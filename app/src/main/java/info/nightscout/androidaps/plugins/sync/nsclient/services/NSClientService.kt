@@ -38,10 +38,10 @@ import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy

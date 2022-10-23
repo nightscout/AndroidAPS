@@ -2,8 +2,9 @@ package info.nightscout.androidaps.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
 
-fun info.nightscout.sdk.localmodel.treatment.TemporaryTarget.toTemporaryTarget(): TemporaryTarget =
+fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =
     TemporaryTarget(
         isValid = isValid,
         timestamp = date,
@@ -15,13 +16,13 @@ fun info.nightscout.sdk.localmodel.treatment.TemporaryTarget.toTemporaryTarget()
         interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
     )
 
-fun info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason?.toReason(): TemporaryTarget.Reason =
+fun NSTemporaryTarget.Reason?.toReason(): TemporaryTarget.Reason =
     when (this) {
-        info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason.CUSTOM       -> TemporaryTarget.Reason.CUSTOM
-        info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason.HYPOGLYCEMIA -> TemporaryTarget.Reason.HYPOGLYCEMIA
-        info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason.ACTIVITY     -> TemporaryTarget.Reason.ACTIVITY
-        info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason.EATING_SOON  -> TemporaryTarget.Reason.EATING_SOON
-        info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason.AUTOMATION   -> TemporaryTarget.Reason.AUTOMATION
-        info.nightscout.sdk.localmodel.treatment.TemporaryTarget.Reason.WEAR         -> TemporaryTarget.Reason.WEAR
-        null                                                                         -> TemporaryTarget.Reason.CUSTOM
+        NSTemporaryTarget.Reason.CUSTOM       -> TemporaryTarget.Reason.CUSTOM
+        NSTemporaryTarget.Reason.HYPOGLYCEMIA -> TemporaryTarget.Reason.HYPOGLYCEMIA
+        NSTemporaryTarget.Reason.ACTIVITY     -> TemporaryTarget.Reason.ACTIVITY
+        NSTemporaryTarget.Reason.EATING_SOON  -> TemporaryTarget.Reason.EATING_SOON
+        NSTemporaryTarget.Reason.AUTOMATION   -> TemporaryTarget.Reason.AUTOMATION
+        NSTemporaryTarget.Reason.WEAR         -> TemporaryTarget.Reason.WEAR
+        null                                  -> TemporaryTarget.Reason.CUSTOM
     }

@@ -12,7 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
@@ -63,12 +63,26 @@ class LoadBgWorker(
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
                         ).then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build()).enqueue()
-                    } else rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+                    } else {
+                        rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+                        WorkManager.getInstance(context).enqueueUniqueWork(
+                            LoadTreatmentsWorker.JOB_NAME,
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build()
+                        )
+                    }
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
                     ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
-            else rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+            else {
+                rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+                WorkManager.getInstance(context).enqueueUniqueWork(
+                    LoadTreatmentsWorker.JOB_NAME,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
+                    OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build()
+                )
+            }
         }
         return ret
     }

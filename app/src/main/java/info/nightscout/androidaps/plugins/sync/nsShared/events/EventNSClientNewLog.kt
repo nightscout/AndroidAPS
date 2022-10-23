@@ -1,9 +1,9 @@
-package info.nightscout.androidaps.plugins.sync.nsclient.events
+package info.nightscout.androidaps.plugins.sync.nsShared.events
 
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.interfaces.NsClient
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class EventNSClientNewLog(val action: String, val logText: String, val version: NsClient.Version) : Event() {
     var date = System.currentTimeMillis()

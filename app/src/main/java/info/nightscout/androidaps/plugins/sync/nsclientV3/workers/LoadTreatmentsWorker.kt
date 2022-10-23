@@ -10,7 +10,8 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
@@ -29,6 +30,7 @@ class LoadTreatmentsWorker(
     @Inject lateinit var context: Context
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     companion object {
 
@@ -61,19 +63,23 @@ class LoadTreatmentsWorker(
                                     .build()
                             ).then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
                             .enqueue()
-                    } else
+                    } else {
                         rxBus.send(
                             EventNSClientNewLog(
                                 "END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}",
                                 NsClient.Version.V3
                             )
                         )
+                        storeDataForDb.storeToDb()
+                    }
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
                     ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
-            else
+            else {
                 rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))
+                storeDataForDb.storeToDb()
+            }
         }
         return ret
     }

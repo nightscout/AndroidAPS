@@ -3,7 +3,7 @@ package info.nightscout.sdk.localmodel.treatment
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import org.json.JSONObject
 
-data class EffectiveProfileSwitch(
+data class NSEffectiveProfileSwitch(
     override val date: Long,
     override val device: String?,
     override val identifier: String,
@@ -27,4 +27,4 @@ data class EffectiveProfileSwitch(
     val originalDuration: Long,
     val originalEnd: Long
 
-) : Treatment
+) : NSTreatment

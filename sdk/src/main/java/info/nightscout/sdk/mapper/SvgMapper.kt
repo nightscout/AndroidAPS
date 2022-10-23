@@ -1,17 +1,17 @@
 package info.nightscout.sdk.mapper
 
 import info.nightscout.sdk.localmodel.entry.Direction
-import info.nightscout.sdk.localmodel.entry.Sgv
+import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.remotemodel.RemoteEntry
 
 @JvmSynthetic
-internal fun RemoteEntry.toSgv(): Sgv? {
+internal fun RemoteEntry.toSgv(): NSSgvV3? {
 
     this.sgv ?: return null
     if (this.type != "sgv") return null
 
-    return Sgv(
+    return NSSgvV3(
         date = this.date,
         device = this.device,
         identifier = this.identifier,

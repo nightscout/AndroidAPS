@@ -8,22 +8,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
@@ -33,17 +24,16 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporary
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.sdk.localmodel.treatment.Bolus
-import info.nightscout.sdk.localmodel.treatment.Carbs
-import info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch
-import info.nightscout.sdk.localmodel.treatment.ProfileSwitch
-import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
-import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
-import info.nightscout.sdk.localmodel.treatment.Treatment
+import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSBolus
+import info.nightscout.sdk.localmodel.treatment.NSCarbs
+import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
+import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
+import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ProcessTreatmentsWorker(
@@ -63,15 +53,15 @@ class ProcessTreatmentsWorker(
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var xDripBroadcast: XDripBroadcast
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWork(): Result {
         @Suppress("UNCHECKED_CAST")
-        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as List<Treatment>?
+        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as List<NSTreatment>?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        var ret = Result.success()
+        val ret = Result.success()
         var latestDateInReceivedData = 0L
-        val processed = HashMap<String, Long>()
 
         for (treatment in treatments) {
             aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
@@ -82,90 +72,15 @@ class ProcessTreatmentsWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             when (treatment) {
-                is Bolus                  -> {
-                    if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
-                        repository.runTransactionForResult(SyncNsBolusTransaction(treatment.toBolus()))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(
-                                        UserEntry.Action.BOLUS, UserEntry.Sources.NSClient, it.notes,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Insulin(it.amount)
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
-                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(
-                                        UserEntry.Action.BOLUS_REMOVED, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Insulin(it.amount)
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
-                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
-                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updated.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
-                                    processed[Bolus::class.java.simpleName] = (processed[Bolus::class.java.simpleName] ?: 0) + 1
-                                }
-                            }
-                    }
-                }
+                is NSBolus ->
+                    if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
+                        storeDataForDb.preparedData.boluses.add(treatment.toBolus())
 
-                is Carbs                  -> {
-                    if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
-                        repository.runTransactionForResult(SyncNsCarbsTransaction(treatment.toCarbs()))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(
-                                        UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Gram(it.amount.toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
-                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(
-                                        UserEntry.Action.CARBS_REMOVED, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Gram(it.amount.toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
-                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updated.forEach {
-                                    uel.log(
-                                        UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Gram(it.amount.toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
-                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
-                                    processed[Carbs::class.java.simpleName] = (processed[Carbs::class.java.simpleName] ?: 0) + 1
-                                }
-                            }
-                    }
-                }
+                is NSCarbs ->
+                    if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
+                        storeDataForDb.preparedData.carbs.add(treatment.toCarbs())
 
-                is TemporaryTarget        -> {
+                is NSTemporaryTarget ->
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         if (treatment.duration > 0L) {
                             // not ending event
@@ -179,57 +94,8 @@ class ProcessTreatmentsWorker(
                                 continue
                             }
                         }
-                        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(treatment.toTemporaryTarget()))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach { tt ->
-                                    uel.log(
-                                        UserEntry.Action.TT, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                        ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
-                                        ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
-                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.invalidated.forEach { tt ->
-                                    uel.log(
-                                        UserEntry.Action.TT_REMOVED, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                        ValueWithUnit.Mgdl(tt.lowTarget),
-                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
-                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.ended.forEach { tt ->
-                                    uel.log(
-                                        UserEntry.Action.CANCEL_TT, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                        ValueWithUnit.Mgdl(tt.lowTarget),
-                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
-                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
-                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updatedDuration.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
-                                    processed[TemporaryTarget::class.java.simpleName] = (processed[TemporaryTarget::class.java.simpleName] ?: 0) + 1
-                                }
-                            }
+                        storeDataForDb.preparedData.temporaryTargets.add(treatment.toTemporaryTarget())
                     }
-                }
                 /*
                 // Convert back emulated TBR -> EB
                 if (eventType == TherapyEvent.Type.TEMPORARY_BASAL.text && json.has("extendedEmulated")) {
@@ -242,126 +108,23 @@ class ProcessTreatmentsWorker(
                     virtualPumpPlugin.fakeDataDetected = true
                 }
                 */
-                is TemporaryBasal         -> {
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(treatment.toTemporaryBasal()))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(
-                                        UserEntry.Action.TEMP_BASAL, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(
-                                        UserEntry.Action.TEMP_BASAL_REMOVED, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.ended.forEach {
-                                    uel.log(
-                                        UserEntry.Action.CANCEL_TEMP_BASAL, UserEntry.Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
-                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
-                                }
-                                result.updatedDuration.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
-                                    processed[TemporaryBasal::class.java.simpleName] = (processed[TemporaryBasal::class.java.simpleName] ?: 0) + 1
-                                }
-                            }
-                    }
-                }
+                is NSTemporaryBasal ->
+                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
+                        storeDataForDb.preparedData.temporaryBasals.add(treatment.toTemporaryBasal())
 
-                is EffectiveProfileSwitch -> {
+                is NSEffectiveProfileSwitch ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
-                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                                        processed[EffectiveProfileSwitch::class.java.simpleName] = (processed[EffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                                        processed[EffectiveProfileSwitch::class.java.simpleName] = (processed[EffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                                        processed[EffectiveProfileSwitch::class.java.simpleName] = (processed[EffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
-                                    }
-                                }
+                            storeDataForDb.preparedData.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         }
                     }
-                }
 
-                is ProfileSwitch          -> {
+                is NSProfileSwitch ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
-                            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                                        processed[ProfileSwitch::class.java.simpleName] = (processed[ProfileSwitch::class.java.simpleName] ?: 0) + 1
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                                        processed[ProfileSwitch::class.java.simpleName] = (processed[ProfileSwitch::class.java.simpleName] ?: 0) + 1
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                                        processed[ProfileSwitch::class.java.simpleName] = (processed[ProfileSwitch::class.java.simpleName] ?: 0) + 1
-                                    }
-                                }
+                            storeDataForDb.preparedData.profileSwitches.add(profileSwitch)
                         }
                     }
-                }
             }
             /*
                         when {
@@ -561,7 +324,6 @@ class ProcessTreatmentsWorker(
 
                          */
         }
-        for (key in processed.keys) rxBus.send(EventNSClientNewLog("PROCESSED", "$key ${processed[key]}", NsClient.Version.V3))
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
 //        xDripBroadcast.sendTreatments(treatments)
         return ret

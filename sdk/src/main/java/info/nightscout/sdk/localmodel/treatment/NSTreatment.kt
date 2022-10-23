@@ -2,7 +2,7 @@ package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
 
-interface Treatment {
+interface NSTreatment {
     val date: Long
     val device: String?
     val identifier: String

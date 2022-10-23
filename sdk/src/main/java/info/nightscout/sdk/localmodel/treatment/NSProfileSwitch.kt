@@ -1,8 +1,9 @@
 package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
+import org.json.JSONObject
 
-data class Carbs(
+data class NSProfileSwitch(
     override val date: Long,
     override val device: String?,
     override val identifier: String,
@@ -18,6 +19,11 @@ data class Carbs(
     override val pumpId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
-    val carbs: Double,
-    val duration: Long
-) : Treatment
+    val profileJson: JSONObject?,
+    val profileName: String,
+    val originalProfileName: String?,
+    val timeShift: Long?,
+    val percentage: Int?,
+    val duration: Long?,
+    val originalDuration: Long?
+) : NSTreatment

@@ -8,8 +8,9 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.fromConstant
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 
-fun info.nightscout.sdk.localmodel.treatment.ProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUtil): ProfileSwitch? {
+fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUtil): ProfileSwitch? {
     val pureProfile =
         profileJson?.let { pureProfileFromJson(it, dateUtil) ?: return null }
             ?: activePlugin.activeProfileSource.profile?.getSpecificProfile(profileName) ?: return null

@@ -1,8 +1,8 @@
 package info.nightscout.sdk.interfaces
 
 import info.nightscout.sdk.localmodel.Status
-import info.nightscout.sdk.localmodel.entry.Sgv
-import info.nightscout.sdk.localmodel.treatment.Treatment
+import info.nightscout.sdk.localmodel.entry.NSSgvV3
+import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.remotemodel.LastModified
 
 interface NSAndroidClient {
@@ -12,8 +12,8 @@ interface NSAndroidClient {
     suspend fun getEntries(): String
 
     suspend fun getLastModified(): LastModified
-    suspend fun getSgvs(): List<Sgv>
-    suspend fun getSgvsModifiedSince(from: Long): List<Sgv>
-    suspend fun getSgvsNewerThan(from: Long, limit: Long): List<Sgv>
-    suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<Treatment>
+    suspend fun getSgvs(): List<NSSgvV3>
+    suspend fun getSgvsModifiedSince(from: Long): List<NSSgvV3>
+    suspend fun getSgvsNewerThan(from: Long, limit: Long): List<NSSgvV3>
+    suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<NSTreatment>
 }

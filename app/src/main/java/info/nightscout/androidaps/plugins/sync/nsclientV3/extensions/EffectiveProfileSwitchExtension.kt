@@ -7,7 +7,7 @@ import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.androidaps.utils.DateUtil
 
-fun info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EffectiveProfileSwitch? {
+fun info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EffectiveProfileSwitch? {
     val pureProfile = pureProfileFromJson(profileJson, dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(pureProfile)
 

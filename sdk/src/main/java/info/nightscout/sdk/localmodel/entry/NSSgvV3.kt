@@ -1,6 +1,6 @@
 package info.nightscout.sdk.localmodel.entry
 
-data class Sgv(
+data class NSSgvV3(
     override val date: Long,
     override val device: String?,
     override val identifier: String,

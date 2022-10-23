@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.sync.nsclient
+package info.nightscout.androidaps.plugins.sync.nsShared
 
 import android.os.Bundle
 import android.os.Handler
@@ -14,8 +14,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
@@ -25,7 +24,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -85,7 +84,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
         binding.paused.isChecked = sp.getBoolean(R.string.key_nsclientinternal_paused, false)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
-            uel.log(if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, Sources.NSClient)
+            uel.log(if (isChecked) UserEntry.Action.NS_PAUSED else UserEntry.Action.NS_RESUME, UserEntry.Sources.NSClient)
             (plugin as NsClient?)?.pause(isChecked)
             updateGui()
         }

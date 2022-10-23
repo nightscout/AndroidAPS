@@ -1,25 +1,25 @@
 package info.nightscout.sdk.mapper
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
-import info.nightscout.sdk.localmodel.treatment.Bolus
-import info.nightscout.sdk.localmodel.treatment.Carbs
-import info.nightscout.sdk.localmodel.treatment.EffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSBolus
+import info.nightscout.sdk.localmodel.treatment.NSCarbs
+import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.EventType
-import info.nightscout.sdk.localmodel.treatment.ProfileSwitch
-import info.nightscout.sdk.localmodel.treatment.TemporaryBasal
-import info.nightscout.sdk.localmodel.treatment.TemporaryTarget
-import info.nightscout.sdk.localmodel.treatment.Treatment
+import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
+import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
+import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.remotemodel.RemoteTreatment
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 @JvmSynthetic
-internal fun RemoteTreatment.toTreatment(): Treatment? {
+internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
     val ageDays = (System.currentTimeMillis() - treatmentTimestamp) / (24* 3600 * 1000.0)
     when {
         insulin != null && insulin > 0                                  ->
-            return Bolus(
+            return NSBolus(
                 date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
@@ -36,11 +36,11 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 insulin = this.insulin,
-                type = Bolus.BolusType.fromString(this.type),
+                type = NSBolus.BolusType.fromString(this.type),
             )
 
         carbs != null && carbs > 0                                      ->
-            return Carbs(
+            return NSCarbs(
                 date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
@@ -67,7 +67,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             this.targetBottom ?: return null
             this.targetTop ?: return null
 
-            return TemporaryTarget(
+            return NSTemporaryTarget(
                 date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
@@ -86,7 +86,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
                 targetBottom = this.targetBottom,
                 targetTop = this.targetTop,
-                reason = TemporaryTarget.Reason.fromString(this.reason)
+                reason = NSTemporaryTarget.Reason.fromString(this.reason)
             )
         }
 
@@ -97,7 +97,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             this.duration ?: return null
             if (this.duration == 0L && this.durationInMilliseconds == null) return null
 
-            return TemporaryBasal(
+            return NSTemporaryBasal(
                 date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
@@ -116,7 +116,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
                 duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
                 isAbsolute = this.absolute != null,
                 rate = this.absolute ?: (this.percent?.plus(100.0)) ?: 0.0,
-                type = TemporaryBasal.Type.fromString(this.type)
+                type = NSTemporaryBasal.Type.fromString(this.type)
             )
         }
 
@@ -129,7 +129,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             this.originalDuration ?: return null
             this.originalEnd ?: return null
 
-            return EffectiveProfileSwitch(
+            return NSEffectiveProfileSwitch(
                 date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,
@@ -159,7 +159,7 @@ internal fun RemoteTreatment.toTreatment(): Treatment? {
             if (treatmentTimestamp == 0L) return null
             this.profile ?: return null
 
-            return ProfileSwitch(
+            return NSProfileSwitch(
                 date = treatmentTimestamp,
                 device = this.device,
                 identifier = this.identifier,

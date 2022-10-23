@@ -26,15 +26,15 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.NSClientFragment
+import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
-import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Resend
-import info.nightscout.androidaps.plugins.sync.nsclientV3.events.EventNSClientV3Status
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -89,7 +89,7 @@ class NSClientV3Plugin @Inject constructor(
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
     override var status = ""
-    override var nsClientService: NSClientService? = null
+    override val nsClientService: NSClientService? = null // service not needed
 
     internal lateinit var nsAndroidClient: NSAndroidClient
 //    private lateinit var nsAndroidRxClient: NSAndroidRxClient
@@ -138,9 +138,9 @@ class NSClientV3Plugin @Inject constructor(
 
         nsClientReceiverDelegate.grabReceiversState()
         disposable += rxBus
-            .toObservable(EventNSClientV3Status::class.java)
+            .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNSClientV3Status ->
+            .subscribe({ event ->
                            status = event.getStatus(rh)
                            rxBus.send(EventNSClientUpdateGUI())
                        }, fabricPrivacy::logException)
@@ -169,7 +169,7 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNSClientV3Resend::class.java)
+            .toObservable(EventNSClientResend::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
     }
@@ -296,7 +296,8 @@ class NSClientV3Plugin @Inject constructor(
                 )
                 .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
                 .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-                .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                // LoadTreatmentsWorker is enqueued after BG finish
+                //.then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
                 .enqueue()
         }
     }

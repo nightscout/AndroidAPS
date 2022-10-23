@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
-import info.nightscout.androidaps.plugins.sync.nsclient.NSClientFragment
+import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolFragment
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 

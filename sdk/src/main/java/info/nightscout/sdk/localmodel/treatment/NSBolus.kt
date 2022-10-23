@@ -2,7 +2,7 @@ package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
 
-data class TemporaryTarget(
+data class NSBolus(
     override val date: Long,
     override val device: String?,
     override val identifier: String,
@@ -18,27 +18,18 @@ data class TemporaryTarget(
     override val pumpId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
-    val duration: Long,
-    val targetBottom: Double,
-    val targetTop: Double,
-    val reason: Reason,
+    val insulin: Double,
+    val type: BolusType
 
-    ) : Treatment {
-
-    fun targetBottomAsMgdl() = targetBottom.asMgdl()
-    fun targetTopAsMgdl() = targetTop.asMgdl()
-    enum class Reason(val text: String) {
-        CUSTOM("Custom"),
-        HYPOGLYCEMIA("Hypo"),
-        ACTIVITY("Activity"),
-        EATING_SOON("Eating Soon"),
-        AUTOMATION("Automation"),
-        WEAR("Wear")
-        ;
+) : NSTreatment {
+    enum class BolusType {
+        NORMAL,
+        SMB,
+        PRIMING;
 
         companion object {
 
-            fun fromString(reason: String?) = values().firstOrNull { it.text == reason } ?: CUSTOM
+            fun fromString(name: String?) = values().firstOrNull { it.name == name } ?: NORMAL
         }
     }
 }

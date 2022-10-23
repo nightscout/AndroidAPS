@@ -20,11 +20,12 @@ import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientNewLog
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientResend
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientResend
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml

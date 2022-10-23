@@ -5,7 +5,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
@@ -13,20 +12,11 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorResultTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
 import info.nightscout.androidaps.extensions.offlineEventFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.profileSwitchFromJson
 import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
@@ -36,9 +26,13 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.profileSwitchFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryBasalFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -69,6 +63,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var xDripBroadcast: XDripBroadcast
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWork(): Result {
         val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
@@ -97,77 +92,14 @@ class NSClientAddUpdateWorker(
             if (insulin > 0) {
                 if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                     bolusFromJson(json)?.let { bolus ->
-                        repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(
-                                        Action.BOLUS, Sources.NSClient, it.notes,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Insulin(it.amount)
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(
-                                        Action.BOLUS_REMOVED, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Insulin(it.amount)
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
-                                }
-                                result.updated.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
-                                }
-                            }
+                        storeDataForDb.preparedData.boluses.add(bolus)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
             if (carbs > 0) {
                 if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                     carbsFromJson(json)?.let { carb ->
-                        repository.runTransactionForResult(SyncNsCarbsTransaction(carb))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(
-                                        Action.CARBS, Sources.NSClient, it.notes,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Gram(it.amount.toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(
-                                        Action.CARBS_REMOVED, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Gram(it.amount.toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
-                                }
-                                result.updated.forEach {
-                                    uel.log(
-                                        Action.CARBS, Sources.NSClient, it.notes,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.Gram(it.amount.toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
-                                }
-                            }
+                        storeDataForDb.preparedData.carbs.add(carb)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
@@ -186,81 +118,14 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         temporaryTargetFromJson(json)?.let { temporaryTarget ->
-                            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach { tt ->
-                                        uel.log(
-                                            Action.TT, Sources.NSClient,
-                                            ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                            ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
-                                            ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
-                                    }
-                                    result.invalidated.forEach { tt ->
-                                        uel.log(
-                                            Action.TT_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                            ValueWithUnit.Mgdl(tt.lowTarget),
-                                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
-                                    }
-                                    result.ended.forEach { tt ->
-                                        uel.log(
-                                            Action.CANCEL_TT, Sources.NSClient,
-                                            ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                            ValueWithUnit.Mgdl(tt.lowTarget),
-                                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
-                                    }
-                                }
+                            storeDataForDb.preparedData.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
 
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
-                            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitch))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                                    }
-                                }
+                            storeDataForDb.preparedData.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
 
@@ -398,78 +263,14 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text                         ->
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         temporaryBasalFromJson(json)?.let { temporaryBasal ->
-                            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.TEMP_BASAL, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.TEMP_BASAL_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                                    }
-                                    result.ended.forEach {
-                                        uel.log(
-                                            Action.CANCEL_TEMP_BASAL, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp),
-                                            if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
-                                    }
-                                }
+                            storeDataForDb.preparedData.temporaryBasals.add(temporaryBasal)
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }
 
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
-                            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitch))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                                    }
-                                    result.invalidated.forEach {
-                                        uel.log(
-                                            Action.PROFILE_SWITCH_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.Timestamp(it.timestamp)
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                                    }
-                                }
+                            storeDataForDb.preparedData.profileSwitches.add(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
 
@@ -534,6 +335,7 @@ class NSClientAddUpdateWorker(
                     }
                 }
         }
+        storeDataForDb.storeToDb()
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
         xDripBroadcast.sendTreatments(treatments)
         return ret

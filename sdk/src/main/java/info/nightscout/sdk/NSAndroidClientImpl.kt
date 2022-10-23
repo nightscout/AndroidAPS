@@ -6,8 +6,8 @@ import info.nightscout.sdk.exceptions.InvalidAccessTokenException
 import info.nightscout.sdk.exceptions.TodoNightscoutException
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.Status
-import info.nightscout.sdk.localmodel.entry.Sgv
-import info.nightscout.sdk.localmodel.treatment.Treatment
+import info.nightscout.sdk.localmodel.entry.NSSgvV3
+import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.mapper.toLocal
 import info.nightscout.sdk.mapper.toSgv
 import info.nightscout.sdk.mapper.toTreatment
@@ -101,7 +101,7 @@ class NSAndroidClientImpl(
     }
 
     // TODO: parameters like count?
-    override suspend fun getSgvs(): List<Sgv> = callWrapper(dispatcher) {
+    override suspend fun getSgvs(): List<NSSgvV3> = callWrapper(dispatcher) {
 
         val response = api.getSgvs()
         if (response.isSuccessful) {
@@ -111,7 +111,7 @@ class NSAndroidClientImpl(
         }
     }
 
-    override suspend fun getSgvsModifiedSince(from: Long): List<Sgv> = callWrapper(dispatcher) {
+    override suspend fun getSgvsModifiedSince(from: Long): List<NSSgvV3> = callWrapper(dispatcher) {
 
         val response = api.getSgvsModifiedSince(from)
         if (response.isSuccessful) {
@@ -121,7 +121,7 @@ class NSAndroidClientImpl(
         }
     }
 
-    override suspend fun getSgvsNewerThan(from: Long, limit: Long): List<Sgv> = callWrapper(dispatcher) {
+    override suspend fun getSgvsNewerThan(from: Long, limit: Long): List<NSSgvV3> = callWrapper(dispatcher) {
 
         val response = api.getSgvsNewerThan(from, limit)
         if (response.isSuccessful) {
@@ -131,7 +131,7 @@ class NSAndroidClientImpl(
         }
     }
 
-    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<Treatment> = callWrapper(dispatcher) {
+    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<NSTreatment> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsModifiedSince(from, limit)
         if (response.isSuccessful) {

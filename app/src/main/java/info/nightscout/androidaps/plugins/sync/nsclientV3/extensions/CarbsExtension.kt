@@ -2,8 +2,9 @@ package info.nightscout.androidaps.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.sdk.localmodel.treatment.NSCarbs
 
-fun info.nightscout.sdk.localmodel.treatment.Carbs.toCarbs(): Carbs =
+fun NSCarbs.toCarbs(): Carbs =
     Carbs(
         isValid = isValid,
         timestamp = date,
