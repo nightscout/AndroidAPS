@@ -46,12 +46,12 @@
     <string name="date">дата</string>
     <string name="units_label">единицы</string>
     <string name="dia_label">DIA (время действия инсулина)</string>
-    <string name="ic_label">IC (инсулин/углеводы):</string>
+    <string name="ic_label">Углеводный коэффициент IC (ГУ/ед. инс)</string>
     <string name="isf_label">ISF (чувствительность к инсулину)</string>
     <string name="basal_label">базал</string>
     <string name="target_label">Целевое значение СК:</string>
     <string name="dia_long_label">Продолжительность действия инсулина</string>
-    <string name="ic_long_label">Соотношение инсулин/углеводы I: C</string>
+    <string name="ic_long_label">Углеводный коэффициент IC (ГУ/ед. инс.)</string>
     <string name="isf_long_label">Фактор Чувствительности к Инсулину (ISF)</string>
     <string name="basal_long_label">Базальная скорость</string>
     <string name="target_long_label">Целевая ГК</string>
