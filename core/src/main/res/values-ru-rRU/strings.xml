@@ -393,7 +393,7 @@
     <string name="profile_sensitivity_value">Значение чувствительности в профиле</string>
     <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
     <string name="current_basal_value">Текущее значение базала</string>
-    <string name="profile_carbs_ratio_value">Коэффициент углеводов в профиле</string>
+    <string name="profile_carbs_ratio_value">Значение Углеводного коэффициента IC в профиле</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
