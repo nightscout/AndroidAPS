@@ -72,7 +72,7 @@
     <string name="basaltest_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Предварительные требования</string>
     <string name="prerequisites_what">Что необходимо для настройки и использования AAPS?</string>
-    <string name="prerequisites_determinedcorrectprofile">Проверенные данные профиля (базал, инс-углеводы IC, фактор чувствительности к инсулину ISF, длительность действия инсулина DIA).</string>
+    <string name="prerequisites_determinedcorrectprofile">Проверенные данные профиля (базал, углеводный коэффициент IC, фактор чувствительности к инсулину ISF, длительность действия инсулина DIA).</string>
     <string name="prerequisites_computer">Компьютер с установленной и настроенной Android Studio.</string>
     <string name="prerequisites_phone">Поддерживаемый телефон.</string>
     <string name="prerequisites_pump">Совместимая инсулиновая помпа, если вы планируете использовать замкнутый цикл.</string>
@@ -158,7 +158,7 @@
     <string name="breadgrams_grams">Для оценки и записи потребляемых углеводов следует использовать только граммы.</string>
     <string name="breadgrams_exchange">Употребленные углеводы можно записывать с помощью соответствующей системы обмена (например, DAFNE «CHO» или европейские «хлебные единицы»).</string>
     <string name="breadgrams_decay">AAPS использует динамическую модель для оценки \"распада\" и расчета COB.</string>
-    <string name="breadgrams_calc">Если уровень глюкозы в крови находится вне допустимых значений (слишком низкое или слишком высокое), то калькулятор болюса может быть использован для внесения предложений по коррекции соотношения инсулин/углеводы.</string>
+    <string name="breadgrams_calc">Если уровень глюкозы в крови находится вне допустимых значений (слишком низкое или слишком высокое), то калькулятор болюса может быть использован для внесения предложений по коррекции углеводного коэффициента IC.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Растянутые углеводы</string>
     <string name="extendedcarbs_handling">Для чего можно использовать e-carbs (растянутые углеводы)?</string>
@@ -184,12 +184,12 @@
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_multiple">Вы можете использовать больше одного значения для коэффициента I:C в своем профиле.</string>
     <string name="ic_isf">Если вы изменяете ISF в своем профиле, вам всегда следует изменять соотношение I:C.</string>
-    <string name="ic_label_exam">Углеводный коэффициент (соотношение I:C)</string>
+    <string name="ic_label_exam">Углеводный коэффициент IC (ГУ/ед.инс)</string>
     <string name="ic_increasingvalue">Более высокий I:C приводит к уменьшению количества инсулина, вводимого на данное число углеводов.</string>
     <string name="ic_decreasingvalue">Более низкий I:C приводит к уменьшению количества инсулина, вводимого на данное число углеводов.</string>
-    <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение соотношения инсулин-углеводы IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>
-    <string name="ic_different">Соотношение инсулин-углеводы IC изменится если принимать ХЕ за 10 или 12г.</string>
-    <string name="ic_meaning">Смысл соотношения инсулин-углеводы IC таков: сколько хлебных единиц покрываются одной ед. инсулина.</string>
+    <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение углеводного коэффициента IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>
+    <string name="ic_different">Углеводный коэффициент IC изменится если принимать ХЕ за 10 или 12г.</string>
+    <string name="ic_meaning">Смысл углеводного коэффициента IC таков: сколько ГУ (хлебных единиц) покрываются одной ед. инсулина.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Cмена профиля</string>
     <string name="profileswitch_pctwillchange"> При установке 90% при переключении профиля, какие утверждения верны?</string>
