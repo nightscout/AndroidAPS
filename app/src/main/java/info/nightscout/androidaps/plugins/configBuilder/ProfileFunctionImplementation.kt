@@ -28,6 +28,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -47,7 +48,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val deviceStatusData: DeviceStatusData
 ) : ProfileFunction {
 
-    val cache = HashMap<Long,Profile?>()
+    val cache = ConcurrentHashMap<Long, Profile?>()
 
     private val disposable = CompositeDisposable()
 
@@ -57,16 +58,7 @@ class ProfileFunctionImplementation @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
-                    synchronized(cache) {
-                        for (key in cache.keys) {
-                            if (key > it.startDate) {
-                                aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(key))
-                                cache.remove(key)
-                            } else {
-                                break
-                            }
-                        }
-                    }
+                    synchronized(cache) { cache.keys.removeIf { key -> key > it.startDate } }
                 }, fabricPrivacy::logException
             )
     }
@@ -138,7 +130,7 @@ class ProfileFunctionImplementation @Inject constructor(
         }
 
         synchronized(cache) {
-            cache.put(rounded, null)
+            cache.remove(rounded)
         }
         return null
     }
@@ -175,7 +167,7 @@ class ProfileFunctionImplementation @Inject constructor(
     }
 
     override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): Boolean {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)  ?: return false
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp) ?: return false
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
