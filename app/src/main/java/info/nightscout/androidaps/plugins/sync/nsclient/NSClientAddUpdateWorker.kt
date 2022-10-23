@@ -11,13 +11,9 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.extensions.offlineEventFromJson
-import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
@@ -27,6 +23,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
@@ -35,6 +32,7 @@ import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isEffectivePr
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.profileSwitchFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryBasalFromJson
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryTargetFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.therapyEventFromJson
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
@@ -146,43 +144,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
                     if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         therapyEventFromJson(json)?.let { therapyEvent ->
-                            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    val action = when (eventType) {
-                                        TherapyEvent.Type.CANNULA_CHANGE.text -> Action.SITE_CHANGE
-                                        TherapyEvent.Type.INSULIN_CHANGE.text -> Action.RESERVOIR_CHANGE
-                                        else                                  -> Action.CAREPORTAL
-                                    }
-                                    result.inserted.forEach { therapyEvent ->
-                                        uel.log(action, Sources.NSClient,
-                                                therapyEvent.note ?: "",
-                                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                                ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                                ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
-                                    }
-                                    result.invalidated.forEach { therapyEvent ->
-                                        uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                                                therapyEvent.note ?: "",
-                                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                                ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                                ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                                    }
-                                }
+                            storeDataForDb.preparedData.therapyEvents.add(therapyEvent)
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                     }
 

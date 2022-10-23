@@ -9,6 +9,7 @@ import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
+import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.remotemodel.RemoteTreatment
 import org.json.JSONObject
@@ -207,6 +208,42 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpSerial = this.pumpSerial,
                 bolusCalculatorResult = this.bolusCalculatorResult,
                 glucose = this.glucose
+            )
+        }
+
+        eventType == EventType.CANNULA_CHANGE ||
+            eventType == EventType.INSULIN_CHANGE ||
+            eventType == EventType.SENSOR_CHANGE ||
+            eventType == EventType.FINGER_STICK_BG_VALUE ||
+            eventType == EventType.NONE ||
+            eventType == EventType.ANNOUNCEMENT ||
+            eventType == EventType.QUESTION ||
+            eventType == EventType.EXERCISE ||
+            eventType == EventType.NOTE ||
+            eventType == EventType.PUMP_BATTERY_CHANGE                  -> {
+            if (treatmentTimestamp == 0L) return null
+
+            return NSTherapyEvent(
+                date = treatmentTimestamp,
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                duration = duration,
+                durationInMilliseconds = durationInMilliseconds,
+                glucose = this.glucose,
+                enteredBy = this.enteredBy,
+                glucoseType = NSTherapyEvent.MeterType.fromString(this.glucoseType)
             )
         }
     }

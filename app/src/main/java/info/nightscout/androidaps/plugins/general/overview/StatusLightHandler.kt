@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.age
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.age
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.sync.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.extensions.toMainUnit
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.toMainUnit
 import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 

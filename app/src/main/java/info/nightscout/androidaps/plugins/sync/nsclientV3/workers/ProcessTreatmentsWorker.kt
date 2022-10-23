@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffective
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
@@ -32,6 +33,7 @@ import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
+import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -130,6 +132,11 @@ class ProcessTreatmentsWorker(
                 is NSBolusWizard ->
                     treatment.toBolusCalculatorResult()?.let { bolusCalculatorResult ->
                         storeDataForDb.preparedData.bolusCalculatorResults.add(bolusCalculatorResult)
+                    }
+
+                is NSTherapyEvent ->
+                    treatment.toTherapyEvent()?.let { therapyEvent ->
+                        storeDataForDb.preparedData.therapyEvents.add(therapyEvent)
                     }
             }
             /*
