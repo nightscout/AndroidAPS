@@ -33,7 +33,7 @@ internal data class RemoteTreatment(
     @SerializedName("isValid") val isValid: Boolean?,           // boolean A flag set by the server only for deleted documents. This field appears only within history operation and for documents which were deleted by API v3 (and they always have a false value)
     @SerializedName("isReadOnly") val isReadOnly: Boolean?,     // boolean A flag set by client that locks the document from any changes. Every document marked with isReadOnly=true is forever immutable and cannot even be deleted.
     @SerializedName("eventType") val eventType: EventType,      // string "BG Check", "Snack Bolus", "Meal Bolus", "Correction Bolus", "Carb Correction", "Combo Bolus", "Announcement", "Note", "Question", "Exercise", "Site Change", "Sensor Start", "Sensor Change", "Pump Battery Change", "Insulin Change", "Temp Basal", "Profile Switch", "D.A.D. Alert", "Temporary Target", "OpenAPS Offline", "Bolus Wizard"
-    @SerializedName("glucose") val glucose: String?,            // string Current glucose
+    @SerializedName("glucose") val glucose: Double?,            // double Current glucose
     @SerializedName("glucoseType") val glucoseType: String?,    // string example: "Sensor", "Finger", "Manual"
     @SerializedName("units") val units: String?,                // string The units for the glucose value, mg/dl or mmol/l. It is strongly recommended to fill in this field.
     @SerializedName("carbs") val carbs: Double?,                // number... Amount of carbs given.

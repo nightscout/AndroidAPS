@@ -15,7 +15,7 @@ import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorRes
 import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.extensions.offlineEventFromJson
 import info.nightscout.androidaps.extensions.therapyEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -131,31 +131,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
                     bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
-                        repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResult))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
-                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(
-                                        Action.BOLUS_CALCULATOR_RESULT, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(
-                                        Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
-                                }
-                            }
+                        storeDataForDb.preparedData.bolusCalculatorResults.add(bolusCalculatorResult)
                     } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
 
                 eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||

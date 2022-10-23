@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
@@ -26,6 +27,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSBolus
+import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
@@ -125,39 +127,15 @@ class ProcessTreatmentsWorker(
                             storeDataForDb.preparedData.profileSwitches.add(profileSwitch)
                         }
                     }
+                is NSBolusWizard ->
+                    treatment.toBolusCalculatorResult()?.let { bolusCalculatorResult ->
+                        storeDataForDb.preparedData.bolusCalculatorResults.add(bolusCalculatorResult)
+                    }
             }
             /*
                         when {
                             insulin > 0 || carbs > 0                                                    -> Any()
 
-                            eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
-                                bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
-                                    repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResult))
-                                        .doOnError {
-                                            aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
-                                            ret = Result.failure(workDataOf("Error" to it.toString()))
-                                        }
-                                        .blockingGet()
-                                        .also { result ->
-                                            result.inserted.forEach {
-                                                uel.log(
-                                                    Action.BOLUS_CALCULATOR_RESULT, Sources.NSClient,
-                                                    ValueWithUnit.Timestamp(it.timestamp),
-                                                )
-                                                aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
-                                            }
-                                            result.invalidated.forEach {
-                                                uel.log(
-                                                    Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.NSClient,
-                                                    ValueWithUnit.Timestamp(it.timestamp),
-                                                )
-                                                aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                                            }
-                                            result.updatedNsId.forEach {
-                                                aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
-                                            }
-                                        }
-                                } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
 
                             eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
                                 eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||

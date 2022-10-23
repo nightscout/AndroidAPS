@@ -11,8 +11,8 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.databinding.DialogWizardinfoBinding
-import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.extensions.toJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper

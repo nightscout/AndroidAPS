@@ -26,6 +26,7 @@ import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
+import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -115,7 +116,7 @@ class NSClientSourcePlugin @Inject constructor(
             )
         }
 
-        private fun toGv(sgv: info.nightscout.sdk.localmodel.entry.NSSgvV3): CgmSourceTransaction.TransactionGlucoseValue {
+        private fun toGv(sgv: NSSgvV3): CgmSourceTransaction.TransactionGlucoseValue {
             return CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = sgv.date,
                 value = sgv.sgv,
@@ -156,7 +157,7 @@ class NSClientSourcePlugin @Inject constructor(
 //                xDripBroadcast.sendSgvs(sgvs)
 
                     for (i in 0 until sgvs.size) {
-                        val sgv = toGv(sgvs[i] as info.nightscout.sdk.localmodel.entry.NSSgvV3)
+                        val sgv = toGv(sgvs[i] as NSSgvV3)
                         if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                         glucoseValues += sgv
                     }

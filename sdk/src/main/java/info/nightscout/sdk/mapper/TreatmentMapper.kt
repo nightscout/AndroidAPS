@@ -1,10 +1,11 @@
 package info.nightscout.sdk.mapper
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
+import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
+import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
-import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
@@ -16,7 +17,6 @@ import java.util.concurrent.TimeUnit
 @JvmSynthetic
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
-    val ageDays = (System.currentTimeMillis() - treatmentTimestamp) / (24* 3600 * 1000.0)
     when {
         insulin != null && insulin > 0                                  ->
             return NSBolus(
@@ -182,6 +182,31 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 duration = this.duration,
                 timeShift = this.timeshift,
                 percentage = this.percentage,
+            )
+        }
+
+        eventType == EventType.BOLUS_WIZARD                             -> {
+            if (treatmentTimestamp == 0L) return null
+            this.bolusCalculatorResult ?: return null
+
+            return NSBolusWizard(
+                date = treatmentTimestamp,
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                bolusCalculatorResult = this.bolusCalculatorResult,
+                glucose = this.glucose
             )
         }
     }

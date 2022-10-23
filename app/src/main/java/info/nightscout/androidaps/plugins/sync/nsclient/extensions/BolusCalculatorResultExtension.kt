@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.androidaps.plugins.sync.nsclient.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException

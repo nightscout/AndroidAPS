@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import androidx.work.ListenableWorker
+import androidx.work.workDataOf
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
@@ -15,6 +17,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
@@ -30,6 +33,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.sdk.localmodel.treatment.NSBolus
+import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
@@ -379,6 +383,31 @@ class StoreDataForDb @Inject constructor(
                 }
 
         sendLog("ProfileSwitch", processed[NSProfileSwitch::class.java.simpleName])
+        SystemClock.sleep(pause)
+
+        if (preparedData.bolusCalculatorResults.isNotEmpty())
+            repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(preparedData.bolusCalculatorResults))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
+                }
+                .blockingGet()
+                .also { result ->
+                    preparedData.bolusCalculatorResults.clear()
+                    result.inserted.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                        processed[NSBolusWizard::class.java.simpleName] = (processed[NSBolusWizard::class.java.simpleName] ?: 0) + 1
+                    }
+                    result.invalidated.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
+                        processed[NSBolusWizard::class.java.simpleName] = (processed[NSBolusWizard::class.java.simpleName] ?: 0) + 1
+                    }
+                    result.updatedNsId.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                        processed[NSBolusWizard::class.java.simpleName] = (processed[NSBolusWizard::class.java.simpleName] ?: 0) + 1
+                    }
+                }
+
+        sendLog("BolusCalculatorResult", processed[NSBolusWizard::class.java.simpleName])
         SystemClock.sleep(pause)
 
         uel.log(preparedData.userEntries)

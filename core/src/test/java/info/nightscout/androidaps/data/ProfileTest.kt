@@ -6,7 +6,6 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
