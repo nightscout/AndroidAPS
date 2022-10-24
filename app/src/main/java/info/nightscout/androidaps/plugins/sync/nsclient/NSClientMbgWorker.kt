@@ -35,9 +35,9 @@ class NSClientMbgWorker(
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            storeDataForDb.preparedData.therapyEvents.add(therapyEventFromNsMbg(nsMbg))
+            storeDataForDb.therapyEvents.add(therapyEventFromNsMbg(nsMbg))
         }
-        storeDataForDb.storeToDb()
+        storeDataForDb.storeTreatmentsToDb()
         return ret
     }
 

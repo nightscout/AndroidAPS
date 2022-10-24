@@ -37,7 +37,7 @@ internal interface NightscoutRemoteService {
     suspend fun getSgvs(): Response<NSResponse<List<RemoteEntry>>>
 
     @GET("v3/entries")
-    suspend fun getSgvsNewerThan(@Query(value = "date\$gte", encoded = true) date: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteEntry>>>
+    suspend fun getSgvsNewerThan(@Query(value = "date\$gt", encoded = true) date: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteEntry>>>
 
     @GET("v3/entries/history/{from}")
     suspend fun getSgvsModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteEntry>>>

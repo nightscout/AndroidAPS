@@ -3,7 +3,12 @@ package info.nightscout.androidaps.plugins.sync.nsclient.services
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.*
+import android.os.Binder
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.IBinder
+import android.os.PowerManager
+import android.os.SystemClock
 import androidx.work.OneTimeWorkRequest
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
@@ -27,6 +32,10 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientMbgWorker
@@ -38,10 +47,8 @@ import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -61,7 +68,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class NSClientService : DaggerService(), NsClient.NSClientService {
@@ -527,11 +534,14 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                             rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs", NsClient.Version.V1))
                             // Objective0
                             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-                            dataWorkerStorage.enqueue(
-                                OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
-                                    .setInputData(dataWorkerStorage.storeInputData(sgvs))
-                                    .build()
-                            )
+                            dataWorkerStorage
+                                .beginUniqueWork(
+                                    NSClientV3Plugin.JOB_NAME,
+                                    OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
+                                        .setInputData(dataWorkerStorage.storeInputData(sgvs))
+                                        .build()
+                                ).then(OneTimeWorkRequest.Builder(StoreDataForDb.StoreBgWorker::class.java).build())
+                                .enqueue()
                         }
                     }
                     rxBus.send(EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData), NsClient.Version.V1))
@@ -557,8 +567,8 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
             rxBus.send(
                 EventNSClientNewLog(
                     "DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
-                        "" + _id + " " + data + progress
-                    , NsClient.Version.V1)
+                        "" + _id + " " + data + progress, NsClient.Version.V1
+                )
             )
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)

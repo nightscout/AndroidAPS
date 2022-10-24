@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientMbgWorker
@@ -49,6 +50,7 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesLoadStatusWorker(): LoadStatusWorker
     @ContributesAndroidInjector abstract fun contributesLoadLastModificationWorker(): LoadLastModificationWorker
     @ContributesAndroidInjector abstract fun contributesLoadBgWorker(): LoadBgWorker
+    @ContributesAndroidInjector abstract fun contributesStoreBgWorker(): StoreDataForDb.StoreBgWorker
     @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesProcessTreatmentsWorker(): ProcessTreatmentsWorker
 }

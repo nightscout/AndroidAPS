@@ -1,6 +1,10 @@
 package info.nightscout.androidaps.plugins.sync.nsShared
 
+import android.content.Context
 import android.os.SystemClock
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
@@ -8,6 +12,7 @@ import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.database.entities.ExtendedBolus
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.entities.TemporaryBasal
@@ -15,6 +20,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
@@ -29,8 +35,10 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
@@ -53,23 +61,25 @@ class StoreDataForDb @Inject constructor(
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val config: Config
+    private val config: Config,
+    private val nsClientSourcePlugin: NSClientSourcePlugin,
+    private val xDripBroadcast: XDripBroadcast
 ) {
 
-    data class PreparedData(
-        val boluses: MutableList<Bolus> = mutableListOf(),
-        val carbs: MutableList<Carbs> = mutableListOf(),
-        val temporaryTargets: MutableList<TemporaryTarget> = mutableListOf(),
-        val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf(),
-        val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf(),
-        val therapyEvents: MutableList<TherapyEvent> = mutableListOf(),
-        val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf(),
-        val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf(),
-        val profileSwitches: MutableList<ProfileSwitch> = mutableListOf(),
-        val offlineEvents: MutableList<OfflineEvent> = mutableListOf(),
+    val glucoseValues: MutableList<CgmSourceTransaction.TransactionGlucoseValue> = mutableListOf()
 
-        val userEntries: MutableList<UserEntryTransaction.Entry> = mutableListOf()
-    )
+    val boluses: MutableList<Bolus> = mutableListOf()
+    val carbs: MutableList<Carbs> = mutableListOf()
+    val temporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
+    val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
+    val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
+    val therapyEvents: MutableList<TherapyEvent> = mutableListOf()
+    val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
+    val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
+    val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
+    val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
+
+    private val userEntries: MutableList<UserEntryTransaction.Entry> = mutableListOf()
 
     private val inserted = HashMap<String, Long>()
     private val updated = HashMap<String, Long>()
@@ -78,22 +88,74 @@ class StoreDataForDb @Inject constructor(
     private val durationUpdated = HashMap<String, Long>()
     private val ended = HashMap<String, Long>()
 
-    val preparedData = PreparedData()
     private val pause = 1000L // to slow down db operations
 
-    fun storeToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+    class StoreBgWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
 
-        if (preparedData.boluses.isNotEmpty())
-            repository.runTransactionForResult(SyncNsBolusTransaction(preparedData.boluses))
+        @Inject lateinit var storeDataForDb: StoreDataForDb
+
+        override fun doWork(): Result {
+            storeDataForDb.storeGlucoseValuesToDb()
+            return Result.success()
+        }
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+    }
+
+    private fun storeGlucoseValuesToDb() {
+        rxBus.send(EventNSClientNewLog("PROCESSING BG", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+
+        if (glucoseValues.isNotEmpty())
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
+                }
+                .blockingGet()
+                .also { result ->
+                    glucoseValues.clear()
+                    result.updated.forEach {
+                        xDripBroadcast.send(it)
+                        nsClientSourcePlugin.detectSource(it)
+                        aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
+                        updated[GlucoseValue::class.java.simpleName] = (updated[GlucoseValue::class.java.simpleName] ?: 0) + 1
+                    }
+                    result.inserted.forEach {
+                        xDripBroadcast.send(it)
+                        nsClientSourcePlugin.detectSource(it)
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                        inserted[GlucoseValue::class.java.simpleName] = (inserted[GlucoseValue::class.java.simpleName] ?: 0) + 1
+                    }
+                    result.updatedNsId.forEach {
+                        xDripBroadcast.send(it)
+                        nsClientSourcePlugin.detectSource(it)
+                        aapsLogger.debug(LTag.DATABASE, "Updated nsId bg $it")
+                        nsIdUpdated[GlucoseValue::class.java.simpleName] = (nsIdUpdated[GlucoseValue::class.java.simpleName] ?: 0) + 1
+                    }
+                }
+
+        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
+        SystemClock.sleep(pause)
+        rxBus.send(EventNSClientNewLog("DONE BG", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+    }
+
+    fun storeTreatmentsToDb() {
+        rxBus.send(EventNSClientNewLog("PROCESSING TR", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+
+        if (boluses.isNotEmpty())
+            repository.runTransactionForResult(SyncNsBolusTransaction(boluses))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.boluses.clear()
+                    boluses.clear()
                     result.inserted.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.BOLUS, UserEntry.Sources.NSClient, it.notes ?: "",
@@ -104,7 +166,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSBolus::class.java.simpleName] = (inserted[NSBolus::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.BOLUS_REMOVED, UserEntry.Sources.NSClient, "",
@@ -127,16 +189,16 @@ class StoreDataForDb @Inject constructor(
         sendLog("Bolus", NSBolus::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.carbs.isNotEmpty())
-            repository.runTransactionForResult(SyncNsCarbsTransaction(preparedData.carbs))
+        if (carbs.isNotEmpty())
+            repository.runTransactionForResult(SyncNsCarbsTransaction(carbs))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.carbs.clear()
+                    carbs.clear()
                     result.inserted.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes ?: "",
@@ -147,7 +209,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSCarbs::class.java.simpleName] = (inserted[NSCarbs::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CARBS_REMOVED, UserEntry.Sources.NSClient, "",
@@ -158,7 +220,7 @@ class StoreDataForDb @Inject constructor(
                         invalidated[NSCarbs::class.java.simpleName] = (invalidated[NSCarbs::class.java.simpleName] ?: 0) + 1
                     }
                     result.updated.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes ?: "",
@@ -178,16 +240,16 @@ class StoreDataForDb @Inject constructor(
         sendLog("Carbs", NSCarbs::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.temporaryTargets.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(preparedData.temporaryTargets))
+        if (temporaryTargets.isNotEmpty())
+            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.temporaryTargets.clear()
+                    temporaryTargets.clear()
                     result.inserted.forEach { tt ->
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.TT, UserEntry.Sources.NSClient, "",
@@ -203,7 +265,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSTemporaryTarget::class.java.simpleName] = (inserted[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach { tt ->
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.TT_REMOVED, UserEntry.Sources.NSClient, "",
@@ -219,7 +281,7 @@ class StoreDataForDb @Inject constructor(
                         invalidated[NSTemporaryTarget::class.java.simpleName] = (invalidated[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
                     }
                     result.ended.forEach { tt ->
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CANCEL_TT, UserEntry.Sources.NSClient, "",
@@ -247,16 +309,16 @@ class StoreDataForDb @Inject constructor(
         sendLog("TemporaryTarget", NSTemporaryTarget::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.temporaryBasals.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(preparedData.temporaryBasals))
+        if (temporaryBasals.isNotEmpty())
+            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasals))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.temporaryBasals.clear()
+                    temporaryBasals.clear()
                     result.inserted.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.TEMP_BASAL, UserEntry.Sources.NSClient, "",
@@ -271,7 +333,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSTemporaryBasal::class.java.simpleName] = (inserted[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.TEMP_BASAL_REMOVED, UserEntry.Sources.NSClient, "",
@@ -286,7 +348,7 @@ class StoreDataForDb @Inject constructor(
                         invalidated[NSTemporaryBasal::class.java.simpleName] = (invalidated[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
                     }
                     result.ended.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CANCEL_TEMP_BASAL, UserEntry.Sources.NSClient, "",
@@ -313,16 +375,16 @@ class StoreDataForDb @Inject constructor(
         sendLog("TemporaryBasal", NSTemporaryBasal::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.effectiveProfileSwitches.isNotEmpty())
-            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(preparedData.effectiveProfileSwitches))
+        if (effectiveProfileSwitches.isNotEmpty())
+            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitches))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.effectiveProfileSwitches.clear()
+                    effectiveProfileSwitches.clear()
                     result.inserted.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient, "",
@@ -333,7 +395,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSEffectiveProfileSwitch::class.java.simpleName] = (inserted[NSEffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient, "",
@@ -352,16 +414,16 @@ class StoreDataForDb @Inject constructor(
         sendLog("EffectiveProfileSwitch", NSEffectiveProfileSwitch::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.profileSwitches.isNotEmpty())
-            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(preparedData.profileSwitches))
+        if (profileSwitches.isNotEmpty())
+            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitches))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.profileSwitches.clear()
+                    profileSwitches.clear()
                     result.inserted.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient, "",
@@ -372,7 +434,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSProfileSwitch::class.java.simpleName] = (inserted[NSProfileSwitch::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient, "",
@@ -391,14 +453,14 @@ class StoreDataForDb @Inject constructor(
         sendLog("ProfileSwitch", NSProfileSwitch::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.bolusCalculatorResults.isNotEmpty())
-            repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(preparedData.bolusCalculatorResults))
+        if (bolusCalculatorResults.isNotEmpty())
+            repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResults))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.bolusCalculatorResults.clear()
+                    bolusCalculatorResults.clear()
                     result.inserted.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
                         inserted[NSBolusWizard::class.java.simpleName] = (inserted[NSBolusWizard::class.java.simpleName] ?: 0) + 1
@@ -416,21 +478,21 @@ class StoreDataForDb @Inject constructor(
         sendLog("BolusCalculatorResult", NSBolusWizard::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (preparedData.therapyEvents.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTherapyEventTransaction(preparedData.therapyEvents))
+        if (therapyEvents.isNotEmpty())
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                 }
                 .blockingGet()
                 .also { result ->
-                    preparedData.therapyEvents.clear()
+                    therapyEvents.clear()
                     result.inserted.forEach { therapyEvent ->
                         val action = when (therapyEvent.type) {
                             TherapyEvent.Type.CANNULA_CHANGE -> UserEntry.Action.SITE_CHANGE
                             TherapyEvent.Type.INSULIN_CHANGE -> UserEntry.Action.RESERVOIR_CHANGE
                             else                             -> UserEntry.Action.CAREPORTAL
                         }
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 action, UserEntry.Sources.NSClient, therapyEvent.note ?: "",
@@ -443,7 +505,7 @@ class StoreDataForDb @Inject constructor(
                         inserted[NSTherapyEvent::class.java.simpleName] = (inserted[NSTherapyEvent::class.java.simpleName] ?: 0) + 1
                     }
                     result.invalidated.forEach { therapyEvent ->
-                        if (config.NSCLIENT.not()) preparedData.userEntries.add(
+                        if (config.NSCLIENT.not()) userEntries.add(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CAREPORTAL_REMOVED, UserEntry.Sources.NSClient, therapyEvent.note ?: "",
@@ -468,33 +530,33 @@ class StoreDataForDb @Inject constructor(
         sendLog("TherapyEvent", NSTherapyEvent::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        uel.log(preparedData.userEntries)
-        rxBus.send(EventNSClientNewLog("DONE", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+        uel.log(userEntries)
+        rxBus.send(EventNSClientNewLog("DONE TR", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
     }
 
     private fun sendLog(item: String, clazz: String) {
         inserted[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INSERTED", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("INSERT", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
         }
         inserted.remove(clazz)
         updated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("UPDATED", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("UPDATE", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
         }
         updated.remove(clazz)
         invalidated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INVALIDATED", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("INVALIDATE", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
         }
         invalidated.remove(clazz)
         nsIdUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("NS_UPDATED", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("NS_ID", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
         }
         nsIdUpdated.remove(clazz)
         durationUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("DUR_UPDATED", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("DURATION", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
         }
         durationUpdated.remove(clazz)
         ended[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("ENDED", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("CUT", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
         }
         ended.remove(clazz)
     }

@@ -90,14 +90,14 @@ class NSClientAddUpdateWorker(
             if (insulin > 0) {
                 if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                     bolusFromJson(json)?.let { bolus ->
-                        storeDataForDb.preparedData.boluses.add(bolus)
+                        storeDataForDb.boluses.add(bolus)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
             if (carbs > 0) {
                 if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                     carbsFromJson(json)?.let { carb ->
-                        storeDataForDb.preparedData.carbs.add(carb)
+                        storeDataForDb.carbs.add(carb)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
@@ -116,20 +116,20 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         temporaryTargetFromJson(json)?.let { temporaryTarget ->
-                            storeDataForDb.preparedData.temporaryTargets.add(temporaryTarget)
+                            storeDataForDb.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
 
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
-                            storeDataForDb.preparedData.effectiveProfileSwitches.add(effectiveProfileSwitch)
+                            storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
 
                 eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
                     bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
-                        storeDataForDb.preparedData.bolusCalculatorResults.add(bolusCalculatorResult)
+                        storeDataForDb.bolusCalculatorResults.add(bolusCalculatorResult)
                     } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
 
                 eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
@@ -144,7 +144,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
                     if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         therapyEventFromJson(json)?.let { therapyEvent ->
-                            storeDataForDb.preparedData.therapyEvents.add(therapyEvent)
+                            storeDataForDb.therapyEvents.add(therapyEvent)
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                     }
 
@@ -201,14 +201,14 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text                         ->
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         temporaryBasalFromJson(json)?.let { temporaryBasal ->
-                            storeDataForDb.preparedData.temporaryBasals.add(temporaryBasal)
+                            storeDataForDb.temporaryBasals.add(temporaryBasal)
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }
 
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
-                            storeDataForDb.preparedData.profileSwitches.add(profileSwitch)
+                            storeDataForDb.profileSwitches.add(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
 
@@ -273,7 +273,7 @@ class NSClientAddUpdateWorker(
                     }
                 }
         }
-        storeDataForDb.storeToDb()
+        storeDataForDb.storeTreatmentsToDb()
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
         xDripBroadcast.sendTreatments(treatments)
         return ret

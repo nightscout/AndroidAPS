@@ -28,17 +28,16 @@ import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
-import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
@@ -84,6 +83,11 @@ class NSClientV3Plugin @Inject constructor(
         .description(R.string.description_ns_client_v3),
     aapsLogger, rh, injector
 ) {
+
+    companion object {
+
+        val JOB_NAME: String = this::class.java.simpleName
+    }
 
     private val disposable = CompositeDisposable()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -284,7 +288,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     fun test() {
-        if (workIsRunning(arrayOf(LoadBgWorker.JOB_NAME, LoadTreatmentsWorker.JOB_NAME)))
+        if (workIsRunning(arrayOf(JOB_NAME)))
             rxBus.send(EventNSClientNewLog("RUN", "Already running", NsClient.Version.V3))
         else {
             rxBus.send(EventNSClientNewLog("RUN", "Starting next round", NsClient.Version.V3))

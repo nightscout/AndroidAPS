@@ -32,11 +32,6 @@ class LoadTreatmentsWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
-    companion object {
-
-        val JOB_NAME: String = this::class.java.simpleName
-    }
-
     override fun doWork(): Result {
         var ret = Result.success()
 
@@ -56,7 +51,7 @@ class LoadTreatmentsWorker(
                         // Schedule processing of fetched data and continue of loading
                         WorkManager.getInstance(context)
                             .beginUniqueWork(
-                                JOB_NAME,
+                                NSClientV3Plugin.JOB_NAME,
                                 ExistingWorkPolicy.APPEND_OR_REPLACE,
                                 OneTimeWorkRequest.Builder(ProcessTreatmentsWorker::class.java)
                                     .setInputData(dataWorkerStorage.storeInputData(treatments))
@@ -70,7 +65,7 @@ class LoadTreatmentsWorker(
                                 NsClient.Version.V3
                             )
                         )
-                        storeDataForDb.storeToDb()
+                        storeDataForDb.storeTreatmentsToDb()
                     }
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
@@ -78,7 +73,7 @@ class LoadTreatmentsWorker(
                 }
             else {
                 rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))
-                storeDataForDb.storeToDb()
+                storeDataForDb.storeTreatmentsToDb()
             }
         }
         return ret

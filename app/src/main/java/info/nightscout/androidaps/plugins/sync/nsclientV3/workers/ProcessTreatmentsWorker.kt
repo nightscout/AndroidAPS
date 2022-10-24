@@ -26,10 +26,10 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTherapyEv
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
-import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
+import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
@@ -76,15 +76,15 @@ class ProcessTreatmentsWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             when (treatment) {
-                is NSBolus ->
+                is NSBolus                  ->
                     if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
-                        storeDataForDb.preparedData.boluses.add(treatment.toBolus())
+                        storeDataForDb.boluses.add(treatment.toBolus())
 
-                is NSCarbs ->
+                is NSCarbs                  ->
                     if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
-                        storeDataForDb.preparedData.carbs.add(treatment.toCarbs())
+                        storeDataForDb.carbs.add(treatment.toCarbs())
 
-                is NSTemporaryTarget ->
+                is NSTemporaryTarget        ->
                     if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         if (treatment.duration > 0L) {
                             // not ending event
@@ -98,7 +98,7 @@ class ProcessTreatmentsWorker(
                                 continue
                             }
                         }
-                        storeDataForDb.preparedData.temporaryTargets.add(treatment.toTemporaryTarget())
+                        storeDataForDb.temporaryTargets.add(treatment.toTemporaryTarget())
                     }
                 /*
                 // Convert back emulated TBR -> EB
@@ -112,31 +112,32 @@ class ProcessTreatmentsWorker(
                     virtualPumpPlugin.fakeDataDetected = true
                 }
                 */
-                is NSTemporaryBasal ->
+                is NSTemporaryBasal         ->
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
-                        storeDataForDb.preparedData.temporaryBasals.add(treatment.toTemporaryBasal())
+                        storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
 
                 is NSEffectiveProfileSwitch ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
-                            storeDataForDb.preparedData.effectiveProfileSwitches.add(effectiveProfileSwitch)
+                            storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         }
                     }
 
-                is NSProfileSwitch ->
+                is NSProfileSwitch          ->
                     if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
-                            storeDataForDb.preparedData.profileSwitches.add(profileSwitch)
+                            storeDataForDb.profileSwitches.add(profileSwitch)
                         }
                     }
-                is NSBolusWizard ->
+
+                is NSBolusWizard            ->
                     treatment.toBolusCalculatorResult()?.let { bolusCalculatorResult ->
-                        storeDataForDb.preparedData.bolusCalculatorResults.add(bolusCalculatorResult)
+                        storeDataForDb.bolusCalculatorResults.add(bolusCalculatorResult)
                     }
 
-                is NSTherapyEvent ->
+                is NSTherapyEvent           ->
                     treatment.toTherapyEvent()?.let { therapyEvent ->
-                        storeDataForDb.preparedData.therapyEvents.add(therapyEvent)
+                        storeDataForDb.therapyEvents.add(therapyEvent)
                     }
             }
             /*

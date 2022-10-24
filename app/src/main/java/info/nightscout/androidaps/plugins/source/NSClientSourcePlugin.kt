@@ -20,6 +20,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -69,7 +70,7 @@ class NSClientSourcePlugin @Inject constructor(
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
 
-    private fun detectSource(glucoseValue: GlucoseValue) {
+    internal fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = arrayOf(
                 GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN,
@@ -98,6 +99,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var activePlugin: ActivePlugin
+        @Inject lateinit var storeDataForDb: StoreDataForDb
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -132,7 +134,6 @@ class NSClientSourcePlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             var ret = Result.success()
-            var processed = 0
             val sgvs = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
@@ -170,33 +171,11 @@ class NSClientSourcePlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
 
-                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
-                    .doOnError {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
-                        ret = Result.failure(workDataOf("Error" to it.toString()))
-                    }
-                    .blockingGet()
-                    .also { result ->
-                        result.updated.forEach {
-                            xDripBroadcast.send(it)
-                            nsClientSourcePlugin.detectSource(it)
-                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
-                            processed++
-                        }
-                        result.inserted.forEach {
-                            xDripBroadcast.send(it)
-                            nsClientSourcePlugin.detectSource(it)
-                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                            processed++
-                        }
-                        ret = Result.success(workDataOf("latestDateInReceivedData" to latestDateInReceivedData))
-                    }
+                storeDataForDb.glucoseValues.addAll(glucoseValues)
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
                 ret = Result.failure(workDataOf("Error" to e.toString()))
             }
-            if (processed > 0)
-                rxBus.send(EventNSClientNewLog("PROCESSED", "GlucoseValue $processed", if (sgvs is List<*>) NsClient.Version.V3 else NsClient.Version.V1))
             return ret
         }
     }

@@ -12,6 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
+import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -65,11 +66,14 @@ class LoadBgWorker(
                         ).then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build()).enqueue()
                     } else {
                         rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
-                        WorkManager.getInstance(context).enqueueUniqueWork(
-                            LoadTreatmentsWorker.JOB_NAME,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
-                            OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build()
-                        )
+                        WorkManager.getInstance(context)
+                            .beginUniqueWork(
+                                NSClientV3Plugin.JOB_NAME,
+                                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                                OneTimeWorkRequest.Builder(StoreDataForDb.StoreBgWorker::class.java).build()
+                            )
+                            .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                            .enqueue()
                     }
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
@@ -77,11 +81,14 @@ class LoadBgWorker(
                 }
             else {
                 rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
-                WorkManager.getInstance(context).enqueueUniqueWork(
-                    LoadTreatmentsWorker.JOB_NAME,
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build()
-                )
+                WorkManager.getInstance(context)
+                    .beginUniqueWork(
+                        NSClientV3Plugin.JOB_NAME,
+                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.Builder(StoreDataForDb.StoreBgWorker::class.java).build()
+                    )
+                    .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                    .enqueue()
             }
         }
         return ret
