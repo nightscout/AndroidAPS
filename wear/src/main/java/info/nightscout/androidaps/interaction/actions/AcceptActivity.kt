@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.os.Vibrator
-import android.support.wearable.view.GridPagerAdapter
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -21,6 +20,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
 import info.nightscout.androidaps.comm.IntentCancelNotification
 import info.nightscout.androidaps.comm.IntentWearToMobile
+import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
 import kotlin.math.roundToInt
 
 class AcceptActivity : ViewSelectorActivity() {
@@ -51,7 +51,7 @@ class AcceptActivity : ViewSelectorActivity() {
         finish()
     }
 
-    private inner class MyGridViewPagerAdapter : GridPagerAdapter() {
+    private inner class MyGridViewPagerAdapter : GridPagerAdapterNonDeprecated() {
 
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1

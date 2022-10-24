@@ -407,6 +407,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             binding.mainPager.currentItem = 0
             return
         }
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 
