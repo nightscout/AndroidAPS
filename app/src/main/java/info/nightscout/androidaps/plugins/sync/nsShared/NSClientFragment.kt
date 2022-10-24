@@ -16,6 +16,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -23,8 +24,8 @@ import info.nightscout.androidaps.interfaces.PluginFragment
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -45,6 +46,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var activePlugin: ActivePlugin
 
     companion object {
 
@@ -56,7 +58,9 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     }
 
     override var plugin: PluginBase? = null
-    private val version: NsClient.Version get() = (plugin as NsClient?)?.version ?: NsClient.Version.NONE
+    private val nsClientPlugin
+        get() = activePlugin.activeNsClient
+    private val version: NsClient.Version get() = nsClientPlugin?.version ?: NsClient.Version.NONE
 
     private val disposable = CompositeDisposable()
 
@@ -85,7 +89,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
         binding.paused.isChecked = sp.getBoolean(R.string.key_nsclientinternal_paused, false)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
             uel.log(if (isChecked) UserEntry.Action.NS_PAUSED else UserEntry.Action.NS_RESUME, UserEntry.Sources.NSClient)
-            (plugin as NsClient?)?.pause(isChecked)
+            nsClientPlugin?.pause(isChecked)
             updateGui()
         }
     }
@@ -102,7 +106,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override fun onMenuItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             ID_MENU_CLEAR_LOG -> {
-                (plugin as NsClient?)?.clearLog()
+                nsClientPlugin?.clearLog()
                 true
             }
 
@@ -112,7 +116,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             }
 
             ID_MENU_SEND_NOW  -> {
-                (plugin as NsClient?)?.resend("GUI")
+                nsClientPlugin?.resend("GUI")
                 true
             }
 
@@ -120,7 +124,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                 context?.let { context ->
                     OKDialog.showConfirmation(
                         context, rh.gs(R.string.nsclientinternal), rh.gs(R.string.full_sync_comment),
-                        Runnable { (plugin as NsClient?)?.resetToFullSync() }
+                        Runnable { nsClientPlugin?.resetToFullSync() }
                     )
                 }
                 true
@@ -150,12 +154,11 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     private fun updateGui() {
         if (_binding == null) return
-        val nsClient = plugin as NsClient? ?: return
         binding.paused.isChecked = sp.getBoolean(R.string.key_nsclientinternal_paused, false)
-        binding.log.text = nsClient.textLog()
+        binding.log.text = nsClientPlugin?.textLog()
         if (sp.getBoolean(R.string.key_nsclientinternal_autoscroll, true)) binding.logScrollview.fullScroll(ScrollView.FOCUS_DOWN)
-        binding.url.text = nsClient.address
-        binding.status.text = nsClient.status
+        binding.url.text = nsClientPlugin?.address
+        binding.status.text = nsClientPlugin?.status
         val size = dataSyncSelector.queueSize()
         binding.queue.text = if (size >= 0) size.toString() else rh.gs(R.string.notavailable)
     }

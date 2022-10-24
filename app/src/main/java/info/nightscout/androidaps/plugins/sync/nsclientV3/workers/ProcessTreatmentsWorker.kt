@@ -136,7 +136,7 @@ class ProcessTreatmentsWorker(
                     }
 
                 is NSTherapyEvent           ->
-                    treatment.toTherapyEvent()?.let { therapyEvent ->
+                    treatment.toTherapyEvent().let { therapyEvent ->
                         storeDataForDb.therapyEvents.add(therapyEvent)
                     }
             }

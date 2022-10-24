@@ -215,6 +215,8 @@ class MainApp : DaggerApplication() {
             }
             sp.remove("ns_charginonly")
         }
+        if (!sp.contains(R.string.key_ns_logappstartedevent))
+            sp.putBoolean(R.string.key_ns_logappstartedevent, config.APS)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

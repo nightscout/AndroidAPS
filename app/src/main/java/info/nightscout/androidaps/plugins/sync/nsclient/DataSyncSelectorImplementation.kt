@@ -97,30 +97,10 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override fun resetToNextFullSync() {
-        appRepository.getLastGlucoseValueIdWrapped().blockingGet().run {
-            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
-            sp.putLong(R.string.key_ns_glucose_value_new_data_id, currentLast)
-        }
         sp.remove(R.string.key_ns_glucose_value_last_synced_id)
-
-        appRepository.getLastTemporaryBasalIdWrapped().blockingGet().run {
-            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
-            sp.putLong(R.string.key_ns_temporary_basal_new_data_id, currentLast)
-        }
         sp.remove(R.string.key_ns_temporary_basal_last_synced_id)
-
-        appRepository.getLastTempTargetIdWrapped().blockingGet().run {
-            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
-            sp.putLong(R.string.key_ns_temporary_target_new_data_id, currentLast)
-        }
         sp.remove(R.string.key_ns_temporary_target_last_synced_id)
-
-        appRepository.getLastExtendedBolusIdWrapped().blockingGet().run {
-            val currentLast = if (this is ValueWrapper.Existing) this.value else 0L
-            sp.putLong(R.string.key_ns_extended_bolus_new_data_id, currentLast)
-        }
         sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
-
         sp.remove(R.string.key_ns_food_last_synced_id)
         sp.remove(R.string.key_ns_bolus_last_synced_id)
         sp.remove(R.string.key_ns_carbs_last_synced_id)
@@ -138,7 +118,7 @@ class DataSyncSelectorImplementation @Inject constructor(
 
     override fun confirmLastBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting Bolus data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting Bolus data sync from $lastSynced")
             sp.putLong(R.string.key_ns_bolus_last_synced_id, lastSynced)
         }
     }
@@ -154,9 +134,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             }
     }
 
-    //private var lastBolusId = -1L
-    //private var lastBolusTime = -1L
-    override fun processChangedBolusesCompat(): Boolean {
+    override tailrec fun processChangedBolusesCompat() {
         val lastDbIdWrapped = appRepository.getLastBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
@@ -164,26 +142,34 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_bolus_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastBolusId && dateUtil.now() - lastBolusTime < 5000) return false
-        //lastBolusId = startId
-        //lastBolusTime = dateUtil.now()
         queueCounter.bolusesRemaining = lastDbId - startId
         appRepository.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
             aapsLogger.info(LTag.NSCLIENT, "Loading Bolus data Start: $startId ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
             when {
-                // only NsId changed, no need to upload
-                bolus.first.onlyNsIdAdded(bolus.second)       -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                bolus.first.id == bolus.second.id && bolus.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Loaded from NS: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
                     confirmLastBolusIdIfGreater(bolus.second.id)
-                    //lastBolusId = -1
                     processChangedBolusesCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                bolus.first.onlyNsIdAdded(bolus.second)                                            -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Only NS id changed ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
-                    return false
+                    confirmLastBolusIdIfGreater(bolus.second.id)
+                    processChangedBolusesCompat()
+                    return
                 }
                 // without nsId = create new
-                bolus.first.interfaceIDs.nightscoutId == null ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", bolus.first.toJson(true, dateUtil), DataSyncSelector.PairBolus(bolus.first, bolus.second.id), " $startId/$lastDbId")
-                // with nsId = update
-                bolus.first.interfaceIDs.nightscoutId != null ->
+                bolus.first.interfaceIDs.nightscoutId == null                                      ->
+                    activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                        "treatments",
+                        bolus.first.toJson(true, dateUtil),
+                        DataSyncSelector.PairBolus(bolus.first, bolus.second.id),
+                        " $startId/$lastDbId"
+                    )
+                // with nsId = update if it's modified record
+                bolus.first.interfaceIDs.nightscoutId != null && bolus.first.id != bolus.second.id ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         bolus.first.interfaceIDs.nightscoutId,
@@ -192,14 +178,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting Carbs data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting Carbs data sync from $lastSynced")
             sp.putLong(R.string.key_ns_carbs_last_synced_id, lastSynced)
         }
     }
@@ -212,9 +197,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastCarbsId = -1L
-    //private var lastCarbsTime = -1L
-    override fun processChangedCarbsCompat(): Boolean {
+    override tailrec fun processChangedCarbsCompat() {
         val lastDbIdWrapped = appRepository.getLastCarbsIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
@@ -222,26 +205,29 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_carbs_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastCarbsId && dateUtil.now() - lastCarbsTime < 5000) return false
-        //lastCarbsId = startId
-        //lastCarbsTime = dateUtil.now()
         queueCounter.carbsRemaining = lastDbId - startId
         appRepository.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
             aapsLogger.info(LTag.NSCLIENT, "Loading Carbs data Start: $startId ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
             when {
-                // only NsId changed, no need to upload
-                carb.first.onlyNsIdAdded(carb.second)        -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                carb.first.id == carb.second.id && carb.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Loaded from NS: ${carb.first.id} HistoryID: ${carb.second.id} ")
                     confirmLastCarbsIdIfGreater(carb.second.id)
-                    //lastCarbsId = -1
                     processChangedCarbsCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                carb.first.onlyNsIdAdded(carb.second)                                           -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Only NS id changed ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
-                    return false
+                    confirmLastCarbsIdIfGreater(carb.second.id)
+                    processChangedCarbsCompat()
+                    return
                 }
                 // without nsId = create new
-                carb.first.interfaceIDs.nightscoutId == null ->
+                carb.first.interfaceIDs.nightscoutId == null                                    ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", carb.first.toJson(true, dateUtil), DataSyncSelector.PairCarbs(carb.first, carb.second.id), "$startId/$lastDbId")
-                // with nsId = update
-                carb.first.interfaceIDs.nightscoutId != null ->
+                // with nsId = update if it's modified record
+                carb.first.interfaceIDs.nightscoutId != null && carb.first.id != carb.second.id ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         carb.first.interfaceIDs.nightscoutId,
@@ -250,14 +236,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting BolusCalculatorResult data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting BolusCalculatorResult data sync from $lastSynced")
             sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, lastSynced)
         }
     }
@@ -270,9 +255,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastBcrId = -1L
-    //private var lastBcrTime = -1L
-    override fun processChangedBolusCalculatorResultsCompat(): Boolean {
+    override tailrec fun processChangedBolusCalculatorResultsCompat() {
         val lastDbIdWrapped = appRepository.getLastBolusCalculatorResultIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
@@ -280,44 +263,46 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastBcrId && dateUtil.now() - lastBcrTime < 5000) return false
-        //lastBcrId = startId
-        //lastBcrTime = dateUtil.now()
         queueCounter.bcrRemaining = lastDbId - startId
         appRepository.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
             aapsLogger.info(LTag.NSCLIENT, "Loading BolusCalculatorResult data Start: $startId ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
             when {
-                // only NsId changed, no need to upload
-                bolusCalculatorResult.first.onlyNsIdAdded(bolusCalculatorResult.second) -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                bolusCalculatorResult.first.id == bolusCalculatorResult.second.id && bolusCalculatorResult.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Loaded from NS: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
                     confirmLastBolusCalculatorResultsIdIfGreater(bolusCalculatorResult.second.id)
-                    //lastBcrId = -1
                     processChangedBolusCalculatorResultsCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                bolusCalculatorResult.first.onlyNsIdAdded(bolusCalculatorResult.second)                                                            -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Only NS id changed ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
-                    return false
+                    confirmLastBolusCalculatorResultsIdIfGreater(bolusCalculatorResult.second.id)
+                    processChangedBolusCalculatorResultsCompat()
+                    return
                 }
                 // without nsId = create new
-                bolusCalculatorResult.first.interfaceIDs.nightscoutId == null           ->
+                bolusCalculatorResult.first.interfaceIDs.nightscoutId == null                                                                      ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd(
                         "treatments",
                         bolusCalculatorResult.first.toJson(true, dateUtil, profileFunction),
                         DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id),
                         "$startId/$lastDbId"
                     )
-                // with nsId = update
-                bolusCalculatorResult.first.interfaceIDs.nightscoutId != null           ->
+                // with nsId = update if it's modified record
+                bolusCalculatorResult.first.interfaceIDs.nightscoutId != null && bolusCalculatorResult.first.id != bolusCalculatorResult.second.id ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments", bolusCalculatorResult.first.interfaceIDs.nightscoutId, bolusCalculatorResult.first.toJson(false, dateUtil, profileFunction),
                         DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id), "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryTarget data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryTarget data sync from $lastSynced")
             sp.putLong(R.string.key_ns_temporary_target_last_synced_id, lastSynced)
         }
     }
@@ -330,9 +315,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastTtId = -1L
-    //private var lastTtTime = -1L
-    override fun processChangedTempTargetsCompat(): Boolean {
+    override tailrec fun processChangedTempTargetsCompat() {
         val lastDbIdWrapped = appRepository.getLastTempTargetIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
@@ -340,31 +323,26 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_temporary_target_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastTtId && dateUtil.now() - lastTtTime < 5000) return false
-        //lastTtId = startId
-        //lastTtTime = dateUtil.now()
         queueCounter.ttsRemaining = lastDbId - startId
         appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
             aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryTarget data Start: $startId ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
             when {
-                // record is not valid record and we are within first sync, no need to upload
-                tt.first.id != tt.second.id && tt.second.id <= sp.getLong(R.string.key_ns_temporary_target_new_data_id, 0) -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                tt.first.id == tt.second.id && tt.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Loaded from NS: ${tt.first.id} HistoryID: ${tt.second.id} ")
                     confirmLastTempTargetsIdIfGreater(tt.second.id)
-                    //lastTbrId = -1
                     processChangedTempTargetsCompat()
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Change within first sync ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
-                    return false
+                    return
                 }
                 // only NsId changed, no need to upload
-                tt.first.onlyNsIdAdded(tt.second)          -> {
-                    confirmLastTempTargetsIdIfGreater(tt.second.id)
-                    //lastTtId = -1
-                    processChangedTempTargetsCompat()
+                tt.first.onlyNsIdAdded(tt.second)                                         -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
-                    return false
+                    confirmLastTempTargetsIdIfGreater(tt.second.id)
+                    processChangedTempTargetsCompat()
+                    return
                 }
                 // without nsId = create new
-                tt.first.interfaceIDs.nightscoutId == null ->
+                tt.first.interfaceIDs.nightscoutId == null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd(
                         "treatments",
                         tt.first.toJson(true, profileFunction.getUnits(), dateUtil),
@@ -372,7 +350,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
                 // existing with nsId = update
-                tt.first.interfaceIDs.nightscoutId != null ->
+                tt.first.interfaceIDs.nightscoutId != null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         tt.first.interfaceIDs.nightscoutId,
@@ -381,14 +359,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastFoodIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_food_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting Food data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting Food data sync from $lastSynced")
             sp.putLong(R.string.key_ns_food_last_synced_id, lastSynced)
         }
     }
@@ -401,9 +378,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastFoodId = -1L
-    //private var lastFoodTime = -1L
-    override fun processChangedFoodsCompat(): Boolean {
+    override tailrec fun processChangedFoodsCompat() {
         val lastDbIdWrapped = appRepository.getLastFoodIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_food_last_synced_id, 0)
@@ -411,26 +386,29 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_food_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastFoodId && dateUtil.now() - lastFoodTime < 5000) return false
-        //lastFoodId = startId
-        //lastFoodTime = dateUtil.now()
         queueCounter.foodsRemaining = lastDbId - startId
         appRepository.getNextSyncElementFood(startId).blockingGet()?.let { food ->
             aapsLogger.info(LTag.NSCLIENT, "Loading Food data Start: $startId ID: ${food.first.id} HistoryID: ${food.second} ")
             when {
-                // only NsId changed, no need to upload
-                food.first.onlyNsIdAdded(food.second)        -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                food.first.id == food.second.id && food.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Loaded from NS: ${food.first.id} HistoryID: ${food.second.id} ")
                     confirmLastFoodIdIfGreater(food.second.id)
-                    //lastFoodId = -1
                     processChangedFoodsCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                food.first.onlyNsIdAdded(food.second)                                           -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Only NS id changed ID: ${food.first.id} HistoryID: ${food.second.id} ")
-                    return false
+                    confirmLastFoodIdIfGreater(food.second.id)
+                    processChangedFoodsCompat()
+                    return
                 }
                 // without nsId = create new
-                food.first.interfaceIDs.nightscoutId == null ->
+                food.first.interfaceIDs.nightscoutId == null                                    ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd("food", food.first.toJson(true), DataSyncSelector.PairFood(food.first, food.second.id), "$startId/$lastDbId")
                 // with nsId = update
-                food.first.interfaceIDs.nightscoutId != null ->
+                food.first.interfaceIDs.nightscoutId != null                                    ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "food",
                         food.first.interfaceIDs.nightscoutId,
@@ -439,14 +417,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting GlucoseValue data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting GlucoseValue data sync from $lastSynced")
             sp.putLong(R.string.key_ns_glucose_value_last_synced_id, lastSynced)
         }
     }
@@ -459,8 +436,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastGvId = -1L
-    //private var lastGvTime = -1L
     override tailrec fun processChangedGlucoseValuesCompat() {
         val lastDbIdWrapped = appRepository.getLastGlucoseValueIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -469,34 +444,30 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_glucose_value_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastGvId && dateUtil.now() - lastGvTime < 5000) return false
-        //lastGvId = startId
-        //lastGvTime = dateUtil.now()
         queueCounter.gvsRemaining = lastDbId - startId
-        var tailCall = false
         appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
             aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
             if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
                 when {
-                    // record is not valid record and we are within first sync, no need to upload
-                    gv.first.id != gv.second.id && gv.second.id <= sp.getLong(R.string.key_ns_glucose_value_new_data_id, 0) -> {
+                    // new record with existing NS id => must be coming from NS => ignore 
+                    gv.first.id == gv.second.id && gv.first.interfaceIDs.nightscoutId != null -> {
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Loaded from NS: ${gv.first.id} HistoryID: ${gv.second.id} ")
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
-                        //lastGvId = -1
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Change within first sync ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
-                        tailCall = true
+                        processChangedGlucoseValuesCompat()
+                        return
                     }
                     // only NsId changed, no need to upload
-                    gv.first.onlyNsIdAdded(gv.second)          -> {
-                        confirmLastGlucoseValueIdIfGreater(gv.second.id)
-                        //lastGvId = -1
+                    gv.first.onlyNsIdAdded(gv.second)                                         -> {
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
-                        tailCall = true
+                        confirmLastGlucoseValueIdIfGreater(gv.second.id)
+                        processChangedGlucoseValuesCompat()
+                        return
                     }
                     // without nsId = create new
-                    gv.first.interfaceIDs.nightscoutId == null ->
+                    gv.first.interfaceIDs.nightscoutId == null                                ->
                         activePlugin.activeNsClient?.nsClientService?.dbAdd("entries", gv.first.toJson(true, dateUtil), DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id), "$startId/$lastDbId")
                     // with nsId = update
-                    else ->  //  gv.first.interfaceIDs.nightscoutId != null
+                    else                                                                      ->  //  gv.first.interfaceIDs.nightscoutId != null
                         activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                             "entries",
                             gv.first.interfaceIDs.nightscoutId,
@@ -507,18 +478,15 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
             } else {
                 confirmLastGlucoseValueIdIfGreater(gv.second.id)
-                //lastGvId = -1
-                tailCall = true
+                processChangedGlucoseValuesCompat()
+                return
             }
-        }
-        if (tailCall) {
-            processChangedGlucoseValuesCompat()
         }
     }
 
     override fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting TherapyEvents data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting TherapyEvents data sync from $lastSynced")
             sp.putLong(R.string.key_ns_therapy_event_last_synced_id, lastSynced)
         }
     }
@@ -531,9 +499,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastTeId = -1L
-    //private var lastTeTime = -1L
-    override fun processChangedTherapyEventsCompat(): Boolean {
+    override tailrec fun processChangedTherapyEventsCompat() {
         val lastDbIdWrapped = appRepository.getLastTherapyEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
@@ -541,26 +507,29 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_therapy_event_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastTeId && dateUtil.now() - lastTeTime < 5000) return false
-        //lastTeId = startId
-        //lastTeTime = dateUtil.now()
         queueCounter.tesRemaining = lastDbId - startId
         appRepository.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
             aapsLogger.info(LTag.NSCLIENT, "Loading TherapyEvents data Start: $startId ID: ${te.first.id} HistoryID: ${te.second} ")
             when {
-                // only NsId changed, no need to upload
-                te.first.onlyNsIdAdded(te.second)          -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                te.first.id == te.second.id && te.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Loaded from NS: ${te.first.id} HistoryID: ${te.second.id} ")
                     confirmLastTherapyEventIdIfGreater(te.second.id)
-                    //lastTeId = -1
                     processChangedTherapyEventsCompat()
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvents. Only NS id changed ID: ${te.first.id} HistoryID: ${te.second.id} ")
-                    return false
+                    return
+                }
+                // only NsId changed, no need to upload
+                te.first.onlyNsIdAdded(te.second)                                         -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Only NS id changed ID: ${te.first.id} HistoryID: ${te.second.id} ")
+                    confirmLastTherapyEventIdIfGreater(te.second.id)
+                    processChangedTherapyEventsCompat()
+                    return
                 }
                 // without nsId = create new
-                te.first.interfaceIDs.nightscoutId == null ->
+                te.first.interfaceIDs.nightscoutId == null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", te.first.toJson(true, dateUtil), DataSyncSelector.PairTherapyEvent(te.first, te.second.id), "$startId/$lastDbId")
                 // nsId = update
-                te.first.interfaceIDs.nightscoutId != null ->
+                te.first.interfaceIDs.nightscoutId != null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         te.first.interfaceIDs.nightscoutId,
@@ -569,14 +538,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting DeviceStatus data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting DeviceStatus data sync from $lastSynced")
             sp.putLong(R.string.key_ns_device_status_last_synced_id, lastSynced)
         }
     }
@@ -588,9 +556,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastDsId = -1L
-    //private var lastDsTime = -1L
-    override fun processChangedDeviceStatusesCompat(): Boolean {
+    override fun processChangedDeviceStatusesCompat() {
         val lastDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
@@ -598,9 +564,6 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_device_status_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastDsId && dateUtil.now() - lastDsTime < 5000) return false
-        //lastDsId = startId
-        //lastDsTime = dateUtil.now()
         queueCounter.dssRemaining = lastDbId - startId
         appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
             aapsLogger.info(LTag.NSCLIENT, "Loading DeviceStatus data Start: $startId ID: ${deviceStatus.id}")
@@ -611,14 +574,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                 // with nsId = ignore
                 deviceStatus.interfaceIDs.nightscoutId != null -> Any()
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryBasal data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryBasal data sync from $lastSynced")
             sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, lastSynced)
         }
     }
@@ -631,9 +593,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastTbrId = -1L
-    //private var lastTbrTime = -1L
-    override fun processChangedTemporaryBasalsCompat(): Boolean {
+    override tailrec fun processChangedTemporaryBasalsCompat() {
         val lastDbIdWrapped = appRepository.getLastTemporaryBasalIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
@@ -641,33 +601,28 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastTbrId && dateUtil.now() - lastTbrTime < 5000) return false
-        //lastTbrId = startId
-        //lastTbrTime = dateUtil.now()
         queueCounter.tbrsRemaining = lastDbId - startId
         appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
             aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ID: ${tb.first.id} HistoryID: ${tb.second} ")
             val profile = profileFunction.getProfile(tb.first.timestamp)
             if (profile != null) {
                 when {
-                    // record is not valid record and we are within first sync, no need to upload
-                    tb.first.id != tb.second.id && tb.second.id <= sp.getLong(R.string.key_ns_temporary_basal_new_data_id, 0) -> {
+                    // new record with existing NS id => must be coming from NS => ignore
+                    tb.first.id == tb.second.id && tb.first.interfaceIDs.nightscoutId != null -> {
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Loaded from NS: ${tb.first.id} HistoryID: ${tb.second.id} ")
                         confirmLastTemporaryBasalIdIfGreater(tb.second.id)
-                        //lastTbrId = -1
                         processChangedTemporaryBasalsCompat()
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Change within first sync ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
-                        return false
+                        return
                     }
                     // only NsId changed, no need to upload
-                    tb.first.onlyNsIdAdded(tb.second)          -> {
-                        confirmLastTemporaryBasalIdIfGreater(tb.second.id)
-                        //lastTbrId = -1
-                        processChangedTemporaryBasalsCompat()
+                    tb.first.onlyNsIdAdded(tb.second)                                         -> {
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
-                        return false
+                        confirmLastTemporaryBasalIdIfGreater(tb.second.id)
+                        processChangedTemporaryBasalsCompat()
+                        return
                     }
                     // without nsId = create new
-                    tb.first.interfaceIDs.nightscoutId == null ->
+                    tb.first.interfaceIDs.nightscoutId == null                                ->
                         activePlugin.activeNsClient?.nsClientService?.dbAdd(
                             "treatments",
                             tb.first.toJson(true, profile, dateUtil),
@@ -675,7 +630,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                             "$startId/$lastDbId"
                         )
                     // with nsId = update
-                    tb.first.interfaceIDs.nightscoutId != null ->
+                    tb.first.interfaceIDs.nightscoutId != null                                ->
                         activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                             "treatments",
                             tb.first.interfaceIDs.nightscoutId,
@@ -684,19 +639,19 @@ class DataSyncSelectorImplementation @Inject constructor(
                             "$startId/$lastDbId"
                         )
                 }
-                return true
+                return
             } else {
+                aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. No profile: ${tb.first.id} HistoryID: ${tb.second.id} ")
                 confirmLastTemporaryBasalIdIfGreater(tb.second.id)
-                //lastTbrId = -1
                 processChangedTemporaryBasalsCompat()
+                return
             }
         }
-        return false
     }
 
     override fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting ExtendedBolus data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting ExtendedBolus data sync from $lastSynced")
             sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, lastSynced)
         }
     }
@@ -709,9 +664,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastEbId = -1L
-    //private var lastEbTime = -1L
-    override fun processChangedExtendedBolusesCompat(): Boolean {
+    override tailrec fun processChangedExtendedBolusesCompat() {
         val lastDbIdWrapped = appRepository.getLastExtendedBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
@@ -719,33 +672,28 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastEbId && dateUtil.now() - lastEbTime < 5000) return false
-        //lastEbId = startId
-        //lastEbTime = dateUtil.now()
         queueCounter.ebsRemaining = lastDbId - startId
         appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
             aapsLogger.info(LTag.NSCLIENT, "Loading ExtendedBolus data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
             val profile = profileFunction.getProfile(eb.first.timestamp)
             if (profile != null) {
                 when {
-                    // record is not valid record and we are within first sync, no need to upload
-                    eb.first.id != eb.second.id && eb.second.id <= sp.getLong(R.string.key_ns_extended_bolus_new_data_id, 0) -> {
+                    // new record with existing NS id => must be coming from NS => ignore
+                    eb.first.id == eb.second.id && eb.first.interfaceIDs.nightscoutId != null -> {
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Loaded from NS: ${eb.first.id} HistoryID: ${eb.second.id} ")
                         confirmLastExtendedBolusIdIfGreater(eb.second.id)
-                        //lastTbrId = -1
                         processChangedExtendedBolusesCompat()
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Change within first sync ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
-                        return false
+                        return
                     }
                     // only NsId changed, no need to upload
-                    eb.first.onlyNsIdAdded(eb.second)          -> {
-                        confirmLastExtendedBolusIdIfGreater(eb.second.id)
-                        //lastEbId = -1
-                        processChangedExtendedBolusesCompat()
+                    eb.first.onlyNsIdAdded(eb.second)                                         -> {
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Only NS id changed ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
-                        return false
+                        confirmLastExtendedBolusIdIfGreater(eb.second.id)
+                        processChangedExtendedBolusesCompat()
+                        return
                     }
                     // without nsId = create new
-                    eb.first.interfaceIDs.nightscoutId == null ->
+                    eb.first.interfaceIDs.nightscoutId == null                                ->
                         activePlugin.activeNsClient?.nsClientService?.dbAdd(
                             "treatments",
                             eb.first.toJson(true, profile, dateUtil),
@@ -753,7 +701,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                             "$startId/$lastDbId"
                         )
                     // with nsId = update
-                    eb.first.interfaceIDs.nightscoutId != null ->
+                    eb.first.interfaceIDs.nightscoutId != null                                ->
                         activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                             "treatments",
                             eb.first.interfaceIDs.nightscoutId,
@@ -762,19 +710,19 @@ class DataSyncSelectorImplementation @Inject constructor(
                             "$startId/$lastDbId"
                         )
                 }
-                return true
+                return
             } else {
+                aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. No profile: ${eb.first.id} HistoryID: ${eb.second.id} ")
                 confirmLastExtendedBolusIdIfGreater(eb.second.id)
-                //lastEbId = -1
                 processChangedExtendedBolusesCompat()
+                return
             }
         }
-        return false
     }
 
     override fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting ProfileSwitch data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting ProfileSwitch data sync from $lastSynced")
             sp.putLong(R.string.key_ns_profile_switch_last_synced_id, lastSynced)
         }
     }
@@ -786,9 +734,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastPsId = -1L
-    //private var lastPsTime = -1L
-    override fun processChangedProfileSwitchesCompat(): Boolean {
+    override tailrec fun processChangedProfileSwitchesCompat() {
         val lastDbIdWrapped = appRepository.getLastProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
@@ -796,26 +742,29 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_profile_switch_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastPsId && dateUtil.now() - lastPsTime < 5000) return false
-        //lastPsId = startId
-        //lastPsTime = dateUtil.now()
         queueCounter.pssRemaining = lastDbId - startId
         appRepository.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { ps ->
             aapsLogger.info(LTag.NSCLIENT, "Loading ProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
             when {
-                // only NsId changed, no need to upload
-                ps.first.onlyNsIdAdded(ps.second)          -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                ps.first.id == ps.second.id && ps.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Loaded from NS: ${ps.first.id} HistoryID: ${ps.second.id} ")
                     confirmLastProfileSwitchIdIfGreater(ps.second.id)
-                    //lastPsId = -1
                     processChangedProfileSwitchesCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                ps.first.onlyNsIdAdded(ps.second)                                         -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
-                    return false
+                    confirmLastProfileSwitchIdIfGreater(ps.second.id)
+                    processChangedProfileSwitchesCompat()
+                    return
                 }
                 // without nsId = create new
-                ps.first.interfaceIDs.nightscoutId == null ->
+                ps.first.interfaceIDs.nightscoutId == null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", ps.first.toJson(true, dateUtil), DataSyncSelector.PairProfileSwitch(ps.first, ps.second.id), "$startId/$lastDbId")
                 // with nsId = update
-                ps.first.interfaceIDs.nightscoutId != null ->
+                ps.first.interfaceIDs.nightscoutId != null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         ps.first.interfaceIDs.nightscoutId,
@@ -824,14 +773,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting EffectiveProfileSwitch data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting EffectiveProfileSwitch data sync from $lastSynced")
             sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, lastSynced)
         }
     }
@@ -843,9 +791,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastEpsId = -1L
-    //private var lastEpsTime = -1L
-    override fun processChangedEffectiveProfileSwitchesCompat(): Boolean {
+    override tailrec fun processChangedEffectiveProfileSwitchesCompat() {
         val lastDbIdWrapped = appRepository.getLastEffectiveProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
@@ -853,26 +799,34 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastEpsId && dateUtil.now() - lastEpsTime < 5000) return false
-        //lastEpsId = startId
-        //lastEpsTime = dateUtil.now()
         queueCounter.epssRemaining = lastDbId - startId
         appRepository.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
             aapsLogger.info(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
             when {
-                // only NsId changed, no need to upload
-                ps.first.onlyNsIdAdded(ps.second)          -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                ps.first.id == ps.second.id && ps.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Loaded from NS: ${ps.first.id} HistoryID: ${ps.second.id} ")
                     confirmLastEffectiveProfileSwitchIdIfGreater(ps.second.id)
-                    //lastEpsId = -1
                     processChangedEffectiveProfileSwitchesCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                ps.first.onlyNsIdAdded(ps.second)                                         -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
-                    return false
+                    confirmLastEffectiveProfileSwitchIdIfGreater(ps.second.id)
+                    processChangedEffectiveProfileSwitchesCompat()
+                    return
                 }
                 // without nsId = create new
-                ps.first.interfaceIDs.nightscoutId == null ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", ps.first.toJson(true, dateUtil), DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second.id), "$startId/$lastDbId")
+                ps.first.interfaceIDs.nightscoutId == null                                ->
+                    activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                        "treatments",
+                        ps.first.toJson(true, dateUtil),
+                        DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second.id),
+                        "$startId/$lastDbId"
+                    )
                 // with nsId = update
-                ps.first.interfaceIDs.nightscoutId != null ->
+                ps.first.interfaceIDs.nightscoutId != null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         ps.first.interfaceIDs.nightscoutId,
@@ -881,14 +835,13 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Setting OfflineEvent data sync from $lastSynced")
+            //aapsLogger.debug(LTag.NSCLIENT, "Setting OfflineEvent data sync from $lastSynced")
             sp.putLong(R.string.key_ns_offline_event_last_synced_id, lastSynced)
         }
     }
@@ -901,9 +854,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    //private var lastOeId = -1L
-    //private var lastOeTime = -1L
-    override fun processChangedOfflineEventsCompat(): Boolean {
+    override tailrec fun processChangedOfflineEventsCompat() {
         val lastDbIdWrapped = appRepository.getLastOfflineEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
@@ -911,26 +862,29 @@ class DataSyncSelectorImplementation @Inject constructor(
             sp.putLong(R.string.key_ns_offline_event_last_synced_id, 0)
             startId = 0
         }
-        //if (startId == lastOeId && dateUtil.now() - lastOeTime < 5000) return false
-        //lastOeId = startId
-        //lastOeTime = dateUtil.now()
         queueCounter.oesRemaining = lastDbId - startId
         appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
             aapsLogger.info(LTag.NSCLIENT, "Loading OfflineEvent data Start: $startId ID: ${oe.first.id} HistoryID: ${oe.second} ")
             when {
-                // only NsId changed, no need to upload
-                oe.first.onlyNsIdAdded(oe.second)          -> {
+                // new record with existing NS id => must be coming from NS => ignore
+                oe.first.id == oe.second.id && oe.first.interfaceIDs.nightscoutId != null -> {
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Loaded from NS: ${oe.first.id} HistoryID: ${oe.second.id} ")
                     confirmLastOfflineEventIdIfGreater(oe.second.id)
-                    //lastOeId = -1
                     processChangedOfflineEventsCompat()
+                    return
+                }
+                // only NsId changed, no need to upload
+                oe.first.onlyNsIdAdded(oe.second)                                         -> {
                     aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.first.id} HistoryID: ${oe.second.id} ")
-                    return false
+                    confirmLastOfflineEventIdIfGreater(oe.second.id)
+                    processChangedOfflineEventsCompat()
+                    return
                 }
                 // without nsId = create new
-                oe.first.interfaceIDs.nightscoutId == null ->
+                oe.first.interfaceIDs.nightscoutId == null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", oe.first.toJson(true, dateUtil), DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id), "$startId/$lastDbId")
                 // existing with nsId = update
-                oe.first.interfaceIDs.nightscoutId != null ->
+                oe.first.interfaceIDs.nightscoutId != null                                ->
                     activePlugin.activeNsClient?.nsClientService?.dbUpdate(
                         "treatments",
                         oe.first.interfaceIDs.nightscoutId,
@@ -939,9 +893,8 @@ class DataSyncSelectorImplementation @Inject constructor(
                         "$startId/$lastDbId"
                     )
             }
-            return true
+            return
         }
-        return false
     }
 
     override fun confirmLastProfileStore(lastSynced: Long) {

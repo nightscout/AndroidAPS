@@ -37,7 +37,7 @@ class NSClientMbgWorker(
             if (!nsMbg.isValid()) continue
             storeDataForDb.therapyEvents.add(therapyEventFromNsMbg(nsMbg))
         }
-        storeDataForDb.storeTreatmentsToDb()
+        // storeDataForDb.storeTreatmentsToDb() don't do this. It will be stored along with other treatments
         return ret
     }
 
