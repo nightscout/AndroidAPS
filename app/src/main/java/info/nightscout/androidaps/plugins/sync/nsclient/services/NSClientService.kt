@@ -208,7 +208,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         connectionStatus += ')'
         isConnected = true
         hasWriteAuth = ack.write && ack.writeTreatment
-        rxBus.send(EventNSClientStatus(connectionStatus))
+        rxBus.send(EventNSClientStatus(connectionStatus, NsClient.Version.V1))
         rxBus.send(EventNSClientNewLog("AUTH", connectionStatus, NsClient.Version.V1))
         if (!ack.write) {
             rxBus.send(EventNSClientNewLog("ERROR", "Write permission not granted ", NsClient.Version.V1))
@@ -239,19 +239,19 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         readPreferences()
         @Suppress("DEPRECATION")
         if (nsAPISecret != "") nsApiHashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString()
-        rxBus.send(EventNSClientStatus("Initializing"))
+        rxBus.send(EventNSClientStatus("Initializing", NsClient.Version.V1))
         if (!nsClientPlugin.isAllowed) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", nsClientPlugin.blockingReason, NsClient.Version.V1))
-            rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason))
+            rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason, NsClient.Version.V1))
         } else if (sp.getBoolean(R.string.key_nsclientinternal_paused, false)) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "paused", NsClient.Version.V1))
-            rxBus.send(EventNSClientStatus("Paused"))
+            rxBus.send(EventNSClientStatus("Paused", NsClient.Version.V1))
         } else if (!nsEnabled) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "disabled", NsClient.Version.V1))
-            rxBus.send(EventNSClientStatus("Disabled"))
+            rxBus.send(EventNSClientStatus("Disabled", NsClient.Version.V1))
         } else if (nsURL != "" && (buildHelper.isEngineeringMode() || nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
-                rxBus.send(EventNSClientStatus("Connecting ..."))
+                rxBus.send(EventNSClientStatus("Connecting ...", NsClient.Version.V1))
                 val opt = IO.Options()
                 opt.forceNew = true
                 opt.reconnection = true
@@ -272,17 +272,17 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                 }
             } catch (e: URISyntaxException) {
                 rxBus.send(EventNSClientNewLog("NSCLIENT", "Wrong URL syntax", NsClient.Version.V1))
-                rxBus.send(EventNSClientStatus("Wrong URL syntax"))
+                rxBus.send(EventNSClientStatus("Wrong URL syntax", NsClient.Version.V1))
             } catch (e: RuntimeException) {
                 rxBus.send(EventNSClientNewLog("NSCLIENT", "Wrong URL syntax", NsClient.Version.V1))
-                rxBus.send(EventNSClientStatus("Wrong URL syntax"))
+                rxBus.send(EventNSClientStatus("Wrong URL syntax", NsClient.Version.V1))
             }
         } else if (nsURL.lowercase(Locale.getDefault()).startsWith("http://")) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "NS URL not encrypted", NsClient.Version.V1))
-            rxBus.send(EventNSClientStatus("Not encrypted"))
+            rxBus.send(EventNSClientStatus("Not encrypted", NsClient.Version.V1))
         } else {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "No NS URL specified", NsClient.Version.V1))
-            rxBus.send(EventNSClientStatus("Not configured"))
+            rxBus.send(EventNSClientStatus("Not configured", NsClient.Version.V1))
         }
     }
 

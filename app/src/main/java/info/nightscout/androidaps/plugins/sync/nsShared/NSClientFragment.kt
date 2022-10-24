@@ -131,7 +131,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             }
 
             ID_MENU_TEST      -> {
-                plugin?.let { plugin -> if (plugin is NSClientV3Plugin) handler.post { plugin.test() } }
+                nsClientPlugin?.let { plugin -> if (plugin is NSClientV3Plugin) handler.post { plugin.test() } }
                 true
             }
 

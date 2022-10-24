@@ -83,8 +83,10 @@ class NSClientPlugin @Inject constructor(
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventNSClientStatus ->
-                           status = event.getStatus(rh)
-                           rxBus.send(EventNSClientUpdateGUI())
+                           if (event.version == NsClient.Version.V1) {
+                               status = event.getStatus(rh)
+                               rxBus.send(EventNSClientUpdateGUI())
+                           }
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
