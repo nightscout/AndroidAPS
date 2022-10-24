@@ -1,6 +1,7 @@
 package info.nightscout.sdk.mapper
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
+import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
@@ -246,6 +247,31 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 glucoseType = NSTherapyEvent.MeterType.fromString(this.glucoseType)
             )
         }
+
+        eventType == EventType.APS_OFFLINE                             -> {
+            if (treatmentTimestamp == 0L) return null
+
+            return NSOfflineEvent(
+                date = treatmentTimestamp,
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
+                reason = NSOfflineEvent.Reason.fromString(this.reason)
+            )
+        }
+
     }
 
     return null

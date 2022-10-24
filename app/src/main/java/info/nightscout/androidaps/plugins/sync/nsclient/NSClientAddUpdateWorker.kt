@@ -13,7 +13,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
-import info.nightscout.androidaps.extensions.offlineEventFromJson
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.offlineEventFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
@@ -215,44 +215,7 @@ class NSClientAddUpdateWorker(
                 eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
                     if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
                         offlineEventFromJson(json)?.let { offlineEvent ->
-                            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent))
-                                .doOnError {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                                }
-                                .blockingGet()
-                                .also { result ->
-                                    result.inserted.forEach { oe ->
-                                        uel.log(
-                                            Action.LOOP_CHANGE, Sources.NSClient,
-                                            ValueWithUnit.OfflineEventReason(oe.reason),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
-                                    }
-                                    result.invalidated.forEach { oe ->
-                                        uel.log(
-                                            Action.LOOP_REMOVED, Sources.NSClient,
-                                            ValueWithUnit.OfflineEventReason(oe.reason),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
-                                    }
-                                    result.ended.forEach { oe ->
-                                        uel.log(
-                                            Action.LOOP_CHANGE, Sources.NSClient,
-                                            ValueWithUnit.OfflineEventReason(oe.reason),
-                                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                        )
-                                        aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
-                                    }
-                                    result.updatedNsId.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
-                                    }
-                                    result.updatedDuration.forEach {
-                                        aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
-                                    }
-                                }
+                            storeDataForDb.offlineEvents.add(offlineEvent)
                         } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
                     }
             }

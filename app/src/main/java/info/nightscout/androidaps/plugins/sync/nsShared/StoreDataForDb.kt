@@ -25,6 +25,7 @@ import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorRes
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
@@ -43,6 +44,7 @@ import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
@@ -107,6 +109,10 @@ class StoreDataForDb @Inject constructor(
         }
     }
 
+    fun <T> HashMap<T, Long>.inc(key: T) =
+        if (containsKey(key)) merge(key, 1, Long::plus)
+        else put(key, 1)
+
     private fun storeGlucoseValuesToDb() {
         rxBus.send(EventNSClientNewLog("PROCESSING BG", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
 
@@ -122,19 +128,19 @@ class StoreDataForDb @Inject constructor(
                         xDripBroadcast.send(it)
                         nsClientSourcePlugin.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
-                        updated[GlucoseValue::class.java.simpleName] = (updated[GlucoseValue::class.java.simpleName] ?: 0) + 1
+                        updated.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.inserted.forEach {
                         xDripBroadcast.send(it)
                         nsClientSourcePlugin.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                        inserted[GlucoseValue::class.java.simpleName] = (inserted[GlucoseValue::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         xDripBroadcast.send(it)
                         nsClientSourcePlugin.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId bg $it")
-                        nsIdUpdated[GlucoseValue::class.java.simpleName] = (nsIdUpdated[GlucoseValue::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
                     }
                 }
 
@@ -163,7 +169,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
-                        inserted[NSBolus::class.java.simpleName] = (inserted[NSBolus::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSBolus::class.java.simpleName)
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -174,15 +180,15 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
-                        invalidated[NSBolus::class.java.simpleName] = (invalidated[NSBolus::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSBolus::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
-                        nsIdUpdated[NSBolus::class.java.simpleName] = (nsIdUpdated[NSBolus::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSBolus::class.java.simpleName)
                     }
                     result.updated.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
-                        updated[NSBolus::class.java.simpleName] = (updated[NSBolus::class.java.simpleName] ?: 0) + 1
+                        updated.inc(NSBolus::class.java.simpleName)
                     }
                 }
 
@@ -206,7 +212,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
-                        inserted[NSCarbs::class.java.simpleName] = (inserted[NSCarbs::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSCarbs::class.java.simpleName)
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -217,7 +223,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
-                        invalidated[NSCarbs::class.java.simpleName] = (invalidated[NSCarbs::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSCarbs::class.java.simpleName)
                     }
                     result.updated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -228,11 +234,11 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
-                        updated[NSCarbs::class.java.simpleName] = (updated[NSCarbs::class.java.simpleName] ?: 0) + 1
+                        updated.inc(NSCarbs::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
-                        nsIdUpdated[NSCarbs::class.java.simpleName] = (nsIdUpdated[NSCarbs::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSCarbs::class.java.simpleName)
                     }
 
                 }
@@ -262,7 +268,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
-                        inserted[NSTemporaryTarget::class.java.simpleName] = (inserted[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSTemporaryTarget::class.java.simpleName)
                     }
                     result.invalidated.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -278,7 +284,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
-                        invalidated[NSTemporaryTarget::class.java.simpleName] = (invalidated[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSTemporaryTarget::class.java.simpleName)
                     }
                     result.ended.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -294,15 +300,15 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
-                        ended[NSTemporaryTarget::class.java.simpleName] = (ended[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
+                        ended.inc(NSTemporaryTarget::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
-                        nsIdUpdated[NSTemporaryTarget::class.java.simpleName] = (nsIdUpdated[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSTemporaryTarget::class.java.simpleName)
                     }
                     result.updatedDuration.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
-                        durationUpdated[NSTemporaryTarget::class.java.simpleName] = (durationUpdated[NSTemporaryTarget::class.java.simpleName] ?: 0) + 1
+                        durationUpdated.inc(NSTemporaryTarget::class.java.simpleName)
                     }
                 }
 
@@ -330,7 +336,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                        inserted[NSTemporaryBasal::class.java.simpleName] = (inserted[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSTemporaryBasal::class.java.simpleName)
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -345,7 +351,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                        invalidated[NSTemporaryBasal::class.java.simpleName] = (invalidated[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSTemporaryBasal::class.java.simpleName)
                     }
                     result.ended.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -360,15 +366,15 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
-                        ended[NSTemporaryBasal::class.java.simpleName] = (ended[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
+                        ended.inc(NSTemporaryBasal::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                        nsIdUpdated[NSTemporaryBasal::class.java.simpleName] = (nsIdUpdated[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSTemporaryBasal::class.java.simpleName)
                     }
                     result.updatedDuration.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
-                        durationUpdated[NSTemporaryBasal::class.java.simpleName] = (durationUpdated[NSTemporaryBasal::class.java.simpleName] ?: 0) + 1
+                        durationUpdated.inc(NSTemporaryBasal::class.java.simpleName)
                     }
                 }
 
@@ -392,7 +398,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                        inserted[NSEffectiveProfileSwitch::class.java.simpleName] = (inserted[NSEffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSEffectiveProfileSwitch::class.java.simpleName)
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -403,11 +409,11 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                        invalidated[NSEffectiveProfileSwitch::class.java.simpleName] = (invalidated[NSEffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSEffectiveProfileSwitch::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                        nsIdUpdated[NSEffectiveProfileSwitch::class.java.simpleName] = (nsIdUpdated[NSEffectiveProfileSwitch::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSEffectiveProfileSwitch::class.java.simpleName)
                     }
                 }
 
@@ -431,7 +437,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                        inserted[NSProfileSwitch::class.java.simpleName] = (inserted[NSProfileSwitch::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSProfileSwitch::class.java.simpleName)
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -442,11 +448,11 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                        invalidated[NSProfileSwitch::class.java.simpleName] = (invalidated[NSProfileSwitch::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSProfileSwitch::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                        nsIdUpdated[NSProfileSwitch::class.java.simpleName] = (nsIdUpdated[NSProfileSwitch::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSProfileSwitch::class.java.simpleName)
                     }
                 }
 
@@ -463,15 +469,15 @@ class StoreDataForDb @Inject constructor(
                     bolusCalculatorResults.clear()
                     result.inserted.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
-                        inserted[NSBolusWizard::class.java.simpleName] = (inserted[NSBolusWizard::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSBolusWizard::class.java.simpleName)
                     }
                     result.invalidated.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                        invalidated[NSBolusWizard::class.java.simpleName] = (invalidated[NSBolusWizard::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSBolusWizard::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
-                        nsIdUpdated[NSBolusWizard::class.java.simpleName] = (nsIdUpdated[NSBolusWizard::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSBolusWizard::class.java.simpleName)
                     }
                 }
 
@@ -502,7 +508,7 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
-                        inserted[NSTherapyEvent::class.java.simpleName] = (inserted[NSTherapyEvent::class.java.simpleName] ?: 0) + 1
+                        inserted.inc(NSTherapyEvent::class.java.simpleName)
                     }
                     result.invalidated.forEach { therapyEvent ->
                         if (config.NSCLIENT.not()) userEntries.add(
@@ -515,19 +521,81 @@ class StoreDataForDb @Inject constructor(
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
-                        invalidated[NSTherapyEvent::class.java.simpleName] = (invalidated[NSTherapyEvent::class.java.simpleName] ?: 0) + 1
+                        invalidated.inc(NSTherapyEvent::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                        nsIdUpdated[NSTherapyEvent::class.java.simpleName] = (nsIdUpdated[NSTherapyEvent::class.java.simpleName] ?: 0) + 1
+                        nsIdUpdated.inc(NSTherapyEvent::class.java.simpleName)
                     }
                     result.updatedDuration.forEach {
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                        durationUpdated[NSTherapyEvent::class.java.simpleName] = (durationUpdated[NSTherapyEvent::class.java.simpleName] ?: 0) + 1
+                        durationUpdated.inc(NSTherapyEvent::class.java.simpleName)
                     }
                 }
 
         sendLog("TherapyEvent", NSTherapyEvent::class.java.simpleName)
+        SystemClock.sleep(pause)
+
+        if (offlineEvents.isNotEmpty())
+            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvents))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
+                }
+                .blockingGet()
+                .also { result ->
+                    result.inserted.forEach { oe ->
+                        if (config.NSCLIENT.not()) userEntries.add(
+                            UserEntryTransaction.Entry(
+                                dateUtil.now(),
+                                UserEntry.Action.LOOP_CHANGE, UserEntry.Sources.NSClient, "",
+                                listOf(
+                                    ValueWithUnit.OfflineEventReason(oe.reason),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                )
+                            )
+                        )
+                        aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
+                        inserted.inc(NSOfflineEvent::class.java.simpleName)
+                    }
+                    result.invalidated.forEach { oe ->
+                        if (config.NSCLIENT.not()) userEntries.add(
+                            UserEntryTransaction.Entry(
+                                dateUtil.now(),
+                                UserEntry.Action.LOOP_REMOVED, UserEntry.Sources.NSClient, "",
+                                listOf(
+                                    ValueWithUnit.OfflineEventReason(oe.reason),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                )
+                            )
+                        )
+                        aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
+                        invalidated.inc(NSOfflineEvent::class.java.simpleName)
+                    }
+                    result.ended.forEach { oe ->
+                        if (config.NSCLIENT.not()) userEntries.add(
+                            UserEntryTransaction.Entry(
+                                dateUtil.now(),
+                                UserEntry.Action.LOOP_CHANGE, UserEntry.Sources.NSClient, "",
+                                listOf(
+                                    ValueWithUnit.OfflineEventReason(oe.reason),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
+                                )
+                            )
+                        )
+                        aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
+                        ended.inc(NSOfflineEvent::class.java.simpleName)
+                    }
+                    result.updatedNsId.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
+                        nsIdUpdated.inc(NSOfflineEvent::class.java.simpleName)
+                    }
+                    result.updatedDuration.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
+                        durationUpdated.inc(NSOfflineEvent::class.java.simpleName)
+                    }
+                }
+
+        sendLog("OfflineEvent", NSOfflineEvent::class.java.simpleName)
         SystemClock.sleep(pause)
 
         uel.log(userEntries)

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.androidaps.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.OfflineEvent

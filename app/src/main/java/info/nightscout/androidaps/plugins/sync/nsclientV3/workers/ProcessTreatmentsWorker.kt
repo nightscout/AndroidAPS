@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toOfflineEvent
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
@@ -30,6 +31,7 @@ import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
@@ -136,9 +138,16 @@ class ProcessTreatmentsWorker(
                     }
 
                 is NSTherapyEvent           ->
-                    treatment.toTherapyEvent().let { therapyEvent ->
-                        storeDataForDb.therapyEvents.add(therapyEvent)
-                    }
+                    if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+                        treatment.toTherapyEvent().let { therapyEvent ->
+                            storeDataForDb.therapyEvents.add(therapyEvent)
+                        }
+
+                is NSOfflineEvent           ->
+                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT)
+                        treatment.toOfflineEvent().let { offlineEvent ->
+                            storeDataForDb.offlineEvents.add(offlineEvent)
+                        }
             }
             /*
                         when {
@@ -193,49 +202,6 @@ class ProcessTreatmentsWorker(
                                     } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                                 }
 
-                            eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
-                                if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
-                                    offlineEventFromJson(json)?.let { offlineEvent ->
-                                        repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvent))
-                                            .doOnError {
-                                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                                            }
-                                            .blockingGet()
-                                            .also { result ->
-                                                result.inserted.forEach { oe ->
-                                                    uel.log(
-                                                        Action.LOOP_CHANGE, Sources.NSClient,
-                                                        ValueWithUnit.OfflineEventReason(oe.reason),
-                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
-                                                }
-                                                result.invalidated.forEach { oe ->
-                                                    uel.log(
-                                                        Action.LOOP_REMOVED, Sources.NSClient,
-                                                        ValueWithUnit.OfflineEventReason(oe.reason),
-                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
-                                                }
-                                                result.ended.forEach { oe ->
-                                                    uel.log(
-                                                        Action.LOOP_CHANGE, Sources.NSClient,
-                                                        ValueWithUnit.OfflineEventReason(oe.reason),
-                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
-                                                }
-                                                result.updatedNsId.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
-                                                }
-                                                result.updatedDuration.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
-                                                }
-                                            }
-                                    } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
-                                }
                         }
                         if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
                             if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {

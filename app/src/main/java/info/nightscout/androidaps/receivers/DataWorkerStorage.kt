@@ -37,6 +37,7 @@ class DataWorkerStorage @Inject constructor(
         return value
     }
 
+    @Suppress("unused")
     @Synchronized fun pickupString(key: Long): String? {
         val value = store[key]
         store.remove(key)
