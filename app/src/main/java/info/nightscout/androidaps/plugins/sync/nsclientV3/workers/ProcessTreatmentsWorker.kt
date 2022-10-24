@@ -142,60 +142,6 @@ class ProcessTreatmentsWorker(
             }
             /*
                         when {
-                            insulin > 0 || carbs > 0                                                    -> Any()
-
-
-                            eventType == TherapyEvent.Type.CANNULA_CHANGE.text ||
-                                eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
-                                eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||
-                                eventType == TherapyEvent.Type.FINGER_STICK_BG_VALUE.text ||
-                                eventType == TherapyEvent.Type.NONE.text ||
-                                eventType == TherapyEvent.Type.ANNOUNCEMENT.text ||
-                                eventType == TherapyEvent.Type.QUESTION.text ||
-                                eventType == TherapyEvent.Type.EXERCISE.text ||
-                                eventType == TherapyEvent.Type.NOTE.text ||
-                                eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
-                                if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
-                                    therapyEventFromJson(json)?.let { therapyEvent ->
-                                        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
-                                            .doOnError {
-                                                aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                                            }
-                                            .blockingGet()
-                                            .also { result ->
-                                                val action = when (eventType) {
-                                                    TherapyEvent.Type.CANNULA_CHANGE.text -> Action.SITE_CHANGE
-                                                    TherapyEvent.Type.INSULIN_CHANGE.text -> Action.RESERVOIR_CHANGE
-                                                    else                                  -> Action.CAREPORTAL
-                                                }
-                                                result.inserted.forEach { therapyEvent ->
-                                                    uel.log(action, Sources.NSClient,
-                                                            therapyEvent.note ?: "",
-                                                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                                            ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
-                                                }
-                                                result.invalidated.forEach { therapyEvent ->
-                                                    uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                                                            therapyEvent.note ?: "",
-                                                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                                            ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                                            ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null }
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
-                                                }
-                                                result.updatedNsId.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                                                }
-                                                result.updatedDuration.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                                                }
-                                            }
-                                    } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
-                                }
 
                             eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
                                 if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
