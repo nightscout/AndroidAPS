@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.utils.T
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
@@ -12,14 +11,14 @@ fun NSTherapyEvent.toTherapyEvent(): TherapyEvent =
         isValid = isValid,
         timestamp = date,
         utcOffset = utcOffset,
-        glucoseUnit =units.toUnits(),
+        glucoseUnit = units.toUnits(),
         type = eventType.toType(),
         note = notes,
         enteredBy = enteredBy,
         glucose = glucose,
         glucoseType = glucoseType.toMeterType(),
-        duration = durationInMilliseconds ?: T.mins(duration ?: 0L).msecs(),
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
+        duration = duration,
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
 fun EventType.toType(): TherapyEvent.Type =
@@ -63,7 +62,7 @@ fun NSTherapyEvent.MeterType?.toMeterType(): TherapyEvent.MeterType =
 
 fun NsUnits?.toUnits(): TherapyEvent.GlucoseUnit =
     when (this) {
-        NsUnits.MG_DL                   -> TherapyEvent.GlucoseUnit.MGDL
-        NsUnits.MMOL_L                  -> TherapyEvent.GlucoseUnit.MMOL
-        null                            -> TherapyEvent.GlucoseUnit.MGDL
+        NsUnits.MG_DL  -> TherapyEvent.GlucoseUnit.MGDL
+        NsUnits.MMOL_L -> TherapyEvent.GlucoseUnit.MMOL
+        null           -> TherapyEvent.GlucoseUnit.MGDL
     }

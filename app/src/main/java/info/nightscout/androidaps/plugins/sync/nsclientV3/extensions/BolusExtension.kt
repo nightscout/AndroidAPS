@@ -12,7 +12,7 @@ fun NSBolus.toBolus(): Bolus =
         amount = insulin,
         type = type.toBolusType(),
         notes = notes,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
 fun NSBolus.BolusType?.toBolusType(): Bolus.Type =

@@ -27,6 +27,6 @@ fun info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch.toEffectiv
         originalDuration = originalDuration,
         originalEnd = originalEnd,
         insulinConfiguration = profileSealed.insulinConfiguration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 }

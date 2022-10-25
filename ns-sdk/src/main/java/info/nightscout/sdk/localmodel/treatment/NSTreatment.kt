@@ -16,6 +16,7 @@ interface NSTreatment {
     val isValid: Boolean
     val notes: String?
     val pumpId: Long?
+    val endId: Long?
     val pumpType: String?
     val pumpSerial: String?
 

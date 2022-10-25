@@ -13,7 +13,7 @@ fun NSTemporaryBasal.toTemporaryBasal(): TemporaryBasal =
         rate = rate,
         isAbsolute = isAbsolute,
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
 fun NSTemporaryBasal.Type?.toType(): TemporaryBasal.Type =

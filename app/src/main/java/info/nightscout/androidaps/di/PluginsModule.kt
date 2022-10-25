@@ -33,7 +33,6 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinLyumjevPlugin
@@ -51,9 +50,20 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.plugins.source.*
+import info.nightscout.androidaps.plugins.source.AidexPlugin
+import info.nightscout.androidaps.plugins.source.DexcomPlugin
+import info.nightscout.androidaps.plugins.source.GlimpPlugin
+import info.nightscout.androidaps.plugins.source.GlunovoPlugin
+import info.nightscout.androidaps.plugins.source.IntelligoPlugin
+import info.nightscout.androidaps.plugins.source.MM640gPlugin
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
+import info.nightscout.androidaps.plugins.source.PoctechPlugin
+import info.nightscout.androidaps.plugins.source.RandomBgPlugin
+import info.nightscout.androidaps.plugins.source.TomatoPlugin
+import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolPlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")
@@ -301,7 +311,7 @@ abstract class PluginsModule {
     abstract fun bindTidepoolPlugin(plugin: TidepoolPlugin): PluginBase
 
     @Binds
-    @AllConfigs
+    @Unfinished
     @IntoMap
     @IntKey(362)
     abstract fun bindNSClientV3Plugin(plugin: NSClientV3Plugin): PluginBase

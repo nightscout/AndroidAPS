@@ -11,7 +11,7 @@ fun NSOfflineEvent.toOfflineEvent(): OfflineEvent =
         utcOffset = utcOffset,
         duration = duration,
         reason = reason.toReason(),
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
 fun NSOfflineEvent.Reason?.toReason(): OfflineEvent.Reason =

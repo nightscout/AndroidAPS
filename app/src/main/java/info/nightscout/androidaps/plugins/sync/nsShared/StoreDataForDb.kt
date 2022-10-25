@@ -6,6 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
@@ -25,6 +26,7 @@ import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorRes
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
@@ -36,6 +38,9 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.utils.DateUtil
@@ -44,6 +49,7 @@ import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
 import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
@@ -51,6 +57,7 @@ import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -60,12 +67,14 @@ class StoreDataForDb @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val repository: AppRepository,
+    private val sp: SP,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val config: Config,
     private val nsClientSourcePlugin: NSClientSourcePlugin,
-    private val xDripBroadcast: XDripBroadcast
+    private val xDripBroadcast: XDripBroadcast,
+    private val virtualPumpPlugin: VirtualPumpPlugin
 ) {
 
     val glucoseValues: MutableList<CgmSourceTransaction.TransactionGlucoseValue> = mutableListOf()
@@ -484,6 +493,16 @@ class StoreDataForDb @Inject constructor(
         sendLog("BolusCalculatorResult", NSBolusWizard::class.java.simpleName)
         SystemClock.sleep(pause)
 
+        if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+            therapyEvents.filter { it.type == TherapyEvent.Type.ANNOUNCEMENT }.forEach {
+                if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
+                    it.note?.isNotEmpty() == true &&
+                    it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
+                ) {
+                    if (sp.getBoolean(R.string.key_ns_announcements, config.NSCLIENT))
+                        rxBus.send(EventNewNotification(Notification(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)))
+                }
+            }
         if (therapyEvents.isNotEmpty())
             repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents))
                 .doOnError {
@@ -596,6 +615,75 @@ class StoreDataForDb @Inject constructor(
                 }
 
         sendLog("OfflineEvent", NSOfflineEvent::class.java.simpleName)
+        SystemClock.sleep(pause)
+
+        if (extendedBoluses.isNotEmpty())
+            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBoluses))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
+                }
+                .blockingGet()
+                .also { result ->
+                    result.inserted.forEach {
+                        if (config.NSCLIENT.not()) userEntries.add(
+                            UserEntryTransaction.Entry(
+                                dateUtil.now(),
+                                UserEntry.Action.EXTENDED_BOLUS, UserEntry.Sources.NSClient, "",
+                                listOf(
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount),
+                                    ValueWithUnit.UnitPerHour(it.rate),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                )
+                            )
+                        )
+                        if (it.isEmulatingTempBasal) virtualPumpPlugin.fakeDataDetected = true
+                        aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
+                        inserted.inc(NSExtendedBolus::class.java.simpleName)
+                    }
+                    result.invalidated.forEach {
+                        if (config.NSCLIENT.not()) userEntries.add(
+                            UserEntryTransaction.Entry(
+                                dateUtil.now(),
+                                UserEntry.Action.EXTENDED_BOLUS_REMOVED, UserEntry.Sources.NSClient, "",
+                                listOf(
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount),
+                                    ValueWithUnit.UnitPerHour(it.rate),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                )
+                            )
+                        )
+                        aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
+                        invalidated.inc(NSExtendedBolus::class.java.simpleName)
+                    }
+                    result.ended.forEach {
+                        if (config.NSCLIENT.not()) userEntries.add(
+                            UserEntryTransaction.Entry(
+                                dateUtil.now(),
+                                UserEntry.Action.CANCEL_EXTENDED_BOLUS, UserEntry.Sources.NSClient, "",
+                                listOf(
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount),
+                                    ValueWithUnit.UnitPerHour(it.rate),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                )
+                            )
+                        )
+                        aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
+                        ended.inc(NSExtendedBolus::class.java.simpleName)
+                    }
+                    result.updatedNsId.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
+                        nsIdUpdated.inc(NSExtendedBolus::class.java.simpleName)
+                    }
+                    result.updatedDuration.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Updated duration ExtendedBolus $it")
+                        durationUpdated.inc(NSExtendedBolus::class.java.simpleName)
+                    }
+                }
+
+        sendLog("ExtendedBolus", NSExtendedBolus::class.java.simpleName)
         SystemClock.sleep(pause)
 
         uel.log(userEntries)

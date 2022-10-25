@@ -1,12 +1,13 @@
 package info.nightscout.sdk.mapper
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
-import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
+import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
@@ -16,11 +17,10 @@ import info.nightscout.sdk.remotemodel.RemoteTreatment
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-@JvmSynthetic
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
     when {
-        insulin != null && insulin > 0                                  ->
+        insulin != null && insulin > 0                                     ->
             return NSBolus(
                 date = treatmentTimestamp,
                 device = this.device,
@@ -35,13 +35,14 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 insulin = this.insulin,
                 type = NSBolus.BolusType.fromString(this.type),
             )
 
-        carbs != null && carbs > 0                                      ->
+        carbs != null && carbs > 0                                         ->
             return NSCarbs(
                 date = treatmentTimestamp,
                 device = this.device,
@@ -56,13 +57,14 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 carbs = this.carbs,
                 duration = this.duration ?: 0L
             )
 
-        eventType == EventType.TEMPORARY_TARGET                         -> {
+        eventType == EventType.TEMPORARY_TARGET                            -> {
             if (treatmentTimestamp == 0L) return null
 
             this.duration ?: return null
@@ -83,6 +85,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
@@ -92,7 +95,33 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             )
         }
 
-        eventType == EventType.TEMPORARY_BASAL                          -> {
+        // Convert back emulated TBR -> EB
+        eventType == EventType.TEMPORARY_BASAL && extendedEmulated != null -> {
+
+            return NSExtendedBolus(
+                date = treatmentTimestamp,
+                device = device,
+                identifier = identifier,
+                units = NsUnits.fromString(extendedEmulated.units),
+                srvModified = srvModified,
+                srvCreated = srvCreated,
+                utcOffset = utcOffset ?: 0,
+                subject = subject,
+                isReadOnly = extendedEmulated.isReadOnly ?: false,
+                isValid = extendedEmulated.isValid ?: true,
+                eventType = extendedEmulated.eventType,
+                notes = extendedEmulated.notes,
+                pumpId = extendedEmulated.pumpId,
+                endId = extendedEmulated.endId,
+                pumpType = extendedEmulated.pumpType,
+                pumpSerial = extendedEmulated.pumpSerial,
+                enteredinsulin = extendedEmulated.enteredinsulin ?: 0.0,
+                duration = extendedEmulated.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(extendedEmulated.duration ?: 0L),
+                isEmulatingTempbasal = extendedEmulated.isEmulatingTempBasal
+            )
+        }
+
+        eventType == EventType.TEMPORARY_BASAL                             -> {
             if (treatmentTimestamp == 0L) return null
 
             this.absolute ?: this.percent ?: return null
@@ -113,6 +142,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
@@ -122,7 +152,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             )
         }
 
-        eventType == EventType.NOTE && this.originalProfileName != null -> {
+        eventType == EventType.NOTE && this.originalProfileName != null    -> {
             if (treatmentTimestamp == 0L) return null
             this.profileJson ?: return null
             this.originalCustomizedName ?: return null
@@ -145,6 +175,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 profileJson = JSONObject(this.profileJson),
@@ -157,7 +188,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             )
         }
 
-        eventType == EventType.PROFILE_SWITCH                           -> {
+        eventType == EventType.PROFILE_SWITCH                              -> {
             if (treatmentTimestamp == 0L) return null
             this.profile ?: return null
 
@@ -175,6 +206,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 profileJson = this.profileJson?.let { JSONObject(this.profileJson) },
@@ -187,7 +219,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             )
         }
 
-        eventType == EventType.BOLUS_WIZARD                             -> {
+        eventType == EventType.BOLUS_WIZARD                                -> {
             if (treatmentTimestamp == 0L) return null
             this.bolusCalculatorResult ?: return null
 
@@ -205,6 +237,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 bolusCalculatorResult = this.bolusCalculatorResult,
@@ -221,7 +254,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             eventType == EventType.QUESTION ||
             eventType == EventType.EXERCISE ||
             eventType == EventType.NOTE ||
-            eventType == EventType.PUMP_BATTERY_CHANGE                  -> {
+            eventType == EventType.PUMP_BATTERY_CHANGE                     -> {
             if (treatmentTimestamp == 0L) return null
 
             return NSTherapyEvent(
@@ -238,17 +271,17 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                duration = duration,
-                durationInMilliseconds = durationInMilliseconds,
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
                 glucose = this.glucose,
                 enteredBy = this.enteredBy,
                 glucoseType = NSTherapyEvent.MeterType.fromString(this.glucoseType)
             )
         }
 
-        eventType == EventType.APS_OFFLINE                             -> {
+        eventType == EventType.APS_OFFLINE                                 -> {
             if (treatmentTimestamp == 0L) return null
 
             return NSOfflineEvent(
@@ -265,6 +298,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 eventType = this.eventType,
                 notes = this.notes,
                 pumpId = this.pumpId,
+                endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
@@ -272,6 +306,32 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             )
         }
 
+        eventType == EventType.COMBO_BOLUS                                 -> {
+            if (treatmentTimestamp == 0L) return null
+            this.enteredinsulin ?: return null
+
+            return NSExtendedBolus(
+                date = treatmentTimestamp,
+                device = this.device,
+                identifier = this.identifier,
+                units = NsUnits.fromString(this.units),
+                srvModified = this.srvModified,
+                srvCreated = this.srvCreated,
+                utcOffset = this.utcOffset ?: 0,
+                subject = this.subject,
+                isReadOnly = this.isReadOnly ?: false,
+                isValid = this.isValid ?: true,
+                eventType = this.eventType,
+                notes = this.notes,
+                pumpId = this.pumpId,
+                endId = this.endId,
+                pumpType = this.pumpType,
+                pumpSerial = this.pumpSerial,
+                enteredinsulin = this.enteredinsulin,
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
+                isEmulatingTempbasal = this.isEmulatingTempBasal
+            )
+        }
     }
 
     return null

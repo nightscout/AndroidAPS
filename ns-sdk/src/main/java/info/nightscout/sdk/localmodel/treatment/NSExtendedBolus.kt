@@ -1,9 +1,8 @@
 package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
-import org.json.JSONObject
 
-data class NSBolusWizard(
+data class NSExtendedBolus(
     override val date: Long,
     override val device: String?,
     override val identifier: String,
@@ -20,6 +19,7 @@ data class NSBolusWizard(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
-    val bolusCalculatorResult: String?,
-    val glucose: Double?,
+    val duration: Long,
+    val enteredinsulin: Double,
+    val isEmulatingTempbasal: Boolean
 ) : NSTreatment

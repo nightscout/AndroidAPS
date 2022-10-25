@@ -16,6 +16,7 @@ data class NSTemporaryTarget(
     override val eventType: EventType,
     override val notes: String?,
     override val pumpId: Long?,
+    override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
     val duration: Long,

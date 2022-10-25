@@ -1,6 +1,7 @@
 package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
+import org.json.JSONObject
 
 data class NSTemporaryBasal(
     override val date: Long,
@@ -16,14 +17,14 @@ data class NSTemporaryBasal(
     override val eventType: EventType,
     override val notes: String?,
     override val pumpId: Long?,
+    override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
     val duration: Long,
     val rate: Double,
     val isAbsolute: Boolean,
-    val type: Type,
-
-    ) : NSTreatment {
+    val type: Type
+) : NSTreatment {
 
     enum class Type {
         NORMAL,

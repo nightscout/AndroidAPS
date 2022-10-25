@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
@@ -19,6 +20,7 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toCarbs
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
+import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toExtendedBolus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toOfflineEvent
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
@@ -26,11 +28,13 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporary
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
 import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
@@ -102,18 +106,7 @@ class ProcessTreatmentsWorker(
                         }
                         storeDataForDb.temporaryTargets.add(treatment.toTemporaryTarget())
                     }
-                /*
-                // Convert back emulated TBR -> EB
-                if (eventType == TherapyEvent.Type.TEMPORARY_BASAL.text && json.has("extendedEmulated")) {
-                    val ebJson = json.getJSONObject("extendedEmulated")
-                    ebJson.put("_id", json.getString("_id"))
-                    ebJson.put("isValid", json.getBoolean("isValid"))
-                    ebJson.put("mills", mills)
-                    json = ebJson
-                    eventType = JsonHelper.safeGetString(json, "eventType")
-                    virtualPumpPlugin.fakeDataDetected = true
-                }
-                */
+
                 is NSTemporaryBasal         ->
                     if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
                         storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
@@ -148,79 +141,13 @@ class ProcessTreatmentsWorker(
                         treatment.toOfflineEvent().let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         }
-            }
-            /*
-                        when {
 
-                            eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
-                                if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                                    extendedBolusFromJson(json)?.let { extendedBolus ->
-                                        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
-                                            .doOnError {
-                                                aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
-                                                ret = Result.failure(workDataOf("Error" to it.toString()))
-                                            }
-                                            .blockingGet()
-                                            .also { result ->
-                                                result.inserted.forEach {
-                                                    uel.log(
-                                                        Action.EXTENDED_BOLUS, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp),
-                                                        ValueWithUnit.Insulin(it.amount),
-                                                        ValueWithUnit.UnitPerHour(it.rate),
-                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
-                                                }
-                                                result.invalidated.forEach {
-                                                    uel.log(
-                                                        Action.EXTENDED_BOLUS_REMOVED, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp),
-                                                        ValueWithUnit.Insulin(it.amount),
-                                                        ValueWithUnit.UnitPerHour(it.rate),
-                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
-                                                }
-                                                result.ended.forEach {
-                                                    uel.log(
-                                                        Action.CANCEL_EXTENDED_BOLUS, Sources.NSClient,
-                                                        ValueWithUnit.Timestamp(it.timestamp),
-                                                        ValueWithUnit.Insulin(it.amount),
-                                                        ValueWithUnit.UnitPerHour(it.rate),
-                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                                    )
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
-                                                }
-                                                result.updatedNsId.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
-                                                }
-                                                result.updatedDuration.forEach {
-                                                    aapsLogger.debug(LTag.DATABASE, "Updated duration ExtendedBolus $it")
-                                                }
-                                            }
-                                    } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
-                                }
-
+                is NSExtendedBolus          ->
+                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
+                        treatment.toExtendedBolus().let { extendedBolus ->
+                            storeDataForDb.extendedBoluses.add(extendedBolus)
                         }
-                        if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
-                            if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {
-                                val date = safeGetLong(json, "mills")
-                                val now = System.currentTimeMillis()
-                                val enteredBy = JsonHelper.safeGetString(json, "enteredBy", "")
-                                val notes = JsonHelper.safeGetString(json, "notes", "")
-                                if (date > now - 15 * 60 * 1000L && notes.isNotEmpty()
-                                    && enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
-                                ) {
-                                    val defaultVal = config.NSCLIENT
-                                    if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
-                                        val announcement = Notification(Notification.NS_ANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60)
-                                        rxBus.send(EventNewNotification(announcement))
-                                    }
-                                }
-                            }
-
-                         */
+            }
         }
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
 //        xDripBroadcast.sendTreatments(treatments)

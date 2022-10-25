@@ -13,7 +13,7 @@ fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =
         highTarget = targetTop.asMgdl(),
         lowTarget = targetBottom.asMgdl(),
         duration = duration,
-        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial)
+        interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 
 fun NSTemporaryTarget.Reason?.toReason(): TemporaryTarget.Reason =

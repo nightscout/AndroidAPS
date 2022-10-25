@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.sdk.localmodel.treatment.NSCarbs
+import info.nightscout.androidaps.database.entities.ExtendedBolus
+import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
 
-fun NSCarbs.toCarbs(): Carbs =
-    Carbs(
+fun NSExtendedBolus.toExtendedBolus(): ExtendedBolus =
+    ExtendedBolus(
         isValid = isValid,
         timestamp = date,
         utcOffset = utcOffset,
-        amount = carbs,
-        notes = notes,
+        amount = enteredinsulin,
         duration = duration,
+        isEmulatingTempBasal = isEmulatingTempbasal,
         interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )

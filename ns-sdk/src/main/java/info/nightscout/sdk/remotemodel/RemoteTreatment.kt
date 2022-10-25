@@ -54,9 +54,10 @@ internal data class RemoteTreatment(
     @SerializedName("notes") val notes: String?,                // string Description/notes of treatment.
     @SerializedName("enteredBy") val enteredBy: String?,        // string Who entered the treatment.
 
-    @SerializedName("pumpId") val pumpId: Long?,                        // long or "Meal Bolus", "Correction Bolus", "Combo Bolus" ex  4102 not sure if long or int
-    @SerializedName("pumpType") val pumpType: String?,                  // string "Meal Bolus", "Correction Bolus", "Combo Bolus" ex "ACCU_CHEK_INSIGHT_BLUETOOTH",
-    @SerializedName("pumpSerial") val pumpSerial: String?,              // string "Meal Bolus", "Correction Bolus", "Combo Bolus" "33013206",
+    @SerializedName("endId") val endId: Long?,                  // long id of record which ended this
+    @SerializedName("pumpId") val pumpId: Long?,                // long or "Meal Bolus", "Correction Bolus", "Combo Bolus" ex  4102 not sure if long or int
+    @SerializedName("pumpType") val pumpType: String?,          // string "Meal Bolus", "Correction Bolus", "Combo Bolus" ex "ACCU_CHEK_INSIGHT_BLUETOOTH",
+    @SerializedName("pumpSerial") val pumpSerial: String?,      // string "Meal Bolus", "Correction Bolus", "Combo Bolus" "33013206",
 
     // other fields found in examples but not in documentation
     @SerializedName("profileJson") val profileJson: String?,            // string "Profile Switch" ex json toString "{\"units\":\"mg\\/dl\",\"dia\":5,\"timezone\":\"Africa\\/Cairo\",
@@ -76,7 +77,7 @@ internal data class RemoteTreatment(
     @SerializedName("isEmulatingTempBasal") val isEmulatingTempBasal: Boolean,  // boolean "Combo Bolus", "extendedEmulated" (not in doc see below)
     @SerializedName("isAnnouncement") val isAnnouncement: Boolean,      // boolean "Announcement"
     @SerializedName("rate") val rate: Double?,                          // Double "Temp Basal" absolute rate (could be calculated with percent and profile information...)
-    @SerializedName("extendedEmulated") val extendedEmulated: Gson?,    // Gson object of treatment ???
+    @SerializedName("extendedEmulated") val extendedEmulated: RemoteTreatment?,  // Gson of emulated EB
     @SerializedName("timeshift") val timeshift: Long,                   // integer "Profile Switch"
     @SerializedName("percentage") val percentage: Int?,                 // integer "Profile Switch"
 ) {
