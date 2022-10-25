@@ -306,7 +306,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("TDD", tdd)
 
 
-        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null)
+        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null && tdd7D != 0.0)
             autosensData.put("ratio", tddLast24H / tdd7D)
         else
             autosensData.put("ratio", 1.0)
