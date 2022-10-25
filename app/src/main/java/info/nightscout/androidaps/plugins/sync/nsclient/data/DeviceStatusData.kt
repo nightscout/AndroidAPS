@@ -16,6 +16,7 @@ class DeviceStatusData @Inject constructor() {
         var voltage = 0.0
         var status = "N/A"
         var reservoir = 0.0
+        var reservoirDisplayOverride = ""
         var extended: Spanned? = null
         var activeProfileName: String? = null
     }
