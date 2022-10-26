@@ -1049,6 +1049,6 @@
     <string name="error_asking_for_permissions">Error al solicitar permisos</string>
     <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
     <string name="database_cleanup">Limpiar base de dados</string>
-    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos más de 3 meses de antiguedad.</string>
+    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos con más de 3 meses de antiguedad.</string>
     <string name="cleared_entries">Entradas eliminadas</string>
 </resources>
