@@ -17,4 +17,5 @@ dependencies {
     implementation project(':core')
     implementation project(':database')
     implementation project(':shared')
+    implementation project(':graphview')
 }

@@ -170,6 +170,7 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':iconify')
+    implementation project(':graphview')
     implementation project(':shared')
     implementation project(':core')
     implementation project(':automation')
