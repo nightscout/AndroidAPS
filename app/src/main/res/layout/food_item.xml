@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Name"
-                android:textSize="@dimen/twenty_four_dp"
+                android:textSize="24dp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 

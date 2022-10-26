@@ -56,11 +56,6 @@ dependencies {
     // pumpCommon
     api "com.google.code.gson:gson:$gson_version"
 
-    // don't kill my app
-    api('dev.doubledot.doki:library:0.0.1@aar') {
-        transitive = true
-    }
-
     //WorkManager
     api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
