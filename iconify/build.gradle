@@ -3,19 +3,18 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
+apply plugin: 'kotlinx-serialization'
 
 apply from: "${project.rootDir}/core/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
 apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
+
 android {
-    namespace 'info.nightscout.androidaps.plugins.pump.medtronic'
+
+    namespace 'com.joanzapata.iconify'
 }
 
 dependencies {
-    implementation project(':core')
-    implementation project(':pump-common')
-    implementation project(':rileylink')
-    implementation project(':shared')
-    implementation project(':iconify')
+    api "androidx.core:core-ktx:$core_version"
 }

@@ -35,6 +35,7 @@ dependencies {
     implementation project(':omnipod-common')
     implementation project(':database')
     implementation project(':shared')
+    implementation project(':iconify')
 
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
