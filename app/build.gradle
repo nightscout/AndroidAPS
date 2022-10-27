@@ -169,8 +169,11 @@ allprojects {
 dependencies {
     wearApp project(':wear')
 
+    // https://github.com/nightscout/graphview.git
+    // in order to use internet's version you'd need to enable Jetifier again
+    implementation(files("${rootProject.rootDir}/libs/graphview.aar"))
+
     implementation project(':iconify')
-    implementation project(':graphview')
     implementation project(':shared')
     implementation project(':core')
     implementation project(':automation')

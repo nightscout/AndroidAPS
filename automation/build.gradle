@@ -12,10 +12,10 @@ android {
     namespace 'info.nightscout.androidaps.automation'
 }
 
-
 dependencies {
+    implementation(files("${rootProject.rootDir}/libs/graphview.aar"))
+
     implementation project(':core')
     implementation project(':database')
     implementation project(':shared')
-    implementation project(':graphview')
 }
