@@ -107,8 +107,8 @@ dependencies {
     compileOnly "com.google.android.wearable:wearable:$wearable_version"
     implementation "com.google.android.support:wearable:$wearable_version"
     implementation "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
-    implementation(files('libs/ustwo-clockwise-debug.aar'))
-    implementation(files('libs/wearpreferenceactivity-0.5.0.aar'))
+    implementation(files("${rootProject.rootDir}/libraries/libs/ustwo-clockwise-debug.aar"))
+    implementation(files("${rootProject.rootDir}/libraries/libs/wearpreferenceactivity-0.5.0.aar"))
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"

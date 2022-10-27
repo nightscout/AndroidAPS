@@ -17,6 +17,7 @@ import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.LoopDialog
+import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
@@ -110,6 +111,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
-
+    @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 }

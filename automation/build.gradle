@@ -15,8 +15,8 @@ android {
     namespace 'info.nightscout.androidaps.automation'
 }
 
-
 dependencies {
+    implementation project(':libraries')
     implementation project(':core')
     implementation project(':database')
     implementation project(':shared')
