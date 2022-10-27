@@ -15,7 +15,5 @@ include ':omnipod-common'
 include ':omnipod-eros'
 include ':omnipod-dash'
 include ':diaconn'
-
 include ':openhumans'
 include ':shared'
-include ':iconify'

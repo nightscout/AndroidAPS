@@ -14,7 +14,8 @@ android {
 }
 
 dependencies {
+    implementation(files("${rootProject.rootDir}/libs/iconify.aar"))
+
     implementation project(':core')
     implementation project(':shared')
-    implementation project(':iconify')
 }
