@@ -171,10 +171,8 @@ dependencies {
 
     // in order to use internet's versions you'd need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
-    implementation(files("${rootProject.rootDir}/libs/graphview.aar"))
     // https://github.com/nightscout/iconify.git
-    implementation(files("${rootProject.rootDir}/libs/iconify.aar"))
-
+    implementation project(':libraries')
     implementation project(':shared')
     implementation project(':core')
     implementation project(':automation')

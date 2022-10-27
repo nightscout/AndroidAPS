@@ -12,8 +12,7 @@ apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 dependencies {
-    implementation(files("${rootProject.rootDir}/libs/graphview.aar"))
-
+    implementation project(':libraries')
     implementation project(':shared')
     implementation project(':database')
 }
