@@ -5,8 +5,10 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.abs
 import kotlin.math.roundToLong
 
 @Reusable
@@ -100,8 +102,35 @@ class GlucoseStatusProvider @Inject constructor(
         ).also { aapsLogger.debug(LTag.GLUCOSE, it.log()) }.asRounded()
     }
 
-    companion object {
+    fun isBgFlatForInterval(minutes: Long, maxDelta: Double) : Boolean? {
+        val data = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        val lastBg = iobCobCalculator.ads.lastBg()?.value
+        val now = dateUtil.now()
+        val offset = now - T.mins(minutes).msecs()
+        val sizeRecords = data.size
 
+        if (lastBg == null) {
+            aapsLogger.debug(LTag.GLUCOSE, "lastBg==null")
+            return null
+        }
+        if (sizeRecords == 0) {
+            aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==0")
+            return null
+        }
+        if (data[0].timestamp < now - 7 * 60 * 1000L) {
+            aapsLogger.debug(LTag.GLUCOSE, "oldData")
+            return null
+        }
+
+        for (bg in data)
+        {
+            if (bg.timestamp < offset) break
+            if (abs(lastBg - bg.value) > maxDelta) return false
+        }
+        return true
+    }
+
+    companion object {
         fun average(array: ArrayList<Double>): Double {
             var sum = 0.0
             if (array.size == 0) return 0.0

@@ -21,6 +21,7 @@ import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -43,6 +44,7 @@ class SafetyPlugin @Inject constructor(
     private val hardLimits: HardLimits,
     private val buildHelper: BuildHelper,
     private val iobCobCalculator: IobCobCalculator,
+    private val glucoseStatusProvider: GlucoseStatusProvider,
     private val config: Config,
     private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
@@ -60,6 +62,7 @@ class SafetyPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value.set(aapsLogger, false, rh.gs(R.string.pumpisnottempbasalcapable), this)
+        if (glucoseStatusProvider.isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) value.set(aapsLogger, false, rh.gs(R.string.stale_bg_data, staleBgCheckPeriodMinutes), this)
         return value
     }
 
@@ -191,7 +194,7 @@ class SafetyPlugin @Inject constructor(
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         val maxIobPref: Double = if (openAPSSMBPlugin.isEnabled() || openAPSSMBDynamicISFPlugin.isEnabled()) sp.getDouble(R.string.key_openapssmb_max_iob, 3.0) else sp.getDouble(R.string
-        .key_openapsma_max_iob, 1.5)
+                                                                                                                                                                                      .key_openapsma_max_iob, 1.5)
         maxIob.setIfSmaller(aapsLogger, maxIobPref, rh.gs(R.string.limitingiob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
         if (openAPSAMAPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), rh.gs(R.string.limitingiob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
         if (openAPSSMBPlugin.isEnabled()) maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), rh.gs(R.string.limitingiob, hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
@@ -210,5 +213,10 @@ class SafetyPlugin @Inject constructor(
         configuration.storeString(R.string.key_age, sp, rh)
         configuration.storeDouble(R.string.key_treatmentssafety_maxbolus, sp, rh)
         configuration.storeInt(R.string.key_treatmentssafety_maxcarbs, sp, rh)
+    }
+
+    companion object {
+        const val staleBgCheckPeriodMinutes = 45L
+        const val staleBgMaxDeltaMgdl = 1.0
     }
 }

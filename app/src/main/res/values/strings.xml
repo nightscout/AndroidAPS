@@ -689,6 +689,7 @@
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
+    <string name="stale_bg_data">CGM data is unchanged for the past ~%1$s minutes</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
