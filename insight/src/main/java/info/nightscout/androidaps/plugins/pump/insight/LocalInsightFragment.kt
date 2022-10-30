@@ -162,49 +162,53 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getConnectionStatusItem(statusItems: MutableList<View>) {
-        val state = localInsightPlugin.connectionService!!.state
-        var string = when (state) {
-            InsightState.NOT_PAIRED                     -> R.string.not_paired
-            InsightState.DISCONNECTED                   -> R.string.disconnected
-            InsightState.CONNECTING,
-            InsightState.SATL_CONNECTION_REQUEST,
-            InsightState.SATL_KEY_REQUEST,
-            InsightState.SATL_SYN_REQUEST,
-            InsightState.SATL_VERIFY_CONFIRM_REQUEST,
-            InsightState.SATL_VERIFY_DISPLAY_REQUEST,
-            InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
-            InsightState.APP_ACTIVATE_STATUS_SERVICE,
-            InsightState.APP_BIND_MESSAGE,
-            InsightState.APP_CONNECT_MESSAGE,
-            InsightState.APP_FIRMWARE_VERSIONS,
-            InsightState.APP_SYSTEM_IDENTIFICATION,
-            InsightState.AWAITING_CODE_CONFIRMATION     -> R.string.connecting
-            InsightState.CONNECTED                      -> R.string.connected
-            InsightState.RECOVERING                     -> R.string.recovering
-        }
-        statusItems.add(getStatusItem(rh.gs(R.string.insight_status), rh.gs(string)))
-        if (state == InsightState.RECOVERING) {
-            statusItems.add(getStatusItem(rh.gs(R.string.recovery_duration), (localInsightPlugin.connectionService!!.recoveryDuration / 1000).toString() + "s"))
+        localInsightPlugin.connectionService?.let {
+            val string = when (it.state) {
+                InsightState.NOT_PAIRED                 -> R.string.not_paired
+                InsightState.DISCONNECTED               -> R.string.disconnected
+                InsightState.CONNECTING,
+                InsightState.SATL_CONNECTION_REQUEST,
+                InsightState.SATL_KEY_REQUEST,
+                InsightState.SATL_SYN_REQUEST,
+                InsightState.SATL_VERIFY_CONFIRM_REQUEST,
+                InsightState.SATL_VERIFY_DISPLAY_REQUEST,
+                InsightState.APP_ACTIVATE_PARAMETER_SERVICE,
+                InsightState.APP_ACTIVATE_STATUS_SERVICE,
+                InsightState.APP_BIND_MESSAGE,
+                InsightState.APP_CONNECT_MESSAGE,
+                InsightState.APP_FIRMWARE_VERSIONS,
+                InsightState.APP_SYSTEM_IDENTIFICATION,
+                InsightState.AWAITING_CODE_CONFIRMATION -> R.string.connecting
+                InsightState.CONNECTED                  -> R.string.connected
+                InsightState.RECOVERING                 -> R.string.recovering
+            }
+            statusItems.add(getStatusItem(rh.gs(R.string.insight_status), rh.gs(string)))
+            if (it.state == InsightState.RECOVERING) {
+                statusItems.add(getStatusItem(rh.gs(R.string.recovery_duration), (it.recoveryDuration / 1000).toString() + "s"))
+            }
         }
     }
 
     private fun getLastConnectedItem(statusItems: MutableList<View>) {
-        when (localInsightPlugin.connectionService!!.state) {
-            InsightState.CONNECTED, InsightState.NOT_PAIRED -> return
+        localInsightPlugin.connectionService?.let {
+            when (it.state) {
+                InsightState.CONNECTED, InsightState.NOT_PAIRED -> return
 
-            else                                            -> {
-                val lastConnection = localInsightPlugin.connectionService!!.lastConnected
-                if (lastConnection == 0L) return
-                val agoMsc = System.currentTimeMillis() - lastConnection
-                val lastConnectionMinAgo = agoMsc / 60.0 / 1000.0
-                val ago: String = if (lastConnectionMinAgo < 60) {
+                else                                            -> {
+                    val lastConnection = it.lastConnected
+                    if (lastConnection == 0L) return
+                    val agoMsc = System.currentTimeMillis() - lastConnection
+                    val lastConnectionMinAgo = agoMsc / 60.0 / 1000.0
+                    val ago: String = if (lastConnectionMinAgo < 60) {
                         dateUtil.minAgo(rh, lastConnection)
                     } else {
                         dateUtil.hourAgo(lastConnection, rh)
                     }
-                statusItems.add(getStatusItem(rh.gs(R.string.last_connected), dateUtil.timeString(lastConnection) + " (" + ago + ")")
-                )
+                    statusItems.add(getStatusItem(rh.gs(R.string.last_connected), dateUtil.timeString(lastConnection) + " (" + ago + ")")
+                    )
+                }
             }
+
         }
     }
 
@@ -284,15 +288,16 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun getBolusItems(statusItems: MutableList<View>) {
-        if (localInsightPlugin.activeBoluses == null) return
-        for (activeBolus in localInsightPlugin.activeBoluses!!) {
-            var label: String
+        localInsightPlugin.activeBoluses?.forEach { activeBolus ->
+            val label: String?
             label = when (activeBolus.bolusType) {
                 BolusType.MULTIWAVE -> rh.gs(R.string.multiwave_bolus)
                 BolusType.EXTENDED  -> rh.gs(R.string.extended_bolus)
-                else                -> continue
+                else                -> null
             }
-            statusItems.add(getStatusItem(label, rh.gs(R.string.eb_formatter, activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)))
+            label?.let {
+                statusItems.add(getStatusItem(it, rh.gs(R.string.eb_formatter, activeBolus.remainingAmount, activeBolus.initialAmount, activeBolus.remainingDuration)))
+            }
         }
     }
 
