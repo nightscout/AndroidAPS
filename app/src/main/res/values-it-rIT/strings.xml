@@ -40,7 +40,9 @@
     <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
     <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
     <string name="description_treatments">Salva tutti i trattamenti che sono stati fatti</string>
+    <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
     <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
+    <string name="description_sms_communicator">Controlla AAPS in remoto usando i comandi SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -78,6 +80,7 @@
     <string name="virtualpump">Micro virtuale</string>
     <string name="configbuilder_pump">Micro</string>
     <string name="configbuilder_profile">Profilo</string>
+    <string name="configbuilder_profile_description">Quale profilo AAPS dovrebbe usare?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Quale algoritmo APS dovrebbe apportare aggiustamenti terapeutici?</string>
     <string name="configbuilder_general">Generale</string>
