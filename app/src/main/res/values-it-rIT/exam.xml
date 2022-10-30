@@ -20,6 +20,8 @@
     <string name="pumpdisconnect_unnecessary">Questo non è necessario poiché l\'insulina non verrà erogata se il micro è fisicamente disconnesso.</string>
     <string name="pumpdisconnect_notstop">Non interromperà l\'erogazione di insulina se il micro rimane connesso.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
+    <string name="objectives_label">Impostazioni AAPS</string>
+    <string name="objectives2_label">Impostazioni AAPS</string>
     <string name="objectives_howtosave">Quali sono le migliori pratiche per il backup delle tue impostazioni?</string>
     <string name="objectives_notesettings">Non hai bisogno di esportare le tue impostazioni a condizione di prenderne nota.</string>
     <string name="objectives_afterobjective">Esportare le tue impostazioni dopo aver completato un obiettivo.</string>
@@ -33,6 +35,7 @@
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Letture CGM \"rumorose\" (noisy)</string>
     <string name="noisycgm_whattodo">Cosa dovrebbe essere fatto se i dati CGM sono \"rumorosi\"?</string>
+    <string name="noisycgm_nothing">Nulla - AAPS se ne occuperà.</string>
     <string name="noisycgm_pause">Disabilitare il loop chiuso per evitare un possibile sovra-dosaggio o sotto-dosaggio.</string>
     <string name="noisycgm_replacesensor">Sostituire i sensori costantemente \"rumorosi\" o inaccurati.</string>
     <string name="noisycgm_checksmoothing">Verificare che la tua app CGM faccia lo smoothing dei dati della glicemia.</string>
@@ -81,6 +84,7 @@
     <string name="prerequisites2_device">Un dispositivo Android compatibile (smartphone, smartwatch con versione integrale di Android o tablet).</string>
     <string name="prerequisites2_supportedcgm">Un CGM supportato e un\'app appropriata per ricevere valori della glicemia sul telefono/dispositivo.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
+    <string name="update_label">Aggiornamento AAPS</string>
     <string name="whatistrue">Seleziona tutte le risposte corrette.</string>
     <string name="update_git">Devi avere Git installato e configurato sul tuo computer.</string>
     <string name="update_keys">Dovresti salvare e annotare la posizione del tuo archivio chiavi e usare per gli aggiornamenti la stessa chiave di firma della tua installazione precedente.</string>
