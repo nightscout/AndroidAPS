@@ -628,13 +628,13 @@ class LocalInsightPlugin @Inject constructor(
         return result
     }
 
-    fun setExtendedBolusOnly(insulin: Double?, durationInMinutes: Int?, disableVibration: Boolean): PumpEnactResult {
+    fun setExtendedBolusOnly(insulin: Double, durationInMinutes: Int, disableVibration: Boolean): PumpEnactResult {
         val result = PumpEnactResult(injector)
         try {
             val bolusMessage = DeliverBolusMessage()
             bolusMessage.bolusType = BolusType.EXTENDED
-            bolusMessage.duration = durationInMinutes ?: 0
-            bolusMessage.extendedAmount = insulin ?: 0.0
+            bolusMessage.duration = durationInMinutes
+            bolusMessage.extendedAmount = insulin
             bolusMessage.immediateAmount = 0.0
             bolusMessage.disableVibration = disableVibration
             val bolusID = connectionService!!.requestMessage(bolusMessage).await().bolusId
