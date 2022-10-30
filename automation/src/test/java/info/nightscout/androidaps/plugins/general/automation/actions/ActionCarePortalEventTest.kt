@@ -21,7 +21,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AndroidAPS")
+        `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
         `when`(
             rh.gs(
                 ArgumentMatchers.eq(R.string.careportal_note_message),

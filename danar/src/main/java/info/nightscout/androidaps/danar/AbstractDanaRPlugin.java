@@ -110,7 +110,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                 .subscribe(event -> {
                     if (event.isChanged(getRh(), R.string.key_danar_bt_name)) {
                         danaPump.reset();
-                        pumpSync.connectNewPump();
+                        pumpSync.connectNewPump(true);
                         getCommandQueue().readStatus(getRh().gs(R.string.device_changed), null);
                     }
                 })

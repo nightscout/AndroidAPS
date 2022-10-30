@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -27,7 +29,12 @@ import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
@@ -66,8 +73,8 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-    //private val log = LoggerFactory.getLogger(AutotunePlugin::class.java)
     private var _binding: AutotuneFragmentBinding? = null
     private lateinit var profileStore: ProfileStore
     private var profileName = ""
@@ -116,9 +123,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneRun.setOnClickListener {
             autotunePlugin.lastNbDays = daysBack.toString()
             log("Run Autotune $profileName, $daysBack days")
-            Thread {
-                autotunePlugin.aapsAutotune(daysBack, false, profileName)
-            }.start()
+            handler.post { autotunePlugin.aapsAutotune(daysBack, false, profileName) }
             updateGui()
         }
 
@@ -307,6 +312,7 @@ class AutotuneFragment : DaggerFragment() {
     override fun onPause() {
         super.onPause()
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
     }
 
     @Synchronized
@@ -486,7 +492,7 @@ class AutotuneFragment : DaggerFragment() {
                                             setTextAppearance(android.R.style.TextAppearance_Material_Medium)
                                         }
                                     )
-                                    layout.addView(toTableRowHeader(context,true))
+                                    layout.addView(toTableRowHeader(context, true))
                                     var totalPump = 0.0
                                     var totalTuned = 0.0
                                     for (h in 0 until tuned.basal.size) {

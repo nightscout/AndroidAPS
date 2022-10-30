@@ -20,7 +20,7 @@
     <string name="disconnected">Odpojené</string>
     <string name="disconnecting">Odpájanie</string>
     <string name="waiting_for_disconnection">Čakám na odpojenie</string>
-    <string name="androidaps_start">AndroidAPS spustený</string>
+    <string name="androidaps_start">AAPS spustený</string>
     <string name="formatinsulinunits1">%1$.1f JI</string>
     <string name="formatinsulinunits">%1$.2f JI</string>
     <string name="formatsignedinsulinunits">%1$+.2f JI</string>

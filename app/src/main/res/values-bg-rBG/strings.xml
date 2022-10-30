@@ -38,9 +38,7 @@
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
     <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
     <string name="description_treatments">Записва всички процедури, които са били направени</string>
-    <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
     <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
-    <string name="description_sms_communicator">Дистанционно управление AndroidAPS чрез използване на SMS команди.</string>
     <string name="treatments_insulin_label_string">Инсулин:</string>
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -77,9 +75,7 @@
     <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="configbuilder_pump">Помпа</string>
-    <string name="configbuilder_pump_description">Каква помпа използвате с AndroidAPS?</string>
     <string name="configbuilder_profile">Профил</string>
-    <string name="configbuilder_profile_description">Кой тип профил да използва AndroidAPS?</string>
     <string name="configbuilder_aps">Алгоритъм за APS</string>
     <string name="configbuilder_aps_description">Кои APS алгоритъм да се използва за корекции в лечението?</string>
     <string name="configbuilder_general">Общи</string>
@@ -87,7 +83,6 @@
     <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
     <string name="constraints">Ограничения</string>
     <string name="configbuilder_loop">Режим на APS - Loop</string>
-    <string name="configbuilder_loop_description">Използвайте това, за да активирате loop интеграцията в \'AndroidAPS.</string>
     <string name="loop_aps_label">Алгоритъм за APS</string>
     <string name="loop_constraintsprocessed_label">След ограничения</string>
     <string name="loop_tbrsetbypump_label">Временният базал зададен от помпата</string>
@@ -103,7 +98,6 @@
     <string name="sms_basal">Базал:</string>
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
-    <string name="configbuilder_bgsource_description">От къде трябва да AndroidAPS да си взима данни?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS режим</string>
     <string name="closedloop">Затворен кръг</string>
@@ -325,7 +319,6 @@
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s се нуждае от изключване от списъка за оптимизиране на батерията за пълна функционалност</string>
     <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor">Изключен (%1$d мин)</string>
     <string name="suspendloopfor1h">Изключи APS за 1ч</string>
@@ -422,7 +415,6 @@
     <string name="sensitivityweightedaverage">чрез Среднопретеглената стойност</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
-    <string name="ns_localbroadcasts">Активира предаване на данни към други приложения (като xDrip+). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Разреши UAM</string>
@@ -612,7 +604,6 @@
     <string name="welcometosetupwizard">Добре дошли в съветника за настройки. Той ще ви преведе през етапите на настройка.</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
-    <string name="setupwizard_loop_description">Натиснете бутона по-долу за да позволите AndroidAPS да предлага/прави промени в базалните стойности</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато не го настроите.</string>
@@ -645,7 +636,6 @@
     <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
     <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
-    <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
     <string name="maintenance_settings">Настройки за поддръжка</string>
     <string name="maintenance_email">Имейл</string>
@@ -671,7 +661,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <string name="profile_total">Общо  %1$s Е</string>
     <string name="dexcom_lognssensorchange_title">Записвай смяната на сензор в NS</string>
-    <string name="dexcom_lognssensorchange_summary">Създаване на събитие \"Смяна на сеснзор\" в NS автоматично при старт на сензор</string>
     <string name="tomato">Tomato(MяоМяо)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>
@@ -739,7 +728,6 @@
     <string name="id">Номер:</string>
     <string name="submit">Изпрати</string>
     <string name="mostcommonprofile">Най-често използван профил:</string>
-    <string name="survey_comment">Забележка: Само данни, видими на този екран, ще бъдат анонимно изпратени. Номер се дава за тази инсталация на AndroidAPS. Отново можете да изпратите данните, ако вашият основен профил се промени, но нека да работи поне една седмица, за да  се види резултата във Време в границите. Много благодарим за Вашата помощ.</string>
     <string name="invalidage">Невалидна възраст</string>
     <string name="invalidweight">Невалидно тегло</string>
     <string name="invalidpct">Невалидна стойност в %</string>
@@ -779,11 +767,9 @@
     <string name="smscommunicator_otp_export_prompt">Сигурни ли сте, че искате да копирате OTP паролата в клипборда?\n\nВие може да се нуждаете само от това, ако вашето приложение за автентичност има проблеми със сканирането на QRCode, искате да го въведете ръчно или искате да конфигурирате хардуерен OTP токен чрез специално приложение.</string>
     <string name="smscommunicator_otp_export_successful">OTP парола (във Base32 формат) е експортирана и копирана в клипборда. Поставете го в автентикатор или хардуерен OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Инсталиране на удостоверител</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Сканиране на кода за настройка на AndroidAPS OTP </string>
     <string name="smscommunicator_otp_step3_test_header">3. Тест на еднократна парола</string>
     <string name="smscommunicator_otp_reset_header">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_install_info">На всеки следящ телефона инсталирайте приложение Аутентификатор, който поддържа RFC 6238 ТОТР токени. Популярни безплатни приложения:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">При нулиране на на удостоверителя, всички вече използвани удостоверения са невалидни. Ще трябва да ги настроите отново!</string>
     <string name="overview_show_predictions">Прогнозни КЗ</string>
     <string name="overview_show_deviationslope">Наклон на отклонението</string>
     <string name="authorizationfailed">Удостоверяването неуспешно</string>

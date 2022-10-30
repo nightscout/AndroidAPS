@@ -56,6 +56,7 @@
     <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
+    <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -93,9 +94,9 @@
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
     <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
-    <string name="description_wear">Monitor and control AndroidAPS using your WearOS watch.</string>
+    <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
-    <string name="description_sms_communicator">Remote control AndroidAPS using SMS commands.</string>
+    <string name="description_sms_communicator">Remote control AAPS using SMS commands.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -132,9 +133,9 @@
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="configbuilder_pump">Pump</string>
-    <string name="configbuilder_pump_description">Which pump would you like to use with AndroidAPS?</string>
+    <string name="configbuilder_pump_description">Which pump would you like to use with AAPS?</string>
     <string name="configbuilder_profile">Profile</string>
-    <string name="configbuilder_profile_description">Which profile should AndroidAPS use?</string>
+    <string name="configbuilder_profile_description">Which profile should AAPS use?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
     <string name="configbuilder_general">General</string>
@@ -142,7 +143,7 @@
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
     <string name="constraints">Constraints</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Use this to activate AndroidAPS\' loop integration.</string>
+    <string name="configbuilder_loop_description">Use this to activate AAPS\' loop integration.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_tbrsetbypump_label">Temp basal set by pump</string>
@@ -159,7 +160,7 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
-    <string name="configbuilder_bgsource_description">Where should AndroidAPS gain  it\'s data from?</string>
+    <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="closedloop">Closed Loop</string>
@@ -395,7 +396,7 @@
     <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
+    <string name="needwhitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
@@ -516,7 +517,7 @@
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
-    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or AAPSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
@@ -775,7 +776,7 @@
     <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
     <string name="readstatus">Read status</string>
     <string name="exitwizard">Skip setup wizard</string>
-    <string name="setupwizard_loop_description">Press the button below to enable AndroidAPS to suggest/make basal changes</string>
+    <string name="setupwizard_loop_description">Press the button below to enable AAPS to suggest/make basal changes</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
@@ -823,7 +824,7 @@
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
     <string name="storedsettingsfound">Stored settings found</string>
-    <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
+    <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
@@ -857,7 +858,7 @@
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
     <string name="dexcom_lognssensorchange_title">Log sensor change to NS</string>
-    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automaticaly on sensor start</string>
+    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="key_tidepool_username" translatable="false">tidepool_username</string>
@@ -950,7 +951,7 @@
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
     <string name="mostcommonprofile">Most common profile:</string>
-    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AndroidAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
     <string name="invalidage">Invalid age entry</string>
     <string name="invalidweight">Invalid weight entry</string>
     <string name="invalidpct">Invalid % entry</string>
@@ -1004,11 +1005,11 @@
     <string name="smscommunicator_otp_export_prompt">Are you sure you want to copy OTP secret to clipboard?\n\nYou may only need that if your authenticator app have issues scanning QRCode, you want to enter it manually or you want to configure hardware OTP token using dedicated app.</string>
     <string name="smscommunicator_otp_export_successful">OTP secret (in Base32 format) exported and copied into clipboard. Paste it into authenticator or hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AndroidAPS OTP codes</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AAPS OTP codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
     <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
@@ -1228,7 +1229,7 @@
     <string name="above" comment="above &quot;in range&quot;">Above</string>
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
-    <string name="widget_description">AndroidAPS widget</string>
+    <string name="widget_description">AAPS widget</string>
     <string name="configure">Configure opacity</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
@@ -1258,5 +1259,8 @@
     <string name="error_asking_for_permissions">Error asking for permissions</string>
     <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
     <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
+    <string name="database_cleanup">Database cleanup</string>
+    <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
+    <string name="cleared_entries">Cleared entries</string>
 
 </resources>

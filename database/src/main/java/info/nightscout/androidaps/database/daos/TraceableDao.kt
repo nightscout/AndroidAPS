@@ -11,7 +11,8 @@ internal interface TraceableDao<T : TraceableDBEntry> : TraceableDaoWorkaround<T
 
     fun deleteAllEntries()
 
-    //fun getAllStartingFrom(id: Long): Single<List<T>>
+    fun deleteOlderThan(than: Long): Int
+    fun deleteTrackedChanges(): Int
 
     @Insert
     fun insert(entry: T): Long
@@ -49,7 +50,7 @@ internal fun <T : TraceableDBEntry> TraceableDao<T>.updateExistingEntryImpl(entr
     val lastModified = System.currentTimeMillis()
     entry.dateCreated = lastModified
     val current = findById(entry.id)
-            ?: throw IllegalArgumentException("The entry with the specified ID does not exist.")
+        ?: throw IllegalArgumentException("The entry with the specified ID does not exist.")
     if (current.referenceId != null) throw IllegalArgumentException("The entry with the specified ID is historic and cannot be updated.")
     entry.version = current.version + 1
     update(entry)

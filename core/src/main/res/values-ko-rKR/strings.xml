@@ -19,7 +19,6 @@
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
     <string name="disconnecting">연결끊기중</string>
-    <string name="androidaps_start">AndroidAPS 시작</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -257,7 +256,6 @@
     <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">폰을 재부팅하거나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그 기록이 되지 않습니다.(알고리즘이 정상적인 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">월</string>
     <string name="tuesday_short">화</string>

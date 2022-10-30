@@ -30,7 +30,7 @@ public enum RileyLinkServiceState {
     // error
     PumpConnectorReady(R.string.rileylink_state_connected), // (OK) RileyLink Ready for Pump Communication
 
-    // Initializing, // get all parameters required for connection (if not possible -> Disabled, if sucessful ->
+    // Initializing, // get all parameters required for connection (if not possible -> Disabled, if successful ->
     // EnableBluetooth)
 
     // EnableBlueTooth, // enable BT (if error no BT interface -> Disabled, BT not enabled -> BluetoothError)

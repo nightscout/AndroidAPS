@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">泵状态在 NS 中可用</string>
     <string name="objectives_manualenacts">手动执行</string>
     <string name="accomplished">已完成: %1$s</string>
-    <string name="objectives_usage_objective">学习如何控制 AndroidAPS</string>
-    <string name="objectives_usage_gate">在 AndroidAPS 中执行不同的操作</string>
     <string name="objectives_useprofileswitch">将个人配置文件设置为90%持续10分钟 (长按首页概览左上角的配置文件名称)</string>
     <string name="objectives_usedisconnectpump">模拟淋浴。 将泵断开连接1个小时(长按开环图标)</string>
     <string name="objectives_usereconnectpump">... 然后以同样的方式重新连接</string>

@@ -26,6 +26,16 @@ class Sms {
         sent = true
     }
 
+    internal constructor(other: Sms, number: String? = null) {
+        phoneNumber = number ?: other.phoneNumber
+        text = other.text
+        date = other.date
+        received = other.received
+        sent = other.sent
+        processed = other.processed
+        ignored = other.ignored
+    }
+
     override fun toString(): String {
         return "SMS from $phoneNumber: $text"
     }

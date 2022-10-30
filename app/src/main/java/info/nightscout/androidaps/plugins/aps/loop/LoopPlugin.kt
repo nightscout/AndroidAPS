@@ -7,6 +7,8 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
@@ -33,8 +35,21 @@ import info.nightscout.androidaps.extensions.buildDeviceStatus
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.Loop.LastRun
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
@@ -52,7 +67,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -107,6 +121,8 @@ class LoopPlugin @Inject constructor(
     override var lastRun: LastRun? = null
     override var closedLoopEnabled: Constraint<Boolean>? = null
 
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+
     override fun onStart() {
         createNotificationChannel()
         super.onStart()
@@ -128,6 +144,7 @@ class LoopPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
+        handler.removeCallbacksAndMessages(null)
         super.onStop()
     }
 
@@ -370,12 +387,17 @@ class LoopPlugin @Inject constructor(
                         if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
                         rxBus.send(EventLoopUpdateGui())
                         fabricPrivacy.logCustom("APSRequest")
+                        // TBR request must be applied first to prevent situation where
+                        // SMB was executed and zero TBR afterwards failed
                         applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
                             override fun run() {
                                 if (result.enacted || result.success) {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
                                     lastRun.lastTBREnact = dateUtil.now()
+                                    // deliverAt is used to prevent executing too old SMB request (older than 1 min)
+                                    // executing TBR may take some time thus give more time to SMB
+                                    resultAfterConstraints.deliverAt = lastRun.lastTBREnact
                                     rxBus.send(EventLoopUpdateGui())
                                     applySMBRequest(resultAfterConstraints, object : Callback() {
                                         override fun run() {
@@ -385,10 +407,7 @@ class LoopPlugin @Inject constructor(
                                                 lastRun.lastSMBRequest = lastRun.lastAPSRun
                                                 lastRun.lastSMBEnact = dateUtil.now()
                                             } else {
-                                                Thread {
-                                                    SystemClock.sleep(1000)
-                                                    invoke("tempBasalFallback", allowNotification, true)
-                                                }.start()
+                                                handler.postDelayed({ invoke("tempBasalFallback", allowNotification, true) }, 1000)
                                             }
                                             rxBus.send(EventLoopUpdateGui())
                                         }
@@ -702,6 +721,6 @@ class LoopPlugin @Inject constructor(
 
     companion object {
 
-        private const val CHANNEL_ID = "AndroidAPS-OpenLoop"
+        private const val CHANNEL_ID = "AAPS-OpenLoop"
     }
 }

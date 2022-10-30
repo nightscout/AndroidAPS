@@ -106,12 +106,14 @@ class OHLoginActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         if (!viewModel.goBack()) {
+            @Suppress("DEPRECATION")
             super.onBackPressed()
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == android.R.id.home) {
+            @Suppress("DEPRECATION")
             onBackPressed()
             true
         } else {

@@ -92,11 +92,13 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private val timeTextWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable) {}
+        override fun afterTextChanged(s: Editable) {
+            binding.alarm.isChecked = binding.carbTimeInput.value > 0
+        }
+
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             calculateInsulin()
-            binding.alarm.isChecked = binding.carbTimeInput.value > 0
         }
     }
 
@@ -367,7 +369,7 @@ class WizardDialog : DaggerDialogFragment() {
             // Set BG if not old
             binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
 
-            binding.ttCheckbox.isEnabled =  tempTarget is ValueWrapper.Existing
+            binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
             binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
 

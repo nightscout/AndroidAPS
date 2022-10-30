@@ -103,7 +103,7 @@
     <string name="action_preset_1">Quantité 1</string>
     <string name="action_preset_2">Quantité 2</string>
     <string name="action_preset_3">Quantité 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Quantité libre</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Quantité libre</string>
     <string name="action_confirm">CONFIRMER</string>
     <string name="action_timeshift">décalage</string>
     <string name="action_bolus">Bolus</string>

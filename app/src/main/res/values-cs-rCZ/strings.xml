@@ -40,9 +40,9 @@
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
     <string name="description_source_xdrip">Příjem glykémií z xDripu+.</string>
     <string name="description_treatments">Ukládá všechny ošetření do databáze</string>
-    <string name="description_wear">Zobrazování stavu a řízení AndroidAPS z hodinek s WearOS</string>
+    <string name="description_wear">Zobrazování stavu a řízení AAPS z hodinek s WearOS.</string>
     <string name="description_xdrip_status_line">Zobrazování informací o smyčce na xDrip+ watchface.</string>
-    <string name="description_sms_communicator">Vzdálené řízení pomocí SMS příkazů</string>
+    <string name="description_sms_communicator">Vzdálené ovládání AAPS pomocí SMS příkazů.</string>
     <string name="treatments_insulin_label_string">Inzulín:</string>
     <string name="treatments_carbs_label_string">Sacharidy:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -79,9 +79,9 @@
     <string name="treatments">Ošetření</string>
     <string name="virtualpump">Virtuální pumpa</string>
     <string name="configbuilder_pump">Pumpa</string>
-    <string name="configbuilder_pump_description">Jakou pumpu chcete používat s AndroidAPS?</string>
+    <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Jaký profil má AndroidAPS používat?</string>
+    <string name="configbuilder_profile_description">Jaký profil má AAPS použít?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Jaký algoritmus má AndroidAPS používat?</string>
     <string name="configbuilder_general">Obecné</string>
@@ -89,7 +89,7 @@
     <string name="configbuilder_constraints_description">Jaká omezení byla použita?</string>
     <string name="constraints">Omezení</string>
     <string name="configbuilder_loop">Smyčka</string>
-    <string name="configbuilder_loop_description">Integrace smyčky do AndroidAPS.</string>
+    <string name="configbuilder_loop_description">Použitím aktivujte integraci AAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
     <string name="loop_tbrsetbypump_label">Bazál nastavený pumpou</string>
@@ -106,7 +106,7 @@
     <string name="sms_basal">Bazál:</string>
     <string name="changeyourinput">Změňte zadání!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
-    <string name="configbuilder_bgsource_description">Odkud má získávat AndroidAPS glykémie?</string>
+    <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Typ smyčky</string>
     <string name="closedloop">Uzavřená smyčka</string>
@@ -429,7 +429,7 @@
     <string name="sensitivityweightedaverage">Sensitivita vážený průměr</string>
     <string name="notloadedplugins">Všechny profily nenačteny!</string>
     <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
-    <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip+). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo NSClient!</string>
+    <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip+). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo AAPSClient!</string>
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
@@ -631,7 +631,7 @@
     <string name="welcometosetupwizard">Vítejte v průvodci nastavením. Provede Vás procesem nastavení programu\n</string>
     <string name="readstatus">Načíst status</string>
     <string name="exitwizard">Přeskočit průvodce</string>
-    <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AndroidAPS povolit navrhovat nebo provádět změny bazálu</string>
+    <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AAPS povolit navrhovat nebo provádět změny bazálu</string>
     <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient slouží ke spojení s Nightscoutem. Nastavení můžete nyní přeskočit, ale nebudete schopni dokončit cíle, dokud nastavení neprovedete.</string>
@@ -673,7 +673,7 @@
     <string name="remove_items">Odstranit položky</string>
     <string name="sort_items">Seřadit položky</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
-    <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
+    <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="error_adding_treatment_title">Data ošetření neúplná</string>
     <string name="maintenance_settings">Nastavení údržby</string>
     <string name="maintenance_email">Příjemce e-mailu</string>
@@ -774,7 +774,7 @@
     <string name="id">ID:</string>
     <string name="submit">Odeslat</string>
     <string name="mostcommonprofile">Nejběžnější profil:</string>
-    <string name="survey_comment">Poznámka: Pouze data viditelná na této obrazovce budou odesílána anonymně. ID je přiřazeno k této instalaci produktu AndroidAPS. Data můžete znovu odeslat, pokud se váš hlavní profil změní, ale nechte ho běžet alespoň týden, aby byl výsledek viditelný v čase v rozsahu. Vážíme si Vaši pomoci.</string>
+    <string name="survey_comment">Poznámka: Pouze data viditelná na této obrazovce budou odesílána anonymně. ID je přiřazeno k této instalaci produktu AAPS. Data můžete znovu odeslat, pokud se váš hlavní profil změní, ale nechte ho běžet alespoň týden, aby byl výsledek viditelný v čase v rozsahu. Vážíme si Vaši pomoci.</string>
     <string name="invalidage">Neplatná položka věku</string>
     <string name="invalidweight">Neplatná položka váhy</string>
     <string name="invalidpct">Neplatný vstup %</string>
@@ -819,7 +819,7 @@
     <string name="smscommunicator_otp_export_prompt">Jste si jisti, že chcete zkopírovat tajný OTP klíč do schránky?\n\nPravděpodobně to budete potřebovat pouze v případě, když bude mít vaše ověřovací aplikace problém se skenováním QR kodu, chcete ho zadat ručně, nebo chcete nakonfigurovat hardwarový OTP token pomocí specializované aplikace.</string>
     <string name="smscommunicator_otp_export_successful">Tajné OTP heslo (ve formátu Base32) bylo vyexportováno a zkopírováno do schránky. Vložte ho do autentikátoru nebo programátoru OTP hardwaru!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Nainstalujte Autentikátor</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pro nastavení kódů OTP AndroidAPS</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pro nastavení kódů OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
     <string name="smscommunicator_otp_reset_header">Resetovat autentikátory</string>
     <string name="smscommunicator_otp_install_info">Na každém sledovacím telefonu nainstalujte Authentikátor, který podporuje tokeny TOTP RFC 6238. Nejoblíbenější bezplatné aplikace jsou:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
@@ -1020,7 +1020,7 @@
     <string name="above" comment="above &quot;in range&quot;">Nad</string>
     <string name="show_loop_records">Zobrazit záznamy smyčky</string>
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
-    <string name="widget_description">AndroidAPS widget</string>
+    <string name="widget_description">Widget AAPS</string>
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="loop_status">Stav smyčky</string>
     <string name="graph_scale">Měřítko grafu</string>
@@ -1048,4 +1048,7 @@
     <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
     <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
     <string name="dynisf_adjust_sensitivity">Upravit citlivost a glykémii</string>
+    <string name="database_cleanup">Vyčištění databáze</string>
+    <string name="cleanup_db_confirm">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.</string>
+    <string name="cleared_entries">Vymazané záznamy</string>
 </resources>

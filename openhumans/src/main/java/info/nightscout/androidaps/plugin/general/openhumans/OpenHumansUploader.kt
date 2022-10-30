@@ -519,7 +519,7 @@ class OpenHumansUploader @Inject internal constructor(
 
         val metaData = OpenHumansAPI.FileMetadata(
             tags = tags,
-            description = "AndroidAPS Database Upload",
+            description = "AAPS Database Upload",
             md5 = MessageDigest.getInstance("MD5").digest(bytes).toHexString(),
             creationDate = uploadDate
         )

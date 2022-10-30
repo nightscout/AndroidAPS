@@ -14,6 +14,7 @@ android {
 }
 
 dependencies {
+    implementation project(':libraries')
     implementation project(':core')
     implementation project(':shared')
 }

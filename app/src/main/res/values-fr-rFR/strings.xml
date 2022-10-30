@@ -40,9 +40,9 @@
     <string name="description_source_ns_client">Télécharge les glycémies depuis Nightscout</string>
     <string name="description_source_xdrip">Recevoir les glycémies depuis xDrip+.</string>
     <string name="description_treatments">Enregistre tous les traitements qui ont été effectués</string>
-    <string name="description_wear">Surveillez et contrôlez AndroidAPS en utilisant votre montre WearOS.</string>
+    <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
     <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
-    <string name="description_sms_communicator">Commander à distance AndroidAPS en utilisant les commandes SMS.</string>
+    <string name="description_sms_communicator">Commander à distance AAPS en utilisant les commandes SMS.</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Glucides :</string>
     <string name="treatments_iob_label_string">IA: </string>
@@ -79,9 +79,9 @@
     <string name="treatments">Traitements</string>
     <string name="virtualpump">Pompe virtuelle</string>
     <string name="configbuilder_pump">Pompe</string>
-    <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AndroidAPS ?</string>
+    <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Quel profil doit utiliser AndroidAPS ?</string>
+    <string name="configbuilder_profile_description">Quel profil AAPS devrait-il utiliser ?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Quel algorithme APS doit faire les ajustements de thérapie?</string>
     <string name="configbuilder_general">Général</string>
@@ -89,7 +89,7 @@
     <string name="configbuilder_constraints_description">Quelles restrictions sont appliquées ?</string>
     <string name="constraints">Restrictions</string>
     <string name="configbuilder_loop">Boucle</string>
-    <string name="configbuilder_loop_description">Veuillez utiliser cela pour activer la Boucle d\'AndroidAPS.</string>
+    <string name="configbuilder_loop_description">Utilisez ceci pour activer l’intégration de la boucle AAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
     <string name="loop_tbrsetbypump_label">Basal temporaire défini par la pompe</string>
@@ -106,7 +106,7 @@
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
-    <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AndroidAPS ?</string>
+    <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="closedloop">Boucle Fermée</string>
@@ -332,7 +332,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s a besoin d\'optimisation de la batterie (whitelisting) pour une performance correcte</string>
+    <string name="needwhitelisting">%1$s a besoin d\'être sur la liste blanche de l\'optimisation de la batterie pour des performances correctes</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="loopsuspendedfor">Suspendu (%1$d m)</string>
     <string name="suspendloopfor1h">Suspendre la Boucle pour 1h</string>
@@ -430,7 +430,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sensitivityweightedaverage">Sensibilité avec moyenne pondérée</string>
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
-    <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de NSClient sont installées !</string>
+    <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de AAPSClient sont installées !</string>
     <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">SI dynamique</string>
@@ -632,7 +632,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="welcometosetupwizard">Bienvenue à l\'assistant de configuration. Je vais vous guider à travers le processus de configuration\n</string>
     <string name="readstatus">Statut de lecture</string>
     <string name="exitwizard">Ignorer l\'assistant de configuration</string>
-    <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AndroidAPS à suggérer/faire des changements de basal</string>
+    <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AAPS à suggérer/faire des changements de basal</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/fr/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">Le NSClient gère la connexion avec Nightscout. Vous pouvez sauter cette étape maintenant mais vous ne pourrez pas terminer les objectifs sans cette configuration.</string>
@@ -674,7 +674,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
-    <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
+    <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
     <string name="maintenance_email">E-mail</string>
@@ -702,7 +702,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_openmode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Enreg. du changement de capteur sur NS</string>
-    <string name="dexcom_lognssensorchange_summary">Créer automatiquement sur NS un événement \"Changement de capteur\" au démarrage du capteur</string>
+    <string name="dexcom_lognssensorchange_summary">Créer automatiquement un événement \"Changement de capteur\" dans NS au démarrage du capteur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
@@ -775,7 +775,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="id">ID :</string>
     <string name="submit">Envoyer</string>
     <string name="mostcommonprofile">Profil le plus courant :</string>
-    <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AndroidAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour rendre le résultat visible dans le temps. Votre aide est appréciée.</string>
+    <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour obtenir le résultat \"temps dans la cible\". Votre aide est appréciée.</string>
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
     <string name="invalidpct">% saisi invalide</string>
@@ -820,7 +820,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_otp_export_prompt">Êtes-vous sûr de vouloir copier l\'OTP secret dans le presse-papiers ?\n\nVous pouvez en avoir besoin uniquement si votre application d\'authentification a des problèmes pour scanner le QRCode, si vous voulez le saisir manuellement ou si vous voulez configurer un jeton OTP matériel en utilisant une application dédiée.</string>
     <string name="smscommunicator_otp_export_successful">OTP secret (au format Base32) exporté et copié dans le presse-papiers. Collez-le dans l\'authentificateur ou le graveur OTP matériel !</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan du code pour configurer les codes OTP AndroidAPS</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scannez le code pour configurer les codes OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
@@ -1020,7 +1020,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
-    <string name="widget_description">Widget AndroidAPS</string>
+    <string name="widget_description">Widget AAPS</string>
     <string name="configure">Configurer l’opacité</string>
     <string name="loop_status">État de la boucle</string>
     <string name="graph_scale">Échelle du graph.</string>
@@ -1048,4 +1048,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="no_watch_connected">(Pas de montre connectée)</string>
     <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
     <string name="dynisf_adjust_sensitivity">Ajuster la sensibilité et la glycémie</string>
+    <string name="database_cleanup">Nettoyer la base de données</string>
+    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
+    <string name="cleared_entries">Entrées effacées</string>
 </resources>

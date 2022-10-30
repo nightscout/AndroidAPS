@@ -38,9 +38,7 @@
     <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
     <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
     <string name="description_treatments">Salvează toate tratamentele făcute</string>
-    <string name="description_wear">Monitorizează și controlează aplicația AndroidAPS folosind smartwatchul WearOS.</string>
     <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
-    <string name="description_sms_communicator">Controlare de la distanță a AndroidAPS folosind comenzi date prin SMS.</string>
     <string name="treatments_insulin_label_string">Insulină:</string>
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -77,9 +75,7 @@
     <string name="treatments">Tratamente</string>
     <string name="virtualpump">Pompă virtuală</string>
     <string name="configbuilder_pump">Pompă</string>
-    <string name="configbuilder_pump_description">Ce pompă doriți să folosiți cu AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Ce profil doriți să folosească AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general">General</string>
@@ -87,7 +83,6 @@
     <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
     <string name="constraints">Constrângeri</string>
     <string name="configbuilder_loop">Buclă</string>
-    <string name="configbuilder_loop_description">Folosiți aceasta pentru a activa facilitățile de buclă a AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Constrângeri după procesare</string>
     <string name="loop_tbrsetbypump_label">Bazală Temporală programată în pompă</string>
@@ -104,7 +99,6 @@
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
-    <string name="configbuilder_bgsource_description">De unde trebuie să primească AndroidAPS datele?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mod APS</string>
     <string name="closedloop">Buclă închisă</string>
@@ -327,7 +321,6 @@
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s necesită excluderea din lista de optimizare a bateriei pentru o funcționare corespunzătoare</string>
     <string name="loopsuspended">Buclă suspendată</string>
     <string name="loopsuspendedfor">Suspendat (%1$d min)</string>
     <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
@@ -425,7 +418,6 @@
     <string name="sensitivityweightedaverage">Sensibilitate estimată prin mediere</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
-    <string name="ns_localbroadcasts">Activați transmisiunile către alte aplicații (cum ar fi xDrip+). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalat!</string>
     <string name="ns_localbroadcasts_title">Permite anunțuri locale.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Activează UAM</string>
@@ -617,7 +609,6 @@
     <string name="welcometosetupwizard">Ați pornit asistentul pentru setări. Acesta vă va ajuta pentru configurarea setărilor\n</string>
     <string name="readstatus">Citire stare</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
-    <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient se ocupă de conectarea la Nightscout. Puteți sări peste această parte, dar nu se vor îndeplini anumite obiective dacă faceți acest lucru.</string>
@@ -652,7 +643,6 @@
     <string name="sensitivity_raises_target_title">Sensibilitatea la insulină crește targetul</string>
     <string name="sensitivity_raises_target_summary">Când este detectată sensibilitate la insulină, crește targetul</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
-    <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AndroidAPS va copia setările bazalelor din profilurile din aplicație în pompă, suprascriindu-le pe cele existente deja în pompă. Asigurați-vă că aveți setările corecte ale bazalelor în AndroidAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="maintenance_settings">Setări de întreținere</string>
     <string name="maintenance_email">Destinatar email</string>
@@ -678,7 +668,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă nou valoare este mai mare cu %. Valoarea implicită este 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Înregistrează schimbarea senzorului în NS</string>
-    <string name="dexcom_lognssensorchange_summary">Crează eveniment ”Schimbare Senzor” în NS la pornirea senzorului</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Utilizatorul Tidepool (de obicei adresa de email)</string>
@@ -749,7 +738,6 @@
     <string name="id">ID:</string>
     <string name="submit">Trimiteți</string>
     <string name="mostcommonprofile">Cel mai frecvent profil:</string>
-    <string name="survey_comment">Notă: Doar datele vizibile pe acest ecran vor fi încărcate în mod anonim. ID-ul este alocat acestei instalări de AndroidAPS. Puteți trimite date din nou dacă profilul dumneavoastră principal se modifică, dar lăsați-l să ruleze cel puțin o săptămână pentru ca rezultatul să fie vizibil în interval de timp. Ajutorul dvs. este binevenit.</string>
     <string name="invalidage">Valoare vârstă invalidă</string>
     <string name="invalidweight">Valoare greutate invalidă</string>
     <string name="invalidpct">Intrare % invalidă</string>
@@ -789,11 +777,9 @@
     <string name="smscommunicator_otp_export_prompt">Sunteţi sigur că doriţi să copiaţi secretul OTP în clipboard?\n\nS-ar putea să aveţi nevoie doar dacă aplicaţia dumneavoastră de autentificare are probleme de scanare a QRCode, doriţi să o introduceţi manual sau doriţi să configuraţi token-ul hardware OTP folosind aplicaţia dedicată.</string>
     <string name="smscommunicator_otp_export_successful">Secret OTP (în formatul Base32) exportat şi copiat în clipboard. Lipiţi-l în autentificator sau in hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanați codul pentru a seta codurile unice pentru AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testați o parolă unică</string>
     <string name="smscommunicator_otp_reset_header">Resetați Authenticatori</string>
     <string name="smscommunicator_otp_install_info">Pe fiecare telefon urmăritor instalați o aplicație de tip Authenticator care suporta tokens RFC 6238 TOTP. Asemenea aplicații gratuite populare sunt:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Prin resetarea autentificatorului invalidați toți autentificatorii existenți. Va trebui să îi configurați din nou!</string>
     <string name="overview_show_predictions">Predicții</string>
     <string name="overview_show_deviationslope">Panta deviaţiei</string>
     <string name="authorizationfailed">Autorizarea a eșuat</string>

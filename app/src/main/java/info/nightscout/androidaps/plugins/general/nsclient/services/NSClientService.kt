@@ -42,7 +42,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
@@ -79,7 +79,7 @@ class NSClientService : DaggerService() {
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var repository: AppRepository
 
@@ -177,18 +177,18 @@ class NSClientService : DaggerService() {
 
     private fun processAddAck(ack: NSAddAck) {
         lastAckTime = dateUtil.now()
-        dataWorker.enqueue(
+        dataWorkerStorage.enqueue(
             OneTimeWorkRequest.Builder(NSClientAddAckWorker::class.java)
-                .setInputData(dataWorker.storeInputData(ack))
+                .setInputData(dataWorkerStorage.storeInputData(ack))
                 .build()
         )
     }
 
     private fun processUpdateAck(ack: NSUpdateAck) {
         lastAckTime = dateUtil.now()
-        dataWorker.enqueue(
+        dataWorkerStorage.enqueue(
             OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker::class.java)
-                .setInputData(dataWorker.storeInputData(ack))
+                .setInputData(dataWorkerStorage.storeInputData(ack))
                 .build()
         )
     }
@@ -466,9 +466,9 @@ class NSClientService : DaggerService() {
                             // take the newest
                             val profileStoreJson = profiles[profiles.length() - 1] as JSONObject
                             rxBus.send(EventNSClientNewLog("PROFILE", "profile received"))
-                            dataWorker.enqueue(
+                            dataWorkerStorage.enqueue(
                                 OneTimeWorkRequest.Builder(LocalProfilePlugin.NSProfileWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(profileStoreJson))
+                                    .setInputData(dataWorkerStorage.storeInputData(profileStoreJson))
                                     .build()
                             )
                         }
@@ -484,9 +484,9 @@ class NSClientService : DaggerService() {
                             else if (action == "update") addedOrUpdatedTreatments.put(jsonTreatment)
                         }
                         if (addedOrUpdatedTreatments.length() > 0) {
-                            dataWorker.enqueue(
+                            dataWorkerStorage.enqueue(
                                 OneTimeWorkRequest.Builder(NSClientAddUpdateWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments))
+                                    .setInputData(dataWorkerStorage.storeInputData(addedOrUpdatedTreatments))
                                     .build()
                             )
                         }
@@ -501,18 +501,18 @@ class NSClientService : DaggerService() {
                     if (data.has("food")) {
                         val foods = data.getJSONArray("food")
                         if (foods.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + foods.length() + " foods"))
-                        dataWorker.enqueue(
+                        dataWorkerStorage.enqueue(
                             OneTimeWorkRequest.Builder(FoodWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(foods))
+                                .setInputData(dataWorkerStorage.storeInputData(foods))
                                 .build()
                         )
                     }
                     if (data.has("mbgs")) {
                         val mbgArray = data.getJSONArray("mbgs")
                         if (mbgArray.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + mbgArray.length() + " mbgs"))
-                        dataWorker.enqueue(
+                        dataWorkerStorage.enqueue(
                             OneTimeWorkRequest.Builder(NSClientMbgWorker::class.java)
-                                .setInputData(dataWorker.storeInputData(mbgArray))
+                                .setInputData(dataWorkerStorage.storeInputData(mbgArray))
                                 .build()
                         )
                     }
@@ -527,9 +527,9 @@ class NSClientService : DaggerService() {
                             rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"))
                             // Objective0
                             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-                            dataWorker.enqueue(
+                            dataWorkerStorage.enqueue(
                                 OneTimeWorkRequest.Builder(NSClientSourceWorker::class.java)
-                                    .setInputData(dataWorker.storeInputData(sgvs))
+                                    .setInputData(dataWorkerStorage.storeInputData(sgvs))
                                     .build()
                             )
                         }

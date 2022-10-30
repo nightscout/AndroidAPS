@@ -103,7 +103,7 @@
     <string name="action_preset_1">הגדרה מראש 1</string>
     <string name="action_preset_2">הגדרה מראש 2</string>
     <string name="action_preset_3">הגדרה מראש 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">כמות חופשית</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">כמות חופשית</string>
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
     <string name="action_bolus">בולוס</string>
