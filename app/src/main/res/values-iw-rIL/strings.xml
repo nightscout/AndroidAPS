@@ -52,9 +52,7 @@
     <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
-    <string name="treatments_wizard_bg_label">ערכי סוכר בדם</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">פחמימות</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
     <string name="bolus_iob_label">בולוס פעיל</string>
     <string name="openapsma_run">בצע</string>
@@ -92,11 +90,9 @@
     <string name="safety">בטיחות</string>
     <string name="openapsma_disabled">התוסף אינו זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
-    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_treatment_label">טיפול</string>
     <string name="overview_calculator_label">מחשבון</string>
-    <string name="constraintapllied">מגבלה הוחלה!</string>
     <string name="sms_bolus">בולוס:</string>
     <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="changeyourinput">שנה קלט!</string>
@@ -111,13 +107,10 @@
     <string name="carbssuggestion">המלצת פחמימות</string>
     <string name="unsupportednsversion">גרסה לא נתמכת של Nightscout</string>
     <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
-    <string name="bolusconstraintapplied">בולוס מעבר למגבלה</string>
-    <string name="carbsconstraintapplied">פחמימות מעבר למגבלה</string>
     <string name="careportal_newnstreatment_other">אחר</string>
     <string name="careportal_newnstreatment_meter">מד</string>
     <string name="careportal_newnstreatment_sensor">חיישן</string>
     <string name="carb_time_label">זמן פחמימות</string>
-    <string name="careportal_newnstreatment_duration_label">משך</string>
     <string name="profile_label">פרופיל</string>
     <string name="careportal_newnstreatment_glucosetype">סוג גלוקוז</string>
     <string name="overview_tempbasal_button">בזאלי זמני</string>
@@ -282,9 +275,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">ערך ברירת מחדל: 3.0 (AMA) או 8.0 (SMB). זוהי הגדרת ברירת מחדל להשפעת פחמימות על הסוכר בדם ב-5 דקות. ברירת המחדל היא 3mg/dL/5min. פעולה זו משפיעה על קצב הדעיכה של פחמ\' פעילות, ועל הנחת קצב ספיגת הפחמ\' בחישוב רמות סוכר עתידיות כשהן בירידה מהירה מהצפוי או עליה איטית מהצפוי.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">שימו לב!\nבדרך כלל אינכם צריכים לשנות את הערכים שלהלן. נא ללחוץ כאן, לקרוא את הטקסט ולוודא שאתם מבינים אותו לפני שתשנו ערכים אלה.</string>
     <string name="smscommunicator_invalidphonennumber">מספר טלפון ל-SMS אינו תקין</string>
-    <string name="overview_calibration">כיול</string>
-    <string name="xdripnotinstalled">xDrip+ אינו מותקן</string>
-    <string name="calibrationsent">כיול נשלח ל-xDrip+</string>
     <string name="smscommunicator_calibrationsent">הכיול נשלח. יש לאשר את קבלת כיולים ב-xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip אינו מקבל כיולים</string>
     <string name="pumpsuspended">משאבה מושהית</string>
@@ -454,7 +444,6 @@
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
     <string name="food">מזון</string>
-    <string name="shortgramm">גר\'</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">אנרגיה</string>
@@ -539,9 +528,6 @@
     <string name="allow_automated_crash_reporting">אפשר דיווח אוטומטי על קריסה ושליחת נתוני השימוש למפתחים דרך שירות fabric.io.</string>
     <string name="g5appnotdetected">עדכנו את יישום ה-Dexcom שלכם לגרסה נתמכת</string>
     <string name="dexcom_app_not_installed">אפליקציית Dexcom אינה מותקנת.</string>
-    <string name="start_activity_tt">התחל פעילות TT</string>
-    <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">רישום בולוס ללא הזרקה</string>
     <string name="category">קטגוריה</string>
     <string name="subcategory">תת קטגוריה</string>
@@ -554,8 +540,6 @@
     <string name="overview_show_cob">פחמימות פעילות</string>
     <string name="overview_show_iob">אניסולין פעיל</string>
     <string name="overview_show_basals">בזאלי</string>
-    <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
-    <string name="start_hypo_tt">הפעלת היפו TT</string>
     <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
     <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
     <string name="profileswitch_ismissing">שינוי פרופיל חסר. אנא החליפו פרופיל או לחצו על \"הפעל פרופיל\" בפרופיל המקומי.</string>
@@ -680,8 +664,6 @@
     <string name="nav_logsettings">הגדרות יומן רישום</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
-    <string name="time_offset">היסט זמן</string>
-    <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <string name="calculation_short">חישוב</string>
@@ -737,7 +719,6 @@
     <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
     <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">דק\'</string>
     <string name="profile_name">שם הפרופיל:</string>
     <string name="selected_profile">נבחר:</string>
     <string name="unitsnosemicolon">יחידות</string>
@@ -842,18 +823,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_ureachable">דווח שהמשאבה אינה נגישה</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
-    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
-    <string name="bolusadvisor">יועץ הבולוסים</string>
-    <string name="bolusadvisormessage">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
-    <string name="enablebolusadvisor">אפשר את יועץ הבולוסים</string>
-    <string name="enablebolusadvisor_summary">מציג תזכורת לאכול אחר כך במקום להזריק את המינון שהומלץ ע\"י האשף בעת היפרגליקמיה (\"בולוס מקדים\")</string>
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
-    <string name="timetoeat">זמן לאכול</string>
-    <string name="bolus_reminder">תזכורת בולוס</string>
     <string name="enablebolusreminder">אפשר את תזכורת בולוס</string>
-    <string name="enablebolusreminder_summary">השתמש בתזכורת כדי להזריק בולוס מאוחר יותר במחשבון
-        (\"פוסט-בולוס\")</string>
-    <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
     <string name="graph_menu_divider_header">גרף</string>
     <string name="chart_menu">תפריט הגרף</string>
@@ -936,7 +907,6 @@
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
-    <string name="a11y_carb_reminder">קביעת תזכורת</string>
     <string name="a11y_add_new_profile">הוסף פרופיל חדש</string>
     <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
     <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
@@ -993,7 +963,6 @@
     <string name="show_loop">הצג לולאה</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
-    <string name="dialog_canceled">דו-שיח בוטל</string>
     <string name="veryLow" comment="below 3.1">נמוך מאוד</string>
     <string name="low" comment="3.1-3.9">נמוך</string>
     <string name="high" comment="10.0-13.9">גבוה</string>
