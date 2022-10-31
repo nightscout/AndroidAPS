@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
     <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
-    <string name="treatments_wizard_bg_label">GLIC</string>
     <string name="treatments_wizard_tt_label">AT</string>
-    <string name="treatments_wizard_carbs_label">Hidratos</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="bolus_iob_label">Bólus - IA</string>
     <string name="openapsma_run">Executar agora</string>
@@ -90,11 +88,9 @@
     <string name="safety">Segurança</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
-    <string name="treatmentdeliveryerror">Ocorreu um erro de bólus. Verifique manualmente a quantidade administrada</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
-    <string name="constraintapllied">Restrição aplicada!</string>
     <string name="sms_bolus">Bólus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere o seu input!</string>
@@ -109,8 +105,6 @@
     <string name="carbssuggestion">Sugestão de Hidratos</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
-    <string name="bolusconstraintapplied">Restrição de bólus aplicada</string>
-    <string name="carbsconstraintapplied">Restrição de hidratos de carbono aplicada</string>
     <string name="careportal_newnstreatment_other">Outro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -278,9 +272,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para deteção avançada de refeições (AMA) ou 8.0 para super micro bólus (SMB). Esta é a configuração padrão para o cálculo de quanto varia a cada 5 min a glicose no sangue (GLIC)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (HCA), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de GLIC, quando é que a GLIC está baixando mais do que espectável ou não subindo como espectável.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
     <string name="smscommunicator_invalidphonennumber">Número de telefone de SMS inválido</string>
-    <string name="overview_calibration">Calibração</string>
-    <string name="xdripnotinstalled">xDrip+ não está instalado</string>
-    <string name="calibrationsent">Calibração enviada para xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibração enviada. Receção tem de estar ativada na xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">O xDrip+ não está a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
@@ -532,7 +523,6 @@
     <string name="dexcom_app_not_installed">App Dexcom não está instalada.</string>
     <string name="start_activity_tt">Iniciar AT de atividade</string>
     <string name="start_eating_soon_tt">Iniciar AT de Comer em breve</string>
-    <string name="temptargetshort">AT</string>
     <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
@@ -545,7 +535,6 @@
     <string name="overview_show_cob">Hidratos de Carbono Ativos (HCA)</string>
     <string name="overview_show_iob">Insulina ativa</string>
     <string name="overview_show_basals">Basais</string>
-    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="start_hypo_tt">Iniciar AT de Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
@@ -659,7 +648,6 @@
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do ClienteNS. Pondere reiniciar o NS e ClienteNS.</string>
     <string name="time_offset">Fuso horário</string>
-    <string name="bolus_reminder">Lembrete para bólus mais tarde</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -812,18 +800,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
-    <string name="alarminxmin">Executar alarme em %1$d min</string>
-    <string name="bolusadvisor">Guia de Bólus</string>
-    <string name="bolusadvisormessage">Tem glicemia alta. Em vez de comer agora é recomendado esperar por uma melhor glicemia. Quer fazer um bólus de correção agora e lembrá-lo quando for hora de comer? Neste caso nenhum hidrato será registado e deve utilizar o assistente novamente quando for lembrado.</string>
-    <string name="enablebolusadvisor">Activar Guia de Bólus</string>
-    <string name="enablebolusadvisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
-    <string name="timetoeat">Hora de comer</string>
-    <string name="bolusreminder">Lembrete de bólus</string>
     <string name="enablebolusreminder">Ativar lembrete de bólus</string>
-    <string name="enablebolusreminder_summary">Usar lembrete para bólus mais tarde com o assistente
-        (\"pós-bólus\")</string>
-    <string name="time_to_bolus">Hora de fazer o bólus!\nExecute o assistente de bólus e faça o cálculo novamente.</string>
     <string name="fabric_upload_disabled">Envio de registos de erro desativado!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menu do Gráfico</string>
