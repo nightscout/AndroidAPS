@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_wizard_bg_label">Glucèmia</string>
     <string name="treatments_wizard_tt_label">OT</string>
-    <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="bolus_iob_label">IOB Bolus</string>
     <string name="openapsma_run">Executar ara</string>
@@ -92,7 +90,6 @@
     <string name="setbasalquestion">Acceptar nova basal temporal:</string>
     <string name="overview_treatment_label">Tractament</string>
     <string name="overview_calculator_label">Calculadora</string>
-    <string name="constraintapllied">Restricció aplicada!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
@@ -107,8 +104,6 @@
     <string name="carbssuggestion">Proposta de carbs</string>
     <string name="unsupportednsversion">Versió no compatible de Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
-    <string name="bolusconstraintapplied">Restricció de bolus aplicada</string>
-    <string name="carbsconstraintapplied">Restricció de carbs. aplicada</string>
     <string name="careportal_newnstreatment_other">Altres</string>
     <string name="careportal_newnstreatment_meter">Glucòmetre</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -246,9 +241,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valor per defecte: 3 (AMA) o 8.0 (SMB). Aquest paràmetre indica el valor per defecte d\'absorció de carbohidrats en 5 minuts, quan diem 3 volem dir 3mg/dl/5min. Afecta a com de ràpid decauen els COB i quina absorció de carbohidrats es considera al calcular la predicció de glucèmia futura, quan la glucèmia cau més ràpid de l\'esperat o no puja tant com era de preveure.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenció!\nNormalment no cal modificar els valors d\'aquí sota. Si us plau FEU CLIC AQUÍ, LLEGIU el text i assegureu-vos de COMPRENDRE\'L abans de modificar-ne qualsevol.</string>
     <string name="smscommunicator_invalidphonennumber">Número de telf. per SMS no vàlid</string>
-    <string name="overview_calibration">Calibració</string>
-    <string name="xdripnotinstalled">xDrip+ no instal·lat</string>
-    <string name="calibrationsent">Calibració enviada a xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibració enviada. Cal que la recepció a xDrip+ estigui activada.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ no està rebent calibracions</string>
     <string name="pumpsuspended">Bomba aturada</string>
