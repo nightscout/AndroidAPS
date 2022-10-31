@@ -51,9 +51,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Carbos</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="bolus_iob_label">I.A de Bolus</string>
     <string name="openapsma_run">Executar agora</string>
@@ -91,11 +89,9 @@
     <string name="safety">Seguro</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
-    <string name="treatmentdeliveryerror">O Bolus relatou um erro. Verifique a quantidade administrada manualmente</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
-    <string name="constraintapllied">Restrição aplicada!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere sua entrada!</string>
@@ -110,13 +106,10 @@
     <string name="carbssuggestion">Sugestão de Carbs</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
-    <string name="bolusconstraintapplied">Restrição de bólus aplicada</string>
-    <string name="carbsconstraintapplied">Restrições de carbs aplicada</string>
     <string name="careportal_newnstreatment_other">Outro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Hora do carboidrato</string>
-    <string name="careportal_newnstreatment_duration_label">Duração</string>
     <string name="profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de glicose</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
@@ -280,9 +273,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para assitência avançada de refeições (AAR) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glicemia (BG) devido à absorção de carboidratos. O padrão é 3mg/dl/5min. Isso afeta a rapidez com que decaem os carboidratos ativos (CA) e quanta absorção de carboidrato será considerada no cálculo da previsão de glicemia futura, tornando possível notar que glicemia está baixando mais do que o esperado ou não subindo como esperado.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequências antes de alterar qualquer um destes valores.</string>
     <string name="smscommunicator_invalidphonennumber">Número de telefone inválido para comunicação por SMS</string>
-    <string name="overview_calibration">Calibração</string>
-    <string name="xdripnotinstalled">xDrip+ não está instalado</string>
-    <string name="calibrationsent">Calibração enviada para o xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibração enviada. O recebimento deve estar ativado no xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ não está recebendo calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
@@ -431,7 +421,6 @@
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="food">Alimentos</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<nenhum>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -505,9 +494,6 @@
     <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
     <string name="g5appnotdetected">Por favor atualize as sua aplicação Dexcom para uma versão suportada</string>
     <string name="dexcom_app_not_installed">App Dexcom não está instalada.</string>
-    <string name="start_activity_tt">Iniciar atividade TT</string>
-    <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
@@ -518,8 +504,6 @@
     <string name="overview_show_cob">Carboidratos a bordo</string>
     <string name="overview_show_iob">Insulina a bordo</string>
     <string name="overview_show_basals">Basais</string>
-    <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
-    <string name="start_hypo_tt">Começar TT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Ativar Perfil\" em PerfilLocal.</string>
@@ -625,7 +609,6 @@
     <string name="nav_logsettings">Definições de registo</string>
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
-    <string name="time_offset">Fuso horário</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -679,7 +662,6 @@
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">min</string>
     <string name="profile_name">Nome do Perfil:</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
@@ -779,17 +761,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se um evento de bomba inacessível for identificado</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
     <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
-    <string name="alarminxmin">Disparar alarme em %1$d min</string>
-    <string name="bolusadvisor">Assistente de bolus</string>
-    <string name="bolusadvisormessage">Sua glicemia está alta. Em vez de comer agora, é recomendado esperar por uma glicemia melhor. Quer fazer um bolus de correção agora e ser lembrado de quando for hora de comer? Neste caso, nenhum carboidrato será registrado e você deverá usar o assistente novamente quando lembrarmos você.</string>
-    <string name="enablebolusadvisor">Ativar o assistente de bolus</string>
     <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
-    <string name="timetoeat">Hora de comer</string>
-    <string name="bolus_reminder">Lembrete de bolus</string>
     <string name="enablebolusreminder">Ativar lembrete de bolus</string>
-    <string name="enablebolusreminder_summary">Usar lembrete para adiar o bolus com o assistente
-        (\"pós-bolus\")</string>
-    <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="prime">Purgar/Preencher</string>
     <string name="ns_upload_summary">Perfis, bolus, carboidratos, basais temporários são enviados para NS</string>
     <string name="ns_receive_tbr_eb">Receber taxa basal temporária (TBT) e bolus estendido (e-bolus ou BE)</string>
@@ -829,7 +802,6 @@
     <string name="a11y_insulin_label">insulina</string>
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">desatualizado</string>
-    <string name="a11y_carb_reminder">definir lembrete</string>
     <string name="a11y_add_new_profile">adicionar novo perfil</string>
     <string name="a11y_clone_profile">clonar perfil atual</string>
     <string name="a11y_delete_current_profile">excluir perfil atual</string>
@@ -863,7 +835,6 @@
     <string name="no_records_available">Nenhum registro disponível</string>
     <string name="show_loop">Exibir loop</string>
     <string name="sort_label">Ordenar</string>
-    <string name="dialog_canceled">Janela cancelada</string>
     <string name="below" comment="below &quot;in range&quot;">Abaixo</string>
     <string name="in_range">Dentro da meta</string>
     <string name="above" comment="above &quot;in range&quot;">Acima</string>
