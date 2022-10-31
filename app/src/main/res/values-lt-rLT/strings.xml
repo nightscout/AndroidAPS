@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">AIO:</string>
     <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
-    <string name="treatments_wizard_bg_label">KG</string>
     <string name="treatments_wizard_tt_label">LT</string>
-    <string name="treatments_wizard_carbs_label">AV</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
     <string name="bolus_iob_label">Bolusų AIO</string>
     <string name="openapsma_run">Paleisti dabar</string>
@@ -90,11 +88,9 @@
     <string name="safety">Saugumas</string>
     <string name="openapsma_disabled">Įskiepis išjungtas</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
-    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Rankiniu būdu patikrinkite faktiškai suleistą kiekį</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="overview_calculator_label">Skaičiuotuvas</string>
-    <string name="constraintapllied">Taikomas ribojimas!</string>
     <string name="sms_bolus">Bolusas:</string>
     <string name="sms_basal">Valandinė bazė:</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
@@ -109,13 +105,10 @@
     <string name="carbssuggestion">Angliavandenių pasiūlymas</string>
     <string name="unsupportednsversion">Nepalaikoma Nightscout versija</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
-    <string name="bolusconstraintapplied">Pritaikytas boluso apribojimas</string>
-    <string name="carbsconstraintapplied">Pritaikytas AV apribojimas</string>
     <string name="careportal_newnstreatment_other">Kiti</string>
     <string name="careportal_newnstreatment_meter">Matuoklis</string>
     <string name="careportal_newnstreatment_sensor">Sensorius</string>
     <string name="carb_time_label">AV laikas</string>
-    <string name="careportal_newnstreatment_duration_label">Trukmė</string>
     <string name="profile_label">Profilis</string>
     <string name="careportal_newnstreatment_glucosetype">Gliukozės tipas</string>
     <string name="overview_tempbasal_button">Laikina bazė</string>
@@ -278,9 +271,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį kraujo gliukozei kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus kraujo gliukozės kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dėmesio!\nPaprastai neturėtumėte keisti šių, žemiau esančių, reikšmių. Prašome PASPAUSTI ČIA ir PERSKAITYKITE tekstą ir įsitikinkite, kad SUPRANTATE prieš keisdami bet kurią iš šių verčių.</string>
     <string name="smscommunicator_invalidphonennumber">Neteisingas SMS telefono numeris</string>
-    <string name="overview_calibration">Kalibravimas</string>
-    <string name="xdripnotinstalled">xDrip+ neįdiegta</string>
-    <string name="calibrationsent">Kalibracija nusiųsta į xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibracija išsiųsta. xDrip+ programoje turi būti įgalintas gavimas.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ negauna kalibracijų</string>
     <string name="pumpsuspended">Pompa sustabdyta</string>
@@ -446,7 +436,6 @@
     <string name="wearcontrol_title">Laikrodžio valdikliai</string>
     <string name="wearcontrol_summary">Nustatyti Laikinus Tikslus ir įvesti terapinius įrašus iš laikrodžio.</string>
     <string name="food">Maistas</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">Energ. vertė</string>
@@ -530,9 +519,6 @@
     <string name="allow_automated_crash_reporting">Leisti automatinį pranešimų apie programos trikdžius ir funkcijų naudojimo duomenų siuntimą kūrėjams, naudojant fabric.io servisą.</string>
     <string name="g5appnotdetected">Atnaujinkite savo Dexcom programėlės versiją</string>
     <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
-    <string name="start_activity_tt">Pradėti Aktyvumo LT</string>
-    <string name="start_eating_soon_tt">Pradėti Netrukus valgysiu LT</string>
-    <string name="temptargetshort">LT</string>
     <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
     <string name="category">Kategorija</string>
     <string name="subcategory">Subkategorija</string>
@@ -545,8 +531,6 @@
     <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
     <string name="overview_show_iob">Aktyvus insulinas organizme</string>
     <string name="overview_show_basals">Bazė</string>
-    <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
-    <string name="start_hypo_tt">Pradėti \"Hipo\" LT</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="engineering_mode_enabled">Inžinerinis režimas įjungtas</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
@@ -658,8 +642,6 @@
     <string name="nav_logsettings">Įrašų nustatymai</string>
     <string name="resettodefaults">Atkurti numatytuosius</string>
     <string name="nsmalfunction">NSClient sutrikimas. Reikėtų paleisti iš naujo NS ir NSClient.</string>
-    <string name="time_offset">Laiko poslinkis</string>
-    <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
     <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
     <string name="treatments_wizard_total_label">Viso</string>
     <string name="calculation_short">Skaič.</string>
@@ -715,7 +697,6 @@
     <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">min.</string>
     <string name="profile_name">Profilio pavadinimas:</string>
     <string name="selected_profile">Parinkta:</string>
     <string name="unitsnosemicolon">Vienetai</string>
@@ -812,17 +793,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
     <string name="smscommunicator_pump_ureachable">Pranešti apie nepasiekiamą pompą</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
-    <string name="alarminxmin">Pranešti po %1$d min</string>
-    <string name="bolusadvisor">Boluso patarėjas</string>
-    <string name="bolusadvisormessage">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
-    <string name="enablebolusadvisor">Įgalinti boluso patarėją</string>
-    <string name="enablebolusadvisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
-    <string name="timetoeat">Laikas valgyti</string>
-    <string name="bolus_reminder">Priminimas apie bolusą</string>
     <string name="enablebolusreminder">Įgalinti priminimą apie bolusą</string>
-    <string name="enablebolusreminder_summary">Naudoti priminimus apie bolusą su skaičiuotuvu        („post-bolusas“)</string>
-    <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="chart_menu">Grafiko meniu</string>
