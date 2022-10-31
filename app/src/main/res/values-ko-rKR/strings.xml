@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">인슐린:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
-    <string name="treatments_wizard_bg_label">혈당</string>
     <string name="treatments_wizard_tt_label">임시목표</string>
-    <string name="treatments_wizard_carbs_label">탄수화물</string>
     <string name="treatments_wizard_correction_label">교정</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="vitualpump_label">가상 펌프</string>
@@ -92,7 +90,6 @@
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
-    <string name="constraintapllied">제한 적용!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">입력값을 변경하세요!</string>
@@ -107,8 +104,6 @@
     <string name="carbssuggestion">탄수화물 제안</string>
     <string name="unsupportednsversion">지원하지 않는 Nightscout 버전입니다</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="bolusconstraintapplied">Bolus 제한이 적용되었습니다</string>
-    <string name="carbsconstraintapplied">탄수화물 제한이 적용되었습니다</string>
     <string name="careportal_newnstreatment_other">기타</string>
     <string name="careportal_newnstreatment_meter">측정기</string>
     <string name="careportal_newnstreatment_sensor">센서</string>
@@ -273,9 +268,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">기본값: 3.0 (AMA) 또는 8.0 (SMB). 5분당 탄수화물이 얼만큼 흡수되었는지에 대한 기본값 설정입니다. 기본값은 3mg/dl / 5분 입니다. 이는 혈당이 예상보다 빨리 떨어지거나 혹은 예상보다 오르지 않을때, COB가 얼마나 빨리 사라지게 되는지에 영향을 주게 되고, 추정된 탄수화물 흡수량이 미래 혈당 예측 계산시에도 영향을 주게 됩니다.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
-    <string name="overview_calibration">보정</string>
-    <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
-    <string name="calibrationsent">보정이 xDrip으로 전송되었습니다+</string>
     <string name="smscommunicator_calibrationsent">보정 전송됨. xDrip에서 수신이 되도록 설정되어 있어야 합니다+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+에서 보정값을 받지 못합니다.</string>
     <string name="pumpsuspended">펌프 일시중지됨</string>
@@ -523,7 +515,6 @@
     <string name="dexcom_app_not_installed">Dexcom 앱이 설치되지 않았습니다.</string>
     <string name="start_activity_tt">활동 임시목표 시작</string>
     <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">실제 Bolus 주입않고, 기록만 하기</string>
     <string name="category">분류</string>
     <string name="subcategory">하위 분류</string>
@@ -536,7 +527,6 @@
     <string name="overview_show_cob">체내탄수화물양(COB)</string>
     <string name="overview_show_iob">체내인슐린양(IOB)</string>
     <string name="overview_show_basals">Basal</string>
-    <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
     <string name="start_hypo_tt">저혈당 임시목표 시작</string>
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
@@ -793,13 +783,7 @@
     <string name="smscommunicator_report_pump_ureachable_summary">허용되지 않는 펌프 이벤트가 발생하면 SMS를 보내기</string>
     <string name="smscommunicator_pump_ureachable">허용되지 않는 펌프 기록</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
-    <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
-    <string name="bolusadvisor">Bolus advisor</string>
-    <string name="bolusadvisormessage">현재 혈당이 높습니다. 지금 식사를 하기 보다 적절한 혈당이 되도록 기다리는 것을 추천합니다. 교정 bolus를 지금 주입하고 식사할 시간이 되면 알려드릴까요? 이 경우 탄수화물은 기록되지 않으며, 알림을 받으면 wizard를 다시 사용해야 합니다.</string>
-    <string name="enablebolusadvisor">Bolus advisor 활성화</string>
-    <string name="enablebolusadvisor_summary">혈당이 높을 때 wizard 결과 대신 reminder를 사용하여 나중에 식사하기 (pre-bolus)</string>
     <string name="time_to_eat">식사할 시간입니다! \nBolus wizard를 켜고 다시 계산하십시오.</string>
-    <string name="timetoeat">식사할 시간</string>
     <string name="fabric_upload_disabled">충돌 로그 업로드가 작동하지 않습니다.</string>
     <string name="graph_menu_divider_header">그래프</string>
     <string name="chart_menu">차트 메뉴</string>
