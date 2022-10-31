@@ -840,6 +840,7 @@
     <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="enablebolusreminder">Povolit připomínání bolusu</string>
+    <string name="enablebolusreminder_summary">Použijte připomenutí pro pozdější bolus s kalkulátorem (\"zpožděný bolus\")</string>
     <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Možnosti grafu</string>
