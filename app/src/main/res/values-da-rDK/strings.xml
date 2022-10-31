@@ -52,9 +52,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">Midlertidig Mål</string>
-    <string name="treatments_wizard_carbs_label">Kulhydrater</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Kør nu</string>
@@ -92,11 +90,9 @@
     <string name="safety">Sikkerhed</string>
     <string name="openapsma_disabled">Plugin deaktiveret</string>
     <string name="constraints_violation">Begrænsninger overtrådt</string>
-    <string name="treatmentdeliveryerror">Bolus fejl. Undersøg manuelt hvor meget insulin der er givet</string>
     <string name="setbasalquestion">Acceptér ny midlertidig basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Beregner</string>
-    <string name="constraintapllied">Begrænsning anvendt!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Skift dit input!</string>
@@ -111,13 +107,10 @@
     <string name="carbssuggestion">Kulhydrat Forslag</string>
     <string name="unsupportednsversion">Ikke understøttet version af Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="bolusconstraintapplied">Bolus begrænsning påført</string>
-    <string name="carbsconstraintapplied">Kulhydrat begrænsning påført</string>
     <string name="careportal_newnstreatment_other">Andet</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Kulhydrat tid</string>
-    <string name="careportal_newnstreatment_duration_label">Varighed</string>
     <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukose type</string>
     <string name="overview_tempbasal_button">Midlertidig basal </string>
@@ -282,9 +275,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Standardværdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en indstilling for standardindvirkningen af kulhydrater pr. 5 minutter. Standardværdien er en forventet 3mg/dl/5min. Det påvirker, hvor hurtigt COB er faldet, og hvor meget kulhydrat absorbering forudsættes ved beregning af forudsagt BG, når BG falder mere end forventet, eller ikke stiger så meget som forventet.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Bemærk!\nNormalt behøver du ikke at ændre disse værdier nedenfor. KLIK HER og LÆS teksten og sørg for at du FORSTÅR den, før du ændrer nogen af disse.</string>
     <string name="smscommunicator_invalidphonennumber">Ugyldigt SMS telefonnummer</string>
-    <string name="overview_calibration">Kalibrering</string>
-    <string name="xdripnotinstalled">xDrip+ ikke installeret</string>
-    <string name="calibrationsent">Kalibrering sendt til xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibrering sendt. Modtagelse skal være aktiveret i xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ modtager ikke kalibreringer</string>
     <string name="pumpsuspended">Pumpe er afbrudt</string>
@@ -454,7 +444,6 @@
     <string name="wearcontrol_title">Kontrolleringer fra Ur</string>
     <string name="wearcontrol_summary">Sæt midlertidige mål og indtast behandlinger fra uret.</string>
     <string name="food">Mad</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -539,9 +528,6 @@
     <string name="allow_automated_crash_reporting">Tillad automatisk nedbruds rapportering og funktionsbrug data som sendes til udviklerne via fabric.io tjenesten.</string>
     <string name="g5appnotdetected">Opdater venligst din Dexcom app til understøttet version</string>
     <string name="dexcom_app_not_installed">Dexcom app er ikke installeret.</string>
-    <string name="start_activity_tt">Start Aktivitets mål</string>
-    <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>
-    <string name="temptargetshort">Midlertidig Mål</string>
     <string name="do_not_bolus_record_only">Ikke bolus, registrer kun</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
@@ -554,8 +540,6 @@
     <string name="overview_show_cob">Aktive kulhydrater </string>
     <string name="overview_show_iob">Aktivt insulin </string>
     <string name="overview_show_basals">Basaler</string>
-    <string name="no_action_selected">Ingen handling valgt, intet vil ske</string>
-    <string name="start_hypo_tt">Begynd Hypo mål</string>
     <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
     <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
     <string name="profileswitch_ismissing">Profilskift mangler. Venligst lav et profilskift eller tryk \"Aktiver profil\" i LokalProfil.</string>
@@ -678,8 +662,6 @@
     <string name="nav_logsettings">Log indstillinger</string>
     <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <string name="nsmalfunction">NSClient funktionsfejl. Overvej NS og NSClient genstart.</string>
-    <string name="time_offset">Tidsforskydning</string>
-    <string name="remind_to_bolus_later">Påmind om at bolus senere</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
     <string name="treatments_wizard_total_label">I alt</string>
     <string name="calculation_short">Beregn</string>
@@ -735,7 +717,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">min.</string>
     <string name="profile_name">Profilnavn:</string>
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheder</string>
@@ -840,18 +821,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Send sms, hvis der udløses en utilgængelig pumpebegivenhed</string>
     <string name="smscommunicator_pump_ureachable">Rapportér pumpe utilgængeligt</string>
     <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
-    <string name="alarminxmin">Kør alarm om %1$d min</string>
-    <string name="bolusadvisor">Bolus rådgiver</string>
-    <string name="bolusadvisormessage">Du har høj glycæmi. I stedet for at spise nu anbefales det at vente på bedre glycæmi. Ønsker du at lave en korrektionsbolus nu og minde dig om, hvornår det er tid til at spise? I dette tilfælde vil ingen kulhydrater blive registreret, og du skal bruge guiden igen, når vi påminder dig.</string>
-    <string name="enablebolusadvisor">Aktiver bolus rådgiver</string>
-    <string name="enablebolusadvisor_summary">Brug påmindelse om at begynde at spise senere i stedet for guiden under høj glykæmi (\"pre-bolus\")</string>
     <string name="time_to_eat">Tid til at spise!\nKør Bolus guiden og lav beregning igen.</string>
-    <string name="timetoeat">Tid til at spise</string>
-    <string name="bolus_reminder">Boluspåminder</string>
     <string name="enablebolusreminder">Aktivér boluspåminder</string>
-    <string name="enablebolusreminder_summary">Brug påmindelse til bolus senere med guiden
-        (\"post-bolus\")</string>
-    <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
     <string name="fabric_upload_disabled">Upload af Crash logs deaktiveret!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammenu</string>
@@ -934,7 +905,6 @@
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
-    <string name="a11y_carb_reminder">Indstil påmindelse</string>
     <string name="a11y_add_new_profile">tilføj ny profil</string>
     <string name="a11y_clone_profile">klon nuværende profil</string>
     <string name="a11y_delete_current_profile">slet nuværende profil</string>
@@ -993,7 +963,6 @@
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sortér</string>
-    <string name="dialog_canceled">Dialog annulleret</string>
     <string name="veryLow" comment="below 3.1">Meget lav</string>
     <string name="low" comment="3.1-3.9">Lav</string>
     <string name="high" comment="10.0-13.9">Høj</string>
