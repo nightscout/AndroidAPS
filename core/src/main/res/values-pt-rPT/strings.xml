@@ -103,6 +103,9 @@
     <string name="notes_label">Notas</string>
     <string name="remove_button">Remover</string>
     <string name="addnew">Adicionar novo</string>
+    <string name="alarminxmin">Executar alarme em %1$d min</string>
+    <string name="treatmentdeliveryerror">Ocorreu um erro de bólus. Verifique manualmente a quantidade administrada</string>
+    <string name="shortgramm">g</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
