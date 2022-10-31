@@ -171,6 +171,7 @@
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Carb time</string>
+    <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="profile_label">Profile</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">TempBasal</string>
@@ -546,6 +547,7 @@
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <string name="food">Food</string>
+    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -653,6 +655,8 @@
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
+    <string name="start_activity_tt">Start Activity TT</string>
+    <string name="start_eating_soon_tt">Start Eating soon TT</string>
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
@@ -665,6 +669,7 @@
     <string name="overview_show_cob">Carbs On Board</string>
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
@@ -824,6 +829,8 @@
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
+    <string name="time_offset">Time offset</string>
+    <string name="remind_to_bolus_later">Remind to bolus later</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -899,6 +906,7 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
+    <string name="unit_minute_short">min</string>
     <string name="profile_name">Profile name:</string>
     <string name="selected_profile">Selected:</string>
     <string name="unitsnosemicolon">Units</string>
@@ -1123,6 +1131,7 @@
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
+    <string name="a11y_carb_reminder">set reminder</string>
     <string name="a11y_add_new_profile">add new profile</string>
     <string name="a11y_clone_profile">clone current profile</string>
     <string name="a11y_delete_current_profile">delete current profile</string>
