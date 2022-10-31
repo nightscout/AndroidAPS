@@ -45,9 +45,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IAB:</string>
     <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Karbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="openapsma_run">Begin nou</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
@@ -86,7 +84,6 @@
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
-    <string name="constraintapllied">Beperking toegepas!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basale:</string>
     <string name="changeyourinput">Verander jou insette!</string>
@@ -98,8 +95,6 @@
     <string name="openloop_newsuggestion">Nuwe voorstel beskikbaar</string>
     <string name="unsupportednsversion">Weergawe van Nightscout nie ondersteun</string>
     <string name="treatments_wizard_basaliob_label">Basale IAB</string>
-    <string name="bolusconstraintapplied">Bolus beperking toegepas</string>
-    <string name="carbsconstraintapplied">Karbs beperking toegepas</string>
     <string name="careportal_newnstreatment_other">Ander</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -209,8 +204,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Verstek waarde: 3.0 (AMA) of 8.0 (SMB). Dit is \'n instelling vir verstek karb absorpsie impak per 5 minute. Die verstek is \'n verwagte 3mg/dl / 5min. Dit beïnvloed hoe vinnig KOB opgeneem word, en hoeveel karb absorpsie word aanvaar sodat in die berekening van toekomstige BG, voorspel wanneer BG val meer as verwagte, of nie soveel styg as verwag.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Aandag! \nNormaalweg hoef jy nie die waardes hieronder te verander nie. KLIEK HIER Asseblief en LEES die teks en maak seker jy verstaan dit voor enige verandering aan hierdie waardes.</string>
     <string name="smscommunicator_invalidphonennumber">Ongeldige SMS selfoon nommer</string>
-    <string name="overview_calibration">Kalibrasie</string>
-    <string name="xdripnotinstalled">xDrip + nie geïnstalleerd nie</string>
     <string name="pumpsuspended">Pomp opgeskort</string>
     <string name="executing">Besig met uitvoering</string>
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
@@ -397,7 +390,6 @@
     <string name="dexcom_app_not_installed">Dexcom toep is nie geïnstalleer nie.</string>
     <string name="start_activity_tt">Begin aktiwiteit TT</string>
     <string name="start_eating_soon_tt">Begin eet gou TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Moet nie bolus. Rekord alleen</string>
     <string name="category">Kategorie</string>
     <string name="subcategory">Subkategorie</string>
@@ -408,7 +400,6 @@
     <string name="overview_show_cob">Karbs AanBoord</string>
     <string name="overview_show_iob">Insulien AanBoord</string>
     <string name="overview_show_basals">Basale</string>
-    <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
     <string name="start_hypo_tt">Begin hipo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
     <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
