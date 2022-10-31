@@ -51,9 +51,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB活性胰岛素:</string>
     <string name="tempbasals_iobtotal_label_string">总 IOB:</string>
-    <string name="treatments_wizard_bg_label">血糖</string>
     <string name="treatments_wizard_tt_label">临时目标</string>
-    <string name="treatments_wizard_carbs_label">碳水化合物</string>
     <string name="treatments_wizard_correction_label">矫正值</string>
     <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
     <string name="openapsma_run">现在运行</string>
@@ -91,11 +89,9 @@
     <string name="safety">安全性</string>
     <string name="openapsma_disabled">插件已禁用</string>
     <string name="constraints_violation">违反约束条件</string>
-    <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查真实输注量</string>
     <string name="setbasalquestion">接受新的临时基础率</string>
     <string name="overview_treatment_label">治疗</string>
     <string name="overview_calculator_label">计算器</string>
-    <string name="constraintapllied">应用约束!</string>
     <string name="sms_bolus">大剂量:</string>
     <string name="sms_basal">基础率:</string>
     <string name="changeyourinput">更改您的输入!</string>
@@ -110,8 +106,6 @@
     <string name="carbssuggestion">碳水建议</string>
     <string name="unsupportednsversion">不支持的 Nightscout 版本</string>
     <string name="treatments_wizard_basaliob_label">基础 IOB</string>
-    <string name="bolusconstraintapplied">大剂量约束条件应用了</string>
-    <string name="carbsconstraintapplied">碳水化合物约束条件应用了</string>
     <string name="careportal_newnstreatment_other">其他</string>
     <string name="careportal_newnstreatment_meter">血糖仪</string>
     <string name="careportal_newnstreatment_sensor">传感器</string>
@@ -281,9 +275,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">默认值: 3.0  (AMA) 或者 8.0 (SMB)。这是默认的每5分钟碳水化合物吸收量。默认值为3毫克/dl/5 分钟。 当血糖的下降超过预期时, 或者不像预期的上升的那么多时，这个值就影响了活性碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量,</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
     <string name="smscommunicator_invalidphonennumber">无效的SMS手机号码</string>
-    <string name="overview_calibration">校准</string>
-    <string name="xdripnotinstalled">没有安装xDrip+</string>
-    <string name="calibrationsent">校准发送到 xDrip+</string>
     <string name="smscommunicator_calibrationsent">校准已发送。必须在 xDrip+ 中启用接收功能。</string>
     <string name="smscommunicator_calibrationfailed">xDrip+未接收校准</string>
     <string name="pumpsuspended">泵暂停了</string>
@@ -538,7 +529,6 @@
     <string name="dexcom_app_not_installed">未安装德康app。</string>
     <string name="start_activity_tt">开始运动临时目标</string>
     <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
-    <string name="temptargetshort">TT(临时目标)</string>
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
     <string name="category">类别</string>
     <string name="subcategory">子类别</string>
@@ -551,7 +541,6 @@
     <string name="overview_show_cob">活性碳水化合物</string>
     <string name="overview_show_iob">活性胰岛素</string>
     <string name="overview_show_basals">基础率</string>
-    <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="start_hypo_tt">开始低的临时目标</string>
     <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
     <string name="engineering_mode_enabled">已启用工程模式</string>
@@ -669,7 +658,6 @@
     <string name="resettodefaults">重置为默认值</string>
     <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
     <string name="time_offset">时区偏移</string>
-    <string name="bolus_reminder">稍后提醒输注大剂量</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="treatments_wizard_total_label">总计</string>
     <string name="calculation_short">计算</string>
@@ -826,18 +814,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">如果触发泵连接丢失事件，则发送短信通知。</string>
     <string name="smscommunicator_pump_ureachable">泵连接丢失报告</string>
     <string name="advisoralarm">在应当吃饭时提醒</string>
-    <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
-    <string name="bolusadvisor">大剂量向导</string>
-    <string name="bolusadvisormessage">你现在血糖值高，请等待血糖值改善后再吃饭。你是否需要输注胰岛素进行纠正并提醒你吃饭？在这种情况下，不会记录碳水，当我们提醒你吃饭时，您必须再次使用大剂量向导。</string>
-    <string name="enablebolusadvisor">启用大剂量向导</string>
-    <string name="enablebolusadvisor_summary">在高血糖期间(\"预测大剂量\")，使用延迟吃饭的提醒功能，来替代大剂量向导结果</string>
     <string name="time_to_eat">吃饭时间到了！\n请运行大剂量向导，然后进行计算。</string>
-    <string name="timetoeat">吃饭时间</string>
-    <string name="bolusreminder">大剂量提醒</string>
     <string name="enablebolusreminder">启用大剂量提醒</string>
-    <string name="enablebolusreminder_summary">使用大剂量向导稍后推注的提醒功能
-      (“稍后注射大剂量”)</string>
-    <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
     <string name="fabric_upload_disabled">已禁用崩溃日志上传！</string>
     <string name="graph_menu_divider_header">绘图</string>
     <string name="chart_menu">图表菜单</string>
@@ -978,7 +956,6 @@
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
-    <string name="dialog_canceled">对话框已取消</string>
     <string name="veryLow" comment="below 3.1">非常低</string>
     <string name="low" comment="3.1-3.9">低</string>
     <string name="high" comment="10.0-13.9">高</string>
