@@ -54,9 +54,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">OT</string>
-    <string name="treatments_wizard_carbs_label">Carbohidratos</string>
     <string name="treatments_wizard_correction_label">Corrección</string>
     <string name="bolus_iob_label">Bolo IOB</string>
     <string name="openapsma_run">Ejecutar ahora</string>
@@ -97,11 +95,9 @@
     <string name="safety">Seguridad</string>
     <string name="openapsma_disabled">El complemento está deshabilitado</string>
     <string name="constraints_violation">Violación de restricciones</string>
-    <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="overview_calculator_label">Calculadora</string>
-    <string name="constraintapllied">Restricción aplicada!</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_basal">Dosis Basal:</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
@@ -117,8 +113,6 @@
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
     <string name="unsupportednsversion">Versión de Nightscout no soportada</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="bolusconstraintapplied">Restricción aplicada en bolo</string>
-    <string name="carbsconstraintapplied">Restricción aplicada en carbohidratos</string>
     <string name="careportal_newnstreatment_other">Otro</string>
     <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -288,9 +282,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valores predeterminados: 3.0 (AMA) y 8.0 (SMB)\nEsta configuración establece cómo se absorben los carbohidratos cada 5 minutos. Por defecto se espera que se absorban 3mg/dl cada 5 minutos. Esto afecta a la rapidez con la que los carbohidratos (COB) decaen, y cómo se calcula la predicción de la absorción de carbohidratos futuros, cuando la glucosa está cayendo más de lo esperado, o no aumenta tanto como se esperaba</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">¡ATENCIÓN!\nLos valores que se muestran a continuación, normalmente no suelen ser necesario modificarlos. Por favor, PINCHA AQUÍ y lee todo el contenido. Asegúrate de que lo has entendido completamente antes de modificar alguno de estos valores.</string>
     <string name="smscommunicator_invalidphonennumber">Número de teléfono incorrecto para SMS</string>
-    <string name="overview_calibration">Calibración</string>
-    <string name="xdripnotinstalled">xDrip+ no instalado</string>
-    <string name="calibrationsent">Calibración mandada a xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibración enviada. La recepción debe estar habilitada en xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ no está recibiendo calibraciones</string>
     <string name="pumpsuspended">Bomba parada</string>
@@ -549,7 +540,6 @@
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
     <string name="start_activity_tt">Iniciar OT Actividad</string>
     <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
-    <string name="temptargetshort">OT</string>
     <string name="do_not_bolus_record_only">No administrar bolo, sólo anotarlo</string>
     <string name="category">Categoría</string>
     <string name="subcategory">Subcategoría</string>
@@ -562,7 +552,6 @@
     <string name="overview_show_cob">Carbohidratos activos COB</string>
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
-    <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
     <string name="start_hypo_tt">Iniciar OT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
@@ -692,7 +681,6 @@
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <string name="time_offset">Retardo</string>
-    <string name="bolus_reminder">Recordar ejecutar el bolo más tarde</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Cálculo</string>
@@ -857,18 +845,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inalcanzable</string>
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
-    <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
-    <string name="bolusadvisor">Asistente de bolo</string>
-    <string name="bolusadvisormessage">Tienes la glucosa alta. En lugar de comer ahora, se recomienda esperar a tener un mejor valor de glucosa. ¿Quieres poner un bolo de corrección ahora y recibir un aviso cuando sea un buen momento para comer? En este caso no se registrarán los carbohidratos y deberás utilizar el asistente de bolos después de recibir la notificación</string>
-    <string name="enablebolusadvisor">Habilitar asistente de bolo</string>
-    <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
-    <string name="timetoeat">Hora de comer</string>
-    <string name="bolusreminder">Recordatorio de bolo</string>
     <string name="enablebolusreminder">Habilitar recordatorio de bolo</string>
-    <string name="enablebolusreminder_summary">Usa recordatorio de bolo más tarde con el asistente
-        (\"post-bolus\")</string>
-    <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="fabric_upload_disabled">¡Carga de registros de errores desactivada!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menú gráfico</string>
@@ -1010,7 +988,6 @@
     <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
-    <string name="dialog_canceled">Diálogo cancelado</string>
     <string name="veryLow" comment="below 3.1">Muy bajo</string>
     <string name="low" comment="3.1-3.9">Bajo</string>
     <string name="high" comment="10.0-13.9">Alto</string>
