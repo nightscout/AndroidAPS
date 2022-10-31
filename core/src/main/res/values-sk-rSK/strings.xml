@@ -114,6 +114,9 @@
     <string name="addnew">Pridať nový</string>
     <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
+    <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
+    <string name="shortgramm">g</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
