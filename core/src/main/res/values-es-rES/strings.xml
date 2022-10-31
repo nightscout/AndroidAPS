@@ -114,6 +114,9 @@
     <string name="addnew">Añadir nuevo</string>
     <string name="addnew_above">Añadir nuevo arriba</string>
     <string name="wrong_pump_data">Los datos proceden de una bomba diferente. Cambia el controlador de la bomba para resetear su estado.</string>
+    <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
+    <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada</string>
+    <string name="shortgramm">g</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
