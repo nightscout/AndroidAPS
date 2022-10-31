@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_bg_label">Gl</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Carbohidrați</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
     <string name="bolus_iob_label">IOB bolus</string>
     <string name="openapsma_run">Execută</string>
@@ -90,11 +88,9 @@
     <string name="safety">Siguranță</string>
     <string name="openapsma_disabled">Modul inactiv</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
-    <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
     <string name="overview_calculator_label">Calculator</string>
-    <string name="constraintapllied">Limitare aplicată!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
@@ -109,8 +105,6 @@
     <string name="carbssuggestion">Sugestie carbohidrați</string>
     <string name="unsupportednsversion">Versiune incompatibilă de Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB bazală</string>
-    <string name="bolusconstraintapplied">Constrângere de bolus aplicată</string>
-    <string name="carbsconstraintapplied">Constrângere de carbohidrați aplicată</string>
     <string name="careportal_newnstreatment_other">Altul</string>
     <string name="careportal_newnstreatment_meter">Glucometru</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
@@ -278,9 +272,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valoarea implicită: 3.0 (AMA) sau 8.0 (SMB). Aceasta este o setare pentru impactul implicit al carbohidraţilor pe 5 minute. Valoarea implicită este 3mg/dl la 5min. Aceasta influenţează rapiditatea cu care se scade COB şi modul în care se ia în calcul absorbţia carbohidraţilor în calcularea valorilor estimate ale glicemiei, atunci când glicemia este în scădere mai mare decât se aştepta sau nu creşte atât de repede pe cât se aştepta.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenție!\nÎn mod normal nu este nevoie să modificați valorile de mai jos. Vă rog să APĂSAȚI AICI și să CITIȚI textul și să vă asigurați că l-ați ÎNȚELES înainte de a schimba valorile.</string>
     <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
-    <string name="overview_calibration">Calibrare</string>
-    <string name="xdripnotinstalled">xDrip+ nu este instalat.</string>
-    <string name="calibrationsent">Calibrare trimisă către xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ nu recepționează calibrări</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
@@ -532,7 +523,6 @@
     <string name="dexcom_app_not_installed">Aplicația Dexcom nu este instalată.</string>
     <string name="start_activity_tt">Start TT activitate</string>
     <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
@@ -545,7 +535,6 @@
     <string name="overview_show_cob">Carbohidrați activi</string>
     <string name="overview_show_iob">Insulină activă</string>
     <string name="overview_show_basals">Bazale</string>
-    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
     <string name="start_hypo_tt">Start TT hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
     <string name="engineering_mode_enabled">Mod inginer activat</string>
@@ -659,7 +648,6 @@
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <string name="time_offset">Decalaj</string>
-    <string name="bolus_reminder">Amintește-mi sa fac bolus mai târziu</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -812,18 +800,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
     <string name="smscommunicator_pump_ureachable">Raportează pompa inaccesibilă</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
-    <string name="alarminxmin">Rulează alarma în %1$d min</string>
-    <string name="bolusadvisor">Consilier bolus</string>
-    <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
-    <string name="enablebolusadvisor">Activare consilier bolus</string>
-    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci mai târziu în loc de alerta de la calculatorul de bolus din timpul hiperglicemiei (\"pre-bolus\")</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
-    <string name="timetoeat">Timpul sa mănânci</string>
-    <string name="bolusreminder">Memento bolus</string>
     <string name="enablebolusreminder">Activează memento bolus</string>
-    <string name="enablebolusreminder_summary">Folosește memento pentru a bolusa mai târziu cu asistentul
-        (\"post-bolus\")</string>
-    <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="chart_menu">Meniu diagramă</string>
