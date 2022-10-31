@@ -52,9 +52,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_bg_label">BS</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Karbo</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utfør nå</string>
@@ -92,11 +90,9 @@
     <string name="safety">Sikkerhet</string>
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
-    <string name="treatmentdeliveryerror">Det er registrert en feil med bolus-leveransen. Sjekk manuelt om den er levert og hvor mye</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkulator</string>
-    <string name="constraintapllied">Begrensning benyttet!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Endre dine inndata!</string>
@@ -111,8 +107,6 @@
     <string name="carbssuggestion">Karbo forslag</string>
     <string name="unsupportednsversion">Versjonen av Nightscout støttes ikke</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="bolusconstraintapplied">Bolus-begrensning utført</string>
-    <string name="carbsconstraintapplied">Karbohydrat-begrensning utført</string>
     <string name="careportal_newnstreatment_other">Annet</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -282,9 +276,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Standardverdi er: 3.0 (AMA) eller 8.0 (SMB). Dette er grunninnstillingen for KH-opptak per 5 minutt. Den påvirker hvor raskt COB skal reduseres, og benyttes i beregning av fremtidig BS-kurve når BS enten synker eller øker mer enn forventet. Standardverdi er 3mg/dl/5 min.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Advarsel!\nNormalt vil du ikke trenge å endre verdiene under. Vennligst TRYKK HER og LES teksten for å være sikker på at du FORSTÅR konsekvensene før du gjør endringer.</string>
     <string name="smscommunicator_invalidphonennumber">Ugyldig mobilnummer for SMS</string>
-    <string name="overview_calibration">Kalibrering</string>
-    <string name="xdripnotinstalled">xDrip+ ikke installert</string>
-    <string name="calibrationsent">Kalibrering er sendt til xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibrering sendt. Mottak må være aktivert i xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ tar ikke imot kalibreringer</string>
     <string name="pumpsuspended">Pumpen er pauset</string>
@@ -541,7 +532,6 @@
     <string name="dexcom_app_not_installed">Dexcom appen er ikke installert.</string>
     <string name="start_activity_tt">Start Trening TT</string>
     <string name="start_eating_soon_tt">Start Spise snart TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
@@ -554,7 +544,6 @@
     <string name="overview_show_cob">Aktive KH (COB)</string>
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
     <string name="overview_show_basals">Basaler</string>
-    <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktivert</string>
@@ -682,7 +671,6 @@
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
     <string name="time_offset">Tidsforskyvning</string>
-    <string name="bolus_reminder">Påminnelse til å gi bolus senere</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyle</string>
@@ -843,18 +831,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
     <string name="smscommunicator_pump_ureachable">Rapporter når kontakt med pumpe ikke oppnås</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
-    <string name="alarminxmin">Aktiver alarm om %1$d min</string>
-    <string name="bolusadvisor">Bolusguide</string>
-    <string name="bolusadvisormessage">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korrigerings bolus nå og få en påminnelse om når den er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
-    <string name="enablebolusadvisor">Aktiver boluskalkulator</string>
-    <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
-    <string name="timetoeat">Nå må du spise</string>
-    <string name="bolusreminder">Bolus påminnelse</string>
     <string name="enablebolusreminder">Aktiver bolus påminnelse</string>
-    <string name="enablebolusreminder_summary">Bruk påminnelse for å sette bolus dosen senere med veiviseren
-        («post bolus»)</string>
-    <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
     <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
@@ -996,7 +974,6 @@
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
-    <string name="dialog_canceled">Dialog avbrutt</string>
     <string name="veryLow" comment="below 3.1">Veldig lavt</string>
     <string name="low" comment="3.1-3.9">Lavt</string>
     <string name="high" comment="10.0-13.9">Høyt</string>
