@@ -52,9 +52,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
-    <string name="treatments_wizard_bg_label">BZ</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Kohlenhydrate</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="bolus_iob_label">Bolus-IOB</string>
     <string name="openapsma_run">Ausführen</string>
@@ -92,11 +90,9 @@
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
-    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Rechner</string>
-    <string name="constraintapllied">Beschränkung angewendet!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
@@ -111,8 +107,6 @@
     <string name="carbssuggestion">Kohlenhydrate Vorschlag</string>
     <string name="unsupportednsversion">Nicht unterstützte Nightscout-Version</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
-    <string name="bolusconstraintapplied">Bolus-Beschränkung angewendet</string>
-    <string name="carbsconstraintapplied">Kohlenhydrat-Beschränkung erreicht</string>
     <string name="careportal_newnstreatment_other">Anderes</string>
     <string name="careportal_newnstreatment_meter">Messgerät</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -282,9 +276,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0 (AMA) or 8.0 (SMB)\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3 mg/dl/5min (AMA) bzw. 8 mg/dl/5min (SMB). Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung!\nNormalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
     <string name="smscommunicator_invalidphonennumber">Falsche/ungültige Telefonnummer</string>
-    <string name="overview_calibration">Kalibrierung</string>
-    <string name="xdripnotinstalled">xDrip+ nicht installiert</string>
-    <string name="calibrationsent">Kalibrierung an xDrip+ gesendet+</string>
     <string name="smscommunicator_calibrationsent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ erhält keine Kalibrierungen</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
@@ -541,7 +532,6 @@
     <string name="dexcom_app_not_installed">Dexcom App ist nicht installiert.</string>
     <string name="start_activity_tt">Starte Aktivitäts-TT</string>
     <string name="start_eating_soon_tt">Starte Essens-TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
     <string name="category">Kategorie</string>
     <string name="subcategory">Unterkategorie</string>
@@ -554,7 +544,6 @@
     <string name="overview_show_cob">Aktive Kohlenhydrate</string>
     <string name="overview_show_iob">Aktives Insulin</string>
     <string name="overview_show_basals">Basal</string>
-    <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
     <string name="start_hypo_tt">Starte Hypo-TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
@@ -679,7 +668,6 @@
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="time_offset">Zeitversatz</string>
-    <string name="bolus_reminder">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -841,18 +829,8 @@ Unerwartetes Verhalten.</string>
     <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
     <string name="smscommunicator_pump_ureachable">Hinweis Pumpe nicht erreichbar</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
-    <string name="alarminxmin">Alarm in %1$d Min.</string>
-    <string name="bolusadvisor">Bolus-Berater</string>
-    <string name="bolusadvisormessage">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
-    <string name="enablebolusadvisor">Bolus-Berater aktivieren</string>
-    <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
-    <string name="timetoeat">Zeit zum Essen</string>
-    <string name="bolusreminder">Bolus-Erinnerung</string>
     <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
-    <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
-        (\"Post-Bolus\")</string>
-    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
@@ -994,7 +972,6 @@ Unerwartetes Verhalten.</string>
     <string name="show_loop">Zeige Loop an</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
-    <string name="dialog_canceled">Dialog abgebrochen</string>
     <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
     <string name="low" comment="3.1-3.9">Niedrig</string>
     <string name="high" comment="10.0-13.9">Hoch</string>
