@@ -46,9 +46,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Υδατάνθρακες</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
@@ -88,7 +86,6 @@
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
-    <string name="constraintapllied">Εφαρμόστηκαν Περιορισμοί!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Βασικός Ρυθμός:</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
@@ -100,8 +97,6 @@
     <string name="openloop_newsuggestion">Νέα πρόταση διαθέσιμη</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
-    <string name="bolusconstraintapplied">Ενεργός Περιορισμός Bolus</string>
-    <string name="carbsconstraintapplied">Ενεργός περιορισμός Υδατανθράκων</string>
     <string name="careportal_newnstreatment_other">Άλλο</string>
     <string name="careportal_newnstreatment_meter">Μετρητής</string>
     <string name="careportal_newnstreatment_sensor">Αισθητήρας</string>
@@ -210,8 +205,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Προσοχή!\nΣυνήθως δεν χρειάζεται να αλλάξετε αυτές τις τιμές. Κάντε κλικ ΕΔΩ, ΔΙΑΒΑΣΤΕ τις πληροφορίες και σιγουρευτείτε ότι τις καταλαβαίνετε πριν τις αλλάξετε.</string>
     <string name="smscommunicator_invalidphonennumber">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
-    <string name="overview_calibration">Καλιμπράρισμα</string>
-    <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="executing">Εκτελείτε</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
@@ -398,7 +391,6 @@
     <string name="dexcom_app_not_installed">Η εφαρμογή Dexcom δεν είναι εγκατεστημένη.</string>
     <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <string name="category">Κατηγορία</string>
     <string name="subcategory">Υποκατηγορία</string>
@@ -409,7 +401,6 @@
     <string name="overview_show_cob">Ενεργοί Υδατάνθρακες</string>
     <string name="overview_show_iob">Ενεργή Ινσουλίνη</string>
     <string name="overview_show_basals">Βασικοί</string>
-    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
     <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
