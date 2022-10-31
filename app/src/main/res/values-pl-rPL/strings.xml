@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Całkowita IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Węglow</string>
     <string name="treatments_wizard_correction_label">Poprawka</string>
     <string name="bolus_iob_label">IOB z bolusów</string>
     <string name="openapsma_run">Uruchom teraz</string>
@@ -90,11 +88,9 @@
     <string name="safety">Zabezpieczenia</string>
     <string name="openapsma_disabled">Wtyczka jest wyłączona</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
-    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie rzeczywiście dostarczoną ilość</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
     <string name="overview_treatment_label">Terapia</string>
     <string name="overview_calculator_label">Kalkulator</string>
-    <string name="constraintapllied">Ograniczenie nałożone!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Baza:</string>
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
@@ -109,8 +105,6 @@
     <string name="carbssuggestion">Sugestia węglowodanów</string>
     <string name="unsupportednsversion">Niewspierana wersja Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
-    <string name="bolusconstraintapplied">Ograniczenia bolusa wprowadzone</string>
-    <string name="carbsconstraintapplied">Ograniczenie stosowania węglowodanów</string>
     <string name="careportal_newnstreatment_other">Inne</string>
     <string name="careportal_newnstreatment_meter">Glukometr</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -279,9 +273,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Wartość domyślna: 3.0 (AMA) lub 8.0 (SMB). To jest ustawienie domyślnego wpływu wchłaniania węglowodanów w czasie 5 min. Wartością domyślną jest spodziewane 3mg/dl/5min. Ma to wpływ na szybkość zaniku COB, oraz jak duże wchłanianie węglowodanów będzie przyjęte do obliczeń przyszłych przewidywanych wartości BG, jeżeli BG obniża się bardziej niż w założono, lub nie wzrasta tak szybko jak się spodziewano.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">UWAGA!\nZwykle nie trzeba zmieniać tych wartości. Proszę NACIŚNIJ TUTAJ i PRZECZYTAJ tekst i upewnij się, że ROZUMIESZ go przed zmianą którejś z tych wartości.</string>
     <string name="smscommunicator_invalidphonennumber">Nieprawidłowy numer telefonu SMS</string>
-    <string name="overview_calibration">Kalibracja</string>
-    <string name="xdripnotinstalled">xDrip+ nie zainstalowany</string>
-    <string name="calibrationsent">Kalibracja przesłana do xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibracja wysłana. Odbiór musi być włączony w xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ nie odbiera kalibracji</string>
     <string name="pumpsuspended">Pompa wstrzymana</string>
@@ -533,7 +524,6 @@
     <string name="dexcom_app_not_installed">Apka Dexcom nie jest zainstalowana.</string>
     <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
     <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
     <string name="category">Kategoria</string>
     <string name="subcategory">Podkategoria</string>
@@ -546,7 +536,6 @@
     <string name="overview_show_cob">COB (Aktywne Węglow.)</string>
     <string name="overview_show_iob">IOB (Aktywna Insulina)</string>
     <string name="overview_show_basals">Dawki Bazowe</string>
-    <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
     <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
     <string name="engineering_mode_enabled">Tryb Inżynierski włączony</string>
@@ -661,7 +650,6 @@
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <string name="nsmalfunction">Usterka NSClient. Spróbuj zrestartować NS i NSClient.</string>
     <string name="time_offset">Przesunięcie czasu</string>
-    <string name="bolus_reminder">Przypomnij o bolusie</string>
     <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="treatments_wizard_total_label">Razem</string>
     <string name="calculation_short">Kalk</string>
@@ -817,17 +805,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
     <string name="smscommunicator_pump_ureachable">Zgłoś nieosiągalną pompę</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
-    <string name="alarminxmin">Uruchom alarm za %1$d min</string>
-    <string name="bolusadvisor">Doradca bolusa</string>
-    <string name="bolusadvisormessage">Masz wysoki poziom. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz teraz wykonać korekcyjny bolus i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kreatora, gdy zostanie otrzymane przypomnienie.</string>
-    <string name="enablebolusadvisor">Włącz doradcę bolusa</string>
-    <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie później podczas wysokiej glikemii (\"pre-bolus\")</string>
     <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
-    <string name="timetoeat">Czas na jedzenie</string>
-    <string name="bolusreminder">Przypomnienie bolusa</string>
     <string name="enablebolusreminder">Włącz przypomnienie bolusa</string>
-    <string name="enablebolusreminder_summary">Użyj przypomnienia o potrzebie obliczenia i podania bolusa kalkulatorem (\"opóźniony bolus\")</string>
-    <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="fabric_upload_disabled">Przesyłanie dzienników awarii jest wyłączone!</string>
     <string name="graph_menu_divider_header">Wykres</string>
     <string name="chart_menu">Menu wykresu</string>
