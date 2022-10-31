@@ -54,9 +54,7 @@
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
-    <string name="treatments_wizard_bg_label">Glykémia</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Sacharidy</string>
     <string name="treatments_wizard_correction_label">Korekcia</string>
     <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="openapsma_run">Spustiť teraz</string>
@@ -97,11 +95,9 @@
     <string name="safety">Bezpečnosť</string>
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
-    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
-    <string name="constraintapllied">Aplikované obmedzenie!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazál:</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
@@ -117,8 +113,6 @@
     <string name="carbssuggestion">Návrh sacharidov</string>
     <string name="unsupportednsversion">Nepodporovaná verzia Nighscoutu</string>
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
-    <string name="bolusconstraintapplied">Aplikované obmedzenie bolusu</string>
-    <string name="carbsconstraintapplied">Aplikované obmedzenie sacharidov</string>
     <string name="careportal_newnstreatment_other">Iné</string>
     <string name="careportal_newnstreatment_meter">Glukomer</string>
     <string name="careportal_newnstreatment_sensor">Senzor</string>
@@ -288,9 +282,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Pozor!\nZa normálnych okolností tieto hodnoty nemusíte meniť. Kliknete TU, PREČÍTAJTE si informácie a UISTITE sa, že im rozumiete skôr, ako ich začnete meniť.</string>
     <string name="smscommunicator_invalidphonennumber">Chybné telefónne číslo</string>
-    <string name="overview_calibration">Kalibrácia</string>
-    <string name="xdripnotinstalled">xDrip+ nie je nainštalovaný</string>
-    <string name="calibrationsent">Kalibrácia odoslaná do xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibrácia odoslaná. Príjem kalibrácií musí byť povolený v xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ neprijíma kalibrácie</string>
     <string name="pumpsuspended">Pumpa pozastavená</string>
@@ -549,7 +540,6 @@
     <string name="dexcom_app_not_installed">Dexcom aplikácia nie je nainštalovaná.</string>
     <string name="start_activity_tt">Spustiť Dočasný cieľ Aktivita</string>
     <string name="start_eating_soon_tt">Spustiť Dočasný cieľ Blížiace sa jedlo</string>
-    <string name="temptargetshort">DC</string>
     <string name="do_not_bolus_record_only">Nepodať bolus, iba zaznamenať</string>
     <string name="category">Kategória</string>
     <string name="subcategory">Podkategória</string>
@@ -562,7 +552,6 @@
     <string name="overview_show_cob">Aktívne sacharidy</string>
     <string name="overview_show_iob">Aktívny inzulín</string>
     <string name="overview_show_basals">Bazály</string>
-    <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="start_hypo_tt">Spustiť doč. cieľ Hypo</string>
     <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
@@ -692,7 +681,6 @@
     <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
     <string name="time_offset">Časový posun</string>
-    <string name="bolus_reminder">Upozorniť na bolus neskôr</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Spolu</string>
     <string name="calculation_short">Kalk</string>
@@ -857,18 +845,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Odoslať SMS, pokiaľ pumpa nie je dostupná</string>
     <string name="smscommunicator_pump_ureachable">Nahlásiť nedostupnú pumpu</string>
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
-    <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
-    <string name="bolusadvisor">Bolusový poradca</string>
-    <string name="bolusadvisormessage">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
-    <string name="enablebolusadvisor">Povoliť bolusového poradcu</string>
-    <string name="enablebolusadvisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
     <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
-    <string name="timetoeat">Čas na jedlo</string>
-    <string name="bolusreminder">Pripomenutie bolusu</string>
     <string name="enablebolusreminder">Zapnúť pripomínanie bolusu</string>
-    <string name="enablebolusreminder_summary">Použite pripomenutie pre neskorší bolus s kalkulačkou
-        (\"oneskorený bolus\")</string>
-    <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="fabric_upload_disabled">Odosielanie protokolov o zlyhaní je zakázané!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Grafové menu</string>
@@ -1010,7 +988,6 @@
     <string name="show_loop">Zobraziť uzavretý okruh</string>
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
-    <string name="dialog_canceled">Dialóg zrušený</string>
     <string name="veryLow" comment="below 3.1">Veľmi nízka</string>
     <string name="low" comment="3.1-3.9">Nízka</string>
     <string name="high" comment="10.0-13.9">Vysoká</string>
