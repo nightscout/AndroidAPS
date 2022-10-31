@@ -50,9 +50,7 @@
     <string name="tempbasals_netinsulin_label_string">Инс:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_wizard_bg_label">КЗ</string>
     <string name="treatments_wizard_tt_label">Вр.цел</string>
-    <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
     <string name="bolus_iob_label">IOB от болуси</string>
     <string name="openapsma_run">Старт сега</string>
@@ -93,7 +91,6 @@
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_treatment_label">Болус</string>
     <string name="overview_calculator_label">Калкулатор</string>
-    <string name="constraintapllied">Приложено ограничение!</string>
     <string name="sms_bolus">Болус:</string>
     <string name="sms_basal">Базал:</string>
     <string name="changeyourinput">Променете данните!</string>
@@ -108,13 +105,10 @@
     <string name="carbssuggestion">Предложение</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
-    <string name="bolusconstraintapplied">Приложено ограничение на болус</string>
-    <string name="carbsconstraintapplied">Приложено ограничение на въглехидрати</string>
     <string name="careportal_newnstreatment_other">Друго</string>
     <string name="careportal_newnstreatment_meter">Глюкомер</string>
     <string name="careportal_newnstreatment_sensor">Сензор</string>
     <string name="carb_time_label">ВХ след</string>
-    <string name="careportal_newnstreatment_duration_label">Продължителност</string>
     <string name="profile_label">Профил</string>
     <string name="careportal_newnstreatment_glucosetype">Тип КЗ</string>
     <string name="overview_tempbasal_button">Временен базал</string>
@@ -276,9 +270,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Стойност по подразбиране: 3.0 (АМА) или 8.0 (SMB). Това е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл за 5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
     <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
-    <string name="overview_calibration">Калибрация</string>
-    <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
-    <string name="calibrationsent">Калибрацията е изпратена към xDrip+</string>
     <string name="smscommunicator_calibrationsent">Калибрацията е изпратена. Получаването трябва да бъде разрешено в xDrip +.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ не получава калибрации</string>
     <string name="pumpsuspended">Помпата е спряна</string>
@@ -443,7 +434,6 @@
     <string name="wearcontrol_title">Контролиране от часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="food">Храна</string>
-    <string name="shortgramm">гр.</string>
     <string name="none"><![CDATA[<празно>]]></string>
     <string name="shortkilojoul">килодж.</string>
     <string name="shortenergy">Ен</string>
@@ -525,9 +515,6 @@
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
     <string name="g5appnotdetected">Моля обновете Dexcom приложението до поддържана версия</string>
     <string name="dexcom_app_not_installed">Приложението на Dexcom не е инсталирано.</string>
-    <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
-    <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
-    <string name="temptargetshort">Вр.цел</string>
     <string name="do_not_bolus_record_only">Не стартирай болус, а само запиши в базата данни</string>
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
@@ -540,8 +527,6 @@
     <string name="overview_show_cob">Активни въглехидрати</string>
     <string name="overview_show_iob">Действащ инсулин</string>
     <string name="overview_show_basals">Базали</string>
-    <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
-    <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
@@ -651,8 +636,6 @@
     <string name="nav_logsettings">Настройки на логовете</string>
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
-    <string name="time_offset">времево отместване</string>
-    <string name="remind_to_bolus_later">Напомни за болус по-късно</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <string name="calculation_short">Калк</string>
@@ -705,7 +688,6 @@
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
     <string name="format_percent">%1$d %%</string>
-    <string name="unit_minute_short">мин</string>
     <string name="profile_name">Име на профила:</string>
     <string name="selected_profile">Избрано:</string>
     <string name="unitsnosemicolon">Единици</string>
@@ -802,17 +784,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
     <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
     <string name="advisoralarm">Алармата, когато е време за хранене.</string>
-    <string name="alarminxmin">Сларма след %1$d мин</string>
-    <string name="bolusadvisor">Съветник на болус</string>
-    <string name="bolusadvisormessage">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
-    <string name="enablebolusadvisor">Активиране на болус съветник</string>
-    <string name="enablebolusadvisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
     <string name="time_to_eat">Време за ядене!\nИзпълнете болус съветника и направете изчисления отново.</string>
-    <string name="timetoeat">Време е за ядене</string>
-    <string name="bolus_reminder">Болус подсещане</string>
     <string name="enablebolusreminder">Включи подсещането за болус</string>
-    <string name="enablebolusreminder_summary">Използвай подсещане за болус по-късно със съветник (\"след-болус\")</string>
-    <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
     <string name="graph_menu_divider_header">Графика</string>
     <string name="chart_menu">Меню на графиката</string>
