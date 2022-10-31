@@ -52,9 +52,7 @@ Eversense-appen.</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Kolhydrater</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>
@@ -92,11 +90,9 @@ Eversense-appen.</string>
     <string name="safety">Säkerhet</string>
     <string name="openapsma_disabled">Insticksprogram inaktiverat</string>
     <string name="constraints_violation">Begränsning nådd</string>
-    <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="overview_calculator_label">Kalkylator</string>
-    <string name="constraintapllied">Begränsning nådd</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Ändra inmatning</string>
@@ -111,13 +107,10 @@ Eversense-appen.</string>
     <string name="carbssuggestion">KH-förslag</string>
     <string name="unsupportednsversion">Versionen av Nightscout stöds inte</string>
     <string name="treatments_wizard_basaliob_label">IOB från basal</string>
-    <string name="bolusconstraintapplied">Bolusspärr aktiverad</string>
-    <string name="carbsconstraintapplied">Kolhydratsspärr aktiverad</string>
     <string name="careportal_newnstreatment_other">Annat</string>
     <string name="careportal_newnstreatment_meter">Mätare</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">KH-tid</string>
-    <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukostyp</string>
     <string name="overview_tempbasal_button">Temp basal</string>
@@ -282,9 +275,6 @@ Eversense-appen.</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardvärde: 3.0 (AMA) eller 8.0 (SMB). Detta är grundinställning för KH-absorption per 5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Viktigt!\nNormalt behöver du inte ändra dessa värden. Vg KLICKA HÄR och LÄS texten och försäkra dig om att du FÖRSTÅTT innan du ändrar dessa värden.</string>
     <string name="smscommunicator_invalidphonennumber">Ogiltigt telefonnummer för SMS</string>
-    <string name="overview_calibration">Kalibrering</string>
-    <string name="xdripnotinstalled">xDrip+ inte installerat</string>
-    <string name="calibrationsent">Kalibrering skickad till xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibrering skickad. Observera att xDrip+ måste vara inställd att ta emot kalibreringar.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ tar inte emot kalibreringar</string>
     <string name="pumpsuspended">Pump pausad</string>
@@ -450,7 +440,6 @@ Eversense-appen.</string>
     <string name="wearcontrol_title">Kontrollera från klockan</string>
     <string name="wearcontrol_summary">Sätt temp målvärde och ange behandlingar från klockan.</string>
     <string name="food">Matdatabas</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<ingen>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -535,9 +524,6 @@ Eversense-appen.</string>
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
     <string name="g5appnotdetected">Vänligen uppdatera din Dexcom-app till en supportad version</string>
     <string name="dexcom_app_not_installed">Dexcom-appen är inte installerad.</string>
-    <string name="start_activity_tt">Starta \"Träning\"</string>
-    <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
@@ -550,8 +536,6 @@ Eversense-appen.</string>
     <string name="overview_show_cob">Aktiva KH (COB)</string>
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
     <string name="overview_show_basals">Basaler</string>
-    <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
-    <string name="start_hypo_tt">Starta \"Hypo\"</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inaktiverat.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
@@ -663,8 +647,6 @@ Eversense-appen.</string>
     <string name="nav_logsettings">Loggningsinställningar</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
     <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
-    <string name="time_offset">KH-tid</string>
-    <string name="remind_to_bolus_later">Påminn om bolus senare</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyl</string>
@@ -720,7 +702,6 @@ Eversense-appen.</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">min</string>
     <string name="profile_name">Profilnamn:</string>
     <string name="selected_profile">Valt:</string>
     <string name="unitsnosemicolon">Enheter</string>
@@ -819,18 +800,8 @@ Eversense-appen.</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
     <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
-    <string name="alarminxmin">Larma om %1$d min</string>
-    <string name="bolusadvisor">Bolusguide</string>
-    <string name="bolusadvisormessage">Ditt blodsocker är högt. Istället för att äta är det rekommenderat att vänta tills det sjunker. Vill du göra en korrektionsbolus nu och påminna dig när det är dags att äta? I det här fallet kommer inga kolhydrater att registreras nu, utan du måste ange måltiden på nytt i kalkylatorn.</string>
-    <string name="enablebolusadvisor">Aktivera bolusguiden</string>
-    <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
-    <string name="timetoeat">Dags att äta</string>
-    <string name="bolus_reminder">Boluspåminnelse</string>
     <string name="enablebolusreminder">Aktivera boluspåminnelse</string>
-    <string name="enablebolusreminder_summary">Använd påminnelse för att ge bolus senare
-        (\"post-bolus\")</string>
-    <string name="time_to_bolus">Dags för bolus!\nKör Bolusguiden och gör beräkningar igen.</string>
     <string name="fabric_upload_disabled">Uppladdning av kraschloggar inaktiverad!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammeny</string>
@@ -910,7 +881,6 @@ Eversense-appen.</string>
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blodglukos</string>
     <string name="a11y_bg_outdated">föråldrad</string>
-    <string name="a11y_carb_reminder">ställ in påminnelse</string>
     <string name="a11y_add_new_profile">lägg till ny profil</string>
     <string name="a11y_clone_profile">klona nuvarande profil</string>
     <string name="a11y_delete_current_profile">ta bort aktuell profil</string>
