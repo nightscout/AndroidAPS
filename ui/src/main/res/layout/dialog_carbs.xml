@@ -148,7 +148,7 @@
                     android:layout_weight="1"
                     android:padding="10dp"
                     android:width="120dp"
-                    android:text="@string/careportal_newnstreatment_duration_label"
+                    android:text="@string/duration_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
@@ -158,7 +158,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="2dp"
-                    app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
+                    app:customContentDescription="@string/duration_label" />
 
                 <TextView
                     android:layout_width="wrap_content"

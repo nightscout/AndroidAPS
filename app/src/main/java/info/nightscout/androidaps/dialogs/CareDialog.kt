@@ -210,7 +210,7 @@ class CareDialog : DialogFragmentWithDate() {
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
-            actions.add(rh.gs(R.string.careportal_newnstreatment_duration_label) + ": " + rh.gs(R.string.format_mins, binding.duration.value.toInt()))
+            actions.add(rh.gs(R.string.duration_label) + ": " + rh.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
             valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) } )
         }
