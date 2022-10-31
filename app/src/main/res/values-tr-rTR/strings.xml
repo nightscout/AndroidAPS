@@ -51,9 +51,7 @@
     <string name="tempbasals_netinsulin_label_string">İns:</string>
     <string name="tempbasals_iob_label_string">AİNS:</string>
     <string name="tempbasals_iobtotal_label_string">Toplam AİNS:</string>
-    <string name="treatments_wizard_bg_label">KŞ</string>
     <string name="treatments_wizard_tt_label">GH</string>
-    <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
     <string name="bolus_iob_label">Bolus AİNS</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
@@ -91,11 +89,9 @@
     <string name="safety">Güvenlik</string>
     <string name="openapsma_disabled">Eklenti devre dışı</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
-    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek teslim edilen miktarı manuel olarak kontrol edin</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_treatment_label">Tedavi</string>
     <string name="overview_calculator_label">Hesap makinesi</string>
-    <string name="constraintapllied">Sınırlaması uygulanır!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
@@ -110,8 +106,6 @@
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
     <string name="treatments_wizard_basaliob_label">Bazal AİNS</string>
-    <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
-    <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="careportal_newnstreatment_other">Diğer</string>
     <string name="careportal_newnstreatment_meter">GlkMetre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
@@ -281,9 +275,6 @@
 Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
     <string name="smscommunicator_invalidphonennumber">Geçersiz SMS telefon numarası</string>
-    <string name="overview_calibration">Kalibrasyon</string>
-    <string name="xdripnotinstalled">xDrip+ uygulaması yüklenmemiş</string>
-    <string name="calibrationsent">Kalibrasyon xDrip+ a gönderildi</string>
     <string name="smscommunicator_calibrationsent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ kalibrasyonları almıyor</string>
     <string name="pumpsuspended">Pompa durduldu</string>
@@ -538,7 +529,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
     <string name="start_activity_tt">Egzersiz Başlat GH</string>
     <string name="start_eating_soon_tt">Yakında Öğün GH</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Alt kategori</string>
@@ -551,7 +541,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_show_cob">Aktif Karbonhidrat</string>
     <string name="overview_show_iob">Aktif İnsülin</string>
     <string name="overview_show_basals">Bazallar</string>
-    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
     <string name="start_hypo_tt">Hipo GH başlat</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
@@ -679,7 +668,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
     <string name="time_offset">Saat farkı</string>
-    <string name="bolus_reminder">Bolusu daha sonra hatırlat</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="treatments_wizard_total_label">Toplam</string>
     <string name="calculation_short">Hesap</string>
@@ -839,18 +827,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smscommunicator_report_pump_ureachable_summary">Pompa ulaşılamazsa SMS gönder</string>
     <string name="smscommunicator_pump_ureachable">Pompaya ulaşılamadığını bildir</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
-    <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
-    <string name="bolusadvisor">Bolus danışmanı</string>
-    <string name="bolusadvisormessage">Yüksek glisemiksiniz. Şimdi yemek yemek yerine daha iyi glisemi beklemeniz önerilir. Şimdi bir düzeltme bolusu yapmak ve yemek zamanı geldiğinde size hatırlatmak ister misiniz? Bu durumda karbonhidrat kaydı yapılmaz ve size hatırlattığımızda sihirbazı tekrar kullanmanız gerekir.</string>
-    <string name="enablebolusadvisor">Bolus danışmanını etkinleştir</string>
-    <string name="enablebolusadvisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
-    <string name="timetoeat">Yemek zamanı</string>
-    <string name="bolusreminder">Bolus hatırlatıcısı</string>
     <string name="enablebolusreminder">Bolus hatırlatıcıyı etkinleştir</string>
-    <string name="enablebolusreminder_summary">Sihirbazla daha sonra bolus için hatırlatıcı kullanın
-         (\"bolus sonrası\")</string>
-    <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="fabric_upload_disabled">Çökme günlükleri yükleme devre dışı bırakıldı!</string>
     <string name="graph_menu_divider_header">Grafik</string>
     <string name="chart_menu">Grafik menüsü</string>
@@ -992,7 +970,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
-    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
     <string name="veryLow" comment="below 3.1">Çok düşük</string>
     <string name="low" comment="3.1-3.9">Düşük</string>
     <string name="high" comment="10.0-13.9">Yüksek</string>
