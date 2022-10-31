@@ -52,9 +52,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Koolhydraten</string>
     <string name="treatments_wizard_correction_label">Correctie</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Nu uitvoeren</string>
@@ -92,11 +90,9 @@
     <string name="safety">Veiligheid</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
-    <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer de daadwerkelijk toegediende hoeveelheid</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Bolus wizard</string>
-    <string name="constraintapllied">Beperking toegepast!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basaal:</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
@@ -111,13 +107,10 @@
     <string name="carbssuggestion">Koolhydraten Voorstel</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
-    <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
-    <string name="carbsconstraintapplied">KH limiet ingesteld</string>
     <string name="careportal_newnstreatment_other">Andere</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">KH tijdsduur</string>
-    <string name="careportal_newnstreatment_duration_label">Tijdsduur</string>
     <string name="profile_label">Profiel</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
@@ -282,9 +275,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaard koolhydraten absorptie-impact per 5 minuten. De standaard is een verwachte 3mg / dl / 5min. Dit is van invloed op hoe snel COB zijn opgenomen en hoeveel koolhydraten absorptie wordt verwacht, bij het voorspellen van toekomstige BG, wanneer BG meer dan verwacht daalt of niet zoveel stijgt als verwacht.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Opgelet!\n Onderstaande waardes moeten normaal gezien niet worden aangepast. KLIK HIER en LEES de tekst zodat je alles volledig BEGRIJPT voordat je een waarde wijzigt.</string>
     <string name="smscommunicator_invalidphonennumber">Foutief SMS telefoon nummer</string>
-    <string name="overview_calibration">Kalibratie</string>
-    <string name="xdripnotinstalled">xDrip+ niet geïnstalleerd</string>
-    <string name="calibrationsent">Kalibratie verzonden naar xDrip+</string>
     <string name="smscommunicator_calibrationsent">Kalibratie verzonden. xDrip+ moet zo zijn ingesteld dat hij het ontvangen van kalibraties toestaat.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ ontvangt geen kalibraties</string>
     <string name="pumpsuspended">Pomp onderbreken</string>
@@ -454,7 +444,6 @@
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
     <string name="food">Voeding</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<geen>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -539,9 +528,6 @@
     <string name="allow_automated_crash_reporting">Sta automatische crashrapporten en verder gebruik van data toe zodat deze naar de ontwikkelaars via fabric.io kan verzonden worden.</string>
     <string name="g5appnotdetected">Gelieve Dexcom app naar ondersteunde versie te updaten</string>
     <string name="dexcom_app_not_installed">Dexcom app is niet geïnstalleerd.</string>
-    <string name="start_activity_tt">Start inspanning TT</string>
-    <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Geen bolus toedienen enkel in behandelingen zetten</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
@@ -554,8 +540,6 @@
     <string name="overview_show_cob">Opgenomen Koolhydraten</string>
     <string name="overview_show_iob">Opgenomen Insuline</string>
     <string name="overview_show_basals">Basalen</string>
-    <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
-    <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
     <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
@@ -678,8 +662,6 @@
     <string name="nav_logsettings">Log instellingen</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
-    <string name="time_offset">Tijdverschuiving</string>
-    <string name="remind_to_bolus_later">Herinner later te bolussen</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <string name="calculation_short">Calc</string>
@@ -735,7 +717,6 @@
     <string name="format_carbs_ic">%1$.0fg KH-ratio: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg KH-ratio: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">min</string>
     <string name="profile_name">Profielnaam:</string>
     <string name="selected_profile">Geselecteerd:</string>
     <string name="unitsnosemicolon">Eenheden</string>
@@ -840,18 +821,8 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
     <string name="smscommunicator_pump_ureachable">Melding pomp onbereikbaar</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
-    <string name="alarminxmin">Start alarm over %1$d min</string>
-    <string name="bolusadvisor">Bolusadviseur</string>
-    <string name="bolusadvisormessage">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je herinneren wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je eraan herinneren.</string>
-    <string name="enablebolusadvisor">Bolusadviseur inschakelen</string>
-    <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
-    <string name="timetoeat">Tijd om te eten</string>
-    <string name="bolus_reminder">Bolus herinnering</string>
     <string name="enablebolusreminder">Bolus herinnering inschakelen</string>
-    <string name="enablebolusreminder_summary">Gebruik herinnering om later te bolussen met de wizard
-        (\"post-bolus\")</string>
-    <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
@@ -934,7 +905,6 @@
     <string name="a11y_insulin_label">insuline</string>
     <string name="a11y_blood_glucose">bloed glucose</string>
     <string name="a11y_bg_outdated">verouderd</string>
-    <string name="a11y_carb_reminder">herinnering instellen</string>
     <string name="a11y_add_new_profile">nieuw profiel toevoegen</string>
     <string name="a11y_clone_profile">huidig profiel dupliceren</string>
     <string name="a11y_delete_current_profile">huidig profiel verwijderen</string>
@@ -993,7 +963,6 @@
     <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
-    <string name="dialog_canceled">Dialoog geannuleerd</string>
     <string name="veryLow" comment="below 3.1">Zeer laag</string>
     <string name="low" comment="3.1-3.9">Laag</string>
     <string name="high" comment="10.0-13.9">Hoog</string>
