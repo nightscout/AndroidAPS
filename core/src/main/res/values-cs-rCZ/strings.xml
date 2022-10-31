@@ -361,6 +361,7 @@
     <string name="uel_export_settings">EXPORTOVAT NASTAVENÍ</string>
     <string name="uel_import_settings">IMPORTOVAT NASTAVENÍ</string>
     <string name="uel_reset_databases">RESETOVAT DATABÁZE</string>
+    <string name="uel_cleanup_databases">VYČISTIT DATABÁZE</string>
     <string name="uel_export_databases">EXPORTOVAT DATABÁZE</string>
     <string name="uel_import_databases">IMPORTOVAT DATABÁZE</string>
     <string name="uel_otp_export">EXPORT OTP</string>
