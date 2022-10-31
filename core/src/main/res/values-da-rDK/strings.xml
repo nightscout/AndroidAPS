@@ -110,6 +110,9 @@
     <string name="addnew">Tilføj ny</string>
     <string name="addnew_above">Tilføj ny ovenfor</string>
     <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
+    <string name="alarminxmin">Kør alarm om %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus fejl. Undersøg manuelt hvor meget insulin der er givet</string>
+    <string name="shortgramm">g</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
     <string name="pumplimit">pumpe grænse</string>
