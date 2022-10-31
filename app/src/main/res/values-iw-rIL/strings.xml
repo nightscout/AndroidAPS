@@ -681,7 +681,7 @@
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
     <string name="time_offset">היסט זמן</string>
-    <string name="bolus_reminder">תזכורת להזרקת בולוס אח\"כ</string>
+    <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <string name="calculation_short">חישוב</string>
@@ -849,7 +849,7 @@
     <string name="enablebolusadvisor_summary">מציג תזכורת לאכול אחר כך במקום להזריק את המינון שהומלץ ע\"י האשף בעת היפרגליקמיה (\"בולוס מקדים\")</string>
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="timetoeat">זמן לאכול</string>
-    <string name="bolusreminder">תזכורת בולוס</string>
+    <string name="bolus_reminder">תזכורת בולוס</string>
     <string name="enablebolusreminder">אפשר את תזכורת בולוס</string>
     <string name="enablebolusreminder_summary">השתמש בתזכורת כדי להזריק בולוס מאוחר יותר במחשבון
         (\"פוסט-בולוס\")</string>

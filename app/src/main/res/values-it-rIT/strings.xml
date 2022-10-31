@@ -682,7 +682,7 @@
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
     <string name="time_offset">Offset</string>
-    <string name="bolus_reminder">Ricorda di fare il bolo</string>
+    <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
     <string name="setupwizard_preferred_aps_mode">Modalità APS preferita</string>
     <string name="treatments_wizard_total_label">Totale</string>
     <string name="calculation_short">Calc</string>
@@ -850,7 +850,7 @@
     <string name="enablebolusadvisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="timetoeat">Tempo di mangiare</string>
-    <string name="bolusreminder">Promemoria bolo</string>
+    <string name="bolus_reminder">Promemoria bolo</string>
     <string name="enablebolusreminder">Abilita promemoria bolo</string>
     <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore
         (\"post-bolo\")</string>

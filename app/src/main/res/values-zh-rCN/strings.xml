@@ -669,7 +669,7 @@
     <string name="resettodefaults">重置为默认值</string>
     <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
     <string name="time_offset">时区偏移</string>
-    <string name="bolus_reminder">稍后提醒输注大剂量</string>
+    <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="treatments_wizard_total_label">总计</string>
     <string name="calculation_short">计算</string>
@@ -833,7 +833,7 @@
     <string name="enablebolusadvisor_summary">在高血糖期间(\"预测大剂量\")，使用延迟吃饭的提醒功能，来替代大剂量向导结果</string>
     <string name="time_to_eat">吃饭时间到了！\n请运行大剂量向导，然后进行计算。</string>
     <string name="timetoeat">吃饭时间</string>
-    <string name="bolusreminder">大剂量提醒</string>
+    <string name="bolus_reminder">大剂量提醒</string>
     <string name="enablebolusreminder">启用大剂量提醒</string>
     <string name="enablebolusreminder_summary">使用大剂量向导稍后推注的提醒功能
       (“稍后注射大剂量”)</string>

@@ -28,7 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.utils.XDripBroadcast
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

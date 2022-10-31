@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.XDripBroadcast
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.shared.sharedPreferences.SP

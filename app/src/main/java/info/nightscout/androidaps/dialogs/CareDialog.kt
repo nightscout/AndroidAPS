@@ -203,7 +203,7 @@ class CareDialog : DialogFragmentWithDate() {
                     else                     -> TherapyEvent.MeterType.MANUAL
                 }
             actions.add(rh.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
-            actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(R.string.bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
             valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value, profileFunction.getUnits().asText))

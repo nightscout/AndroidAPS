@@ -659,7 +659,7 @@
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <string name="time_offset">Decalaj</string>
-    <string name="bolus_reminder">Amintește-mi sa fac bolus mai târziu</string>
+    <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -819,7 +819,7 @@
     <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci mai târziu în loc de alerta de la calculatorul de bolus din timpul hiperglicemiei (\"pre-bolus\")</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
-    <string name="bolusreminder">Memento bolus</string>
+    <string name="bolus_reminder">Memento bolus</string>
     <string name="enablebolusreminder">Activează memento bolus</string>
     <string name="enablebolusreminder_summary">Folosește memento pentru a bolusa mai târziu cu asistentul
         (\"post-bolus\")</string>

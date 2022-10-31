@@ -661,7 +661,7 @@
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <string name="nsmalfunction">Usterka NSClient. Spróbuj zrestartować NS i NSClient.</string>
     <string name="time_offset">Przesunięcie czasu</string>
-    <string name="bolus_reminder">Przypomnij o bolusie</string>
+    <string name="remind_to_bolus_later">Przypomnij o bolusie</string>
     <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="treatments_wizard_total_label">Razem</string>
     <string name="calculation_short">Kalk</string>
@@ -824,7 +824,7 @@
     <string name="enablebolusadvisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie później podczas wysokiej glikemii (\"pre-bolus\")</string>
     <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
     <string name="timetoeat">Czas na jedzenie</string>
-    <string name="bolusreminder">Przypomnienie bolusa</string>
+    <string name="bolus_reminder">Przypomnienie bolusa</string>
     <string name="enablebolusreminder">Włącz przypomnienie bolusa</string>
     <string name="enablebolusreminder_summary">Użyj przypomnienia o potrzebie obliczenia i podania bolusa kalkulatorem (\"opóźniony bolus\")</string>
     <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>

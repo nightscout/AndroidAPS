@@ -1,35 +1,44 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.implementation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionAlarm
-import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta
+import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.TimerUtil
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CarbTimer @Inject constructor(
+class CarbTimerImpl @Inject constructor(
     private val injector: HasAndroidInjector,
     private val rh: ResourceHelper,
     private val automationPlugin: AutomationPlugin,
     private val timerUtil: TimerUtil
-) {
+) : CarbTimer {
 
-    fun scheduleReminder(seconds: Int, text: String? = null) =
-        timerUtil.scheduleReminder(seconds, text ?: rh.gs(R.string.timetoeat))
+    /**
+     * Generate reminder via [info.nightscout.androidaps.utils.TimerUtil]
+     *
+     * @param seconds seconds to the future
+     */
+    override fun scheduleTimeToEatReminder(seconds: Int) =
+        timerUtil.scheduleReminder(seconds, rh.gs(R.string.time_to_eat))
 
-    fun scheduleEatReminder() {
+    /**
+     * Create new Automation event to alarm when is time to eat
+     */
+    override fun scheduleAutomationEventEatReminder() {
         val event = AutomationEvent(injector).apply {
-            title = rh.gs(R.string.bolusadvisor)
+            title = rh.gs(R.string.bolus_advisor)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -60,9 +69,12 @@ class CarbTimer @Inject constructor(
         automationPlugin.addIfNotExists(event)
     }
 
-    fun removeEatReminder() {
+    /**
+     * Remove Automation event
+     */
+    override fun removeAutomationEventEatReminder() {
         val event = AutomationEvent(injector).apply {
-            title = rh.gs(R.string.bolusadvisor)
+            title = rh.gs(R.string.bolus_advisor)
         }
         automationPlugin.removeIfExists(event)
     }

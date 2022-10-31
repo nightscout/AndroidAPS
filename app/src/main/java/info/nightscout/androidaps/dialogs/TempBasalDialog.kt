@@ -111,14 +111,14 @@ class TempBasalDialog : DialogFragmentWithDate() {
             percent = constraintChecker.applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
             actions.add(rh.gs(R.string.tempbasal_label) + ": $percent%")
             actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
-            if (percent != basalPercentInput) actions.add(rh.gs(R.string.constraintapllied))
+            if (percent != basalPercentInput) actions.add(rh.gs(R.string.constraint_applied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(binding.basalAbsoluteInput.text)
             absolute = constraintChecker.applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
             actions.add(rh.gs(R.string.tempbasal_label) + ": " + rh.gs(R.string.pump_basebasalrate, absolute))
             actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(rh.gs(R.string.constraintapllied).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.constraint_applied).formatColor(context, rh, R.attr.warningColor))
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {

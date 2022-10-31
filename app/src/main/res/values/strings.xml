@@ -108,9 +108,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Run now</string>
@@ -151,11 +149,9 @@
     <string name="safety">Safety</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
-    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered amount</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
-    <string name="constraintapllied">Constraint applied!</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Change your input!</string>
@@ -171,8 +167,6 @@
     <string name="carbssuggestion">Carbs Suggestion</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="bolusconstraintapplied">Bolus constraint applied</string>
-    <string name="carbsconstraintapplied">Carbs constraint applied</string>
     <string name="careportal_newnstreatment_other">Other</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
@@ -345,9 +339,6 @@
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
-    <string name="overview_calibration">Calibration</string>
-    <string name="xdripnotinstalled">xDrip+ not installed</string>
-    <string name="calibrationsent">Calibration sent to xDrip+</string>
     <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ is not receiving calibrations</string>
     <string name="pumpsuspended">Pump suspended</string>
@@ -496,7 +487,6 @@
     <string name="openapsama_autosens_period">Interval for autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
-    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
@@ -593,7 +583,6 @@
     <string name="carbsReqThreshold">Minimum Carbs Required For Suggestion</string>
     <string name="carbsReqThreshold_summary">Minimum grams of carbs to display a carbs suggestion alert. Carbs suggestions below this number will not trigger a notification.</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
-    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="nsclientbgshort">NS BG</string>
@@ -642,9 +631,6 @@
     <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
     <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
     <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
-    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
-    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
-    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
@@ -671,7 +657,6 @@
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="start_activity_tt">Start Activity TT</string>
     <string name="start_eating_soon_tt">Start Eating soon TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>
@@ -684,7 +669,6 @@
     <string name="overview_show_cob">Carbs On Board</string>
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
-    <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="start_hypo_tt">Start Hypo TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
@@ -846,7 +830,7 @@
     <string name="resettodefaults">Reset to defaults</string>
     <string name="nsmalfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
     <string name="time_offset">Time offset</string>
-    <string name="bolus_reminder">Remind to bolus later</string>
+    <string name="remind_to_bolus_later">Remind to bolus later</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -1048,20 +1032,10 @@
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
     <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
-    <string name="alarminxmin">Run alarm in %1$d min</string>
-    <string name="bolusadvisor">Bolus advisor</string>
-    <string name="bolusadvisormessage">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
     <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
-    <string name="enablebolusadvisor">Enable bolus advisor</string>
-    <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
-    <string name="timetoeat">Time to eat</string>
-    <string name="bolusreminder">Bolus reminder</string>
-    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
     <string name="enablebolusreminder">Enable bolus reminder</string>
-    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard
-        ("post-bolus")</string>
-    <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
+    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard ("post-bolus")</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
@@ -1219,7 +1193,6 @@
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
-    <string name="dialog_canceled">Dialog canceled</string>
     <string name="veryLow" comment="below 3.1">Very low</string>
     <string name="low" comment="3.1-3.9">Low</string>
     <string name="high" comment="10.0-13.9">High</string>

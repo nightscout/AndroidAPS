@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.shared.di.SharedModule
+import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton
 
 @Singleton
@@ -65,7 +66,8 @@ import javax.inject.Singleton
         WorkersModule::class,
         DiaconnG8Module::class,
         OpenHumansModule::class,
-        SharedModule::class
+        SharedModule::class,
+        UiModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

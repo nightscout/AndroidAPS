@@ -10,8 +10,6 @@ import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFr
 import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
 import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
 import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
-import info.nightscout.androidaps.dialogs.CalibrationDialog
-import info.nightscout.androidaps.dialogs.CarbsDialog
 import info.nightscout.androidaps.dialogs.CareDialog
 import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
@@ -88,8 +86,6 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
-    @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
-    @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
     @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
     @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog

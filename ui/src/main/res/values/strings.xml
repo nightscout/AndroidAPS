@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="constraint_applied">Constraint applied!</string>
+    <string name="bolus_constraint_applied">Bolus constraint applied</string>
+    <string name="carbs_constraint_applied">Carbs constraint applied</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog canceled</string>
+
+</resources>

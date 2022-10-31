@@ -176,6 +176,8 @@ dependencies {
     implementation project(':libraries')
     implementation project(':shared')
     implementation project(':core')
+    implementation project(':ui')
+    implementation project(':implementation')
     implementation project(':automation')
     implementation project(':combo')
     implementation project(':database')

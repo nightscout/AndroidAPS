@@ -659,7 +659,7 @@
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do ClienteNS. Pondere reiniciar o NS e ClienteNS.</string>
     <string name="time_offset">Fuso horário</string>
-    <string name="bolus_reminder">Lembrete para bólus mais tarde</string>
+    <string name="remind_to_bolus_later">Lembrete para bólus mais tarde</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -819,7 +819,7 @@
     <string name="enablebolusadvisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
     <string name="timetoeat">Hora de comer</string>
-    <string name="bolusreminder">Lembrete de bólus</string>
+    <string name="bolus_reminder">Lembrete de bólus</string>
     <string name="enablebolusreminder">Ativar lembrete de bólus</string>
     <string name="enablebolusreminder_summary">Usar lembrete para bólus mais tarde com o assistente
         (\"pós-bólus\")</string>

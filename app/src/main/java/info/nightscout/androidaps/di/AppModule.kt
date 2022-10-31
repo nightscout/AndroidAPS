@@ -33,10 +33,13 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.implementation.BolusTimerImpl
+import info.nightscout.implementation.CarbTimerImpl
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
@@ -107,6 +110,9 @@ open class AppModule {
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
 
         @Binds fun bindPumpSync(pumpSyncImplementation: PumpSyncImplementation): PumpSync
+        @Binds fun bindXDripBroadcast(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
+        @Binds fun bindCarbTimer(carbTimer: CarbTimerImpl): CarbTimer
+        @Binds fun bindBolusTimer(bolusTimer: BolusTimerImpl): BolusTimer
     }
 }
 

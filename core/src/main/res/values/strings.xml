@@ -74,6 +74,12 @@
     <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
     <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
+    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
+    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
+    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
+    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -188,6 +194,11 @@
     <string name="addnew">Add new</string>
     <string name="addnew_above">Add new above</string>
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
+    <string name="bg_label">BG</string>
+    <string name="calibration">Calibration</string>
+    <string name="alarminxmin">Run alarm in %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered amount</string>
+    <string name="bolus_reminder">Bolus reminder</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

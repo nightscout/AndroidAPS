@@ -679,7 +679,7 @@
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="time_offset">Zeitversatz</string>
-    <string name="bolus_reminder">Später an Bolus erinnern</string>
+    <string name="remind_to_bolus_later">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -848,7 +848,7 @@ Unerwartetes Verhalten.</string>
     <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
-    <string name="bolusreminder">Bolus-Erinnerung</string>
+    <string name="bolus_reminder">Bolus-Erinnerung</string>
     <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
     <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
         (\"Post-Bolus\")</string>

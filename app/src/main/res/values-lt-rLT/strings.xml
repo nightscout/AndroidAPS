@@ -659,7 +659,7 @@
     <string name="resettodefaults">Atkurti numatytuosius</string>
     <string name="nsmalfunction">NSClient sutrikimas. Reikėtų paleisti iš naujo NS ir NSClient.</string>
     <string name="time_offset">Laiko poslinkis</string>
-    <string name="bolus_reminder">Priminti apie bolusą vėliau</string>
+    <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
     <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
     <string name="treatments_wizard_total_label">Viso</string>
     <string name="calculation_short">Skaič.</string>
@@ -819,7 +819,7 @@
     <string name="enablebolusadvisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="timetoeat">Laikas valgyti</string>
-    <string name="bolusreminder">Priminimas apie bolusą</string>
+    <string name="bolus_reminder">Priminimas apie bolusą</string>
     <string name="enablebolusreminder">Įgalinti priminimą apie bolusą</string>
     <string name="enablebolusreminder_summary">Naudoti priminimus apie bolusą su skaičiuotuvu        („post-bolusas“)</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>

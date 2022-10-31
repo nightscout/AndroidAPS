@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.XDripBroadcast
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert

@@ -1,16 +1,17 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.implementation
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.extensions.safeQueryBroadcastReceivers
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.receivers.Intents
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -25,15 +26,15 @@ import javax.inject.Singleton
 @Suppress("SpellCheckingInspection")
 @OpenForTesting
 @Singleton
-class XDripBroadcast @Inject constructor(
+class XDripBroadcastImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction
-) {
+) : XDripBroadcast {
 
-    fun sendCalibration(bg: Double): Boolean {
+    override fun sendCalibration(bg: Double): Boolean {
         val bundle = Bundle()
         bundle.putDouble("glucose_number", bg)
         bundle.putString("units", if (profileFunction.getUnits() == GlucoseUnit.MGDL) "mgdl" else "mmol")
@@ -44,18 +45,18 @@ class XDripBroadcast @Inject constructor(
         context.sendBroadcast(intent)
         val q = context.packageManager.safeQueryBroadcastReceivers(intent, 0)
         return if (q.isEmpty()) {
-            ToastUtils.errorToast(context, R.string.xdripnotinstalled)
-            aapsLogger.debug(rh.gs(R.string.xdripnotinstalled))
+            ToastUtils.errorToast(context, R.string.xdrip_not_installed)
+            aapsLogger.debug(rh.gs(R.string.xdrip_not_installed))
             false
         } else {
-            ToastUtils.errorToast(context, R.string.calibrationsent)
-            aapsLogger.debug(rh.gs(R.string.calibrationsent))
+            ToastUtils.errorToast(context, R.string.calibration_sent)
+            aapsLogger.debug(rh.gs(R.string.calibration_sent))
             true
         }
     }
 
     // sent in 640G mode
-    fun send(glucoseValue: GlucoseValue) {
+    override fun send(glucoseValue: GlucoseValue) {
         if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
             try {
@@ -89,7 +90,7 @@ class XDripBroadcast @Inject constructor(
     }
 
     // sent in NSClient dbaccess mode
-    fun sendProfile(profileStoreJson: JSONObject) {
+    override fun sendProfile(profileStoreJson: JSONObject) {
         if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false))
             broadcast(
                 Intent(Intents.ACTION_NEW_PROFILE).apply {
@@ -101,7 +102,7 @@ class XDripBroadcast @Inject constructor(
     }
 
     // sent in NSClient dbaccess mode
-    fun sendTreatments(addedOrUpdatedTreatments: JSONArray) {
+    override fun sendTreatments(addedOrUpdatedTreatments: JSONArray) {
         if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false))
             splitArray(addedOrUpdatedTreatments).forEach { part ->
                 broadcast(
@@ -114,7 +115,7 @@ class XDripBroadcast @Inject constructor(
     }
 
     // sent in NSClient dbaccess mode
-    fun sendSgvs(sgvs: JSONArray) {
+    override fun sendSgvs(sgvs: JSONArray) {
         if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false))
             splitArray(sgvs).forEach { part ->
                 broadcast(

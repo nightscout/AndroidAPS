@@ -1,7 +1,7 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.implementation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.BolusTimer
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
@@ -17,15 +17,15 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BolusTimer @Inject constructor(
+class BolusTimerImpl @Inject constructor(
     private val injector: HasAndroidInjector,
     private val rh: ResourceHelper,
     private val automationPlugin: AutomationPlugin,
-) {
+) : BolusTimer {
 
-    fun scheduleBolusReminder() {
+    override fun scheduleAutomationEventBolusReminder() {
         val event = AutomationEvent(injector).apply {
-            title = rh.gs(R.string.bolusreminder)
+            title = rh.gs(R.string.bolus_reminder)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -46,9 +46,9 @@ class BolusTimer @Inject constructor(
         automationPlugin.addIfNotExists(event)
     }
 
-    fun removeBolusReminder() {
+    override fun removeAutomationEventBolusReminder() {
         val event = AutomationEvent(injector).apply {
-            title = rh.gs(R.string.bolusreminder)
+            title = rh.gs(R.string.bolus_reminder)
         }
         automationPlugin.removeIfExists(event)
     }

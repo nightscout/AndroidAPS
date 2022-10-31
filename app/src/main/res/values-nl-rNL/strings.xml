@@ -679,7 +679,7 @@
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
     <string name="time_offset">Tijdverschuiving</string>
-    <string name="bolus_reminder">Herinner later te bolussen</string>
+    <string name="remind_to_bolus_later">Herinner later te bolussen</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <string name="calculation_short">Calc</string>
@@ -847,7 +847,7 @@
     <string name="enablebolusadvisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="timetoeat">Tijd om te eten</string>
-    <string name="bolusreminder">Bolus herinnering</string>
+    <string name="bolus_reminder">Bolus herinnering</string>
     <string name="enablebolusreminder">Bolus herinnering inschakelen</string>
     <string name="enablebolusreminder_summary">Gebruik herinnering om later te bolussen met de wizard
         (\"post-bolus\")</string>
