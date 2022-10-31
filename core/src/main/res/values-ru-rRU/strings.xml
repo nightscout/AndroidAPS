@@ -114,6 +114,9 @@
     <string name="addnew">Добавить новый</string>
     <string name="addnew_above">Добавить строку сверху</string>
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
+    <string name="alarminxmin">Напомнить через %1$d мин</string>
+    <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
+    <string name="shortgramm">грамм</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
