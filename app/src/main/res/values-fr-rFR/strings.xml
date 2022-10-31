@@ -54,9 +54,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
     <string name="tempbasals_iobtotal_label_string">IA Totale :</string>
-    <string name="treatments_wizard_bg_label">Gly</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Glucides</string>
     <string name="treatments_wizard_correction_label">Corr.</string>
     <string name="bolus_iob_label">IA Bolus</string>
     <string name="openapsma_run">Exécuter maintenant</string>
@@ -97,11 +95,9 @@
     <string name="safety">Sécurité</string>
     <string name="openapsma_disabled">Plugin désactivé</string>
     <string name="constraints_violation">Violation des restrictions</string>
-    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Assistant</string>
-    <string name="constraintapllied">Restriction appliquée !</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Changez vos entrées !</string>
@@ -117,8 +113,6 @@
     <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IA Basal</string>
-    <string name="bolusconstraintapplied">Restriction du Bolus appliquée</string>
-    <string name="carbsconstraintapplied">Restriction des Glucides appliquée</string>
     <string name="careportal_newnstreatment_other">Autre</string>
     <string name="careportal_newnstreatment_meter">Lecteur</string>
     <string name="careportal_newnstreatment_sensor">Capteur</string>
@@ -289,9 +283,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsama_min_5m_carbimpact_summary">Valeur par défaut : 3.0 (AMA) ou 8.0 (SMB). Il s’agit d’un paramètre décrivant l’absorption des glucides par 5 minutes. La valeur par défaut est de 3mg/dl/5min. Cela influe sur la vitesse calculée de disparition des Glucides Actifs (GA), et comment sera estimée la consommation des glucides pour calculer les valeurs futures de glycémies, lorsque la glycémie chute plus que prévu ou n\'augmente pas autant que calculé.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention !\nNormalement vous n\'avez pas à changer les valeurs mentionnées ci-dessous. SVP CLIQUEZ ICI et LISEZ bien le texte. Assurez-vous de bien le COMPRENDRE avant de changer n’importe laquelle de ces valeurs.</string>
     <string name="smscommunicator_invalidphonennumber">Num tél du SMS est invalide</string>
-    <string name="overview_calibration">Étalonnage</string>
-    <string name="xdripnotinstalled">xDrip+ n\'est pas installé</string>
-    <string name="calibrationsent">Étalonnage envoyé à xDrip+</string>
     <string name="smscommunicator_calibrationsent">Étalonnage envoyé. La réception doit être activée dans xDrip+.</string>
     <string name="smscommunicator_calibrationfailed">xDrip+ ne reçoit pas les étalonnages</string>
     <string name="pumpsuspended">Pompe arrêtée</string>
@@ -550,7 +541,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
-    <string name="temptargetshort">Traitement</string>
     <string name="do_not_bolus_record_only">Ne pas administrer de bolus, enregistrer uniquement</string>
     <string name="category">Catégorie</string>
     <string name="subcategory">Sous-catégorie</string>
@@ -563,7 +553,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_show_cob">Glucides actifs</string>
     <string name="overview_show_iob">Insuline Active</string>
     <string name="overview_show_basals">Basals</string>
-    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
     <string name="start_hypo_tt">Début Traitement Hypo</string>
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
@@ -693,7 +682,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="nsmalfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <string name="time_offset">Décalage horaire</string>
-    <string name="bolus_reminder">Rappel du bolus plus tard</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -858,17 +846,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_report_pump_ureachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
     <string name="smscommunicator_pump_ureachable">Signaler Pompe hors de portée</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
-    <string name="alarminxmin">Alerter dans %1$d min</string>
-    <string name="bolusadvisor">Assistant bolus</string>
-    <string name="bolusadvisormessage">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
-    <string name="enablebolusadvisor">Activer l\'assistant bolus</string>
-    <string name="enablebolusadvisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
-    <string name="timetoeat">Il est temps de manger</string>
-    <string name="bolusreminder">Rappel bolus</string>
     <string name="enablebolusreminder">Activer le rappel bolus</string>
-    <string name="enablebolusreminder_summary">Utiliser un rappel pour faire le bolus plus tard avec l\'Assistant (\"post-bolus\")</string>
-    <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Menu graphique</string>
@@ -1010,7 +989,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
-    <string name="dialog_canceled">Boîte de dialogue annulée</string>
     <string name="veryLow" comment="below 3.1">Très bas</string>
     <string name="low" comment="3.1-3.9">Bas</string>
     <string name="high" comment="10.0-13.9">Haut</string>
