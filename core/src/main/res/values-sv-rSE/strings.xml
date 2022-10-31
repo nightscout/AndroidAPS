@@ -110,6 +110,9 @@
     <string name="addnew">Lägg till</string>
     <string name="addnew_above">Lägg till nytt ovan</string>
     <string name="wrong_pump_data">Data kommer från en annan pump. Byt pumpdrivrutin för att återställa.</string>
+    <string name="alarminxmin">Larma om %1$d min</string>
+    <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
+    <string name="shortgramm">g</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
