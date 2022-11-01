@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Zresetuj bazy danych</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="nav_exit">Wyjście</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
     <string name="description_objectives">Program do nauki</string>
@@ -162,7 +161,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimalna liczba minut która musi upłynąć pomiędzy jednym a drugim zdalnie podawanym bolusem</string>
     <string name="smscommunicator_remotebolusmindistance">Ile co najmniej minut musi upłynąć pomiędzy jednym a drugim bolusem</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Dla twojego bezpieczeństwa, aby zmienić to ustawienie musisz dodać co najmniej 2 numery telefonów.</string>
-    <string name="bolusrequested">Zamierzam podać %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
     <string name="smscommunicator_mealbolusdelivered">Pomyślnie podano %1$.2f U bolusa posiłkowego</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Cel %1$s na %2$d minut</string>
@@ -232,7 +230,6 @@
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
     <string name="basal_rate">Dawka bazowa</string>
-    <string name="basalvaluebelowminimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Ostatnia BG:</string>
     <string name="MM640g">MM640g</string>
@@ -369,7 +366,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">KRZOD</string>
     <string name="nav_about">O programie</string>
-    <string name="smscommunicator_missingsmspermission">Brak uprawnień SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Brak uprawnień do wykrywania stanu telefonu</string>
     <string name="xdripstatus_settings">Status xDrip+ (zegarek)</string>
     <string name="xdripstatus">Linia Statusu xDrip+ (zegarek)</string>
@@ -442,8 +438,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Bi</string>
     <string name="shortfat">Tł</string>
-    <string name="executingrightnow">Polecenie jest teraz wykonywane</string>
-    <string name="missed_bg_readings">Pominięte odczyty BG</string>
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
     <string name="gradually_increase_notification_volume">Stopniowo zwiększaj głośność ostrzeżeń i powiadomień</string>
     <string name="localalertsettings_title">Alarmy lokalne</string>
@@ -602,12 +596,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>
     <string name="startobjective">Rozpocznij swoje pierwsze Zadanie</string>
-    <string name="permission">Uprawnienia</string>
     <string name="askforpermission">Zapytaj o uprawnienia</string>
-    <string name="needsystemwindowpermission">Aplikacja wymaga uprawnienia systemowego okna dla powiadomień</string>
-    <string name="needlocationpermission">Aplikacja wymaga dostępu do lokalizacji dla zarządzania bluetoothem i identyfikacją Wi-Fi</string>
-    <string name="needstoragepermission">Aplikacja wymaga zgody na zapis do pamięci, aby móc przechować pliki logów i eksportować ustawienia</string>
-    <string name="request">Żądanie</string>
     <string name="open_navigation">Otwórz menu</string>
     <string name="close_navigation">Zamknij menu</string>
     <string name="nav_plugin_preferences">Konfiguracja wtyczki</string>
