@@ -4,14 +4,16 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.Sms
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class AuthRequest internal constructor(
@@ -22,7 +24,7 @@ class AuthRequest internal constructor(
     val action: SmsAction) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var dateUtil: DateUtil
@@ -34,7 +36,7 @@ class AuthRequest internal constructor(
     init {
         injector.androidInjector().inject(this)
         date = dateUtil.now()
-        smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, requestText))
+        smsCommunicator.sendSMS(Sms(requester.phoneNumber, requestText))
     }
 
     private fun codeIsValid(toValidate: String): Boolean =
@@ -48,7 +50,7 @@ class AuthRequest internal constructor(
         if (!codeIsValid(codeReceived)) {
             processed = true
             aapsLogger.debug(LTag.SMS, "Wrong code")
-            smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_wrongcode)))
+            smsCommunicator.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_wrongcode)))
             return
         }
         if (dateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
@@ -62,7 +64,7 @@ class AuthRequest internal constructor(
                 }
                 if (commandQueue.size() != 0) {
                     aapsLogger.debug(LTag.SMS, "Command timed out: " + requester.text)
-                    smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_timeout_while_wating)))
+                    smsCommunicator.sendSMS(Sms(requester.phoneNumber, rh.gs(R.string.sms_timeout_while_wating)))
                     return
                 }
             }

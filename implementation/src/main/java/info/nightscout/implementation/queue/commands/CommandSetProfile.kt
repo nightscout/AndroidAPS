@@ -1,17 +1,19 @@
-package info.nightscout.androidaps.queue.commands
+package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.implementation.R
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class CommandSetProfile constructor(
@@ -21,7 +23,7 @@ class CommandSetProfile constructor(
     callback: Callback?
 ) : Command(injector, CommandType.BASAL_PROFILE, callback) {
 
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicator
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var commandQueue: CommandQueue
@@ -39,7 +41,7 @@ class CommandSetProfile constructor(
         // Send SMS notification if ProfileSwitch is coming from NS
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
-            if (smsCommunicatorPlugin.isEnabled())
+            if ((smsCommunicatorPlugin as PluginBase).isEnabled())
                 smsCommunicatorPlugin.sendNotificationToAllNumbers(rh.gs(R.string.profile_set_ok))
         }
     }

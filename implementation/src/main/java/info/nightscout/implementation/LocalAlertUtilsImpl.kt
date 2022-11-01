@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.implementation
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TherapyEvent
@@ -11,14 +10,17 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.LocalAlertUtils
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -32,19 +34,19 @@ import kotlin.math.min
  * Created by adrian on 17/12/17.
  */
 @Singleton
-class LocalAlertUtils @Inject constructor(
+class LocalAlertUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
-    private val smsCommunicatorPlugin: SmsCommunicatorPlugin,
+    private val smsCommunicatorPlugin: SmsCommunicator,
     private val config: Config,
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
-) {
+) : LocalAlertUtils {
 
     private val disposable = CompositeDisposable()
 
@@ -56,7 +58,7 @@ class LocalAlertUtils @Inject constructor(
         return T.mins(sp.getInt(R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong()).msecs()
     }
 
-    fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
+    override fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
         val alarmTimeoutExpired = isAlarmTimeoutExpired(lastConnection, pumpUnreachableThreshold())
         val nextAlarmOccurrenceReached = sp.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis()
         if (config.APS && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
@@ -68,7 +70,7 @@ class LocalAlertUtils @Inject constructor(
                 if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true))
                     disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(R.string.pump_unreachable))).subscribe()
             }
-            if (sp.getBoolean(R.string.key_smscommunicator_report_pump_ureachable, true))
+            if (sp.getBoolean(R.string.key_smscommunicator_report_pump_unreachable, true))
                 smsCommunicatorPlugin.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
@@ -85,7 +87,7 @@ class LocalAlertUtils @Inject constructor(
     /*Pre-snoozes the alarms with 5 minutes if no snooze exists.
      * Call only at startup!
      */
-    fun preSnoozeAlarms() {
+    override fun preSnoozeAlarms() {
         if (sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + 5 * 60 * 1000)
         }
@@ -94,7 +96,7 @@ class LocalAlertUtils @Inject constructor(
         }
     }
 
-    fun shortenSnoozeInterval() { //shortens alarm times in case of setting changes or future data
+    override fun shortenSnoozeInterval() { //shortens alarm times in case of setting changes or future data
         var nextMissedReadingsAlarm = sp.getLong("nextMissedReadingsAlarm", 0L)
         nextMissedReadingsAlarm = min(System.currentTimeMillis() + missedReadingsThreshold(), nextMissedReadingsAlarm)
         sp.putLong("nextMissedReadingsAlarm", nextMissedReadingsAlarm)
@@ -103,7 +105,7 @@ class LocalAlertUtils @Inject constructor(
         sp.putLong("nextPumpDisconnectedAlarm", nextPumpDisconnectedAlarm)
     }
 
-    fun notifyPumpStatusRead() { //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
+    override fun notifyPumpStatusRead() { //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
         if (profile != null) {
@@ -115,7 +117,7 @@ class LocalAlertUtils @Inject constructor(
         }
     }
 
-    fun checkStaleBGAlert() {
+    override fun checkStaleBGAlert() {
         val bgReadingWrapped = repository.getLastGlucoseValueWrapped().blockingGet()
         val bgReading = if (bgReadingWrapped is ValueWrapper.Existing) bgReadingWrapped.value else return
         if (sp.getBoolean(R.string.key_enable_missed_bg_readings_alert, false)

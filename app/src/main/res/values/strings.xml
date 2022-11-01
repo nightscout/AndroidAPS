@@ -67,7 +67,6 @@
     <string name="nav_resetdb">Reset Databases</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
@@ -225,7 +224,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimum number of minutes that must elapse between one remote bolus and the next</string>
     <string name="smscommunicator_remotebolusmindistance">How many minutes must elapse, at least, between one bolus and the next</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
-    <string name="bolusrequested">Going to deliver %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2f U delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s for %2$d minutes</string>
@@ -295,7 +293,6 @@
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
     <string name="basal_rate">Basal rate</string>
-    <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
     <string name="MM640g">MM640g</string>
@@ -386,7 +383,6 @@
     <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
@@ -460,7 +456,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
-    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="xdripstatus_settings">xDrip+ Status (watch)</string>
     <string name="xdripstatus">xDrip+ Statusline (watch)</string>
@@ -551,14 +546,9 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
-    <string name="executingrightnow">Command is executed right now</string>
-    <string name="missed_bg_readings">Missed BG readings</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
-    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
-    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
-    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="localalertsettings_title">Local alerts</string>
     <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
     <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
@@ -765,12 +755,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
     <string name="startobjective">Start your first objective</string>
-    <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>
-    <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
-    <string name="needlocationpermission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="needstoragepermission">Application needs storage permission to be able store log files and export settings</string>
-    <string name="request">Request</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="nav_plugin_preferences">Plugin preferences</string>
@@ -1020,7 +1005,6 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
     <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
@@ -1220,7 +1204,6 @@
     <string name="blocked_by_charging">Blocked by charging options</string>
     <string name="blocked_by_connectivity">Blocked by connectivity options</string>
     <string name="no_watch_connected">(No Watch Connected)</string>
-    <string name="error_asking_for_permissions">Error asking for permissions</string>
     <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
     <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
     <string name="database_cleanup">Database cleanup</string>

@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
+import info.nightscout.implementation.di.CommandQueueModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton

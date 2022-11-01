@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 
 import android.telephony.SmsMessage
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.data.Sms
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito

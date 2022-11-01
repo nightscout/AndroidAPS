@@ -8,6 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.Sms
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.smsCommunicator
+package info.nightscout.androidaps.data
 
 import android.telephony.SmsMessage
 
@@ -12,21 +12,21 @@ class Sms {
     var processed = false
     var ignored = false
 
-    internal constructor(message: SmsMessage) {
+    constructor(message: SmsMessage) {
         phoneNumber = message.originatingAddress ?: ""
         text = message.messageBody
         date = message.timestampMillis
         received = true
     }
 
-    internal constructor(phoneNumber: String, text: String) {
+    constructor(phoneNumber: String, text: String) {
         this.phoneNumber = phoneNumber
         this.text = text
         date = System.currentTimeMillis()
         sent = true
     }
 
-    internal constructor(other: Sms, number: String? = null) {
+    constructor(other: Sms, number: String? = null) {
         phoneNumber = number ?: other.phoneNumber
         text = other.text
         date = other.date

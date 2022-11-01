@@ -1,9 +1,11 @@
-package info.nightscout.androidaps.queue.commands
+package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.androidaps.queue.commands.CustomCommand
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class CommandCustomCommand(

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.queue
+package info.nightscout.implementation.queue
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,6 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.annotations.OpenForTesting
@@ -22,22 +21,48 @@ import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.commands.*
+import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.Command.CommandType
-import info.nightscout.androidaps.utils.AndroidPermission
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.implementation.R
+import info.nightscout.implementation.queue.commands.CommandBolus
+import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
+import info.nightscout.implementation.queue.commands.CommandCancelTempBasal
+import info.nightscout.implementation.queue.commands.CommandCustomCommand
+import info.nightscout.implementation.queue.commands.CommandExtendedBolus
+import info.nightscout.implementation.queue.commands.CommandInsightSetTBROverNotification
+import info.nightscout.implementation.queue.commands.CommandLoadEvents
+import info.nightscout.implementation.queue.commands.CommandLoadHistory
+import info.nightscout.implementation.queue.commands.CommandLoadTDDs
+import info.nightscout.implementation.queue.commands.CommandReadStatus
+import info.nightscout.implementation.queue.commands.CommandSMBBolus
+import info.nightscout.implementation.queue.commands.CommandSetProfile
+import info.nightscout.implementation.queue.commands.CommandSetUserSettings
+import info.nightscout.implementation.queue.commands.CommandStartPump
+import info.nightscout.implementation.queue.commands.CommandStopPump
+import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
+import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -45,7 +70,7 @@ import info.nightscout.shared.weardata.EventData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import java.util.*
+import java.util.LinkedList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -121,7 +146,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(R.string.executingrightnow)
+        PumpEnactResult(injector).success(false).enacted(false).comment(R.string.executing_right_now)
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -300,7 +325,7 @@ class CommandQueueImplementation @Inject constructor(
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo)
                 // Notify Wear about upcoming bolus
-                rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(R.string.bolusrequested, detailedBolusInfo.insulin))))
+                rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(R.string.goingtodeliver, detailedBolusInfo.insulin))))
             }
         }
         notifyAboutNewCommand()
@@ -421,9 +446,9 @@ class CommandQueueImplementation @Inject constructor(
         val basalValues = profile.getBasalValues()
         for (basalValue in basalValues) {
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
-                val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, rh.gs(R.string.basalvaluebelowminimum), Notification.URGENT)
+                val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, rh.gs(R.string.basal_value_below_minimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basalvaluebelowminimum))?.run()
+                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
                 return false
             }
         }

@@ -15,6 +15,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.data.Sms
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -184,7 +185,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
-        @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
@@ -1099,7 +1099,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    fun sendSMS(sms: Sms): Boolean {
+    override fun sendSMS(sms: Sms): Boolean {
         sms.text = stripAccents(sms.text)
         try {
             aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)

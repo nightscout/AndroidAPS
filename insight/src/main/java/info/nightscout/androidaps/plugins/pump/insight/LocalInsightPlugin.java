@@ -31,6 +31,7 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.interfaces.Insight;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -134,7 +135,8 @@ import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 
 @Singleton
-public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constraints, InsightConnectionService.StateCallback {
+public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight, Constraints,
+        InsightConnectionService.StateCallback {
 
     private final AAPSLogger aapsLogger;
     private final RxBus rxBus;

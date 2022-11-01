@@ -1,14 +1,15 @@
-package info.nightscout.androidaps.queue.commands
+package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.implementation.R
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class CommandBolus(

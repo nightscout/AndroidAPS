@@ -1,12 +1,13 @@
-package info.nightscout.androidaps.queue.commands
+package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.interfaces.Diaconn
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.implementation.R
+import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
 
 class CommandLoadEvents(

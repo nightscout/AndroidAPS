@@ -1,23 +1,22 @@
-package info.nightscout.androidaps.queue
+package info.nightscout.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.queue.commands.CommandTempBasalAbsolute
-import info.nightscout.androidaps.utils.AndroidPermission
-import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
+import info.nightscout.implementation.R
+import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -31,9 +30,9 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
-    @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
 
     val injector = HasAndroidInjector {
@@ -59,7 +58,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            BuildHelperImpl(config, fileListProvider), dateUtil, repository, fabricPrivacy, config, androidPermission
+            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
         )
 
         val pumpDescription = PumpDescription()

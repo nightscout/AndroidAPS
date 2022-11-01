@@ -8,8 +8,28 @@ import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.androidaps.interfaces.Autotune
+import info.nightscout.androidaps.interfaces.BolusTimer
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.CarbTimer
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.DataSyncSelector
+import info.nightscout.androidaps.interfaces.IconsProvider
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.LocalAlertUtils
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.NotificationHolder
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -23,23 +43,24 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
-import info.nightscout.androidaps.queue.CommandQueueImplementation
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.implementation.AndroidPermissionImpl
 import info.nightscout.implementation.BolusTimerImpl
 import info.nightscout.implementation.CarbTimerImpl
+import info.nightscout.implementation.LocalAlertUtilsImpl
+import info.nightscout.implementation.XDripBroadcastImpl
+import info.nightscout.implementation.queue.CommandQueueImplementation
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
@@ -109,10 +130,12 @@ open class AppModule {
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
 
-        @Binds fun bindPumpSync(pumpSyncImplementation: PumpSyncImplementation): PumpSync
-        @Binds fun bindXDripBroadcast(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
-        @Binds fun bindCarbTimer(carbTimer: CarbTimerImpl): CarbTimer
-        @Binds fun bindBolusTimer(bolusTimer: BolusTimerImpl): BolusTimer
+        @Binds fun bindPumpSyncInterface(pumpSyncImplementation: PumpSyncImplementation): PumpSync
+        @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
+        @Binds fun bindCarbTimerInterface(carbTimer: CarbTimerImpl): CarbTimer
+        @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
+        @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
+        @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
     }
 }
 
