@@ -110,6 +110,12 @@
     <string name="addnew">Voeg nieuw toe</string>
     <string name="addnew_above">Voeg nieuw hierboven toe</string>
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
+    <string name="alarminxmin">Start alarm over %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer de daadwerkelijk toegediende hoeveelheid</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pomp onderbreken</string>
+    <string name="notconfigured">Niet ingesteld</string>
+    <string name="loopsuspended">Loop pauzeren</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -477,6 +483,7 @@
     <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

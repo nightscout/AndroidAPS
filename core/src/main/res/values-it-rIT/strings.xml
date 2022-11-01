@@ -114,6 +114,12 @@
     <string name="addnew">Aggiungi nuovo</string>
     <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
+    <string name="alarminxmin">Esegui allarme in %1$d min</string>
+    <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Micro sospeso</string>
+    <string name="notconfigured">Non configurato</string>
+    <string name="loopsuspended">Loop sospeso</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -491,6 +497,7 @@
     <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
     <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
     <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

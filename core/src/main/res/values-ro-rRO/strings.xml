@@ -105,6 +105,12 @@
     <string name="remove_button">Șterge</string>
     <string name="addnew">Adăugare</string>
     <string name="wrong_pump_data">Datele vin de la o pompa diferita. Schimba driver-ul de pompa pentru a reseta starea pompei.</string>
+    <string name="alarminxmin">Rulează alarma în %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Livrare de insulină suspendată</string>
+    <string name="notconfigured">Nu este configurat</string>
+    <string name="loopsuspended">Buclă suspendată</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -417,6 +423,7 @@
     <string name="sort_label">Sortează</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

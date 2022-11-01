@@ -114,6 +114,16 @@
     <string name="addnew">Ajouter</string>
     <string name="addnew_above">Ajouter le nouveau au-dessus</string>
     <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
+    <string name="bg_label">Gly</string>
+    <string name="calibration">Étalonnage</string>
+    <string name="alarminxmin">Alerter dans %1$d min</string>
+    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
+    <string name="bolus_reminder">Rappel bolus</string>
+    <string name="duration_label">Durée</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompe arrêtée</string>
+    <string name="notconfigured">Non configuré</string>
+    <string name="loopsuspended">La Boucle est suspendue</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -491,6 +501,7 @@
     <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
     <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

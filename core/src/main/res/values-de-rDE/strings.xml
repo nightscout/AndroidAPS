@@ -110,6 +110,12 @@
     <string name="addnew">Weiteren hinzufügen</string>
     <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
+    <string name="alarminxmin">Alarm in %1$d Min.</string>
+    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpe pausiert</string>
+    <string name="notconfigured">Nicht konfiguriert</string>
+    <string name="loopsuspended">Loop pausiert</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -479,6 +485,7 @@
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

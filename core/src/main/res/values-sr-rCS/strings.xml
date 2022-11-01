@@ -2,6 +2,8 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="save">Sačuvaj</string>
+    <string name="treatmentdeliveryerror">Bolus je prijavio grešku. Ručno proverite stvarnu isporučenu količinu</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -26,4 +28,5 @@
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
+    <!-- SmsCommunicator -->
 </resources>

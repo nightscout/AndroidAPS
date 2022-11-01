@@ -110,6 +110,12 @@
     <string name="addnew">Lägg till</string>
     <string name="addnew_above">Lägg till nytt ovan</string>
     <string name="wrong_pump_data">Data kommer från en annan pump. Byt pumpdrivrutin för att återställa.</string>
+    <string name="alarminxmin">Larma om %1$d min</string>
+    <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pump pausad</string>
+    <string name="notconfigured">Inte konfigurerad</string>
+    <string name="loopsuspended">Loop pausad</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -422,6 +428,7 @@
     <string name="basal">Basal</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

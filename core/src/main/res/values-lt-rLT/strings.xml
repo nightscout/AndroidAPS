@@ -105,6 +105,12 @@
     <string name="remove_button">Pašalinti</string>
     <string name="addnew">Pridėti naują</string>
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
+    <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Rankiniu būdu patikrinkite faktiškai suleistą kiekį</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompa sustabdyta</string>
+    <string name="notconfigured">Nesukonfigūruota</string>
+    <string name="loopsuspended">Ciklas sustabdytas</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -415,6 +421,7 @@
     <string name="basal">Valandinė bazė</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
