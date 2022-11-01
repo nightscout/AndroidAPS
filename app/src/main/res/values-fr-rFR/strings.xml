@@ -841,6 +841,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="enablebolusreminder">Activer le rappel bolus</string>
+    <string name="enablebolusreminder_summary">Utiliser un rappel pour faire le bolus plus tard avec l\'Assistant (\"post-bolus\")</string>
     <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Menu graphique</string>
