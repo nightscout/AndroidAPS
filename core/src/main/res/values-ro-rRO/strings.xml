@@ -108,6 +108,9 @@
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Livrare de insulină suspendată</string>
+    <string name="notconfigured">Nu este configurat</string>
+    <string name="loopsuspended">Buclă suspendată</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
