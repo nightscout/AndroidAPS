@@ -3,6 +3,7 @@
     <!--    Keys-->
     <!--    General-->
     <string name="pump_time_updated">Pumpa idő frissítve</string>
+    <string name="notconfigured">Nincs beállítva</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
