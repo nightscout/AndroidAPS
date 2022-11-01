@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Reiniciar Base de Dados</string>
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo parece não suportar a otimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
@@ -162,7 +161,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência precisa adicionar pelo menos 2 números de telefone.</string>
-    <string name="bolusrequested">A ser administrado %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered">Bólus de Refeição %1$.2f U administrado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
@@ -231,7 +229,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
-    <string name="basalvaluebelowminimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
     <string name="sms_actualbg">Glicose:</string>
     <string name="sms_lastbg">Ultima Gli:</string>
     <string name="MM640g">MM640g</string>
@@ -368,7 +365,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="nav_about">Acerca</string>
-    <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
     <string name="xdripstatus_settings">Estado xDrip+ (relógio)</string>
     <string name="xdripstatus">Linha Estado xDrip+ (relógio)</string>
@@ -441,8 +437,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Gor</string>
-    <string name="executingrightnow">Comando será executado agora</string>
-    <string name="missed_bg_readings">Leituras Glicose perdidas</string>
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas locais</string>
@@ -601,12 +595,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar a configuração assim que a bomba for configurada.\n</string>
     <string name="startobjective">Iniciar primeiro objectivo</string>
-    <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
-    <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
-    <string name="needlocationpermission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
-    <string name="needstoragepermission">A aplicação precisa da permissão de armazenamento para poder armazenar ficheiros de registo e exportar definições</string>
-    <string name="request">Pedido</string>
     <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
     <string name="nav_plugin_preferences">Preferências plugin</string>
