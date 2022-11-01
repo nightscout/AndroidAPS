@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
+    <string name="constraint_applied">Restriction appliquée !</string>
+    <string name="bolus_constraint_applied">Restriction de bolus appliquée</string>
+    <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
+    <string name="temp_target_short">CT</string>
     <string name="dialog_canceled">Boîte de dialogue annulée</string>
     <string name="start_activity_tt">Début Activités</string>
     <string name="start_eating_soon_tt">Début Repas Imminent</string>
