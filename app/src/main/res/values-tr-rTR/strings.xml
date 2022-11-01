@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -163,7 +162,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Bir sms bolusu ile bir sonraki bolus arasında geçmesi gereken minimum dakika sayısı</string>
     <string name="smscommunicator_remotebolusmindistance">Bir sms bolus gönderimi ile bir sonraki bolus arasında en az kaç dakika geçsin?</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Güvenliğiniz için en az 2 telefon numarası eklemeniz gerekir.</string>
-    <string name="bolusrequested">%1$.2f U gönderilecek</string>
     <string name="smscommunicator_bolusdelivered">%1$.2f U Bolus başarıyla gönderildi</string>
     <string name="smscommunicator_mealbolusdelivered">%1$.2f U Yemek Bolusu başarıyla gönderildi</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Hedef %2$d dakika boyunca %1$s</string>
@@ -232,7 +230,6 @@
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Ayarları Wear\'da açın</string>
     <string name="basal_rate">Bazal oranı</string>
-    <string name="basalvaluebelowminimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
     <string name="sms_actualbg">KŞ:</string>
     <string name="sms_lastbg">Son KŞ:</string>
     <string name="MM640g">MM640g</string>
@@ -371,7 +368,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="nav_about">Hakkında</string>
-    <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
     <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
     <string name="xdripstatus_settings">xDrip+ Durumu (saat)</string>
     <string name="xdripstatus">xDrip+ Durum Çizgisi (saat)</string>
@@ -448,8 +444,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Yağ</string>
-    <string name="executingrightnow">Komut şu anda çalıştırıldı</string>
-    <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="gradually_increase_notification_volume">Uyarılar ve bildirimler için ses seviyesini kademeli olarak artırın</string>
     <string name="localalertsettings_title">Yerel uyarılar</string>
@@ -612,12 +606,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
     <string name="startobjective">İlk görevinize başlayın</string>
-    <string name="permission">Yetki</string>
     <string name="askforpermission">İzin için sorunuz</string>
-    <string name="needsystemwindowpermission">Uygulama, bildirimler için sistem iznine ihtiyaç duyuyor</string>
-    <string name="needlocationpermission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
-    <string name="needstoragepermission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
-    <string name="request">İstek</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
@@ -996,6 +985,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
-    <string name="error_asking_for_permissions">İzin istenirken hata</string>
     <string name="dynisf_adjust_sensitivity">Duyarlılığı ve KŞ\'ni ayarlayın</string>
 </resources>
