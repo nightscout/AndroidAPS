@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <string name="reset_db_confirm">Ar tikrai norite iš naujo nustatyti duomenų bazę?</string>
     <string name="nav_exit">Išeiti</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
     <string name="description_objectives">Mokymosi programa</string>
@@ -162,7 +161,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno boluso, suleisto nuotoliniu būdu iki kito</string>
     <string name="smscommunicator_remotebolusmindistance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
-    <string name="bolusrequested">Bus suleista %1$.2f vv</string>
     <string name="smscommunicator_bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
     <string name="smscommunicator_mealbolusdelivered">Bolusas %1$.2f vv sėkmingai suleistas</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Tikslas %1$s %2$d min.</string>
@@ -231,7 +229,6 @@
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
-    <string name="basalvaluebelowminimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
     <string name="sms_actualbg">KG:</string>
     <string name="sms_lastbg">Paskutinė KG:</string>
     <string name="MM640g">MM640g</string>
@@ -368,7 +365,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Apie</string>
-    <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Trūksta telefono būsenos leidimo</string>
     <string name="xdripstatus_settings">xDrip+ statusas (laikrodyje)</string>
     <string name="xdripstatus">xDrip+ būsenos juosta (laikrodyje)</string>
@@ -441,8 +437,6 @@
     <string name="shortenergy">Energ. vertė</string>
     <string name="shortprotein">Balt.</string>
     <string name="shortfat">Rieb</string>
-    <string name="executingrightnow">Komanda vykdoma</string>
-    <string name="missed_bg_readings">Negauti KG duomenys</string>
     <string name="raise_notifications_as_android_notifications">Naudoti sistemos perspėjimus aliarmams ir įspėjimams</string>
     <string name="gradually_increase_notification_volume">Palaipsniui didinkite įspėjimų ir pranešimų garso lygį</string>
     <string name="localalertsettings_title">Lokalūs perspėjimai</string>
@@ -601,12 +595,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
     <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
-    <string name="permission">Leidimas</string>
     <string name="askforpermission">Prašyti leidimo</string>
-    <string name="needsystemwindowpermission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
-    <string name="needlocationpermission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
-    <string name="needstoragepermission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
-    <string name="request">Užklausa</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="close_navigation">Uždaryti meniu</string>
     <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
