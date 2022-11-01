@@ -80,6 +80,10 @@
     <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
     <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
     <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
+    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -616,6 +620,9 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
     <string name="needconnectpermission">Application needs bluetooth permission</string>
+
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
