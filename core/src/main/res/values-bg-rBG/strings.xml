@@ -286,6 +286,7 @@
     <string name="basal">Базал</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Апликацията изисква разрешение за bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
