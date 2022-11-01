@@ -493,6 +493,7 @@
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
