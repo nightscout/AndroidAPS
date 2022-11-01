@@ -437,6 +437,7 @@
     <string name="a11y_user">用户</string>
     <!-- Autotune -->
     <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>
