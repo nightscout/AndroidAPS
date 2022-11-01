@@ -105,6 +105,12 @@
     <string name="remove_button">Usuń</string>
     <string name="addnew">Dodaj nowy</string>
     <string name="wrong_pump_data">Dane pochodzą z innej pompy. Zmień sterownik pompy, aby zresetować stan pompy.</string>
+    <string name="alarminxmin">Uruchom alarm za %1$d min</string>
+    <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie rzeczywiście dostarczoną ilość</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompa wstrzymana</string>
+    <string name="notconfigured">Nie skonfigurowano</string>
+    <string name="loopsuspended">Pętla wstrzymana</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
@@ -417,6 +423,7 @@
     <string name="sort_label">Sortuj</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplikacja wymaga uprawnienia Bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">BZ-Werte fehlen</string>
+    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
+    <string name="request">Anfordern</string>
+    <string name="permission">Berechtigung</string>
+    <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
+</resources>

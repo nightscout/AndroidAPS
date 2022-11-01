@@ -110,6 +110,12 @@
     <string name="addnew">Tilføj ny</string>
     <string name="addnew_above">Tilføj ny ovenfor</string>
     <string name="wrong_pump_data">Data kommer fra en anden pumpe. Skift pumpedriver for at nulstille pumpetilstand.</string>
+    <string name="alarminxmin">Kør alarm om %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus fejl. Undersøg manuelt hvor meget insulin der er givet</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpe er afbrudt</string>
+    <string name="notconfigured">Ikke konfigureret</string>
+    <string name="loopsuspended">Loop suspenderet</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
     <string name="pumplimit">pumpe grænse</string>
@@ -479,6 +485,7 @@
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>

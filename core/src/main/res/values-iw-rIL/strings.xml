@@ -110,6 +110,12 @@
     <string name="addnew">הוסף חדש</string>
     <string name="addnew_above">הוסף חדש למעלה</string>
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
+    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
+    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
+    <string name="shortgramm">גר\'</string>
+    <string name="pumpsuspended">משאבה מושהית</string>
+    <string name="notconfigured">לא מוגדר</string>
+    <string name="loopsuspended">לולאה מושהית</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -479,6 +485,7 @@
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

@@ -114,6 +114,16 @@
     <string name="addnew">Přidat nový</string>
     <string name="addnew_above">Přidat novou nad</string>
     <string name="wrong_pump_data">Data přicházejí z jiné pumpy. Změňte ovladač pro obnovení stavu pumpy.</string>
+    <string name="bg_label">Gly</string>
+    <string name="calibration">Kalibrace</string>
+    <string name="alarminxmin">Spustit alarm za %1$d min</string>
+    <string name="treatmentdeliveryerror">Podání bolusu skončilo chybou. Ručně zkontrolujte, kolik inzulinu se skutečně vydalo.</string>
+    <string name="bolus_reminder">Připomenutí bolusu</string>
+    <string name="duration_label">Trvání</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpa pozastavena</string>
+    <string name="notconfigured">Není nakonfigurováno</string>
+    <string name="loopsuspended">Smyčka pozastavena</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -491,6 +501,8 @@
     <string name="autotune_run_with_error">Chyba při posledním spuštění Autotune</string>
     <string name="autotune_run_cancelled">Byla zjištěna jiná běžící úloha Autotune, spuštění zrušeno</string>
     <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

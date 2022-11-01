@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Липсват данни за КЗ</string>
+    <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
+    <string name="request">Искане</string>
+    <string name="permission">Разрешение</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
+</resources>

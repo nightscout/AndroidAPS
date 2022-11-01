@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">לא התקבלו קריאות סוכר</string>
+    <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
+    <string name="request">בקשה</string>
+    <string name="permission">הרשאה</string>
+    <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
+</resources>
