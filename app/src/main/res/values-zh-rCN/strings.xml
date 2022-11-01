@@ -12,7 +12,6 @@
     <string name="nav_resetdb">重置数据库</string>
     <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="nav_exit">退出</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">此设备似乎不支持电池优化白名单 - 您可能会遇到性能问题。</string>
     <string name="description_actions">一些快速访问常用功能的按钮</string>
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
@@ -163,7 +162,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">一次远程遥控输注命令与下一次命令之间必须经过的最小分钟数</string>
     <string name="smscommunicator_remotebolusmindistance">两次短信遥控胰岛素输注的时间间隔</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">为了您的安全，您需要添加至少两个电话号码。</string>
-    <string name="bolusrequested">将要输注 %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">成功输注大剂量%1$.2fU</string>
     <string name="smscommunicator_mealbolusdelivered">成功输注餐时大剂量%1$.2fU</string>
     <string name="smscommunicator_mealbolusdelivered_tt">目标 %1$s 执行 %2$d 分钟</string>
@@ -233,7 +231,6 @@
     <string name="resend_all_data">重新发送所有数据</string>
     <string name="open_settings_on_wear">在手表上打开设置</string>
     <string name="basal_rate">基础率</string>
-    <string name="basalvaluebelowminimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
     <string name="sms_actualbg">血糖:</string>
     <string name="sms_lastbg">上次血糖：</string>
     <string name="MM640g">美敦力640g</string>
@@ -371,7 +368,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">关于</string>
-    <string name="smscommunicator_missingsmspermission">缺少 SMS 短信权限</string>
     <string name="smscommunicator_missingphonestatepermission">缺少手机状态权限</string>
     <string name="xdripstatus_settings">xDrip+状态 (手表)</string>
     <string name="xdripstatus">xDrip+状态线 (手表)</string>
@@ -446,8 +442,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">蛋白质</string>
     <string name="shortfat">脂肪</string>
-    <string name="executingrightnow">现在命令被执行了</string>
-    <string name="missed_bg_readings">血糖读数丢失</string>
     <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
     <string name="gradually_increase_notification_volume">逐渐增加警报和通知的音量</string>
     <string name="localalertsettings_title">本地警报</string>
@@ -607,12 +601,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">在下面配置你的RileyLink 。选择RileLink后，一旦RileLink状态为“已连接”，就可以继续安装。这可能需要一分钟。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b>胰岛素泵设置完成后，您可以继续安装。\n</string>
     <string name="startobjective">开始你的第一个目标</string>
-    <string name="permission">权限</string>
     <string name="askforpermission">请求权限</string>
-    <string name="needsystemwindowpermission">应用程序需要悬浮窗权限用于发送通知。</string>
-    <string name="needlocationpermission">应用程序需要定位权限，才能进行蓝牙扫描及WIFI识别。</string>
-    <string name="needstoragepermission">应用程序需要文件存储权限，才能存储日志文件及导出设置。</string>
-    <string name="request">请求</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="close_navigation">关闭导航栏</string>
     <string name="nav_plugin_preferences">插件选项</string>
