@@ -785,7 +785,7 @@
     <string name="enablebolusadvisor">Ativar o assistente de bolus</string>
     <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="timetoeat">Hora de comer</string>
-    <string name="bolusreminder">Lembrete de bolus</string>
+    <string name="bolus_reminder">Lembrete de bolus</string>
     <string name="enablebolusreminder">Ativar lembrete de bolus</string>
     <string name="enablebolusreminder_summary">Usar lembrete para adiar o bolus com o assistente
         (\"pós-bolus\")</string>

@@ -693,7 +693,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="nsmalfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <string name="time_offset">Décalage horaire</string>
-    <string name="bolus_reminder">Rappel du bolus plus tard</string>
+    <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -865,7 +865,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablebolusadvisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="timetoeat">Il est temps de manger</string>
-    <string name="bolusreminder">Rappel bolus</string>
+    <string name="bolus_reminder">Rappel bolus</string>
     <string name="enablebolusreminder">Activer le rappel bolus</string>
     <string name="enablebolusreminder_summary">Utiliser un rappel pour faire le bolus plus tard avec l\'Assistant (\"post-bolus\")</string>
     <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>

@@ -14,9 +14,9 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag

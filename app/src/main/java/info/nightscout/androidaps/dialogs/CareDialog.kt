@@ -203,14 +203,14 @@ class CareDialog : DialogFragmentWithDate() {
                     else                     -> TherapyEvent.MeterType.MANUAL
                 }
             actions.add(rh.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
-            actions.add(rh.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(R.string.bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
             valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value, profileFunction.getUnits().asText))
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
-            actions.add(rh.gs(R.string.careportal_newnstreatment_duration_label) + ": " + rh.gs(R.string.format_mins, binding.duration.value.toInt()))
+            actions.add(rh.gs(R.string.duration_label) + ": " + rh.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
             valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) } )
         }

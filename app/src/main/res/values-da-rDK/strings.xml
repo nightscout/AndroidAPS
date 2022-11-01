@@ -679,7 +679,7 @@
     <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <string name="nsmalfunction">NSClient funktionsfejl. Overvej NS og NSClient genstart.</string>
     <string name="time_offset">Tidsforskydning</string>
-    <string name="bolus_reminder">Påmind om at bolus senere</string>
+    <string name="remind_to_bolus_later">Påmind om at bolus senere</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
     <string name="treatments_wizard_total_label">I alt</string>
     <string name="calculation_short">Beregn</string>
@@ -847,7 +847,7 @@
     <string name="enablebolusadvisor_summary">Brug påmindelse om at begynde at spise senere i stedet for guiden under høj glykæmi (\"pre-bolus\")</string>
     <string name="time_to_eat">Tid til at spise!\nKør Bolus guiden og lav beregning igen.</string>
     <string name="timetoeat">Tid til at spise</string>
-    <string name="bolusreminder">Boluspåminder</string>
+    <string name="bolus_reminder">Boluspåminder</string>
     <string name="enablebolusreminder">Aktivér boluspåminder</string>
     <string name="enablebolusreminder_summary">Brug påmindelse til bolus senere med guiden
         (\"post-bolus\")</string>

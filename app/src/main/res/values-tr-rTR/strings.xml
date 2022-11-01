@@ -679,7 +679,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
     <string name="time_offset">Saat farkı</string>
-    <string name="bolus_reminder">Bolusu daha sonra hatırlat</string>
+    <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="treatments_wizard_total_label">Toplam</string>
     <string name="calculation_short">Hesap</string>
@@ -846,7 +846,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablebolusadvisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="timetoeat">Yemek zamanı</string>
-    <string name="bolusreminder">Bolus hatırlatıcısı</string>
+    <string name="bolus_reminder">Bolus hatırlatıcısı</string>
     <string name="enablebolusreminder">Bolus hatırlatıcıyı etkinleştir</string>
     <string name="enablebolusreminder_summary">Sihirbazla daha sonra bolus için hatırlatıcı kullanın
          (\"bolus sonrası\")</string>

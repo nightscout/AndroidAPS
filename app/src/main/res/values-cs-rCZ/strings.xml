@@ -692,7 +692,7 @@
     <string name="resettodefaults">Obnovit výchozí</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>
     <string name="time_offset">Časový posun</string>
-    <string name="bolus_reminder">Upozornit později na bolus</string>
+    <string name="remind_to_bolus_later">Upozornit později na bolus</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Výsledek</string>
     <string name="calculation_short">Kalk</string>
@@ -864,7 +864,7 @@
     <string name="enablebolusadvisor_summary">Při vysoké glykémii použijte připomenutí, abyste začali jíst později, namísto výsledku z kalkulátoru („prebolus“)</string>
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="timetoeat">Čas k jídlu</string>
-    <string name="bolusreminder">Připomenutí bolusu</string>
+    <string name="bolus_reminder">Připomenutí bolusu</string>
     <string name="enablebolusreminder">Povolit připomínání bolusu</string>
     <string name="enablebolusreminder_summary">Použijte připomenutí pro pozdější bolus s kalkulátorem
         (\"zpožděný bolus\")</string>

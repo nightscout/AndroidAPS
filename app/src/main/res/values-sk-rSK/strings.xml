@@ -692,7 +692,7 @@
     <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
     <string name="time_offset">Časový posun</string>
-    <string name="bolus_reminder">Upozorniť na bolus neskôr</string>
+    <string name="remind_to_bolus_later">Upozorniť na bolus neskôr</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Spolu</string>
     <string name="calculation_short">Kalk</string>
@@ -864,7 +864,7 @@
     <string name="enablebolusadvisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
     <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="timetoeat">Čas na jedlo</string>
-    <string name="bolusreminder">Pripomenutie bolusu</string>
+    <string name="bolus_reminder">Pripomenutie bolusu</string>
     <string name="enablebolusreminder">Zapnúť pripomínanie bolusu</string>
     <string name="enablebolusreminder_summary">Použite pripomenutie pre neskorší bolus s kalkulačkou
         (\"oneskorený bolus\")</string>
@@ -1048,4 +1048,7 @@
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
     <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
     <string name="dynisf_adjust_sensitivity">Upraviť citlivosť a glykémiu</string>
+    <string name="database_cleanup">Vyčistenie databázy</string>
+    <string name="cleanup_db_confirm">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.</string>
+    <string name="cleared_entries">Vymazané záznamy</string>
 </resources>

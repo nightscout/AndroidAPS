@@ -12,7 +12,7 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.androidaps.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.extensions.convertedToAbsolute
@@ -469,7 +469,7 @@ class DataHandlerMobile @Inject constructor(
         message += rh.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
         message += rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
         if (insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0)
-            message += "\n" + rh.gs(R.string.constraintapllied)
+            message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -487,7 +487,7 @@ class DataHandlerMobile @Inject constructor(
             "\n" + rh.gs(R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(R.string.duration) + ": " + command.duration + "h"
         if (carbsAfterConstraints - command.carbs != 0) {
-            message += "\n" + rh.gs(R.string.constraintapllied)
+            message += "\n" + rh.gs(R.string.constraint_applied)
         }
         if (carbsAfterConstraints <= 0) {
             sendError("Carbs = 0! No action taken!")
@@ -512,7 +512,7 @@ class DataHandlerMobile @Inject constructor(
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
         var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraintapllied)
+        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -526,7 +526,7 @@ class DataHandlerMobile @Inject constructor(
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
         var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraintapllied)
+        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(

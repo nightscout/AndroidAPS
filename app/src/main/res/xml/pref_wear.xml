@@ -22,7 +22,7 @@
                 android:defaultValue="true"
                 android:dependency="@string/key_wear_control"
                 android:key="@string/key_wearwizard_bg"
-                android:title="@string/treatments_wizard_bg_label" />
+                android:title="@string/bg_label" />
 
             <CheckBoxPreference
                 android:defaultValue="false"

@@ -72,11 +72,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (SafeParse.stringToInt(binding.carbs.text) > maxCarbs) {
             binding.carbs.value = 0.0
-            ToastUtils.warnToast(context, R.string.carbsconstraintapplied)
+            ToastUtils.warnToast(context, R.string.carbs_constraint_applied)
         }
         if (SafeParse.stringToDouble(binding.insulin.text) > maxInsulin) {
             binding.insulin.value = 0.0
-            ToastUtils.warnToast(context, R.string.bolusconstraintapplied)
+            ToastUtils.warnToast(context, R.string.bolus_constraint_applied)
         }
     }
 
@@ -137,7 +137,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (carbsAfterConstraints > 0) {
             actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, R.attr.carbsColor))
             if (carbsAfterConstraints != carbs)
-                actions.add(rh.gs(R.string.carbsconstraintapplied).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.carbs_constraint_applied).formatColor(context, rh, R.attr.warningColor))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->

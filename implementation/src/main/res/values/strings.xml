@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="xdrip_not_installed">xDrip+ not installed</string>
+    <string name="calibration_sent">Calibration sent to xDrip+</string>
+
+    <string name="bg_label">BG</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+
+    <string name="time_to_eat">Time to eat</string>
+    <string name="enable_bolus_advisor">Enable bolus advisor</string>
+    <string name="enable_bolus_advisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
+    <string name="bolus_advisor">Bolus advisor</string>
+    <string name="bolus_advisor_message">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
+    <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
+    <string name="executing_right_now">Command is executed right now</string>
+    <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
+    <string name="request">Request</string>
+    <string name="permission">Permission</string>
+    <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
+    <string name="need_system_window_permission">Application needs system window permission for notifications</string>
+    <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
+    <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
+    <string name="error_asking_for_permissions">Error asking for permissions</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
+
+</resources>

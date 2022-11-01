@@ -49,4 +49,10 @@ files:
     translation: /pump-common/src/main/res/values-%android_code%/strings.xml
   - source: /openhumans/src/main/res/values/strings.xml
     translation: /openhumans/src/main/res/values-%android_code%/strings.xml
+  - source: /implementation/src/main/res/values/strings.xml
+    translation: /implementation/src/main/res/values-%android_code%/strings.xml
+  - source: /ui/src/main/res/values/strings.xml
+    translation: /ui/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/src/main/res/values/strings.xml
+    translation: /plugins/src/main/res/values-%android_code%/strings.xml
     translate_attributes: 0

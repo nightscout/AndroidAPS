@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="constraint_applied">Constraint applied!</string>
+    <string name="bolus_constraint_applied">Bolus constraint applied</string>
+    <string name="carbs_constraint_applied">Carbs constraint applied</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog canceled</string>
+    <string name="start_activity_tt">Start Activity TT</string>
+    <string name="start_eating_soon_tt">Start Eating soon TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Time offset</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Remind to bolus later</string>
+
+    <string name="a11y_carb_reminder">set reminder</string>
+
+</resources>

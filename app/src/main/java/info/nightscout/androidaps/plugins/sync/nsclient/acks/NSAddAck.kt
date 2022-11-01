@@ -4,7 +4,7 @@ import info.nightscout.androidaps.events.Event
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.events.EventNSClientRestart
+import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
 import io.socket.client.Ack
 import org.json.JSONArray
 import org.json.JSONObject
@@ -16,7 +16,7 @@ class NSAddAck(
 ) : Event(), Ack {
 
     var id: String? = null
-    var nsClientID: String? = null
+    private var nsClientID: String? = null
     var json: JSONObject? = null
     override fun call(vararg args: Any) {
         // Regular response

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
+    <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
+    <string name="key_patient_name" translatable="false">patient_name</string>
+    <string name="key_smscommunicator_remote_bolus_min_distance" translatable="false">smscommunicator_remotebolusmindistance</string>
+    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
+    <string name="key_smscommunicator_remote_commands_allowed" translatable="false">smscommunicator_remotecommandsallowed</string>
+
+    <string name="smscommunicator">SMS Communicator</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Remote control AAPS using SMS commands.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">from Authenticator app for: %1$s followed by PIN</string>
+    <string name="smscommunicator_otp_pin">Additional mandatory PIN at token end</string>
+    <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and glued at end of each generated One Time Password</string>
+    <string name="smscommunicator_tab_otp_label">Authenticator setup</string>
+    <string name="smscommunicator_code_verify_label">Code to check:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">The verification code consist of 6 digits displayed by Authenticator app (known as OTP) followed by 3 or more digits of mandatory PIN.</string>
+    <string name="smscommunicator_otp_reset_btn">Reset Authenticators</string>
+    <string name="smscommunicator_otp_reset_title">Reset Authenticator Key</string>
+    <string name="smscommunicator_otp_reset_prompt">Are you sure to reset Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
+    <string name="smscommunicator_otp_reset_successful">New Authenticator Key was generated! Please use updated QRCode to provision authenticators.</string>
+    <string name="smscommunicator_otp_export_title">Exporting OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Are you sure you want to copy OTP secret to clipboard?\n\nYou may only need that if your authenticator app have issues scanning QRCode, you want to enter it manually or you want to configure hardware OTP token using dedicated app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (in Base32 format) exported and copied into clipboard. Paste it into authenticator or hardware OTP burner!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AAPS OTP codes</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
+    <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
+    <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="sms_wrong_code">Wrong code. Command cancelled.</string>
+    <string name="sms_timeout_while_waiting">Timeout while waiting for finish of previous pump communication</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
+    <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">To deliver bolus %1$.2fU reply with code %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">To deliver meal bolus %1$.2fU reply with code %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">To set the Temp Target %1$s reply with code %2$s</string>
+    <string name="smscommunicator_temptargetcancel">To cancel Temp Target reply with code %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">To disable the SMS Remote Service reply with code %1$s.\n\nKeep in mind that you\'ll able to reactivate it directly from the AAPS master smartphone only.</string>
+    <string name="smscommunicator_stoppedsms">SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.</string>
+    <string name="smscommunicator_calibrationreplywithcode">To send calibration %1$.2f reply with code %2$s</string>
+    <string name="smscommunicator_bolusfailed">Bolus failed</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Minimum number of minutes that must elapse between one remote bolus and the next</string>
+    <string name="smscommunicator_remotebolusmindistance">How many minutes must elapse, at least, between one bolus and the next</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2f U delivered successfully</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s for %2$d minutes</string>
+    <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
+    <string name="smscommunicator_tt_canceled">Temp Target canceled successfully</string>
+    <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
+    <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
+    <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
+    <string name="smscommunicator_loopisenabled">Loop is enabled</string>
+    <string name="smscommunicator_pumpconnectwithcode">To connect pump reply with code %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Connection to pump failed</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">To disconnect pump for %1$d minutes reply with code %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Pump disconnected</string>
+    <string name="smscommunicator_reconnect">Pump reconnected</string>
+    <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
+    <string name="smscommunicator_remotebolusnotallowed">Remote bolus not available. Try again later.</string>
+    <string name="smscommunicator_basalreplywithcode">To start basal %1$.2f U/h for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">To switch profile to %1$s %2$d%% reply with code %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">To start extended bolus %1$.2f U for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">To enter %1$dg at %2$s reply with code %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">To resume loop reply with code %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">To enable loop reply with code %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">To disable loop reply with code %1$s</string>
+    <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
+    <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
+    <string name="smscommunicator_carbsset">Carbs %1$d  g entered successfully</string>
+    <string name="smscommunicator_carbsfailed">Entering %1$dg of carbs failed</string>
+    <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% for %2$d min started successfully</string>
+    <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
+    <string name="smscommunicator_extendedfailed">Extended bolus start failed</string>
+    <string name="smscommunicator_basalstopreplywithcode">To stop temp basal reply with code %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">To stop extended bolus reply with code %1$s</string>
+    <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
+    <string name="smscommunicator_extendedcanceled">Extended bolus canceled</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
+    <string name="smscommunicator_extendedcancelfailed">Canceling extended bolus failed</string>
+    <string name="smscommunicator_unknowncommand">Unknown command or wrong reply</string>
+    <string name="smscommunicator_another_bolus_in_queue">There is another bolus in queue. Try again later.</string>
+    <string name="smscommunicator_wrongduration">Wrong duration</string>
+    <string name="smscommunicator_loopsuspended">Loop suspended</string>
+    <string name="smscommunicator_loopresumed">Loop resumed</string>
+    <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
+    <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ is not receiving calibrations</string>
+    <string name="smscommunicator_messagebody">Invalid message body</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
+    <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>
+    <string name="wrong_format">Wrong format</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">Last BG:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <string name="sms_min_ago">%1$dmin ago</string>
+    <string name="sms_loop_suspended_for">Suspended (%1$d m)</string>
+    <string name="sms_read_status_failed">Read status failed</string>
+    <string name="sms_profile_switch_created">Profile switch created</string>
+    <string name="sms_wrong_tbr_duration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
+    <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
+
+</resources>

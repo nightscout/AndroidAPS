@@ -692,7 +692,7 @@
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <string name="time_offset">Retardo</string>
-    <string name="bolus_reminder">Recordar ejecutar el bolo más tarde</string>
+    <string name="remind_to_bolus_later">Recordar ejecutar el bolo más tarde</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Cálculo</string>
@@ -864,7 +864,7 @@
     <string name="enablebolusadvisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
     <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="timetoeat">Hora de comer</string>
-    <string name="bolusreminder">Recordatorio de bolo</string>
+    <string name="bolus_reminder">Recordatorio de bolo</string>
     <string name="enablebolusreminder">Habilitar recordatorio de bolo</string>
     <string name="enablebolusreminder_summary">Usa recordatorio de bolo más tarde con el asistente
         (\"post-bolus\")</string>
@@ -1049,6 +1049,6 @@
     <string name="error_asking_for_permissions">Error al solicitar permisos</string>
     <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
     <string name="database_cleanup">Limpiar base de dados</string>
-    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos más de 3 meses de antiguedad.</string>
+    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos con más de 3 meses de antiguedad.</string>
     <string name="cleared_entries">Entradas eliminadas</string>
 </resources>

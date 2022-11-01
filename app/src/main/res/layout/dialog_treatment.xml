@@ -104,7 +104,7 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/treatments_wizard_carbs_label"
+                android:text="@string/carbs"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
@@ -112,7 +112,7 @@
                 android:id="@+id/carbs"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                app:customContentDescription="@string/treatments_wizard_carbs_label" />
+                app:customContentDescription="@string/carbs" />
 
             <TextView
                 android:layout_width="wrap_content"

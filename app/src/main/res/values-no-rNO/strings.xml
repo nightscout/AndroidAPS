@@ -682,7 +682,7 @@
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
     <string name="time_offset">Tidsforskyvning</string>
-    <string name="bolus_reminder">Påminnelse til å gi bolus senere</string>
+    <string name="remind_to_bolus_later">Påminnelse til å gi bolus senere</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Kalkyle</string>
@@ -850,7 +850,7 @@
     <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="timetoeat">Nå må du spise</string>
-    <string name="bolusreminder">Bolus påminnelse</string>
+    <string name="bolus_reminder">Bolus påminnelse</string>
     <string name="enablebolusreminder">Aktiver bolus påminnelse</string>
     <string name="enablebolusreminder_summary">Bruk påminnelse for å sette bolus dosen senere med veiviseren
         («post bolus»)</string>
