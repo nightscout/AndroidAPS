@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Nullstill databasene</string>
     <string name="reset_db_confirm">Vil du virkelig nullstille databasene?</string>
     <string name="nav_exit">Avslutt</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Det ser ikke ut som mobilen støtter registrering av apper som unntas fra batterioptimalisering - du kan oppleve ytelsesproblemer.</string>
     <string name="description_actions">Knapper for rask tilgang til ofte brukte funksjoner</string>
     <string name="description_config_builder">Brukes for innstilling av aktive plugins</string>
     <string name="description_objectives">Opplæringsprogram</string>
@@ -164,7 +163,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimum antall minutter som må forløpe mellom en fjernstyrt bolus og den neste</string>
     <string name="smscommunicator_remotebolusmindistance">Minimum antall minutter mellom en fjernstyrt bolus og neste</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">For din egen sikkerhet, må du legge til minst 2 telefonnumre for å endre denne innstillingen.</string>
-    <string name="bolusrequested">Skal levere %1$.2f E</string>
     <string name="smscommunicator_bolusdelivered">Bolus på %1$.2f E er levert</string>
     <string name="smscommunicator_mealbolusdelivered">Måltidsbolus på %1$.2f E er levert</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Temp target på %1$s er satt i %2$d minutter</string>
@@ -234,7 +232,6 @@
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
     <string name="basal_rate">Basalrate</string>
-    <string name="basalvaluebelowminimum">Basalverdi under minimum. Profilen settes ikke!</string>
     <string name="sms_actualbg">BS:</string>
     <string name="sms_lastbg">Siste BS:</string>
     <string name="MM640g">MM640G</string>
@@ -372,7 +369,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Om</string>
-    <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
     <string name="xdripstatus_settings">xDrip+ Status (klokke)</string>
     <string name="xdripstatus">xDrip+ Statuslinje (klokke)</string>
@@ -449,8 +445,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fett</string>
-    <string name="executingrightnow">Kommandoen utføres akkurat nå</string>
-    <string name="missed_bg_readings">Mangler BS-målinger</string>
     <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
     <string name="gradually_increase_notification_volume">Øk volumet gradvis for alarmer og varsler</string>
     <string name="localalertsettings_title">Lokale varsler</string>
@@ -615,12 +609,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vennligst konfigurer din RileyLink under. Etter å ha valgt en RileyLink, vil det være mulig å fortsette konfigureringen når RileyLink statusen er \"Tilkoblet\". Dette kan ta et minutt.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er satt opp.\n</string>
     <string name="startobjective">Start første læringsmål</string>
-    <string name="permission">Tillatelse</string>
     <string name="askforpermission">Spør om tillatelse</string>
-    <string name="needsystemwindowpermission">App trenger tillatelse til å bruke Varslinger for å vise meldinger</string>
-    <string name="needlocationpermission">App trenger tilgang til Posisjon for å søke etter Bluetooth og Wifi enheter</string>
-    <string name="needstoragepermission">App trenger tilgang til Lagring for lagre logg filer og eksportere innstillinger</string>
-    <string name="request">Forespørsel</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>
     <string name="nav_plugin_preferences">Plugin innstillinger</string>
@@ -1000,6 +989,5 @@
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
-    <string name="error_asking_for_permissions">Feil under spørring etter tillatelser</string>
     <string name="dynisf_adjust_sensitivity">Juster sensitivitet og BS</string>
 </resources>
