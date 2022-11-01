@@ -113,6 +113,9 @@
     <string name="alarminxmin">Start alarm over %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus fout geconstateerd. Controleer de daadwerkelijk toegediende hoeveelheid</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pomp onderbreken</string>
+    <string name="notconfigured">Niet ingesteld</string>
+    <string name="loopsuspended">Loop pauzeren</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
