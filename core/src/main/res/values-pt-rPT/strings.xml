@@ -338,6 +338,7 @@
     <string name="basal">Basal</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicação precisa de permissão Bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
