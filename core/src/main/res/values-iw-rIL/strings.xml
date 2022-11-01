@@ -113,6 +113,9 @@
     <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
     <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
     <string name="shortgramm">גר\'</string>
+    <string name="pumpsuspended">משאבה מושהית</string>
+    <string name="notconfigured">לא מוגדר</string>
+    <string name="loopsuspended">לולאה מושהית</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
