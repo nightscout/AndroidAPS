@@ -7,6 +7,9 @@
     <string name="alarminxmin">Executar alarma en %1$d min</string>
     <string name="treatmentdeliveryerror">Error en el bolus. Comprova manualment la quantitat real subministrada</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Bomba aturada</string>
+    <string name="notconfigured">No configurat</string>
+    <string name="loopsuspended">Llaç aturat</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
