@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Restablecer las bases de datos</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
     <string name="nav_exit">Salir</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por los ajustes - pueden ocurrir problemas de funcionamiento.</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
     <string name="description_config_builder">Utilizado para configurar complementos activos</string>
     <string name="description_objectives">Programa de aprendizaje</string>
@@ -170,7 +169,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deben transcurrir entre un bolo remoto y el siguiente</string>
     <string name="smscommunicator_remotebolusmindistance">Cuántos minutos deben transcurrir, al menos, entre un bolo y el siguiente</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Por su seguridad, para editar esta preferencia es necesario añadir al menos 2 números de teléfono.</string>
-    <string name="bolusrequested">Entregando %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bolo %1$.2fU entregado correctamente</string>
     <string name="smscommunicator_mealbolusdelivered">Bolo de comida %1$.2f U entregado correctamente</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Objetivo %1$s para %2$d minutos</string>
@@ -240,7 +238,6 @@
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <string name="basal_rate">Tasa Basal</string>
-    <string name="basalvaluebelowminimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
     <string name="sms_actualbg">Glucosa:</string>
     <string name="sms_lastbg">Última Glucosa:</string>
     <string name="MM640g">MM640g</string>
@@ -321,7 +318,6 @@
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
     <string name="loopsuspended">Lazo suspendido</string>
     <string name="loopsuspendedfor">Desactivado (%1$d m)</string>
     <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
@@ -379,7 +375,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Acerca de</string>
-    <string name="smscommunicator_missingsmspermission">Falta permiso SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permiso de estado del teléfono</string>
     <string name="xdripstatus_settings">Estado de xDrip+ (reloj)</string>
     <string name="xdripstatus">Línea de estado de xDrip+ (reloj)</string>
@@ -457,8 +452,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Grasa</string>
-    <string name="executingrightnow">Orden se esta efectuando en este momento</string>
-    <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
     <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de las alarmas y de las notificaciones</string>
     <string name="localalertsettings_title">Alarmas locales</string>
@@ -624,12 +617,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, a continuación configure su RileyLink. Después de seleccionar un RileyLink, será posible continuar la configuración una vez que el estado de RileyLink esté en \"Conectado\". Esto podría tardar un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puede continuar con la configuración una vez que la bomba se haya configurado.\n</string>
     <string name="startobjective">Comienza tu primer objetivo</string>
-    <string name="permission">Permiso</string>
     <string name="askforpermission">Pedir permiso</string>
-    <string name="needsystemwindowpermission">La aplicación necesita permisos del sistema para poder mostrarse sobre otras aplicaciones, para las notificaciones</string>
-    <string name="needlocationpermission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
-    <string name="needstoragepermission">La aplicación necesita permiso de almacenamiento para poder almacenar archivos de registro y valores de exportación</string>
-    <string name="request">Solicitar</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="close_navigation">Cerrar navegación</string>
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
@@ -1015,7 +1003,6 @@
     <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
     <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
-    <string name="error_asking_for_permissions">Error al solicitar permisos</string>
     <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
     <string name="database_cleanup">Limpiar base de dados</string>
     <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos con más de 3 meses de antiguedad.</string>
