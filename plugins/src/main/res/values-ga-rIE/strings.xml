@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_loophasbeendisabled">Is lúb díchumasaithe</string>
+    <string name="smscommunicator_loophasbeenenabled">Is lúb cumasaithe</string>
+    <string name="smscommunicator_loopisenabled">Is lúb cumasaithe</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Cealú TBR teip</string>
+    <string name="smscommunicator_loopsuspended">Lúb ar fionraí</string>
+    <string name="smscommunicator_loopresumed">Lúb atógáil</string>
+    <string name="sms_delta">Deilte:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bólas:</string>
+    <string name="sms_basal">Bunaidh:</string>
 </resources>
