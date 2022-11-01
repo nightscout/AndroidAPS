@@ -13,7 +13,6 @@
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
     <string name="description_objectives">תוכנית הלימוד</string>
@@ -164,7 +163,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">מספר המינימלי (בדקות) שחייב לחלוף בין בולוס מרוחק אחד למשנהו</string>
     <string name="smscommunicator_remotebolusmindistance">מספר הדקות המינימלי שצריכות לחלוף, בין בולוס אחד למשנהו</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">למען בטחונכם, על מנת לערוך את העדפה זו, עליכם להוסיף לפחות שני מספרי טלפון.</string>
-    <string name="bolusrequested">עומד להזריק %1$.2f יח\'</string>
     <string name="smscommunicator_bolusdelivered">בולוס %1$.2f יחידות ניתן בהצלחה</string>
     <string name="smscommunicator_mealbolusdelivered">בולוס עבור ארוחה %1$.2fU ניתן בהצלחה</string>
     <string name="smscommunicator_mealbolusdelivered_tt">ערך מטרה %1$s למשך %2$d דקות</string>
@@ -234,7 +232,6 @@
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="basal_rate">מינון בזאלי</string>
-    <string name="basalvaluebelowminimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="sms_actualbg">ערכי סוכר בדם:</string>
     <string name="sms_lastbg">ערכי סוכר אחרונים:</string>
     <string name="MM640g">Minimed 640G</string>
@@ -372,7 +369,6 @@
     <string name="abs_insulin_shortname">אבס\'</string>
     <string name="devslope_shortname">שיפוע</string>
     <string name="nav_about">אודות</string>
-    <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
     <string name="xdripstatus_settings">מצב xDrip (שעון)</string>
     <string name="xdripstatus">שורת מצב xDrip (שעון)</string>
@@ -449,8 +445,6 @@
     <string name="shortenergy">אנרגיה</string>
     <string name="shortprotein">חלבון</string>
     <string name="shortfat">שומן</string>
-    <string name="executingrightnow">הפקודה מבוצעת כעת</string>
-    <string name="missed_bg_readings">לא התקבלו קריאות סוכר</string>
     <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
     <string name="gradually_increase_notification_volume">הגבר את עוצמת הקול בהדרגה להתראות ולהודעות</string>
     <string name="localalertsettings_title">התראות מקומיות</string>
@@ -615,12 +609,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן יהיה להמשיך בהתקנה לאחר חיבור ההמשאבה.\n</string>
     <string name="startobjective">התחלת המשימה הראשונה שלכם</string>
-    <string name="permission">הרשאה</string>
     <string name="askforpermission">מבקש הרשאה</string>
-    <string name="needsystemwindowpermission">האפליקציה צריכה הרשאת מערכת של חלונות לצורך התראות</string>
-    <string name="needlocationpermission">דרושה הרשאת מיקום עבור סריקת בלוטות\' וזיהוי WiFi</string>
-    <string name="needstoragepermission">דרושה הרשאת אחסון כדי שתוכלו לאחסן קובצי יומן והגדרות יצוא.</string>
-    <string name="request">בקשה</string>
     <string name="open_navigation">פתח ניווט</string>
     <string name="close_navigation">סגור ניווט</string>
     <string name="nav_plugin_preferences">העדפות תוסף</string>
@@ -997,6 +986,5 @@
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
-    <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
     <string name="dynisf_adjust_sensitivity">כיוונון הרגישות והסוכר בדם</string>
 </resources>
