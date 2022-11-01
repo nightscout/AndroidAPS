@@ -3,6 +3,8 @@
     <!--    Keys-->
     <!--    General-->
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Caidéil ar fionraí</string>
+    <string name="loopsuspended">Lúb ar fionraí</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
