@@ -13,7 +13,6 @@
     <string name="nav_resetdb">обнулить базы</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
     <string name="description_objectives">Обучающая программа</string>
@@ -170,7 +169,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Минимальное количество минут между одним удаленным болюсом и следующим</string>
     <string name="smscommunicator_remotebolusmindistance">Минимум минут, должных пройти между одним болюсом и следующим</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">В целях безопасности, для изменения этого параметра необходимо добавить не менее 2 телефонных номеров.</string>
-    <string name="bolusrequested">Будет подано %1$.2fU ед. инс</string>
     <string name="smscommunicator_bolusdelivered">Болюс %1$.2fед. подан успешно</string>
     <string name="smscommunicator_mealbolusdelivered">Болюс на еду %1$.2f ед. подан успешно</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Цель %1$s на %2$d минут</string>
@@ -240,7 +238,6 @@
     <string name="resend_all_data">повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на Wear</string>
     <string name="basal_rate">Базальная скорость</string>
-    <string name="basalvaluebelowminimum">значение базала ниже минимума. профиль не создан!</string>
     <string name="sms_actualbg">гликемия:</string>
     <string name="sms_lastbg">прошлый СК:</string>
     <string name="MM640g">MM640g</string>
@@ -321,7 +318,6 @@
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Пользователь</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s необходимо включить в белый список оптимизации батареи для корректной работы</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
     <string name="loopsuspendedfor">Остановлен на(%1$d m)</string>
     <string name="suspendloopfor1h">приостановить цикл на 1 час</string>
@@ -379,7 +375,6 @@
     <string name="abs_insulin_shortname">НАДО</string>
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="nav_about">о приложении</string>
-    <string name="smscommunicator_missingsmspermission">отсутствует смс подтверждение</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
     <string name="xdripstatus_settings">Cтрока состояния xDrip (часы)</string>
     <string name="xdripstatus">Cтрока состояния xDrip (часы)</string>
@@ -457,8 +452,6 @@
     <string name="shortenergy">Энергия</string>
     <string name="shortprotein">Белки</string>
     <string name="shortfat">Жиры</string>
-    <string name="executingrightnow">Команда выполняется</string>
-    <string name="missed_bg_readings">Пропущенные данные СК</string>
     <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
     <string name="gradually_increase_notification_volume">Постепенно увеличивать громкость оповещений и уведомлений</string>
     <string name="localalertsettings_title">Локальные оповещения</string>
@@ -624,12 +617,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
     <string name="startobjective">Начните первую Цель</string>
-    <string name="permission">Права доступа</string>
     <string name="askforpermission">Запросить права доступа</string>
-    <string name="needsystemwindowpermission">Приложению требуется разрешение системного окна для уведомлений</string>
-    <string name="needlocationpermission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
-    <string name="needstoragepermission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
-    <string name="request">Запрос</string>
     <string name="open_navigation">Показать панель навигации</string>
     <string name="close_navigation">Cкрыть панель навигации</string>
     <string name="nav_plugin_preferences">Настройки расширений</string>
@@ -1015,7 +1003,6 @@
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="no_watch_connected">(Часы не подключены)</string>
-    <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
     <string name="dynisf_adjust_sensitivity">Настроить чувствительность относительно ГК</string>
     <string name="database_cleanup">Очистка базы данных</string>
     <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
