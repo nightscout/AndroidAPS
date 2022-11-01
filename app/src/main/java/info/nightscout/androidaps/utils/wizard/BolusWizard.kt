@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils.wizard
 
 import android.content.Context
-import android.content.Intent
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.BolusTimer
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -349,11 +349,11 @@ class BolusWizard @Inject constructor(
             }
             accepted = true
             if (calculatedTotalInsulin > 0.0)
-                bolusTimer.removeBolusReminder()
+                bolusTimer.removeAutomationEventBolusReminder()
             if (carbs > 0.0)
-                carbTimer.removeEatReminder()
+                carbTimer.removeAutomationEventEatReminder()
             if (sp.getBoolean(R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
-                OKDialog.showYesNoCancel(ctx, rh.gs(R.string.bolusadvisor), rh.gs(R.string.bolusadvisormessage),
+                OKDialog.showYesNoCancel(ctx, rh.gs(R.string.bolus_advisor), rh.gs(R.string.bolus_advisor_message),
                                          { bolusAdvisorProcessing(ctx) },
                                          { commonProcessing(ctx) }
                 )
@@ -390,7 +390,7 @@ class BolusWizard @Inject constructor(
                             if (!result.success) {
                                 ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                             } else
-                                carbTimer.scheduleEatReminder()
+                                carbTimer.scheduleAutomationEventEatReminder()
                         }
                     })
                 }
@@ -487,7 +487,7 @@ class BolusWizard @Inject constructor(
 
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
-                    carbTimer.scheduleReminder(T.mins(carbTime.toLong()).secs().toInt())
+                    carbTimer.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                 }
             }
         })

@@ -72,6 +72,7 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             android.R.id.home -> {
+                @Suppress("DEPRECATION")
                 onBackPressed()
                 true
             }

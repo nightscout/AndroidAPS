@@ -411,7 +411,7 @@ class WizardDialog : DaggerDialogFragment() {
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
-            ToastUtils.warnToast(ctx, R.string.carbsconstraintapplied)
+            ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)
             return
         }
 

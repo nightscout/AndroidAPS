@@ -20,7 +20,6 @@
     <string name="disconnected">Verbinding verbroken</string>
     <string name="disconnecting">Verbinding aan het verbreken</string>
     <string name="waiting_for_disconnection">Wachten op het loskoppelen</string>
-    <string name="androidaps_start">AndroidAPS gestart</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
@@ -274,7 +273,6 @@
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <string name="version_expire">Versie %1$s verloopt op %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen. \nAnders zullen er voor AndroidAPS geen logs worden aangemaakt (dit is belangrijk voor de ontwikkelaars, zo kunnen zij controleren of de algoritmes correct werken)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>
     <string name="tuesday_short">T</string>
@@ -478,8 +476,6 @@
     <string name="autotune_update_local_profile_message">Profiel %1$s bijwerken met Autotune Profiel?</string>
     <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
-    <string name="autotune_run_without_autoswitch">Autotune uitgevoerd zonder profiel aanpassing</string>
-    <string name="autotune_run_with_autoswitch">Autotune uitgevoerd en profiel automatisch gewisseld</string>
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>

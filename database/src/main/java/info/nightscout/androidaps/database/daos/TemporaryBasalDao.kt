@@ -8,7 +8,6 @@ import info.nightscout.androidaps.database.entities.TemporaryBasal
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
 
@@ -17,6 +16,12 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
 
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_TEMPORARY_BASALS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_TEMPORARY_BASALS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_TEMPORARY_BASALS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

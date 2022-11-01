@@ -33,9 +33,7 @@
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
     <string name="description_treatments">Stoor alle behandelings wat gedoen was</string>
-    <string name="description_wear">Monitor en beheer AndroidAPS met jou WearOS horlosie.</string>
     <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
-    <string name="description_sms_communicator">Afstandbeheer AndroidAPS met SMS kodes.</string>
     <string name="treatments_insulin_label_string">Insulien:</string>
     <string name="treatments_carbs_label_string">Karbs:</string>
     <string name="treatments_iob_label_string">IAB:</string>
@@ -70,9 +68,7 @@
     <string name="treatments">Behandelings</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="configbuilder_pump">Pomp</string>
-    <string name="configbuilder_pump_description">Watter pomp wil jy gebruik met AndroidAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
-    <string name="configbuilder_profile_description">Watter profiel moet AndroidAPS gebruik?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Watter APS algoritme moet terapie aanpassings maak?</string>
     <string name="configbuilder_general">Algemene</string>
@@ -80,7 +76,6 @@
     <string name="configbuilder_constraints_description">Watter beperkings word toegepas?</string>
     <string name="constraints">Beperkings</string>
     <string name="configbuilder_loop">Lus</string>
-    <string name="configbuilder_loop_description">Gebruik die om AndroidAPS se lus integrasie te aktiveer.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Na verwerkte beperkings</string>
     <string name="loop_tbrsetbypump_label">Tydelike basale gestel deur pomp</string>
@@ -96,7 +91,6 @@
     <string name="sms_basal">Basale:</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
-    <string name="configbuilder_bgsource_description">Waarvandaan  moet AndroidAPS data kry?</string>
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Geslote lus</string>
     <string name="openloop">Oop lus</string>
@@ -248,7 +242,6 @@
     <string name="adult">Volwassene</string>
     <string name="resistantadult">Insulien weerstandige volwasse</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s benodig battery optimisering bemagtiging vir beter werksverrigting</string>
     <string name="loopsuspended">Lus opgeskort</string>
     <string name="loopsuspendedfor">Opgeskort (%1$d m)</string>
     <string name="suspendloopfor1h">Skort lus vir 1h</string>
@@ -479,7 +472,6 @@
     <string name="welcometosetupwizard">Welkom by opstelling-Ghoeroe. Dit sal jou lei deur die opstelling proses\n</string>
     <string name="readstatus">Lees status</string>
     <string name="exitwizard">Slaan opstelling-Ghoeroe oor</string>
-    <string name="setupwizard_loop_description">Druk die knoppie hieronder om AndroidAPS te aktiveer om voorstelle/of veranderings te maak aan basale</string>
     <string name="setupwizard_sensitivity_description">Sensitiwiteit plugin vir sensitiwiteit opsporing en KAB berekening. Vir meer inligting besoek:</string>
     <string name="diawarning">Onthou asseblief: dat nuwe insulien profiele vereis DIA van minstens 5h. DIA 5 – 6h op nuwe profiel is gelyk aan DIA 3h op ou insulien profiele.</string>
     <string name="setupwizard_aps_description">Kies een van beskikbare algoritmes. Hulle is gesorteer vanaf oudste tot jongste. Nuwer algoritmes is gewoonlik kragtiger en meer aggressief. Dus as jy nuut is met jou lus, sal jy waarskynlik begin met AMA en nie met jongste een. Moenie vergeet om die OpenAPS dokumentasie te lees en te konfigureer voor gebruik.</string>
@@ -501,7 +493,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">Lae tydelike doelwitte verlaag sensitiwiteit</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Laer sensitiwiteit vir tydelike doelwitte < 100]]></string>
     <string name="storedsettingsfound">Gestoorde instellings gevind</string>
-    <string name="allow_hardware_pump_text">Aandag: As jy aktiveer en koppel aan \'n hardeware pomp, AndroidAPS sal die basale instellings uit die profiel aan die pomp kopieer, die bestaande basale koers gestoor op die pomp sal oorskryf word. Maak seker jy het die korrekte basale instelling in AndroidAPS. As jy nie seker is of nie die basale instellings wil oorskryf op jou pomp, druk Kanselleer en herhaal oorskakel na die pomp op \'n later tyd.</string>
     <string name="error_adding_treatment_title">Behandeling data onvolledig</string>
     <string name="maintenance_settings">Onderhoud instellings</string>
     <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
@@ -525,7 +516,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Log sensor verander na NS</string>
-    <string name="dexcom_lognssensorchange_summary">Skep geleentheid \"sensor verandering\" in NS automaties op sensor begin</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>

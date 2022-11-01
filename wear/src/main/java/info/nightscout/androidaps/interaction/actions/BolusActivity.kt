@@ -3,7 +3,6 @@
 package info.nightscout.androidaps.interaction.actions
 
 import android.os.Bundle
-import android.support.wearable.view.GridPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
+import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.weardata.EventData.ActionBolusPreCheck
 import java.text.DecimalFormat
@@ -30,7 +30,7 @@ class BolusActivity : ViewSelectorActivity() {
         finish()
     }
 
-    private inner class MyGridViewPagerAdapter : GridPagerAdapter() {
+    private inner class MyGridViewPagerAdapter : GridPagerAdapterNonDeprecated() {
 
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1

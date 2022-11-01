@@ -74,7 +74,7 @@
             android:drawableTop="@drawable/ic_cp_bolus_carbs"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/treatments_wizard_carbs_label"
+            android:text="@string/carbs"
             android:textColor="?attr/icBolusCarbsColor"
             app:iconPadding="-4dp" />
 
@@ -102,7 +102,7 @@
             android:drawableTop="@drawable/ic_calibration"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@string/overview_calibration"
+            android:text="@string/calibration"
             android:textColor="?attr/icCalibrationColor"
             android:visibility="gone"
             app:iconPadding="-4dp" />

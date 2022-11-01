@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinLyumjevPlugin
@@ -293,6 +294,12 @@ abstract class PluginsModule {
     abstract fun bindNSClientPlugin(plugin: NSClientPlugin): PluginBase
 
     @Binds
+    @Unfinished
+    @IntoMap
+    @IntKey(368)
+    abstract fun bindTidepoolPlugin(plugin: TidepoolPlugin): PluginBase
+
+    @Binds
     @AllConfigs
     @IntoMap
     @IntKey(370)
@@ -382,12 +389,6 @@ abstract class PluginsModule {
     @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
-    // @Binds
-    // @NotNSClient
-    // @IntoMap
-    // @IntKey(480)
-    // abstract fun bindOpenHumansPlugin(plugin: OpenHumansUploader): PluginBase
-
     @Binds
     @NotNSClient
     @IntoMap
@@ -418,4 +419,6 @@ abstract class PluginsModule {
     @Qualifier
     annotation class APS
 
+    @Qualifier
+    annotation class Unfinished
 }

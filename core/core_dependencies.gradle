@@ -27,7 +27,7 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:30.0.2')
+    api platform('com.google.firebase:firebase-bom:30.5.0')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     api "com.google.firebase:firebase-messaging-ktx"
@@ -46,20 +46,12 @@ dependencies {
     api 'com.madgag.spongycastle:core:1.58.0.0'
     api "com.google.crypto.tink:tink-android:$tink_version"
 
-    // Graphview cannot be upgraded
-    api "com.jjoe64:graphview:4.0.1"
-
     //db
     api "com.j256.ormlite:ormlite-core:$ormLite_version"
     api "com.j256.ormlite:ormlite-android:$ormLite_version"
 
     // pumpCommon
     api "com.google.code.gson:gson:$gson_version"
-
-    // don't kill my app
-    api('dev.doubledot.doki:library:0.0.1@aar') {
-        transitive = true
-    }
 
     //WorkManager
     api "androidx.work:work-runtime:$work_version"
@@ -73,8 +65,6 @@ dependencies {
     api "com.squareup.retrofit2:retrofit:$retrofit2_version"
     api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
-
-    api "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
 
     api "androidx.fragment:fragment-ktx:$fragmentktx_version"
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"

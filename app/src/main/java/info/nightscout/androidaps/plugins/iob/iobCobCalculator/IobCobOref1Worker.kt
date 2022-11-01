@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -62,7 +62,7 @@ class IobCobOref1Worker(
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var calculationWorkflow: CalculationWorkflow
 
     init {
@@ -80,7 +80,7 @@ class IobCobOref1Worker(
 
     override fun doWork(): Result {
 
-        val data = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as IobCobOref1WorkerData?
+        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as IobCobOref1WorkerData?
             ?: return Result.success(workDataOf("Error" to "missing input data"))
 
         val start = dateUtil.now()

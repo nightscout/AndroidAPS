@@ -139,10 +139,10 @@ class MainApp : DaggerApplication() {
             }, 10000
         )
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "KeepAlive",
+            KeepAliveWorker.KA_0,
             ExistingPeriodicWorkPolicy.REPLACE,
             PeriodicWorkRequest.Builder(KeepAliveWorker::class.java, 15, TimeUnit.MINUTES)
-                .setInputData(Data.Builder().putString("schedule", "KeepAlive").build())
+                .setInputData(Data.Builder().putString("schedule", KeepAliveWorker.KA_0).build())
                 .setInitialDelay(5, TimeUnit.SECONDS)
                 .build()
         )
@@ -184,7 +184,7 @@ class MainApp : DaggerApplication() {
                 Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
                 return@setErrorHandler
             }
-            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e)
+            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e.toString())
         }
     }
 

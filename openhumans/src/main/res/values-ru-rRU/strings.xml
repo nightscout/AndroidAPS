@@ -12,7 +12,7 @@
     <string name="only_upload_if_charging">Загружать только при зарядке</string>
     <string name="open_humans_uploading">Идет передача данных в Open Humans…</string>
     <string name="open_humans_notifications">Уведомления Open Humans</string>
-    <string name="uploading_to_open_humans">AndroidAPS передает данные в Open Humans. Это может занять некоторое время.</string>
+    <string name="uploading_to_open_humans">AAPS передает данные в Open Humans. Это может занять некоторое время.</string>
     <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
     <string name="upload_now">Начать передачу данных</string>

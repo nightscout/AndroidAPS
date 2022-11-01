@@ -7,7 +7,6 @@ import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult> {
 
@@ -17,6 +16,12 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
     @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS")
 
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_BOLUS_CALCULATOR_RESULTS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

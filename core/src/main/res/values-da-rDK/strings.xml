@@ -20,7 +20,6 @@
     <string name="disconnected">Forbindelse afbrudt</string>
     <string name="disconnecting">Afbryder</string>
     <string name="waiting_for_disconnection">Venter på afbrydelse</string>
-    <string name="androidaps_start">AndroidAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f IE</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
@@ -274,7 +273,6 @@
     <string name="versionavailable">Version %1$s tilgængelig</string>
     <string name="version_expire">Version %1$s udløber den %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AndroidAPS fra Systemindstillinger \nellers vil Android APS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Ma</string>
     <string name="tuesday_short">Ti</string>
@@ -478,8 +476,6 @@
     <string name="autotune_update_local_profile_message">Opdater %1$s profil med Autotune profil?</string>
     <string name="autotune_revert_local_profile_message">Gendan %1$s profil med Input-profilen?</string>
     <string name="autotune_profile_invalid">Profil ugyldig</string>
-    <string name="autotune_run_without_autoswitch">Autotune kørt uden profilskift</string>
-    <string name="autotune_run_with_autoswitch">Autotune kørt, profilen er automatisk skiftet</string>
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>

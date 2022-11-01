@@ -89,7 +89,7 @@
     <string name="action_preset_1">Förinställning 1</string>
     <string name="action_preset_2">Förinställning 2</string>
     <string name="action_preset_3">Förinställning 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Valfri mängd</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Valfri mängd</string>
     <string name="action_confirm">BEKRÄFTA</string>
     <string name="action_timeshift">tidsförskjutning</string>
     <string name="action_bolus">Bolus</string>

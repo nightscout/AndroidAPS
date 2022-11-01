@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:text="@string/treatments_wizard_bg_label"
+                    android:text="@string/bg_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                     android:layout_weight="1"
                     android:labelFor="@id/carbs_input"
                     android:padding="10dp"
-                    android:text="@string/treatments_wizard_carbs_label"
+                    android:text="@string/carbs"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
@@ -105,7 +105,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="2dp"
-                    app:customContentDescription="@string/treatments_wizard_carbs_label" />
+                    app:customContentDescription="@string/carbs" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -229,7 +229,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:checked="true"
-                android:contentDescription="@string/treatments_wizard_bg_label"
+                android:contentDescription="@string/bg_label"
                 android:drawableTop="@drawable/checkbox_bg_icon"
                 android:scaleX="1.4"
                 android:scaleY="1.4" />
@@ -436,7 +436,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
-                            android:text="@string/treatments_wizard_bg_label" />
+                            android:text="@string/bg_label" />
 
                         <CheckBox
                             android:id="@+id/tt_checkbox"
@@ -571,7 +571,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:width="86dp"
-                            android:text="@string/treatments_wizard_carbs_label"
+                            android:text="@string/carbs"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     </LinearLayout>

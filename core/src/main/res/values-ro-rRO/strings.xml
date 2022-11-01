@@ -20,7 +20,6 @@
     <string name="disconnected">Deconectat</string>
     <string name="disconnecting">Se deconectează</string>
     <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
-    <string name="androidaps_start">AndroidAPS a pornit</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -268,7 +267,6 @@
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din Setările de sistem \naltfel AndroidAPS nu va avea jurnalizare (importanta pentru monitorizare si verifica funcționarea corecta a algoritmilor)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
     <string name="tuesday_short">Ma</string>

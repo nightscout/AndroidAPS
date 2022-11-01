@@ -9,7 +9,7 @@ import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import javax.inject.Inject
 
 class InvokeLoopWorker(
@@ -17,7 +17,7 @@ class InvokeLoopWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var loop: Loop
 
@@ -38,7 +38,7 @@ class InvokeLoopWorker(
     */
     override fun doWork(): Result {
 
-        val data = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as InvokeLoopData?
+        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as InvokeLoopData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         if (data.cause !is EventNewBG) return Result.success(workDataOf("Result" to "no calculation needed"))

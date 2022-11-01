@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import androidx.collection.LongSparseArray
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.ProfileSealed
@@ -11,19 +10,19 @@ import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwi
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,7 +42,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val deviceStatusData: DeviceStatusData
 ) : ProfileFunction {
 
-    val cache = HashMap<Long,Profile?>()
+    var cache = ConcurrentHashMap<Long, Profile?>()
 
     private val disposable = CompositeDisposable()
 
@@ -53,16 +52,7 @@ class ProfileFunctionImplementation @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe(
                 {
-                    synchronized(cache) {
-                        for (key in cache.keys) {
-                            if (key > it.startDate) {
-                                aapsLogger.debug(LTag.AUTOSENS, "Removing from profileCache: " + dateUtil.dateAndTimeAndSecondsString(key))
-                                cache.remove(key)
-                            } else {
-                                break
-                            }
-                        }
-                    }
+                    synchronized(cache) { cache.keys.removeIf { key -> key > it.startDate } }
                 }, fabricPrivacy::logException
             )
     }
@@ -134,7 +124,7 @@ class ProfileFunctionImplementation @Inject constructor(
         }
 
         synchronized(cache) {
-            cache.put(rounded, null)
+            cache.remove(rounded)
         }
         return null
     }
@@ -171,7 +161,7 @@ class ProfileFunctionImplementation @Inject constructor(
     }
 
     override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): Boolean {
-        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp)  ?: return false
+        val ps = buildProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, timestamp) ?: return false
         disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
             .subscribe({ result ->
                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }

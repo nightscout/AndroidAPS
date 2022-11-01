@@ -31,6 +31,7 @@ import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.BolusTimer
 import info.nightscout.shared.SafeParse
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -83,11 +84,11 @@ class InsulinDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (abs(binding.time.value.toInt()) > 12 * 60) {
             binding.time.value = 0.0
-            ToastUtils.warnToast(context, R.string.constraintapllied)
+            ToastUtils.warnToast(context, R.string.constraint_applied)
         }
         if (binding.amount.value > maxInsulin) {
             binding.amount.value = 0.0
-            ToastUtils.warnToast(context, R.string.bolusconstraintapplied)
+            ToastUtils.warnToast(context, R.string.bolus_constraint_applied)
         }
     }
 
@@ -181,7 +182,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
-            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")")
+            actions.add(rh.gs(R.string.temp_target_short) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")")
                 .formatColor(context, rh, R.attr.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
@@ -234,7 +235,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
                                 )
                             if (timeOffset == 0)
-                                bolusTimer.removeBolusReminder()
+                                bolusTimer.removeAutomationEventBolusReminder()
                         } else {
                             uel.log(Action.BOLUS, Sources.InsulinDialog,
                                 notes,
@@ -244,7 +245,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     } else {
-                                        bolusTimer.removeBolusReminder()
+                                        bolusTimer.removeAutomationEventBolusReminder()
                                     }
                                 }
                             })

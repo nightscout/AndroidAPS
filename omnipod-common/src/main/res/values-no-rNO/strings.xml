@@ -80,7 +80,7 @@
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Initialiser Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Fest Pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Klargjør infusjonsstedet. Fjern Pod\'ens kanylebeskyttelse og papirfolien, og fest Pod til infusjonsstedet.\n\nHvis du oppdager feil med kanylen, trykk <b>Avbryt</b> og forkast Pod.\n\nTrykk <b>Neste</b> for å sette inn kanyle og starte påfyllingsbolus.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Når du trykker <b>OK</b>vil kanylen settes inn. Pass på at du har festet Pod\'en på infusjonsstedet.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Når du trykker <b>OK</b>, vil kanylen settes inn. Pass på at du har festet Pod\'en på infusjonsstedet.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Sett inn kanyle</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Prøver å angi basalprogram og sette inn kanylen.\n\nNår kanylen er vellykket på plass kan du trykke på <b>Neste</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod aktivert</string>
