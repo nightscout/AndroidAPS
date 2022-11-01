@@ -117,6 +117,9 @@
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
     <string name="treatmentdeliveryerror">Det er registrert en feil med bolus-leveransen. Sjekk manuelt om den er levert og hvor mye</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpen er pauset</string>
+    <string name="notconfigured">Ikke konfigurert</string>
+    <string name="loopsuspended">Loop pauset</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
