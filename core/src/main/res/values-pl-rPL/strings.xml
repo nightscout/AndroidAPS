@@ -108,6 +108,9 @@
     <string name="alarminxmin">Uruchom alarm za %1$d min</string>
     <string name="treatmentdeliveryerror">Błąd podczas podawania bolusa. Sprawdź ręcznie rzeczywiście dostarczoną ilość</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompa wstrzymana</string>
+    <string name="notconfigured">Nie skonfigurowano</string>
+    <string name="loopsuspended">Pętla wstrzymana</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
