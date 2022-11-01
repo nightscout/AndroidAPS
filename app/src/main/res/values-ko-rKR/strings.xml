@@ -12,7 +12,6 @@
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
     <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
     <string name="description_objectives">프로그램 배우기</string>
@@ -159,7 +158,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">원격 Bolus를 주입한 후 얼마간의 시간이 흐른 후에야 다음 원격 Bolus주입이 가능합니다</string>
     <string name="smscommunicator_remotebolusmindistance">원격 Bolus를 주입한 후 몇분이 지나야 다음 원격 Bolus 주입이 가능하게 합니까</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">안전을 위하여 이 설정을 수정하기 위해 최소 2개의 폰 번호를 추가해야합니다.</string>
-    <string name="bolusrequested"> %1$.2f U이 주입됩니다.</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U이 성공적으로 주입되었습니다.</string>
     <string name="smscommunicator_mealbolusdelivered">식사 Bolus %1$.2f U 이 성공적으로 주입되었습니다. </string>
     <string name="smscommunicator_mealbolusdelivered_tt">%2$d 분 동안 목표 %1$s</string>
@@ -228,7 +226,6 @@
     <string name="wear">워치</string>
     <string name="resend_all_data">모든 데이터 다시 보내기</string>
     <string name="open_settings_on_wear">워치에서 설정 열기</string>
-    <string name="basalvaluebelowminimum">Basal값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
     <string name="MM640g">미니메드640g</string>
@@ -363,7 +360,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">버전정보</string>
-    <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
     <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
     <string name="xdripstatus_settings">xDrip+ 상태 (워치)</string>
     <string name="xdripstatus">xDrip+ 상태표시라인 (워치)</string>
@@ -436,8 +432,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">단백질</string>
     <string name="shortfat">지방</string>
-    <string name="executingrightnow">명령을 지금 실행합니다.</string>
-    <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
     <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
     <string name="gradually_increase_notification_volume">알람과 알림의 소리를 점차적으로 증가시킴</string>
     <string name="localalertsettings_title">자체 경고 기능</string>
@@ -592,12 +586,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">하단의 RileyLink를 설정하십시오. RileyLink를 선택한 뒤, RileyLink 상태가 \"연결됨\"이 되고 나면 설정을 계속 할 수 있습니다. 이 작업은 금방 진행됩니다.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>참고:</b> 펌프가 한 번 연동되면 계속 설정할 수 있습니다.\n</string>
     <string name="startobjective">첫번째 목표를 시작하세요.</string>
-    <string name="permission">권한</string>
     <string name="askforpermission">권한 요청하기</string>
-    <string name="needsystemwindowpermission">알림에 대한 시스템 창 권한이 필요합니다</string>
-    <string name="needlocationpermission">어플은 BT scan과 WiFi 식별을 위해 \"위치 허용\"이 요구됩니다.</string>
-    <string name="needstoragepermission">어플은 로그 파일 저장과 설정 내보내기를 위해 \"저장공간 허용\"이 요구됩니다.</string>
-    <string name="request">요청</string>
     <string name="open_navigation">메뉴 열기</string>
     <string name="close_navigation">메뉴 닫기</string>
     <string name="nav_plugin_preferences">플러그인 설정</string>
