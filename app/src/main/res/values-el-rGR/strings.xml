@@ -37,7 +37,6 @@
     <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="sms_iob">IOB:</string>
     <string name="treatments_iobtotal_label_string">Συνολική IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Συνολική δραστηριότητα IOB:</string>
     <string name="tempbasals_realduration_label_string">Διάρκεια:</string>
@@ -61,7 +60,6 @@
     <string name="openapsma_noglucosedata">Μη διαθέσιμα δεδομένα γλυκόζης</string>
     <string name="openapsma_request_label">Αίτημα</string>
     <string name="delta">Διαφορά</string>
-    <string name="sms_delta">Διαφορά:</string>
     <string name="configbuilder">Διαμόρφωση</string>
     <string name="overview">Επισκόπηση</string>
     <string name="treatments">Θεραπείες</string>
@@ -85,8 +83,6 @@
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
     <string name="overview_calculator_label">Υπολογιστής</string>
-    <string name="sms_bolus">Bolus:</string>
-    <string name="sms_basal">Βασικός Ρυθμός:</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="apsmode_title">Λειτουργία APS</string>
@@ -117,33 +113,6 @@
     <string name="end_user_license_agreement_text">ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΝΑ ΚΑΝΕΤΕ ΙΑΤΡΙΚΗ ΑΠΟΦΑΣΗ. ΔΕΝ ΥΠΑΡΧΕΙ ΕΓΓΥΗΣΗ ΓΙΑ ΤΟ ΠΡΟΓΡΑΜΜΑ, ΣΤΟ ΒΑΘΜΟ ΠΟΥ ΕΠΙΤΡΕΠΕΤΑΙ ΑΠΟ ΤΟ ΕΦΑΡΜΟΣΤΕΟ ΔΙΚΑΙΟ. ΕΚΤΟΣ ΟΠΟΙΑΣΔΗΠΟΤΕ ΔΙΑΒΑΘΜΙΣΜΕΝΗ ΚΑΤΑ ΤΗΝ ΕΓΓΡΑΦΗ ΤΩΝ ΚΑΤΟΧΟΙ ΠΝΕΥΜΑΤΙΚΩΝ ΔΙΚΑΙΩΜΑΤΩΝ ΚΑΙ/Ή ΑΛΛΑ ΜΕΡΗ ΠΑΡΕΧΟΝΤΑΙ ΤΟ ΠΡΟΓΡΑΜΜΑ \"ΩΣ ΕΧΕΙ\" ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ, ΕΞΑΙΡΟΥΜΕΝΕΣ Ή ΣΙΩΠΗΡΕΣ, ΣΥΜΠΕΡΙΛΑΜΒΑΝΟΜΕΝΩΝ, ΕΝΔΕΙΚΤΙΚΑ, ΤΩΝ ΣΙΩΠΗΡΩΝ ΕΓΓΥΗΣΕΩΝ ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ΚΑΙ ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Ο ΟΛΟΚΛΗΡΩΜΕΝΟΣ ΚΙΝΔΥΝΟΣ ΟΣΟΝ ΑΦΟΡΑ ΤΗΝ ΠΟΙΟΤΗΤΑ ΚΑΙ ΤΗΝ ΑΠΟΔΟΣΗ ΤΟΥ ΠΡΟΓΡΑΜΜΑΤΟΣ ΕΙΝΑΙ ΔΙΚΟ ΣΑΣ. ΕΑΝ ΤΟ ΠΡΟΓΡΑΜΜΑ ΔΕΝ ΕΙΝΑΙ ΕΛΑΤΤΩΜΑΤΙΚΟ, ΠΡΕΠΕΙ ΝΑ ΕΞΕΤΑΣΤΕ ΤΟ ΚΟΣΤΟΣ ΟΛΩΝ ΤΩΝ ΑΠΑΡΑΙΤΗΤΩΝ ΣΥΝΤΗΡΗΣΕΩΝ, ΕΠΙΣΚΕΥΩΝ Ή ΔΙΟΡΘΩΣΕΩΝ.</string>
     <string name="end_user_license_agreement_i_understand">ΚΑΤΑΛΑΒΑ ΚΑΙ ΣΥΜΦΩΝΩ</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
-    <string name="smscommunicator">SMS Επικοινωνία</string>
-    <string name="smscommunicator_allowednumbers">Επιτρεπτά τηλεφωνικά νούμερα</string>
-    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_calibrationreplywithcode">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_bolusfailed">Αποτυχία Bolus</string>
-    <string name="smscommunicator_remotecommandsallowed">Άδεια για απομακρυσμένες εντολές μέσω SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Το κύκλωμα απενεργοποιήθηκε</string>
-    <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
-    <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
-    <string name="smscommunicator_remotebolusnotallowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
-    <string name="smscommunicator_profilereplywithcode">Για αλλαγή προφίλ σε %1$s %2$d%% στείλτε κωδικό %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Για έναρξη βασικού %1$d%% για %2$d λεπτά στείλτε κωδικό %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Για αναστολή κυκλκώματος για %1$d λεπτών στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_tempbasalset">Προσωρινός Ρυθμός %1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
-    <string name="smscommunicator_extendedset">Εκτεταμένο bolus %1$.2fU για %2$d λεπτά ξεκίνησε επιτυχώς</string>
-    <string name="smscommunicator_tempbasalset_percent">Προσωρινός Ρυθμός %1$d%% για %2$d λεπτά ξεκίνησε επιτυχώς</string>
-    <string name="smscommunicator_tempbasalfailed">Εκκίνηση Προσωρινού Ρυθμού απέτυχε</string>
-    <string name="smscommunicator_extendedfailed">Έναρξη εκτεταμένου bolus απέτυχε</string>
-    <string name="smscommunicator_basalstopreplywithcode">Για κλείσιμο Προσωρινού Ρυθμού στείλτε κωδικό %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Για κλείσιμο Εκτεταμένου bolus στείλτε κωδικό %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Ο Προσωρινός Ρυθμός ακυρώθηκε</string>
-    <string name="smscommunicator_extendedcanceled">Εκτεταμένο bolus ακυρώθηκε</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Ακύρωση Προσωρινού Ρυθμού απέτυχε</string>
-    <string name="smscommunicator_extendedcancelfailed">Η ακύρωση του Εκτεταμένου bolus απέτυχε</string>
-    <string name="smscommunicator_unknowncommand">Άγνωστη εντολή ή λάθος απάντηση</string>
     <string name="quickwizard">Γρήγορος Οδηγός</string>
     <string name="quickwizardsettings">Ρυθμίσεις Γρήγορου Οδηγού</string>
     <string name="overview_editquickwizard_buttontext">Κείμενο στο πλήκτρο:</string>
@@ -167,12 +136,9 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
     <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
-    <string name="sms_actualbg">BG:</string>
-    <string name="sms_lastbg">Τελευταία BG:</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Συνεχής Ειδοποίηση</string>
     <string name="old_data">Παλιά Δεδομένα</string>
-    <string name="sms_minago">πριν από %1$d λεπτά</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Πεδίο %1$d Στοιχεία.\nΤρέχουσα τιμή:</string>
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
@@ -189,7 +155,6 @@
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="wear_shortname">WEAR</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Συντομογραφίες ενοτήτων</string>
     <string name="always_use_shortavg">Χρησιμοποιείτε πάντα τη βραχυπρόθεσμη μέση διαφορά αντί της απλής διαφοράς</string>
     <string name="profile">Προφίλ</string>
@@ -201,8 +166,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Προεπιλεγμένη τιμή: 2\nΗ αναβολή Bolus ενεργοποιείται αφού κάνετε ένα γευματικό bolus, έτσι το κύκλωμα δεν θα εξουδετερώσει με χαμηλό προσωρινό μόλις έχετε φάει. Το παράδειγμα εδώ και η προεπιλογή είναι 2: έτσι μια τρίωρη DIA σημαίνει ότι το bolus αναβολής θα είναι σταδιακά πάνω από 1,5 ώρα (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Προσοχή!\nΣυνήθως δεν χρειάζεται να αλλάξετε αυτές τις τιμές. Κάντε κλικ ΕΔΩ, ΔΙΑΒΑΣΤΕ τις πληροφορίες και σιγουρευτείτε ότι τις καταλαβαίνετε πριν τις αλλάξετε.</string>
-    <string name="smscommunicator_invalidphonennumber">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
-    <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="executing">Εκτελείτε</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
     <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
@@ -233,8 +196,6 @@
     <string name="adult">Ενήλικας</string>
     <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
     <string name="Glimp">Glimp</string>
-    <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
-    <string name="loopsuspendedfor">Αναστολή (%1$d m)</string>
     <string name="suspendloopfor1h">Κύκλωμα σε αναστολή για 1h</string>
     <string name="suspendloopfor2h">Κύκλωμα σε αναστολή για 2h</string>
     <string name="suspendloopfor3h">Κύκλωμα σε αναστολή για 3h</string>
@@ -246,9 +207,6 @@
     <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
     <string name="resume">Επαναφορά</string>
     <string name="reconnect">Επανασύνδεση αντλίας</string>
-    <string name="smscommunicator_wrongduration">Λάθος διάρκεια</string>
-    <string name="smscommunicator_loopsuspended">Κύκλωμα σε αναστολή</string>
-    <string name="smscommunicator_loopresumed">Επαναφορά κυκλώματος</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Η εφαρμογή καταγραφής ξεκινά από το NS</string>
@@ -410,7 +368,6 @@
     <string name="limitingiob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
-    <string name="readstatusfailed">Η ανάγνωση κατάστασης απέτυχε</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
@@ -515,10 +472,6 @@
     <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
     <string name="storage">περιορισμός εσωτερικής μνήμης</string>
     <string name="diskfull">Ελευθερώστε τουλάχιστον %1$d MB από εσωτερική μνήμη! Κύκλωμα απενεργοποιήθηκε!</string>
-    <string name="wrongformat">Λάθος μορφή αρχείου</string>
-    <string name="sms_wrongcode">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
-    <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
-    <string name="profileswitchcreated">Δημιουργήθηκε αλλαγή προφίλ</string>
     <string name="versionChecker">Έλεγχος Έκδοσης</string>
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
@@ -528,12 +481,10 @@
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
     <string name="snooze">Αναβολή</string>
     <string name="increasingmaxbasal">Αυξείστε την μέγιστη βασική τιμή, επειδή η ρύθμιση είναι χαμηλότερη από τη μέγιστη βασική στο προφίλ σας</string>
-    <string name="smscommunicator_messagebody">Μη έγκυρο μήνυμα</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <!-- SMS Communicator & OTP Authenticator -->
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <!-- Aidex Cgms -->
