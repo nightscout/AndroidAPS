@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Återställ databaserna</string>
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="nav_exit">Avsluta</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
     <string name="description_objectives">Inlärningsprogram</string>
@@ -164,7 +163,6 @@ Eversense-appen.</string>
     <string name="smscommunicator_remotebolusmindistance_summary">Minsta antal minuter som måste förflyta mellan en fjärrbolus och nästa</string>
     <string name="smscommunicator_remotebolusmindistance">Minsta antal minuter mellan fjärrbolus</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">För att redigera den här inställningen måste du, för din säkerhet, lägga till minst 2 telefonnummer.</string>
-    <string name="bolusrequested">Kommer att leverera %1$.2f enheter</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f enheter levererat</string>
     <string name="smscommunicator_mealbolusdelivered">Bolus på %1$.2f enheter levererat</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Temporärt mål på %1$s är satt i %2$d minuter</string>
@@ -234,7 +232,6 @@ Eversense-appen.</string>
     <string name="resend_all_data">Uppdatera klockans data</string>
     <string name="open_settings_on_wear">Öppna inställningar på klockan</string>
     <string name="basal_rate">Basaldos</string>
-    <string name="basalvaluebelowminimum">Basal understiger miniminivå. Profilen sattes inte.</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Senaste BG:</string>
     <string name="MM640g">Minimed 640G</string>
@@ -372,7 +369,6 @@ Eversense-appen.</string>
     <string name="abs_insulin_shortname">Abs</string>
     <string name="devslope_shortname">Devslope</string>
     <string name="nav_about">Om</string>
-    <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
     <string name="xdripstatus_settings">xDrip+ Status (klocka)</string>
     <string name="xdripstatus">xDrip+ Statusrad (klocka)</string>
@@ -445,8 +441,6 @@ Eversense-appen.</string>
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fett</string>
-    <string name="executingrightnow">Kommando körs just nu</string>
-    <string name="missed_bg_readings">BG-värden saknas</string>
     <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
     <string name="gradually_increase_notification_volume">Öka volymen gradvis för larm och aviseringar</string>
     <string name="localalertsettings_title">Lokala larm</string>
@@ -606,12 +600,7 @@ Eversense-appen.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
     <string name="startobjective">Påbörja ditt första mål</string>
-    <string name="permission">Behörighet</string>
     <string name="askforpermission">Be om behörighet</string>
-    <string name="needsystemwindowpermission">Applikationen behöver förhöjd behörighet för aviseringar</string>
-    <string name="needlocationpermission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
-    <string name="needstoragepermission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
-    <string name="request">Begäran</string>
     <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>
     <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
