@@ -113,6 +113,9 @@
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="treatmentdeliveryerror">Ett fel rapporterades under bolus. Vänligen kontrollera pumpen manuellt</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pump pausad</string>
+    <string name="notconfigured">Inte konfigurerad</string>
+    <string name="loopsuspended">Loop pausad</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
