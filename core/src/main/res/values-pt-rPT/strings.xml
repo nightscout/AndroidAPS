@@ -106,6 +106,9 @@
     <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="treatmentdeliveryerror">Ocorreu um erro de bólus. Verifique manualmente a quantidade administrada</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Bomba suspensa</string>
+    <string name="notconfigured">Não configurado</string>
+    <string name="loopsuspended">Loop suspenso</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
