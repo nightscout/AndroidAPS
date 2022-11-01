@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="missed_bg_readings">Chýbajúce hodnoty glykémie</string>
     <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
+    <string name="request">Požiadavka</string>
+    <string name="permission">Povolenie</string>
+    <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
 </resources>
