@@ -5,7 +5,13 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.aps.loop.CarbSuggestionReceiver
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
-import info.nightscout.androidaps.receivers.*
+import info.nightscout.androidaps.receivers.AutoStartReceiver
+import info.nightscout.androidaps.receivers.BTReceiver
+import info.nightscout.androidaps.receivers.ChargingStateReceiver
+import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.KeepAliveWorker
+import info.nightscout.androidaps.receivers.SmsReceiver
+import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 
 @Module
 @Suppress("unused")

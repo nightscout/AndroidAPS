@@ -41,7 +41,7 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
-    private val smsCommunicatorPlugin: SmsCommunicator,
+    private val smsCommunicator: SmsCommunicator,
     private val config: Config,
     private val repository: AppRepository,
     private val dateUtil: DateUtil,
@@ -71,7 +71,7 @@ class LocalAlertUtilsImpl @Inject constructor(
                     disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(R.string.pump_unreachable))).subscribe()
             }
             if (sp.getBoolean(R.string.key_smscommunicator_report_pump_unreachable, true))
-                smsCommunicatorPlugin.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
     }

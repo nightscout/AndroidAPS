@@ -36,7 +36,7 @@ class ActionSendSMSTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        `when`(smsCommunicatorPlugin.sendNotificationToAllNumbers(anyString())).thenReturn(true)
+        `when`(smsCommunicator.sendNotificationToAllNumbers(anyString())).thenReturn(true)
         sut.text = InputString("Asd")
         sut.doAction(object : Callback() {
             override fun run() {

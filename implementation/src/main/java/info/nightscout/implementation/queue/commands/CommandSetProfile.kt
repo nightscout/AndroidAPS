@@ -23,7 +23,7 @@ class CommandSetProfile constructor(
     callback: Callback?
 ) : Command(injector, CommandType.BASAL_PROFILE, callback) {
 
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicator
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var commandQueue: CommandQueue
@@ -41,8 +41,8 @@ class CommandSetProfile constructor(
         // Send SMS notification if ProfileSwitch is coming from NS
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
-            if ((smsCommunicatorPlugin as PluginBase).isEnabled())
-                smsCommunicatorPlugin.sendNotificationToAllNumbers(rh.gs(R.string.profile_set_ok))
+            if ((smsCommunicator as PluginBase).isEnabled())
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.profile_set_ok))
         }
     }
 
