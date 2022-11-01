@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Нулирай базата данни</string>
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="nav_exit">Изход</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
     <string name="description_objectives">Разучаване на програмата</string>
@@ -161,7 +160,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Минимално време в минути, което трябва да е изминало след отдалечен болус, преди да може да бъде доставен следващият</string>
     <string name="smscommunicator_remotebolusmindistance">Колко най-малко минути трябва да минат между доставката на два болуса</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">За вашата сигурност, променете тази настройка, трябва да добавите най-малко 2 телефонни номера.</string>
-    <string name="bolusrequested">Ще стартира %1$.2fЕ болус</string>
     <string name="smscommunicator_bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="smscommunicator_mealbolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Временна цел от %1$s за %2$d минути</string>
@@ -230,7 +228,6 @@
     <string name="wear">Часовник</string>
     <string name="resend_all_data">Изпрати отново всички дани</string>
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
-    <string name="basalvaluebelowminimum">Базалните стойности са под минимума. Не е зададен профил!</string>
     <string name="sms_actualbg">КЗ:</string>
     <string name="sms_lastbg">Последна КЗ:</string>
     <string name="MM640g">MM640g</string>
@@ -366,7 +363,6 @@
     <string name="abs_insulin_shortname">АБС</string>
     <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="nav_about">За приложението</string>
-    <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <string name="smscommunicator_missingphonestatepermission">Липсва разрешение до данни от телефона</string>
     <string name="xdripstatus_settings">xDrip+ статус (часовник)</string>
     <string name="xdripstatus">xDrip+ линия със статута (часовник)</string>
@@ -439,8 +435,6 @@
     <string name="shortenergy">Ен</string>
     <string name="shortprotein">Бел.</string>
     <string name="shortfat">Маз.</string>
-    <string name="executingrightnow">Командата се изпълнява в момента</string>
-    <string name="missed_bg_readings">Липсват данни за КЗ</string>
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
     <string name="gradually_increase_notification_volume">Постепенно увеличаване на звука за сигнали и аларми</string>
     <string name="localalertsettings_title">Локални аларми</string>
@@ -597,12 +591,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
     <string name="startobjective">Започнете първа цел</string>
-    <string name="permission">Разрешение</string>
     <string name="askforpermission">Питане за разрешение</string>
-    <string name="needsystemwindowpermission">ААПС изисква разрешение за да може да Ви уведомява</string>
-    <string name="needlocationpermission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
-    <string name="needstoragepermission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
-    <string name="request">Искане</string>
     <string name="open_navigation">Отвори меню</string>
     <string name="close_navigation">Затвори меню</string>
     <string name="nav_plugin_preferences">Настройки на модул</string>
