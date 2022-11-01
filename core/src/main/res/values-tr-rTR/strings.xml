@@ -488,6 +488,7 @@
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
     <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
