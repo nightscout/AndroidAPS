@@ -205,6 +205,9 @@
     <string name="bolus_reminder">Bolus reminder</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pump suspended</string>
+    <string name="notconfigured">Not configured</string>
+    <string name="loopsuspended">Loop suspended</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
