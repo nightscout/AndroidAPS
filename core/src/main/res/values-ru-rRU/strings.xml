@@ -117,6 +117,9 @@
     <string name="alarminxmin">Напомнить через %1$d мин</string>
     <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
     <string name="shortgramm">грамм</string>
+    <string name="pumpsuspended">Работа помпы остановлена</string>
+    <string name="notconfigured">Не сконфигурировано</string>
+    <string name="loopsuspended">ЗЦ остановлен</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
