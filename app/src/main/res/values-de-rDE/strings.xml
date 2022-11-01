@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="nav_exit">Schließen</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
     <string name="description_objectives">Das Programm kennenlernen</string>
@@ -164,7 +163,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimale Dauer in Minuten, die nach einem Remote-Bolus verstrichen sein muss, bevor ein neuer abgegeben werden kann.</string>
     <string name="smscommunicator_remotebolusmindistance">Anzahl der Minuten, die mindestens zwischen zwei Remote-Bolusabgaben liegen müssen.</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Aus Sicherheitsgründen musst Du mindestens zwei Telefonnummern eintragen, um diese Voreinstellung zu ändern.</string>
-    <string name="bolusrequested">Werde %1$.2f IE abgeben</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="smscommunicator_mealbolusdelivered">Mahlzeiten-Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Ziel %1$s für %2$d Minuten</string>
@@ -234,7 +232,6 @@
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
     <string name="basal_rate">Basalrate</string>
-    <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="sms_actualbg">BZ:</string>
     <string name="sms_lastbg">Letzter BZ:</string>
     <string name="MM640g">MM640g</string>
@@ -372,7 +369,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Über</string>
-    <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
     <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
     <string name="xdripstatus_settings">xDrip+ Status (Uhr)</string>
     <string name="xdripstatus">xDrip+ Statuszeile (Uhr)</string>
@@ -449,8 +445,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Prot</string>
     <string name="shortfat">Ft</string>
-    <string name="executingrightnow">Befehl wird zurzeit ausgeführt</string>
-    <string name="missed_bg_readings">BZ-Werte fehlen</string>
     <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
     <string name="gradually_increase_notification_volume">Lautstärke für Alarme und Benachrichtigungen schrittweise erhöhen</string>
     <string name="localalertsettings_title">Lokale Alarme</string>
@@ -615,12 +609,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
-    <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
-    <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
-    <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
-    <string name="needstoragepermission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
-    <string name="request">Anfordern</string>
     <string name="open_navigation">Menü öffnen</string>
     <string name="close_navigation">Menü schließen</string>
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
@@ -998,6 +987,5 @@ Unerwartetes Verhalten.</string>
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
-    <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
     <string name="dynisf_adjust_sensitivity">Empfindlichkeit und BZ anpassen</string>
 </resources>
