@@ -121,6 +121,9 @@
     <string name="bolus_reminder">Rappel bolus</string>
     <string name="duration_label">Durée</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompe arrêtée</string>
+    <string name="notconfigured">Non configuré</string>
+    <string name="loopsuspended">La Boucle est suspendue</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
