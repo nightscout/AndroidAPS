@@ -113,6 +113,9 @@
     <string name="alarminxmin">Kør alarm om %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus fejl. Undersøg manuelt hvor meget insulin der er givet</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpe er afbrudt</string>
+    <string name="notconfigured">Ikke konfigureret</string>
+    <string name="loopsuspended">Loop suspenderet</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
     <string name="pumplimit">pumpe grænse</string>
