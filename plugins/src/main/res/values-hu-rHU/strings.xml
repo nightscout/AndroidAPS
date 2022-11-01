@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="sms_basal">Bázis:</string>
 </resources>
