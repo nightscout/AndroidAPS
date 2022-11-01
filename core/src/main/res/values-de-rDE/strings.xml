@@ -113,6 +113,9 @@
     <string name="alarminxmin">Alarm in %1$d Min.</string>
     <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpe pausiert</string>
+    <string name="notconfigured">Nicht konfiguriert</string>
+    <string name="loopsuspended">Loop pausiert</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
