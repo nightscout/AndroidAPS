@@ -121,6 +121,9 @@
     <string name="bolus_reminder">Připomenutí bolusu</string>
     <string name="duration_label">Trvání</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpa pozastavena</string>
+    <string name="notconfigured">Není nakonfigurováno</string>
+    <string name="loopsuspended">Smyčka pozastavena</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
