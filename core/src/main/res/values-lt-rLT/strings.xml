@@ -418,6 +418,7 @@
     <string name="basal">Valandinė bazė</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
