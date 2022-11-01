@@ -27,4 +27,5 @@
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
+    <!-- SmsCommunicator -->
 </resources>
