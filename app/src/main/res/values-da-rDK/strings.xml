@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Nulstil databaser</string>
     <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
     <string name="nav_exit">Afslut</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <string name="description_actions">Nogle knapper til hurtigt at få adgang til almindelige funktioner</string>
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
     <string name="description_objectives">Oplæringsprogram</string>
@@ -164,7 +163,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Mindste antal minutter, der skal gå mellem én fjernbolus og den næste</string>
     <string name="smscommunicator_remotebolusmindistance">Hvor mange minutter der mindst skal gå mellem en bolus og den næste</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Af hensyn til din sikkerhed, skal du tilføje mindst 2 telefonnumre for at redigere denne præference.</string>
-    <string name="bolusrequested">Leverer %1$.2f IE</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2fIE leveret succesfuldt</string>
     <string name="smscommunicator_mealbolusdelivered">Måltidsbolus %1$.2f IE leveret uden fejl</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Mål %1$s i %2$d minutter</string>
@@ -234,7 +232,6 @@
     <string name="resend_all_data">Send alle data igen</string>
     <string name="open_settings_on_wear">Åbn indstillinger på ur</string>
     <string name="basal_rate">Basalrate</string>
-    <string name="basalvaluebelowminimum">Basal værdi under minimum. Profil ikke angivet!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Sidste BG:</string>
     <string name="MM640g">MM640g</string>
@@ -372,7 +369,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">AFVHÆL</string>
     <string name="nav_about">Om</string>
-    <string name="smscommunicator_missingsmspermission">Manglende sms tilladelse</string>
     <string name="smscommunicator_missingphonestatepermission">Manglende telefonstatus tilladelse</string>
     <string name="xdripstatus_settings">xDrip-status (ur)</string>
     <string name="xdripstatus">xDrip Statuslinje (ur)</string>
@@ -449,8 +445,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fedt</string>
-    <string name="executingrightnow">Kommando udføres lige nu</string>
-    <string name="missed_bg_readings">Manglende BS målinger </string>
     <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>
     <string name="gradually_increase_notification_volume">Gradvis øg lydstyrken for advarsler og meddelelser</string>
     <string name="localalertsettings_title">Lokale advarsler</string>
@@ -615,12 +609,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurer venligst din RileyLink nedenfor. Når du har valgt en RileyLink, vil det være muligt at fortsætte opsætningen, når RileyLink-status er \"Tilsluttet\". Dette kan tage et minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Bemærk:</b> Du kan fortsætte opsætningen, når pumpen er konfigureret.\n</string>
     <string name="startobjective">Start dit første mål</string>
-    <string name="permission">Tilladelse</string>
     <string name="askforpermission">Anmod om tilladelse</string>
-    <string name="needsystemwindowpermission">Applikationen mangler system vindues tilladelse til notifikationer</string>
-    <string name="needlocationpermission">Applikationen mangler lokations tilladelse til BT scanning og WIFI identifikation</string>
-    <string name="needstoragepermission">Applikationen mangler lagerstyrings tilladelse for at gemme logfiler og exporteringsindstillinger</string>
-    <string name="request">Anmod</string>
     <string name="open_navigation">Åbn navigation</string>
     <string name="close_navigation">Luk navigation</string>
     <string name="nav_plugin_preferences">Plugin indstillinger</string>
