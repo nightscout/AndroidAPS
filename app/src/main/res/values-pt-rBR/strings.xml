@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Redefinir banco de dados</string>
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
@@ -163,7 +162,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deve decorrer entre um bólus remoto e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência você precisa adicionar pelo menos 2 números de telefone.</string>
-    <string name="bolusrequested">Iniciando aplicação de %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U aplicado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered">Bolus da refeição %1$.2f U aplicado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
@@ -232,7 +230,6 @@
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
     <string name="basal_rate">Valor da Basal</string>
-    <string name="basalvaluebelowminimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Último BG:</string>
     <string name="MM640g">MM640g</string>
@@ -362,7 +359,6 @@
     <string name="statuslights_res_critical">Aviso de limite crítico de nível de reservatório [U]</string>
     <string name="activity_shortname">ACT</string>
     <string name="nav_about">Sobre</string>
-    <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar IG (Impacto na Glicemia)</string>
@@ -426,8 +422,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Gor</string>
-    <string name="executingrightnow">Comando será executado agora</string>
-    <string name="missed_bg_readings">Leituras Glic. perdidas</string>
     <string name="raise_notifications_as_android_notifications">Usar as notificações do sistema para alertas e notificações</string>
     <string name="localalertsettings_title">Alertas local</string>
     <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma glicemia seja recebida</string>
@@ -571,10 +565,7 @@
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
     <string name="startobjective">Iniciar primeiro objetivo</string>
-    <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
-    <string name="needsystemwindowpermission">Aplicação precisa de permissão de janela do sistema para notificações</string>
-    <string name="request">Pedido</string>
     <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
     <string name="nav_plugin_preferences">Preferências plugin</string>
