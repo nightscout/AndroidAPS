@@ -391,3 +391,100 @@
   "srvModified": 1626202783325,
   "srvCreated": 1626202783325
 },
+
+DEVICE STATUS with configuration
+---------------------------------
+{
+    "_id": "635abf2069a34517e83768cd",
+    "created_at": "2022-10-27T17:25:49.730Z",
+    "device": "openaps://samsung SM-G970F",
+    "pump": {
+        "battery": {
+            "percent": 100
+        },
+        "status": {
+            "status": "normal",
+            "timestamp": "2022-10-27T17:16:11.504Z"
+        },
+        "extended": {
+            "Version": "3.1.0.3-dev-c-nscv3-8da78d7351-2022.10.25-19:56",
+            "LastBolus": "10/27/22 18:40",
+            "LastBolusAmount": 0.35,
+            "TempBasalAbsoluteRate": 0,
+            "TempBasalStart": "10/27/22 18:50",
+            "TempBasalRemaining": 24,
+            "BaseBasalRate": 1,
+            "ActiveProfile": "LocalProfile1"
+        },
+        "reservoir": 191,
+        "clock": "2022-10-27T17:25:49.759Z"
+    },
+    "openaps": {
+        "suggested": {
+            "temp": "absolute",
+            "bg": 72,
+            "tick": -6,
+            "eventualBG": 4,
+            "snoozeBG": 4,
+            "predBGs": {
+                "IOB": [72, 61, 51, 42, 39, 39, 39, 39, 39, 39, 39, 39, 39]
+            },
+            "COB": 0,
+            "IOB": 0.052,
+            "reason": "COB: 0, Dev: -66, BGI: -0.88, ISF: 2.0, Target: 6.0; BG 4.0<4.4, but 25m left and 0 ~ req 0U/hr: no action required",
+            "timestamp": "2022-10-27T17:25:49.726Z"
+        },
+        "iob": {
+            "iob": 0.052,
+            "basaliob": 0.052,
+            "activity": 0.0049,
+            "time": "2022-10-27T17:25:49.726Z"
+        }
+    },
+    "uploaderBattery": 100,
+    "configuration": {
+        "insulin": 5,
+        "insulinConfiguration": {},
+        "sensitivity": 2,
+        "sensitivityConfiguration": {
+            "openapsama_min_5m_carbimpact": 10,
+            "absorption_cutoff": 4,
+            "autosens_max": 1.2,
+            "autosens_min": 0.7
+        },
+        "overviewConfiguration": {
+            "units": "mmol",
+            "eatingsoon_duration": 0,
+            "eatingsoon_target": 0,
+            "activity_duration": 0,
+            "activity_target": 0,
+            "hypo_duration": 0,
+            "hypo_target": 0,
+            "low_mark": 4,
+            "high_mark": 0,
+            "statuslights_cage_warning": 48,
+            "statuslights_cage_critical": 72,
+            "statuslights_iage_warning": 72,
+            "statuslights_iage_critical": 144,
+            "statuslights_sage_warning": 216,
+            "statuslights_sage_critical": 240,
+            "statuslights_sbat_warning": 25,
+            "statuslights_sbat_critical": 5,
+            "statuslights_bage_warning": 216,
+            "statuslights_bage_critical": 240,
+            "statuslights_res_warning": 80,
+            "statuslights_res_critical": 10,
+            "statuslights_bat_warning": 25,
+            "statuslights_bat_critical": 5,
+            "boluswizard_percentage": 60
+        },
+        "safetyConfiguration": {
+            "age": "teenage",
+            "treatmentssafety_maxbolus": 4,
+            "treatmentssafety_maxcarbs": 60
+        },
+        "pump": "DanaR",
+        "version": "3.1.0.3-dev-c-nscv3"
+        },
+    "mills": 1666891549730
+}

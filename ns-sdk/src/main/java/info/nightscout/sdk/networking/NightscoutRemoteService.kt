@@ -2,6 +2,7 @@ package info.nightscout.sdk.networking
 
 import com.google.gson.JsonElement
 import info.nightscout.sdk.remotemodel.LastModified
+import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.sdk.remotemodel.NSResponse
 import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
@@ -44,4 +45,7 @@ internal interface NightscoutRemoteService {
 
     @GET("v3/treatments/history/{from}")
     suspend fun getTreatmentsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
+
+    @GET("v3/devicestatus/history/{from}")
+    suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteDeviceStatus>>>
 }

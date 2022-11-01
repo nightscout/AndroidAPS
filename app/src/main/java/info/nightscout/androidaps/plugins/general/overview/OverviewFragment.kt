@@ -35,8 +35,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.ui.dialogs.CalibrationDialog
-import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
@@ -78,7 +76,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
@@ -92,6 +89,8 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -108,6 +107,8 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.weardata.EventData
+import info.nightscout.ui.dialogs.CalibrationDialog
+import info.nightscout.ui.dialogs.CarbsDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -128,7 +129,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var statusLightHandler: StatusLightHandler
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
+    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
+    @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var loop: Loop
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -722,16 +724,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             // pump status from ns
-            binding.pump.text = nsDeviceStatus.pumpStatus
-            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), nsDeviceStatus.extendedPumpStatus) } }
+            binding.pump.text = processedDeviceStatusData.pumpStatus(nsSettingsStatus)
+            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), processedDeviceStatusData.extendedPumpStatus) } }
 
             // OpenAPS status from ns
-            binding.openaps.text = nsDeviceStatus.openApsStatus
-            binding.openaps.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.openaps), nsDeviceStatus.extendedOpenApsStatus) } }
+            binding.openaps.text = processedDeviceStatusData.openApsStatus
+            binding.openaps.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.openaps), processedDeviceStatusData.extendedOpenApsStatus) } }
 
             // Uploader status from ns
-            binding.uploader.text = nsDeviceStatus.uploaderStatusSpanned
-            binding.uploader.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
+            binding.uploader.text = processedDeviceStatusData.uploaderStatusSpanned
+            binding.uploader.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.uploader), processedDeviceStatusData.extendedUploaderStatus) } }
         }
     }
 
@@ -1118,7 +1120,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
             if (config.APS && request is DetermineBasalResultSMB) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(nsDeviceStatus.getAPSResult(injector).json, "variable_sens")
+            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
             else 0.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {

@@ -66,6 +66,12 @@ class LoadTreatmentsWorker(
                             )
                         )
                         storeDataForDb.storeTreatmentsToDb()
+                        WorkManager.getInstance(context)
+                            .enqueueUniqueWork(
+                                NSClientV3Plugin.JOB_NAME,
+                                ExistingWorkPolicy.APPEND_OR_REPLACE,
+                                OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
+                            )
                     }
                 } catch (error: Exception) {
                     aapsLogger.error("Error: ", error)
@@ -74,6 +80,12 @@ class LoadTreatmentsWorker(
             else {
                 rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))
                 storeDataForDb.storeTreatmentsToDb()
+                WorkManager.getInstance(context)
+                    .enqueueUniqueWork(
+                        NSClientV3Plugin.JOB_NAME,
+                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
+                    )
             }
         }
         return ret

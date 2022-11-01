@@ -113,7 +113,6 @@ import javax.inject.Singleton
  "activeProfile": "2016 +30%"
  }
  */
-@Suppress("SpellCheckingInspection")
 @OpenForTesting
 @Singleton
 class NSSettingsStatus @Inject constructor(
@@ -233,11 +232,6 @@ class NSSettingsStatus @Inject constructor(
 
     fun pumpExtendedSettingsFields(): String =
         JsonHelper.safeGetString(extendedPumpSettings(), "fields", "")
-
-    fun openAPSEnabledAlerts(): Boolean {
-        val openaps = JsonHelper.safeGetJSONObject(getExtendedSettings(), "openaps", null)
-        return JsonHelper.safeGetBoolean(openaps, "enableAlerts")
-    }
 
     fun copyStatusLightsNsSettings(context: Context?) {
         val action = Runnable {

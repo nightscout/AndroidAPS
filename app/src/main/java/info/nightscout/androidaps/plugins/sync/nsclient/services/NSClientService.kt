@@ -12,6 +12,8 @@ import android.os.SystemClock
 import androidx.work.OneTimeWorkRequest
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
@@ -45,7 +47,7 @@ import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSAuthAck
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
-import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatus
+import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -56,6 +58,7 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.androidaps.utils.T.Companion.mins
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -77,7 +80,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
+    @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
@@ -499,10 +502,17 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                         }
                     }
                     if (data.has("devicestatus")) {
-                        val devicestatuses = data.getJSONArray("devicestatus")
-                        if (devicestatuses.length() > 0) {
-                            rxBus.send(EventNSClientNewLog("DATA", "received " + devicestatuses.length() + " device statuses", NsClient.Version.V1))
-                            nsDeviceStatus.handleNewData(devicestatuses, NsClient.Version.V1)
+                        val deserializer: JsonDeserializer<JSONObject?> =
+                            JsonDeserializer<JSONObject?> { json, _, _ ->
+                                JSONObject(json.asJsonObject.toString())
+                            }
+                        val gson = GsonBuilder().also {
+                            it.registerTypeAdapter(JSONObject::class.java, deserializer)
+                        }.create()
+                        val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<RemoteDeviceStatus>::class.java)
+                        if (devicestatuses.isNotEmpty()) {
+                            rxBus.send(EventNSClientNewLog("DATA", "received " + devicestatuses.size + " device statuses", NsClient.Version.V1))
+                            nsDeviceStatusHandler.handleNewData(devicestatuses, NsClient.Version.V1)
                         }
                     }
                     if (data.has("food")) {

@@ -1,16 +1,23 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
+import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -60,17 +67,16 @@ class RunningConfiguration @Inject constructor(
     }
 
     // called in NSClient mode only
-    fun apply(configuration: JSONObject, version: NsClient.Version) {
+    fun apply(configuration: RemoteDeviceStatus.Configuration, version: NsClient.Version) {
         assert(config.NSCLIENT)
 
-        if (configuration.has("version")) {
-            rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  ${configuration.getString("version")}", version))
-            if (config.VERSION_NAME.startsWith(configuration.getString("version")).not()) {
+        configuration.version?.let {
+            rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  $it", version))
+            if (config.VERSION_NAME.startsWith(it).not())
                 rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
-            }
         }
-        if (configuration.has("insulin")) {
-            val insulin = Insulin.InsulinType.fromInt(JsonHelper.safeGetInt(configuration, "insulin", Insulin.InsulinType.UNKNOWN.value))
+        configuration.insulin?.let {
+            val insulin = Insulin.InsulinType.fromInt(it)
             for (p in activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)) {
                 val insulinPlugin = p as Insulin
                 if (insulinPlugin.id == insulin) {
@@ -78,13 +84,13 @@ class RunningConfiguration @Inject constructor(
                         aapsLogger.debug(LTag.CORE, "Changing insulin plugin to ${insulin.name}")
                         configBuilder.performPluginSwitch(p, true, PluginType.INSULIN)
                     }
-                    insulinPlugin.applyConfiguration(configuration.getJSONObject("insulinConfiguration"))
+                    configuration.insulinConfiguration?.let { ic -> insulinPlugin.applyConfiguration(ic) }
                 }
             }
         }
 
-        if (configuration.has("sensitivity")) {
-            val sensitivity = Sensitivity.SensitivityType.fromInt(JsonHelper.safeGetInt(configuration, "sensitivity", Sensitivity.SensitivityType.UNKNOWN.value))
+        configuration.sensitivity?.let {
+            val sensitivity = Sensitivity.SensitivityType.fromInt(it)
             for (p in activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)) {
                 val sensitivityPlugin = p as Sensitivity
                 if (sensitivityPlugin.id == sensitivity) {
@@ -92,25 +98,26 @@ class RunningConfiguration @Inject constructor(
                         aapsLogger.debug(LTag.CORE, "Changing sensitivity plugin to ${sensitivity.name}")
                         configBuilder.performPluginSwitch(p, true, PluginType.SENSITIVITY)
                     }
-                    sensitivityPlugin.applyConfiguration(configuration.getJSONObject("sensitivityConfiguration"))
+                    configuration.sensitivityConfiguration?.let { sc -> sensitivityPlugin.applyConfiguration(sc) }
                 }
             }
         }
 
-        if (configuration.has("pump")) {
-            val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GENERIC_AAPS.description)
-            if (sp.getString(R.string.key_virtualpump_type, "fake") != pumpType) {
-                sp.putString(R.string.key_virtualpump_type, pumpType)
-                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
+        configuration.pump?.let {
+            if (sp.getString(R.string.key_virtualpump_type, "fake") != it) {
+                sp.putString(R.string.key_virtualpump_type, it)
+                activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
-                aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+                aapsLogger.debug(LTag.CORE, "Changing pump type to $it")
             }
         }
 
-        if (configuration.has("overviewConfiguration"))
-            activePlugin.activeOverview.applyConfiguration(configuration.getJSONObject("overviewConfiguration"))
+        configuration.overviewConfiguration?.let {
+            activePlugin.activeOverview.applyConfiguration(it)
+        }
 
-        if (configuration.has("safetyConfiguration"))
-            activePlugin.activeSafety.applyConfiguration(configuration.getJSONObject("safetyConfiguration"))
+        configuration.safetyConfiguration?.let {
+            activePlugin.activeSafety.applyConfiguration(it)
+        }
     }
 }

@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.data.DeviceStatusData
+import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -45,7 +45,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val hardLimits: HardLimits,
     aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
-    private val deviceStatusData: DeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) : ProfileFunction {
 
     val cache = ConcurrentHashMap<Long, Profile?>()
@@ -117,7 +117,7 @@ class ProfileFunctionImplementation @Inject constructor(
         // Try to get it from device status
         // Remove this code after switch to api v3
         if (config.NSCLIENT && ps is ValueWrapper.Absent) {
-            deviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
+            processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
                 activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap)
                     synchronized(cache) {

@@ -161,7 +161,7 @@ class ConfigBuilderPlugin @Inject constructor(
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
-        storeSettings("CheckedCheckboxEnabled")
+        storeSettings("RemoteConfiguration")
         rxBus.send(EventRebuildTabs())
         rxBus.send(EventConfigBuilderChange())
         rxBus.send(EventConfigBuilderUpdateGui())

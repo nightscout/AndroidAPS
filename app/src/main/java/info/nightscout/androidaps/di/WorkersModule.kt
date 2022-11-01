@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.sync.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientMbgWorker
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientUpdateRemoveAckWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
+import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
@@ -51,4 +52,5 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesStoreBgWorker(): StoreDataForDb.StoreBgWorker
     @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesProcessTreatmentsWorker(): ProcessTreatmentsWorker
+    @ContributesAndroidInjector abstract fun contributesLoadDeviceStatusWorker(): LoadDeviceStatusWorker
 }

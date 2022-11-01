@@ -6,6 +6,7 @@ import info.nightscout.sdk.localmodel.Status
 import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.remotemodel.LastModified
+import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.rx3.rxSingle
 
@@ -17,4 +18,6 @@ class NSAndroidRxClientImpl(private val client: NSAndroidClient) : NSAndroidRxCl
     override fun getSgvsModifiedSince(from: Long): Single<List<NSSgvV3>> = rxSingle { client.getSgvsModifiedSince(from) }
     override fun getTreatmentsModifiedSince(from: Long, limit: Long): Single<List<NSTreatment>> =
         rxSingle { client.getTreatmentsModifiedSince(from, limit) }
+    override fun getDeviceStatusModifiedSince(from: Long): Single<List<RemoteDeviceStatus>> =
+        rxSingle { client.getDeviceStatusModifiedSince(from) }
 }
