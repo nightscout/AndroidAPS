@@ -375,6 +375,7 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Basal</string>
     <!-- Autotune -->
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>
