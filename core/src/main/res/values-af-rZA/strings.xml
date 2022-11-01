@@ -29,6 +29,9 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="addnew">Voeg nuwe by</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pomp opgeskort</string>
+    <string name="notconfigured">Nie gekonfigureer nie</string>
+    <string name="loopsuspended">Lus opgeskort</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
