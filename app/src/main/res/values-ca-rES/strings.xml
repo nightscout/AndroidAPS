@@ -12,7 +12,6 @@
     <string name="nav_resetdb">Restablir bases de dades</string>
     <string name="reset_db_confirm">Esteu segurs que voleu restablir les bases de dades?</string>
     <string name="nav_exit">Sortir</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
@@ -158,7 +157,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Mínim nr. de minuts que han de passar entre un bolus remot i el següent</string>
     <string name="smscommunicator_remotebolusmindistance">Quants minuts han de passar, com a mínim, entre un bolus i el següent</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Per la vostra seguretat, per editar aquesta configuració haureu d\'afegir al menys 2 nrs. de telèfon.</string>
-    <string name="bolusrequested">A punt de lliurar %1$.2f U</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U llliurat correctament</string>
     <string name="smscommunicator_mealbolusdelivered">Bolus d\'àpat %1$.2f U lliurat correctament</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Objectiu %1$s per %2$d minuts</string>
@@ -287,7 +285,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">PENDENTDESV</string>
     <string name="nav_about">Quant a</string>
-    <string name="smscommunicator_missingsmspermission">Falta permís SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permís d\'estat del telèfon</string>
     <string name="xdripstatus_settings">Estat d\'xDrip+ (rellotge)</string>
     <string name="xdripstatus">Línia d\'estat d\'xDrip+ (rellotge)</string>
