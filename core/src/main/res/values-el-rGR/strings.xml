@@ -66,4 +66,5 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Βασικός Ρυθμός</string>
     <!-- Autotune -->
+    <!-- SmsCommunicator -->
 </resources>
