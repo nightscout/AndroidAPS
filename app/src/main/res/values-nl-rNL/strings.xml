@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Reset database</string>
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="nav_exit">Afsluiten</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
     <string name="description_objectives">Leerprogramma</string>
@@ -164,7 +163,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimum aantal minuten dat moet verstrijken tussen de ene bolus op afstand en de volgende</string>
     <string name="smscommunicator_remotebolusmindistance">Hoeveel minuten er ten minste moeten verstrijken tussen de ene bolus en de volgende</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Voor de veiligheid moet je ten minste 2 telefoonnummers toevoegen om deze instelling te kunnen bijwerken.</string>
-    <string name="bolusrequested">%1$.2f E toedienen</string>
     <string name="smscommunicator_bolusdelivered">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="smscommunicator_mealbolusdelivered">Maaltijdbolus van %1$.2f E succesvol toegediend</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Streefdoel %1$s gedurende %2$d minuten</string>
@@ -234,7 +232,6 @@
     <string name="resend_all_data">Update Wear gegevens</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
     <string name="basal_rate">Basaalstand</string>
-    <string name="basalvaluebelowminimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Laatste BG:</string>
     <string name="MM640g">MM640g</string>
@@ -372,7 +369,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Over</string>
-    <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
     <string name="smscommunicator_missingphonestatepermission">Machtiging ontbreekt voor telefoon gebruik</string>
     <string name="xdripstatus_settings">xDrip+ Status (horloge)</string>
     <string name="xdripstatus">xDrip+ Statuslijn (horloge)</string>
@@ -449,8 +445,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Prot</string>
     <string name="shortfat">Vet</string>
-    <string name="executingrightnow">Opdracht is nu uitgevoerd</string>
-    <string name="missed_bg_readings">Geen BG metingen</string>
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
     <string name="gradually_increase_notification_volume">Volume van notificaties en meldingen geleidelijk verhogen</string>
     <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
@@ -615,12 +609,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
     <string name="startobjective">Start je eerste Doel</string>
-    <string name="permission">Toestemming</string>
     <string name="askforpermission">Vragen om toestemming</string>
-    <string name="needsystemwindowpermission">Toepassing vereist systeemvenstermachtiging voor meldingen</string>
-    <string name="needlocationpermission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
-    <string name="needstoragepermission">Applicatie heeft toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>
-    <string name="request">Verzoek</string>
     <string name="open_navigation">Open navigatie</string>
     <string name="close_navigation">Sluit navigatie</string>
     <string name="nav_plugin_preferences">Plugin instellingen</string>
