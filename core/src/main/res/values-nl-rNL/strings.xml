@@ -480,6 +480,7 @@
     <string name="autotune_revert_local_profile_message">Profiel %1$s terugzetten met invoerprofiel?</string>
     <string name="autotune_profile_invalid">Profiel ongeldig</string>
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
