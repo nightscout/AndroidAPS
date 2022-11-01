@@ -13,7 +13,6 @@
     <string name="nav_resetdb">Vymaž databázu</string>
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
     <string name="nav_exit">Ukončiť</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
     <string name="description_objectives">Výukový program</string>
@@ -170,7 +169,6 @@
     <string name="smscommunicator_remotebolusmindistance_summary">Minimálny počet minút, ktorý musí uplynúť medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
     <string name="smscommunicator_remotebolusmindistance">Aspoň koľko minút musí uplynúť, medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Pre vašu bezpečnosť,  musíte pridať aspoň 2 telefónne čísla, aby ste zmenili toto prednastavenie.</string>
-    <string name="bolusrequested">Podávanie %1$.2f J inzulínu</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f JI podaný úspešne</string>
     <string name="smscommunicator_mealbolusdelivered">Bolus na jedlo %1$.2f JI podaný úspešne</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Cieľ %1$s na %2$d minút</string>
@@ -240,7 +238,6 @@
     <string name="resend_all_data">Všetky dáta poslať znova</string>
     <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
     <string name="basal_rate">Bazál</string>
-    <string name="basalvaluebelowminimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
     <string name="sms_actualbg">Glykémia:</string>
     <string name="sms_lastbg">Posledná glykémia:</string>
     <string name="MM640g">MM640g</string>
@@ -321,7 +318,6 @@
     <string name="patient_name_summary">Zadajte meno pacienta, alebo prezývku pre rozlíšenie medzi viacerými nastaveniami</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
     <string name="loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="loopsuspendedfor">Pozastavený (%1$d min)</string>
     <string name="suspendloopfor1h">Pozastaviť uzavretý okruh na 1 h</string>
@@ -379,7 +375,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikácii</string>
-    <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
     <string name="xdripstatus_settings">Stav z xDrip+ (hodinky)</string>
     <string name="xdripstatus">Stavový riadok xDrip+ (hodinky)</string>
@@ -457,8 +452,6 @@
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Tuk</string>
-    <string name="executingrightnow">Príkaz sa práve vykonáva</string>
-    <string name="missed_bg_readings">Chýbajúce hodnoty glykémie</string>
     <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>
     <string name="gradually_increase_notification_volume">Postupne zvyšovať hlasitosť upozornení a oznámení</string>
     <string name="localalertsettings_title">Lokálne výstrahy</string>
@@ -624,12 +617,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
-    <string name="permission">Povolenie</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
-    <string name="needsystemwindowpermission">Aplikácia vyžaduje pre oznámenia systémové oprávnenie</string>
-    <string name="needlocationpermission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
-    <string name="needstoragepermission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
-    <string name="request">Požiadavka</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>
     <string name="nav_plugin_preferences">Nastavenie modulu</string>
@@ -1015,7 +1003,6 @@
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
-    <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
     <string name="dynisf_adjust_sensitivity">Upraviť citlivosť a glykémiu</string>
     <string name="database_cleanup">Vyčistenie databázy</string>
     <string name="cleanup_db_confirm">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.</string>
