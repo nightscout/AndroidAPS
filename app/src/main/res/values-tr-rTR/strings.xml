@@ -17,10 +17,6 @@
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
-    <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
-    <string name="description_insulin_ultra_rapid">Fiasp için insülin Profili</string>
-    <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
-    <string name="description_insulin_free_peak">İnsülin aktivitesinin zirvesini tanımlamanıza izin verir ve yalnızca ileri düzey kullanıcılar tarafından kullanılmalıdır.</string>
     <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
     <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
     <string name="description_ama">2017\'da algoritmanın durumu</string>
@@ -171,7 +167,6 @@
     <string name="button3">Buton 3</string>
     <string name="units_colon">Birim:</string>
     <string name="units">Birim</string>
-    <string name="dia">İES</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
     <string name="prefs_range_summary">Genel bakış ve akıllı saat göstergesi için yüksek ve düşük değerler</string>
     <string name="low_mark">DÜŞÜK işareti</string>
@@ -241,7 +236,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_detailedIOB_title">Ayrıntılı AİNS göster</string>
     <string name="wear_detailedIOB_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal olarak ayırın</string>
     <string name="nosuccess">başarısız - lütfen telefonu kontrol edin</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Hasta tipi</string>
     <string name="child">Çocuk</string>
     <string name="teenage">Ergen</string>
@@ -276,9 +270,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">İNS</string>
     <string name="enablesuperbolus">Sihirbazda süperbolusu etkinleştir</string>
     <string name="enablesuperbolus_summary">Bolus sihirbazında süperbolus işlevselliğini etkinleştirin. Gerçekten ne yaptığınızı öğrenene kadar etkinleştirmeyin. BİLİNÇSİZ KULLANILDIĞINDA AŞIRI DOZ İNSÜLIN VERİLEBİLİR!</string>
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
@@ -353,14 +344,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
     <string name="enableuam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
-    <string name="insulin_oref_peak">AİNS Eğrisi Tepe Zamanı</string>
-    <string name="insulin_peak_time">Tepe zamanı [min]</string>
-    <string name="insulin_peak">Tepe</string>
-    <string name="free_peak_oref">Serbest tepe Oref</string>
-    <string name="rapid_acting_oref">Hızlı etkili Oref</string>
-    <string name="ultrarapid_oref">Ultra Hızlı Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
     <string name="activate_profile">Profili etkinleştir</string>
     <string name="invalid">GEÇERSİZ</string>
     <string name="careportal_newnstreatment_percentage_label">Yüzde</string>
@@ -443,7 +426,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ignore5m">5dk yoksay</string>
     <string name="ignore15m">15dk yoksay</string>
     <string name="ignore30m">30dk yoksay</string>
-    <string name="required">iht.</string>
     <string name="nav_historybrowser">Geçmiş tarayıcısı</string>
     <string name="wear_notifysmb_title">SMB\'ye (Super Micro Bolus) bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi (Super Micro Bolus) standart bir bolus gibi göster.</string>
@@ -524,7 +506,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapsama_bolussnooze_dia_divisor">Bolus erteleme dia bölen</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_current_basal_safety_multiplier">Mevcut bazal güvenlik çarpanı</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Sanal pompa tipi</string>
     <string name="virtualpump_definition">Pompa tanımı</string>
     <string name="virtualpump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nTBR: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
@@ -733,7 +714,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="graph_menu_divider_header">Grafik</string>
     <string name="chart_menu">Grafik menüsü</string>
     <string name="clear_filter">Filtreyi temizle</string>
-    <string name="trend_arrow">Trend oku</string>
     <string name="cannula">Kanül</string>
     <string name="userentry">Kullanıcı girişi</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
@@ -790,18 +770,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11_correction_percentage">% ile doğru sonuç</string>
     <string name="a11_correction_units">ünite ile doğru sonuç</string>
     <string name="not_available_full">Mevcut değil</string>
-    <string name="a11y_high">yüksek</string>
-    <string name="a11y_inrange">aralık içinde</string>
-    <string name="a11y_low">düşük</string>
-    <string name="a11y_arrow_double_down">hızla düşüyor</string>
-    <string name="a11y_arrow_single_down">düşüyor</string>
-    <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
-    <string name="a11y_arrow_flat">sabit</string>
-    <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
-    <string name="a11y_arrow_single_up">yükseliyor</string>
-    <string name="a11y_arrow_double_up">hızla yükseliyor</string>
-    <string name="a11y_arrow_none">yok</string>
-    <string name="a11y_arrow_unknown">bilinmiyor</string>
     <string name="a11y_graph">grafik</string>
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_bg_quality_recalculated">tekrar hesaplandı</string>
@@ -876,8 +844,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
     <string name="show_loop_records">Döngü kayıtlarını göster</string>
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
-    <string name="widget_description">AAPS widget</string>
-    <string name="configure">Şeffaflığı yapılandır</string>
     <string name="loop_status">Döngü durumu</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="profile1">Profil 1</string>
