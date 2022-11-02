@@ -235,7 +235,6 @@
     <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
     <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Patiententyp</string>
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
@@ -436,7 +435,6 @@
     <string name="ignore5m">5 Min. ignorieren</string>
     <string name="ignore15m">15 Min. ignorieren</string>
     <string name="ignore30m">30 Min. ignorieren</string>
-    <string name="required">angef.</string>
     <string name="nav_historybrowser">Historie</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
@@ -517,7 +515,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus-Snooze-DIA-Divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Sicherheitsmultiplikator des Basalhöchstwertes</string>
     <string name="openapsama_current_basal_safety_multiplier">Sicherheitsmultiplikator der aktuellen Basalrate</string>
-    <string name="value_unavailable_short">N/A</string>
     <string name="virtualpump_type">Typ der virtuellen Pumpe</string>
     <string name="virtualpump_definition">Pumpen-Definition</string>
     <string name="virtualpump_pump_def">Bolus: Schritt=%1$s\nVerzögerter Bolus: [Schritt=%2$s, Dauer=%3$smin-%4$sh]\nBasal: Schritt=%5$s\nTBR: %6$s (bei %7$s), Dauer=%8$smin-%9$sh\n%10$s</string>
@@ -718,7 +715,6 @@ Unerwartetes Verhalten.</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
     <string name="clear_filter">Filter löschen</string>
-    <string name="trend_arrow">Trendpfeil</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
@@ -775,18 +771,6 @@ Unerwartetes Verhalten.</string>
     <string name="a11_correction_percentage">korrektes Ergebnis mit %</string>
     <string name="a11_correction_units">korrektes Ergebnis mit Einheiten</string>
     <string name="not_available_full">Nicht verfügbar</string>
-    <string name="a11y_high">hoch</string>
-    <string name="a11y_inrange">im Zielbereich</string>
-    <string name="a11y_low">niedrig</string>
-    <string name="a11y_arrow_double_down">schnell fallend</string>
-    <string name="a11y_arrow_single_down">fallend</string>
-    <string name="a11y_arrow_forty_five_down">langsam fallend</string>
-    <string name="a11y_arrow_flat">stabil</string>
-    <string name="a11y_arrow_forty_five_up">Langsamer Anstieg</string>
-    <string name="a11y_arrow_single_up">steigend</string>
-    <string name="a11y_arrow_double_up">schnell steigend</string>
-    <string name="a11y_arrow_none">kein(e)</string>
-    <string name="a11y_arrow_unknown">unbekannt</string>
     <string name="a11y_graph">Diagramm</string>
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_bg_quality_recalculated">neu berechnet</string>
