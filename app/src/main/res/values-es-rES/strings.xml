@@ -17,10 +17,6 @@
     <string name="description_config_builder">Utilizado para configurar complementos activos</string>
     <string name="description_objectives">Programa de aprendizaje</string>
     <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
-    <string name="description_insulin_rapid">Ajustes de insulina preestablecidos para Humalog y NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Ajuste de insulina preestablecido para Fiasp</string>
-    <string name="description_insulin_lyumjev">Ajuste de insulina preestablecido para Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite personalizar el pico de acción máxima de la insulina. Debe ser utilizado únicamente por usuarios avanzados</string>
     <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
     <string name="description_ns_client">Sincroniza tus datos con Nightscout</string>
     <string name="description_ama">Estado del algoritmo en 2017</string>
@@ -171,7 +167,6 @@
     <string name="button3">Botón 3</string>
     <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Rango de visualización</string>
     <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
     <string name="low_mark">Valor de hipoglucemia</string>
@@ -274,9 +269,6 @@
     <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en Nightscout</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activar superbolo en asistente</string>
     <string name="enablesuperbolus_summary">Activar la función superbolo en el asistente. No lo actives hasta que hayas aprendido lo que realmente hace. ¡PUEDE CAUSAR SOBREDOSIS DE INSULINA si lo usas sin precaución!</string>
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
@@ -351,14 +343,6 @@
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
     <string name="enableuam_summary">Detectar comidas no anunciadas (UAM)</string>
-    <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
-    <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
-    <string name="insulin_peak">Pico</string>
-    <string name="free_peak_oref">Personalizar Pico</string>
-    <string name="rapid_acting_oref">Acción Rápida</string>
-    <string name="ultrarapid_oref">Acción Ultra Rápida</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Porcentaje</string>
