@@ -3,7 +3,9 @@
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Erros</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
     <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
@@ -12,7 +14,17 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_desc_set_time">Definir tempo da bomba</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Obter status da bateria</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancelar a basal temporária</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obter a insulina restante</string>
+    <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
     <!-- medtronic_warning -->
     <!-- combo_pump_connected_now -->
     <!-- combo_notification_check_time_date -->
+    <string name="common_off">Desligado</string>
+    <string name="set_neutral_temps_title">Definir as basais temporárias neutras</string>
+    <string name="set_neutral_temps_summary">Se ativado, cancelará uma basal temporária antes do final de cada hora. Este método pode ajudar a parar algumas bombas de alarmar/vibrar por uma hora.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="invalid_history_data">Dados inválidos do histórico da bomba detectados. Abra nova solicitação e forneça logs.</string>
 </resources>
