@@ -23,6 +23,7 @@
     <string name="medtronic_pump_battery_lithium">Λιθίου (Extended view)</string>
     <!-- MDT Fragment -->
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Σφάλματα</string>
     <string name="medtronic_error_serial_not_set">Δεν ορίστηκε # Serial.</string>
     <string name="medtronic_error_serial_invalid">Serial # μη έγκυρο.</string>
     <string name="medtronic_error_pump_type_not_set">Δεν ορίστηκε Τύπος Αντλίας.</string>
@@ -44,6 +45,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Ιστορικό Αντλίας Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Ακυρώσατε τον Bolus, αφού είχε ήδη σταλεί στην αντλία. Επειδή η αντλία Medtronic δεν υποστηρίζει ακύρωση, θα χρειαστεί να ακυρωθεί χειροκίνητα. Βάλτε την αντλία σε αναστολή λειτουργίας και μετά κάντε Συνέχιση (αν θέλετε να ακυρώσετε ακόμα). Η εφαρμογή θα πάρει τις αλλαγές, στην επόμενη ενημέρωση (σε λιγότερο από 5 λεπτά).</string>
     <string name="medtronic_cmd_cant_read_tbr">Αδυναμία ανάγνωσης τρέχοντος TBR.</string>
@@ -65,8 +67,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
+    <string name="medtronic_pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
+    <string name="medtronic_warning">Προειδοποίηση</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Τώρα</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">πριν</string>
+    <string name="medtronic_notification_check_time_date">Η ώρα της αντλίας χρειάζεται ανανέωση</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Ενεργό</string>
+    <string name="common_off">Ανενεργό</string>
     <string name="pump_time_updated">Η ώρα στην αντλία άλλαξε</string>
 </resources>
