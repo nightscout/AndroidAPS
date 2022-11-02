@@ -6,4 +6,5 @@
     <string name="start_hypo_tt">Begin hipo TT</string>
     <string name="time_offset">Tyd verskil</string>
     <string name="unit_minute_short">min</string>
+    <!--    Widget-->
 </resources>
