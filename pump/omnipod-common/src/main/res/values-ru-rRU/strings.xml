@@ -2,7 +2,23 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_heading_tools">Инструментарий</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Активировать Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Деактивировать Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Утилизировать Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Если нажать Утилизировать Pod, вы больше не сможете обмениваться командами с Pod. Сделайте это только в том случае, если связь с помпой постоянно отсутствует. Если связь с Pod еще возможна, воспользуйтесь опцией <b>Деактивировать Pod</b>.\n\n Если все же хотите продолжить, снимите помпу с тела!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Воспроизводится тестовый звуковой сигнал…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Журнал Pod</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Нет активных Pod</string>
+    <string name="omnipod_common_error_set_basal_failed">Настройка базального профиля не состоялась.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Болюс не подан.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Не удалось задать базальный профиль: получен пустой профиль. Активируйте профиль базала.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Базальный профиль не активен. Активируйте профиль базала.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Неподдерживаемая пользовательская команда: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Не удалось обновить статус</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Не удалось обновить статус при запуске</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Wizard Base -->
