@@ -5,6 +5,7 @@
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
@@ -14,5 +15,6 @@
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Short status -->
     <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">OK</string>
     <!-- Omnipod - Times -->
 </resources>
