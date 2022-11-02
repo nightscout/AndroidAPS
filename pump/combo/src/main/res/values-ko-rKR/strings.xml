@@ -3,6 +3,7 @@
     <string name="description_pump_combo">아큐-첵 Combo 펌프와 연동, ruffy 설치 필요</string>
     <string name="combo_programming_bolus">Bolus 주입을 위한 펌프 프로그래밍</string>
     <string name="combo_pump_state_label">상태</string>
+    <string name="combo_pump_activity_label">활동</string>
     <string name="combo_no_pump_connection">%1$d분 동안 연결되지 않음</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d분 남음)</string>
     <string name="combo_pump_state_initializing">초기화중</string>
@@ -49,4 +50,5 @@
     <string name="combo_tbr_count">임시기초주입 수</string>
     <string name="bolusstopped">Bolus 중지됨</string>
     <string name="bolusstopping">Bolus 중지중</string>
+    <string name="combo_error_display_never">절대</string>
 </resources>
