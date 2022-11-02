@@ -1032,6 +1032,8 @@
     <string name="above" comment="above &quot;in range&quot;">Above</string>
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
+    <string name="widget_description">AAPS widget</string>
+    <string name="configure">Configure opacity</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
     <string name="profile1">Profile 1</string>
