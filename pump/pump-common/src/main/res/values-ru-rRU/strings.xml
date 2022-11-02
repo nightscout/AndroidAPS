@@ -8,5 +8,9 @@
     <!-- BLE Config -->
     <!-- BLE Errors -->
     <!-- Pump Error -->
+    <string name="pump_settings_error_wrong_tbr_type_set">Неверный тип временной скорости базала TBR на помпе (должен быть %s).</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">На помпе задан неверный макс болюс (должен быть %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">На помпе задан неверный макс базал (должен быть %1$.2f).</string>
     <!-- Pump History -->
+    <string name="pump_history_type">Тип:</string>
 </resources>
