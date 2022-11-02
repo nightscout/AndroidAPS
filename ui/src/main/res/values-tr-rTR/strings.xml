@@ -13,4 +13,5 @@
     <string name="unit_minute_short">dk.</string>
     <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
     <string name="a11y_carb_reminder">hatırlatıcıyı kur</string>
+    <!--    Widget-->
 </resources>
