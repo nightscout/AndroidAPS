@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="occlusion">Tıkanma</string>
+    <string name="emptyreservoir">Rezervuar boş</string>
+    <string name="checkshaft">Mili kontrol edin</string>
+    <string name="basalmax">Maks Bazal</string>
+    <string name="dailymax">Maks günlük</string>
+    <string name="bloodsugarmeasurementalert">Kan şekeri ölçüm uyarısı</string>
+    <string name="remaininsulinalert">Kalan insülin seviyesi</string>
+    <string name="missedbolus">Eksik Bolus</string>
+    <string name="invalidpairing">Geçersiz eşleştirme bilgisi. Yeniden eşleştirme isteniyor</string>
+</resources>
