@@ -17,10 +17,6 @@
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
     <string name="description_objectives">Leerprogramma</string>
     <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
-    <string name="description_insulin_rapid">Insuline instelling voor Humalog en NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insuline instelling voor Fiasp</string>
-    <string name="description_insulin_lyumjev">Insuline instelling voor Lyumjev</string>
-    <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren, mag alleen worden gebruikt door gevorderde gebruikers</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
     <string name="description_ama">Het algoritme uit 2017</string>
@@ -166,7 +162,6 @@
     <string name="button3">Knop 3</string>
     <string name="units_colon">Eenheden:</string>
     <string name="units">Eenheden</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
     <string name="low_mark">LAAG grens</string>
@@ -269,9 +264,6 @@
     <string name="ns_logappstartedevent">Log app start naar NS</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSIS IS MOGELIJK BIJ BLINDELINGS GEBRUIK!</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
@@ -345,14 +337,6 @@
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
     <string name="enableuam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
-    <string name="insulin_oref_peak">IOB curve piek tijd</string>
-    <string name="insulin_peak_time">Piek tijd [min]</string>
-    <string name="insulin_peak">Piek</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Snel-werkende Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA van %1$f te kort - %2$f wordt inplaats gebruikt!</string>
     <string name="activate_profile">Activeer profiel</string>
     <string name="invalid">Ongeldig</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
