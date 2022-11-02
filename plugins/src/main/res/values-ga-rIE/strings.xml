@@ -12,4 +12,5 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bólas:</string>
     <string name="sms_basal">Bunaidh:</string>
+    <!-- Insulin -->
 </resources>
