@@ -34,4 +34,13 @@
     <string name="combo_error_partial_bolus_delivered">Bir hata nedeniyle %2$.2f Ü istenen bolus %1$.2f Ü gönderildi. Bunu doğrulamak ve uygun önlemleri almak için lütfen pompayı kontrol edin.</string>
     <string name="combo_error_bolus_verification_failed">Bolus iletimi ve pompa geçmişinin doğrulanması başarısız oldu, lütfen pompayı kontrol edin. Eğer bolus iletilmişse, pompaya bir sonraki bağlantıda tedavilere eklenecektir.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Rezervuarda bolus için yeterli insülin yok</string>
+    <string name="combo_invalid_setup">Geçersiz pompa kurulumu, belgeleri kontrol edin ve 360 konfigürasyon yazılımını kullanarak Quick info menüsünün QUICK INFO olarak adlandırıldığını doğrulayın.</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">Bolus hesaplaması yapıldıktan sonra pompa geçmişi değişti. Bolus teslim edilmedi. Bir bolus hala gerekli ise lütfen yeniden hesaplayın.</string>
+    <string name="combo_error_updating_treatment_record">Bolus başarıyla iletildi, ancak tedavi girişi eklenemedi. Bu, son iki dakika içinde aynı boyutta iki küçük bolus verilirse meydana gelebilir. Lütfen pompa geçmişini ve tedavi girişlerini kontrol edin ve eksik girişleri eklemek için Tedavi Portalını kullanın. Tam olarak aynı dakika ve aynı miktarda herhangi bir giriş eklemediğinizden emin olun.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Hesaplama, yakın zamanda değiştirilen pompa geçmişini dikkate almadığı için yüksek geçici bazal reddediliyor</string>
+    <string name="combo_activity_checking_pump_state">Pompa durumu güncelleniyor</string>
+    <string name="combo_warning_pump_basal_rate_changed">Pompadaki bazal oran değişti ve yakında güncellenecek</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
+    <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
+    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
 </resources>
