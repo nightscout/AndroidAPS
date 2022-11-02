@@ -1,11 +1,9 @@
-package info.nightscout.androidaps.plugins.insulin
+package info.nightscout.plugins.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -65,7 +63,6 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var config: Config
     @Mock lateinit var hardLimits: HardLimits
 
