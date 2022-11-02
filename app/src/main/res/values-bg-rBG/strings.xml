@@ -16,10 +16,6 @@
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
     <string name="description_objectives">Разучаване на програмата</string>
     <string name="description_food">Показва въведените в Nightscout храни</string>
-    <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
-    <string name="description_insulin_lyumjev">Действие на инсулин Lyumjev</string>
-    <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
     <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
@@ -163,7 +159,6 @@
     <string name="button3">Бутон 3</string>
     <string name="units_colon">Единици:</string>
     <string name="units">Единици</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
     <string name="low_mark">Ниска КЗ под</string>
@@ -264,9 +259,6 @@
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
     <string name="restartingapp">Рестартиране за да се приложат новите настройки.</string>
     <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
-    <string name="fastactinginsulincomment">Novorapid Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">ИНС</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
@@ -336,13 +328,6 @@
     <string name="enablesmb">Разреши SMB</string>
     <string name="enablesmb_summary">Използвай супер микро болуси вместо временен базал за по бързо действие</string>
     <string name="enableuam_summary">Детекция на необявено хранене (UAM)</string>
-    <string name="insulin_oref_peak">Пик на кривата на IOB</string>
-    <string name="insulin_peak_time">Време на пик [мин.]</string>
-    <string name="free_peak_oref">Със свободен пик по Oref</string>
-    <string name="rapid_acting_oref">Бързодействащ по Oref</string>
-    <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="invalid">НЕВАЛИДНО</string>
     <string name="careportal_newnstreatment_percentage_label">% от профила</string>
