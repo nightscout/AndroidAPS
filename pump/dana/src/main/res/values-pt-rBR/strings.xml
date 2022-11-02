@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Integração da bomba para o DANA Diabecare RS e para bombas Dana-i</string>
+    <string name="resetpairing">Redefinir informações de pareamento?</string>
+    <string name="dana_model">%1$s\nModelo: %2$02X\nProtocolo: %3$02X\nCódigo: %4$02X</string>
+    <string name="basalcompare">Administrando menos que a taxa basal pré-definida</string>
+    <string name="checkshaft">Verifique a seta</string>
+    <string name="basalmax">Basal máxima</string>
+    <string name="dailymax">Máximo diário</string>
+    <string name="missedbolus">Bolus não administrado</string>
+    <string name="invalidpairing">Informações de pareamento inválidas. Solicitando novo pareamento</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="danarpump">DanaR</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="danars_password_title">Senha da bomba (apenas v1)</string>
+    <string name="rs_loginsulinchange_title">Mudança do reservatório do log</string>
+    <string name="rs_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao portal de cuidados, quando detectado no histórico</string>
+    <string name="rs_logcanulachange_title">Mudança do log da cânula</string>
+    <string name="rs_logcanulachange_summary">Adicionar evento \"Mudança de local\" ao portal de cuidados, quando detectado no histórico</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+    <string name="press_ok_on_the_pump">Pressione OK na bomba\ne digite 2 números exibidos\nMantenha a exibição ligada na bomba pressionando o botão menos até terminar de digitar o código.</string>
+    <string name="num1pin">1: (12 dígitos)</string>
+    <string name="num2pin">2: (8 dígitos)</string>
+    <string name="basal_bolus_step">Etapa basal/bolus</string>
+    <string name="carbs_store_error">Carboidratos provavelmente não foram armazenados corretamente. Verifique e armazene manual e novamente se necessário.</string>
+</resources>
