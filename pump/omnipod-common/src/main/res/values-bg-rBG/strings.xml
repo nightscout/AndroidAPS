@@ -5,6 +5,7 @@
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
