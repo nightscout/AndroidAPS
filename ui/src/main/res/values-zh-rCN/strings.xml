@@ -9,4 +9,5 @@
     <string name="unit_minute_short">分钟</string>
     <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
     <string name="a11y_carb_reminder">设置提醒</string>
+    <!--    Widget-->
 </resources>
