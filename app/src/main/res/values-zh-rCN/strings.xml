@@ -234,7 +234,6 @@
     <string name="wear_detailedIOB_title">显示详细 IOB</string>
     <string name="wear_detailedIOB_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="nosuccess">未成功-请检查手机</string>
-    <string name="notavailable">无可用</string>
     <string name="patientage">患者类型</string>
     <string name="child">儿童</string>
     <string name="teenage">青少年</string>
@@ -433,7 +432,6 @@
     <string name="ignore5m">忽略5分钟</string>
     <string name="ignore15m">忽略 15分钟</string>
     <string name="ignore30m">忽略30分钟</string>
-    <string name="required">要</string>
     <string name="nav_historybrowser">历史浏览</string>
     <string name="wear_notifysmb_title">在 SMB 上通知</string>
     <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
@@ -509,7 +507,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">大剂量snooze 胰岛素持续作用时间除数</string>
     <string name="openapsama_max_daily_safety_multiplier">最大日基础率安全倍数</string>
     <string name="openapsama_current_basal_safety_multiplier">当前基础率安全倍数</string>
-    <string name="value_unavailable_short">无可用</string>
     <string name="virtualpump_type">虚拟泵类型</string>
     <string name="virtualpump_definition">泵定义</string>
     <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
@@ -703,7 +700,6 @@
     <string name="graph_menu_divider_header">绘图</string>
     <string name="chart_menu">图表菜单</string>
     <string name="clear_filter">清除筛选</string>
-    <string name="trend_arrow">趋势箭头</string>
     <string name="cannula">输注导管</string>
     <string name="userentry">用户条目</string>
     <string name="common_values">\n选择您三餐的最大碳水值和最大胰岛素剂量\n</string>
@@ -760,18 +756,6 @@
     <string name="a11_correction_percentage">校正结果使用%</string>
     <string name="a11_correction_units">校正结果使用单位</string>
     <string name="not_available_full">不可用</string>
-    <string name="a11y_high">高</string>
-    <string name="a11y_inrange">在范围内</string>
-    <string name="a11y_low">低</string>
-    <string name="a11y_arrow_double_down">迅速下降</string>
-    <string name="a11y_arrow_single_down">下降</string>
-    <string name="a11y_arrow_forty_five_down">缓慢减少</string>
-    <string name="a11y_arrow_flat">稳定</string>
-    <string name="a11y_arrow_forty_five_up">缓慢增长</string>
-    <string name="a11y_arrow_single_up">上升</string>
-    <string name="a11y_arrow_double_up">快速上升</string>
-    <string name="a11y_arrow_none">无</string>
-    <string name="a11y_arrow_unknown">未知</string>
     <string name="a11y_graph">绘图</string>
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_bg_quality_recalculated">重新计算</string>
