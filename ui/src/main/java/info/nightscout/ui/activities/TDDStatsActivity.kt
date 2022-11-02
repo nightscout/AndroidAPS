@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.ui.activities
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
@@ -15,8 +14,8 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.core.databinding.ActivityTddStatsBinding
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
@@ -25,7 +24,6 @@ import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -33,11 +31,13 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.databinding.ActivityTddStatsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -55,7 +55,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     private lateinit var binding: ActivityTddStatsBinding
     private val disposable = CompositeDisposable()
 
-    lateinit var tbb: String
+    private lateinit var tbb: String
     private var magicNumber = 0.0
     private var decimalFormat: DecimalFormat = DecimalFormat("0.000")
     private var historyList: MutableList<TotalDailyDose> = mutableListOf()

@@ -14,16 +14,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
+import info.nightscout.androidaps.interfaces.ActivityNames;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -79,8 +78,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.rxjava3.subjects.SingleSubject;
 
@@ -99,6 +99,7 @@ public class AapsOmnipodErosManager {
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final Context context;
     private final PumpSync pumpSync;
+    private final ActivityNames activityNames;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -128,7 +129,8 @@ public class AapsOmnipodErosManager {
                                   HasAndroidInjector injector,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
-                                  PumpSync pumpSync) {
+                                  PumpSync pumpSync,
+                                  ActivityNames activityNames) {
 
         this.podStateManager = podStateManager;
         this.erosHistory = erosHistory;
@@ -141,6 +143,7 @@ public class AapsOmnipodErosManager {
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
         this.pumpSync = pumpSync;
+        this.activityNames = activityNames;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -965,7 +968,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        ErrorHelperActivity.Companion.runAlarm(context, message, rh.gs(R.string.error), sound);
+        activityNames.runAlarm(context, message, rh.gs(R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {

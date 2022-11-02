@@ -5,7 +5,6 @@ import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
@@ -19,23 +18,38 @@ import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.BolusTimer
+import info.nightscout.androidaps.interfaces.CarbTimer
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.BolusTimer
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -62,6 +76,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
 
@@ -388,7 +403,7 @@ class BolusWizard @Inject constructor(
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                             } else
                                 carbTimer.scheduleAutomationEventEatReminder()
                         }
@@ -435,7 +450,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
@@ -443,7 +458,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
@@ -474,7 +489,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })

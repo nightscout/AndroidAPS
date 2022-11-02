@@ -1,5 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
+import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +34,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -37,6 +41,7 @@ import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.ActivityNames;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -46,9 +51,7 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -81,6 +84,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Al
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
@@ -98,21 +102,18 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.CustomCommand;
+import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.TimeChangeType;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
-import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
 
 /**
  * Created by andy on 23.04.18.
@@ -129,7 +130,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
-    private final ErosHistory erosHistory;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final RileyLinkUtil rileyLinkUtil;
     private final OmnipodAlertUtil omnipodAlertUtil;
@@ -147,6 +147,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.OMNIPOD_EROS;
     private final PumpSync pumpSync;
+    private final ActivityNames activityNames;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -176,7 +177,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             ActivePlugin activePlugin,
             SP sp,
             ErosPodStateManager podStateManager,
-            ErosHistory erosHistory,
             AapsOmnipodErosManager aapsOmnipodErosManager,
             CommandQueue commandQueue,
             FabricPrivacy fabricPrivacy,
@@ -186,7 +186,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            PumpSync pumpSync
+            PumpSync pumpSync,
+            ActivityNames activityNames
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -209,12 +210,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.podStateManager = podStateManager;
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.aapsOmnipodErosManager = aapsOmnipodErosManager;
-        this.erosHistory = erosHistory;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
         this.pumpSync = pumpSync;
+        this.activityNames = activityNames;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -896,10 +897,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
         }
 
-        Intent i = new Intent(context, ErrorHelperActivity.class);
-        i.putExtra(ErrorHelperActivity.SOUND_ID, 0);
-        i.putExtra(ErrorHelperActivity.STATUS, rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString());
-        i.putExtra(ErrorHelperActivity.TITLE, rh.gs(R.string.omnipod_eros_pod_management_pulse_log));
+        Intent i = new Intent(context, activityNames.getErrorHelperActivity());
+        i.putExtra(AlarmSoundService.SOUND_ID, 0);
+        i.putExtra(AlarmSoundService.STATUS, rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString());
+        i.putExtra(AlarmSoundService.TITLE, rh.gs(R.string.omnipod_eros_pod_management_pulse_log));
         i.putExtra("clipboardContent", result.toString());
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);

@@ -9,12 +9,11 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import dagger.android.DaggerService
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.NotificationHolder
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import kotlin.math.ln
@@ -31,6 +30,10 @@ class AlarmSoundService : DaggerService() {
     private var resourceId = R.raw.error
 
     companion object {
+
+        const val SOUND_ID = "soundId"
+        const val STATUS = "status"
+        const val TITLE = "title"
 
         private const val VOLUME_INCREASE_STEPS = 40 // Total number of steps to increase volume with
         private const val VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS = 3_000L // Number of milliseconds that the notification should initially be silent
@@ -71,7 +74,7 @@ class AlarmSoundService : DaggerService() {
 
         player?.let { if (it.isPlaying) it.stop() }
 
-        if (intent?.hasExtra(ErrorHelperActivity.SOUND_ID) == true) resourceId = intent.getIntExtra(ErrorHelperActivity.SOUND_ID, R.raw.error)
+        if (intent?.hasExtra(AlarmSoundService.SOUND_ID) == true) resourceId = intent.getIntExtra(AlarmSoundService.SOUND_ID, R.raw.error)
         player = MediaPlayer()
         try {
             val afd = rh.openRawResourceFd(resourceId) ?: return START_NOT_STICKY

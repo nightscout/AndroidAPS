@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application>
+    <application android:supportsRtl="true">
 
         <activity
             android:name=".widget.WidgetConfigureActivity"
@@ -23,6 +23,19 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+
+        <activity
+            android:name=".activities.TDDStatsActivity"
+            android:exported="false" />
+        <activity
+            android:name="info.nightscout.ui.activities.BolusProgressHelperActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
+        <activity
+            android:name=".activities.ErrorHelperActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
+
     </application>
 
 </manifest>

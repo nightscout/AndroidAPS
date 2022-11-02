@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
@@ -50,19 +49,19 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileSwitchChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.ActivityNames;
 import info.nightscout.androidaps.interfaces.CommandQueue;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -72,7 +71,8 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
@@ -91,6 +91,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject PumpSync pumpSync;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
+    @Inject ActivityNames activityNames;
 
     public DanaRv2ExecutionService() {
     }
@@ -194,7 +195,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    ErrorHelperActivity.Companion.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error);
+                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff),
+                            rh.gs(R.string.largetimedifftitle), R.raw.error);
 
                     //deinitialize pump
                     danaPump.reset();
@@ -350,7 +352,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
             if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
-                ErrorHelperActivity.Companion.runAlarm(context, rh.gs(R.string.carbs_store_error)
+                activityNames.runAlarm(context, rh.gs(R.string.carbs_store_error)
                         , rh.gs(R.string.error), R.raw.boluserror);
         }
 

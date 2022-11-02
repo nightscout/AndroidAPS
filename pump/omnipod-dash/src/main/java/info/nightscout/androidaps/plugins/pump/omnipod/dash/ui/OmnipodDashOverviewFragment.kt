@@ -10,12 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -49,7 +48,8 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
 import java.time.Duration
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Date
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -66,7 +66,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var activityNames: ActivityNames
     @Inject lateinit var buildHelper: BuildHelper
 
     companion object {
@@ -677,7 +677,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
         context?.let {
-            ErrorHelperActivity.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
+            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
         }
     }
 

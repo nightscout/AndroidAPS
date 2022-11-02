@@ -2,26 +2,39 @@ package info.nightscout.androidaps.diaconn.service
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothGattService
+import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
-import info.nightscout.androidaps.diaconn.packet.*
+import info.nightscout.androidaps.diaconn.packet.BatteryWarningReportPacket
+import info.nightscout.androidaps.diaconn.packet.BigLogInquireResponsePacket
+import info.nightscout.androidaps.diaconn.packet.DiaconnG8Packet
+import info.nightscout.androidaps.diaconn.packet.DiaconnG8ResponseMessageHashTable
+import info.nightscout.androidaps.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
+import info.nightscout.androidaps.diaconn.packet.InjectionBlockReportPacket
+import info.nightscout.androidaps.diaconn.packet.InsulinLackReportPacket
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,6 +49,7 @@ class BLECommonService @Inject internal constructor(
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
     private val diaconnG8SettingResponseMessageHashTable: DiaconnG8SettingResponseMessageHashTable,
     private val diaconnG8Pump: DiaconnG8Pump,
+    private val activityNames: ActivityNames
 ) {
 
     companion object {
@@ -274,7 +288,7 @@ class BLECommonService @Inject internal constructor(
         processedMessageByte = bytes
 
         if (bluetoothGatt == null) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> IGNORING (NOT CONNECTED) " + message.friendlyName )
+            aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> IGNORING (NOT CONNECTED) " + message.friendlyName)
             return
         }
 
@@ -324,20 +338,20 @@ class BLECommonService @Inject internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
+                activityNames.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
+                activityNames.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
+                activityNames.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
                 return
             }
 

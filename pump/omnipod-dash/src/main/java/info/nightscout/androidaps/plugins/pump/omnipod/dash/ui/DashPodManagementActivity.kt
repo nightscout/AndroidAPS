@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
@@ -33,6 +33,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
+    @Inject lateinit var activityNames: ActivityNames
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -147,7 +148,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
         context.let {
-            ErrorHelperActivity.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
+            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
         }
     }
 }

@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity
 import info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivity
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8FragmentBinding
@@ -19,15 +18,16 @@ import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -49,6 +49,7 @@ class DiaconnG8Fragment : DaggerFragment() {
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var activityNames: ActivityNames
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -77,7 +78,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.history.setOnClickListener { startActivity(Intent(context, DiaconnG8HistoryActivity::class.java)) }
-        binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
+        binding.stats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DiaconnG8UserOptionsActivity::class.java)) }
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")

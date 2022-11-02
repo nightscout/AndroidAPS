@@ -6,8 +6,6 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.BolusProgressHelperActivity
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
@@ -22,6 +20,7 @@ import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -93,7 +92,8 @@ class CommandQueueImplementation @Inject constructor(
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
     private val config: Config,
-    private val androidPermission: AndroidPermission
+    private val androidPermission: AndroidPermission,
+    private val activityNames: ActivityNames
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
@@ -117,7 +117,7 @@ class CommandQueueImplementation @Inject constructor(
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
-                                           ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
+                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
                                        } else {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
@@ -229,7 +229,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
+            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -631,7 +631,7 @@ class CommandQueueImplementation @Inject constructor(
             val i = Intent()
             i.putExtra("insulin", detailedBolusInfo.insulin)
             i.putExtra("id", detailedBolusInfo.id)
-            i.setClass(context, BolusProgressHelperActivity::class.java)
+            i.setClass(context, activityNames.bolusProgressHelperActivity)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
         }

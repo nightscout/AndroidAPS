@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
 import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
@@ -37,6 +36,7 @@ import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -59,6 +59,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var activityNames: ActivityNames
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -107,7 +108,7 @@ class DanaFragment : DaggerFragment() {
 
             }.show(childFragmentManager, "ProfileViewDialog")
         }
-        binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
+        binding.stats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
         binding.btConnectionLayout.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")

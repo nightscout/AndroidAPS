@@ -1,6 +1,7 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.ui.activities
 
 import android.os.Bundle
+import info.nightscout.androidaps.activities.DialogAppCompatActivity
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 
 class BolusProgressHelperActivity : DialogAppCompatActivity() {

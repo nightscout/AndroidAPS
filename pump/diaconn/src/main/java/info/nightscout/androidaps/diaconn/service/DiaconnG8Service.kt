@@ -9,7 +9,6 @@ import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
@@ -18,7 +17,34 @@ import info.nightscout.androidaps.diaconn.api.DiaconnApiService
 import info.nightscout.androidaps.diaconn.api.DiaconnLogUploader
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
-import info.nightscout.androidaps.diaconn.packet.*
+import info.nightscout.androidaps.diaconn.packet.AppConfirmSettingPacket
+import info.nightscout.androidaps.diaconn.packet.BasalLimitInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BasalSettingPacket
+import info.nightscout.androidaps.diaconn.packet.BigAPSMainInfoInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BigLogInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BigMainInfoInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BolusSpeedInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BolusSpeedSettingPacket
+import info.nightscout.androidaps.diaconn.packet.DiaconnG8Packet
+import info.nightscout.androidaps.diaconn.packet.DisplayTimeInquirePacket
+import info.nightscout.androidaps.diaconn.packet.DisplayTimeoutSettingPacket
+import info.nightscout.androidaps.diaconn.packet.IncarnationInquirePacket
+import info.nightscout.androidaps.diaconn.packet.InjectionBasalSettingPacket
+import info.nightscout.androidaps.diaconn.packet.InjectionCancelSettingPacket
+import info.nightscout.androidaps.diaconn.packet.InjectionExtendedBolusSettingPacket
+import info.nightscout.androidaps.diaconn.packet.InjectionSnackInquirePacket
+import info.nightscout.androidaps.diaconn.packet.InjectionSnackSettingPacket
+import info.nightscout.androidaps.diaconn.packet.LanguageInquirePacket
+import info.nightscout.androidaps.diaconn.packet.LanguageSettingPacket
+import info.nightscout.androidaps.diaconn.packet.LogStatusInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SerialNumInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SneckLimitInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SoundInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SoundSettingPacket
+import info.nightscout.androidaps.diaconn.packet.TempBasalInquirePacket
+import info.nightscout.androidaps.diaconn.packet.TempBasalSettingPacket
+import info.nightscout.androidaps.diaconn.packet.TimeInquirePacket
+import info.nightscout.androidaps.diaconn.packet.TimeSettingPacket
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
@@ -26,10 +52,12 @@ import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -41,7 +69,6 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -68,7 +95,6 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    @Inject lateinit var diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -79,6 +105,7 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
@@ -190,7 +217,7 @@ class DiaconnG8Service : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    ErrorHelperActivity.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
+                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
 
                     //de-initialize pump
                     diaconnG8Pump.reset()

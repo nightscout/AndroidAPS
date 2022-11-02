@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -15,7 +14,17 @@ import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpPluginBase
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -27,9 +36,22 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmed
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -61,7 +83,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
 import java.time.Duration
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Date
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +103,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-
+    private val activityNames: ActivityNames,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -1478,7 +1500,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        runAlarm(context, message, rh.gs(R.string.error), sound)
+        activityNames.runAlarm(context, message, rh.gs(R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {

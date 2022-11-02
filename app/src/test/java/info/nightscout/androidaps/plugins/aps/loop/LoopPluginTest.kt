@@ -7,7 +7,15 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -16,7 +24,6 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -44,6 +51,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var config: Config
+    @Mock lateinit var activityNames: ActivityNames
 
     private lateinit var loopPlugin: LoopPlugin
 
@@ -51,7 +59,8 @@ class LoopPluginTest : TestBase() {
     @Before fun prepareMock() {
 
         loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
-                                constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
+                                constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+                                repository, runningConfiguration, activityNames)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

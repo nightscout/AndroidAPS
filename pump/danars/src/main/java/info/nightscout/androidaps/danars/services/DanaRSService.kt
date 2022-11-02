@@ -9,7 +9,6 @@ import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
@@ -23,25 +22,25 @@ import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -65,10 +64,9 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var context: Context
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var danaRSMessageHashTable: DanaRSMessageHashTable
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Inject lateinit var activityNames: ActivityNames
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
@@ -162,7 +160,7 @@ class DanaRSService : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    ErrorHelperActivity.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
+                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
 
                     //de-initialize pump
                     danaPump.reset()
@@ -272,7 +270,7 @@ class DanaRSService : DaggerService() {
             sendMessage(msgSetHistoryEntryV2)
             danaPump.lastHistoryFetched = min(danaPump.lastHistoryFetched, carbTime - T.mins(1).msecs())
             if (!msgSetHistoryEntryV2.isReceived || msgSetHistoryEntryV2.failed)
-                ErrorHelperActivity.runAlarm(context, rh.gs(R.string.carbs_store_error), rh.gs(R.string.error), R.raw.boluserror)
+                activityNames.runAlarm(context, rh.gs(R.string.carbs_store_error), rh.gs(R.string.error), R.raw.boluserror)
         }
         val bolusStart = System.currentTimeMillis()
         if (insulin > 0) {

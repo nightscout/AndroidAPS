@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.implementation.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -13,6 +12,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
@@ -22,12 +22,13 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.commands.*
+import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCustomCommand
 import info.nightscout.implementation.queue.commands.CommandExtendedBolus
@@ -42,7 +43,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.`when`
-import java.util.*
+import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
@@ -51,7 +52,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
-    @Mock lateinit var fileListProvider: PrefFileListProvider
+    @Mock lateinit var activityNames: ActivityNames
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
 
@@ -71,10 +72,11 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
         config: Config,
-        androidPermission: AndroidPermission
+        androidPermission: AndroidPermission,
+        activityNames: ActivityNames
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
+        activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
     ) {
 
         override fun notifyAboutNewCommand() {}
@@ -119,7 +121,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             constraintChecker, profileFunction, activePlugin, context, sp,
             buildHelper, dateUtil,
             repository,
-            fabricPrivacy, config, androidPermission
+            fabricPrivacy, config, androidPermission, activityNames
         )
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -158,7 +160,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             constraintChecker, profileFunction, activePlugin, context, sp,
             buildHelper,
             dateUtil, repository,
-            fabricPrivacy, config, androidPermission
+            fabricPrivacy, config, androidPermission, activityNames
         )
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())

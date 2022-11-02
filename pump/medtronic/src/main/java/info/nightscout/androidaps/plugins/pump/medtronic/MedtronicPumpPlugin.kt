@@ -7,7 +7,6 @@ import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventRefreshOverview
@@ -88,6 +87,7 @@ class MedtronicPumpPlugin @Inject constructor(
     private val medtronicHistoryData: MedtronicHistoryData,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val serviceTaskExecutor: ServiceTaskExecutor,
+    private val activityNames: ActivityNames,
     dateUtil: DateUtil,
     aapsSchedulers: AapsSchedulers,
     pumpSync: PumpSync,
@@ -626,7 +626,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread {
                         SystemClock.sleep(2000)
-                        runAlarm(context, rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
+                        activityNames.runAlarm(context, rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
                     }.start()
                 }
                 val now = System.currentTimeMillis()
@@ -1182,7 +1182,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (rileyLinkMedtronicService?.verifyConfiguration() == true) {
                     serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
                 } else {
-                    runAlarm(context, rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
+                    activityNames.runAlarm(context, rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
                 }
             }
 
