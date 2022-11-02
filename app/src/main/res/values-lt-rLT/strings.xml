@@ -16,10 +16,6 @@
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
-    <string name="description_insulin_rapid">Nustatymai Humalog ir NovoRapid / NovoLog insulinams</string>
-    <string name="description_insulin_ultra_rapid">Nustatymai Fiasp insulinui</string>
-    <string name="description_insulin_lyumjev">Nustatymai Lyumjev insulinui</string>
-    <string name="description_insulin_free_peak">Leidžia pasirinkti insulino veikimo piką ir turėtų būti naudojama tik patyrusių vartotojų</string>
     <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
     <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout</string>
     <string name="description_ama">2017 m. algoritmas</string>
@@ -164,7 +160,6 @@
     <string name="button3">Mygtukas 3</string>
     <string name="units_colon">Vienetai:</string>
     <string name="units">Vienetai</string>
-    <string name="dia">IVT</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
     <string name="prefs_range_summary">Aukštoji ir žemoji riba Apžvalgos grafikuose bei išmaniuosiuose laikrodžiuose</string>
     <string name="low_mark">Žemoji riba</string>
@@ -231,7 +226,6 @@
     <string name="wear_detailedIOB_title">Rodyti AIO detaliai</string>
     <string name="wear_detailedIOB_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="nosuccess">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Paciento tipas</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
@@ -266,9 +260,6 @@
     <string name="ns_logappstartedevent">Siųsti programos paleidimo žymę į NS</string>
     <string name="restartingapp">Uždarant aplikaciją, taikyti nustatymus.</string>
     <string name="configbuilder_insulin_description">Kokio tipo insuliną naudojate?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
     <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
@@ -339,13 +330,6 @@
     <string name="enablesmb">Įjungti SMB</string>
     <string name="enablesmb_summary">Naudoti Super Mikro Bolusus vietoj laikinos bazės greitesniam veikimui</string>
     <string name="enableuam_summary">Nedeklaruoto maisto (NDM) aptikimas</string>
-    <string name="insulin_oref_peak">AIO kreivės pikas</string>
-    <string name="insulin_peak_time">Piko laikas [min]</string>
-    <string name="free_peak_oref">Oref be piko</string>
-    <string name="rapid_acting_oref">Greito veikimo Oref</string>
-    <string name="ultrarapid_oref">Staigaus veikimo Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="invalid">KLAIDA</string>
     <string name="careportal_newnstreatment_percentage_label">Procentais</string>
@@ -427,7 +411,6 @@
     <string name="ignore5m">Ignoruoti 5 min</string>
     <string name="ignore15m">Ignoruoti 15 min</string>
     <string name="ignore30m">Ignoruoti 30 min</string>
-    <string name="required">reikal.</string>
     <string name="nav_historybrowser">Istorija</string>
     <string name="wear_notifysmb_title">Pranešti apie SMB</string>
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
@@ -503,7 +486,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Boluso snaudimo daliklis</string>
     <string name="openapsama_max_daily_safety_multiplier">Maksimalus dienos bazės saugos daugiklis</string>
     <string name="openapsama_current_basal_safety_multiplier">Dabartinės bazės saugos daugiklis</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtualios pompos tipas</string>
     <string name="virtualpump_definition">Pompos nustatymas</string>
     <string name="virtualpump_pump_def">Bolusas: Žingsnis=%1$s\nIštęstinis bolusas: [Žingsnis=%2$s, Trukmė=%3$smin-%4$sh]\nBazė: Žingsnis=%5$s\nLDB: %6$s (iš %7$s), Trukmė=%8$smin -%9$sh\n%10$s</string>
@@ -689,7 +671,6 @@
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="chart_menu">Grafiko meniu</string>
     <string name="clear_filter">Valyti filtrą</string>
-    <string name="trend_arrow">Tendencijos kryptis</string>
     <string name="cannula">Kaniulė</string>
     <string name="userentry">Naudotojo įrašas</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
