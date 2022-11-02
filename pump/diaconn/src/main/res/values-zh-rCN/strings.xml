@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="diaconn_g8_pump">Diaconn G8</string>
+    <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
+    <string name="apslastLogNum">aps_last_log_num</string>
+    <string name="apsWrappingCount">aps_wrapping_count</string>
+    <string name="diaconn_g8_screentimeout_10">"10 "</string>
+    <string name="diaconn_g8_pumpscreentimeout_10">10</string>
+    <string name="diaconn_g8_pumpscreentimeout_20">20</string>
+    <string name="diaconn_g8_pumpscreentimeout_30">30</string>
+    <string name="pumpversion">pump_version</string>
+    <string name="apsIncarnationNo">aps_incarnation_no</string>
+    <string name="pumpserialno">pump_serial_no</string>
+    <string name="diaconn_g8_errorcode_4">Eating timed, cannot be injected.</string>
+</resources>
