@@ -241,7 +241,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_detailedIOB_title">Ayrıntılı AİNS göster</string>
     <string name="wear_detailedIOB_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal olarak ayırın</string>
     <string name="nosuccess">başarısız - lütfen telefonu kontrol edin</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Hasta tipi</string>
     <string name="child">Çocuk</string>
     <string name="teenage">Ergen</string>
@@ -443,7 +442,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ignore5m">5dk yoksay</string>
     <string name="ignore15m">15dk yoksay</string>
     <string name="ignore30m">30dk yoksay</string>
-    <string name="required">iht.</string>
     <string name="nav_historybrowser">Geçmiş tarayıcısı</string>
     <string name="wear_notifysmb_title">SMB\'ye (Super Micro Bolus) bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi (Super Micro Bolus) standart bir bolus gibi göster.</string>
@@ -524,7 +522,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapsama_bolussnooze_dia_divisor">Bolus erteleme dia bölen</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_current_basal_safety_multiplier">Mevcut bazal güvenlik çarpanı</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Sanal pompa tipi</string>
     <string name="virtualpump_definition">Pompa tanımı</string>
     <string name="virtualpump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nTBR: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
@@ -733,7 +730,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="graph_menu_divider_header">Grafik</string>
     <string name="chart_menu">Grafik menüsü</string>
     <string name="clear_filter">Filtreyi temizle</string>
-    <string name="trend_arrow">Trend oku</string>
     <string name="cannula">Kanül</string>
     <string name="userentry">Kullanıcı girişi</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
@@ -790,18 +786,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11_correction_percentage">% ile doğru sonuç</string>
     <string name="a11_correction_units">ünite ile doğru sonuç</string>
     <string name="not_available_full">Mevcut değil</string>
-    <string name="a11y_high">yüksek</string>
-    <string name="a11y_inrange">aralık içinde</string>
-    <string name="a11y_low">düşük</string>
-    <string name="a11y_arrow_double_down">hızla düşüyor</string>
-    <string name="a11y_arrow_single_down">düşüyor</string>
-    <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
-    <string name="a11y_arrow_flat">sabit</string>
-    <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
-    <string name="a11y_arrow_single_up">yükseliyor</string>
-    <string name="a11y_arrow_double_up">hızla yükseliyor</string>
-    <string name="a11y_arrow_none">yok</string>
-    <string name="a11y_arrow_unknown">bilinmiyor</string>
     <string name="a11y_graph">grafik</string>
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_bg_quality_recalculated">tekrar hesaplandı</string>
