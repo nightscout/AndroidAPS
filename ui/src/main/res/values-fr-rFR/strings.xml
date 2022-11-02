@@ -14,5 +14,6 @@
     <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
     <string name="a11y_carb_reminder">définir un rappel</string>
     <!--    Widget-->
+    <string name="configure">Configurer l’opacité</string>
     <string name="widget_description">Widget AAPS</string>
 </resources>
