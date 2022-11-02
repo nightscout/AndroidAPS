@@ -2,6 +2,7 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <!-- MDT History -->
