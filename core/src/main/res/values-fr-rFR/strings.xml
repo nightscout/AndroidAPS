@@ -124,6 +124,22 @@
     <string name="pumpsuspended">Pompe arrêtée</string>
     <string name="notconfigured">Non configuré</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
+    <string name="trend_arrow">Flèche de tendance</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">indisponible</string>
+    <string name="required">requis</string>
+    <string name="a11y_arrow_double_down">en baisse rapide</string>
+    <string name="a11y_arrow_single_down">en baisse</string>
+    <string name="a11y_arrow_forty_five_down">en baisse lente</string>
+    <string name="a11y_arrow_flat">stable</string>
+    <string name="a11y_arrow_forty_five_up">en hausse lente</string>
+    <string name="a11y_arrow_single_up">en hausse</string>
+    <string name="a11y_arrow_double_up">en hausse rapide</string>
+    <string name="a11y_arrow_none">aucun</string>
+    <string name="a11y_arrow_unknown">inconnu</string>
+    <string name="a11y_high">haut</string>
+    <string name="a11y_inrange">dans la cible</string>
+    <string name="a11y_low">bas</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
