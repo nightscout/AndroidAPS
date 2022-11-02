@@ -16,10 +16,6 @@
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
-    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
-    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
-    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
-    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
     <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="description_ns_client">将数据与 Nightscout 同步</string>
     <string name="description_ama">算法的状态在2017年</string>
@@ -165,7 +161,6 @@
     <string name="button3">按钮3</string>
     <string name="units_colon">单位:</string>
     <string name="units">单位</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">可视化范围</string>
     <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>
     <string name="low_mark">低值标记</string>
@@ -234,7 +229,6 @@
     <string name="wear_detailedIOB_title">显示详细 IOB</string>
     <string name="wear_detailedIOB_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="nosuccess">未成功-请检查手机</string>
-    <string name="notavailable">无可用</string>
     <string name="patientage">患者类型</string>
     <string name="child">儿童</string>
     <string name="teenage">青少年</string>
@@ -269,9 +263,6 @@
     <string name="ns_logappstartedevent">记录app启动事件到NS服务器</string>
     <string name="restartingapp">正在退出应用程序以应用设置。</string>
     <string name="configbuilder_insulin_description">你使用哪种类型的胰岛素？</string>
-    <string name="fastactinginsulincomment">诺和锐, 门冬, 优泌乐</string>
-    <string name="ultrafastactinginsulincomment">Fiasp超速效</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">在向导中启用超级大剂量</string>
     <string name="enablesuperbolus_summary">在向导中启用 superbolus超级大剂量 功能。不要启用, 直到你了解它真正的用法。如果盲目使用, 可能会导致胰岛素过量!</string>
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
@@ -344,13 +335,6 @@
     <string name="enablesmb">启用微型大剂量</string>
     <string name="enablesmb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
     <string name="enableuam_summary">检测未输入的膳食</string>
-    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
-    <string name="insulin_peak_time">峰值时间 [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">速效 Oref</string>
-    <string name="ultrarapid_oref">超速效 Oref</string>
-    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
-    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="invalid">无效</string>
     <string name="careportal_newnstreatment_percentage_label">百分比</string>
@@ -433,7 +417,6 @@
     <string name="ignore5m">忽略5分钟</string>
     <string name="ignore15m">忽略 15分钟</string>
     <string name="ignore30m">忽略30分钟</string>
-    <string name="required">要</string>
     <string name="nav_historybrowser">历史浏览</string>
     <string name="wear_notifysmb_title">在 SMB 上通知</string>
     <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
@@ -509,7 +492,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">大剂量snooze 胰岛素持续作用时间除数</string>
     <string name="openapsama_max_daily_safety_multiplier">最大日基础率安全倍数</string>
     <string name="openapsama_current_basal_safety_multiplier">当前基础率安全倍数</string>
-    <string name="value_unavailable_short">无可用</string>
     <string name="virtualpump_type">虚拟泵类型</string>
     <string name="virtualpump_definition">泵定义</string>
     <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
@@ -703,7 +685,6 @@
     <string name="graph_menu_divider_header">绘图</string>
     <string name="chart_menu">图表菜单</string>
     <string name="clear_filter">清除筛选</string>
-    <string name="trend_arrow">趋势箭头</string>
     <string name="cannula">输注导管</string>
     <string name="userentry">用户条目</string>
     <string name="common_values">\n选择您三餐的最大碳水值和最大胰岛素剂量\n</string>
@@ -760,18 +741,6 @@
     <string name="a11_correction_percentage">校正结果使用%</string>
     <string name="a11_correction_units">校正结果使用单位</string>
     <string name="not_available_full">不可用</string>
-    <string name="a11y_high">高</string>
-    <string name="a11y_inrange">在范围内</string>
-    <string name="a11y_low">低</string>
-    <string name="a11y_arrow_double_down">迅速下降</string>
-    <string name="a11y_arrow_single_down">下降</string>
-    <string name="a11y_arrow_forty_five_down">缓慢减少</string>
-    <string name="a11y_arrow_flat">稳定</string>
-    <string name="a11y_arrow_forty_five_up">缓慢增长</string>
-    <string name="a11y_arrow_single_up">上升</string>
-    <string name="a11y_arrow_double_up">快速上升</string>
-    <string name="a11y_arrow_none">无</string>
-    <string name="a11y_arrow_unknown">未知</string>
     <string name="a11y_graph">绘图</string>
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_bg_quality_recalculated">重新计算</string>
@@ -845,7 +814,6 @@
     <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="show_loop_records">显示闭环记录</string>
     <string name="show_hide_records">隐藏闭环记录</string>
-    <string name="configure">配置透明度</string>
     <string name="loop_status">闭环状态</string>
     <string name="graph_scale">图形缩放</string>
     <string name="profile1">配置文件 1</string>

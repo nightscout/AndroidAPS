@@ -16,10 +16,6 @@
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
-    <string name="description_insulin_rapid">Predefinição de Insulina para Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Pré-ajuste de Insulina para Fiasp</string>
-    <string name="description_insulin_lyumjev">Configuração pre-definida para a Insulina Lyumyev</string>
-    <string name="description_insulin_free_peak">Permite que você defina o pico da atividade de insulina, deve ser usado apenas por usuários avançados</string>
     <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
     <string name="description_ns_client">Sincroniza seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
@@ -164,7 +160,6 @@
     <string name="button3">Botão 3</string>
     <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
     <string name="prefs_range_summary">Marca alta e baixa para as cartas em Visão geral e Smartwatch</string>
     <string name="low_mark">Marca Baixo</string>
@@ -233,7 +228,6 @@
     <string name="wear_detailedIOB_title">Mostrar detalhes da IA</string>
     <string name="wear_detailedIOB_summary">Dividir IA entre IA de bolus e de basal na face do relógio</string>
     <string name="nosuccess">não foi bem sucedido - por favor, verifique o telefone</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Tipo de paciente</string>
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
@@ -268,9 +262,6 @@
     <string name="ns_logappstartedevent">Registrar início do app no NS</string>
     <string name="restartingapp">Saindo do app para aplicar as configurações.</string>
     <string name="configbuilder_insulin_description">Que tipo de insulina está usando?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Ativar superbolus no assistente</string>
     <string name="enablesuperbolus_summary">Habilite a funcionalidade de superbolus no assistente. Não habilite até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE USAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
@@ -325,13 +316,6 @@
     <string name="enablesmb">Ativar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
     <string name="enableuam_summary">Detecção de refeições não Introduzidas</string>
-    <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
-    <string name="insulin_peak_time">Tempo Pico [min]</string>
-    <string name="insulin_peak">Pico</string>
-    <string name="free_peak_oref">Oref Pico-Livre</string>
-    <string name="rapid_acting_oref">Oref Ação Rápida</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <string name="activate_profile">Ativar perfil</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentagem</string>
@@ -476,7 +460,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Pausa bólus divisor DIA</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplicador máx. diário de segurança</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicador actual de segurança basal</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Tipo da Bomba Virtual</string>
     <string name="virtualpump_definition">Definição da Bomba</string>
     <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Estendido: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nTBR: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
@@ -676,18 +659,6 @@
     <string name="a11_correction_percentage">resultado correto em %</string>
     <string name="a11_correction_units">resultado correto em unidades</string>
     <string name="not_available_full">Indisponível</string>
-    <string name="a11y_high">hiper</string>
-    <string name="a11y_inrange">dentro da meta</string>
-    <string name="a11y_low">hipo</string>
-    <string name="a11y_arrow_double_down">caindo rapidamente</string>
-    <string name="a11y_arrow_single_down">caindo</string>
-    <string name="a11y_arrow_forty_five_down">caindo lentamente</string>
-    <string name="a11y_arrow_flat">estável</string>
-    <string name="a11y_arrow_forty_five_up">subindo lentamente</string>
-    <string name="a11y_arrow_single_up">subindo</string>
-    <string name="a11y_arrow_double_up">subindo rapidamente</string>
-    <string name="a11y_arrow_none">nenhum</string>
-    <string name="a11y_arrow_unknown">desconhecido</string>
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_bg_quality">qualidade da glicemia</string>
     <string name="a11y_bg_quality_recalculated">recalculada</string>
@@ -733,7 +704,6 @@
     <string name="above" comment="above &quot;in range&quot;">Acima</string>
     <string name="show_loop_records">Exibir registros do loop</string>
     <string name="show_hide_records">Ocultar registros do loop</string>
-    <string name="configure">Configurar opacidade</string>
     <string name="loop_status">Status do loop</string>
     <string name="a11y_open_settings">abrir configurações</string>
     <string name="a11y_set_carb_timer">definir alarme temporizador de carboidrato</string>

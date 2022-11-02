@@ -17,10 +17,6 @@
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
     <string name="description_objectives">Výukový program</string>
     <string name="description_food">Zobrazenie prednastavených jedál, definovaných v Nightscoute</string>
-    <string name="description_insulin_rapid">Predvoľba pre inzulín Humalog a Novorapid</string>
-    <string name="description_insulin_ultra_rapid">Predvoľba pre inzulín Fiasp</string>
-    <string name="description_insulin_lyumjev">Predvoľba pre inzulín Lyumjev</string>
-    <string name="description_insulin_free_peak">Umožňuje definovať vrchol účinnosti inzulínu a malo by byť používané iba pokročilými užívateľmi</string>
     <string name="description_loop">Aktivuje alebo deaktivuje spustenie uzavretého okruhu.</string>
     <string name="description_ns_client">Synchronizuje vaše dáta s NS</string>
     <string name="description_ama">Stav algoritmu v roku 2017</string>
@@ -171,7 +167,6 @@
     <string name="button3">Tlačidlo 3</string>
     <string name="units_colon">Jednotky:</string>
     <string name="units">Jednotky</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Rozsah pre zobrazenie</string>
     <string name="prefs_range_summary">Značka vysokej a nízkej hodnoty v prehľade a na hodinkách Wear</string>
     <string name="low_mark">Dolná značka</string>
@@ -240,7 +235,6 @@
     <string name="wear_detailedIOB_title">Zobraziť detailný IOB</string>
     <string name="wear_detailedIOB_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="nosuccess">Neúspešné - skontrolujte telefón</string>
-    <string name="notavailable">nie je k dispozícii</string>
     <string name="patientage">Typ pacienta</string>
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
@@ -275,9 +269,6 @@
     <string name="ns_logappstartedevent">Zaznamenávať spustenie aplikácie do NS</string>
     <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
     <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
-    <string name="fastactinginsulincomment">Novorapid, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INZ</string>
     <string name="enablesuperbolus">Povoliť superbolus</string>
     <string name="enablesuperbolus_summary">Povolenie superbolusu v kalkulátore. Nepovoľujte, pokiaľ se nenaučíte, čo to v skutočnosti robí. MÔŽE SPÔSOBIŤ PREDÁVKOVANIE INZULÍNOM PRI NESPRÁVNOM POUŽITÍ!</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
@@ -352,14 +343,6 @@
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
     <string name="enableuam_summary">Detekcia neoznámených jedál</string>
-    <string name="insulin_oref_peak">Čas vrcholu IOB krivky</string>
-    <string name="insulin_peak_time">Vrchol krivky [min]</string>
-    <string name="insulin_peak">Vrchol</string>
-    <string name="free_peak_oref">Voliteľný vrchol - Oref</string>
-    <string name="rapid_acting_oref">Rýchlo pôsobiaci - Oref</string>
-    <string name="ultrarapid_oref">Ultra rýchly - Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA %1$f je príliš krátke - AAPS namiesto toho použilo %2$f !</string>
     <string name="activate_profile">Aktivovať profil</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="careportal_newnstreatment_percentage_label">% zmena</string>
@@ -442,7 +425,6 @@
     <string name="ignore5m">Ignorovať 5m</string>
     <string name="ignore15m">Ignorovať 15m</string>
     <string name="ignore30m">Ignorovať 30m</string>
-    <string name="required">pož.</string>
     <string name="nav_historybrowser">Prehliadač histórie</string>
     <string name="wear_notifysmb_title">Oznámenie pri SMB</string>
     <string name="wear_notifysmb_summary">Ukazovať SMB na hodinkách ako normálny bolus.</string>
@@ -523,7 +505,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Deliteľ \"bolus snooze\"</string>
     <string name="openapsama_max_daily_safety_multiplier">Max násobiteľ denného najvyššieho bazálu</string>
     <string name="openapsama_current_basal_safety_multiplier">Max násobiteľ súčasného bazálu</string>
-    <string name="value_unavailable_short">---</string>
     <string name="virtualpump_type">Typ virtuálnej pumpy</string>
     <string name="virtualpump_definition">Definícia pumpy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
@@ -732,7 +713,6 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Grafové menu</string>
     <string name="clear_filter">Vyčistiť filter</string>
-    <string name="trend_arrow">Trendová šípka</string>
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
@@ -789,18 +769,6 @@
     <string name="a11_correction_percentage">správny výsledok v %</string>
     <string name="a11_correction_units">správny výsledok s jednotkami</string>
     <string name="not_available_full">Nedostupný</string>
-    <string name="a11y_high">vysoká</string>
-    <string name="a11y_inrange">v rozsahu</string>
-    <string name="a11y_low">nízka</string>
-    <string name="a11y_arrow_double_down">rýchly pokles</string>
-    <string name="a11y_arrow_single_down">klesajúca</string>
-    <string name="a11y_arrow_forty_five_down">pomaly klesajúca</string>
-    <string name="a11y_arrow_flat">stabilná</string>
-    <string name="a11y_arrow_forty_five_up">pomaly stúpajúca</string>
-    <string name="a11y_arrow_single_up">stúpajúca</string>
-    <string name="a11y_arrow_double_up">rýchlo stúpajúca</string>
-    <string name="a11y_arrow_none">žiadny</string>
-    <string name="a11y_arrow_unknown">neznámy</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">kvalita glykémií</string>
     <string name="a11y_bg_quality_recalculated">prepočítané</string>
@@ -875,8 +843,6 @@
     <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
     <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
-    <string name="widget_description">AAPS widget</string>
-    <string name="configure">Konfigurovať priehľadnosť</string>
     <string name="loop_status">Stav uzavretého okruhu</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="profile1">Profil 1</string>

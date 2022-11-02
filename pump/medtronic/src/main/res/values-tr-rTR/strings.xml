@@ -54,7 +54,7 @@
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Pompa üzerinde ayarlandıktan sonra Bolus\'u iptal ettiniz. Medtronic Pompa iptali desteklemediğinden, elle iptal etmeniz gerekecektir. Pompayı Askıya Al moduna getirin ve ardından Devam et\'e basın. (yine de iptal etmek istiyorsanız). Uygulama, bir sonraki güncellemede (5 dakikadan daha kısa sürede) değişiklikleri alacaktır.</string>
     <string name="medtronic_cmd_cant_read_tbr">Mevcut TBR (geçici bazal oranı) okunamadı.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Mevcut TBR (geçici bazal oranı) iptal edilemedi. İşlem durduruldu.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Mevcut GBO iptal edilemedi. İşlem durduruldu.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profil kümesi başarısız oldu, çünkü aşağıdaki şablonlar çok büyük bazal orana sahip: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus gönderilemedi.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus gönderilemedi, çünkü mevcut insülin miktarı (%1$.2f) gereken bolustan (%2$.2f) az.</string>

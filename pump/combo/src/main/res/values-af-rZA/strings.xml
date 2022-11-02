@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Pomp Integrasie met Accu-Chek Combo pompe, vereis dat ruffy geïnstalleer is</string>
     <string name="combo_programming_bolus">Programmeer pomp vir bolusing</string>
     <string name="combo_pump_state_label">Staat</string>
+    <string name="combo_pump_activity_label">Aktiwiteit</string>
     <string name="combo_no_pump_connection">Geen verbinding vir %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min oorblywend)</string>
     <string name="combo_pump_state_initializing">Inisialiseer tans</string>
@@ -49,4 +50,5 @@
     <string name="combo_tbr_count">TBR telling</string>
     <string name="bolusstopped">Bolus gestaak</string>
     <string name="bolusstopping">Staak bolus</string>
+    <string name="combo_error_display_never">Nooit</string>
 </resources>

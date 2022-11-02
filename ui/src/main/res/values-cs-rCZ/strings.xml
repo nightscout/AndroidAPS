@@ -13,4 +13,7 @@
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Upozornit později na bolus</string>
     <string name="a11y_carb_reminder">nastavit připomenutí</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurovat průhlednost</string>
+    <string name="widget_description">Widget AAPS</string>
 </resources>

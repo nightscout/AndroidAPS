@@ -72,4 +72,5 @@
     <plurals name="duration_hours">
         <item quantity="other">%1$d 시간</item>
     </plurals>
+    <string name="rileylink_configuration">RileyLink 의 구성</string>
 </resources>

@@ -7,6 +7,7 @@
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">из приложения Authenticator для %1$s и дополните пином в конце</string>
     <string name="smscommunicator_otp_pin">Дополнительный обязательный пин-код в конце маркера</string>
     <string name="smscommunicator_otp_pin_summary">Дополнительные цифры, которые должны быть запомнены и добавлены в конце каждого сгенерированного одноразового пароля</string>
+    <string name="smscommunicator_tab_otp_label">Настройка аутентификации</string>
     <string name="smscommunicator_code_verify_label">Код для проверки:</string>
     <string name="smscommunicator_code_verify_hint">OTP + ПИН-код</string>
     <string name="smscommunicator_code_verify_info">Проверочный код состоит из 6 цифр, отображаемых приложением Authenticator (известным как OTP), за которым следует 3 или более цифр обязательного PIN-кода.</string>
@@ -23,9 +24,13 @@
     <string name="smscommunicator_otp_reset_header">Сбросить аутентификаторы</string>
     <string name="smscommunicator_otp_install_info">В каждом отслеживающем телефоне установите приложение Authenticator, поддерживающее маркеры TOTP RFC 6238. Популярные бесплатные приложения: \n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">После сброса аутентификатора вы делаете все созданные идентификаторы недействительными. Вам нужно будет снова создать их!</string>
+    <string name="sms_wrong_code">Неверный код. Команда отменена.</string>
+    <string name="sms_timeout_while_waiting">Время ожидания окончания предыдущего соединения с помпой истекло</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Пользователь</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
     <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Для подачи болюса %1$.2fед ответьте кодом %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Для подачи болюса %1$.2fед ответьте кодом %2$s</string>
     <string name="smscommunicator_temptargetwithcode">Чтобы установить временную цель %1$s ответьте кодом %2$s</string>
     <string name="smscommunicator_temptargetcancel">Чтобы отменить временную цель ответьте кодом %1$s</string>
     <string name="smscommunicator_stopsmswithcode">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
@@ -84,9 +89,34 @@
     <string name="smscommunicator_messagebody">Недопустимое тело сообщения</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
     <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
+    <string name="wrong_format">Неверный формат</string>
+    <string name="sms_actual_bg">ГК:</string>
+    <string name="sms_last_bg">Предыдущая ГК:</string>
     <string name="sms_delta">дельта:</string>
     <string name="sms_iob">IOB: активный инсулин</string>
     <string name="sms_bolus">болюс:</string>
     <string name="sms_basal">базал: </string>
+    <string name="sms_min_ago">%1$dмин. назад</string>
+    <string name="sms_loop_suspended_for">Остановлен на(%1$d мин)</string>
+    <string name="sms_read_status_failed">Статус чтения: неудача</string>
+    <string name="sms_profile_switch_created">Переключатель профиля создан</string>
+    <string name="sms_wrong_tbr_duration">Длительность временного базала TBR должна быть кратной %1$d минутам и больше 0.</string>
     <string name="a11y_otp_qr_code">QR код для введения временного пароля</string>
+    <!-- Insulin -->
+    <string name="dia">Время действия инсулина DIA</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Предустановки для Humalog и Novorapid / Novolog</string>
+    <string name="description_insulin_ultra_rapid">Предустановки для Fiasp</string>
+    <string name="description_insulin_lyumjev">Предустановки для Lyumjev</string>
+    <string name="description_insulin_free_peak">Позволяет самостоятельно задавать пик активности инсулина - только для опытных пользователей</string>
+    <string name="insulin_shortname">ИНС</string>
+    <string name="insulin_oref_peak">Время пика активного инс IOB</string>
+    <string name="insulin_peak_time">Время пика [min]</string>
+    <string name="insulin_peak">Пик</string>
+    <string name="free_peak_oref">Свободный от пиков Oref</string>
+    <string name="rapid_acting_oref">Быстро действующий Oref</string>
+    <string name="ultrarapid_oref">Сверхбыстрый Oref</string>
+    <string name="dia_too_short">Значение времени действия инс %1$f слишком мало - применено %2$f!</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
 </resources>
