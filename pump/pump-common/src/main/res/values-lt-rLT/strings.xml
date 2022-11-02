@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="bolus_delivered">%1$.2f vv iš %2$.2f vv suleista</string>
     <!-- PumpCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
     <!-- Time -->
