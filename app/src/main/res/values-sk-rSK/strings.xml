@@ -240,7 +240,6 @@
     <string name="wear_detailedIOB_title">Zobraziť detailný IOB</string>
     <string name="wear_detailedIOB_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="nosuccess">Neúspešné - skontrolujte telefón</string>
-    <string name="notavailable">nie je k dispozícii</string>
     <string name="patientage">Typ pacienta</string>
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
@@ -442,7 +441,6 @@
     <string name="ignore5m">Ignorovať 5m</string>
     <string name="ignore15m">Ignorovať 15m</string>
     <string name="ignore30m">Ignorovať 30m</string>
-    <string name="required">pož.</string>
     <string name="nav_historybrowser">Prehliadač histórie</string>
     <string name="wear_notifysmb_title">Oznámenie pri SMB</string>
     <string name="wear_notifysmb_summary">Ukazovať SMB na hodinkách ako normálny bolus.</string>
@@ -523,7 +521,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Deliteľ \"bolus snooze\"</string>
     <string name="openapsama_max_daily_safety_multiplier">Max násobiteľ denného najvyššieho bazálu</string>
     <string name="openapsama_current_basal_safety_multiplier">Max násobiteľ súčasného bazálu</string>
-    <string name="value_unavailable_short">---</string>
     <string name="virtualpump_type">Typ virtuálnej pumpy</string>
     <string name="virtualpump_definition">Definícia pumpy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
@@ -732,7 +729,6 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Grafové menu</string>
     <string name="clear_filter">Vyčistiť filter</string>
-    <string name="trend_arrow">Trendová šípka</string>
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
@@ -789,18 +785,6 @@
     <string name="a11_correction_percentage">správny výsledok v %</string>
     <string name="a11_correction_units">správny výsledok s jednotkami</string>
     <string name="not_available_full">Nedostupný</string>
-    <string name="a11y_high">vysoká</string>
-    <string name="a11y_inrange">v rozsahu</string>
-    <string name="a11y_low">nízka</string>
-    <string name="a11y_arrow_double_down">rýchly pokles</string>
-    <string name="a11y_arrow_single_down">klesajúca</string>
-    <string name="a11y_arrow_forty_five_down">pomaly klesajúca</string>
-    <string name="a11y_arrow_flat">stabilná</string>
-    <string name="a11y_arrow_forty_five_up">pomaly stúpajúca</string>
-    <string name="a11y_arrow_single_up">stúpajúca</string>
-    <string name="a11y_arrow_double_up">rýchlo stúpajúca</string>
-    <string name="a11y_arrow_none">žiadny</string>
-    <string name="a11y_arrow_unknown">neznámy</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">kvalita glykémií</string>
     <string name="a11y_bg_quality_recalculated">prepočítané</string>
