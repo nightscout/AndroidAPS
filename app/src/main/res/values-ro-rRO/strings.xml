@@ -231,7 +231,6 @@
     <string name="wear_detailedIOB_title">Arată IOB detaliat</string>
     <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
-    <string name="notavailable">indisponibil</string>
     <string name="patientage">Tip de pacient</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
@@ -427,7 +426,6 @@
     <string name="ignore5m">Ignorați 5min</string>
     <string name="ignore15m">Ignorați 15min</string>
     <string name="ignore30m">Ignorați 30min</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">Vizualizare istoric</string>
     <string name="wear_notifysmb_title">Notifică despre SMB</string>
     <string name="wear_notifysmb_summary">Arată SMB pe ceas ca și un bolus standard.</string>
@@ -503,7 +501,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Amână bolusul prin divizor</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplicator sigur maxim zilnic</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicator sigur pentru bazala curentă</string>
-    <string name="value_unavailable_short">indisponibil</string>
     <string name="virtualpump_type">Tipul pompei virtuale</string>
     <string name="virtualpump_definition">Definirea pompei</string>
     <string name="virtualpump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
@@ -689,7 +686,6 @@
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="chart_menu">Meniu diagramă</string>
     <string name="clear_filter">Șterge filtru</string>
-    <string name="trend_arrow">Săgeată tendinţă</string>
     <string name="cannula">Canula</string>
     <string name="userentry">Înregistrare utilizator</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
