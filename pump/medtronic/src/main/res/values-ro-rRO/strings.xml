@@ -91,4 +91,6 @@
     <string name="set_neutral_temps_summary">Dacă este activată, va anula o bazală temporară înainte de sfârșitul fiecărei ore. Aceasta metoda poate ajuta la oprirea vibrațiilor/bipurilor orare pe anumite pompe.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min ramase)</string>
     <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschideți o nouă problemă și furnizați jurnalele.</string>
+    <string name="riley_statistics">Statistici RL</string>
+    <string name="medtronic_history_type">Tip:</string>
 </resources>
