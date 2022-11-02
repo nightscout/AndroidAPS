@@ -69,7 +69,9 @@
     <string name="treatments">Behandlinger</string>
     <string name="virtualpump">Virtuell pumpe</string>
     <string name="configbuilder_pump">Pumpe</string>
+    <string name="configbuilder_pump_description">Hvilken pumpe ønsker du å bruke med AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_profile_description">Hvilken profil skal AAPS bruke?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Hvilken algoritme skal APS benytte for behandlinger?</string>
     <string name="configbuilder_general">Generelt</string>
@@ -77,6 +79,7 @@
     <string name="configbuilder_constraints_description">Hvilke begrensninger brukes?</string>
     <string name="constraints">Begrensninger</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Bruk denne for å aktivere AAPS\' loopintegrasjon.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Etter behandling av begrensninger</string>
     <string name="loop_tbrsetbypump_label">Temp basal satt av pumpen</string>
@@ -89,6 +92,7 @@
     <string name="overview_calculator_label">Kalkulator</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
+    <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Lukket Loop</string>
@@ -703,6 +707,8 @@
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="enablebolusreminder">Aktiver bolus påminnelse</string>
+    <string name="enablebolusreminder_summary">Bruk påminnelse for å sette bolus dosen senere med veiviseren
+        («post bolus»)</string>
     <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
