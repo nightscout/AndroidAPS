@@ -3,6 +3,9 @@
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <!-- RL Status Page -->
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <!-- RL State -->
     <!-- RL Errors -->
     <!-- RileyLink - Common -->
