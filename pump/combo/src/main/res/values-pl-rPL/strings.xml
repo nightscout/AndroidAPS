@@ -51,4 +51,5 @@
     <string name="combo_tbr_count">Obliczenia TBR</string>
     <string name="bolusstopped">Bolus zatrzymany</string>
     <string name="bolusstopping">Zatrzymuję bolus</string>
+    <string name="combo_error_display_never">Nigdy</string>
 </resources>
