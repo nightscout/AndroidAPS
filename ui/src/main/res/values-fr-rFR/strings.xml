@@ -13,4 +13,5 @@
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
     <string name="a11y_carb_reminder">définir un rappel</string>
+    <!--    Widget-->
 </resources>
