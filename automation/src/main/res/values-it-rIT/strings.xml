@@ -81,7 +81,6 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
-    <string name="a11y_autosenslabel">Asuto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Differenza BG</string>
     <string name="deltalabel_u">Differenza BG [%1$s]</string>
