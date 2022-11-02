@@ -6,4 +6,5 @@
     <string name="smscommunicator_otp_reset_warning">Poništavanjem autentifikatora činite sve već osigurane autentifikatore nevažećima. Morat ćete ih ponovno postaviti!</string>
     <string name="sms_delta">Delta:</string>
     <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
+    <!-- Insulin -->
 </resources>
