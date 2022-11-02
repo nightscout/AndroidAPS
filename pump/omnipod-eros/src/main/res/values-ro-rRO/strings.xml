@@ -4,7 +4,10 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <!-- Omnipod Eros - Short Status -->
     <!-- Omnipod Eros - Error -->
     <!-- Omnipod Eros - Pod Management -->
