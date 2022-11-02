@@ -16,10 +16,6 @@
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
     <string name="description_objectives">Разучаване на програмата</string>
     <string name="description_food">Показва въведените в Nightscout храни</string>
-    <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
-    <string name="description_insulin_lyumjev">Действие на инсулин Lyumjev</string>
-    <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
     <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
@@ -163,7 +159,6 @@
     <string name="button3">Бутон 3</string>
     <string name="units_colon">Единици:</string>
     <string name="units">Единици</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
     <string name="low_mark">Ниска КЗ под</string>
@@ -230,7 +225,6 @@
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
-    <string name="notavailable">---</string>
     <string name="patientage">Тип пациент</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
@@ -265,9 +259,6 @@
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
     <string name="restartingapp">Рестартиране за да се приложат новите настройки.</string>
     <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
-    <string name="fastactinginsulincomment">Novorapid Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">ИНС</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
@@ -337,13 +328,6 @@
     <string name="enablesmb">Разреши SMB</string>
     <string name="enablesmb_summary">Използвай супер микро болуси вместо временен базал за по бързо действие</string>
     <string name="enableuam_summary">Детекция на необявено хранене (UAM)</string>
-    <string name="insulin_oref_peak">Пик на кривата на IOB</string>
-    <string name="insulin_peak_time">Време на пик [мин.]</string>
-    <string name="free_peak_oref">Със свободен пик по Oref</string>
-    <string name="rapid_acting_oref">Бързодействащ по Oref</string>
-    <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
     <string name="activate_profile">Активирай профила</string>
     <string name="invalid">НЕВАЛИДНО</string>
     <string name="careportal_newnstreatment_percentage_label">% от профила</string>
@@ -423,7 +407,6 @@
     <string name="ignore5m">Игнориране за 5 мин</string>
     <string name="ignore15m">Игнориране за 15 мин</string>
     <string name="ignore30m">Игнориране за 30 мин</string>
-    <string name="required">нужн</string>
     <string name="nav_historybrowser">История</string>
     <string name="wear_notifysmb_title">Уведомяване при SMB</string>
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
@@ -499,7 +482,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Каква част от DIA след болус да изчаква AAPS преди да направи нещо</string>
     <string name="openapsama_max_daily_safety_multiplier">Макс. множител за най-големия базал за денонощието</string>
     <string name="openapsama_current_basal_safety_multiplier">Макс. множител за настоящ базал</string>
-    <string name="value_unavailable_short">---</string>
     <string name="virtualpump_type">Виртуална помпа тип</string>
     <string name="virtualpump_definition">Описание на помпата</string>
     <string name="virtualpump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
@@ -680,7 +662,6 @@
     <string name="graph_menu_divider_header">Графика</string>
     <string name="chart_menu">Меню на графиката</string>
     <string name="clear_filter">Премахни филтъра</string>
-    <string name="trend_arrow">Стрелка тенденция</string>
     <string name="cannula">Канюла</string>
     <string name="userentry">Потербителска настройка</string>
     <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
