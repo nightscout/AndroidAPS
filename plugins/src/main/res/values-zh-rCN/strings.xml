@@ -86,4 +86,5 @@
     <string name="sms_bolus">大剂量:</string>
     <string name="sms_basal">基础率:</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
+    <!-- Insulin -->
 </resources>
