@@ -240,7 +240,6 @@
     <string name="wear_detailedIOB_title">Mostra IOB dettagliato</string>
     <string name="wear_detailedIOB_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="nosuccess">non riuscito - controlla il telefono</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Tipo paziente</string>
     <string name="child">Bambino</string>
     <string name="teenage">Adolescente</string>
@@ -442,7 +441,6 @@
     <string name="ignore5m">Ignora | 5m</string>
     <string name="ignore15m">Ignora | 15m</string>
     <string name="ignore30m">Ignora | 30m</string>
-    <string name="required">ric</string>
     <string name="nav_historybrowser">Storico</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
@@ -523,7 +521,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze - divisore DIA</string>
     <string name="openapsama_max_daily_safety_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_current_basal_safety_multiplier">Moltiplicatore di sicurezza basale corrente</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Tipo micro virtuale</string>
     <string name="virtualpump_definition">Definizione micro</string>
     <string name="virtualpump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
@@ -730,7 +727,6 @@
     <string name="graph_menu_divider_header">Grafico</string>
     <string name="chart_menu">Menu grafico</string>
     <string name="clear_filter">Cancella filtro</string>
-    <string name="trend_arrow">Freccia trend</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
@@ -787,18 +783,6 @@
     <string name="a11_correction_percentage">risultato corretto con %</string>
     <string name="a11_correction_units">risultato corretto con unità</string>
     <string name="not_available_full">Non disponibile</string>
-    <string name="a11y_high">alto</string>
-    <string name="a11y_inrange">in range</string>
-    <string name="a11y_low">basso</string>
-    <string name="a11y_arrow_double_down">discesa rapida</string>
-    <string name="a11y_arrow_single_down">discesa</string>
-    <string name="a11y_arrow_forty_five_down">discesa lenta</string>
-    <string name="a11y_arrow_flat">stabile</string>
-    <string name="a11y_arrow_forty_five_up">salita lenta</string>
-    <string name="a11y_arrow_single_up">salita</string>
-    <string name="a11y_arrow_double_up">salita rapida</string>
-    <string name="a11y_arrow_none">nessuno</string>
-    <string name="a11y_arrow_unknown">sconosciuto</string>
     <string name="a11y_graph">grafico</string>
     <string name="a11y_bg_quality">qualità glicemia</string>
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
