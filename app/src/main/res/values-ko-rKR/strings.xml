@@ -227,7 +227,6 @@
     <string name="wear_detailedIOB_title">IOB 자세하게 보여주기</string>
     <string name="wear_detailedIOB_summary">워치페이스에 IOB를 Bolus IOB와 Basal IOB로 나누어서 보여줍니다.</string>
     <string name="nosuccess">성공하지 못했습니다. 폰을 확인하세요</string>
-    <string name="notavailable">사용불가</string>
     <string name="patientage">환자 유형</string>
     <string name="child">어린이</string>
     <string name="teenage">청소년</string>
@@ -419,7 +418,6 @@
     <string name="ignore5m">5분간 무시하기</string>
     <string name="ignore15m">5분간 무시하기</string>
     <string name="ignore30m">30분간 무시하기</string>
-    <string name="required">필요량</string>
     <string name="nav_historybrowser">이력 브라우저</string>
     <string name="wear_notifysmb_title">SMB 알림</string>
     <string name="wear_notifysmb_summary">일반 Bolus처럼 워치에 SMB 표시</string>
@@ -495,7 +493,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA 나눗수</string>
     <string name="openapsama_max_daily_safety_multiplier">최대 일 안전 승수</string>
     <string name="openapsama_current_basal_safety_multiplier">현재 Basal 안전 승수</string>
-    <string name="value_unavailable_short">사용불가</string>
     <string name="virtualpump_type">가성펌프 종류</string>
     <string name="virtualpump_definition">펌프 정의</string>
     <string name="virtualpump_pump_def">Bolus: 스텝=%1$s\n확장Bolus: [Step=%2$s, 기간=%3$s분-%4$s시]\nBasal: 스텝=%5$s\n임시Basal: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
@@ -671,7 +668,6 @@
     <string name="graph_menu_divider_header">그래프</string>
     <string name="chart_menu">차트 메뉴</string>
     <string name="clear_filter">필터 지우기</string>
-    <string name="trend_arrow">경향 화살표</string>
     <string name="cannula">캐뉼라</string>
     <string name="userentry">사용자 항목</string>
     <string name="common_values">평소 섭취하는 가장 많은 양의 탄수화물 값을 사용하세요.\n</string>
