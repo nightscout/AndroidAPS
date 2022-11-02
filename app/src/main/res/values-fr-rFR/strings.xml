@@ -17,10 +17,6 @@
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
     <string name="description_objectives">Programme d’apprentissage</string>
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
-    <string name="description_insulin_rapid">Réglages pour les insulines Humalog et NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Réglages pour l\'insuline Fiasp</string>
-    <string name="description_insulin_lyumjev">Réglages pour l\'insuline Lyumjev</string>
-    <string name="description_insulin_free_peak">Permet de définir le pic de l’activité de l’insuline et ne doit être utilisé que par les utilisateurs avancés</string>
     <string name="description_loop">Activer ou désactiver la mise en œuvre déclenchant la Boucle.</string>
     <string name="description_ns_client">Synchronise vos données avec Nightscout</string>
     <string name="description_ama">État de l’algorithme en 2017</string>
@@ -172,7 +168,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="button3">Bouton 3</string>
     <string name="units_colon">Unités :</string>
     <string name="units">Unités</string>
-    <string name="dia">DAI</string>
     <string name="prefs_range_title">Fourchette de visualisation</string>
     <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l\'aperçu et la montre</string>
     <string name="low_mark">Ligne BASSE</string>
@@ -241,7 +236,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_detailedIOB_title">Afficher l\'IA détaillée</string>
     <string name="wear_detailedIOB_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="nosuccess">Sans succès - vérifiez votre téléphone</string>
-    <string name="notavailable">s/o</string>
     <string name="patientage">Type de patient</string>
     <string name="child"> Enfant</string>
     <string name="teenage">Adolescent</string>
@@ -276,9 +270,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_logappstartedevent">Démarrage AAPS entré dans NS</string>
     <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
     <string name="configbuilder_insulin_description">Quel type d\'insuline utilisez-vous ?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog, Apidra</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
     <string name="enablesuperbolus_summary">Activer la fonctionnalité SuperBolus dans l’Assistant. Ne pas l’activer avant de bien comprendre comment cela fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT !</string>
     <string name="show_statuslights">Afficher les voyants d\'état sur l\'écran d\'accueil</string>
@@ -353,14 +344,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
     <string name="enableuam_summary">Détection des Repas Non Signalés</string>
-    <string name="insulin_oref_peak">Durée du Pic de la Courbe IA</string>
-    <string name="insulin_peak_time">Temps du Pic [min]</string>
-    <string name="insulin_peak">Pic</string>
-    <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
-    <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
-    <string name="ultrarapid_oref">Insuline Ultra Rapide Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
     <string name="activate_profile">Activer le profil</string>
     <string name="invalid">INVALIDE</string>
     <string name="careportal_newnstreatment_percentage_label">Pourcentage</string>
@@ -443,7 +426,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ignore5m">Ignorer 5m</string>
     <string name="ignore15m">Ignorer 15m</string>
     <string name="ignore30m">Ignorer 30m</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">Historique</string>
     <string name="wear_notifysmb_title">Notifier en SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
@@ -524,7 +506,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsama_bolussnooze_dia_divisor">Snooze bolus Diviseur de DAI</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplicateur max quotidien de sécurité</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicateur de sécurité basale courante</string>
-    <string name="value_unavailable_short">ND</string>
     <string name="virtualpump_type">Type de pompe virtuelle</string>
     <string name="virtualpump_definition">Définition de pompe</string>
     <string name="virtualpump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
@@ -732,7 +713,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Menu graphique</string>
     <string name="clear_filter">Effacer le filtre</string>
-    <string name="trend_arrow">Flèche de tendance</string>
     <string name="cannula">Canule</string>
     <string name="userentry">Entrées utilisateur</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
@@ -789,18 +769,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11_correction_percentage">corriger le résultat avec le %</string>
     <string name="a11_correction_units">corriger le résultat avec les unités</string>
     <string name="not_available_full">Non disponible</string>
-    <string name="a11y_high">haut</string>
-    <string name="a11y_inrange">dans la plage</string>
-    <string name="a11y_low">bas</string>
-    <string name="a11y_arrow_double_down">en baisse rapide</string>
-    <string name="a11y_arrow_single_down">en baisse</string>
-    <string name="a11y_arrow_forty_five_down">en baisse lente</string>
-    <string name="a11y_arrow_flat">stable</string>
-    <string name="a11y_arrow_forty_five_up">en hausse lente</string>
-    <string name="a11y_arrow_single_up">en hausse</string>
-    <string name="a11y_arrow_double_up">en hausse rapide</string>
-    <string name="a11y_arrow_none">aucun</string>
-    <string name="a11y_arrow_unknown">inconnu</string>
     <string name="a11y_graph">graphique</string>
     <string name="a11y_bg_quality">qualité de la glycémie</string>
     <string name="a11y_bg_quality_recalculated">recalculé</string>
@@ -875,8 +843,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
-    <string name="widget_description">Widget AAPS</string>
-    <string name="configure">Configurer l’opacité</string>
     <string name="loop_status">État de la boucle</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="profile1">Profil 1</string>
