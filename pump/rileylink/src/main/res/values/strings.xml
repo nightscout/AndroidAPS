@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- RL keys -->
+    <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>
+    <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
+    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
+    <string name="key_rileylink_name" translatable="false">pref_rileylink_name</string>
+    <string name="key_riley_link_show_battery_level" translatable="false">pref_riley_link_show_reported_battery_level</string>
+    <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
+
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scan</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Selected</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
+    <string name="riley_link_ble_config_scan_scanning">Scanning</string>
+    <string name="riley_link_ble_config_scan_finished">Scanning finished</string>
+    <string name="riley_link_ble_config_scan_error">Scanning error: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Never</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Currently Selected RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Remove</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Are you sure that you want to remove your RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remove RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">No RileyLink selected</string>
+
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Settings</string>
+    <string name="rileylink_settings_tab2">History</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pump Status</string>
+    <string name="title_activity_rileylink_settings">RileyLink Settings</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Address:</string>
+    <string name="rileylink_name">Name:</string>
+    <string name="rileylink_battery_level">Battery Level:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Connection Status:</string>
+    <string name="rileylink_connection_error">Connection Error:</string>
+    <string name="rileylink_device">Device</string>
+    <string name="rileylink_device_type">Device Type:</string>
+    <string name="rileylink_configured_device_model">Configured Device Model:</string>
+    <string name="rileylink_connected_device_model">Connected Device Model:</string>
+    <string name="rileylink_last_used_frequency">Last Used Frequency:</string>
+    <string name="rileylink_last_device_contact">Last Device Contact:</string>
+    <string name="rileylink_firmware_version">Firmware Version:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Pump Serial Number:</string>
+    <string name="rileylink_pump_frequency">Pump Frequency:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth Initializing…</string>
+    <string name="rileylink_state_bt_error">Bluetooth Error</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Ready</string>
+    <string name="rileylink_state_not_started">Not Started</string>
+    <string name="rileylink_state_rl_init">RileyLink Initialization…</string>
+    <string name="rileylink_state_rl_error">RileyLink Error</string>
+    <string name="rileylink_state_pc_tune_up">Tuning up RileyLink and Pump</string>
+    <string name="rileylink_state_pc_error">Problem connecting to Pump</string>
+    <string name="rileylink_state_connected">Connected</string>
+    <string name="rileylink_state_rl_ready">RileyLink ready</string>
+
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Device is not RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink unreachable</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth disabled</string>
+    <string name="rileylink_error_no_bt_adapter">No Bluetooth Adapter</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp Failed</string>
+    <string name="rileylink_error_pump_unreachable">Pump unreachable</string>
+    <string name="rileylink_error_pod_unreachable">Pod unreachable</string>
+
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Yes</string>
+    <string name="riley_link_common_no">No</string>
+
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">DOES NOT work with the original RileyLink. May not work with other RileyLink alternatives.</string>
+
+    <plurals name="duration_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Use Scanning</string>
+    <string name="orange_use_scanning_level_summary">Scan before connecting to OrangeLink, it should improve connections (can also be used with other RileyLink clones, if needed)</string>
+    <string name="key_orange_use_scanning" translatable="false">pref_orange_use_scanning</string>
+    <string name="rileylink_configuration">RileyLink Configuration</string>
+</resources>
