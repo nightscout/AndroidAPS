@@ -81,7 +81,6 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">自动传感器 %1$s %2$s %%</string>
     <string name="autosenslabel">自动传感器 %</string>
-    <string name="a11y_autosenslabel">自动敏感度</string>
     <string name="deltacompared">%3$s %1$s (%2$s</string>
     <string name="deltalabel">BG 差异</string>
     <string name="deltalabel_u">BG 差异 [%1$s]</string>
