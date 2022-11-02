@@ -88,4 +88,5 @@
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_basal">Basale:</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
+    <!-- Insulin -->
 </resources>
