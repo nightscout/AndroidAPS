@@ -85,4 +85,5 @@
     <string name="sms_iob">IA:</string>
     <string name="sms_bolus">Bólus:</string>
     <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
 </resources>
