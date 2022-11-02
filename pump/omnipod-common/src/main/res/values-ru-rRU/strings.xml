@@ -11,9 +11,9 @@
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Если нажать Утилизировать Pod, вы больше не сможете обмениваться командами с Pod. Сделайте это только в том случае, если связь с помпой постоянно отсутствует. Если связь с Pod еще возможна, воспользуйтесь опцией <b>Деактивировать Pod</b>.\n\n Если все же хотите продолжить, снимите помпу с тела!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Воспроизвести тестовый звуковой сигнал</string>
     <string name="omnipod_common_pod_management_button_playing_test_beep">Воспроизводится тестовый звуковой сигнал…</string>
-    <string name="omnipod_common_pod_management_button_pod_history">Журнал помпы</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Журнал Pod</string>
     <!-- Omnipod - Error -->
-    <string name="omnipod_common_error_pod_not_attached">Активная помпа не выбрана</string>
+    <string name="omnipod_common_error_pod_not_attached">Нет активных Pod</string>
     <string name="omnipod_common_error_set_basal_failed">Настройка базального профиля не состоялась.</string>
     <string name="omnipod_common_error_bolus_did_not_succeed">Болюс не подан.</string>
     <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Не удалось задать базальный профиль: получен пустой профиль. Активируйте профиль базала.</string>
