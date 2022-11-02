@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="emptyreservoir">Резервуар пуст</string>
+    <string name="checkshaft">Проверьте шток помпы</string>
+    <string name="basalmax">Макс. шаг базала</string>
+    <string name="dailymax">Максимум за сутки</string>
+    <string name="bloodsugarmeasurementalert">Предупреждение при измерении уровня СК</string>
+    <string name="remaininsulinalert">Уровень оставшегося инсулина</string>
+    <string name="missedbolus">Недоставленный болюс</string>
+    <string name="invalidpairing">Неверная информация о соединении. Запрос нового сопряжения</string>
+    <string name="gettingpumpstatus">получение статуса помпы</string>
+    <string name="gettingextendedbolusstatus">Получение статуса пролонгированного болюса</string>
+    <string name="gettingbolusstatus">Получение статуса болюса</string>
+    <string name="gettingtempbasalstatus">Получение статуса временного базала</string>
+    <string name="gettingpumpsettings">Получение настроек помпы</string>
+    <string name="gettingpumptime">Получение времени помпы</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="danarpump">DanaR</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+</resources>
