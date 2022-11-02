@@ -235,7 +235,6 @@
     <string name="wear_detailedIOB_title">Toon gedetailleerde IOB</string>
     <string name="wear_detailedIOB_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="nosuccess">Niet geslaagd - controleer de telefoon</string>
-    <string name="notavailable">n.v.t.</string>
     <string name="patientage">Type patiënt</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
@@ -436,7 +435,6 @@
     <string name="ignore5m">Negeer 5m</string>
     <string name="ignore15m">Negeer 15m</string>
     <string name="ignore30m">Negeer 30m</string>
-    <string name="required">nodig</string>
     <string name="nav_historybrowser">Historiek venster</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
@@ -517,7 +515,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsama_max_daily_safety_multiplier">Maximale dagelijkse veiligheids vermeningvuldigings factor</string>
     <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtuele pomp Type</string>
     <string name="virtualpump_definition">Pomp definitie</string>
     <string name="virtualpump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
@@ -717,7 +714,6 @@
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
     <string name="clear_filter">Verwijder filter</string>
-    <string name="trend_arrow">Trendpijl</string>
     <string name="cannula">Canule</string>
     <string name="userentry">Gebruikersinvoer</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
@@ -774,18 +770,6 @@
     <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
     <string name="a11_correction_units">corrigeer uitkomt met units</string>
     <string name="not_available_full">Niet beschikbaar</string>
-    <string name="a11y_high">hoog</string>
-    <string name="a11y_inrange">binnen bereik</string>
-    <string name="a11y_low">laag</string>
-    <string name="a11y_arrow_double_down">snel dalend</string>
-    <string name="a11y_arrow_single_down">dalend</string>
-    <string name="a11y_arrow_forty_five_down">langzaam dalend</string>
-    <string name="a11y_arrow_flat">stabiel</string>
-    <string name="a11y_arrow_forty_five_up">langzaam stijgend</string>
-    <string name="a11y_arrow_single_up">stijgt</string>
-    <string name="a11y_arrow_double_up">snel stijgend</string>
-    <string name="a11y_arrow_none">geen</string>
-    <string name="a11y_arrow_unknown">onbekend</string>
     <string name="a11y_graph">grafiek</string>
     <string name="a11y_bg_quality">bloedglucose kwaliteit</string>
     <string name="a11y_bg_quality_recalculated">opnieuw berekend</string>
