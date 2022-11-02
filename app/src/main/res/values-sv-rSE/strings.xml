@@ -16,10 +16,6 @@
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
     <string name="description_objectives">Inlärningsprogram</string>
     <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
-    <string name="description_insulin_rapid">Insulininställning för vanliga direktverkande insuliner som Humalog, Lispro, Apidra och Novorapid/Novolog</string>
-    <string name="description_insulin_ultra_rapid">Insulininställning för ultrasnabba insuliner, t ex Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulininställning för Lyumjev</string>
-    <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet. Bör bara användas av avancerade användare</string>
     <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
     <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
     <string name="description_ama">Så som algoritmen var definierad år 2017</string>
@@ -166,7 +162,6 @@ Eversense-appen.</string>
     <string name="button3">Knapp 3</string>
     <string name="units_colon">Enheter:</string>
     <string name="units">Enheter</string>
-    <string name="dia">Duration</string>
     <string name="prefs_range_title">Gränsvärden för visualisering</string>
     <string name="prefs_range_summary">Högt och lågt värde för grafen i Översikt och i klockan</string>
     <string name="low_mark">LÅG-markering</string>
@@ -235,7 +230,6 @@ Eversense-appen.</string>
     <string name="wear_detailedIOB_title">Visa detaljerad IOB</string>
     <string name="wear_detailedIOB_summary">Visa IOB med bolus och basal på klocka</string>
     <string name="nosuccess">misslyckat - kontrollera telefonen</string>
-    <string name="notavailable">-</string>
     <string name="patientage">Patienttyp</string>
     <string name="child">Barn</string>
     <string name="teenage">Tonåring</string>
@@ -270,9 +264,6 @@ Eversense-appen.</string>
     <string name="ns_logappstartedevent">Rapportera appstart till Nightscout</string>
     <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
     <string name="configbuilder_insulin_description">Vilken typ av insulin använder du?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog, Apidra</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
     <string name="enablesuperbolus_summary">Aktiverar superbolusfunktionen i kalkylatorn. Aktivera inte innan du förstått hur den fungerar. DEN KAN ORSAKA ÖVERDOSERING AV INSULIN OM INSIKT SAKNAS OM FUNKTIONEN!</string>
     <string name="show_statuslights">Visa \"statuslampor\" på hemskärmen</string>
@@ -343,13 +334,6 @@ Eversense-appen.</string>
     <string name="enablesmb">Aktivera SMB</string>
     <string name="enablesmb_summary">Använd Super Micro Bolusar istället för temp basal för snabbare resultat</string>
     <string name="enableuam_summary">Avkänning av oförberedda måltider (UAM)</string>
-    <string name="insulin_oref_peak">Peaktid för IOB-kurvan</string>
-    <string name="insulin_peak_time">Peaktid [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
     <string name="activate_profile">Aktivera profil</string>
     <string name="invalid">OGILTIG</string>
     <string name="careportal_newnstreatment_percentage_label">Procent</string>
@@ -432,7 +416,6 @@ Eversense-appen.</string>
     <string name="ignore5m">Ignorera 5 min</string>
     <string name="ignore15m">Ignorera 15 min</string>
     <string name="ignore30m">Ignorera 30 min</string>
-    <string name="required">beh</string>
     <string name="nav_historybrowser">Historikläsare</string>
     <string name="wear_notifysmb_title">Skicka notis vid SMB</string>
     <string name="wear_notifysmb_summary">Visa SMB på klockan som en standardbolus.</string>
@@ -508,7 +491,6 @@ Eversense-appen.</string>
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplikator för max daglig basal (max_daily)</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplikator för nuvarande basal (max_current)</string>
-    <string name="value_unavailable_short">-</string>
     <string name="virtualpump_type">Typ av virtuell pump</string>
     <string name="virtualpump_definition">Pumpdefinition</string>
     <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
@@ -696,7 +678,6 @@ Eversense-appen.</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammeny</string>
     <string name="clear_filter">Rensa filter</string>
-    <string name="trend_arrow">Trendpil</string>
     <string name="cannula">Kanyl</string>
     <string name="userentry">Angivet av användare</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
@@ -750,18 +731,6 @@ Eversense-appen.</string>
     <string name="a11_correction_percentage">korrigera med %</string>
     <string name="a11_correction_units">korrigera med enheter</string>
     <string name="not_available_full">Ej tillgängligt</string>
-    <string name="a11y_high">hög</string>
-    <string name="a11y_inrange">inom målområdet</string>
-    <string name="a11y_low">låg</string>
-    <string name="a11y_arrow_double_down">sjunker snabbt</string>
-    <string name="a11y_arrow_single_down">sjunker</string>
-    <string name="a11y_arrow_forty_five_down">sjunker långsamt</string>
-    <string name="a11y_arrow_flat">stabilt</string>
-    <string name="a11y_arrow_forty_five_up">stiger långsamt</string>
-    <string name="a11y_arrow_single_up">stiger</string>
-    <string name="a11y_arrow_double_up">stiger snabbt</string>
-    <string name="a11y_arrow_none">ingen</string>
-    <string name="a11y_arrow_unknown">okänd</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">Kvalitet på BG-data</string>
     <string name="a11y_bg_quality_recalculated">omräknad</string>
