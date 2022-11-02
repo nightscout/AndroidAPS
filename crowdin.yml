@@ -55,5 +55,15 @@ files:
     translation: /ui/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/src/main/res/values/strings.xml
     translation: /plugins/src/main/res/values-%android_code%/strings.xml
-  - source: /dana/src/main/res/values/strings.xml
-    translation: /dana/src/main/res/values-%android_code%/strings.xml
+  - source: /danar/src/main/res/values/strings.xml
+    translation: /danar/src/main/res/values-%android_code%/strings.xml
+  - source: /diaconn/src/main/res/values/strings.xml
+    translation: /diaconn/src/main/res/values-%android_code%/strings.xml
+  - source: /medtronic/src/main/res/values/strings.xml
+    translation: /medtronic/src/main/res/values-%android_code%/strings.xml
+  - source: /omnipod-common/src/main/res/values/strings.xml
+    translation: /omnipod-common/src/main/res/values-%android_code%/strings.xml
+  - source: /omnipod-eros/src/main/res/values/strings.xml
+    translation: /omnipod-eros/src/main/res/values-%android_code%/strings.xml
+  - source: /omnipod-dash/src/main/res/values/strings.xml
+    translation: /omnipod-dash/src/main/res/values-%android_code%/strings.xml
