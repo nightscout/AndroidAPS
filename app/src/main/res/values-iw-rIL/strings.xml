@@ -235,7 +235,6 @@
     <string name="wear_detailedIOB_title">הצגת IOB מפורט</string>
     <string name="wear_detailedIOB_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
-    <string name="notavailable">לא זמין</string>
     <string name="patientage">סוג המטופל\\ת</string>
     <string name="child">ילד\\ה</string>
     <string name="teenage">מתבגר\\ת</string>
@@ -436,7 +435,6 @@
     <string name="ignore5m">התעלם ל-5 דק\'</string>
     <string name="ignore15m">התעלם ל-15 דק\'</string>
     <string name="ignore30m">התעלם ל-30 דק\'</string>
-    <string name="required">דרושים</string>
     <string name="nav_historybrowser">דפדפן היסטוריה</string>
     <string name="wear_notifysmb_title">דיווח על SMB</string>
     <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
@@ -517,7 +515,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">נמנום בולוס - מחלק משך פעילות אינסולין</string>
     <string name="openapsama_max_daily_safety_multiplier">מכפלת בטיחות בזאלי יומי מרבי</string>
     <string name="openapsama_current_basal_safety_multiplier">מכפלת בטיחות בזאלי נוכחי</string>
-    <string name="value_unavailable_short">לא זמין</string>
     <string name="virtualpump_type">סוג משאבה וירטואלית</string>
     <string name="virtualpump_definition">הגדרת משאבה</string>
     <string name="virtualpump_pump_def">בולוס: צעד=%1$s\nבולוס ממושך: [צעד=%2$s, משך=%3$s מינ\'-%4$sש\']\nבזאלי: צעד=%5$s\nבזאלי זמני: %6$s (עם %7$s), משך=%8$s מינ\'-%9$sש\'\n%10$s</string>
@@ -719,7 +716,6 @@
     <string name="graph_menu_divider_header">גרף</string>
     <string name="chart_menu">תפריט הגרף</string>
     <string name="clear_filter">נקה סינון</string>
-    <string name="trend_arrow">חץ מגמה</string>
     <string name="cannula">צינורית</string>
     <string name="userentry">קלט המשתמש</string>
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
@@ -776,18 +772,6 @@
     <string name="a11_correction_percentage">תיקון עם %</string>
     <string name="a11_correction_units">תיקון עם יחידות</string>
     <string name="not_available_full">לא זמין</string>
-    <string name="a11y_high">גבוה</string>
-    <string name="a11y_inrange">בטווח</string>
-    <string name="a11y_low">נמוך</string>
-    <string name="a11y_arrow_double_down">ירידה מהירה</string>
-    <string name="a11y_arrow_single_down">ירידה</string>
-    <string name="a11y_arrow_forty_five_down">ירידה איטית</string>
-    <string name="a11y_arrow_flat">יציב</string>
-    <string name="a11y_arrow_forty_five_up">עלייה איטית</string>
-    <string name="a11y_arrow_single_up">עלייה</string>
-    <string name="a11y_arrow_double_up">עלייה מהירה</string>
-    <string name="a11y_arrow_none">אין</string>
-    <string name="a11y_arrow_unknown">לא ידוע</string>
     <string name="a11y_graph">גרף</string>
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
     <string name="a11y_bg_quality_recalculated">חושב מחדש</string>
