@@ -51,4 +51,10 @@
     <string name="combo_tbr_count">LBD skaičius</string>
     <string name="bolusstopped">Bolusas sustabdytas</string>
     <string name="bolusstopping">Bolusas stabdomas</string>
+    <string name="pump_commerror_label">Comm. Klaidų skaičius</string>
+    <string name="show_comm_error_count_title">Rodyti com. klaidų skaičius</string>
+    <string name="show_comm_error_count_summary">Rodo klaidų skaičių bendraujant su Ruffy. Daugeliu atvejų skaičius, didesnis nei 0, reiškia „Ruffy“ ryšio problemas (gali prireikti paleisti iš naujo).</string>
+    <string name="combo_error_display_never">Niekada</string>
+    <string name="combo_error_display_error">Kai klaida</string>
+    <string name="combo_error_display_always">Visada</string>
 </resources>
