@@ -32,7 +32,6 @@
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
-    <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
     <string name="key_ns_temporary_target_new_data_id" translatable="false">temporary_target_new_data_id</string>
     <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
@@ -70,10 +69,6 @@
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
     <string name="description_food">Displays the food presets defined in Nightscout</string>
-    <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulin preset for Lyumjev</string>
-    <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ama">State of the algorithm in 2017</string>
@@ -225,7 +220,6 @@
     <string name="button3">Button 3</string>
     <string name="units_colon">Units:</string>
     <string name="units">Units</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
@@ -335,9 +329,6 @@
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
@@ -437,15 +428,6 @@
     <string name="enablesmb">Enable SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
-    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
-    <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="insulin_peak">Peak</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
     <string name="activate_profile">Activate profile</string>
     <string name="invalid">INVALID</string>
     <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
