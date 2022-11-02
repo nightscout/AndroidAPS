@@ -4,6 +4,7 @@
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
 </resources>
