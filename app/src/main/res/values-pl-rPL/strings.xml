@@ -16,10 +16,6 @@
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
     <string name="description_objectives">Program do nauki</string>
     <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
-    <string name="description_insulin_rapid">Profil insulinowy dla Humalog i Novorapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Profil insulinowy dla Fiasp</string>
-    <string name="description_insulin_lyumjev">Profil insulinowy dla Lyumjev</string>
-    <string name="description_insulin_free_peak">Pozwala na określenie czasu wartości szczytowej działania insuliny i powinno być używane tylko przez zaawansowanych użytkowników</string>
     <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
     <string name="description_ns_client">Synchronizuje twoje dane z Nightscout</string>
     <string name="description_ama">Stan algorytmu w 2017</string>
@@ -164,7 +160,6 @@
     <string name="button3">Przycisk 3</string>
     <string name="units_colon">Jednostki:</string>
     <string name="units">Jednostki</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
     <string name="prefs_range_summary">Oznaczenia wysokiego i niskiego cukru na wykresie w oknie przegląd i na smartwatch\'u</string>
     <string name="low_mark">Znacznik NISKI</string>
@@ -232,7 +227,6 @@
     <string name="wear_detailedIOB_title">Pokaż szczegóły IOB</string>
     <string name="wear_detailedIOB_summary">Rozłóż IOB na bolus i IOB bazy na zegarku</string>
     <string name="nosuccess">nie udało się - proszę sprawdzić telefon</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Typ pacjenta</string>
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
@@ -267,9 +261,6 @@
     <string name="ns_logappstartedevent">Wyślij start app do NS</string>
     <string name="restartingapp">Zamykanie aplikacji w celu wprowadzenia ustawień.</string>
     <string name="configbuilder_insulin_description">Jakiego typu insuliny używasz?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Zezwalaj na superbolus w kalkulatorze</string>
     <string name="enablesuperbolus_summary">Włącz funkcję Superbolus w kalkulatorze. Nie uruchamiaj, dopóki nie nauczysz się jak ta funkcja działa. MOŻESZ DOPROWADZIĆ DO PRZEDAWKOWANIA INSULINY JEŻELI UŻYJESZ TEJ FUNKCJI NIE POSIADAJĄC ODPOWIEDNIEJ WIEDZY!</string>
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
@@ -340,13 +331,6 @@
     <string name="enablesmb">Włącz SMB</string>
     <string name="enablesmb_summary">Używaj SMB (Super Mikro Bolusów) zamiast bazy tymczasowej dla szybszego działania </string>
     <string name="enableuam_summary">Detekcja niezapowiedzianych posiłków (UAM)</string>
-    <string name="insulin_oref_peak">IOB Czas piku krzywej działania insuliny</string>
-    <string name="insulin_peak_time">Czas piku [min]</string>
-    <string name="free_peak_oref">Swobodny-Pik Oref</string>
-    <string name="rapid_acting_oref">Szybko-Działający Oref</string>
-    <string name="ultrarapid_oref">Ultra-Szybki Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA %1$f zbyt krótki - przyjmuję %2$f w zamian!</string>
     <string name="activate_profile">Aktywuj profil</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="careportal_newnstreatment_percentage_label">Procent</string>
@@ -428,7 +412,6 @@
     <string name="ignore5m">Ignoruj 5 min</string>
     <string name="ignore15m">Ignoruj 15 min</string>
     <string name="ignore30m">Ignoruj 30 min</string>
-    <string name="required">wym</string>
     <string name="nav_historybrowser">Przegląd historii</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
@@ -504,7 +487,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia divisor (Dzielnik uśpienia bolusa)</string>
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier (Mnożnik bezpieczeństwa maksymalnej dziennej dawki bazowej [U/godzinę])</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier (Mnożnik bezpieczeństwa aktualnej dziennej dawki bazowej [U/godzinę])</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Pompa wirtualna</string>
     <string name="virtualpump_definition">Definicja Pompy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBasal: krok =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
@@ -694,7 +676,6 @@
     <string name="graph_menu_divider_header">Wykres</string>
     <string name="chart_menu">Menu wykresu</string>
     <string name="clear_filter">Wyczyść filtr</string>
-    <string name="trend_arrow">Strzałka trendu</string>
     <string name="cannula">Kaniula</string>
     <string name="userentry">Wpis użytkownika</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
