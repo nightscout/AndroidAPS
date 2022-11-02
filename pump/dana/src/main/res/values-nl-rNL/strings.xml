@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCode: %4$02X</string>
+    <string name="danar_history_glucose">Glucose</string>
+    <string name="danar_pumpalarm">Alarm</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="danarpump">DanaR</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="danar_bluetooth_status">Bluetooth status</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+</resources>
