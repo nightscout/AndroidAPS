@@ -17,10 +17,6 @@
     <string name="description_config_builder">Brukes for innstilling av aktive plugins</string>
     <string name="description_objectives">Opplæringsprogram</string>
     <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
-    <string name="description_insulin_rapid">Innstillinger for Humalog og NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Innstillinger for Fiasp</string>
-    <string name="description_insulin_lyumjev">Innstillinger for Lyumjev</string>
-    <string name="description_insulin_free_peak">Lar deg stille inn tidspunktet for toppen av insulinvirkningen. Bør bare benyttes av erfarne brukere</string>
     <string name="description_loop">Aktiver eller deaktiver hendelsen som trigger loop.</string>
     <string name="description_ns_client">Synkroniserer dine data med Nightscout</string>
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
@@ -39,6 +35,7 @@
     <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
     <string name="description_treatments">Lagre data om alle behandlinger som er utført</string>
+    <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
     <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Karbo:</string>
@@ -166,7 +163,6 @@
     <string name="button3">Knapp 3</string>
     <string name="units_colon">Enheter:</string>
     <string name="units">Enheter</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Område for visualisering</string>
     <string name="prefs_range_summary">Høy og lav verdi for grafen i Oversikt og smartklokke</string>
     <string name="low_mark">Lav verdi</string>
@@ -235,7 +231,6 @@
     <string name="wear_detailedIOB_title">Vis detaljert IOB</string>
     <string name="wear_detailedIOB_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="nosuccess">feilet - sjekk telefonen</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Pasienttype</string>
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
@@ -270,9 +265,6 @@
     <string name="ns_logappstartedevent">Logg app-start til NS</string>
     <string name="restartingapp">Avslutter appen for å aktivere innstillinger.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruker du?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Aktiver superbolus i veiviser</string>
     <string name="enablesuperbolus_summary">Aktiver superbolus-funksjonen i veiviseren. Ikke aktiver denne før du vet hvordan den fungerer. DEN KAN LEDE TIL EN OVERDOSERING AV INSULIN HVIS DEN BRUKES BLINDT!</string>
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
@@ -337,6 +329,7 @@
     <string name="sensitivityweightedaverage">Sensitivitet vektet middelverdi</string>
     <string name="notloadedplugins">Ikke alle profiler ble lastet!</string>
     <string name="valuesnotstored">Verdier ikke lagret!</string>
+    <string name="ns_localbroadcasts">Aktiver kringkasting av data til andre apper (som xDrip+). Ikke aktiver dette hvis du har mer enn én AAPS eller NSClient installert!</string>
     <string name="ns_localbroadcasts_title">Aktiver deling av data mellom apper på telefonen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
@@ -346,14 +339,6 @@
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Bolus i stedet for temp basal for raskere resultat</string>
     <string name="enableuam_summary">Oppdag uannonsert måltid (UAM)</string>
-    <string name="insulin_oref_peak">IOB-kurvens topptid</string>
-    <string name="insulin_peak_time">Topptid [min]</string>
-    <string name="insulin_peak">Topp</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA på %1$f for kort - bruker %2$f i stedet!</string>
     <string name="activate_profile">Aktiver profil</string>
     <string name="invalid">UGYLDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Prosent</string>
@@ -436,7 +421,6 @@
     <string name="ignore5m">Ignorer 5m</string>
     <string name="ignore15m">Ignorer 15m</string>
     <string name="ignore30m">Ignorer 30m</string>
-    <string name="required">beh</string>
     <string name="nav_historybrowser">Historikk leser</string>
     <string name="wear_notifysmb_title">Varsle på SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
@@ -517,7 +501,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplikator for max daglig basal</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplikator får gjeldende basal</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtuell pumpetype</string>
     <string name="virtualpump_definition">Pumpedefinisjon</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
@@ -529,6 +512,7 @@
     <string name="welcometosetupwizard">Velkommen til oppsettveiviseren. Den vil lede deg gjennom installasjonsprosessen\n</string>
     <string name="readstatus">Les status</string>
     <string name="exitwizard">Hopp over oppsettsveiviser</string>
+    <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basal endringer</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient håndterer tilkobling til Nightscout. Du kan hoppe over denne delen nå, men du vil ikke kunne bestå læringsmålene før den er satt opp.</string>
@@ -565,6 +549,7 @@
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
+    <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret i pumpen. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
     <string name="maintenance_settings">Vedlikeholds innstillinger</string>
     <string name="maintenance_email">E-post mottaker</string>
@@ -590,6 +575,7 @@
     <string name="loop_openmode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be om en endring hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="dexcom_lognssensorchange_title">Logg sensor endring til NS</string>
+    <string name="dexcom_lognssensorchange_summary">Opprett hendelse \"Sensor bytte\" i NS automatisk ved start av sensoren</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Ditt Tidepool brukernavn, normalt din e-postadresse</string>
@@ -655,6 +641,7 @@
     <string name="id">ID:</string>
     <string name="submit">Lagre</string>
     <string name="mostcommonprofile">Mest vanlig profil:</string>
+    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
     <string name="invalidage">Ugyldig alder</string>
     <string name="invalidweight">Ugyldig vekt</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
@@ -720,7 +707,6 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
     <string name="clear_filter">Nullstill filtre</string>
-    <string name="trend_arrow">Trend pil</string>
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruker registrering</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
@@ -777,18 +763,6 @@
     <string name="a11_correction_percentage">korriger resultatet med %</string>
     <string name="a11_correction_units">korriger resultatet med enheter</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
-    <string name="a11y_high">høy</string>
-    <string name="a11y_inrange">i målområdet</string>
-    <string name="a11y_low">lav</string>
-    <string name="a11y_arrow_double_down">synker raskt</string>
-    <string name="a11y_arrow_single_down">synker</string>
-    <string name="a11y_arrow_forty_five_down">synker sakte</string>
-    <string name="a11y_arrow_flat">stabil</string>
-    <string name="a11y_arrow_forty_five_up">stiger sakte</string>
-    <string name="a11y_arrow_single_up">stiger</string>
-    <string name="a11y_arrow_double_up">stiger raskt</string>
-    <string name="a11y_arrow_none">ingen</string>
-    <string name="a11y_arrow_unknown">ukjent</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">blodsukkermålingens kvalitet</string>
     <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
@@ -863,7 +837,6 @@
     <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop registreringer</string>
     <string name="show_hide_records">Skjul loop registreringer</string>
-    <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Diagram skala</string>
     <string name="profile1">Profil 1</string>
@@ -888,4 +861,7 @@
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
     <string name="dynisf_adjust_sensitivity">Juster sensitivitet og BS</string>
+    <string name="database_cleanup">Database opprydding</string>
+    <string name="cleanup_db_confirm">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.</string>
+    <string name="cleared_entries">Ryddet opp i oppføringer</string>
 </resources>
