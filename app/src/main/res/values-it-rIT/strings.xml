@@ -17,10 +17,6 @@
     <string name="description_config_builder">Usato per configurare i plugin attivi</string>
     <string name="description_objectives">Programma di apprendimento</string>
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
-    <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
@@ -171,7 +167,6 @@
     <string name="button3">Tasto 3</string>
     <string name="units_colon">Unità:</string>
     <string name="units">Unità</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
     <string name="prefs_range_summary">Limite alto e basso per i grafici nella sezione Panoramica e sullo smartwatch</string>
     <string name="low_mark">Limite BASSO</string>
@@ -240,7 +235,6 @@
     <string name="wear_detailedIOB_title">Mostra IOB dettagliato</string>
     <string name="wear_detailedIOB_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="nosuccess">non riuscito - controlla il telefono</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Tipo paziente</string>
     <string name="child">Bambino</string>
     <string name="teenage">Adolescente</string>
@@ -275,9 +269,6 @@
     <string name="ns_logappstartedevent">Registra l\'avvio dell\'app in NS</string>
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
     <string name="configbuilder_insulin_description">Quale tipo di insulina stai usando?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
@@ -352,14 +343,6 @@
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enableuam_summary">Rilevamento dei pasti non annunciati</string>
-    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
-    <string name="insulin_peak_time">Tempo del picco [min]</string>
-    <string name="insulin_peak">Picco</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="invalid">NON VALIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentuale</string>
@@ -442,7 +425,6 @@
     <string name="ignore5m">Ignora | 5m</string>
     <string name="ignore15m">Ignora | 15m</string>
     <string name="ignore30m">Ignora | 30m</string>
-    <string name="required">ric</string>
     <string name="nav_historybrowser">Storico</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
@@ -523,7 +505,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze - divisore DIA</string>
     <string name="openapsama_max_daily_safety_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_current_basal_safety_multiplier">Moltiplicatore di sicurezza basale corrente</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Tipo micro virtuale</string>
     <string name="virtualpump_definition">Definizione micro</string>
     <string name="virtualpump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
@@ -730,7 +711,6 @@
     <string name="graph_menu_divider_header">Grafico</string>
     <string name="chart_menu">Menu grafico</string>
     <string name="clear_filter">Cancella filtro</string>
-    <string name="trend_arrow">Freccia trend</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
@@ -787,18 +767,6 @@
     <string name="a11_correction_percentage">risultato corretto con %</string>
     <string name="a11_correction_units">risultato corretto con unità</string>
     <string name="not_available_full">Non disponibile</string>
-    <string name="a11y_high">alto</string>
-    <string name="a11y_inrange">in range</string>
-    <string name="a11y_low">basso</string>
-    <string name="a11y_arrow_double_down">discesa rapida</string>
-    <string name="a11y_arrow_single_down">discesa</string>
-    <string name="a11y_arrow_forty_five_down">discesa lenta</string>
-    <string name="a11y_arrow_flat">stabile</string>
-    <string name="a11y_arrow_forty_five_up">salita lenta</string>
-    <string name="a11y_arrow_single_up">salita</string>
-    <string name="a11y_arrow_double_up">salita rapida</string>
-    <string name="a11y_arrow_none">nessuno</string>
-    <string name="a11y_arrow_unknown">sconosciuto</string>
     <string name="a11y_graph">grafico</string>
     <string name="a11y_bg_quality">qualità glicemia</string>
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
@@ -873,8 +841,6 @@
     <string name="above" comment="above &quot;in range&quot;">Sopra</string>
     <string name="show_loop_records">Mostra record di loop</string>
     <string name="show_hide_records">Nascondi record di loop</string>
-    <string name="widget_description">AAPS widget</string>
-    <string name="configure">Configura opacità</string>
     <string name="loop_status">Stato loop</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="profile1">Profilo 1</string>
