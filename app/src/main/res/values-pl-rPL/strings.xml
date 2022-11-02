@@ -232,7 +232,6 @@
     <string name="wear_detailedIOB_title">Pokaż szczegóły IOB</string>
     <string name="wear_detailedIOB_summary">Rozłóż IOB na bolus i IOB bazy na zegarku</string>
     <string name="nosuccess">nie udało się - proszę sprawdzić telefon</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Typ pacjenta</string>
     <string name="child">Dziecko</string>
     <string name="teenage">Nastolatek</string>
@@ -428,7 +427,6 @@
     <string name="ignore5m">Ignoruj 5 min</string>
     <string name="ignore15m">Ignoruj 15 min</string>
     <string name="ignore30m">Ignoruj 30 min</string>
-    <string name="required">wym</string>
     <string name="nav_historybrowser">Przegląd historii</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
@@ -504,7 +502,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia divisor (Dzielnik uśpienia bolusa)</string>
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier (Mnożnik bezpieczeństwa maksymalnej dziennej dawki bazowej [U/godzinę])</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier (Mnożnik bezpieczeństwa aktualnej dziennej dawki bazowej [U/godzinę])</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Pompa wirtualna</string>
     <string name="virtualpump_definition">Definicja Pompy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBasal: krok =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
@@ -694,7 +691,6 @@
     <string name="graph_menu_divider_header">Wykres</string>
     <string name="chart_menu">Menu wykresu</string>
     <string name="clear_filter">Wyczyść filtr</string>
-    <string name="trend_arrow">Strzałka trendu</string>
     <string name="cannula">Kaniula</string>
     <string name="userentry">Wpis użytkownika</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
