@@ -3,8 +3,12 @@
     <!-- RL keys -->
     <!-- RL BLE Config -->
     <!-- RL Status Page -->
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="rileylink_title">RileyLink</string>
     <!-- RL State -->
+    <string name="rileylink_state_connected">Gekoppel</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_pump_unreachable">Pomp onbereikbaar</string>
     <!-- RileyLink - Common -->
     <!-- RileyLink - Preferences -->
 </resources>
