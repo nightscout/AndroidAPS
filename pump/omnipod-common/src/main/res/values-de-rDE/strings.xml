@@ -2,9 +2,14 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Pod Management</string>
+    <string name="omnipod_common_pod_management_heading_tools">Tools</string>
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_pod_management">Pod Mgmt</string>
+    <string name="omnipod_common_overview_pod_status">Pod Status</string>
+    <string name="omnipod_common_overview_reservoir">Reservoir</string>
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
@@ -13,6 +18,9 @@
     <!-- Omnipod - Commands -->
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Short status -->
+    <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
+    <string name="omnipod_common_short_status_reservoir">Reserv: %1$sU</string>
     <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">OK</string>
     <!-- Omnipod - Times -->
 </resources>
