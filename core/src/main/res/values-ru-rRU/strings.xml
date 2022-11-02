@@ -120,6 +120,22 @@
     <string name="pumpsuspended">Работа помпы остановлена</string>
     <string name="notconfigured">Не сконфигурировано</string>
     <string name="loopsuspended">ЗЦ остановлен</string>
+    <string name="trend_arrow">Стрелка тренда</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">н/д</string>
+    <string name="required">надо</string>
+    <string name="a11y_arrow_double_down">быстрое падение</string>
+    <string name="a11y_arrow_single_down">падение</string>
+    <string name="a11y_arrow_forty_five_down">медленное падение</string>
+    <string name="a11y_arrow_flat">стабильно</string>
+    <string name="a11y_arrow_forty_five_up">медленный рост</string>
+    <string name="a11y_arrow_single_up">рост</string>
+    <string name="a11y_arrow_double_up">быстрый рост</string>
+    <string name="a11y_arrow_none">отсутствует</string>
+    <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="a11y_high">высокий</string>
+    <string name="a11y_inrange">в диапазоне</string>
+    <string name="a11y_low">низкий</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
