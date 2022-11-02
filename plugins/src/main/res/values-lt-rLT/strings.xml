@@ -85,4 +85,5 @@
     <string name="sms_iob">AIO:</string>
     <string name="sms_bolus">Bolusas:</string>
     <string name="sms_basal">Valandinė bazė:</string>
+    <!-- Insulin -->
 </resources>
