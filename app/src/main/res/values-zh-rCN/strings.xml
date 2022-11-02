@@ -16,10 +16,6 @@
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
-    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
-    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
-    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
-    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
     <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="description_ns_client">将数据与 Nightscout 同步</string>
     <string name="description_ama">算法的状态在2017年</string>
@@ -165,7 +161,6 @@
     <string name="button3">按钮3</string>
     <string name="units_colon">单位:</string>
     <string name="units">单位</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">可视化范围</string>
     <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>
     <string name="low_mark">低值标记</string>
@@ -268,9 +263,6 @@
     <string name="ns_logappstartedevent">记录app启动事件到NS服务器</string>
     <string name="restartingapp">正在退出应用程序以应用设置。</string>
     <string name="configbuilder_insulin_description">你使用哪种类型的胰岛素？</string>
-    <string name="fastactinginsulincomment">诺和锐, 门冬, 优泌乐</string>
-    <string name="ultrafastactinginsulincomment">Fiasp超速效</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">在向导中启用超级大剂量</string>
     <string name="enablesuperbolus_summary">在向导中启用 superbolus超级大剂量 功能。不要启用, 直到你了解它真正的用法。如果盲目使用, 可能会导致胰岛素过量!</string>
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
@@ -343,13 +335,6 @@
     <string name="enablesmb">启用微型大剂量</string>
     <string name="enablesmb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
     <string name="enableuam_summary">检测未输入的膳食</string>
-    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
-    <string name="insulin_peak_time">峰值时间 [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">速效 Oref</string>
-    <string name="ultrarapid_oref">超速效 Oref</string>
-    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
-    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
     <string name="activate_profile">激活配置文件</string>
     <string name="invalid">无效</string>
     <string name="careportal_newnstreatment_percentage_label">百分比</string>
