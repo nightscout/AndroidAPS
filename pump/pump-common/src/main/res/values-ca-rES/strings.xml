@@ -3,6 +3,7 @@
     <!-- PumoCommon - Pump Abstract -->
     <!-- PumpCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basals</string>
     <!-- Time -->
     <!-- BLE Config -->
     <!-- BLE Errors -->
