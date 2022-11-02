@@ -235,7 +235,6 @@
     <string name="wear_detailedIOB_title">Vis detaljert IOB</string>
     <string name="wear_detailedIOB_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="nosuccess">feilet - sjekk telefonen</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Pasienttype</string>
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
@@ -436,7 +435,6 @@
     <string name="ignore5m">Ignorer 5m</string>
     <string name="ignore15m">Ignorer 15m</string>
     <string name="ignore30m">Ignorer 30m</string>
-    <string name="required">beh</string>
     <string name="nav_historybrowser">Historikk leser</string>
     <string name="wear_notifysmb_title">Varsle på SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
@@ -517,7 +515,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplikator for max daglig basal</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplikator får gjeldende basal</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtuell pumpetype</string>
     <string name="virtualpump_definition">Pumpedefinisjon</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
@@ -720,7 +717,6 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
     <string name="clear_filter">Nullstill filtre</string>
-    <string name="trend_arrow">Trend pil</string>
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruker registrering</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
@@ -777,18 +773,6 @@
     <string name="a11_correction_percentage">korriger resultatet med %</string>
     <string name="a11_correction_units">korriger resultatet med enheter</string>
     <string name="not_available_full">Ikke tilgjengelig</string>
-    <string name="a11y_high">høy</string>
-    <string name="a11y_inrange">i målområdet</string>
-    <string name="a11y_low">lav</string>
-    <string name="a11y_arrow_double_down">synker raskt</string>
-    <string name="a11y_arrow_single_down">synker</string>
-    <string name="a11y_arrow_forty_five_down">synker sakte</string>
-    <string name="a11y_arrow_flat">stabil</string>
-    <string name="a11y_arrow_forty_five_up">stiger sakte</string>
-    <string name="a11y_arrow_single_up">stiger</string>
-    <string name="a11y_arrow_double_up">stiger raskt</string>
-    <string name="a11y_arrow_none">ingen</string>
-    <string name="a11y_arrow_unknown">ukjent</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">blodsukkermålingens kvalitet</string>
     <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
