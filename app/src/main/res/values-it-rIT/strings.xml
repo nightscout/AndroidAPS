@@ -17,10 +17,6 @@
     <string name="description_config_builder">Usato per configurare i plugin attivi</string>
     <string name="description_objectives">Programma di apprendimento</string>
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
-    <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
     <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
@@ -171,7 +167,6 @@
     <string name="button3">Tasto 3</string>
     <string name="units_colon">Unità:</string>
     <string name="units">Unità</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
     <string name="prefs_range_summary">Limite alto e basso per i grafici nella sezione Panoramica e sullo smartwatch</string>
     <string name="low_mark">Limite BASSO</string>
@@ -274,9 +269,6 @@
     <string name="ns_logappstartedevent">Registra l\'avvio dell\'app in NS</string>
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
     <string name="configbuilder_insulin_description">Quale tipo di insulina stai usando?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
@@ -351,14 +343,6 @@
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enableuam_summary">Rilevamento dei pasti non annunciati</string>
-    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
-    <string name="insulin_peak_time">Tempo del picco [min]</string>
-    <string name="insulin_peak">Picco</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
     <string name="activate_profile">Attiva profilo</string>
     <string name="invalid">NON VALIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentuale</string>
