@@ -399,7 +399,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Διαιρέτης Αναβολής bolus</string>
     <string name="openapsama_max_daily_safety_multiplier">Μέγιστος ημερήσιος πολλαπλασιαστής ασφαλείας</string>
     <string name="openapsama_current_basal_safety_multiplier">Τρέχων πολλαπλασιαστής ασφαλείας βασικού ρυθμού</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Τύπος εικονικής αντλίας</string>
     <string name="virtualpump_definition">Ορισμός Αντλίας</string>
     <string name="virtualpump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
