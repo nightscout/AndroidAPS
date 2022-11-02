@@ -3,7 +3,11 @@
     <!-- Omnipod Dash - Description -->
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
     <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_overview_firmware_version_value">Firmware %1$s / Bluetooth %2$s</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>
