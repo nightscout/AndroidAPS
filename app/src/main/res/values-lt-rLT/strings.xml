@@ -231,7 +231,6 @@
     <string name="wear_detailedIOB_title">Rodyti AIO detaliai</string>
     <string name="wear_detailedIOB_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="nosuccess">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Paciento tipas</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
@@ -427,7 +426,6 @@
     <string name="ignore5m">Ignoruoti 5 min</string>
     <string name="ignore15m">Ignoruoti 15 min</string>
     <string name="ignore30m">Ignoruoti 30 min</string>
-    <string name="required">reikal.</string>
     <string name="nav_historybrowser">Istorija</string>
     <string name="wear_notifysmb_title">Pranešti apie SMB</string>
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
@@ -503,7 +501,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Boluso snaudimo daliklis</string>
     <string name="openapsama_max_daily_safety_multiplier">Maksimalus dienos bazės saugos daugiklis</string>
     <string name="openapsama_current_basal_safety_multiplier">Dabartinės bazės saugos daugiklis</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtualios pompos tipas</string>
     <string name="virtualpump_definition">Pompos nustatymas</string>
     <string name="virtualpump_pump_def">Bolusas: Žingsnis=%1$s\nIštęstinis bolusas: [Žingsnis=%2$s, Trukmė=%3$smin-%4$sh]\nBazė: Žingsnis=%5$s\nLDB: %6$s (iš %7$s), Trukmė=%8$smin -%9$sh\n%10$s</string>
@@ -689,7 +686,6 @@
     <string name="graph_menu_divider_header">Grafikas</string>
     <string name="chart_menu">Grafiko meniu</string>
     <string name="clear_filter">Valyti filtrą</string>
-    <string name="trend_arrow">Tendencijos kryptis</string>
     <string name="cannula">Kaniulė</string>
     <string name="userentry">Naudotojo įrašas</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
