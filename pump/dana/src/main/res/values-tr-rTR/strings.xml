@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="danarspump">Dana-i/RS</string>
+    <string name="danarspump_shortname">Dana</string>
     <string name="occlusion">Tıkanma</string>
     <string name="emptyreservoir">Rezervuar boş</string>
     <string name="checkshaft">Mili kontrol edin</string>
@@ -9,4 +11,11 @@
     <string name="remaininsulinalert">Kalan insülin seviyesi</string>
     <string name="missedbolus">Eksik Bolus</string>
     <string name="invalidpairing">Geçersiz eşleştirme bilgisi. Yeniden eşleştirme isteniyor</string>
+    <string name="danar_pumpalarm">Alarm</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="danarpump">DanaR</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
 </resources>
