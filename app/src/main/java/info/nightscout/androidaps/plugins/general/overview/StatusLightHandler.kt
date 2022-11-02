@@ -67,7 +67,7 @@ class StatusLightHandler @Inject constructor(
             if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
             } else {
-                careportal_battery_level?.text = rh.gs(R.string.notavailable)
+                careportal_battery_level?.text = rh.gs(R.string.value_unavailable_short)
                 careportal_battery_level?.setTextColor(rh.gac(careportal_battery_level.context, R.attr.defaultTextColor))
             }
         }
@@ -81,7 +81,7 @@ class StatusLightHandler @Inject constructor(
             warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
             view?.text = therapyEvent.value.age(rh.shortTextMode(), rh, dateUtil)
         } else {
-            view?.text = if (rh.shortTextMode()) "-" else rh.gs(R.string.notavailable)
+            view?.text = if (rh.shortTextMode()) "-" else rh.gs(R.string.value_unavailable_short)
         }
     }
 

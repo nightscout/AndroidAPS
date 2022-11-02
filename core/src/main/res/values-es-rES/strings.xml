@@ -114,6 +114,12 @@
     <string name="addnew">Añadir nuevo</string>
     <string name="addnew_above">Añadir nuevo arriba</string>
     <string name="wrong_pump_data">Los datos proceden de una bomba diferente. Cambia el controlador de la bomba para resetear su estado.</string>
+    <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
+    <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Bomba parada</string>
+    <string name="notconfigured">Sin configurar</string>
+    <string name="loopsuspended">Lazo suspendido</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -491,6 +497,7 @@
     <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
     <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

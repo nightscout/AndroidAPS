@@ -110,6 +110,12 @@
     <string name="addnew">添加新条目</string>
     <string name="addnew_above">在顶部新增</string>
     <string name="wrong_pump_data">数据来自不同的胰岛素泵，修改泵的驱动配置用来重置泵的状态。</string>
+    <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
+    <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查真实输注量</string>
+    <string name="shortgramm">克</string>
+    <string name="pumpsuspended">泵暂停了</string>
+    <string name="notconfigured">未配置</string>
+    <string name="loopsuspended">闭环暂停了</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
@@ -434,6 +440,7 @@
     <string name="a11y_user">用户</string>
     <!-- Autotune -->
     <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>

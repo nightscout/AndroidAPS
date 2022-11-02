@@ -105,6 +105,12 @@
     <string name="remove_button">Изтрий</string>
     <string name="addnew">Добави нов</string>
     <string name="wrong_pump_data">Данните идват от различна помпа. Сменете драйвера на помпата и за да възстановите състоянието на помпата.</string>
+    <string name="alarminxmin">Сларма след %1$d мин</string>
+    <string name="treatmentdeliveryerror">Грешка в болуса. Сам провери истинската стойност на доставения инсулин</string>
+    <string name="shortgramm">гр.</string>
+    <string name="pumpsuspended">Помпата е спряна</string>
+    <string name="notconfigured">Не е конфигуриран</string>
+    <string name="loopsuspended">Loop изключен</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -283,6 +289,7 @@
     <string name="basal">Базал</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Апликацията изисква разрешение за bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

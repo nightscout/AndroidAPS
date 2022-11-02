@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Gemiste BG lesings</string>
+    <string name="request">Versoek</string>
+    <string name="permission">Toestemming</string>
+</resources>

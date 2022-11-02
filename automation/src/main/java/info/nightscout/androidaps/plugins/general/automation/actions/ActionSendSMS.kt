@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicator
+    @Inject lateinit var smsCommunicator: SmsCommunicator
 
     var text = InputString()
 
@@ -24,7 +24,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
     override fun icon(): Int = R.drawable.ic_notifications
 
     override fun doAction(callback: Callback) {
-        val result = smsCommunicatorPlugin.sendNotificationToAllNumbers(text.value)
+        val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
         callback.result(PumpEnactResult(injector).success(result).comment(if (result) R.string.ok else R.string.error)).run()
     }
 

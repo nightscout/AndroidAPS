@@ -104,6 +104,11 @@
     <string name="remove_button">삭제</string>
     <string name="addnew">새로 추가</string>
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
+    <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">펌프 일시중지됨</string>
+    <string name="notconfigured">설정되지 않음</string>
+    <string name="loopsuspended">Loop 일시중지</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
@@ -373,6 +378,7 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Basal</string>
     <!-- Autotune -->
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>

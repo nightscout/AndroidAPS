@@ -9,6 +9,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
@@ -19,8 +20,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.ceil
 import kotlin.math.max

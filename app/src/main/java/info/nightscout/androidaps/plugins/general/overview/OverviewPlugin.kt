@@ -1,20 +1,30 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.extensions.*
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.extensions.putDouble
+import info.nightscout.androidaps.extensions.putInt
+import info.nightscout.androidaps.extensions.putString
+import info.nightscout.androidaps.extensions.storeDouble
+import info.nightscout.androidaps.extensions.storeInt
+import info.nightscout.androidaps.extensions.storeString
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Overview
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -56,8 +66,18 @@ class OverviewPlugin @Inject constructor(
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
+    override fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable) {
+        rxBus.send(
+            EventNewNotification(
+                NotificationWithAction(injector, id, text, level).apply {
+                    action(actionButtonId, action)
+                })
+        )
+    }
 
-    class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
+    override fun dismissNotification(id: Int) {
+        rxBus.send(EventDismissNotification(id))
+    }
 
     override fun onStart() {
         super.onStart()

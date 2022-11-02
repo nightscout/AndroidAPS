@@ -49,8 +49,7 @@ class HistoryBrowserData @Inject constructor(
                 activePlugin,
                 defaultValueHelper,
                 profileFunction,
-                repository,
-                fabricPrivacy
+                repository
             )
         iobCobCalculator =
             IobCobCalculatorPlugin(

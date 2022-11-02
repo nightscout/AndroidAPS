@@ -44,9 +44,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
@@ -72,7 +70,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var loop: Loop
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var buildHelper: BuildHelper
@@ -152,7 +150,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
+            androidPermission.notifyForSMSPermissions(this, smsCommunicator)
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }

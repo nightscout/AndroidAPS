@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.LocalAlertUtils
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -32,12 +33,11 @@ import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.widget.updateWidget
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.widget.Widget
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -117,7 +117,7 @@ class KeepAliveWorker(
         }
         lastRun = dateUtil.now()
 
-        updateWidget(context)
+        Widget.updateWidget(context)
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.checkStaleBGAlert()
         checkPump()

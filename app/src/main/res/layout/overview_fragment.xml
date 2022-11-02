@@ -57,7 +57,7 @@
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
                         android:hint="temp target"
-                        android:text="@string/notavailable"
+                        android:text="@string/value_unavailable_short"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:foreground="?attr/selectableItemBackgroundBorderless"
                         app:drawableStartCompat="@drawable/ic_crosstarget"

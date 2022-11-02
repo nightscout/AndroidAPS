@@ -23,8 +23,10 @@ import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.di.DaggerAppComponent
 import info.nightscout.androidaps.di.StaticInjector
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.LocalAlertUtils
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -41,14 +43,12 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.widget.updateWidget
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -155,7 +155,7 @@ class MainApp : DaggerApplication() {
         //  schedule widget update
         refreshWidget = Runnable {
             handler.postDelayed(refreshWidget, 60000)
-            updateWidget(this)
+            Widget.updateWidget(this)
         }
         handler.postDelayed(refreshWidget, 60000)
     }

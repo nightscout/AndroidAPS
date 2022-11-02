@@ -54,7 +54,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profilePlugin: ProfileSource
-    @Mock lateinit var smsCommunicatorPlugin: SmsCommunicator
+    @Mock lateinit var smsCommunicator: SmsCommunicator
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
 
@@ -82,7 +82,7 @@ ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionSendSMS) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
-                it.smsCommunicatorPlugin = smsCommunicatorPlugin
+                it.smsCommunicator = smsCommunicator
             }
             if (it is ActionProfileSwitch) {
                 it.aapsLogger = aapsLogger

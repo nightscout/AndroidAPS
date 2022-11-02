@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Pominięte odczyty BG</string>
+    <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
+    <string name="request">Żądanie</string>
+    <string name="permission">Uprawnienia</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
+</resources>

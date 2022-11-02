@@ -41,10 +41,8 @@ import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragmen
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorFragment
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
-import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
@@ -64,7 +62,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
-    @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
@@ -72,7 +69,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
-    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
     @ContributesAndroidInjector abstract fun contributesWearFragment(): WearFragment
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment

@@ -80,6 +80,11 @@
     <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
     <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
     <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
+    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
+    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -201,6 +206,25 @@
     <string name="bolus_reminder">Bolus reminder</string>
     <string name="duration_label">Duration</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pump suspended</string>
+    <string name="notconfigured">Not configured</string>
+    <string name="loopsuspended">Loop suspended</string>
+    <string name="trend_arrow">Trend arrow</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">req</string>
+    <string name="a11y_arrow_double_down">falling rapidly</string>
+    <string name="a11y_arrow_single_down">falling</string>
+    <string name="a11y_arrow_forty_five_down">falling slowly</string>
+    <string name="a11y_arrow_flat">stable</string>
+    <string name="a11y_arrow_forty_five_up">rising slowly</string>
+    <string name="a11y_arrow_single_up">rising</string>
+    <string name="a11y_arrow_double_up">rising rapidly</string>
+    <string name="a11y_arrow_none">none</string>
+    <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_high">high</string>
+    <string name="a11y_inrange">in range</string>
+    <string name="a11y_low">low</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -616,6 +640,9 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
     <string name="needconnectpermission">Application needs bluetooth permission</string>
+
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

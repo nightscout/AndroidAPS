@@ -81,6 +81,12 @@
     <string name="event_time_label">Hora do Evento</string>
     <string name="notes_label">Notas</string>
     <string name="addnew">Adicionar novo</string>
+    <string name="alarminxmin">Disparar alarme em %1$d min</string>
+    <string name="treatmentdeliveryerror">O Bolus relatou um erro. Verifique a quantidade administrada manualmente</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Bomba suspensa</string>
+    <string name="notconfigured">Não configurado</string>
+    <string name="loopsuspended">Loop suspenso</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite da bomba</string>
@@ -225,6 +231,7 @@
     <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
     <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
     <string name="needconnectpermission">O aplicativo precisa de permissão bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

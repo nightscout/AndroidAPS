@@ -12,6 +12,7 @@
     <string name="only_upload_if_charging">Yalnızca şarj olurken yükleyin</string>
     <string name="open_humans_uploading">Open Humans Yükleniyor…</string>
     <string name="open_humans_notifications">Open Humans Bildirimleri</string>
+    <string name="uploading_to_open_humans">AAPS, Open Humans\'a yükleniyor. Bu biraz zaman alabilir.</string>
     <string name="you_have_been_signed_out_of_open_humans">Open Humans\'dan çıkış yaptınız</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Bu bilerek yapılmadıysa tekrar oturum açmak için burayı tıklayın.</string>
     <string name="upload_now">Şimdi yükle</string>

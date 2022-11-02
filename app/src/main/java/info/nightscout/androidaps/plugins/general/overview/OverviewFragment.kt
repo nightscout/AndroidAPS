@@ -35,8 +35,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.ui.dialogs.CalibrationDialog
-import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
@@ -108,6 +106,8 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.weardata.EventData
+import info.nightscout.ui.dialogs.CalibrationDialog
+import info.nightscout.ui.dialogs.CarbsDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -799,7 +799,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
-                ?: rh.gs(R.string.notavailable)
+                ?: rh.gs(R.string.value_unavailable_short)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())
             binding.infoLayout.arrow.setColorFilter(lastBgColor)
@@ -813,7 +813,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
             } else {
                 binding.infoLayout.deltaLarge.text = ""
-                binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.notavailable)
+                binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.value_unavailable_short)
                 binding.infoLayout.avgDelta.text = ""
                 binding.infoLayout.longAvgDelta.text = ""
             }
