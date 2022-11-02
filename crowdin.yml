@@ -18,19 +18,19 @@ files:
   - source: /pump/combo/src/main/res/values/strings.xml
     translation: /pump/combo/src/main/res/values-%android_code%/strings.xml
   - source: /pump/dana/src/main/res/values/strings.xml
-    translation: /pump//dana/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/dana/src/main/res/values-%android_code%/strings.xml
   - source: /pump/danar/src/main/res/values/strings.xml
-    translation: /pump//danar/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/danar/src/main/res/values-%android_code%/strings.xml
   - source: /pump/medtronic/src/main/res/values/strings.xml
-    translation: /pump//medtronic/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/medtronic/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod-common/src/main/res/values/strings.xml
-    translation: /pump//omnipod-common/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/omnipod-common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod-dash/src/main/res/values/strings.xml
-    translation: /pump//omnipod-dash/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/omnipod-dash/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod-eros/src/main/res/values/strings.xml
-    translation: /pump//omnipod-eros/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/omnipod-eros/src/main/res/values-%android_code%/strings.xml
   - source: /pump/rileylink/src/main/res/values/strings.xml
-    translation: /pump//rileylink/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/rileylink/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/strings.xml
     translation: /insight/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/alert_codes.xml
@@ -44,9 +44,9 @@ files:
   - source: /automation/src/main/res/values/strings.xml
     translation: /automation/src/main/res/values-%android_code%/strings.xml
   - source: /pump/diaconn/src/main/res/values/strings.xml
-    translation: /pump//diaconn/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
   - source: /pump/pump-common/src/main/res/values/strings.xml
-    translation: /pump//pump-common/src/main/res/values-%android_code%/strings.xml
+    translation: /pump/pump-common/src/main/res/values-%android_code%/strings.xml
   - source: /openhumans/src/main/res/values/strings.xml
     translation: /openhumans/src/main/res/values-%android_code%/strings.xml
   - source: /implementation/src/main/res/values/strings.xml
