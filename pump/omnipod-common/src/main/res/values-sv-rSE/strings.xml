@@ -13,6 +13,8 @@
     <!-- Omnipod - Commands -->
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Short status -->
+    <string name="omnipod_common_short_status_temp_basal">Temp: %1$s</string>
     <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">OK</string>
     <!-- Omnipod - Times -->
 </resources>
