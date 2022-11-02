@@ -86,4 +86,5 @@
     <string name="sms_bolus">בולוס:</string>
     <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
+    <!-- Insulin -->
 </resources>
