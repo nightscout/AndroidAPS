@@ -17,10 +17,6 @@
     <string name="description_config_builder">Utilizado para configurar complementos activos</string>
     <string name="description_objectives">Programa de aprendizaje</string>
     <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
-    <string name="description_insulin_rapid">Ajustes de insulina preestablecidos para Humalog y NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Ajuste de insulina preestablecido para Fiasp</string>
-    <string name="description_insulin_lyumjev">Ajuste de insulina preestablecido para Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite personalizar el pico de acción máxima de la insulina. Debe ser utilizado únicamente por usuarios avanzados</string>
     <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
     <string name="description_ns_client">Sincroniza tus datos con Nightscout</string>
     <string name="description_ama">Estado del algoritmo en 2017</string>
@@ -171,7 +167,6 @@
     <string name="button3">Botón 3</string>
     <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Rango de visualización</string>
     <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
     <string name="low_mark">Valor de hipoglucemia</string>
@@ -240,7 +235,6 @@
     <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
     <string name="wear_detailedIOB_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Tipo de paciente</string>
     <string name="child">Menor de edad</string>
     <string name="teenage">Adolescente</string>
@@ -275,9 +269,6 @@
     <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en Nightscout</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activar superbolo en asistente</string>
     <string name="enablesuperbolus_summary">Activar la función superbolo en el asistente. No lo actives hasta que hayas aprendido lo que realmente hace. ¡PUEDE CAUSAR SOBREDOSIS DE INSULINA si lo usas sin precaución!</string>
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
@@ -352,14 +343,6 @@
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Usar microbolos en lugar de basales temporales, para corregir más rápidamente</string>
     <string name="enableuam_summary">Detectar comidas no anunciadas (UAM)</string>
-    <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
-    <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
-    <string name="insulin_peak">Pico</string>
-    <string name="free_peak_oref">Personalizar Pico</string>
-    <string name="rapid_acting_oref">Acción Rápida</string>
-    <string name="ultrarapid_oref">Acción Ultra Rápida</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Porcentaje</string>
@@ -442,7 +425,6 @@
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
     <string name="ignore30m">Ignorar 30m</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">Historial</string>
     <string name="wear_notifysmb_title">Notificar SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB en el reloj como un bolo estándar</string>
@@ -523,7 +505,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">DIA Divisor para suspensión de bolos</string>
     <string name="openapsama_max_daily_safety_multiplier">Máximo multiplicador diario de seguridad</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicador basal de seguridad actual</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Bomba virtual</string>
     <string name="virtualpump_definition">Definición de la bomba</string>
     <string name="virtualpump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, Duración =%3$smin -%4$sh] \nBasal: Paso =%5$s\nTBR: %6$s ( %7$s), Duración =%8$sMin -%9$sh\n%10$s</string>
@@ -730,7 +711,6 @@
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menú gráfico</string>
     <string name="clear_filter">Borrar filtro</string>
-    <string name="trend_arrow">Flecha de tendencia</string>
     <string name="cannula">Cánula</string>
     <string name="userentry">Entrada de usuario</string>
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
@@ -787,18 +767,6 @@
     <string name="a11_correction_percentage">resultado correcto con %</string>
     <string name="a11_correction_units">corregir resultado con unidades</string>
     <string name="not_available_full">No disponible</string>
-    <string name="a11y_high">alto</string>
-    <string name="a11y_inrange">en rango</string>
-    <string name="a11y_low">bajo</string>
-    <string name="a11y_arrow_double_down">bajando rápido</string>
-    <string name="a11y_arrow_single_down">bajando</string>
-    <string name="a11y_arrow_forty_five_down">bajando despacio</string>
-    <string name="a11y_arrow_flat">estable</string>
-    <string name="a11y_arrow_forty_five_up">subiendo despacio</string>
-    <string name="a11y_arrow_single_up">subiendo</string>
-    <string name="a11y_arrow_double_up">subiendo rápido</string>
-    <string name="a11y_arrow_none">ninguno</string>
-    <string name="a11y_arrow_unknown">desconocido</string>
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
     <string name="a11y_bg_quality_recalculated">recalculado</string>
@@ -873,8 +841,6 @@
     <string name="above" comment="above &quot;in range&quot;">Alto</string>
     <string name="show_loop_records">Mostrar registros del lazo</string>
     <string name="show_hide_records">Ocultar registros del lazo</string>
-    <string name="widget_description">Widget de AAPS</string>
-    <string name="configure">Configurar opacidad</string>
     <string name="loop_status">Estado del lazo</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="profile1">Perfil 1</string>
