@@ -240,7 +240,6 @@
     <string name="wear_detailedIOB_title">показать IOB подробно</string>
     <string name="wear_detailedIOB_summary">разбивка IOB на болюсный и базальный IOB на циферблате смарт-часов</string>
     <string name="nosuccess">неудача - проверьте телефон</string>
-    <string name="notavailable">н/д</string>
     <string name="patientage">Тип пациента</string>
     <string name="child">ребенок</string>
     <string name="teenage">подросток</string>
@@ -442,7 +441,6 @@
     <string name="ignore5m">Игнорировать 5 м</string>
     <string name="ignore15m">Игнорировать 15 м</string>
     <string name="ignore30m">Игнорировать 30 м</string>
-    <string name="required">надо</string>
     <string name="nav_historybrowser">История</string>
     <string name="wear_notifysmb_title">Сообщить о супер микро болюсе SMB</string>
     <string name="wear_notifysmb_summary">Показывать супер микро болюс SMB на часах как стандартный болюс.</string>
@@ -523,7 +521,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Делитель продолжительности действия инсулина при болюсе OpenAPS AMA</string>
     <string name="openapsama_max_daily_safety_multiplier">Множитель безопасности макс суточного базала</string>
     <string name="openapsama_current_basal_safety_multiplier">Текущий множитель безопасности базала</string>
-    <string name="value_unavailable_short">н/д</string>
     <string name="virtualpump_type">Тип виртуальной помпы</string>
     <string name="virtualpump_definition">Определение помпы</string>
     <string name="virtualpump_pump_def">Болюс: Шаг =%1$s\n Пролонгированный Болюс: [Шаг =%2$s, Продолжительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\n ВБС: %6$s (на %7$s), Продолжительность =%8$sмин -%9$sh\n%10$s</string>
@@ -730,7 +727,6 @@
     <string name="graph_menu_divider_header">График</string>
     <string name="chart_menu">Меню графика</string>
     <string name="clear_filter">Очистить фильтр</string>
-    <string name="trend_arrow">Стрелка тренда</string>
     <string name="cannula">Катетер помпы</string>
     <string name="userentry">Запись пользователя</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
@@ -787,18 +783,6 @@
     <string name="a11_correction_percentage">корректный результат в %</string>
     <string name="a11_correction_units">корректный результат в ед</string>
     <string name="not_available_full">Недоступно</string>
-    <string name="a11y_high">высокий</string>
-    <string name="a11y_inrange">в диапазоне</string>
-    <string name="a11y_low">низкий</string>
-    <string name="a11y_arrow_double_down">быстро падает</string>
-    <string name="a11y_arrow_single_down">падает</string>
-    <string name="a11y_arrow_forty_five_down">медленно падает</string>
-    <string name="a11y_arrow_flat">стабильный</string>
-    <string name="a11y_arrow_forty_five_up">медленно поднимается</string>
-    <string name="a11y_arrow_single_up">растет</string>
-    <string name="a11y_arrow_double_up">стремительно растет</string>
-    <string name="a11y_arrow_none">отсутствует</string>
-    <string name="a11y_arrow_unknown">неизвестно</string>
     <string name="a11y_graph">график</string>
     <string name="a11y_bg_quality">качество глюкозы в крови</string>
     <string name="a11y_bg_quality_recalculated">пересчитано</string>
