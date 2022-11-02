@@ -7,6 +7,7 @@
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator uygulamasından %1$s için PIN girin</string>
     <string name="smscommunicator_otp_pin">İlave zorunlu şifre (PIN)</string>
     <string name="smscommunicator_otp_pin_summary">Oluşturulan Her Tek Kullanımlık Şifrenin sonunda ezberlenmesi ve yapıştırılması gereken ek şifre</string>
+    <string name="smscommunicator_tab_otp_label">Kimlik doğrulayıcı (OTP-Authenticator) kurulumu</string>
     <string name="smscommunicator_code_verify_label">Kontrol edilecek kod:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Doğrulama kodu, Authenticator uygulaması (OTP olarak bilinir) tarafından görüntülenen 6 haneden ve ardından 3 veya daha fazla zorunlu PIN hanesinden oluşur.</string>
@@ -97,7 +98,9 @@
     <string name="sms_basal">Bazal:</string>
     <string name="sms_min_ago">%1$ddak önce</string>
     <string name="sms_loop_suspended_for">(%1$d dk) Duraklatıldı</string>
+    <string name="sms_read_status_failed">Durum okuması başarısız oldu</string>
     <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
+    <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
     <!-- Insulin -->
     <string name="dia">İES</string>
