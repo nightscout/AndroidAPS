@@ -502,6 +502,7 @@
     <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
