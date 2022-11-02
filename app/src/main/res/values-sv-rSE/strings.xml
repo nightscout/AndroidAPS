@@ -235,7 +235,6 @@ Eversense-appen.</string>
     <string name="wear_detailedIOB_title">Visa detaljerad IOB</string>
     <string name="wear_detailedIOB_summary">Visa IOB med bolus och basal på klocka</string>
     <string name="nosuccess">misslyckat - kontrollera telefonen</string>
-    <string name="notavailable">-</string>
     <string name="patientage">Patienttyp</string>
     <string name="child">Barn</string>
     <string name="teenage">Tonåring</string>
@@ -432,7 +431,6 @@ Eversense-appen.</string>
     <string name="ignore5m">Ignorera 5 min</string>
     <string name="ignore15m">Ignorera 15 min</string>
     <string name="ignore30m">Ignorera 30 min</string>
-    <string name="required">beh</string>
     <string name="nav_historybrowser">Historikläsare</string>
     <string name="wear_notifysmb_title">Skicka notis vid SMB</string>
     <string name="wear_notifysmb_summary">Visa SMB på klockan som en standardbolus.</string>
@@ -508,7 +506,6 @@ Eversense-appen.</string>
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplikator för max daglig basal (max_daily)</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplikator för nuvarande basal (max_current)</string>
-    <string name="value_unavailable_short">-</string>
     <string name="virtualpump_type">Typ av virtuell pump</string>
     <string name="virtualpump_definition">Pumpdefinition</string>
     <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
@@ -696,7 +693,6 @@ Eversense-appen.</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammeny</string>
     <string name="clear_filter">Rensa filter</string>
-    <string name="trend_arrow">Trendpil</string>
     <string name="cannula">Kanyl</string>
     <string name="userentry">Angivet av användare</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
@@ -750,18 +746,6 @@ Eversense-appen.</string>
     <string name="a11_correction_percentage">korrigera med %</string>
     <string name="a11_correction_units">korrigera med enheter</string>
     <string name="not_available_full">Ej tillgängligt</string>
-    <string name="a11y_high">hög</string>
-    <string name="a11y_inrange">inom målområdet</string>
-    <string name="a11y_low">låg</string>
-    <string name="a11y_arrow_double_down">sjunker snabbt</string>
-    <string name="a11y_arrow_single_down">sjunker</string>
-    <string name="a11y_arrow_forty_five_down">sjunker långsamt</string>
-    <string name="a11y_arrow_flat">stabilt</string>
-    <string name="a11y_arrow_forty_five_up">stiger långsamt</string>
-    <string name="a11y_arrow_single_up">stiger</string>
-    <string name="a11y_arrow_double_up">stiger snabbt</string>
-    <string name="a11y_arrow_none">ingen</string>
-    <string name="a11y_arrow_unknown">okänd</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">Kvalitet på BG-data</string>
     <string name="a11y_bg_quality_recalculated">omräknad</string>
