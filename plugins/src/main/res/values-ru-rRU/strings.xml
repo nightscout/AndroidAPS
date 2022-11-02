@@ -89,4 +89,5 @@
     <string name="sms_bolus">болюс:</string>
     <string name="sms_basal">базал: </string>
     <string name="a11y_otp_qr_code">QR код для введения временного пароля</string>
+    <!-- Insulin -->
 </resources>
