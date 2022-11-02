@@ -15,4 +15,8 @@
 
     <string name="a11y_carb_reminder">set reminder</string>
 
+    <!--    Widget-->
+    <string name="configure">Configure opacity</string>
+    <string name="widget_description">AAPS widget</string>
+
 </resources>
