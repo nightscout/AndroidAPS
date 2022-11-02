@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="pump_commerror_label">Брой комуникационни грешки</string>
+    <string name="show_comm_error_count_title">Покажи брой комуникационни грешки</string>
+    <string name="show_comm_error_count_summary">Покажи броя грешки докато комуникира с Ruffi.  В повечето случаи, ако има една или повече грешки грешка сепрепоръчва рестарт.</string>
+    <string name="combo_error_display_never">Никога</string>
+    <string name="combo_error_display_error">Когато има грешка</string>
+    <string name="combo_error_display_always">Винаги</string>
+</resources>
