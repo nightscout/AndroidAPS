@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Интеграция с помпой Medtronic требует устройства RileyLink и специфическую модель помпы</string>
     <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Серийный номер помы</string>
+    <string name="medtronic_pump_type">Тип помпы</string>
+    <string name="medtronic_pump_frequency">Частота помпы</string>
+    <string name="medtronic_pump_bolus_delay">Задержка перед подачей болюса (сек)</string>
+    <string name="medtronic_pump_max_bolus">Макс. болюс на помпе (ед)</string>
+    <string name="medtronic_pump_max_basal">Макс. базал на помпе (ед/ч)</string>
+    <string name="medtronic_pump_encoding">Кодировка Medtronic</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Глобальн (868 Мгц)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Программное 4b6b кодирование</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Аппаратное кодирование 4b6b</string>
+    <string name="medtronic_custom_action_wake_and_tune">Пробуждение и настройка</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Очистить блок болюса</string>
+    <string name="medtronic_custom_action_reset_rileylink">Сбросить конфигурацию RileyLink</string>
+    <string name="medtronic_pump_battery_select">Тип батареи (по мощности)</string>
+    <string name="medtronic_pump_battery_no">Не выбрано (Простой вид)</string>
+    <string name="medtronic_pump_battery_alkaline">Щелочная (Подробный вид)</string>
+    <string name="medtronic_pump_battery_lithium">Литиевая (Подробный вид)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
+    <string name="medtronic_pump_battery_nimh">Никель-металлогидридная (подробно)</string>
+    <string name="medtronic_bolus_debugging">Отладка Болюс/Назначения</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">Батарея RileyLink</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Ошибки</string>
+    <string name="medtronic_error_serial_not_set">Серийный # не задан.</string>
+    <string name="medtronic_error_serial_invalid">Серийный # неверный.</string>
+    <string name="medtronic_error_pump_type_not_set">Тип помпы не задан.</string>
+    <string name="medtronic_error_pump_type_invalid">Тип помпы не поддерживается.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Частота помпы не задана.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Частота помпы не поддерживается.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
     <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
