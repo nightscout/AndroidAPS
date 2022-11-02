@@ -9,4 +9,5 @@
     <string name="unit_minute_short">דק\'</string>
     <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
     <string name="a11y_carb_reminder">קביעת תזכורת</string>
+    <!--    Widget-->
 </resources>
