@@ -2,8 +2,10 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
     <!-- MDT Fragment -->
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Foute</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
     <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
