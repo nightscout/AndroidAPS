@@ -4,10 +4,13 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
     <!-- Omnipod Eros - History -->
     <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RLBatt: %1$d</string>
     <!-- Omnipod Eros - Error -->
     <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_pulse_log">Pulse Log</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <!-- Omnipod Eros - Other -->
 </resources>
