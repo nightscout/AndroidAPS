@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="apslastLogNum">aps_last_log_num</string>
+    <string name="diaconn_g8_screentimeout_10">"10 "</string>
+    <string name="diaconn_g8_pumpscreentimeout_10">10</string>
+    <string name="diaconn_g8_pumpscreentimeout_20">20</string>
+    <string name="diaconn_g8_pumpscreentimeout_30">30</string>
+    <string name="apsIncarnationNo">aps_incarnation_no</string>
+</resources>
