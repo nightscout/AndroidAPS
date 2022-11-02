@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.database
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.androidaps.annotations.DbOpenForTesting
 import info.nightscout.androidaps.database.data.NewEntries
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
@@ -19,7 +19,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@OpenForTesting
+@DbOpenForTesting
 @Singleton class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
 ) {
