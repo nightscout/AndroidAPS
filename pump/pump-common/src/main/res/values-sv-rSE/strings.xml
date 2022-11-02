@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">OK</string>
     <!-- PumpCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
     <!-- Time -->
