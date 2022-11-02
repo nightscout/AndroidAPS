@@ -2,9 +2,13 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_remove_riley_link">Διαγραφή</string>
     <!-- RL Status Page -->
+    <string name="rileylink_title">RileyLink</string>
     <!-- RL State -->
+    <string name="rileylink_state_connected">Συνδέθηκε</string>
     <!-- RL Errors -->
+    <string name="rileylink_error_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
     <!-- RileyLink - Common -->
     <!-- RileyLink - Preferences -->
 </resources>
