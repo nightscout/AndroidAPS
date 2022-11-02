@@ -15,9 +15,6 @@
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <string name="description_objectives">Onderrig program</string>
     <string name="description_food">Vertoon kos-voorafinstellings soos omskryf in Nightscout</string>
-    <string name="description_insulin_rapid">Insulien voorkeure vir Humalog en NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulien voorkeure vir Fiasp</string>
-    <string name="description_insulin_free_peak">Laat jou toe om die piek van die insulien aktiwiteit definieer en behoort slegs gebruik te word deur gevorderde gebruikers</string>
     <string name="description_loop">Aktiveer of deaktiveer die implementering die lus wakker maak.</string>
     <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
     <string name="description_ama">Status van die algoritme in 2017</string>
@@ -212,9 +209,6 @@
     <string name="ns_logappstartedevent">Log app begin na NS</string>
     <string name="restartingapp">Begin toepassing weer om instellings toe te pas.</string>
     <string name="configbuilder_insulin_description">Watter tipe insulien gebruik jy?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Ontsper superbolus in Ghoeroe</string>
     <string name="enablesuperbolus_summary">Ontsper superbolus funksionaliteit in Ghoeroe. Moenie aktiveer totdat jy leer wat dit werklik doen. DIT KAN \'n INSULIEN OORDOSIS VEROORSAAK AS BLINDELINGS GEBRUIK WORD!</string>
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
@@ -256,12 +250,6 @@
     <string name="enablesmb">Aktiveer SMB</string>
     <string name="enablesmb_summary">Gebruik Super Mikro Boluses in plaas van of tydelike basale vir vinniger resultate</string>
     <string name="enableuam_summary">Opsporing van Onaangekondigde etes</string>
-    <string name="insulin_oref_peak">IAB kurwe piek tyd</string>
-    <string name="insulin_peak_time">Piek tyd [min]</string>
-    <string name="free_peak_oref">Vry-piek Oref</string>
-    <string name="rapid_acting_oref">Snelaksie Oref</string>
-    <string name="ultrarapid_oref">Ultra-Snel Oref</string>
-    <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
     <string name="activate_profile">Aktiveer profiel</string>
     <string name="invalid">ONGELDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Persentasie</string>
