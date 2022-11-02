@@ -16,10 +16,6 @@
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
     <string name="description_objectives">Program de învăţare</string>
     <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
-    <string name="description_insulin_rapid">Setări prestabilite pentru insulinele Humalog sau NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Setări prestabilite pentru Fiasp</string>
-    <string name="description_insulin_lyumjev">Setări prestabilite pentru Lyumjev</string>
-    <string name="description_insulin_free_peak">Vă permite definirea vârfului activităţii insulinei şi ar trebui folosit doar de către utilizatorii avansaţi</string>
     <string name="description_loop">Activare sau dezactivare a implementării declanşatoare pentru buclă.</string>
     <string name="description_ns_client">Sincronizare a datelor cu Nightscout</string>
     <string name="description_ama">Starea algoritmului în 2017</string>
@@ -164,7 +160,6 @@
     <string name="button3">Buton 3</string>
     <string name="units_colon">Unități:</string>
     <string name="units">Unități</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Intervalul pentru vizualizare</string>
     <string name="prefs_range_summary">Valoarea maximă și minimă pentru graficele din vizualizare și pentru smartwatch</string>
     <string name="low_mark">Pragul HIPO</string>
@@ -231,7 +226,6 @@
     <string name="wear_detailedIOB_title">Arată IOB detaliat</string>
     <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
-    <string name="notavailable">indisponibil</string>
     <string name="patientage">Tip de pacient</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
@@ -266,9 +260,6 @@
     <string name="ns_logappstartedevent">Înregistrează pornirea aplicației în NS</string>
     <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
     <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activează superbolus în asistent</string>
     <string name="enablesuperbolus_summary">Activează funcționalitatea de superbolus în asistentul de buclă. Nu activați până nu înțelegeți ce face cu adevărat. DACĂ ESTE FOLOSIT ÎN NECUNOȘTINȚĂ DE CAUZĂ POATE DUCE LA SUPRADOZĂ DE INSULINĂ!</string>
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
@@ -339,13 +330,6 @@
     <string name="enablesmb">Activează SMB</string>
     <string name="enablesmb_summary">Folosește SMB în locul bazalei temporare pentru reacție mai rapidă</string>
     <string name="enableuam_summary">S-a detectat masă neanunțată</string>
-    <string name="insulin_oref_peak">Curbă timp vârf IOB</string>
-    <string name="insulin_peak_time">Timp vârf [min]</string>
-    <string name="free_peak_oref">Oref Vârf-Liber</string>
-    <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
-    <string name="ultrarapid_oref">Oref Insulină-UltraRapidă</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <string name="activate_profile">Activează profil</string>
     <string name="invalid">INVALID</string>
     <string name="careportal_newnstreatment_percentage_label">Procentaj</string>
@@ -427,7 +411,6 @@
     <string name="ignore5m">Ignorați 5min</string>
     <string name="ignore15m">Ignorați 15min</string>
     <string name="ignore30m">Ignorați 30min</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">Vizualizare istoric</string>
     <string name="wear_notifysmb_title">Notifică despre SMB</string>
     <string name="wear_notifysmb_summary">Arată SMB pe ceas ca și un bolus standard.</string>
@@ -503,7 +486,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Amână bolusul prin divizor</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplicator sigur maxim zilnic</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicator sigur pentru bazala curentă</string>
-    <string name="value_unavailable_short">indisponibil</string>
     <string name="virtualpump_type">Tipul pompei virtuale</string>
     <string name="virtualpump_definition">Definirea pompei</string>
     <string name="virtualpump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
@@ -689,7 +671,6 @@
     <string name="graph_menu_divider_header">Grafic</string>
     <string name="chart_menu">Meniu diagramă</string>
     <string name="clear_filter">Șterge filtru</string>
-    <string name="trend_arrow">Săgeată tendinţă</string>
     <string name="cannula">Canula</string>
     <string name="userentry">Înregistrare utilizator</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
