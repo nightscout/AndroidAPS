@@ -399,7 +399,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus sluimer dia divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks daaglikse veiligheids vermenigvuldiger</string>
     <string name="openapsama_current_basal_safety_multiplier">Huidige basale veiligheids vermenigvuldiger</string>
-    <string name="value_unavailable_short">nvt</string>
     <string name="virtualpump_type">Virtuele Pomp</string>
     <string name="virtualpump_definition">Pomp definisie</string>
     <string name="virtualpump_pump_def">Bolus: Stap =%1$s\nVerlengde Bolus: [stap%2$s, duur = =%3$smin -%4$sh]\nBasal: stap =%5$s\nTBR: %6$s (deur %7$s), duur =%8$smin -%9$sh\n%10$s</string>
