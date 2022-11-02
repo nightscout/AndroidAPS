@@ -14,4 +14,6 @@
     <string name="remind_to_bolus_later">Напомнить о болюсе позже</string>
     <string name="a11y_carb_reminder">установить напоминание</string>
     <!--    Widget-->
+    <string name="configure">Настроить прозрачность</string>
+    <string name="widget_description">Виджет AAPS</string>
 </resources>
