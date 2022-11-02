@@ -9,4 +9,5 @@
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Påminnelse til å gi bolus senere</string>
     <string name="a11y_carb_reminder">angi påminnelse</string>
+    <!--    Widget-->
 </resources>
