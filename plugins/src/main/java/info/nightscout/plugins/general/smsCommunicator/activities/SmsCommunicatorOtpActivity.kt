@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.plugins.R
-import info.nightscout.plugins.databinding.ActivitySmscommunicatorOtpBinding
+import info.nightscout.plugins.databinding.SmscommunicatorActivityOtpBinding
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import net.glxn.qrgen.android.QRCode
@@ -34,13 +34,13 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var uel: UserEntryLogger
 
-    private lateinit var binding: ActivitySmscommunicatorOtpBinding
+    private lateinit var binding: SmscommunicatorActivityOtpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
 
-        binding = ActivitySmscommunicatorOtpBinding.inflate(layoutInflater)
+        binding = SmscommunicatorActivityOtpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.otpVerifyEdit.addTextChangedListener(object : TextWatcher {

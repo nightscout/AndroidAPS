@@ -17,10 +17,6 @@
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
     <string name="description_objectives">Leerprogramma</string>
     <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
-    <string name="description_insulin_rapid">Insuline instelling voor Humalog en NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insuline instelling voor Fiasp</string>
-    <string name="description_insulin_lyumjev">Insuline instelling voor Lyumjev</string>
-    <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren, mag alleen worden gebruikt door gevorderde gebruikers</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
     <string name="description_ama">Het algoritme uit 2017</string>
@@ -166,7 +162,6 @@
     <string name="button3">Knop 3</string>
     <string name="units_colon">Eenheden:</string>
     <string name="units">Eenheden</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
     <string name="low_mark">LAAG grens</string>
@@ -235,7 +230,6 @@
     <string name="wear_detailedIOB_title">Toon gedetailleerde IOB</string>
     <string name="wear_detailedIOB_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="nosuccess">Niet geslaagd - controleer de telefoon</string>
-    <string name="notavailable">n.v.t.</string>
     <string name="patientage">Type patiënt</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
@@ -270,9 +264,6 @@
     <string name="ns_logappstartedevent">Log app start naar NS</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSIS IS MOGELIJK BIJ BLINDELINGS GEBRUIK!</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
@@ -346,14 +337,6 @@
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
     <string name="enableuam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
-    <string name="insulin_oref_peak">IOB curve piek tijd</string>
-    <string name="insulin_peak_time">Piek tijd [min]</string>
-    <string name="insulin_peak">Piek</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Snel-werkende Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA van %1$f te kort - %2$f wordt inplaats gebruikt!</string>
     <string name="activate_profile">Activeer profiel</string>
     <string name="invalid">Ongeldig</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
@@ -436,7 +419,6 @@
     <string name="ignore5m">Negeer 5m</string>
     <string name="ignore15m">Negeer 15m</string>
     <string name="ignore30m">Negeer 30m</string>
-    <string name="required">nodig</string>
     <string name="nav_historybrowser">Historiek venster</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
@@ -517,7 +499,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsama_max_daily_safety_multiplier">Maximale dagelijkse veiligheids vermeningvuldigings factor</string>
     <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Virtuele pomp Type</string>
     <string name="virtualpump_definition">Pomp definitie</string>
     <string name="virtualpump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
@@ -717,7 +698,6 @@
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
     <string name="clear_filter">Verwijder filter</string>
-    <string name="trend_arrow">Trendpijl</string>
     <string name="cannula">Canule</string>
     <string name="userentry">Gebruikersinvoer</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
@@ -774,18 +754,6 @@
     <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
     <string name="a11_correction_units">corrigeer uitkomt met units</string>
     <string name="not_available_full">Niet beschikbaar</string>
-    <string name="a11y_high">hoog</string>
-    <string name="a11y_inrange">binnen bereik</string>
-    <string name="a11y_low">laag</string>
-    <string name="a11y_arrow_double_down">snel dalend</string>
-    <string name="a11y_arrow_single_down">dalend</string>
-    <string name="a11y_arrow_forty_five_down">langzaam dalend</string>
-    <string name="a11y_arrow_flat">stabiel</string>
-    <string name="a11y_arrow_forty_five_up">langzaam stijgend</string>
-    <string name="a11y_arrow_single_up">stijgt</string>
-    <string name="a11y_arrow_double_up">snel stijgend</string>
-    <string name="a11y_arrow_none">geen</string>
-    <string name="a11y_arrow_unknown">onbekend</string>
     <string name="a11y_graph">grafiek</string>
     <string name="a11y_bg_quality">bloedglucose kwaliteit</string>
     <string name="a11y_bg_quality_recalculated">opnieuw berekend</string>
@@ -860,7 +828,6 @@
     <string name="above" comment="above &quot;in range&quot;">Boven</string>
     <string name="show_loop_records">Toon loop records</string>
     <string name="show_hide_records">Verberg loop records</string>
-    <string name="configure">Configureer transparantie</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="profile1">Profiel 1</string>

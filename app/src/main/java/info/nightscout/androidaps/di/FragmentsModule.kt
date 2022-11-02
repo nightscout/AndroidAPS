@@ -41,7 +41,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragmen
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
-import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
@@ -63,7 +62,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
-    @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment

@@ -7,4 +7,5 @@
     <string name="time_offset">Fuso horário</string>
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Lembrete para bólus mais tarde</string>
+    <!--    Widget-->
 </resources>

@@ -8,6 +8,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Constraint
@@ -34,6 +35,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
+    @Mock lateinit var activityNames: ActivityNames
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -58,7 +60,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
+            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
         )
 
         val pumpDescription = PumpDescription()

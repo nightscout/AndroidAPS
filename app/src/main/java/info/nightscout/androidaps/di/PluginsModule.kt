@@ -35,10 +35,10 @@ import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
-import info.nightscout.androidaps.plugins.insulin.InsulinLyumjevPlugin
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
+import info.nightscout.plugins.insulin.InsulinLyumjevPlugin
+import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
+import info.nightscout.plugins.insulin.InsulinOrefRapidActingPlugin
+import info.nightscout.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin

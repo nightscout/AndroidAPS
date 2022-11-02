@@ -7,25 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogExtendedbolusBinding
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.shared.SafeParse
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
 import java.util.*
@@ -41,6 +41,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     private var queryingProtection = false
     private var _binding: DialogExtendedbolusBinding? = null
@@ -103,7 +104,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                         }
                     }
                 })

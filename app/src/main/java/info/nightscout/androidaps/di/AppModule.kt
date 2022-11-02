@@ -8,7 +8,9 @@ import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.BolusTimer
@@ -136,6 +138,7 @@ open class AppModule {
         @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
         @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
+        @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
     }
 }
 

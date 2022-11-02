@@ -45,10 +45,10 @@ import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.widget.updateWidget
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -155,7 +155,7 @@ class MainApp : DaggerApplication() {
         //  schedule widget update
         refreshWidget = Runnable {
             handler.postDelayed(refreshWidget, 60000)
-            updateWidget(this)
+            Widget.updateWidget(this)
         }
         handler.postDelayed(refreshWidget, 60000)
     }

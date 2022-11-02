@@ -37,4 +37,18 @@
     <string name="sms_iob">IAB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basale:</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="description_insulin_rapid">Insulien voorkeure vir Humalog en NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Insulien voorkeure vir Fiasp</string>
+    <string name="description_insulin_free_peak">Laat jou toe om die piek van die insulien aktiwiteit definieer en behoort slegs gebruik te word deur gevorderde gebruikers</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IAB kurwe piek tyd</string>
+    <string name="insulin_peak_time">Piek tyd [min]</string>
+    <string name="free_peak_oref">Vry-piek Oref</string>
+    <string name="rapid_acting_oref">Snelaksie Oref</string>
+    <string name="ultrarapid_oref">Ultra-Snel Oref</string>
+    <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
 </resources>

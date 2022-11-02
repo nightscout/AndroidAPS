@@ -16,10 +16,6 @@
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
-    <string name="description_insulin_rapid">Predefinição de Insulina Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Predefinição de Insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Predefinição para Insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite definir o pico de atividade da insulina e deve ser usado somente por usuários avançados</string>
     <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
     <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
@@ -164,7 +160,6 @@
     <string name="button3">Botão 3</string>
     <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
     <string name="prefs_range_summary">Marca Alto e Baixo para os gráficos em Sumário e Smartwatch</string>
     <string name="low_mark">Marca Baixo</string>
@@ -231,7 +226,6 @@
     <string name="wear_detailedIOB_title">Mostrar IA detalhada</string>
     <string name="wear_detailedIOB_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
-    <string name="notavailable">n/d</string>
     <string name="patientage">Tipo de Paciente</string>
     <string name="child">Criança</string>
     <string name="teenage">Adolescente</string>
@@ -266,9 +260,6 @@
     <string name="ns_logappstartedevent">Registar inicio da app no NS</string>
     <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
     <string name="configbuilder_insulin_description">Qual o tipo de insulina que está a utilizar?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
     <string name="enablesuperbolus_summary">Active a funcionalidade de superbolus no assistente. Não active até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE UTILIZAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
@@ -339,13 +330,6 @@
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Bólus em vez de basal temporária para uma ação mais rápida</string>
     <string name="enableuam_summary">Deteção de Refeições Não Anunciadas (RNA)</string>
-    <string name="insulin_oref_peak">Tempo do Pico da curva de IA</string>
-    <string name="insulin_peak_time">Tempo Pico [min]</string>
-    <string name="free_peak_oref">Oref Pico-Livre</string>
-    <string name="rapid_acting_oref">Oref Acção-Rápida</string>
-    <string name="ultrarapid_oref">Oref Ultra-Rápida</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <string name="activate_profile">Activar perfil</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentagem</string>
@@ -427,7 +411,6 @@
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
     <string name="ignore30m">Ignorar 30m</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">Navegador do histórico</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
@@ -503,7 +486,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Pausa bólus divisor DIA</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplicador máx. diário de segurança</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicador actual de segurança basal</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Tipo da Bomba Virtual</string>
     <string name="virtualpump_definition">Definição da Bomba</string>
     <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Prolongado: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nDBT: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
@@ -689,7 +671,6 @@
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menu do Gráfico</string>
     <string name="clear_filter">Limpar filtros</string>
-    <string name="trend_arrow">Seta de tendência</string>
     <string name="cannula">Cânula</string>
     <string name="userentry">Entrada de Utilizador</string>
     <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>

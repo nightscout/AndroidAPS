@@ -12,7 +12,6 @@ import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -25,9 +24,17 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -40,7 +47,8 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -65,6 +73,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var objectivePlugin: ObjectivesPlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     private var queryingProtection = false
     private var showOkCancel: Boolean = true
@@ -345,7 +354,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })

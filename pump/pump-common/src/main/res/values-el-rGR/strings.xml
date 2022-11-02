@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Η λειτουργία δεν υποστηρίζεται από την αντλία ή/και οδηγό.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Η λειτουργία δεν υποστηρίζεται ΑΚΟΜΑ από την αντλία.</string>
+    <string name="common_resultok">ΟΚ</string>
+    <string name="pump_serial_number">Σειριακός Αριθμός Αντλίας</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Ποτέ δεν επικοινωνήσατε</string>
+    <string name="pump_status_waking_up">Ξύπνημα</string>
+    <string name="pump_status_error_comm">Σφάλμα με επικοινωνία</string>
+    <string name="pump_status_timeout_comm">Λήξη χρόνου επικοινωνίας</string>
+    <string name="pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
+    <string name="pump_status_invalid_config">Μη έγκυρη παραμετροποίηση</string>
+    <string name="pump_status_active">Ενεργή</string>
+    <string name="pump_status_sleeping">Sleeping</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Βασικοί</string>
+    <string name="history_group_configuration">Ρύθμιση παραμέτρων</string>
+    <string name="history_group_notification">Ειδοποιήσεις</string>
+    <string name="history_group_statistic">Στατιστικά</string>
+    <string name="history_group_unknown">Άγνωστα</string>
+    <string name="history_group_all">Όλα</string>
+    <string name="history_group_bolus">Bolus</string>
+    <string name="history_group_prime">Πλήρωση</string>
+    <string name="history_group_alarm">Συναγερμοί</string>
+    <string name="history_group_glucose">Γλυκόζη</string>
+    <string name="history_group_other">Άλλο</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Scan</string>
+    <string name="ble_config_scan_stop">Stop</string>
+    <string name="ble_config_scan_selected">Επιλεγμένο</string>
+    <string name="ble_config_scan_scanning">Σάρωση</string>
+    <string name="ble_config_scan_finished">Η σάρωση ολοκληρώθηκε</string>
+    <string name="ble_config_scan_error">Λάθος σάρωσης: %1$d</string>
+    <string name="ble_config_connected_never">Ποτέ</string>
+    <string name="ble_config_remove">Μετακίνηση</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth απενεργοποιημένο</string>
+    <string name="ble_error_no_bt_adapter">Δεν υπάρχει προσαρμογέας Bluetooth</string>
+    <string name="ble_error_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_wrong_max_bolus_set">Λάθος μέγιστο bolus ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Λάθος μέγιστο Βασικού ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
+    <!-- Pump History -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d ημέρες</item>
+        <item quantity="other">%1$d ημέρες</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d ώρες</item>
+    </plurals>
+</resources>

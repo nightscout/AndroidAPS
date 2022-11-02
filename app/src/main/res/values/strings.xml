@@ -32,7 +32,6 @@
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
-    <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
     <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
     <string name="key_ns_food_last_synced_id" translatable="false">ns_food_last_sync</string>
@@ -68,10 +67,6 @@
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
     <string name="description_food">Displays the food presets defined in Nightscout</string>
-    <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulin preset for Lyumjev</string>
-    <string name="description_insulin_free_peak">Allows you to define the peak of the insulin activity and should only be used by advanced users</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ns_client_v3">Synchronizes your data with Nightscout using v3 API</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
@@ -226,7 +221,6 @@
     <string name="button3">Button 3</string>
     <string name="units_colon">Units:</string>
     <string name="units">Units</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
@@ -306,7 +300,6 @@
     <string name="wear_detailedIOB_title">Show detailed IOB</string>
     <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="nosuccess">not successful - please check phone</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Patient type</string>
     <string name="child">Child</string>
     <string name="teenage">Teenage</string>
@@ -342,9 +335,6 @@
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
@@ -421,7 +411,6 @@
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
-    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
@@ -445,15 +434,6 @@
     <string name="enablesmb">Enable SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
-    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
-    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
-    <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="insulin_peak">Peak</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA of %1$f too short - using %2$f instead!</string>
     <string name="activate_profile">Activate profile</string>
     <string name="invalid">INVALID</string>
     <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
@@ -556,7 +536,6 @@
     <string name="ignore5m">Ignore 5m</string>
     <string name="ignore15m">Ignore 15m</string>
     <string name="ignore30m">Ignore 30m</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">History browser</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
@@ -656,7 +635,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="key_virtualpump_uploadstatus" translatable="false">virtualpump_uploadstatus</string>
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
@@ -913,7 +891,6 @@
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
     <string name="clear_filter">Clear filter</string>
-    <string name="trend_arrow">Trend arrow</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">User entry</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
@@ -983,18 +960,6 @@
     <string name="a11_correction_percentage">correct outcome with %</string>
     <string name="a11_correction_units">correct outcome with units</string>
     <string name="not_available_full">Not available</string>
-    <string name="a11y_high">high</string>
-    <string name="a11y_inrange">in range</string>
-    <string name="a11y_low">low</string>
-    <string name="a11y_arrow_double_down">falling rapidly</string>
-    <string name="a11y_arrow_single_down">falling</string>
-    <string name="a11y_arrow_forty_five_down">falling slowly</string>
-    <string name="a11y_arrow_flat">stable</string>
-    <string name="a11y_arrow_forty_five_up">rising slowly</string>
-    <string name="a11y_arrow_single_up">rising</string>
-    <string name="a11y_arrow_double_up">rising rapidly</string>
-    <string name="a11y_arrow_none">none</string>
-    <string name="a11y_arrow_unknown">unknown</string>
     <string name="a11y_graph">graph</string>
     <string name="a11y_bg_quality">blood glucose quality</string>
     <string name="a11y_bg_quality_recalculated">recalculated</string>
@@ -1072,8 +1037,6 @@
     <string name="above" comment="above &quot;in range&quot;">Above</string>
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
-    <string name="widget_description">AAPS widget</string>
-    <string name="configure">Configure opacity</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
     <string name="profile1">Profile 1</string>

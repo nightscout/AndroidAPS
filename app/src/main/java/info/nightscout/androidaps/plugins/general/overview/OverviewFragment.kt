@@ -801,7 +801,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
-                ?: rh.gs(R.string.notavailable)
+                ?: rh.gs(R.string.value_unavailable_short)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())
             binding.infoLayout.arrow.setColorFilter(lastBgColor)
@@ -815,7 +815,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
             } else {
                 binding.infoLayout.deltaLarge.text = ""
-                binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.notavailable)
+                binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.value_unavailable_short)
                 binding.infoLayout.avgDelta.text = ""
                 binding.infoLayout.longAvgDelta.text = ""
             }
