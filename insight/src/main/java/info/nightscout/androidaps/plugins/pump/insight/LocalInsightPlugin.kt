@@ -6,9 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -22,8 +20,20 @@ import info.nightscout.androidaps.insight.database.InsightBolusID
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.insight.database.InsightHistoryOffset
 import info.nightscout.androidaps.insight.database.InsightPumpID
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.Insight
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpPluginBase
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.PumpSync.PumpState.TemporaryBasal
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.shared.logging.AAPSLogger
@@ -89,7 +99,7 @@ class LocalInsightPlugin @Inject constructor(
     .fragmentClass(LocalInsightFragment::class.java.name)
     .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
     injector, aapsLogger, rh, commandQueue
-), Pump, Constraints, InsightConnectionService.StateCallback {
+), Pump, Insight, Constraints, InsightConnectionService.StateCallback {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
     private var alertService: InsightAlertService? = null
@@ -872,7 +882,7 @@ class LocalInsightPlugin @Inject constructor(
             ?:"Unknown"
     }
 
-    fun stopPump(): PumpEnactResult {
+    override fun stopPump(): PumpEnactResult {
         val result = PumpEnactResult(injector)
         connectionService?.let { service ->
             try {
@@ -896,7 +906,7 @@ class LocalInsightPlugin @Inject constructor(
         return result
     }
 
-    fun startPump(): PumpEnactResult {
+    override fun startPump(): PumpEnactResult {
         val result = PumpEnactResult(injector)
         connectionService?.let { service ->
             try {
@@ -920,7 +930,7 @@ class LocalInsightPlugin @Inject constructor(
         return result
     }
 
-    fun setTBROverNotification(enabled: Boolean): PumpEnactResult {
+    override fun setTBROverNotification(enabled: Boolean): PumpEnactResult {
         val result = PumpEnactResult(injector)
         tBROverNotificationBlock?.let { tBROverNotificationBlock ->
             val valueBefore = tBROverNotificationBlock.isEnabled
