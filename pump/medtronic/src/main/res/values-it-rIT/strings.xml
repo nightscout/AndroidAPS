@@ -2,6 +2,9 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
     <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <!-- MDT History -->
@@ -15,4 +18,6 @@
     <!-- medtronic_warning -->
     <!-- combo_pump_connected_now -->
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
 </resources>
