@@ -17,10 +17,6 @@
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
     <string name="description_objectives">Oplæringsprogram</string>
     <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
-    <string name="description_insulin_rapid">Insulin forudindstillet til Humalog og NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulinforudindstilling til Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulin forudindstillet til Lyumjev</string>
-    <string name="description_insulin_free_peak">Giver dig mulighed for at definere spidsbelastningen af insulin-aktiviteten og bør kun bruges af avancerede brugere</string>
     <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
     <string name="description_ns_client">Synkroniserer dine data med NightScout</string>
     <string name="description_ama">Status for algoritmen i 2017</string>
@@ -166,7 +162,6 @@
     <string name="button3">Knap 3</string>
     <string name="units_colon">Enheder:</string>
     <string name="units">Enheder</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Område for Visualisering</string>
     <string name="prefs_range_summary">Højeste og laveste værdi for diagrammerne i Oversigt og Smartwatch</string>
     <string name="low_mark">LAV værdi</string>
@@ -269,9 +264,6 @@
     <string name="ns_logappstartedevent">Log app-start til NS</string>
     <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruger du?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Aktiver superbolus i guiden</string>
     <string name="enablesuperbolus_summary">Aktiver superbolus funktionalitet i guiden. Aktiver ikke før du har lært, hvad det virkelig gør. DET KAN FORÅRSAGE INSULIN OVERDOSERING HVIS BRUGT I BLINDE!</string>
     <string name="show_statuslights">Vis statuslys på startskærm</string>
@@ -345,14 +337,6 @@
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Brug Super Mikro Boluser i stedet for midlertidig basal for hurtigere handling</string>
     <string name="enableuam_summary">Detektering af uanmeldte måltider</string>
-    <string name="insulin_oref_peak">IOB Kurve Peak-Tid</string>
-    <string name="insulin_peak_time">Spidstidspunkt [min]</string>
-    <string name="insulin_peak">Top</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA af %1$f for kort - bruger %2$f i stedet!</string>
     <string name="activate_profile">Aktivér profil</string>
     <string name="invalid">UGYLDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Procent</string>
