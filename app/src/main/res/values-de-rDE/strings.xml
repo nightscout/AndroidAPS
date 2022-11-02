@@ -17,10 +17,6 @@
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
     <string name="description_objectives">Das Programm kennenlernen</string>
     <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
-    <string name="description_insulin_rapid">Insulinprofil für Humalog und NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulinprofil für Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulin-Voreinstellung für Lyumjev</string>
-    <string name="description_insulin_free_peak">Erlaubt dir, das Wirkmaximum der Insulinaktivität zu definieren, und sollte nur von erfahrenen Anwendern genutzt werden</string>
     <string name="description_loop">Aktiviere oder deaktiviere die Anwendung, die den Loop ausführt.</string>
     <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
     <string name="description_ama">Stand des Algorithmus in 2017</string>
@@ -166,7 +162,6 @@
     <string name="button3">Schaltfläche 3</string>
     <string name="units_colon">Einheiten:</string>
     <string name="units">Einheiten</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
     <string name="prefs_range_summary">Hoch- und Niedrig-Werte für die Übersicht- und die Smartwatch-Anzeige</string>
     <string name="low_mark">Niedrig-Markierung</string>
@@ -235,7 +230,6 @@
     <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
     <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Patiententyp</string>
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
@@ -270,9 +264,6 @@
     <string name="ns_logappstartedevent">Logge App-Start in Nightscout</string>
     <string name="restartingapp">App wird beendet, um neue Einstellungen zu laden.</string>
     <string name="configbuilder_insulin_description">Welchen Insulin-Typ verwendest Du?</string>
-    <string name="fastactinginsulincomment">NovoRapid, NovoLog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Aktiviere Superbolus im Bolus-Rechner</string>
     <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Bolus-Rechner. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
@@ -346,14 +337,6 @@
     <string name="enablesmb">Aktiviere SMB</string>
     <string name="enablesmb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enableuam_summary">Erkennung von unangekündigten Mahlzeiten</string>
-    <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
-    <string name="insulin_peak_time">Wirkungshoch [min]</string>
-    <string name="insulin_peak">Gipfel</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
     <string name="activate_profile">Aktiviere Profil</string>
     <string name="invalid">Ungültig</string>
     <string name="careportal_newnstreatment_percentage_label">Prozentsatz</string>
@@ -436,7 +419,6 @@
     <string name="ignore5m">5 Min. ignorieren</string>
     <string name="ignore15m">15 Min. ignorieren</string>
     <string name="ignore30m">30 Min. ignorieren</string>
-    <string name="required">angef.</string>
     <string name="nav_historybrowser">Historie</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
@@ -517,7 +499,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus-Snooze-DIA-Divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Sicherheitsmultiplikator des Basalhöchstwertes</string>
     <string name="openapsama_current_basal_safety_multiplier">Sicherheitsmultiplikator der aktuellen Basalrate</string>
-    <string name="value_unavailable_short">N/A</string>
     <string name="virtualpump_type">Typ der virtuellen Pumpe</string>
     <string name="virtualpump_definition">Pumpen-Definition</string>
     <string name="virtualpump_pump_def">Bolus: Schritt=%1$s\nVerzögerter Bolus: [Schritt=%2$s, Dauer=%3$smin-%4$sh]\nBasal: Schritt=%5$s\nTBR: %6$s (bei %7$s), Dauer=%8$smin-%9$sh\n%10$s</string>
@@ -718,7 +699,6 @@ Unerwartetes Verhalten.</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
     <string name="clear_filter">Filter löschen</string>
-    <string name="trend_arrow">Trendpfeil</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
@@ -775,18 +755,6 @@ Unerwartetes Verhalten.</string>
     <string name="a11_correction_percentage">korrektes Ergebnis mit %</string>
     <string name="a11_correction_units">korrektes Ergebnis mit Einheiten</string>
     <string name="not_available_full">Nicht verfügbar</string>
-    <string name="a11y_high">hoch</string>
-    <string name="a11y_inrange">im Zielbereich</string>
-    <string name="a11y_low">niedrig</string>
-    <string name="a11y_arrow_double_down">schnell fallend</string>
-    <string name="a11y_arrow_single_down">fallend</string>
-    <string name="a11y_arrow_forty_five_down">langsam fallend</string>
-    <string name="a11y_arrow_flat">stabil</string>
-    <string name="a11y_arrow_forty_five_up">Langsamer Anstieg</string>
-    <string name="a11y_arrow_single_up">steigend</string>
-    <string name="a11y_arrow_double_up">schnell steigend</string>
-    <string name="a11y_arrow_none">kein(e)</string>
-    <string name="a11y_arrow_unknown">unbekannt</string>
     <string name="a11y_graph">Diagramm</string>
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_bg_quality_recalculated">neu berechnet</string>
@@ -861,7 +829,6 @@ Unerwartetes Verhalten.</string>
     <string name="above" comment="above &quot;in range&quot;">Über</string>
     <string name="show_loop_records">Zeige Loop Datensätze</string>
     <string name="show_hide_records">Verberge Loop Datensätze</string>
-    <string name="configure">Deckkraft konfigurieren</string>
     <string name="loop_status">Loop Status</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="profile1">Profil 1</string>
