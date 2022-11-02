@@ -14,5 +14,6 @@
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Short status -->
     <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">OK</string>
     <!-- Omnipod - Times -->
 </resources>
