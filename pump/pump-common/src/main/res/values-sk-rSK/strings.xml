@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">OK</string>
     <!-- PumpCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
     <!-- Time -->
     <!-- BLE Config -->
+    <string name="ble_config_scan_stop">Stop</string>
     <!-- BLE Errors -->
     <!-- Pump Error -->
     <!-- Pump History -->
