@@ -235,7 +235,6 @@
     <string name="wear_detailedIOB_title">Vis detaljeret IOB</string>
     <string name="wear_detailedIOB_summary">Bryd IOB ned i bolus og basal IOB på urskiven</string>
     <string name="nosuccess">mislykkedes - tjek venligst telefonen</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Patienttype</string>
     <string name="child">Barn</string>
     <string name="teenage">Teeanger</string>
@@ -436,7 +435,6 @@
     <string name="ignore5m">Ignorér 5m</string>
     <string name="ignore15m">Ignorér 15m</string>
     <string name="ignore30m">Ignorér 30m</string>
-    <string name="required">krævet</string>
     <string name="nav_historybrowser">Historik browser</string>
     <string name="wear_notifysmb_title">Giv besked ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på uret som en standard bolus.</string>
@@ -517,7 +515,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze DIA divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks daglig basal multiplikator</string>
     <string name="openapsama_current_basal_safety_multiplier">Nuværende basal sikkerheds multiplikator</string>
-    <string name="value_unavailable_short">ikke tilgængelig</string>
     <string name="virtualpump_type">Virtuel pumpe type</string>
     <string name="virtualpump_definition">Pumpe Definition</string>
     <string name="virtualpump_pump_def">Bolus: Trin=%1$s\nForlænget Bolus: [Trin=%2$s, Varighed=%3$smin-%4$sh]\nBasal: Trin=%5$s\nTBR: %6$s (by %7$s), Varighed=%8$smin-%9$sh\n%10$s</string>
@@ -717,7 +714,6 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagrammenu</string>
     <string name="clear_filter">Nulstil filter</string>
-    <string name="trend_arrow">Trend pil</string>
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruger indtastning</string>
     <string name="common_values">Brug værdien af den største mængde mad du plejer at indtage\n</string>
@@ -774,18 +770,6 @@
     <string name="a11_correction_percentage">korrekt resultat med %</string>
     <string name="a11_correction_units">korrekt resultat med enheder</string>
     <string name="not_available_full">Ikke tilgængelig</string>
-    <string name="a11y_high">høj</string>
-    <string name="a11y_inrange">inden for området</string>
-    <string name="a11y_low">lav</string>
-    <string name="a11y_arrow_double_down">falder hurtigt</string>
-    <string name="a11y_arrow_single_down">falder</string>
-    <string name="a11y_arrow_forty_five_down">falder langsomt</string>
-    <string name="a11y_arrow_flat">stabil</string>
-    <string name="a11y_arrow_forty_five_up">stiger langsomt</string>
-    <string name="a11y_arrow_single_up">stiger</string>
-    <string name="a11y_arrow_double_up">stiger hurtigt</string>
-    <string name="a11y_arrow_none">ingen</string>
-    <string name="a11y_arrow_unknown">ukendt</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">blodglukose kvalitet</string>
     <string name="a11y_bg_quality_recalculated">genberegnet</string>
