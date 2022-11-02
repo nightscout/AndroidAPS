@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.plugins.general.overview
 
 import android.content.Context
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
@@ -19,20 +21,21 @@ import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DeviationDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,8 +48,7 @@ class OverviewData @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
-    private val repository: AppRepository,
-    private val fabricPrivacy: FabricPrivacy
+    private val repository: AppRepository
 ) {
 
     var rangeToDisplay = 6 // for graph
@@ -163,7 +165,7 @@ class OverviewData @Inject constructor(
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
             temporaryBasal?.let { "T:" + it.toStringShort() }
                 ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
-        } ?: rh.gs(R.string.notavailable)
+        } ?: rh.gs(R.string.value_unavailable_short)
 
     fun temporaryBasalDialogText(iobCobCalculator: IobCobCalculator): String =
         profileFunction.getProfile()?.let { profile ->
@@ -172,9 +174,9 @@ class OverviewData @Inject constructor(
                     "\n" + rh.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
             }
                 ?: "${rh.gs(R.string.basebasalrate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}"
-        } ?: rh.gs(R.string.notavailable)
+        } ?: rh.gs(R.string.value_unavailable_short)
 
-    fun temporaryBasalIcon(iobCobCalculator: IobCobCalculator): Int =
+    @DrawableRes fun temporaryBasalIcon(iobCobCalculator: IobCobCalculator): Int =
         profileFunction.getProfile()?.let { profile ->
             iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 val percentRate = temporaryBasal.convertedToPercent(dateUtil.now(), profile)
@@ -186,7 +188,8 @@ class OverviewData @Inject constructor(
             }
         } ?: R.drawable.ic_cp_basal_no_tbr
 
-    fun temporaryBasalColor(context: Context?, iobCobCalculator: IobCobCalculator): Int = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gac(context , R.attr.basal) }
+    @AttrRes fun temporaryBasalColor(context: Context?, iobCobCalculator: IobCobCalculator): Int = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gac(context, R
+        .attr.basal) }
             ?: rh.gac(context, R.attr.defaultTextColor)
 
     /*
@@ -239,7 +242,7 @@ class OverviewData @Inject constructor(
      * SENSITIVITY
      */
 
-    fun lastAutosensData(iobCobCalculator: IobCobCalculator) = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
+    fun lastAutosensData(iobCobCalculator: IobCobCalculator) : AutosensData? = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
 
     /*
      * Graphs
@@ -291,7 +294,7 @@ class OverviewData @Inject constructor(
 
     var maxDevValueFound = Double.MIN_VALUE
     val devScale = Scale()
-    var deviationsSeries: BarGraphSeries<OverviewPlugin.DeviationDataPoint> = BarGraphSeries()
+    var deviationsSeries: BarGraphSeries<DeviationDataPoint> = BarGraphSeries()
 
     var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
     var minRatioValueFound = -maxRatioValueFound

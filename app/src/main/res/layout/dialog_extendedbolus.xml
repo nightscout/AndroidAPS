@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_actions_startextbolus" />
+                app:srcCompat="@drawable/ic_actions_start_extended_bolus" />
 
             <TextView
                 android:layout_width="match_parent"

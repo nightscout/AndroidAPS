@@ -23,8 +23,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
@@ -80,8 +78,6 @@ class OverviewPlugin @Inject constructor(
     override fun dismissNotification(id: Int) {
         rxBus.send(EventDismissNotification(id))
     }
-
-    class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
 
     override fun onStart() {
         super.onStart()

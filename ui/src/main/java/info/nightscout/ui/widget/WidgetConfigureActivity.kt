@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.widget
+package info.nightscout.ui.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.SeekBar
 import dagger.android.DaggerActivity
-import info.nightscout.androidaps.databinding.WidgetConfigureBinding
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.databinding.WidgetConfigureBinding
 import javax.inject.Inject
 
 /**
@@ -18,7 +18,6 @@ class WidgetConfigureActivity : DaggerActivity() {
 
     companion object {
 
-        @Suppress("PrivatePropertyName")
         const val PREF_PREFIX_KEY = "appwidget_"
         const val DEFAULT_OPACITY = 25
     }
@@ -51,7 +50,7 @@ class WidgetConfigureActivity : DaggerActivity() {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 value = progress
                 saveTitlePref(appWidgetId, value)
-                updateWidget(this@WidgetConfigureActivity)
+                Widget.updateWidget(this@WidgetConfigureActivity)
             }
         })
 

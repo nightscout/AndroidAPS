@@ -136,6 +136,6 @@ class NSClientFragment : DaggerFragment(), MenuProvider {
         binding.url.text = nsClientPlugin.url()
         binding.status.text = nsClientPlugin.status
         val size = dataSyncSelector.queueSize()
-        binding.queue.text = if (size >= 0) size.toString() else rh.gs(R.string.notavailable)
+        binding.queue.text = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
     }
 }

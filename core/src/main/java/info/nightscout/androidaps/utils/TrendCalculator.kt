@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils
 
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow.*

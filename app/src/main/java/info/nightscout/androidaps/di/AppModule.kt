@@ -8,7 +8,9 @@ import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.BolusTimer
@@ -40,7 +42,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsI
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
 import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
-import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.utils.DateUtil
@@ -60,6 +61,7 @@ import info.nightscout.implementation.CarbTimerImpl
 import info.nightscout.implementation.LocalAlertUtilsImpl
 import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.queue.CommandQueueImplementation
+import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
@@ -136,6 +138,7 @@ open class AppModule {
         @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
         @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
+        @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
     }
 }
 

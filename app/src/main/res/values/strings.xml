@@ -300,7 +300,6 @@
     <string name="wear_detailedIOB_title">Show detailed IOB</string>
     <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="nosuccess">not successful - please check phone</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Patient type</string>
     <string name="child">Child</string>
     <string name="teenage">Teenage</string>
@@ -415,7 +414,6 @@
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
-    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
@@ -550,7 +548,6 @@
     <string name="ignore5m">Ignore 5m</string>
     <string name="ignore15m">Ignore 15m</string>
     <string name="ignore30m">Ignore 30m</string>
-    <string name="required">req</string>
     <string name="nav_historybrowser">History browser</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
@@ -650,7 +647,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="key_virtualpump_uploadstatus" translatable="false">virtualpump_uploadstatus</string>
     <string name="virtualpump_type">Virtual Pump Type</string>
     <string name="virtualpump_definition">Pump Definition</string>
@@ -908,7 +904,6 @@
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
     <string name="clear_filter">Clear filter</string>
-    <string name="trend_arrow">Trend arrow</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">User entry</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
@@ -978,18 +973,6 @@
     <string name="a11_correction_percentage">correct outcome with %</string>
     <string name="a11_correction_units">correct outcome with units</string>
     <string name="not_available_full">Not available</string>
-    <string name="a11y_high">high</string>
-    <string name="a11y_inrange">in range</string>
-    <string name="a11y_low">low</string>
-    <string name="a11y_arrow_double_down">falling rapidly</string>
-    <string name="a11y_arrow_single_down">falling</string>
-    <string name="a11y_arrow_forty_five_down">falling slowly</string>
-    <string name="a11y_arrow_flat">stable</string>
-    <string name="a11y_arrow_forty_five_up">rising slowly</string>
-    <string name="a11y_arrow_single_up">rising</string>
-    <string name="a11y_arrow_double_up">rising rapidly</string>
-    <string name="a11y_arrow_none">none</string>
-    <string name="a11y_arrow_unknown">unknown</string>
     <string name="a11y_graph">graph</string>
     <string name="a11y_bg_quality">blood glucose quality</string>
     <string name="a11y_bg_quality_recalculated">recalculated</string>

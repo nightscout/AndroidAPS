@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.widget
+package info.nightscout.ui.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -14,15 +14,21 @@ import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainActivity
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.VariableSensitivityResult
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -31,7 +37,8 @@ import info.nightscout.androidaps.utils.TrendCalculator
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import info.nightscout.ui.R
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -43,6 +50,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var trendCalculator: TrendCalculator
+    @Inject lateinit var activityNames: ActivityNames
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var dateUtil: DateUtil
@@ -58,6 +66,13 @@ class Widget : AppWidgetProvider() {
         // This object doesn't behave like singleton,
         // many threads were created. Making handler static resolve this issue
         private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+
+        fun updateWidget(context: Context) {
+            context.sendBroadcast(Intent().also {
+                it.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, AppWidgetManager.getInstance(context)?.getAppWidgetIds(ComponentName(context, Widget::class.java)))
+                it.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            })
+        }
     }
     private val intentAction = "OpenApp"
 
@@ -88,7 +103,7 @@ class Widget : AppWidgetProvider() {
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 
         // Create an Intent to launch MainActivity when clicked
-        val intent = Intent(context, MainActivity::class.java).also { it.action = intentAction }
+        val intent = Intent(context, activityNames.mainActivityClass).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)
@@ -109,7 +124,7 @@ class Widget : AppWidgetProvider() {
 
     private fun updateBg(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        views.setTextViewText(R.id.bg, overviewData.lastBg?.valueToUnitsString(units) ?: rh.gs(R.string.notavailable))
+        views.setTextViewText(R.id.bg, overviewData.lastBg?.valueToUnitsString(units) ?: rh.gs(R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
                 overviewData.isLow  -> rh.gc(R.color.widget_low)
@@ -132,9 +147,9 @@ class Widget : AppWidgetProvider() {
             views.setTextViewText(R.id.avg_delta, Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units))
             views.setTextViewText(R.id.long_avg_delta, Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units))
         } else {
-            views.setTextViewText(R.id.delta, rh.gs(R.string.notavailable))
-            views.setTextViewText(R.id.avg_delta, rh.gs(R.string.notavailable))
-            views.setTextViewText(R.id.long_avg_delta, rh.gs(R.string.notavailable))
+            views.setTextViewText(R.id.delta, rh.gs(R.string.value_unavailable_short))
+            views.setTextViewText(R.id.avg_delta, rh.gs(R.string.value_unavailable_short))
+            views.setTextViewText(R.id.long_avg_delta, rh.gs(R.string.value_unavailable_short))
         }
 
         // strike through if BG is old
@@ -142,7 +157,7 @@ class Widget : AppWidgetProvider() {
         else views.setInt(R.id.bg, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
 
         views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg?.timestamp))
-        views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
+        //views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
     }
 
     private fun updateTemporaryBasal(views: RemoteViews) {
@@ -240,7 +255,7 @@ class Widget : AppWidgetProvider() {
 
         // Show variable sensitivity
         val request = loop.lastRun?.request
-        if (request is DetermineBasalResultSMB) {
+        if (request is VariableSensitivityResult) {
             val isfMgdl = profileFunction.getProfile()?.getIsfMgdl()
             val variableSens = request.variableSens
             if (variableSens != isfMgdl && variableSens != null && isfMgdl != null) {
@@ -256,11 +271,4 @@ class Widget : AppWidgetProvider() {
             } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
         } else views.setViewVisibility(R.id.variable_sensitivity, View.GONE)
     }
-}
-
-internal fun updateWidget(context: Context) {
-    context.sendBroadcast(Intent().also {
-        it.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, AppWidgetManager.getInstance(context)?.getAppWidgetIds(ComponentName(context, Widget::class.java)))
-        it.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-    })
 }
