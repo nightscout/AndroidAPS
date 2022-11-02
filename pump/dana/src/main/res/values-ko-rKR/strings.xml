@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="danar_history_bolus">Boluses</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+</resources>
