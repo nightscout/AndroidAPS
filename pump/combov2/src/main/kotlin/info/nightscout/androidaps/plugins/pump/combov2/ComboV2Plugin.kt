@@ -1116,11 +1116,12 @@ class ComboV2Plugin @Inject constructor (
         get() = _pumpDescription
 
     override fun shortStatus(veryShort: Boolean): String {
-        var ret = ""
+        var lines = mutableListOf<String>()
+
         if (lastConnectionTimestamp != 0L) {
             val agoMsec: Long = System.currentTimeMillis() - lastConnectionTimestamp
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            ret += rh.gs(R.string.combov2_short_status_last_connection, agoMin) + "\n"
+            lines += rh.gs(R.string.combov2_short_status_last_connection, agoMin)
         }
 
         val alertCodeString = when (val alert = lastComboAlert) {
@@ -1129,41 +1130,45 @@ class ComboV2Plugin @Inject constructor (
             else -> null
         }
         if (alertCodeString != null)
-            ret += rh.gs(R.string.combov2_short_status_alert, alertCodeString) + "\n"
+            lines += rh.gs(R.string.combov2_short_status_alert, alertCodeString)
 
         lastBolusUIFlow.value?.let {
             val localBolusTimestamp = it.timestamp.toLocalDateTime(TimeZone.currentSystemDefault())
-            ret += rh.gs(
+            lines += rh.gs(
                 R.string.combov2_short_status_last_bolus, DecimalFormatter.to2Decimal(it.bolusAmount.cctlBolusToIU()),
                 String.format("%02d:%02d", localBolusTimestamp.hour, localBolusTimestamp.minute)
-            ) + "\n"
+            )
         }
 
         val temporaryBasal = pumpSync.expectedPumpState().temporaryBasal
         temporaryBasal?.let {
-            ret += rh.gs(
+            lines += rh.gs(
                 R.string.combov2_short_status_temp_basal,
                 it.toStringFull(dateUtil)
-            ) + "\n"
+            )
         }
 
         pumpStatus?.let {
-            ret += rh.gs(
+            lines += rh.gs(
                 R.string.combov2_short_status_reservoir,
                 it.availableUnitsInReservoir
-            ) + "\n"
+            )
             val batteryStateDesc = when (it.batteryState) {
                 BatteryState.NO_BATTERY -> rh.gs(R.string.combov2_short_status_battery_state_empty)
                 BatteryState.LOW_BATTERY -> rh.gs(R.string.combov2_short_status_battery_state_low)
                 BatteryState.FULL_BATTERY -> rh.gs(R.string.combov2_short_status_battery_state_full)
             }
-            ret += rh.gs(
+            lines += rh.gs(
                 R.string.combov2_short_status_battery_state,
                 batteryStateDesc
-            ) + "\n"
+            )
         }
 
-        return ret
+        val shortStatusString = lines.joinToString("\n")
+
+        aapsLogger.debug(LTag.PUMP, "Produced short status: [$shortStatusString]")
+
+        return shortStatusString
     }
 
     override val isFakingTempsByExtendedBoluses = false
