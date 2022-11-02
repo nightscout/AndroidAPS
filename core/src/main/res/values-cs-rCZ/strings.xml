@@ -124,6 +124,22 @@
     <string name="pumpsuspended">Pumpa pozastavena</string>
     <string name="notconfigured">Není nakonfigurováno</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
+    <string name="trend_arrow">Šipka trendu</string>
+    <string name="a11y_autosens_label">Automatická detekce senzitivity</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">pož</string>
+    <string name="a11y_arrow_double_down">rychle klesající</string>
+    <string name="a11y_arrow_single_down">klesající</string>
+    <string name="a11y_arrow_forty_five_down">pomalu klesající</string>
+    <string name="a11y_arrow_flat">stabilní</string>
+    <string name="a11y_arrow_forty_five_up">pomalu stoupající</string>
+    <string name="a11y_arrow_single_up">stoupající</string>
+    <string name="a11y_arrow_double_up">rychle stoupající</string>
+    <string name="a11y_arrow_none">žádný</string>
+    <string name="a11y_arrow_unknown">neznámý</string>
+    <string name="a11y_high">vysoká</string>
+    <string name="a11y_inrange">v rozsahu</string>
+    <string name="a11y_low">nízká</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
