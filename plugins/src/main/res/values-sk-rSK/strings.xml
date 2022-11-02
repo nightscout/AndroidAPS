@@ -102,4 +102,5 @@
     <string name="sms_profile_switch_created">Prepnutie profilu vytvorené</string>
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
+    <!-- Insulin -->
 </resources>
