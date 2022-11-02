@@ -88,4 +88,5 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="a11y_otp_qr_code">QR-kode til opsætning af engangs kodeord</string>
+    <!-- Insulin -->
 </resources>
