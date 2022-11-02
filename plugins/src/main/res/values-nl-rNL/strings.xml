@@ -87,4 +87,5 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basaal:</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
+    <!-- Insulin -->
 </resources>
