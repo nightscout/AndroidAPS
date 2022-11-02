@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">OK</string>
+    <string name="bolus_delivered">%1$.2f IE / %2$.2f IE leveret</string>
     <!-- PumpCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
     <!-- Time -->
     <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Scan</string>
+    <string name="ble_config_scan_stop">Stop</string>
+    <string name="ble_config_scan_scanning">Scanning</string>
     <!-- BLE Errors -->
     <!-- Pump Error -->
     <!-- Pump History -->
+    <string name="pump_history_type">Type:</string>
 </resources>
