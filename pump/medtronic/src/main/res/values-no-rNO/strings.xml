@@ -2,6 +2,7 @@
 <resources>
     <!-- Medtronic (MDT) - Base -->
     <!-- MDT Configuration -->
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
     <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <!-- MDT History -->
@@ -15,4 +16,5 @@
     <!-- medtronic_warning -->
     <!-- combo_pump_connected_now -->
     <!-- combo_notification_check_time_date -->
+    <string name="medtronic_history_type">Type:</string>
 </resources>
