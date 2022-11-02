@@ -6,6 +6,7 @@
     <!-- Omnipod Eros - Preferences -->
     <!-- Omnipod Eros - History -->
     <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">RLBatt: %1$d</string>
     <!-- Omnipod Eros - Error -->
     <!-- Omnipod Eros - Pod Management -->
     <!-- Omnipod Eros - Pod Activation Wizard -->
