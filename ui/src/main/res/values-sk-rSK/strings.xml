@@ -14,5 +14,6 @@
     <string name="remind_to_bolus_later">Upozorniť na bolus neskôr</string>
     <string name="a11y_carb_reminder">nastaviť pripomienku</string>
     <!--    Widget-->
+    <string name="configure">Konfigurovať priehľadnosť</string>
     <string name="widget_description">AAPS widget</string>
 </resources>
