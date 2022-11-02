@@ -16,10 +16,6 @@
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
-    <string name="description_insulin_rapid">Nustatymai Humalog ir NovoRapid / NovoLog insulinams</string>
-    <string name="description_insulin_ultra_rapid">Nustatymai Fiasp insulinui</string>
-    <string name="description_insulin_lyumjev">Nustatymai Lyumjev insulinui</string>
-    <string name="description_insulin_free_peak">Leidžia pasirinkti insulino veikimo piką ir turėtų būti naudojama tik patyrusių vartotojų</string>
     <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
     <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout</string>
     <string name="description_ama">2017 m. algoritmas</string>
@@ -164,7 +160,6 @@
     <string name="button3">Mygtukas 3</string>
     <string name="units_colon">Vienetai:</string>
     <string name="units">Vienetai</string>
-    <string name="dia">IVT</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
     <string name="prefs_range_summary">Aukštoji ir žemoji riba Apžvalgos grafikuose bei išmaniuosiuose laikrodžiuose</string>
     <string name="low_mark">Žemoji riba</string>
@@ -265,9 +260,6 @@
     <string name="ns_logappstartedevent">Siųsti programos paleidimo žymę į NS</string>
     <string name="restartingapp">Uždarant aplikaciją, taikyti nustatymus.</string>
     <string name="configbuilder_insulin_description">Kokio tipo insuliną naudojate?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
     <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
@@ -338,13 +330,6 @@
     <string name="enablesmb">Įjungti SMB</string>
     <string name="enablesmb_summary">Naudoti Super Mikro Bolusus vietoj laikinos bazės greitesniam veikimui</string>
     <string name="enableuam_summary">Nedeklaruoto maisto (NDM) aptikimas</string>
-    <string name="insulin_oref_peak">AIO kreivės pikas</string>
-    <string name="insulin_peak_time">Piko laikas [min]</string>
-    <string name="free_peak_oref">Oref be piko</string>
-    <string name="rapid_acting_oref">Greito veikimo Oref</string>
-    <string name="ultrarapid_oref">Staigaus veikimo Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="invalid">KLAIDA</string>
     <string name="careportal_newnstreatment_percentage_label">Procentais</string>
