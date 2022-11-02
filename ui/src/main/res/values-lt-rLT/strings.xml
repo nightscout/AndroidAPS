@@ -8,4 +8,5 @@
     <string name="unit_minute_short">min.</string>
     <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
     <string name="a11y_carb_reminder">nustatyti priminimą</string>
+    <!--    Widget-->
 </resources>
