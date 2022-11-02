@@ -89,4 +89,5 @@
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_basal">Dosis Basal:</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
+    <!-- Insulin -->
 </resources>
