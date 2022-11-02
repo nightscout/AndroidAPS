@@ -16,10 +16,6 @@
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
     <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
-    <string name="description_insulin_rapid">Configuració preestablerta per insulina Humalog i NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Configuració preestablerta per insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Configuració preestablerta per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Permet definir el pic d\'activitat de la insulina. A utilitzar només per usuaris avançats</string>
     <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
     <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
     <string name="description_ama">Estat de l\'algoritme el 2017</string>
@@ -197,9 +193,6 @@
     <string name="ns_logappstartedevent">Enregistrar l\'inici de l\'app a NS</string>
     <string name="restartingapp">Sortint de l\'app per aplicar configuració.</string>
     <string name="configbuilder_insulin_description">Quin tipus d\'insulina feu servir?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activar superbolus a l\'assistent</string>
     <string name="enablesuperbolus_summary">Activar funcionalitat superbolus a l\'assistent. No ho activeu fins que no hagueu après què fa realment. POT CAUSAR SOBREDOSI D\'INSULINA SI NO VIGILEU!</string>
     <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
