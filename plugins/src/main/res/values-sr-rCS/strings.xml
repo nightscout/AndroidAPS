@@ -43,4 +43,5 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
 </resources>
