@@ -124,6 +124,22 @@
     <string name="pumpsuspended">Pompa durduldu</string>
     <string name="notconfigured">Yapılandırılmadı</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
+    <string name="trend_arrow">Trend oku</string>
+    <string name="a11y_autosens_label">Oto duyarlılık</string>
+    <string name="value_unavailable_short">yok</string>
+    <string name="required">iht.</string>
+    <string name="a11y_arrow_double_down">hızla düşüyor</string>
+    <string name="a11y_arrow_single_down">düşüyor</string>
+    <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
+    <string name="a11y_arrow_flat">sabit</string>
+    <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
+    <string name="a11y_arrow_single_up">yükseliyor</string>
+    <string name="a11y_arrow_double_up">hızla yükseliyor</string>
+    <string name="a11y_arrow_none">yok</string>
+    <string name="a11y_arrow_unknown">bilinmiyor</string>
+    <string name="a11y_high">yüksek</string>
+    <string name="a11y_inrange">aralık içinde</string>
+    <string name="a11y_low">düşük</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
     <string name="pumplimit">pompa sınırı</string>
