@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_yet_supported_by_pump">Operação não suportada ainda pela Bomba.</string>
+    <string name="bolus_delivered">%1$.2fU / %2$.2fU administrada</string>
     <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Bomba não inicializada</string>
+    <string name="pump_status_initialized">Inicializado</string>
+    <string name="pump_status_encrypt">Comunicação criptografada</string>
+    <string name="pump_status_ready">Preparado</string>
+    <string name="pump_status_busy">Ocupado</string>
+    <string name="pump_status_executing_command">Executando Comando</string>
     <!-- PumpCommon - History Group -->
+    <string name="history_group_unknown">Desconhecidos</string>
+    <string name="history_group_base">Base</string>
+    <string name="history_group_events">Todos os eventos</string>
+    <string name="history_group_events_no_stat">Eventos (sem Status)</string>
     <!-- Time -->
+    <string name="time_today">Hoje</string>
+    <string name="time_last_hour">Última Hora</string>
+    <string name="time_last_3_hours">Últimas 3 horas</string>
+    <string name="time_last_6_hours">Últimas 6 horas</string>
+    <string name="time_last_12_hours">Últimas 12 horas</string>
+    <string name="time_last_2_days">Últimos 2 Dias</string>
+    <string name="time_last_4_days">Últimos 4 dias</string>
+    <string name="time_last_week">Última semana</string>
+    <string name="time_last_month">Último mês</string>
     <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Escanear</string>
     <!-- BLE Errors -->
+    <string name="ble_error_configured_pump_not_found">Bomba Configurada Não Encontrada</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">Falha ao se conectar ao dispositivo BLE</string>
+    <string name="ble_error_encryption_failed">Falha na criptografia</string>
+    <string name="ble_error_pump_found_unbonded">Encontrada bomba não vinculada</string>
     <!-- Pump Error -->
+    <string name="pump_settings_error_incorrect_basal_profile_selected">Perfil Basal definido na bomba está incorreto (deve ser %s).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">Tipo de DBT errado definido na bomba (deve ser %s).</string>
     <!-- Pump History -->
+    <plurals name="hoursago">
+        <item quantity="one">%1$d hora atrás</item>
+        <item quantity="other">%1$d horas atrás</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">%1$d dia atrás</item>
+        <item quantity="other">%1$d dias atrás</item>
+    </plurals>
 </resources>
