@@ -25,7 +25,9 @@
     <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">Bateria RileyLink</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Erros</string>
     <string name="medtronic_error_serial_not_set">Núm. Série não definido.</string>
     <string name="medtronic_error_serial_invalid">Núm. Série inválido.</string>
     <string name="medtronic_error_pump_type_not_set">Tipo de Bomba não definido.</string>
@@ -48,6 +50,7 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bolus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá obter as alterações, na próxima actualização (em menos de 5 minutos).</string>
     <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler a TBR actual.</string>
@@ -62,15 +65,31 @@
     <string name="medtronic_cmd_desc_get_history">Obter Histórico - Página %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Obter Histórico - Página %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Obter Hora da Bomba</string>
+    <string name="medtronic_cmd_desc_set_time">Definir tempo da bomba</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Obter status da bateria</string>
     <string name="medtronic_cmd_desc_get_settings">Obter Definições</string>
     <string name="medtronic_cmd_desc_get_model">Obter Modelo de Bomba</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Obter Perfil Basal</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Definir Perfil Basal</string>
     <string name="medtronic_cmd_desc_get_tbr">Obter Basal temporário</string>
     <string name="medtronic_cmd_desc_set_tbr">Definir Basal temporário</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancelar a basal temporária</string>
     <string name="medtronic_cmd_desc_set_bolus">Definir Bólus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obter a insulina restante</string>
+    <string name="medtronic_pump_status_pump_unreachable">Bomba inacessível</string>
+    <string name="medtronic_warning">Aviso</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Agora</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">atrás</string>
+    <string name="medtronic_notification_check_time_date">É necessário atualizar o relógio da bomba</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">Lig.</string>
+    <string name="common_off">Desligado</string>
     <string name="pump_time_updated">Hora da bomba actualizada</string>
+    <string name="set_neutral_temps_title">Definir as basais temporárias neutras</string>
+    <string name="set_neutral_temps_summary">Se ativado, cancelará uma basal temporária antes do final de cada hora. Este método pode ajudar a parar algumas bombas de alarmar/vibrar por uma hora.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="invalid_history_data">Dados inválidos do histórico da bomba detectados. Abra nova solicitação e forneça logs.</string>
+    <string name="medtronic_history_type">Tipo:</string>
 </resources>
