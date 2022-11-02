@@ -37,4 +37,5 @@
     <string name="sms_iob">IAB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basale:</string>
+    <!-- Insulin -->
 </resources>
