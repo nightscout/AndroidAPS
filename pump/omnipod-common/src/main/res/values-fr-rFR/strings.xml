@@ -2,17 +2,27 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_heading_actions">Actions</string>
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Confirmation</string>
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_category_notifications">Notifications</string>
     <!-- Omnipod - Pod Status -->
     <!-- Omnipod - Commands -->
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Short status -->
     <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">OK</string>
     <!-- Omnipod - Times -->
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
 </resources>
