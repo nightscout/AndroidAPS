@@ -6,7 +6,7 @@
     <string name="medtronic_serial_number">Серийный номер помы</string>
     <string name="medtronic_pump_type">Тип помпы</string>
     <string name="medtronic_pump_frequency">Частота помпы</string>
-    <string name="medtronic_pump_bolus_delay">Задержка перед подачей болюса (с) начата</string>
+    <string name="medtronic_pump_bolus_delay">Задержка перед подачей болюса (сек)</string>
     <string name="medtronic_pump_max_bolus">Макс. болюс на помпе (ед)</string>
     <string name="medtronic_pump_max_basal">Макс. базал на помпе (ед/ч)</string>
     <string name="medtronic_pump_encoding">Кодировка Medtronic</string>
@@ -14,7 +14,7 @@
     <string name="medtronic_pump_frequency_worldwide">Глобальн (868 Мгц)</string>
     <string name="medtronic_pump_encoding_4b6b_local">Программное 4b6b кодирование</string>
     <string name="medtronic_pump_encoding_4b6b_rileylink">Аппаратное кодирование 4b6b</string>
-    <string name="medtronic_custom_action_wake_and_tune">Пробудить и настроить</string>
+    <string name="medtronic_custom_action_wake_and_tune">Пробуждение и настройка</string>
     <string name="medtronic_custom_action_clear_bolus_block">Очистить блок болюса</string>
     <string name="medtronic_custom_action_reset_rileylink">Сбросить конфигурацию RileyLink</string>
     <string name="medtronic_pump_battery_select">Тип батареи (по мощности)</string>
