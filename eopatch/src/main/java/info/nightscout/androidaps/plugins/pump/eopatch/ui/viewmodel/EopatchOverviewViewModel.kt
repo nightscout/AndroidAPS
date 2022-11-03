@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -16,7 +17,12 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.*
@@ -30,7 +36,10 @@ class EopatchOverviewViewModel @Inject constructor(
     val patchManager: IPatchManager,
     private val preferenceManager: IPreferenceManager,
     private val profileFunction: ProfileFunction,
-    private val aapsSchedulers: AapsSchedulers
+    private val aapsSchedulers: AapsSchedulers,
+    private val aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil,
+    private val pumpSync: PumpSync
 ) : EoBaseViewModel<EoBaseNavigator>() {
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
     val eventHandler : LiveData<UIEvent<EventType>>
@@ -208,6 +217,18 @@ class EopatchOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe({ response ->
                 if (response.isSuccess) {
+                    var result = pumpSync.syncTemporaryBasalWithPumpId(
+                                       timestamp = dateUtil.now(),
+                                       rate = 0.0,
+                                       duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
+                                       isAbsolute = true,
+                                       type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                                       pumpId = dateUtil.now(),
+                                       pumpType = PumpType.EOFLOW_EOPATCH2,
+                                       pumpSerial = patchManager.patchConfig.patchSerialNumber
+                                   )
+                    aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
+
                     UIEvent(EventType.PAUSE_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
                     startPauseTimeUpdate()
                 } else {
@@ -224,6 +245,12 @@ class EopatchOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.isSuccess) {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                        timestamp = dateUtil.now(),
+                        endPumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = patchManager.patchConfig.patchSerialNumber
+                    )
                     UIEvent(EventType.RESUME_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
                     stopPauseTimeUpdate()
                 } else {
