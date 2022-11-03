@@ -32,6 +32,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -60,6 +61,7 @@ import info.nightscout.implementation.AndroidPermissionImpl
 import info.nightscout.implementation.BolusTimerImpl
 import info.nightscout.implementation.CarbTimerImpl
 import info.nightscout.implementation.LocalAlertUtilsImpl
+import info.nightscout.implementation.TrendCalculatorImpl
 import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.queue.CommandQueueImplementation
@@ -143,6 +145,7 @@ open class AppModule {
         @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
+        @Binds fun bindTrendCalculatorInterface(trendCalculator: TrendCalculatorImpl): TrendCalculator
     }
 }
 
