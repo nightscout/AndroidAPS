@@ -199,7 +199,7 @@ class EopatchPumpPlugin @Inject constructor(
 
                 disposable.dispose()
                 aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess?:false}")
-                if(isSuccess?:false) {
+                if(isSuccess == true) {
                     rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
                     return PumpEnactResult(injector).success(true).enacted(true)
                 }else{

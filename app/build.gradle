@@ -189,6 +189,7 @@ dependencies {
     implementation project(':pump:danars')
     implementation project(':pump:danar')
     implementation project(':pump:diaconn')
+    implementation project(':pump:eopatch')
     implementation project(':insight')
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
@@ -198,7 +199,6 @@ dependencies {
     implementation project(':pump:omnipod-dash')
     implementation project(':automation')
     implementation project(':openhumans')
-    implementation project(':eopatch')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

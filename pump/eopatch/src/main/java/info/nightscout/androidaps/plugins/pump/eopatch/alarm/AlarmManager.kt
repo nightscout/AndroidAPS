@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -14,7 +13,12 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.EONotification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.*
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A005
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A016
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A020
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B000
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B001
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B012
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory

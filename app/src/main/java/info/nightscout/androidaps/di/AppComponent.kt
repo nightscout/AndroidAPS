@@ -70,7 +70,7 @@ import javax.inject.Singleton
         WorkersModule::class,
         DiaconnG8Module::class,
         OpenHumansModule::class,
-        SharedModule::class
+        SharedModule::class,
         EopatchModule::class,
         SharedModule::class,
         UiModule::class,
