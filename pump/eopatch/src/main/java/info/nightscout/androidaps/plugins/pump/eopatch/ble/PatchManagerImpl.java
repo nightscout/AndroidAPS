@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ActivateTask;
@@ -109,6 +110,7 @@ public class PatchManagerImpl{
     @Inject SP sp;
     @Inject AAPSLogger aapsLogger;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject PumpSync pumpSync;
 
     @Inject StartBondTask START_BOND;
     @Inject GetPatchInfoTask GET_PATCH_INFO;
@@ -379,6 +381,7 @@ public class PatchManagerImpl{
                     if (success) {
                         TaskBase.enqueue(TaskFunc.LOW_RESERVOIR);
                         TaskBase.enqueue(TaskFunc.INFO_REMINDER);
+                        pumpSync.connectNewPump(true);
                     }
                 });
     }
