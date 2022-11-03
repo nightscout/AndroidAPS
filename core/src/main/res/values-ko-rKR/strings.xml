@@ -150,7 +150,6 @@
     <string name="nochangerequested">변경사항 없음</string>
     <!--    ProfileSwitch-->
     <string name="zerovalueinprofile">유효하지 않은 프로파일: %1$s</string>
-
     <!--    Temptarget-->
     <string name="mins">%1$d 분</string>
     <!--    Translator-->

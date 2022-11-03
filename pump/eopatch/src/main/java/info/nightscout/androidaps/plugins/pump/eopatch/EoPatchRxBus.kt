@@ -10,7 +10,7 @@ object EoPatchRxBus {
         publishSubject.onNext(event)
     }
 
-    fun <T> listen(eventType: Class<T>): Observable<T> {
+    fun <T: Any> listen(eventType: Class<T>): Observable<T> {
         return publishSubject.ofType(eventType)
     }
 

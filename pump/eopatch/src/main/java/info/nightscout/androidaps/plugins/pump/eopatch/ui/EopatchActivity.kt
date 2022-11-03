@@ -9,10 +9,11 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.androidaps.extensions.safeGetSerializableExtra
 import info.nightscout.androidaps.plugins.pump.eopatch.R
+import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
-import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.ActivityEopatchBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.replaceFragmentInActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
@@ -117,7 +118,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         binding.viewModel?.apply {
 
             intent?.run {
-                val step = intent.getSerializableExtra(EXTRA_START_PATCH_STEP) as PatchStep?
+                val step = intent.safeGetSerializableExtra(EXTRA_START_PATCH_STEP, PatchStep::class.java)
 
                 forceDiscard = intent.getBooleanExtra(EXTRA_FORCE_DISCARD, false)
                 if (intent.getBooleanExtra(EXTRA_START_WITH_COMM_CHECK, false)) {
