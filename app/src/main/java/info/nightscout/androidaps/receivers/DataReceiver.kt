@@ -64,6 +64,9 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.DEXCOM_BG                         ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
+            Intents.DEXCOM_G7_BG                       ->
+                OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
+                    .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
             Intents.AIDEX_NEW_BG_ESTIMATE             ->
                 OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
