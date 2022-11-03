@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+        <variable
+            name="viewModel"
+            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        tools:context=".ui.EopatchActivity">
+
+        <TextView
+            android:id="@+id/text_patch_basal_schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/patch_basal_schedule"
+            android:gravity="center_horizontal"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_patch_basal_schedule_desc_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:gravity="center"
+            android:text="@{viewModel.programEnabledMessage}"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_patch_basal_schedule"
+            tools:text="@string/patch_basal_schedule_desc_1" />
+
+        <TextView
+            android:id="@+id/text_patch_basal_schedule_desc_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@string/patch_basal_schedule_desc_2"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_patch_basal_schedule_desc_1" />
+
+
+
+        <Button
+            android:id="@+id/btn_positive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/finish"
+            android:contentDescription="@string/finish"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:onSafeClick="@{() -> viewModel.onConfirm()}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

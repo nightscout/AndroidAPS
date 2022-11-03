@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+        <variable
+            name="viewModel"
+            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.EopatchActivity">
+
+            <TextView
+                android:id="@+id/text_patch_remove_needle_cap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/patch_remove_needle_cap"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_patch_remove_needle_cap_progress"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="7dp"
+                android:gravity="center"
+                android:text="@string/patch_remove_needle_cap_step"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap" />
+
+            <TextView
+                android:id="@+id/text_patch_remove_needle_cap_desc_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="42dp"
+                android:text="@string/patch_remove_needle_cap_desc_1"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap_progress" />
+
+            <ImageView
+                android:id="@+id/image_patch_remove_needle_cap_desc_2"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="3dp"
+                android:contentDescription="@string/patch_remove_needle_cap_desc_2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_patch_remove_needle_cap_desc_2" />
+
+            <TextView
+                android:id="@+id/text_patch_remove_needle_cap_desc_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/patch_remove_needle_cap_desc_2"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_patch_remove_needle_cap_desc_2"
+                app:layout_constraintTop_toBottomOf="@+id/image_patch_remove_needle_cap_desc_2" />
+
+            <ImageView
+                android:id="@+id/image_patch_remove_needle_cap"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="3dp"
+                android:contentDescription="@string/patch_remove_needle_cap_desc_3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_patch_remove_needle_cap_desc_3" />
+
+            <TextView
+                android:id="@+id/text_patch_remove_needle_cap_desc_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="5dp"
+                android:text="@string/patch_remove_needle_cap_desc_3"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/image_patch_remove_needle_cap"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap_desc_2" />
+
+            <ImageView
+                android:id="@+id/img_patch_act_02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/patch_remove_needle_cap"
+                app:layout_constraintBottom_toTopOf="@+id/layout_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_remove_needle_cap_desc_3"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <Button
+                    android:id="@+id/btn_negative"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/discard"
+                    android:contentDescription="@string/discard"
+                    app:layout_constraintEnd_toStartOf="@id/guideline_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onSafeClick="@{() -> viewModel.discardPatchWithCommCheck()}" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.4" />
+
+                <Button
+                    android:id="@+id/btn_positive"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/next"
+                    android:contentDescription="@string/next"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/guideline_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.REMOVE_PROTECTION_TAPE)}" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>
