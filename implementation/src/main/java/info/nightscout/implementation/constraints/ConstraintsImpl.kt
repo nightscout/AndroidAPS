@@ -1,63 +1,14 @@
-package info.nightscout.androidaps.plugins.configBuilder
+package info.nightscout.implementation.constraints
 
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
-class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlugin) : Constraints {
-
-    fun isLoopInvocationAllowed(): Constraint<Boolean> =
-        isLoopInvocationAllowed(Constraint(true))
-
-    fun isClosedLoopAllowed(): Constraint<Boolean> =
-        isClosedLoopAllowed(Constraint(true))
-
-    fun isLgsAllowed(): Constraint<Boolean> =
-        isLgsAllowed(Constraint(true))
-
-    fun isAutosensModeEnabled(): Constraint<Boolean> =
-        isAutosensModeEnabled(Constraint(true))
-
-    fun isSMBModeEnabled(): Constraint<Boolean> =
-        isSMBModeEnabled(Constraint(true))
-
-    fun isUAMEnabled(): Constraint<Boolean> =
-        isUAMEnabled(Constraint(true))
-
-    fun isAdvancedFilteringEnabled(): Constraint<Boolean> =
-        isAdvancedFilteringEnabled(Constraint(true))
-
-    fun isSuperBolusEnabled(): Constraint<Boolean> =
-        isSuperBolusEnabled(Constraint(true))
-
-    fun getMaxBasalAllowed(profile: Profile): Constraint<Double> =
-        applyBasalConstraints(Constraint(Constants.REALLYHIGHBASALRATE), profile)
-
-    fun getMaxBasalPercentAllowed(profile: Profile): Constraint<Int> =
-        applyBasalPercentConstraints(Constraint(Constants.REALLYHIGHPERCENTBASALRATE), profile)
-
-    fun getMaxBolusAllowed(): Constraint<Double> =
-        applyBolusConstraints(Constraint(Constants.REALLYHIGHBOLUS))
-
-    fun getMaxExtendedBolusAllowed(): Constraint<Double> =
-        applyExtendedBolusConstraints(Constraint(Constants.REALLYHIGHBOLUS))
-
-    fun getMaxCarbsAllowed(): Constraint<Int> =
-        applyCarbsConstraints(Constraint(Constants.REALLYHIGHCARBS))
-
-    fun getMaxIOBAllowed(): Constraint<Double> =
-        applyMaxIOBConstraints(Constraint(Constants.REALLYHIGHIOB))
-
-    fun isAutomationEnabled(): Constraint<Boolean> =
-        isAutomationEnabled(Constraint(true))
+class ConstraintsImpl @Inject constructor(private val activePlugin: ActivePlugin) : Constraints {
 
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)

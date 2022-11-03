@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -40,7 +40,7 @@ import kotlin.math.abs
 
 class FillDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueue

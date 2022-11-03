@@ -73,7 +73,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
@@ -126,7 +126,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var loop: Loop

@@ -14,7 +14,7 @@ import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
@@ -47,7 +47,7 @@ class AutomationPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val rxBus: RxBus,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val config: Config,

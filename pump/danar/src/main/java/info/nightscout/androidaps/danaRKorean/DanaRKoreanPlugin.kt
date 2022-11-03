@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
@@ -42,7 +42,7 @@ class DanaRKoreanPlugin @Inject constructor(
     rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
-    constraintChecker: ConstraintChecker,
+    constraintChecker: Constraints,
     activePlugin: ActivePlugin,
     sp: SP,
     commandQueue: CommandQueue,

@@ -35,7 +35,7 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
@@ -64,7 +64,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var loop: Loop

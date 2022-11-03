@@ -21,7 +21,7 @@ import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -41,7 +41,7 @@ import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction

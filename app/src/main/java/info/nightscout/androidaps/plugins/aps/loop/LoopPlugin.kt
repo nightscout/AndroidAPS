@@ -55,7 +55,7 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -87,7 +87,7 @@ class LoopPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val sp: SP,
     config: Config,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,

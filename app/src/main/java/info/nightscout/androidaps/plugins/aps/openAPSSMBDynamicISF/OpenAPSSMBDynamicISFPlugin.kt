@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.interfaces.DetermineBasalAdapterInterface
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
@@ -30,7 +30,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
-    constraintChecker: ConstraintChecker,
+    constraintChecker: Constraints,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
     context: Context,

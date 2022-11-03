@@ -28,7 +28,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -54,7 +54,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var ctx: Context
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator

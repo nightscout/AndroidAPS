@@ -34,7 +34,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
@@ -71,7 +71,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,

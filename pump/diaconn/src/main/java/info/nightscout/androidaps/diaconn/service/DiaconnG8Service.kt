@@ -59,7 +59,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -96,7 +96,7 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleCommonService: BLECommonService
     @Inject lateinit var fabricPrivacy: FabricPrivacy
