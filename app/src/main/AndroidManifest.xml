@@ -144,6 +144,7 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from Dexcom -->
                 <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
+                <action android:name="com.dexcom.g7.EXTERNAL_BROADCAST" />
                 <!-- Receiver from Poctech -->
                 <action android:name="com.china.poctech.data" />
                 <!-- Receiver from Tomato -->
