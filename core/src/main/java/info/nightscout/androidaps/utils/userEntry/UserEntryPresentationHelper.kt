@@ -95,6 +95,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Omnipod             -> R.drawable.ic_patch_pump_outline
         Sources.OmnipodEros         -> R.drawable.ic_patch_pump_outline
         Sources.OmnipodDash         -> R.drawable.ic_patch_pump_outline
+        Sources.EOPatch2            -> R.drawable.ic_eopatch2_128
         Sources.MDI                 -> R.drawable.ic_ict
         Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS                 -> R.drawable.ic_sms

@@ -1,0 +1,30 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-allopen'
+apply plugin: 'com.hiya.jacoco-android'
+
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/jacoco_global.gradle"
+
+android {
+    namespace 'info.nightscout.androidaps.plugins.pump.eopatch'
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':pump:eopatch-core')
+    implementation project(':libraries')
+    implementation project(':shared')
+    implementation project(':database')
+    implementation project(':core')
+
+    //RxAndroidBle
+    implementation "com.polidea.rxandroidble3:rxandroidble:1.16.0"
+    implementation "com.jakewharton.rx3:replaying-share:3.0.0"
+}

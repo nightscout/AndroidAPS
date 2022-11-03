@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+        <variable
+            name="viewModel"
+            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        tools:context=".ui.EopatchActivity">
+
+        <TextView
+            android:id="@+id/text_patch_safety_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/patch_safety_check"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_patch_safety_check_progress"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:text="@string/patch_safety_check_step"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_patch_safety_check" />
+
+        <TextView
+            android:id="@+id/text_patch_safety_check_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:text="@string/patch_safety_check_desc_1"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_patch_safety_check_progress" />
+
+        <ProgressBar
+            android:id="@+id/progressbar_patch_safety_check"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginTop="20dp"
+            android:max="100"
+            android:progress="@{viewModel.safetyCheckProgress}"
+            app:layout_constraintTop_toBottomOf="@+id/text_patch_safety_check_desc"
+            tools:progress="0" />
+
+        <ImageView
+            android:id="@+id/image_patch_safety_check_desc_2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="3dp"
+            android:contentDescription="@string/patch_remove_needle_cap_desc_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_patch_remove_needle_cap_desc_2" />
+
+        <TextView
+            android:id="@+id/text_patch_remove_needle_cap_desc_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="9dp"
+            android:layout_marginTop="27dp"
+            android:text="@string/patch_safety_check_desc_2"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image_patch_safety_check_desc_2"
+            app:layout_constraintTop_toBottomOf="@+id/progressbar_patch_safety_check" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

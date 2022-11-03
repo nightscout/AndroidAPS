@@ -159,6 +159,10 @@ android {
     }
 
     useLibrary "org.apache.http.legacy"
+
+    dataBinding {   //Deleting it causes a binding error
+        enabled = true
+    }
 }
 
 allprojects {
@@ -185,6 +189,7 @@ dependencies {
     implementation project(':pump:danars')
     implementation project(':pump:danar')
     implementation project(':pump:diaconn')
+    implementation project(':pump:eopatch')
     implementation project(':insight')
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
