@@ -11,8 +11,8 @@
     <string name="colon" translatable="false">:</string>
 
     <string name="eopatch">EOPatch2</string>
-    <string name="eopatch_shortname">EOPatch2</string>
-    <string name="eopatch_pump_description">Pump integration for EOPatch2 and GlucoMen</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Pump integration for EOPatch2 / GlucoMen Day</string>
 
     <string name="category_alerts">Alerts</string>
     <string name="low_reservoir">Low reservoir Alerts</string>
