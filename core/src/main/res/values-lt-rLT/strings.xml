@@ -20,7 +20,6 @@
     <string name="disconnected">Atsijungta</string>
     <string name="disconnecting">Atsijungiama</string>
     <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
-    <string name="androidaps_start">AndroidAPS paleista</string>
     <string name="formatinsulinunits1">%1$.1f vv</string>
     <string name="formatinsulinunits">%1$.2f vv</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
@@ -106,6 +105,12 @@
     <string name="remove_button">Pašalinti</string>
     <string name="addnew">Pridėti naują</string>
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
+    <string name="alarminxmin">Pranešti po %1$d min</string>
+    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Rankiniu būdu patikrinkite faktiškai suleistą kiekį</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompa sustabdyta</string>
+    <string name="notconfigured">Nesukonfigūruota</string>
+    <string name="loopsuspended">Ciklas sustabdytas</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -267,7 +272,6 @@
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
     <string name="version_expire">Versija %1$s baigia galioti %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Prašome iš naujo paleisti telefoną arba sistemos nustatymuose iš naujo paleisti AndroidAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">A</string>
@@ -417,6 +421,7 @@
     <string name="basal">Valandinė bazė</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

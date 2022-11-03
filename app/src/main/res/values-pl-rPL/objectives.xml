@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS</string>
     <string name="objectives_manualenacts">Ręczne zarządzanie</string>
     <string name="accomplished">Ukończone: %1$s</string>
-    <string name="objectives_usage_objective">Dowiedz się, jak kontrolować AndroidAPS</string>
-    <string name="objectives_usage_gate">Wykonuj różne działania w AndroidAPS</string>
     <string name="objectives_useprofileswitch">Ustaw profil 90% na 10 min (Długie przytrzymanie nazwy profilu w Przegląd)</string>
     <string name="objectives_usedisconnectpump">Symuluj prysznic. Odłącz pompę na 1 godzinę (długie naciśnięcie w otwartej pętli)</string>
     <string name="objectives_usereconnectpump">... i połącz się ponownie w ten sam sposób</string>

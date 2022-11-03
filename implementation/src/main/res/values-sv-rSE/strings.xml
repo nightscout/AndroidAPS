@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">BG-värden saknas</string>
+    <string name="time_to_bolus">Dags för bolus!\nKör Bolusguiden och gör beräkningar igen.</string>
+    <string name="request">Begäran</string>
+    <string name="permission">Behörighet</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
+</resources>

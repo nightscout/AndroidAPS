@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">Pumpstatus tillgängligt i Nightscout</string>
     <string name="objectives_manualenacts">Manuella justeringar</string>
     <string name="accomplished">Utfört: %1$s</string>
-    <string name="objectives_usage_objective">Lär dig hur du kontrollerar AndroidAPS</string>
-    <string name="objectives_usage_gate">Utföra olika åtgärder i AndroidAPS</string>
     <string name="objectives_useprofileswitch">Ställ in profilen 90% för 10 minuter (Tryck och håll in profilens namn i Översikten)</string>
     <string name="objectives_usedisconnectpump">Simulera dusch. Koppla från pump i 1 timme (Tryck och håll in på Open Loop i Översikten)</string>
     <string name="objectives_usereconnectpump">... och återanslut på samma sätt</string>

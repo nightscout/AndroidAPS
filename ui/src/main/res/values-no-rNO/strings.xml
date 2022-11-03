@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
+    <string name="constraint_applied">Begrensning benyttet!</string>
+    <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
+    <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog avbrutt</string>
+    <string name="start_activity_tt">Start Trening TT</string>
+    <string name="start_eating_soon_tt">Start Spise snart TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Tidsforskyvning</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Påminnelse til å gi bolus senere</string>
+    <string name="a11y_carb_reminder">angi påminnelse</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurer gjennomsiktighet</string>
+    <string name="widget_description">AAPS widget</string>
+</resources>

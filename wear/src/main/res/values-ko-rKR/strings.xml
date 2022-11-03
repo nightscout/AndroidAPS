@@ -63,7 +63,7 @@
     <string name="action_preset_1">프리셋 1</string>
     <string name="action_preset_2">프리셋 2</string>
     <string name="action_preset_3">프리셋 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">양 제한없음</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">양 제한없음</string>
     <string name="action_confirm">확인</string>
     <string name="action_timeshift">시간이동</string>
     <string name="bolus_progress">Bolus 주입 중</string>

@@ -12,7 +12,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class NSClientUpdateRemoveAckWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
@@ -31,7 +31,7 @@ class NSClientUpdateRemoveAckWorker(
     override fun doWork(): Result {
         var ret = Result.success()
 
-        val ack = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as NSUpdateAck?
+        val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSUpdateAck?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         // new room way

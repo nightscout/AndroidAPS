@@ -1,16 +1,17 @@
 package info.nightscout.androidaps.plugins.aps.openAPSSMB
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.interfaces.VariableSensitivityResult
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import org.json.JSONException
 import org.json.JSONObject
 
-class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) : APSResult(injector) {
+class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) : APSResult(injector), VariableSensitivityResult {
 
     private var eventualBG = 0.0
     private var snoozeBG = 0.0
-    var variableSens: Double? = null
+    override var variableSens: Double? = null
 
     internal constructor(injector: HasAndroidInjector, result: JSONObject) : this(injector) {
         date = dateUtil.now()

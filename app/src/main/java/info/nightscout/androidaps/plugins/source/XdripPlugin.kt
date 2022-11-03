@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import javax.inject.Inject
@@ -64,7 +64,7 @@ class XdripPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var xdripPlugin: XdripPlugin
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var dataWorker: DataWorker
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -74,7 +74,7 @@ class XdripPlugin @Inject constructor(
             var ret = Result.success()
 
             if (!xdripPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
-            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
+            val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")

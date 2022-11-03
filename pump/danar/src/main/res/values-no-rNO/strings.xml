@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">Kommando støttes ikke i pumpen. Bruk kun AndroidAPS brukergrensesnittet!</string>
+</resources>

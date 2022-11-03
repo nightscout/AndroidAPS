@@ -90,7 +90,7 @@
                         android:layout_weight="1"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
-                        app:customContentDescription="@string/careportal_newnstreatment_duration_label" />
+                        app:customContentDescription="@string/duration_label" />
 
                 </LinearLayout>
 

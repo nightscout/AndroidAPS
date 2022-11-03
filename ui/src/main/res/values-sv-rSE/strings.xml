@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
+    <string name="start_activity_tt">Starta \"Träning\"</string>
+    <string name="start_eating_soon_tt">Starta \"Äta snart\"</string>
+    <string name="start_hypo_tt">Starta \"Hypo\"</string>
+    <string name="time_offset">KH-tid</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Påminn om bolus senare</string>
+    <string name="a11y_carb_reminder">ställ in påminnelse</string>
+    <!--    Widget-->
+</resources>

@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -21,17 +20,16 @@ import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -43,7 +41,7 @@ import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -55,6 +53,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     companion object {
 
@@ -83,11 +82,11 @@ class InsulinDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (abs(binding.time.value.toInt()) > 12 * 60) {
             binding.time.value = 0.0
-            ToastUtils.warnToast(context, R.string.constraintapllied)
+            ToastUtils.warnToast(context, R.string.constraint_applied)
         }
         if (binding.amount.value > maxInsulin) {
             binding.amount.value = 0.0
-            ToastUtils.warnToast(context, R.string.bolusconstraintapplied)
+            ToastUtils.warnToast(context, R.string.bolus_constraint_applied)
         }
     }
 
@@ -181,7 +180,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
-            actions.add(rh.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")")
+            actions.add(rh.gs(R.string.temp_target_short) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(R.string.format_mins, eatingSoonTTDuration) + ")")
                 .formatColor(context, rh, R.attr.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
@@ -234,7 +233,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
                                 )
                             if (timeOffset == 0)
-                                bolusTimer.removeBolusReminder()
+                                bolusTimer.removeAutomationEventBolusReminder()
                         } else {
                             uel.log(Action.BOLUS, Sources.InsulinDialog,
                                 notes,
@@ -242,9 +241,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                        activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     } else {
-                                        bolusTimer.removeBolusReminder()
+                                        bolusTimer.removeAutomationEventBolusReminder()
                                     }
                                 }
                             })

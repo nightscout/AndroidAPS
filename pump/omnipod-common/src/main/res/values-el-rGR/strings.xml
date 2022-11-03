@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_heading_actions">Ενέργειες</string>
+    <!-- Omnipod - Error -->
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Επιβεβαίωση</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_suspend_delivery">Αναστολή</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_reservoir">Αμπούλα</string>
+    <string name="omnipod_common_overview_errors">Σφάλματα</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Ακύρωση</string>
+    <string name="omnipod_common_wizard_button_next">Επόμενο</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Έξοδος</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_category_other">Άλλο</string>
+    <string name="omnipod_common_preferences_category_notifications">Ειδοποιήσεις</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_running">Εκτελείτε</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_set_bolus">Όρισε bolus</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Ακύρωση του Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
+    <!-- Omnipod - Alerts -->
+    <!-- Omnipod - Short status -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Ναι</string>
+    <string name="omnipod_common_no">Όχι</string>
+    <string name="omnipod_common_ok">ΟΚ</string>
+    <string name="omnipod_common_cancel">Ακύρωση</string>
+    <string name="omnipod_common_warning">Προειδοποίηση</string>
+    <!-- Omnipod - Times -->
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d λεπτά</item>
+    </plurals>
+    <plurals name="omnipod_common_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d ώρες</item>
+    </plurals>
+    <plurals name="omnipod_common_days">
+        <item quantity="one">%1$d ημέρες</item>
+        <item quantity="other">%1$d ημέρες</item>
+    </plurals>
+</resources>

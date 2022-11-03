@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">仅在充电时上传</string>
     <string name="open_humans_uploading">上传到开源人类项目</string>
     <string name="open_humans_notifications">开源人类项目通知</string>
-    <string name="uploading_to_open_humans">AndroidAPS 正在上传数据给开源人类项目。这可能需要一段时间。</string>
     <string name="you_have_been_signed_out_of_open_humans">你已经从开源人类项目中退出</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">如果不是故意的，请单击此处再次登录。</string>
     <string name="upload_now">现在上传</string>

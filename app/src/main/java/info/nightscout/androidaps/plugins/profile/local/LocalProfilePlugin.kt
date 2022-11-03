@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.interfaces.ResourceHelper
@@ -457,7 +457,7 @@ class LocalProfilePlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var rxBus: RxBus
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var dataWorker: DataWorker
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var sp: SP
         @Inject lateinit var config: Config
         @Inject lateinit var localProfilePlugin: LocalProfilePlugin
@@ -468,7 +468,7 @@ class LocalProfilePlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
-            val profileJson = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
+            val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {

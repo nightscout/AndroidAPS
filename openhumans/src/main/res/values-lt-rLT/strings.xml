@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">Įkelti tik akumuliatoriaus įkrovimo metu</string>
     <string name="open_humans_uploading">Įkeliama į Open Humans…</string>
     <string name="open_humans_notifications">Open Humans Pranešimai</string>
-    <string name="uploading_to_open_humans">AndroidAPS įkelia duomenis į Open Humans. Tai gali šiek tiek užtrukti.</string>
     <string name="you_have_been_signed_out_of_open_humans">Jūs buvote atjungtas iš Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
     <string name="upload_now">Įkelti dabar</string>

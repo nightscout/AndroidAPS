@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
+    <string name="start_activity_tt">활동 임시목표 시작</string>
+    <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
+    <string name="start_hypo_tt">저혈당 임시목표 시작</string>
+    <string name="time_offset">시간 이동</string>
+    <string name="unit_minute_short">분</string>
+    <!--    Widget-->
+</resources>

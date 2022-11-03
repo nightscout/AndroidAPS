@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Communicator</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_allowednumbers">Toegelate telefoon nommers</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_calibrationreplywithcode">Om kalibrasie %1$.2f te stuur antwoord met kode %2$s</string>
+    <string name="smscommunicator_bolusfailed">Bolus het misluk</string>
+    <string name="smscommunicator_remotecommandsallowed">Laat afstandbeheerde bevele toe via SMS</string>
+    <string name="smscommunicator_loophasbeendisabled">Loop is gedeaktiveer</string>
+    <string name="smscommunicator_loophasbeenenabled">Loop is geaktiveerd</string>
+    <string name="smscommunicator_loopisenabled">Lus geaktiveer</string>
+    <string name="smscommunicator_remotecommandnotallowed">Afstandbeheerde bevel word nie toegelaat nie</string>
+    <string name="smscommunicator_remotebolusnotallowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
+    <string name="smscommunicator_profilereplywithcode">Om profiel te verander na %1$s %2$d%% antwoord met %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Om basal e %1$d%% vir %2$d min te begin kies %3$s</string>
+    <string name="smscommunicator_suspendreplywithcode">Om lus op te skort vir %1$d minute antwoord met kode %2$s</string>
+    <string name="smscommunicator_tempbasalset">Temp basale %1$.2fU/h vir %2$d min suksesvol geaktiveerd</string>
+    <string name="smscommunicator_extendedset">Verlengde bolus %1$.2fU vir %2$d min is begin</string>
+    <string name="smscommunicator_tempbasalset_percent">Tydelike basale %1$d%% vir %2$d min hardloop</string>
+    <string name="smscommunicator_tempbasalfailed">Tydelike basale aktivering het gefaal</string>
+    <string name="smscommunicator_extendedfailed">Verlengde bolus het misluk</string>
+    <string name="smscommunicator_basalstopreplywithcode">Stop tydelike basale antwoord met kode %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Stop tydelike basale antwoord met kode %1$s</string>
+    <string name="smscommunicator_tempbasalcanceled">Tydelike basale gekanselleer</string>
+    <string name="smscommunicator_extendedcanceled">Verlengde bolus gekanselleer</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Kansellassie van tydelike basale het gefaal</string>
+    <string name="smscommunicator_extendedcancelfailed">Kansellasie van verlengde bolus het misluk</string>
+    <string name="smscommunicator_unknowncommand">Onbekende opdrag of verkeerde opsie</string>
+    <string name="smscommunicator_wrongduration">Verkeerde duur</string>
+    <string name="smscommunicator_loopsuspended">Lus opgeskort</string>
+    <string name="smscommunicator_loopresumed">Lus hervat</string>
+    <string name="smscommunicator_invalidphonennumber">Ongeldige SMS selfoon nommer</string>
+    <string name="smscommunicator_messagebody">Ongeldig boodskap teks</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IAB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basale:</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="description_insulin_rapid">Insulien voorkeure vir Humalog en NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Insulien voorkeure vir Fiasp</string>
+    <string name="description_insulin_free_peak">Laat jou toe om die piek van die insulien aktiwiteit definieer en behoort slegs gebruik te word deur gevorderde gebruikers</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IAB kurwe piek tyd</string>
+    <string name="insulin_peak_time">Piek tyd [min]</string>
+    <string name="free_peak_oref">Vry-piek Oref</string>
+    <string name="rapid_acting_oref">Snelaksie Oref</string>
+    <string name="ultrarapid_oref">Ultra-Snel Oref</string>
+    <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
+</resources>

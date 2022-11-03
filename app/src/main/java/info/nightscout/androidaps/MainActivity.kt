@@ -3,6 +3,8 @@ package info.nightscout.androidaps
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.SpannableString
@@ -28,7 +30,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
-import dev.doubledot.doki.ui.DokiActivity
 import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -39,16 +40,13 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
@@ -72,7 +70,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var loop: Loop
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var buildHelper: BuildHelper
@@ -80,7 +78,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
@@ -152,7 +150,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
+            androidPermission.notifyForSMSPermissions(this, smsCommunicator)
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }
@@ -349,7 +347,14 @@ class MainActivity : NoSplashAppCompatActivity() {
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(rh.gs(R.string.ok), null)
-                    .setNeutralButton(rh.gs(R.string.cta_dont_kill_my_app_info)) { _, _ -> DokiActivity.start(context = this@MainActivity) }
+                    .setNeutralButton(rh.gs(R.string.cta_dont_kill_my_app_info)) { _, _ ->
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))
+                            )
+                        )
+                    }
                     .create().apply {
                         show()
                         findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
@@ -375,12 +380,12 @@ class MainActivity : NoSplashAppCompatActivity() {
                 })
                 return true
             }
-/*
-            R.id.nav_survey             -> {
-                startActivity(Intent(this, SurveyActivity::class.java))
-                return true
-            }
-*/
+            /*
+                        R.id.nav_survey             -> {
+                            startActivity(Intent(this, SurveyActivity::class.java))
+                            return true
+                        }
+            */
             R.id.nav_defaultprofile     -> {
                 startActivity(Intent(this, ProfileHelperActivity::class.java))
                 return true
@@ -407,6 +412,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             binding.mainPager.currentItem = 0
             return
         }
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 

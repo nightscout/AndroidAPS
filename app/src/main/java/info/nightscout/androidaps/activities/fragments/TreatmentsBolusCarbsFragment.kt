@@ -35,7 +35,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
@@ -271,7 +271,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
 
             holder.binding.calculation.tag = ml
 
-            var notes = ml.carbs?.notes ?: ml.bolus?.notes ?: ""
+            val notes = ml.carbs?.notes ?: ml.bolus?.notes ?: ""
             holder.binding.notes.text = notes
             holder.binding.notes.visibility = if (notes != "") View.VISIBLE else View.GONE
         }

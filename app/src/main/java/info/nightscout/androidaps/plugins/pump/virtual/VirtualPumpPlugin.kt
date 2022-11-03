@@ -7,10 +7,22 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpPluginBase
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -23,7 +35,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -170,6 +181,7 @@ open class VirtualPumpPlugin @Inject constructor(
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
             .comment(rh.gs(R.string.virtualpump_resultok))
         val bolusingEvent = EventOverviewBolusProgress
+        bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
@@ -177,6 +189,11 @@ open class VirtualPumpPlugin @Inject constructor(
             bolusingEvent.percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
             rxBus.send(bolusingEvent)
             delivering += 0.1
+            if (BolusProgressDialog.stopPressed)
+                return PumpEnactResult(injector)
+                    .success(false)
+                    .enacted(false)
+                    .comment(rh.gs(R.string.stoppressed))
         }
         SystemClock.sleep(200)
         bolusingEvent.status = rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
@@ -361,7 +378,7 @@ open class VirtualPumpPlugin @Inject constructor(
         return pump
     }
 
-    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer ?: ManufacturerType.AndroidAPS
+    override fun manufacturer(): ManufacturerType = pumpDescription.pumpType.manufacturer ?: ManufacturerType.AAPS
 
     override fun model(): PumpType = pumpDescription.pumpType
 

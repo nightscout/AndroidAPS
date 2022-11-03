@@ -13,7 +13,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class NSClientMbgWorker(
 ) : Worker(context, params) {
 
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var buildHelper: BuildHelper
@@ -36,7 +36,7 @@ class NSClientMbgWorker(
         val acceptNSData = sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT
         if (!acceptNSData) return Result.success(workDataOf("Result" to "Sync not enabled"))
 
-        val mbgArray = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
+        val mbgArray = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))

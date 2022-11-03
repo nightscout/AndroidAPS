@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
+    <string name="start_activity_tt">Iniciar AT de atividade</string>
+    <string name="start_eating_soon_tt">Iniciar AT de Comer em breve</string>
+    <string name="start_hypo_tt">Iniciar AT de Hipo</string>
+    <string name="time_offset">Fuso horário</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Lembrete para bólus mais tarde</string>
+    <!--    Widget-->
+</resources>

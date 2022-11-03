@@ -12,7 +12,7 @@
     <string name="only_upload_if_charging">Ne télécharger que si en charge</string>
     <string name="open_humans_uploading">Téléchargement vers Open Humans…</string>
     <string name="open_humans_notifications">Notifications Open Humans</string>
-    <string name="uploading_to_open_humans">AndroidAPS télécharge vers Open Humans. Cela peut prendre un certain temps.</string>
+    <string name="uploading_to_open_humans">AAPS téléverse vers Open Humans. Cela peut prendre un certain temps.</string>
     <string name="you_have_been_signed_out_of_open_humans">Vous avez été déconnecté d\'Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Cliquez ici pour vous connecter à nouveau si ce n\'était pas volontaire.</string>
     <string name="upload_now">Télécharger maintenant</string>

@@ -20,7 +20,6 @@
     <string name="disconnected">Getrennt</string>
     <string name="disconnecting">Verbindung wird getrennt</string>
     <string name="waiting_for_disconnection">Warte auf Trennung der Verbindung</string>
-    <string name="androidaps_start">AndroidAPS gestartet</string>
     <string name="formatinsulinunits1">%1$.1f IE</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
@@ -111,6 +110,12 @@
     <string name="addnew">Weiteren hinzufügen</string>
     <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
+    <string name="alarminxmin">Alarm in %1$d Min.</string>
+    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpe pausiert</string>
+    <string name="notconfigured">Nicht konfiguriert</string>
+    <string name="loopsuspended">Loop pausiert</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -274,7 +279,6 @@
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
     <string name="version_expire">Version %1$s läuft am %2$s ab</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Mo</string>
     <string name="tuesday_short">Di</string>
@@ -478,11 +482,10 @@
     <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
     <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
     <string name="autotune_profile_invalid">Profil ungültig</string>
-    <string name="autotune_run_without_autoswitch">Autotune ohne Profilwechsel ausgeführt</string>
-    <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil automatisch gewechselt</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

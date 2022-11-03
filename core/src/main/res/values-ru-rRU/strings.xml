@@ -20,7 +20,7 @@
     <string name="disconnected">Разъединено</string>
     <string name="disconnecting">разъединение</string>
     <string name="waiting_for_disconnection">Ожидание разъединения</string>
-    <string name="androidaps_start">AndroidAPS запущен</string>
+    <string name="androidaps_start">AAPS запущен</string>
     <string name="formatinsulinunits1">%1$.1f ед</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
     <string name="formatsignedinsulinunits">%1$+.2f ед</string>
@@ -46,12 +46,12 @@
     <string name="date">дата</string>
     <string name="units_label">единицы</string>
     <string name="dia_label">DIA (время действия инсулина)</string>
-    <string name="ic_label">IC (инсулин/углеводы):</string>
+    <string name="ic_label">Углеводный коэффициент IC (ГУ/ед. инс)</string>
     <string name="isf_label">ISF (чувствительность к инсулину)</string>
     <string name="basal_label">базал</string>
     <string name="target_label">Целевое значение СК:</string>
     <string name="dia_long_label">Продолжительность действия инсулина</string>
-    <string name="ic_long_label">Соотношение инсулин/углеводы I: C</string>
+    <string name="ic_long_label">Углеводный коэффициент IC (ГУ/ед. инс.)</string>
     <string name="isf_long_label">Фактор Чувствительности к Инсулину (ISF)</string>
     <string name="basal_long_label">Базальная скорость</string>
     <string name="target_long_label">Целевая ГК</string>
@@ -114,6 +114,32 @@
     <string name="addnew">Добавить новый</string>
     <string name="addnew_above">Добавить строку сверху</string>
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
+    <string name="bg_label">ГК</string>
+    <string name="calibration">калибровка</string>
+    <string name="alarminxmin">Напомнить через %1$d мин</string>
+    <string name="treatmentdeliveryerror">Возможна ошибка в подаче болюса. Проверьте реальное количество поданного инсулина</string>
+    <string name="bolus_reminder">Напоминание о болюсе</string>
+    <string name="duration_label">Длительность действия</string>
+    <string name="shortgramm">грамм</string>
+    <string name="pumpsuspended">Работа помпы остановлена</string>
+    <string name="notconfigured">Не сконфигурировано</string>
+    <string name="loopsuspended">ЗЦ остановлен</string>
+    <string name="trend_arrow">Стрелка тренда</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">н/д</string>
+    <string name="required">надо</string>
+    <string name="a11y_arrow_double_down">быстрое падение</string>
+    <string name="a11y_arrow_single_down">падение</string>
+    <string name="a11y_arrow_forty_five_down">медленное падение</string>
+    <string name="a11y_arrow_flat">стабильно</string>
+    <string name="a11y_arrow_forty_five_up">медленный рост</string>
+    <string name="a11y_arrow_single_up">рост</string>
+    <string name="a11y_arrow_double_up">быстрый рост</string>
+    <string name="a11y_arrow_none">отсутствует</string>
+    <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="a11y_high">высокий</string>
+    <string name="a11y_inrange">в диапазоне</string>
+    <string name="a11y_low">низкий</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -280,7 +306,7 @@
     <string name="versionavailable">Доступна версия %1$s</string>
     <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AndroidAPS из системных настроек \n иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
+    <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AAPS из системных настроек \n иначе AAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Пн</string>
     <string name="tuesday_short">Вт</string>
@@ -361,6 +387,7 @@
     <string name="uel_export_settings">ЭКСПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_import_settings">ИМПОРТИРОВАТЬ НАСТРОЙКИ</string>
     <string name="uel_reset_databases">СБРОСИТЬ БАЗЫ ДАННЫХ</string>
+    <string name="uel_cleanup_databases">ОЧИСТКА ДАННЫХ</string>
     <string name="uel_export_databases">ЭКСПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>
     <string name="uel_import_databases">ИМПОРТИРОВАТЬ БАЗЫ ДАННЫХ</string>
     <string name="uel_otp_export">ЭКСПОРТИРОВАТЬ OTP</string>
@@ -392,12 +419,12 @@
     <string name="profile_sensitivity_value">Значение чувствительности в профиле</string>
     <string name="profile_max_daily_basal_value">Максимальное значение базала в профиле</string>
     <string name="current_basal_value">Текущее значение базала</string>
-    <string name="profile_carbs_ratio_value">Коэффициент углеводов в профиле</string>
+    <string name="profile_carbs_ratio_value">Значение Углеводного коэффициента IC в профиле</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
     <string name="valueoutofrange">»%1$s« за пределами жестких ограничений</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f за пределами жестких ограничений</string>
     <string name="basal_value">Величина базала</string>
-    <string name="nsclient_version_does_not_match">Версия NSClient не совпадает с версией AndroidAPS. Обновите версию.</string>
+    <string name="nsclient_version_does_not_match">Версия AAPSClient не совпадает с версией AAPS. Обновите версию.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">БОЛЮС %1$.2f ЕД</string>
     <string name="carbs_g">УГЛ %1$d г</string>
@@ -490,6 +517,8 @@
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

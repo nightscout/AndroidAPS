@@ -8,7 +8,6 @@ import info.nightscout.androidaps.database.entities.TotalDailyDose
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
 
@@ -17,6 +16,12 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
 
     @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TotalDailyDose?
@@ -33,7 +38,7 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
     suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TotalDailyDose>
 
-    @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE dateCreated >= :since AND pumpType = :pumpType")
+    @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp >= :since AND pumpType = :pumpType")
     fun deleteNewerThan(since: Long, pumpType: InterfaceIDs.PumpType)
 
 }

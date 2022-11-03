@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Leituras Glic. perdidas</string>
+    <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
+    <string name="request">Pedido</string>
+    <string name="permission">Permissão</string>
+    <string name="error_asking_for_permissions">Erro alterando permissões</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
+</resources>

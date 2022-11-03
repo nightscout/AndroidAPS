@@ -26,8 +26,8 @@
     <string name="objectives_pumpstatusavailableinns">Stato micro disponibile in NS</string>
     <string name="objectives_manualenacts">Attivazioni manuali</string>
     <string name="accomplished">Completato: %1$s</string>
-    <string name="objectives_usage_objective">Impara a controllare AndroidAPS</string>
-    <string name="objectives_usage_gate">Esegui varie azioni in AndroidAPS</string>
+    <string name="objectives_usage_objective">Impara a controllare AAPS</string>
+    <string name="objectives_usage_gate">Esegui varie azioni in AAPS</string>
     <string name="objectives_useprofileswitch">Imposta il profilo \"90%\" per 10 min (premi a lungo sul nome profilo nella sezione Panoramica)</string>
     <string name="objectives_usedisconnectpump">Simula la doccia. Disconnetti il micro per 1h (premi a lungo su Loop aperto)</string>
     <string name="objectives_usereconnectpump">... e riconnetti allo stesso modo</string>

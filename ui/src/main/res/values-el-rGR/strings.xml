@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
+    <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
+    <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
+    <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
+    <string name="time_offset">Χρονική μετατόπιση</string>
+    <string name="unit_minute_short">min</string>
+    <!--    Widget-->
+</resources>

@@ -8,35 +8,63 @@ import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.implementations.ActivityNamesImpl
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.androidaps.interfaces.Autotune
+import info.nightscout.androidaps.interfaces.BolusTimer
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.CarbTimer
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.DataSyncSelector
+import info.nightscout.androidaps.interfaces.IconsProvider
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.LocalAlertUtils
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.NotificationHolder
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
 import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
-import info.nightscout.androidaps.queue.CommandQueueImplementation
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.implementation.AndroidPermissionImpl
+import info.nightscout.implementation.BolusTimerImpl
+import info.nightscout.implementation.CarbTimerImpl
+import info.nightscout.implementation.LocalAlertUtilsImpl
+import info.nightscout.implementation.XDripBroadcastImpl
+import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.implementation.queue.CommandQueueImplementation
+import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
@@ -47,16 +75,18 @@ import javax.inject.Singleton
 open class AppModule {
 
     @Provides
-    fun providesPlugins(config: Config,
+    fun providesPlugins(config: Config, buildHelper: BuildHelper,
                         @PluginsModule.AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
                         @PluginsModule.PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
                         @PluginsModule.NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
-                        @PluginsModule.APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>)
+                        @PluginsModule.APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
+                        @PluginsModule.Unfinished unfinished: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>)
         : List<@JvmSuppressWildcards PluginBase> {
         val plugins = allConfigs.toMutableMap()
         if (config.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (config.APS) plugins += aps.get()
         if (!config.NSCLIENT) plugins += notNsClient.get()
+        if (buildHelper.isUnfinishedMode()) plugins += unfinished.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }
 
@@ -80,11 +110,14 @@ open class AppModule {
         ActivePlugin, repository: AppRepository, dateUtil: DateUtil, config: Config, hardLimits: HardLimits,
         aapsSchedulers: AapsSchedulers, fabricPrivacy: FabricPrivacy, deviceStatusData: DeviceStatusData
     ): ProfileFunction =
-        ProfileFunctionImplementation(
+        ProfileFunctionImpl(
             aapsLogger, sp, rxBus, rh, activePlugin, repository, dateUtil,
             config, hardLimits, aapsSchedulers, fabricPrivacy, deviceStatusData
         )
 
+    @Provides
+    @Singleton
+    internal fun provideConstraints(activePlugin: ActivePlugin): Constraints = ConstraintsImpl(activePlugin)
     @Module
     interface AppBindings {
 
@@ -102,9 +135,14 @@ open class AppModule {
         @Binds fun bindAutotuneInterface(autotunePlugin: AutotunePlugin): Autotune
         @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
-        @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
-
-        @Binds fun bindPumpSync(pumpSyncImplementation: PumpSyncImplementation): PumpSync
+        @Binds fun bindDataSyncSelectorInterface(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
+        @Binds fun bindPumpSyncInterface(pumpSyncImplementation: PumpSyncImplementation): PumpSync
+        @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
+        @Binds fun bindCarbTimerInterface(carbTimer: CarbTimerImpl): CarbTimer
+        @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
+        @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
+        @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
+        @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
     }
 }
 

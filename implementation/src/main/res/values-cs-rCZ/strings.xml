@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="xdrip_not_installed">xDrip+ není nainstalován</string>
+    <string name="calibration_sent">Kalibrace odeslána do xDripu+</string>
+    <string name="bg_label">Gly</string>
+    <string name="missed_bg_readings">Chybějící glykémie</string>
+    <string name="time_to_eat">Čas k jídlu</string>
+    <string name="enable_bolus_advisor">Povolit poradce s bolusem</string>
+    <string name="enable_bolus_advisor_summary">Při vysoké glykémii použijte připomenutí, abyste začali jíst později, namísto výsledku z kalkulátoru („prebolus“)</string>
+    <string name="bolus_advisor">Poradce pro bolus</string>
+    <string name="bolus_advisor_message">Máte vysokou glykémii. Namísto jídla doporučujeme vyčkat na lepší glykémii a připomenout, až bude čas na jídlo. Přejete si poslat korekční bolus a připomenout, až bude čas k jídlu? V tomto případě nebudou zapsané žádné sacharidy, a později opět musíte spustit kalkulátor, jakmile vám to připomeneme.</string>
+    <string name="time_to_bolus">Čas na bolus!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
+    <string name="executing_right_now">Příkaz je právě prováděn</string>
+    <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
+    <string name="request">Požadavek</string>
+    <string name="permission">Povolení</string>
+    <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
+    <string name="need_system_window_permission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
+    <string name="need_location_permission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
+    <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
+    <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
+</resources>

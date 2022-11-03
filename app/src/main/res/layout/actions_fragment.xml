@@ -107,7 +107,7 @@
                     style="@style/GrayButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:drawableTop="@drawable/ic_actions_startextbolus"
+                    android:drawableTop="@drawable/ic_actions_start_extended_bolus"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
                     android:text="@string/overview_extendedbolus_button"

@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.TABLE_DEVICE_STATUS
+import info.nightscout.androidaps.database.entities.DeviceStatus
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
@@ -24,6 +24,9 @@ internal interface DeviceStatusDao {
 
     @Query("DELETE FROM $TABLE_DEVICE_STATUS")
     fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_DEVICE_STATUS WHERE timestamp < :than")
+    fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT id FROM $TABLE_DEVICE_STATUS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

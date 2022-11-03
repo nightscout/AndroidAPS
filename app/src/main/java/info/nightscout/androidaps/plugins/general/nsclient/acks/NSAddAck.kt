@@ -4,7 +4,7 @@ import info.nightscout.androidaps.events.Event
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
 import io.socket.client.Ack
 import org.json.JSONArray
 import org.json.JSONObject

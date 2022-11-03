@@ -31,7 +31,7 @@ import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
@@ -53,7 +53,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
@@ -92,11 +92,13 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private val timeTextWatcher = object : TextWatcher {
-        override fun afterTextChanged(s: Editable) {}
+        override fun afterTextChanged(s: Editable) {
+            binding.alarm.isChecked = binding.carbTimeInput.value > 0
+        }
+
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             calculateInsulin()
-            binding.alarm.isChecked = binding.carbTimeInput.value > 0
         }
     }
 
@@ -367,7 +369,7 @@ class WizardDialog : DaggerDialogFragment() {
             // Set BG if not old
             binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
 
-            binding.ttCheckbox.isEnabled =  tempTarget is ValueWrapper.Existing
+            binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
             binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
 
@@ -409,7 +411,7 @@ class WizardDialog : DaggerDialogFragment() {
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
-            ToastUtils.warnToast(ctx, R.string.carbsconstraintapplied)
+            ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)
             return
         }
 

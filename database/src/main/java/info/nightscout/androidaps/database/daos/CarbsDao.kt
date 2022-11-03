@@ -2,13 +2,11 @@ package info.nightscout.androidaps.database.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.androidaps.database.TABLE_BOLUSES
 import info.nightscout.androidaps.database.TABLE_CARBS
 import info.nightscout.androidaps.database.entities.Carbs
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface CarbsDao : TraceableDao<Carbs> {
 
@@ -17,6 +15,12 @@ internal interface CarbsDao : TraceableDao<Carbs> {
 
     @Query("DELETE FROM $TABLE_CARBS")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_CARBS WHERE timestamp < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_CARBS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_CARBS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

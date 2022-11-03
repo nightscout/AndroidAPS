@@ -8,7 +8,7 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -27,7 +27,7 @@ class BolusWizardTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueue

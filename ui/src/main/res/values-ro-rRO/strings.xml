@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
+    <string name="start_activity_tt">Start TT activitate</string>
+    <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
+    <string name="start_hypo_tt">Start TT hipo</string>
+    <string name="time_offset">Decalaj</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
+    <!--    Widget-->
+</resources>

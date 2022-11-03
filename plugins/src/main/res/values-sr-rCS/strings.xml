@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS komunikator</string>
+    <string name="description_sms_communicator">Daljinsko upravljanje AAPS-om pomoću SMS naredbi.</string>
+    <string name="smscommunicator_allowednumbers">Dozvoljeni brojevi telefona</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_temptargetwithcode">Da bi podesili privremeni cilj %1$s odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Da otkažete privremenog cilja odgovorI sa kodom %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">Da bi onemogućili SMS usluga na daljinu odgovori sa kodom %1$s.\n\nImaj na umu da ćeš moći da ga ponovo aktiviraš direktno samo sa AAPS glavnog pametnog telefona.</string>
+    <string name="smscommunicator_stoppedsms">SMS usluga na daljinu je zaustavljen. Da bi je ponovo aktivirali, koristite AAPS na glavnom pametnom telefonu.</string>
+    <string name="smscommunicator_calibrationreplywithcode">Za slanje kalibracije %1$.2f odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_bolusfailed">Bolus nije uspeo</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Minimalni broj minuta koji mora da prođe između jednog daljinskog bolusa i sledećeg</string>
+    <string name="smscommunicator_remotebolusmindistance">Koliko minuta mora da prođe najmanje između jednog bolusa i sledećeg</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">Radi tvoje sigurnosti, za izmenu ove postavke, moraš dodati najmanje 2 telefonska broja.</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f U je uspešno isporučen</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolus za obrok %1$.2f U je uspešno isporučen</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Cilj %1$s za %2$d minuta</string>
+    <string name="smscommunicator_tt_set">Cilj %1$s za %2$d minuta je uspešno postavljen</string>
+    <string name="smscommunicator_tt_canceled">Privremeni cilj uspješno je otkazan</string>
+    <string name="smscommunicator_remotecommandsallowed">Dozvoli daljinske komande putem SMS-a</string>
+    <string name="smscommunicator_loophasbeendisabled">Petlja je onemogućena</string>
+    <string name="smscommunicator_loophasbeenenabled">Petlja je omogućena</string>
+    <string name="smscommunicator_loopisenabled">Petlja je omogućena</string>
+    <string name="smscommunicator_pumpconnectwithcode">Za povezivanje pumpe, odgovori sa kodom %1$s</string>
+    <string name="smscommunicator_pumpconnectfail">Povezivanje sa pumpom nije uspelo</string>
+    <string name="smscommunicator_pumpdisconnectwithcode">Za isključivanje pumpe na %1$d minuta, odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_pumpdisconnected">Pumpa nije povezana</string>
+    <string name="smscommunicator_reconnect">Pumpa je ponovo povezana</string>
+    <string name="smscommunicator_remotecommandnotallowed">Daljinska komanda nije dozvoljena</string>
+    <string name="smscommunicator_remotebolusnotallowed">Daljinski bolus nije dostupan. Pokušaj ponovo kasnije.</string>
+    <string name="smscommunicator_basalreplywithcode">Za početak bazala %1$.2f U/h za %2$d min odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">Za promenu profila na %1$s %2$d%% odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_extendedreplywithcode">Za početak produženog bolusa %1$.2f U za %2$d min, odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Za unos %1$dg u %2$s odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Za početak bazala %1$d%% za %2$d min, odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_suspendreplywithcode">Za obustavljanje petlje na %1$d minuta, odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_loopresumereplywithcode">Za nastavak petlje odgovori sa kodom %1$s</string>
+    <string name="smscommunicator_loopenablereplywithcode">Za omogućavanje petlje odgovori sa kodom %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Za onemogućavanje petlje odgovori sa kodom %1$s</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
+    <string name="description_insulin_rapid">Unapred podešena postavka insulina za Humalog i NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Unapred podešena postavka insulina za Fiasp</string>
+    <string name="description_insulin_lyumjev">Unapred podešena postavka insulina za Lyumjev</string>
+    <string name="description_insulin_free_peak">Omogućava definisanje vrhunca aktivnosti insulina i trebaju ga koriste samo napredni korisnici</string>
+</resources>

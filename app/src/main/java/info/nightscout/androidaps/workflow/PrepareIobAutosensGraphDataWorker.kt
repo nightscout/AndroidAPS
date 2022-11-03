@@ -15,24 +15,23 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DeviationDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import java.util.ArrayList
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -43,7 +42,7 @@ class PrepareIobAutosensGraphDataWorker(
     params: WorkerParameters
 ) : Worker(context, params) {
 
-    @Inject lateinit var dataWorker: DataWorker
+    @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
@@ -63,7 +62,7 @@ class PrepareIobAutosensGraphDataWorker(
     )
 
     override fun doWork(): Result {
-        val data = dataWorker.pickupObject(inputData.getLong(DataWorker.STORE_KEY, -1)) as PrepareIobAutosensData?
+        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareIobAutosensData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0, null))
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -87,7 +86,7 @@ class PrepareIobAutosensGraphDataWorker(
         val bgiArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         data.overviewData.maxBGIValue = Double.MIN_VALUE
 
-        val devArray: MutableList<OverviewPlugin.DeviationDataPoint> = ArrayList()
+        val devArray: MutableList<DeviationDataPoint> = ArrayList()
         data.overviewData.maxDevValueFound = Double.MIN_VALUE
 
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -168,7 +167,7 @@ class PrepareIobAutosensGraphDataWorker(
                 } else if (autosensData.type == "csf") {
                     color =  rh.gac( ctx, R.attr.deviationGreyColor)
                 }
-                devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
+                devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
                 data.overviewData.maxDevValueFound = maxOf(data.overviewData.maxDevValueFound, abs(autosensData.deviation), abs(bgi))
             }
 
@@ -260,7 +259,7 @@ class PrepareIobAutosensGraphDataWorker(
 
         // DEVIATIONS
         data.overviewData.deviationsSeries = BarGraphSeries(Array(devArray.size) { i -> devArray[i] }).also {
-            it.setValueDependentColor { data: OverviewPlugin.DeviationDataPoint -> data.color }
+            it.setValueDependentColor { data: DeviationDataPoint -> data.color }
         }
 
         // RATIO

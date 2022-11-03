@@ -46,7 +46,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
         Sources.WizardDialog        -> R.drawable.ic_calculator
         Sources.QuickWizard         -> R.drawable.ic_quick_wizard
-        Sources.ExtendedBolusDialog -> R.drawable.ic_actions_startextbolus
+        Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
         Sources.TTDialog            -> R.drawable.ic_temptarget_high
         Sources.ProfileSwitchDialog -> R.drawable.ic_actions_profileswitch
         Sources.LoopDialog          -> R.drawable.ic_loop_closed

@@ -20,7 +20,7 @@
     <string name="disconnected">Déconnectée</string>
     <string name="disconnecting">Déconnexion en cours</string>
     <string name="waiting_for_disconnection">Attente de déconnexion</string>
-    <string name="androidaps_start">Démarrage AndroidAPS</string>
+    <string name="androidaps_start">AAPS démarré</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -114,6 +114,32 @@
     <string name="addnew">Ajouter</string>
     <string name="addnew_above">Ajouter le nouveau au-dessus</string>
     <string name="wrong_pump_data">Les données proviennent de différentes pompes. Changer le pilote de la pompe pour réinitialiser l\'état de la pompe.</string>
+    <string name="bg_label">Gly</string>
+    <string name="calibration">Étalonnage</string>
+    <string name="alarminxmin">Alerter dans %1$d min</string>
+    <string name="treatmentdeliveryerror">Erreur lors du Bolus. Vérifiez manuellement la quantité réellement injectée</string>
+    <string name="bolus_reminder">Rappel bolus</string>
+    <string name="duration_label">Durée</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pompe arrêtée</string>
+    <string name="notconfigured">Non configuré</string>
+    <string name="loopsuspended">La Boucle est suspendue</string>
+    <string name="trend_arrow">Flèche de tendance</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">indisponible</string>
+    <string name="required">requis</string>
+    <string name="a11y_arrow_double_down">en baisse rapide</string>
+    <string name="a11y_arrow_single_down">en baisse</string>
+    <string name="a11y_arrow_forty_five_down">en baisse lente</string>
+    <string name="a11y_arrow_flat">stable</string>
+    <string name="a11y_arrow_forty_five_up">en hausse lente</string>
+    <string name="a11y_arrow_single_up">en hausse</string>
+    <string name="a11y_arrow_double_up">en hausse rapide</string>
+    <string name="a11y_arrow_none">aucun</string>
+    <string name="a11y_arrow_unknown">inconnu</string>
+    <string name="a11y_high">haut</string>
+    <string name="a11y_inrange">dans la cible</string>
+    <string name="a11y_low">bas</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -280,7 +306,7 @@
     <string name="versionavailable">Version %1$s disponible</string>
     <string name="version_expire">La version %1$s expire le %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Redémarrez votre smartphone ou redémarrez AndroidAPS depuis les paramètres système\nsinon AndroidAPS n\'aura pas de fichiers log (il est important de suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
+    <string name="alert_dialog_storage_permission_text">Veuillez redémarrer votre téléphone ou redémarrer AAPS à partir des Paramètres du système\nsinon AAPS ne sera pas connecté aux journaux (important pour suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
     <string name="tuesday_short">M</string>
@@ -361,6 +387,7 @@
     <string name="uel_export_settings">PARAMÈTRES EXPORTÉS</string>
     <string name="uel_import_settings">PARAMÈTRES IMPORTÉS</string>
     <string name="uel_reset_databases">BASE DE DONNÉES RÉINITIALISÉE</string>
+    <string name="uel_cleanup_databases">SUPPRIMER LES DONNÉES</string>
     <string name="uel_export_databases">BASE DE DONNÉES EXPORTÉE</string>
     <string name="uel_import_databases">BASE DE DONNÉES IMPORTÉE</string>
     <string name="uel_otp_export">OTP EXPORTÉ</string>
@@ -397,7 +424,7 @@
     <string name="valueoutofrange">\"%1$s\" est en dehors des limites</string>
     <string name="value_out_of_hard_limits">\"%1$s\" %2$.2f est en dehors des limites</string>
     <string name="basal_value">Valeur de Basal</string>
-    <string name="nsclient_version_does_not_match">La version NSClient ne correspond pas à AndroidAPS. Faites une mise à jour.</string>
+    <string name="nsclient_version_does_not_match">La version AAPSClient ne correspond pas à AAPS. Faites une mise à jour.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
     <string name="carbs_g">GLUCIDES %1$d g</string>
@@ -490,6 +517,8 @@
     <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
     <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

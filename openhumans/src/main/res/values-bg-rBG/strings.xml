@@ -12,11 +12,18 @@
     <string name="only_upload_if_charging">Качване само при зареждане</string>
     <string name="open_humans_uploading">Качване на данни към Open Humans…</string>
     <string name="open_humans_notifications">Open Humans нотификации</string>
-    <string name="uploading_to_open_humans">AndroidAPS в момента качва данни към Open Humans. Това може да отнеме известно време.</string>
     <string name="you_have_been_signed_out_of_open_humans">Излязохте от \"Open Humans\".</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Натиснете тук за да влезете отново, ако това не е било нарочно.</string>
     <string name="upload_now">Качи сега</string>
+    <string name="next">Следващ</string>
     <string name="terms_of_use">Условия за ползване</string>
+    <string name="info_openhumans">Това е отворен код, който ще копира данните ви в Open Humans. Ние не запазваме никакви права да споделяме вашите данни с трети страни без изричното ви разрешение. Данните, които проектът и приложението получават, се идентифицират чрез случаен идентификатор на потребител и ще бъдат надеждно предадени на Open Humans акаунт с вашето разрешение за този процес. Можете да спрете качването и да изтриете данните за качване по всяко време чрез www.openhumans.org.</string>
+    <string name="boluses">Болуси</string>
+    <string name="carbohydrates">Въглехидрати</string>
+    <string name="settings">Настройки</string>
+    <string name="device_model">Модел</string>
+    <string name="nightscout_url">Nightscout адрес</string>
+    <string name="agree">Разбирам и съм съгласен.</string>
     <string name="cancel">Откажи</string>
     <string name="close">Затвори</string>
 </resources>

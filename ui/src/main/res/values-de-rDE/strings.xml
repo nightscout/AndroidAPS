@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
+    <string name="dialog_canceled">Dialog abgebrochen</string>
+    <string name="start_activity_tt">Starte Aktivitäts-TT</string>
+    <string name="start_eating_soon_tt">Starte Essens-TT</string>
+    <string name="start_hypo_tt">Starte Hypo-TT</string>
+    <string name="time_offset">Zeitversatz</string>
+    <string name="unit_minute_short">Min.</string>
+    <string name="remind_to_bolus_later">Später an Bolus erinnern</string>
+    <string name="a11y_carb_reminder">Erinnerung einstellen</string>
+    <!--    Widget-->
+</resources>

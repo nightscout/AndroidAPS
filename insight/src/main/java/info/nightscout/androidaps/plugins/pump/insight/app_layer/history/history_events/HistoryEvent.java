@@ -1,14 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
 
-import info.nightscout.shared.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.insight.ids.HistoryEventIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
-import org.slf4j.Logger;
 
 public class HistoryEvent implements Comparable<HistoryEvent> {
-    @SuppressWarnings("deprecation")
-    private static final Logger log = StacktraceLoggerWrapper.Companion.getLogger(HistoryEvent.class);
+    //private static final Logger log = StacktraceLoggerWrapper.Companion.getLogger(HistoryEvent.class);
 
     private int eventYear;
     private int eventMonth;
@@ -27,7 +24,7 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
             try {
                 event = eventClass.newInstance();
             } catch (IllegalAccessException | InstantiationException e) {
-                log.error("Unhandled exception", e);
+                //log.error("Unhandled exception", e);
             }
         }
         event.parseHeader(byteBuf);

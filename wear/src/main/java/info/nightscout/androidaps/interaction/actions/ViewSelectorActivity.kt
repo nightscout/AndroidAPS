@@ -4,17 +4,16 @@ package info.nightscout.androidaps.interaction.actions
 
 import android.content.Context
 import android.os.Bundle
-import android.support.wearable.view.DotsPageIndicator
-import android.support.wearable.view.GridPagerAdapter
 import android.support.wearable.view.GridViewPager
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.wear.widget.CurvedTextView
 import dagger.android.DaggerActivity
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.nondeprecated.DotsPageIndicatorNonDeprecated
+import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
+import info.nightscout.androidaps.nondeprecated.GridViewPagerNonDeprecated
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -27,14 +26,14 @@ open class ViewSelectorActivity : DaggerActivity() {
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
 
-    private var pager: GridViewPager? = null
+    private var pager: GridViewPagerNonDeprecated? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grid_layout)
         setTitleBasedOnScreenShape()
         pager = findViewById(R.id.pager)
-        val dotsPageIndicator: DotsPageIndicator = findViewById(R.id.page_indicator)
+        val dotsPageIndicator: DotsPageIndicatorNonDeprecated = findViewById(R.id.page_indicator)
         dotsPageIndicator.setPager(pager)
         pager?.setOnPageChangeListener(object : GridViewPager.OnPageChangeListener {
             override fun onPageScrolled(row: Int, column: Int, rowOffset: Float, columnOffset: Float, rowOffsetPixels: Int, columnOffsetPixels: Int) {
@@ -52,7 +51,7 @@ open class ViewSelectorActivity : DaggerActivity() {
         })
     }
 
-    fun setAdapter(adapter: GridPagerAdapter?) {
+    fun setAdapter(adapter: GridPagerAdapterNonDeprecated?) {
         pager?.adapter = adapter
     }
 
