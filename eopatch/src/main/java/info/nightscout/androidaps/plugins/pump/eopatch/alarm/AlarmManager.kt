@@ -2,12 +2,15 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.EONotification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
@@ -18,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
@@ -54,6 +58,9 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
     @Inject lateinit var pm: IPreferenceManager
     @Inject lateinit var mAlarmRegistry: IAlarmRegistry
+
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var pumpSync: PumpSync
 
     private lateinit var mAlarmProcess: AlarmProcess
 
@@ -157,6 +164,14 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                 }
                 .subscribe { ret ->
                     if(ret == IAlarmProcess.ALARM_HANDLED){
+                        if(alarmCode == B001){
+                            pumpSync.syncStopTemporaryBasalWithPumpId(
+                                timestamp = dateUtil.now(),
+                                endPumpId = dateUtil.now(),
+                                pumpType = PumpType.EOFLOW_EOPATCH2,
+                                pumpSerial = patchManager.patchConfig.patchSerialNumber
+                            )
+                        }
                         updateState(alarmCode, AlarmState.HANDLE)
                     }else{
                         rxBus.send(EventNewNotification(notification))
