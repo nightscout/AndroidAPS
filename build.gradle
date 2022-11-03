@@ -44,6 +44,7 @@ buildscript {
         wearable_version = '2.9.0'
         play_services_wearable_version = '17.1.0'
         play_services_location_version = '20.0.0'
+        agp_version = '7.2.1'
     }
     repositories {
         google()
@@ -51,7 +52,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath "com.android.tools.build:gradle:$agp_version"
         classpath 'com.google.gms:google-services:4.3.14'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
 
