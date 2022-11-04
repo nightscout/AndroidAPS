@@ -274,7 +274,6 @@
     <string name="prefdecrypt_issue_wrong_format">Fehlende Verschlüsselungskonfiguration, Einstellungsformat ist ungültig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nicht unterstützter oder nicht angegebener Verschlüsselungsalgorithmus!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Signaturprüfung</string>
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
     <string name="version_expire">Version %1$s läuft am %2$s ab</string>
