@@ -414,7 +414,6 @@
     <string name="overview_show_basals">Базали</string>
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
-    <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
     <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
     <string name="autosensdisabledinpreferences">Аутосенс е забранен в настройките</string>
