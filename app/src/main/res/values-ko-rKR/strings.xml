@@ -33,7 +33,6 @@
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
     <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
     <string name="description_treatments">모든 관리를 저장합니다.</string>
-    <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
     <string name="treatments_insulin_label_string">인슐린:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -90,7 +89,6 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">저혈당 주입정지</string>
-    <string name="disabledloop">Loop 중지됨</string>
     <string name="openloop_newsuggestion">새로운 제안이 있습니다</string>
     <string name="carbssuggestion">탄수화물 제안</string>
     <string name="unsupportednsversion">지원하지 않는 Nightscout 버전입니다</string>
@@ -218,8 +216,6 @@
     <string name="clearlog">기록 지우기</string>
     <string name="nowritepermission">NSCLIENT이 쓰기 권한이 없습니다. 잘못된 API secret인지 확인해보세요</string>
     <string name="wear_settings">워치 설정</string>
-    <string name="wear_detailedIOB_title">IOB 자세하게 보여주기</string>
-    <string name="wear_detailedIOB_summary">워치페이스에 IOB를 Bolus IOB와 Basal IOB로 나누어서 보여줍니다.</string>
     <string name="nosuccess">성공하지 못했습니다. 폰을 확인하세요</string>
     <string name="patientage">환자 유형</string>
     <string name="child">어린이</string>
@@ -280,11 +276,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
-    <string name="xdripstatus_settings">xDrip+ 상태 (워치)</string>
-    <string name="xdripstatus">xDrip+ 상태표시라인 (워치)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">BGI 보기</string>
-    <string name="wear_showbgi_summary">BGI를 상태라인에 추가하기</string>
     <string name="overview_extendedbolus_cancel_button">확장Bolus 취소</string>
     <string name="doprofileswitch">프로파일 변경 실행</string>
     <string name="careportal_sensor_label">센서</string>
