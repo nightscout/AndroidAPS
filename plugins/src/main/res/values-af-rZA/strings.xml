@@ -49,4 +49,7 @@
     <string name="rapid_acting_oref">Snelaksie Oref</string>
     <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
