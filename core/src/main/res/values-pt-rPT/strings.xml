@@ -253,7 +253,6 @@
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de definições é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Verificador de assinatura</string>
     <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
     <!-- Permissions -->
