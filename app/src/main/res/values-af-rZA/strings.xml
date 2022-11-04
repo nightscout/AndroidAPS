@@ -30,7 +30,6 @@
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
     <string name="description_treatments">Stoor alle behandelings wat gedoen was</string>
-    <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
     <string name="treatments_insulin_label_string">Insulien:</string>
     <string name="treatments_carbs_label_string">Karbs:</string>
     <string name="treatments_iob_label_string">IAB:</string>
@@ -84,7 +83,6 @@
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Geslote lus</string>
     <string name="openloop">Oop lus</string>
-    <string name="disabledloop">Loop Afgeskakel</string>
     <string name="openloop_newsuggestion">Nuwe voorstel beskikbaar</string>
     <string name="unsupportednsversion">Weergawe van Nightscout nie ondersteun</string>
     <string name="treatments_wizard_basaliob_label">Basale IAB</string>
@@ -184,8 +182,6 @@
     <string name="clearlog">Maak log skoon</string>
     <string name="nowritepermission">NSCLIENT het geen skryfregte. Dalk verkeerde API secret?</string>
     <string name="wear_settings">Wear instellings</string>
-    <string name="wear_detailedIOB_title">Wys gedetailleerde IAB</string>
-    <string name="wear_detailedIOB_summary">Breek af IAB in bolus en basale IAB op die watchface</string>
     <string name="nosuccess">nie suksesvol - Kontroleer asseblief foon</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
@@ -215,9 +211,6 @@
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Wys BGI</string>
-    <string name="wear_showbgi_summary">Voeg BGI by status lyn</string>
     <string name="overview_extendedbolus_cancel_button">Kanselleer Verlengde Bolus</string>
     <string name="ns_alarmoptions">Alarm Opsies</string>
     <string name="nsalarm_staledatavalue_label">Ou data drumpel [min]</string>
