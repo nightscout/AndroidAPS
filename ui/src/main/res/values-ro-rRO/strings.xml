@@ -9,5 +9,9 @@
     <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="statistics">Statistici</string>
+    <string name="calculation_in_progress">Calcul în desfășurare</string>
+    <string name="id">ID:</string>
+    <string name="submit">Trimiteți</string>
     <!-- CareDialog -->
 </resources>
