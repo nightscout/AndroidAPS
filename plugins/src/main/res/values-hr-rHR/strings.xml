@@ -9,9 +9,12 @@
     <!-- Insulin -->
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Prikažite informacije o svojem Loop-u na vašem xDrip+ brojčaniku.</string>
     <!-- Food-->
+    <string name="description_food">Prikaži postavke prehrane definirane u Nightscout</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <string name="description_profile_local">Definirajte profil koji je dostupan izvan mreže.</string>
     <!-- BG Quality -->
     <!-- DST Helper -->
     <!-- Storage constraint -->
