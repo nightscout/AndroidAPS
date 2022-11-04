@@ -423,7 +423,6 @@
     <string name="overview_show_basals">Basales</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
-    <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
     <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
     <string name="autosensdisabledinpreferences">Autosens deshabilitado en preferencias</string>
