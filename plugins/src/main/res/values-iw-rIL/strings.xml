@@ -101,4 +101,7 @@
     <string name="rapid_acting_oref">Oref אינסולין מהיר</string>
     <string name="dia_too_short">DIA במשך %1$f הוא קצר מדי - משתמש ב-%2$f במקום!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
