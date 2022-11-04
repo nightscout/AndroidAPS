@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydeder</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
-    <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
     <string name="treatments_insulin_label_string">İnsülin:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
     <string name="treatments_iob_label_string">AİNS:</string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Kapalı Döngü</string>
     <string name="openloop">Açık Döngü</string>
     <string name="lowglucosesuspend">Düşük Glikoz Duraklatma (LGS)</string>
-    <string name="disabledloop">Döngü devre dışı</string>
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
@@ -232,8 +230,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="clearlog">Günlüğü temizle</string>
     <string name="nowritepermission">NSCLIENT yazma izni yok. Yanlış API Anahtarı?</string>
     <string name="wear_settings">Wear ayarları</string>
-    <string name="wear_detailedIOB_title">Ayrıntılı AİNS göster</string>
-    <string name="wear_detailedIOB_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal olarak ayırın</string>
     <string name="nosuccess">başarısız - lütfen telefonu kontrol edin</string>
     <string name="patientage">Hasta tipi</string>
     <string name="child">Çocuk</string>
@@ -295,11 +291,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="nav_about">Hakkında</string>
     <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
-    <string name="xdripstatus_settings">xDrip+ Durumu (saat)</string>
-    <string name="xdripstatus">xDrip+ Durum Çizgisi (saat)</string>
-    <string name="xdripstatus_shortname">xd+</string>
-    <string name="wear_showbgi_title">BGI göster</string>
-    <string name="wear_showbgi_summary">BGI\'yı durum satırına ekle</string>
     <string name="overview_extendedbolus_cancel_button">Yayma Bolusu iptal et</string>
     <string name="doprofileswitch">Profil Değişimi Yap</string>
     <string name="careportal_sensor_label">Sensör</string>
