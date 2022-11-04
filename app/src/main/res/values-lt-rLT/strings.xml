@@ -191,7 +191,6 @@
     <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
     <string name="always_use_shortavg">Visada naudoti trumpo laikotarpio vidutinį pokyti vietoj paprasto pokyčio</string>
     <string name="always_use_shortavg_summary">Naudinga, kai duomenys, gaunami iš nefiltruoto šaltinio, tokio kaip xDrip+, tampa nestabilūs.</string>
-    <string name="profile">Profilis</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
     <string name="openapsama_autosens_max_summary">Numatytoji reikšmė: 1.2\nTai daugiklis Autosens (ir netrukus Autotune) funkcijoje, kuris nustato 20%% maksimalią ribą iki kurios Autosens gali padidinti valandinę bazę, sumažinti JIF ir tikslinę gliukozės vertę.</string>
@@ -460,7 +459,6 @@
     <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes kraujo gliukozės duomenų šaltinis neturi reikalingo filtravimo</string>
     <string name="smbnotallowedinopenloopmode">SMB neleidžiami atviro ciklo režime</string>
     <string name="food_short">Maistas</string>
-    <string name="reset">atstatyti</string>
     <string name="openapssmb_maxiob_title">Maksimalus bendras AIO, kurio negali viršyti OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Ši vertė yra vadinama Maks AIO OpenAPS kontekste\nOpenAPS nepridės daugiau insulino, jei dabartinis AIO yra didesnis už šią vertę</string>
     <string name="absorption_cutoff_title">Maksimalus maisto įsisavinimo laikas [h]</string>
@@ -609,17 +607,7 @@
     <string name="profilenamecontainsdot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
-    <string name="id">ID:</string>
-    <string name="submit">Pateikti</string>
-    <string name="mostcommonprofile">Dažniausiai naudojamas profilis:</string>
-    <string name="invalidage">Neteisingas amžiaus įrašas</string>
-    <string name="invalidweight">Neteisingas svorio įrašas</string>
     <string name="invalidpct">Netinkamas % įrašas</string>
-    <string name="average">Vidutinis</string>
-    <string name="tir">TIR (Laikas normos ribose)</string>
-    <string name="activitymonitor">Aktyvumo stebėjimas</string>
-    <string name="doyouwantresetstats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
-    <string name="statistics">Statistika</string>
     <string name="randombg">Atsitiktinė KG</string>
     <string name="description_source_randombg">Generuoti atsitiktinių KG duomenis (demonstracinis režimas)</string>
     <string name="randombg_short">KG</string>
@@ -700,7 +688,6 @@
     <string name="ns_receive_therapy_events_summary">Priimti terapijos įvykius (kaniulės, insulino, baterijos keitimą ir pan.), įvestus per NS arba NSClient</string>
     <string name="ns_receive_cgm">Gauti/užpildyti atgaline data NGJ duomenis</string>
     <string name="ns_receive_cgm_summary">Priimti NGJ duomenis iš NS</string>
-    <string name="calculation_in_progress">Skaičiuojama</string>
     <string name="missing_profile_name">Profilio pavadinimas nėra įrašytas</string>
     <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
     <string name="error_in_basal_values">Bazės reikšmių klaida</string>
