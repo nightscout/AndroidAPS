@@ -144,6 +144,11 @@
     <string name="tir">Čas v rozsahu</string>
     <string name="tdd_total">CDD celkom</string>
     <string name="none"><![CDATA[<prázdne>]]></string>
+    <string name="remove_label">VYMAZAŤ</string>
+    <string name="activate_profile">Aktivovať profil</string>
+    <string name="reset">Resetovať</string>
+    <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
