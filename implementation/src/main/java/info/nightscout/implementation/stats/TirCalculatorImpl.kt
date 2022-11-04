@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.stats
+package info.nightscout.implementation.stats
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,26 +9,28 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.stats.TIR
+import info.nightscout.androidaps.interfaces.stats.TirCalculator
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.implementation.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TirCalculator @Inject constructor(
+class TirCalculatorImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
-) {
+) : TirCalculator {
 
-    fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
+    override fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
         val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
@@ -40,7 +42,7 @@ class TirCalculator @Inject constructor(
             val midnight = MidnightTime.calc(bg.timestamp)
             var tir = result[midnight]
             if (tir == null) {
-                tir = TIR(midnight, lowMgdl, highMgdl)
+                tir = TirImpl(midnight, lowMgdl, highMgdl)
                 result.append(midnight, tir)
             }
             if (bg.value < 39) tir.error()
@@ -53,9 +55,9 @@ class TirCalculator @Inject constructor(
 
     private fun averageTIR(tirs: LongSparseArray<TIR>): TIR {
         val totalTir = if (tirs.size() > 0) {
-            TIR(tirs.valueAt(0).date, tirs.valueAt(0).lowThreshold, tirs.valueAt(0).highThreshold)
+            TirImpl(tirs.valueAt(0).date, tirs.valueAt(0).lowThreshold, tirs.valueAt(0).highThreshold)
         } else {
-            TIR(7, 70.0, 180.0)
+            TirImpl(7, 70.0, 180.0)
         }
         for (i in 0 until tirs.size()) {
             val tir = tirs.valueAt(i)
@@ -69,7 +71,7 @@ class TirCalculator @Inject constructor(
     }
 
     @SuppressLint("SetTextI18n")
-    fun stats(context: Context): TableLayout =
+    override fun stats(context: Context): TableLayout =
         TableLayout(context).also { layout ->
             val lowTirMgdl = Constants.STATS_RANGE_LOW_MMOL * Constants.MMOLL_TO_MGDL
             val highTirMgdl = Constants.STATS_RANGE_HIGH_MMOL * Constants.MMOLL_TO_MGDL
@@ -92,7 +94,7 @@ class TirCalculator @Inject constructor(
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)
                 })
-            layout.addView(TIR.toTableRowHeader(context, rh))
+            layout.addView(TirImpl.toTableRowHeader(context, rh))
             for (i in 0 until tir7.size()) layout.addView(tir7.valueAt(i).toTableRow(context, rh, dateUtil))
             layout.addView(
                 TextView(context).apply {

@@ -35,6 +35,14 @@
             android:name=".activities.ErrorHelperActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />
+        <activity
+            android:name=".activities.SurveyActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.StatsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
 
     </application>
 

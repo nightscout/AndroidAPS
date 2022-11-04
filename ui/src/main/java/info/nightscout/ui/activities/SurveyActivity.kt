@@ -1,32 +1,29 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.ActivitySurveyBinding
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.ActivityMonitor
+import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
-import info.nightscout.androidaps.utils.stats.TddCalculator
-import info.nightscout.androidaps.utils.stats.TirCalculator
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.LTag
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.ActivitySurveyBinding
+import info.nightscout.ui.defaultProfile.DefaultProfile
 import javax.inject.Inject
 
 class SurveyActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var tddCalculator: TddCalculator
-    @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var dateUtil: DateUtil
 
@@ -43,24 +40,20 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val profileList = profileStore?.getProfileList() ?: return
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        //binding.tdds.text = tddCalculator.stats()
-        //binding.tir.text = tirCalculator.stats()
-        //binding.activity.text = activityMonitor.stats()
-
         binding.profile.setOnClickListener {
             val age = SafeParse.stringToDouble(binding.age.text.toString())
             val weight = SafeParse.stringToDouble(binding.weight.text.toString())
             val tdd = SafeParse.stringToDouble(binding.tdd.text.toString())
             if (age < 1 || age > 120) {
-                ToastUtils.warnToast(this, R.string.invalidage)
+                ToastUtils.warnToast(this, R.string.invalid_age)
                 return@setOnClickListener
             }
             if ((weight < 5 || weight > 150) && tdd == 0.0) {
-                ToastUtils.warnToast(this, R.string.invalidweight)
+                ToastUtils.warnToast(this, R.string.invalid_weight)
                 return@setOnClickListener
             }
             if ((tdd < 5 || tdd > 150) && weight == 0.0) {
-                ToastUtils.warnToast(this, R.string.invalidweight)
+                ToastUtils.warnToast(this, R.string.invalid_weight)
                 return@setOnClickListener
             }
             profileFunction.getProfile()?.let { runningProfile ->
@@ -84,11 +77,11 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             r.age = SafeParse.stringToInt(binding.age.text.toString())
             r.weight = SafeParse.stringToInt(binding.weight.text.toString())
             if (r.age < 1 || r.age > 120) {
-                ToastUtils.warnToast(this, R.string.invalidage)
+                ToastUtils.warnToast(this, R.string.invalid_age)
                 return@setOnClickListener
             }
             if (r.weight < 5 || r.weight > 150) {
-                ToastUtils.warnToast(this, R.string.invalidweight)
+                ToastUtils.warnToast(this, R.string.invalid_weight)
                 return@setOnClickListener
             }
 

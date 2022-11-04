@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.stats
+package info.nightscout.implementation.stats
 
 import android.content.Context
 import android.graphics.Typeface
@@ -8,27 +8,29 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TotalDailyDose
-import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toTableRow
 import info.nightscout.androidaps.extensions.toTableRowHeader
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
+import info.nightscout.implementation.R
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class TddCalculator @Inject constructor(
+@Singleton
+class TddCalculatorImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
@@ -36,9 +38,9 @@ class TddCalculator @Inject constructor(
     private val dateUtil: DateUtil,
     private val iobCobCalculator: IobCobCalculator,
     private val repository: AppRepository
-) {
+) : TddCalculator {
 
-    fun calculate(days: Long): LongSparseArray<TotalDailyDose> {
+    override fun calculate(days: Long): LongSparseArray<TotalDailyDose> {
         var startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
         val endTime = MidnightTime.calc(dateUtil.now())
         val stepSize = T.hours(24).msecs()
@@ -69,19 +71,19 @@ class TddCalculator @Inject constructor(
         return result
     }
 
-    fun calculateToday(): TotalDailyDose {
+    override fun calculateToday(): TotalDailyDose {
         val startTime = MidnightTime.calc(dateUtil.now())
         val endTime = dateUtil.now()
         return calculate(startTime, endTime)
     }
 
-    fun calculateDaily(startHours: Long, endHours: Long): TotalDailyDose {
+    override fun calculateDaily(startHours: Long, endHours: Long): TotalDailyDose {
         val startTime = dateUtil.now() + T.hours(hour = startHours).msecs()
         val endTime = dateUtil.now() + T.hours(hour = endHours).msecs()
         return calculate(startTime, endTime)
     }
 
-    fun calculate(startTime: Long, endTime: Long): TotalDailyDose {
+    override fun calculate(startTime: Long, endTime: Long): TotalDailyDose {
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TotalDailyDose(timestamp = startTimeAligned)
@@ -112,7 +114,7 @@ class TddCalculator @Inject constructor(
         return tdd
     }
 
-    fun averageTDD(tdds: LongSparseArray<TotalDailyDose>): TotalDailyDose? {
+    override fun averageTDD(tdds: LongSparseArray<TotalDailyDose>): TotalDailyDose? {
         val totalTdd = TotalDailyDose(timestamp = dateUtil.now())
         if (tdds.size() == 0) return null
         for (i in 0 until tdds.size()) {
@@ -129,7 +131,7 @@ class TddCalculator @Inject constructor(
         return totalTdd
     }
 
-    fun stats(context: Context): TableLayout {
+    override fun stats(context: Context): TableLayout {
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         val todayTdd = calculateToday()

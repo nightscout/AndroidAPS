@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.defaultProfile
+package info.nightscout.ui.defaultProfile
 
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.pureProfileFromJson
@@ -13,31 +13,32 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
+@Suppress("LocalVariableName")
 @Singleton
 class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
 
-    var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
-    var sixToEleven: TreeMap<Double, Array<Double>> = TreeMap()
-    var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
-    var eighteenToTwentyFour: TreeMap<Double, Array<Double>> = TreeMap()
+    private var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
+    private var sixToEleven: TreeMap<Double, Array<Double>> = TreeMap()
+    private var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
+    @Suppress("unused") var eighteenToTwentyFour: TreeMap<Double, Array<Double>> = TreeMap()
 
     fun profile(age: Double, tdd: Double, weight: Double, units: GlucoseUnit): PureProfile? {
         val profile = JSONObject()
-        if (age >= 1 && age < 6) {
+        if (age in 1.0..5.0) {
             val _tdd = if (tdd == 0.0) 0.6 * weight else tdd
             closest(oneToFive, _tdd * 0.3)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(250.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0)))
             val isf = Round.roundTo(200.0 / _tdd, 0.1)
             profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0),units))
-        } else if (age >= 6 && age < 12) {
+        } else if (age in 6.0..11.0) {
             val _tdd = if (tdd == 0.0) 0.8 * weight else tdd
             closest(sixToEleven, _tdd * 0.4)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(375.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
             val isf = Round.roundTo(170.0 / _tdd, 0.1)
             profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0),units))
-        } else if (age >= 12 && age <= 18) {
+        } else if (age in 12.0..18.0) {
             val _tdd = if (tdd == 0.0) 1.0 * weight else tdd
             closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(500.0 / _tdd, 1.0)

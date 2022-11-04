@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.stats.TddCalculator
+import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag

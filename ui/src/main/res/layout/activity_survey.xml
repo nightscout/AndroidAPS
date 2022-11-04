@@ -68,7 +68,7 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/weigth_label"
+                    android:id="@+id/weight_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -124,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="20dp"
-                android:text="@string/mostcommonprofile"
+                android:text="@string/most_common_profile"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <Spinner

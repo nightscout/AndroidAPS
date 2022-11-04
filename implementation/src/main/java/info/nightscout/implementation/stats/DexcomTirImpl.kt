@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.stats
+package info.nightscout.implementation.stats
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,16 +7,17 @@ import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.stats.DexcomTIR
+import info.nightscout.implementation.R
 import java.util.*
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-class DexcomTIR {
+class DexcomTirImpl : DexcomTIR {
 
     private var veryLow = 0
     private var low = 0
@@ -26,7 +27,7 @@ class DexcomTIR {
     private var error = 0
     private var count = 0
 
-    var sum = 0.0
+    private var sum = 0.0
     val values = mutableListOf<Double>()
 
     private val veryLowTirMgdl = Constants.STATS_RANGE_VERY_LOW_MMOL * Constants.MMOLL_TO_MGDL
@@ -65,14 +66,14 @@ class DexcomTIR {
     private fun veryHighPct() = if (count > 0) veryHigh.toDouble() / count * 100.0 else 0.0
     private fun mean() = sum / count
 
-    fun calculateSD(): Double {
+    override fun calculateSD(): Double {
         if (count == 0) return 0.0
         var standardDeviation = 0.0
         for (num in values) standardDeviation += (num - mean()).pow(2.0)
         return sqrt(standardDeviation / count)
     }
 
-    fun toHbA1cView(context: Context, rh: ResourceHelper): TextView =
+    override fun toHbA1cView(context: Context, rh: ResourceHelper): TextView =
         TextView(context).apply {
             text =
                 if (count == 0) ""
@@ -86,7 +87,7 @@ class DexcomTIR {
         }
 
     @SuppressLint("SetTextI18n")
-    fun toSDView(context: Context, rh: ResourceHelper, profileFunction: ProfileFunction): TextView =
+    override fun toSDView(context: Context, rh: ResourceHelper, profileFunction: ProfileFunction): TextView =
         TextView(context).apply {
             val sd = calculateSD()
             text = "\n" + rh.gs(R.string.std_deviation, Profile.toUnitsString(sd, sd * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()))
@@ -94,7 +95,7 @@ class DexcomTIR {
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
-    fun toRangeHeaderView(context: Context, rh: ResourceHelper, profileFunction: ProfileFunction): TextView =
+    override fun toRangeHeaderView(context: Context, rh: ResourceHelper, profileFunction: ProfileFunction): TextView =
         TextView(context).apply {
             text = StringBuilder()
                 .append(rh.gs(R.string.detailed_14_days))
@@ -129,7 +130,7 @@ class DexcomTIR {
             setTextAppearance(android.R.style.TextAppearance_Material_Medium)
         }
 
-    fun toTableRowHeader(context: Context, rh: ResourceHelper): TableRow =
+    override fun toTableRowHeader(context: Context, rh: ResourceHelper): TableRow =
         TableRow(context).also { header ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
             header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
@@ -142,7 +143,7 @@ class DexcomTIR {
         }
 
     @SuppressLint("SetTextI18n")
-    fun toTableRow(context: Context, rh: ResourceHelper): TableRow =
+    override fun toTableRow(context: Context, rh: ResourceHelper): TableRow =
         TableRow(context).also { row ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)

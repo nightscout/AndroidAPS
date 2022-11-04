@@ -25,10 +25,10 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfileDPV
+import info.nightscout.ui.defaultProfile.DefaultProfile
+import info.nightscout.ui.defaultProfile.DefaultProfileDPV
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.stats.TddCalculator
+import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -183,25 +183,25 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             for (i in 0..1) {
                 if (typeSelected[i] == ProfileType.MOTOL_DEFAULT) {
                     if (ageUsed[i] < 1 || ageUsed[i] > 18) {
-                        ToastUtils.warnToast(this, R.string.invalidage)
+                        ToastUtils.warnToast(this, R.string.invalid_age)
                         return@setOnClickListener
                     }
                     if ((weightUsed[i] < 5 || weightUsed[i] > 150) && tddUsed[i] == 0.0) {
-                        ToastUtils.warnToast(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalid_weight)
                         return@setOnClickListener
                     }
                     if ((tddUsed[i] < 5 || tddUsed[i] > 150) && weightUsed[i] == 0.0) {
-                        ToastUtils.warnToast(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalid_weight)
                         return@setOnClickListener
                     }
                 }
                 if (typeSelected[i] == ProfileType.DPV_DEFAULT) {
                     if (ageUsed[i] < 1 || ageUsed[i] > 18) {
-                        ToastUtils.warnToast(this, R.string.invalidage)
+                        ToastUtils.warnToast(this, R.string.invalid_age)
                         return@setOnClickListener
                     }
                     if (tddUsed[i] < 5 || tddUsed[i] > 150) {
-                        ToastUtils.warnToast(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalid_weight)
                         return@setOnClickListener
                     }
                     if ((pctUsed[i] < 32 || pctUsed[i] > 37)) {

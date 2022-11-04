@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.androidaps.plugins.source.activities
 
 import android.os.Bundle
+import info.nightscout.androidaps.activities.DialogAppCompatActivity
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
-import javax.inject.Inject
 
 class RequestDexcomPermissionActivity : DialogAppCompatActivity() {
-    @Inject lateinit var dexcomPlugin: DexcomPlugin
 
     private val requestCode = "AndroidAPS <3".map { it.code }.sum()
 

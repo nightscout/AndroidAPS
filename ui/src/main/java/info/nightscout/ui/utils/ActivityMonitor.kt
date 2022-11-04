@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.ui.utils
 
 import android.app.Activity
 import android.app.Application
@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -69,7 +71,7 @@ class ActivityMonitor @Inject constructor(
             layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             layout.addView(
                 TextView(context).apply {
-                    text = rh.gs(R.string.activitymonitor)
+                    text = rh.gs(R.string.activity_monitor)
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)

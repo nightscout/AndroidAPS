@@ -91,15 +91,7 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.SurveyActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activities.ProfileHelperActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.StatsActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
 
@@ -212,7 +204,7 @@
             android:name=".plugins.general.maintenance.activities.LogSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RequestDexcomPermissionActivity"
+            android:name=".plugins.source.activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
         <uses-library

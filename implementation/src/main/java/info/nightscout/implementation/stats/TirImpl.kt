@@ -1,26 +1,38 @@
-package info.nightscout.androidaps.utils.stats
+package info.nightscout.implementation.stats
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.stats.TIR
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.implementation.R
 
-class TIR(val date: Long, val lowThreshold: Double, val highThreshold: Double) {
+class TirImpl(override val date: Long, override val lowThreshold: Double, override val highThreshold: Double) : TIR {
 
-    internal var below = 0
-    internal var inRange = 0
-    internal var above = 0
-    internal var error = 0
-    internal var count = 0
+    override var below = 0
+    override var inRange = 0
+    override var above = 0
+    override var error = 0
+    override var count = 0
 
-    fun error() = run { error++ }
-    fun below() = run { below++; count++ }
-    fun inRange() = run { inRange++; count++ }
-    fun above() = run { above++; count++ }
+    override fun error() {
+        error++
+    }
+
+    override fun below() {
+        below++; count++
+    }
+
+    override fun inRange() {
+        inRange++; count++
+    }
+
+    override fun above() {
+        above++; count++
+    }
 
     private fun belowPct() = if (count > 0) below.toDouble() / count * 100.0 else 0.0
     private fun inRangePct() = if (count > 0) 100 - belowPct() - abovePct() else 0.0
@@ -39,8 +51,8 @@ class TIR(val date: Long, val lowThreshold: Double, val highThreshold: Double) {
                 header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3; weight = 1f }; text = rh.gs(R.string.above) })
             }
     }
-    
-    fun toTableRow(context: Context, rh: ResourceHelper, dateUtil: DateUtil): TableRow =
+
+    override fun toTableRow(context: Context, rh: ResourceHelper, dateUtil: DateUtil): TableRow =
         TableRow(context).also { row ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
@@ -52,7 +64,7 @@ class TIR(val date: Long, val lowThreshold: Double, val highThreshold: Double) {
         }
 
     @SuppressLint("SetTextI18n")
-    fun toTableRow(context: Context, rh: ResourceHelper, days: Int): TableRow =
+    override fun toTableRow(context: Context, rh: ResourceHelper, days: Int): TableRow =
         TableRow(context).also { row ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)

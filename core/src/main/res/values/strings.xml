@@ -225,6 +225,9 @@
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
+    <string name="average">Average</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD Total</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
