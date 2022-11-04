@@ -15,7 +15,6 @@
     <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
     <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
     <string name="description_objectives">프로그램 배우기</string>
-    <string name="description_food">Nightscout에서 정의된 음식 설정을 표시합니다.</string>
     <string name="description_loop">Loop를 활성화 혹은 비활성화합니다.</string>
     <string name="description_ns_client">Nightscout과 데이터 동기화하기</string>
     <string name="description_ama">2017년의 알고리즘</string>
@@ -93,10 +92,6 @@
     <string name="carbssuggestion">탄수화물 제안</string>
     <string name="unsupportednsversion">지원하지 않는 Nightscout 버전입니다</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">기타</string>
-    <string name="careportal_newnstreatment_meter">측정기</string>
-    <string name="careportal_newnstreatment_sensor">센서</string>
-    <string name="careportal_newnstreatment_glucosetype">혈당 종류</string>
     <string name="overview_tempbasal_button">임시Basal</string>
     <string name="overview_extendedbolus_button">확장 Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
@@ -329,12 +324,6 @@
     <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
     <string name="wearcontrol_title">워치로 제어하기</string>
     <string name="wearcontrol_summary">임시목표와 관리입력을 워치로 설정합니다.</string>
-    <string name="food">음식</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">단백질</string>
-    <string name="shortfat">지방</string>
     <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
     <string name="gradually_increase_notification_volume">알람과 알림의 소리를 점차적으로 증가시킴</string>
     <string name="localalertsettings_title">자체 경고 기능</string>
@@ -441,7 +430,6 @@
     <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
     <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>
     <string name="smbnotallowedinopenloopmode">Open Loop모드에선 SMB가 허용되지 않습니다.</string>
-    <string name="food_short">Food</string>
     <string name="openapssmb_maxiob_title">OpenAPS가 초과 할 수 없는 총 IOB의 최대량 [U]</string>
     <string name="openapssmb_maxiob_summary">이 값은 OpenAPS에서 Max IOB라고 합니다\n현재 IOB가 이 값보다 크면 OpenAPS는 인슐린을 추가로 주입하지 않습니다.</string>
     <string name="absorption_cutoff_title">식사 최대 흡수 시간 [h]</string>
@@ -624,7 +612,6 @@
     <string name="basalpctfromtdd_label">% basal</string>
     <string name="dpvdefaultprofile">DPV 기본 프로파일</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink 상태:</string>
-    <string name="filter">필터</string>
     <string name="cta_dont_kill_my_app_info">앱이 종료되지 않도록 합니다?</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="time_to_eat">식사할 시간입니다! \nBolus wizard를 켜고 다시 계산하십시오.</string>
@@ -657,7 +644,6 @@
     <string name="ns_receive_therapy_events_summary">NS 또는 NSClient에서 입력한 처치 이벤트 (캐뉼라, 인슐린, 배터리 교체 등) 수락하기</string>
     <string name="ns_receive_cgm">CGM 데이터 받기/다시 채우기</string>
     <string name="ns_receive_cgm_summary">NS로부터 CGM 데이터 수락하기</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="login">로그인</string>
     <!-- Aidex Cgms -->
