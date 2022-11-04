@@ -102,4 +102,7 @@
     <string name="rapid_acting_oref">Snel-werkende Oref</string>
     <string name="dia_too_short">DIA van %1$f te kort - %2$f wordt inplaats gebruikt!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
