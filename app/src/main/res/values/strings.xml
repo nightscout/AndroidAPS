@@ -253,7 +253,6 @@
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip+ gets noisy.</string>
-    <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
@@ -589,7 +588,6 @@
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
-    <string name="reset">reset</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
@@ -802,25 +800,7 @@
     <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
-    <string name="age">Age</string>
-    <string name="weight_label">Weight</string>
-    <string name="id">ID:</string>
-    <string name="submit">Submit</string>
-    <string name="mostcommonprofile">Most common profile:</string>
-    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
-    <string name="invalidage">Invalid age entry</string>
-    <string name="invalidweight">Invalid weight entry</string>
     <string name="invalidpct">Invalid % entry</string>
-    <string name="average">Average</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">Day TIR</string>
-    <string name="night_tir">Night TIR</string>
-    <string name="detailed_14_days">Detailed 14 days</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Activity monitor</string>
-    <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
-    <string name="statistics">Statistics</string>
     <string name="randombg">Random BG</string>
     <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
     <string name="randombg_short">BG</string>
@@ -927,7 +907,6 @@
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
     <string name="ns_receive_cgm">Receive/backfill CGM data</string>
     <string name="ns_receive_cgm_summary">Accept CGM data from NS</string>
-    <string name="calculation_in_progress">Calculation in progress</string>
     <string name="missing_profile_name">Missing profile name</string>
     <string name="error_in_ic_values">Error in IC values</string>
     <string name="error_in_basal_values">Error in basal values</string>
@@ -1023,13 +1002,6 @@
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
-    <string name="veryLow" comment="below 3.1">Very low</string>
-    <string name="low" comment="3.1-3.9">Low</string>
-    <string name="high" comment="10.0-13.9">High</string>
-    <string name="veryHigh" comment="above 13.9">Very high</string>
-    <string name="below" comment="below &quot;in range&quot;">Below</string>
-    <string name="in_range">In range</string>
-    <string name="above" comment="above &quot;in range&quot;">Above</string>
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
     <string name="loop_status">Loop status</string>
