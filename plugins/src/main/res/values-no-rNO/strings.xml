@@ -117,4 +117,7 @@
     <string name="rapid_acting_oref">Hurtigvirkende Oref</string>
     <string name="dia_too_short">DIA på %1$f er for kort - bruker %2$f i stedet!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
