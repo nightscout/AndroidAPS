@@ -710,7 +710,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                     else                                                                        -> {
                         binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disabled)
-                        apsModeSetA11yLabel(R.string.disabledloop)
+                        apsModeSetA11yLabel(R.string.disabled_loop)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
                 }

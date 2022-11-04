@@ -33,7 +33,7 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
 
-    override fun commentStandardText(): String = rh.gs(R.string.fastactinginsulincomment)
+    override fun commentStandardText(): String = rh.gs(R.string.fast_acting_insulin_comment)
 
     override val peak = 75
 

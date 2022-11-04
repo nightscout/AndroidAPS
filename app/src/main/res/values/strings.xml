@@ -88,7 +88,6 @@
     <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
     <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
-    <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -149,8 +148,7 @@
     <string name="apsmode_title">APS Mode</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
-   <string name="lowglucosesuspend">Low Glucose Suspend</string>
-    <string name="disabledloop">Loop Disabled</string>
+    <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
@@ -290,8 +288,6 @@
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
     <string name="nowritepermission">NSCLIENT has no write permission. Wrong API secret?</string>
     <string name="wear_settings">Wear settings</string>
-    <string name="wear_detailedIOB_title">Show detailed IOB</string>
-    <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="nosuccess">not successful - please check phone</string>
     <string name="patientage">Patient type</string>
     <string name="child">Child</string>
@@ -370,11 +366,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="xdripstatus_settings">xDrip+ Status (watch)</string>
-    <string name="xdripstatus">xDrip+ Statusline (watch)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Show BGI</string>
-    <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -808,8 +799,6 @@
     <string name="show_calculation">Show calcuation</string>
     <string name="show_removed">Show removed</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
-    <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
-    <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
     <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>

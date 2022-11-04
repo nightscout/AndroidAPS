@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.plugins.general.xdripStatusline
+package info.nightscout.plugins.general.xdripStatusline
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.*
@@ -12,6 +11,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.plugins.R
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -36,8 +36,8 @@ class StatusLinePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginIcon((R.drawable.ic_blooddrop_48))
-        .pluginName(R.string.xdripstatus)
-        .shortName(R.string.xdripstatus_shortname)
+        .pluginName(R.string.xdrip_status)
+        .shortName(R.string.xdrip_status_shortname)
         .neverVisible(true)
         .preferencesId(R.xml.pref_xdripstatus)
         .description(R.string.description_xdrip_status_line),
@@ -112,7 +112,7 @@ class StatusLinePlugin @Inject constructor(
     private fun buildStatusString(profile: Profile): String {
         var status = ""
         if (!(loop as PluginBase).isEnabled()) {
-            status += rh.gs(R.string.disabledloop) + "\n"
+            status += rh.gs(R.string.disabled_loop) + "\n"
             lastLoopStatus = false
         } else lastLoopStatus = true
 
@@ -125,12 +125,12 @@ class StatusLinePlugin @Inject constructor(
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
-        if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
+        if (sp.getBoolean(R.string.key_xdrip_status_detailed_iob, true)) {
             status += ("("
                 + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                 + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")")
         }
-        if (sp.getBoolean(R.string.key_xdripstatus_showbgi, true)) {
+        if (sp.getBoolean(R.string.key_xdrip_status_show_bgi, true)) {
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
             status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
         }

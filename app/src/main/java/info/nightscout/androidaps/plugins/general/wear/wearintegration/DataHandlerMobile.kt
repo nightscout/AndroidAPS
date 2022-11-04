@@ -1079,7 +1079,7 @@ class DataHandlerMobile @Inject constructor(
     private fun generateStatusString(profile: Profile?, currentBasal: String, iobSum: String, iobDetail: String, bgiString: String): String {
         var status = ""
         profile ?: return rh.gs(R.string.noprofile)
-        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabledloop) + "\n"
+        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
 
         val iobString =
             if (sp.getBoolean(R.string.key_wear_detailediob, false)) "$iobSum $iobDetail"
