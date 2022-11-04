@@ -11,5 +11,11 @@
     <string name="a11y_carb_reminder">קביעת תזכורת</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="statistics">סטטיסטיקה</string>
+    <string name="calculation_in_progress">מבצע חישוב</string>
+    <string name="id">מס\' זיהוי:</string>
+    <string name="submit">עדכן</string>
+    <string name="age">גיל</string>
+    <string name="weight_label">משקל</string>
     <!-- CareDialog -->
 </resources>
