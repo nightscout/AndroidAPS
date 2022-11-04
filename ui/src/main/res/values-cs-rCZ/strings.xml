@@ -17,4 +17,5 @@
     <string name="configure">Konfigurovat průhlednost</string>
     <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
