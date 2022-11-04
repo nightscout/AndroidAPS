@@ -100,15 +100,53 @@
     <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
     <!-- Food-->
+    <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
+    <string name="filter">Filtro</string>
+    <string name="food">Alimentos</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Gor</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Subcategoria</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="missing_profile_name">Nome do perfil ausente</string>
+    <string name="error_in_ic_values">Erro nos valores de IHC</string>
+    <string name="error_in_basal_values">Erro nos valores da basal</string>
+    <string name="error_in_target_values">Erros no valor alvo</string>
+    <string name="error_in_isf_values">Erro nos valores do FSI</string>
+    <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceite do NS</string>
+    <string name="view">Ver</string>
+    <string name="errors">Erros</string>
+    <string name="profile_name">Nome do Perfil:</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IHC</string>
+    <string name="isf_short">FSI</string>
+    <string name="target_short">ALV</string>
+    <string name="clone_label">Clone</string>
+    <string name="basal_short">BAS</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Dados utilizados foram recalculados</string>
+    <string name="bg_too_close">Glicemia demasiado próxima:\n%1$s\n%2$s</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
+    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Loop Fechado desativado</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">versão antiga</string>
+    <string name="very_old_version">versão muito antiga</string>
+    <string name="application_expired">A aplicação expirou</string>
+    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="not_completed_yet">Não concluído ainda</string>
+    <string name="time_elapsed">Tempo decorrido</string>
     <!-- Overview -->
 </resources>
