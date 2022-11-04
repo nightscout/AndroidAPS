@@ -17,7 +17,6 @@
     <string name="not_inserted">Не е поставено</string>
     <string name="tdd_bolus">ТДД болус</string>
     <string name="tdd_basal">ТДД базал</string>
-    <string name="tdd_total">ТДД общо</string>
     <string name="tbr_formatter">%1$d%% за %2$d / %3$d мин</string>
     <string name="multiwave_bolus">Двувълнов болус</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
