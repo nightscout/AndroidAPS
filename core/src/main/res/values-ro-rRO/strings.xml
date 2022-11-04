@@ -268,7 +268,6 @@
     <string name="prefdecrypt_issue_wrong_format">Lipseşte configuraţia de criptare, formatul setărilor este invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Verificare semnătură</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
