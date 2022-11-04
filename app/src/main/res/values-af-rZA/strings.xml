@@ -314,7 +314,6 @@
     <string name="overview_show_basals">Basale</string>
     <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
     <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
-    <string name="profileswitch_ismissing">ProfileSwitch ontbreek. Doen \'n profiel skakelaar of druk \"Aktiveer profiel\" in die LokaleProfiel.</string>
     <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
     <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
     <string name="autosensdisabledinpreferences">Autosens gedeaktiveer in voorkeure</string>
