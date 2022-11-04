@@ -192,7 +192,6 @@
     <string name="short_tabtitles">Skrócone tytuły kart</string>
     <string name="always_use_shortavg">Zawsze używaj krótkiej średniej delty zamiast prostej delta</string>
     <string name="always_use_shortavg_summary">Użyteczne, jeżeli dane z niefiltrowanego źródła jak xDrip+ mają rozrzut / szumy.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Wartość domyślna: 3 To jest kluczowy współczynnik bezpieczeństwa OpenAPS. Ogranicza dawki bazowe do 3x twojej największej dawki bazowej. Prawdopodobnie nie będziesz musiał tego zmieniać, ale powinieneś być świadomy tego, co się rozumie przez “3x max dzienna; 4x aktualna” dla współczynników bezpieczeństwa.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Wartość domyślna: 4 To jest drugi kluczowy współczynnik bezpieczeństwa OpenAPS, i druga wartość z “3x max dzienna; 4x aktualna”. To oznacza, że Twoja dawka bazowa niezależnie od maksymalnej bazy ustawionej na pompie nie może być większa niż ta ustawiona wartość razy twoja aktualna dawka bazowa. To ma na celu przestrzec ludzi przed ustawieniem zbyt wysokiej dawki maksymalnej przed zrozumieniem jak działa algorytm. Ponownie, wartość domyślna to 4x; większość ludzi nie będzie potrzebowała tego zmienić i raczej będą potrzebować dostosować inne ustawienia, jeśli czują, że zbliżają się do współczynnika bezpieczeństwa.</string>
     <string name="openapsama_autosens_max_summary">Wartość domyślna: 1.2\nTo jest mnożnik dla autosens (wkrótce autotune), ustawia 20%% maks. limit dla najwyższej wartości jaką autosens może przyjąć, co z kolei określa jak wysoko autosens może zwiększyć bazę, jak nisko może ustawić współczynnik wrażliwości insuliny ISF, i jak nisko może ustawić docelową wartość glikemii.</string>
@@ -461,7 +460,6 @@
     <string name="smbalwaysdisabled">SMB zawsze i po węglow. wyłączone z uwagi na brak źródła BG z zaawansowanym filtrowaniem</string>
     <string name="smbnotallowedinopenloopmode">SMB nie dozwolone w trybie otwartej pętli</string>
     <string name="food_short">Posiłek</string>
-    <string name="reset">ponowne uruchomienie</string>
     <string name="openapssmb_maxiob_title">Maksymalna, całkowita IOB, której OpenAPS nie może przekroczyć [U]</string>
     <string name="openapssmb_maxiob_summary">Ta wartość jest nazywana Max IOB w OpenAPS\nOpenAPS nie poda więcej insuliny jeżeli obecna IOB jest większa niż ta wartość</string>
     <string name="absorption_cutoff_title">Maksymalny czas wchłaniania posiłku [h]</string>
@@ -611,19 +609,7 @@
     <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
-    <string name="age">Czas</string>
-    <string name="weight_label">Waga</string>
-    <string name="id">ID:</string>
-    <string name="submit">Wyślij</string>
-    <string name="mostcommonprofile">Najczęściej używany profil:</string>
-    <string name="invalidage">Nieprawidłowy wpis wieku</string>
-    <string name="invalidweight">Nieprawidłowy wpis wagi</string>
     <string name="invalidpct">Nieprawidłowa wartość procentowa</string>
-    <string name="average">Średnio</string>
-    <string name="tir">TIR</string>
-    <string name="activitymonitor">Monitor aktywności</string>
-    <string name="doyouwantresetstats">Czy chcesz zresetować statystyki aktywności?</string>
-    <string name="statistics">Statystyki</string>
     <string name="randombg">Losowa BG</string>
     <string name="description_source_randombg">Generuj losowe dane BG (tylko tryb demonstracyjny)</string>
     <string name="randombg_short">BG (poziom cukru)</string>
@@ -705,7 +691,6 @@
     <string name="ns_receive_therapy_events_summary">Akceptuj zdarzenia związane z leczeniem (kaniula, insulina, zmiana baterii itp.) wprowadzone przez NS lub NSClient</string>
     <string name="ns_receive_cgm">Odbieraj/uzupełnij dane CGM</string>
     <string name="ns_receive_cgm_summary">Akceptuj dane CGM z NS</string>
-    <string name="calculation_in_progress">Trwa obliczanie</string>
     <string name="missing_profile_name">Brak nazwy profilu</string>
     <string name="error_in_ic_values">Błąd w przelicznikach IC</string>
     <string name="error_in_basal_values">Błąd w wartościach bazy</string>
