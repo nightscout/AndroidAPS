@@ -99,4 +99,7 @@
     <string name="rapid_acting_oref">Oref ràpida</string>
     <string name="dia_too_short">DIA de %1$f massa curt - utilitzant %2$f!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
