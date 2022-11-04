@@ -9,5 +9,11 @@
     <string name="remind_to_bolus_later">Przypomnij o bolusie</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="statistics">Statystyki</string>
+    <string name="calculation_in_progress">Trwa obliczanie</string>
+    <string name="id">ID:</string>
+    <string name="submit">Wyślij</string>
+    <string name="age">Czas</string>
+    <string name="weight_label">Waga</string>
     <!-- CareDialog -->
 </resources>
