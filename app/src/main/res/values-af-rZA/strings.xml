@@ -20,7 +20,6 @@
     <string name="description_smb">Mees onlangse algoritme vir gevorderde gebruikers</string>
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
-    <string name="description_profile_local">Definieer\'n profiel wat beskikbaar is aflyn.</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
     <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
@@ -76,7 +75,6 @@
     <string name="constraints_violation">Beperkings skending</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
-    <string name="overview_calculator_label">Rekenaar</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="apsmode_title">APS modus</string>
@@ -139,7 +137,6 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LUS</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">TUIS</string>
     <string name="virtualpump_shortname">VPOMP</string>
     <string name="treatments_shortname">BEHANDEL</string>
@@ -224,7 +221,6 @@
     <string name="absorption_maxtime_summary">Tyd in ure waarna verwag word dat alle koolhidrate uit maaltyd geabsorbeer sal wees</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Hou skerm aktief</string>
     <string name="keep_screen_on_summary">Verhoed dat Android skerm afskakel. Dit sal baie meer energie vereis wanneer nie in krag prop is nie.</string>
     <string name="sensitivity_warning">Deur Autosense aan te skakel onthou om alle koolhidrate in te voer Andersins sal koolhidrate dwalinge verkeerdelik geïdentifiseer word as sensitiwiteit veranderinge!!</string>
@@ -237,7 +233,6 @@
     <string name="enablesmb">Aktiveer SMB</string>
     <string name="enablesmb_summary">Gebruik Super Mikro Boluses in plaas van of tydelike basale vir vinniger resultate</string>
     <string name="enableuam_summary">Opsporing van Onaangekondigde etes</string>
-    <string name="activate_profile">Aktiveer profiel</string>
     <string name="invalid">ONGELDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Persentasie</string>
     <string name="careportal_newnstreatment_timeshift_label">Tyd verskuiwing</string>
@@ -310,8 +305,6 @@
     <string name="g5appnotdetected">Hernuwe asseblief jou G5 toepassing na \'n ondersteunde weergawe</string>
     <string name="dexcom_app_not_installed">Dexcom toep is nie geïnstalleer nie.</string>
     <string name="do_not_bolus_record_only">Moet nie bolus. Rekord alleen</string>
-    <string name="category">Kategorie</string>
-    <string name="subcategory">Subkategorie</string>
     <string name="loop_smbsetbypump_label">SMB gestel deur pomp</string>
     <string name="overview_show_activity">Aktiwiteit</string>
     <string name="overview_show_sensitivity">Sensitiewiteit</string>
