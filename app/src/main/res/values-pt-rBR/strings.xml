@@ -34,7 +34,6 @@
     <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
     <string name="description_treatments">Salva todos os tratamentos que foram feitos</string>
-    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carboidratos:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -92,7 +91,6 @@
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
     <string name="lowglucosesuspend">Suspensão de Glicémia Baixa</string>
-    <string name="disabledloop">Loop Desativado</string>
     <string name="openloop_newsuggestion">Nova sugestão disponível</string>
     <string name="carbssuggestion">Sugestão de Carbs</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
@@ -224,8 +222,6 @@
     <string name="clearlog">Limpar registros</string>
     <string name="nowritepermission">NSCLIENT não tem permissão de escrita. Senha da API errada?</string>
     <string name="wear_settings">Definições Wear</string>
-    <string name="wear_detailedIOB_title">Mostrar detalhes da IA</string>
-    <string name="wear_detailedIOB_summary">Dividir IA entre IA de bolus e de basal na face do relógio</string>
     <string name="nosuccess">não foi bem sucedido - por favor, verifique o telefone</string>
     <string name="patientage">Tipo de paciente</string>
     <string name="child">Criança</string>
@@ -279,9 +275,6 @@
     <string name="activity_shortname">ACT</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Mostrar IG (Impacto na Glicemia)</string>
-    <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Estendido</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
