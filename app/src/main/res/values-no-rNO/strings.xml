@@ -16,7 +16,6 @@
     <string name="description_actions">Knapper for rask tilgang til ofte brukte funksjoner</string>
     <string name="description_config_builder">Brukes for innstilling av aktive plugins</string>
     <string name="description_objectives">Opplæringsprogram</string>
-    <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
     <string name="description_loop">Aktiver eller deaktiver hendelsen som trigger loop.</string>
     <string name="description_ns_client">Synkroniserer dine data med Nightscout</string>
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
@@ -24,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
-    <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
     <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten beregnes på samme måte som i Oref0, men du kan angi hvor mye av historikken som skal tas med i beregningen. Minimum opptak av karbohydrater beregnes ut fra maks karbohydratopptak angitt i dine innstillinger.</string>
     <string name="description_sensitivity_oref1">Sensitivitet beregnes fra 8t og 24t historiske data (velger alltid det resultatet som gir høyest insulinsensitivitet). Karbohydrater (som ikke er absorbert) blir avsluttet etter tiden som er angitt i innstillinger. Plugin beregner også UAM.</string>
@@ -36,7 +34,6 @@
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
     <string name="description_treatments">Lagre data om alle behandlinger som er utført</string>
     <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
-    <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Karbo:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -89,7 +86,6 @@
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
-    <string name="calculator_label">Kalkulator</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
@@ -98,17 +94,12 @@
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åpen Loop</string>
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
-    <string name="disabledloop">Loop er deaktivert</string>
     <string name="openloop_newsuggestion">Ny anbefaling tilgjengelig</string>
     <string name="carbssuggestion">Karbo forslag</string>
     <string name="unsupportednsversion">Versjonen av Nightscout støttes ikke</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">Annet</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Karbo-tid</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Glukosetype</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Forlenget bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versjon:</string>
@@ -165,7 +156,6 @@
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
     <string name="button3">Knapp 3</string>
-    <string name="units_colon">Enheter:</string>
     <string name="units">Enheter</string>
     <string name="prefs_range_title">Område for visualisering</string>
     <string name="prefs_range_summary">Høy og lav verdi for grafen i Oversikt og smartklokke</string>
@@ -178,7 +168,6 @@
     <string name="MM640g">MM640G</string>
     <string name="ongoingnotificaction">Pågående varslinger</string>
     <string name="old_data">GAMLE DATA</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
     <string name="openapsma_autosensdata_label">Autosens-data</string>
@@ -191,7 +180,6 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HJEM</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="treatments_shortname">BEH</string>
@@ -200,7 +188,6 @@
     <string name="short_tabtitles">Korte navn i menyfaner</string>
     <string name="always_use_shortavg">Bruk alltid kort gjennomsnittsverdi delta i stedet for enkel delta</string>
     <string name="always_use_shortavg_summary">Nyttig når data fra ufiltrerte kilder som xDrip+ registrerer mye støy.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine basaler til maks 3x av din høyeste basalverdi. Du vil trolig ikke behøve å endre denne verdien, men les og forstå hva som menes med \"3x max daglig; 4x gjeldende\" som sikkerhetsinnstilling.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine temp basal til max 4 ganger din nåværende basal dose, uansett hva som er maks basal i pumpen. Dette er for å unngå at man setter farlige høye maks basal doser uten at man har forstått algoritmene. Når du taket i denne begrensningen bør du i stedet fokusere på å endre andre innstillinger.</string>
     <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDetta er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISK kan reduseres og hvor lavt BS målverdi kan settes.</string>
@@ -232,8 +219,6 @@
     <string name="clearlog">Tøm logg</string>
     <string name="nowritepermission">NSCLIENT har ingen skriverettighet. Feil API-nøkkel?</string>
     <string name="wear_settings">Klokkeinnstillinger</string>
-    <string name="wear_detailedIOB_title">Vis detaljert IOB</string>
-    <string name="wear_detailedIOB_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="nosuccess">feilet - sjekk telefonen</string>
     <string name="patientage">Pasienttype</string>
     <string name="child">Barn</string>
@@ -295,11 +280,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
-    <string name="xdripstatus_settings">xDrip+ Status (klokke)</string>
-    <string name="xdripstatus">xDrip+ Statuslinje (klokke)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Vis BGI</string>
-    <string name="wear_showbgi_summary">Legg til BGI i statuslinje</string>
     <string name="overview_extendedbolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -326,7 +306,6 @@
     <string name="absorption_maxtime_summary">Tid i timer hvor det forventes at alle karbohydrater fra måltid vil være absorbert</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Hold skjermen påslått</string>
     <string name="keep_screen_on_summary">Forhindre Android fra å slå av skjermen. Mobilen vil bruke mye batteri hvis den ikke plugges til strømledning.</string>
     <string name="sensitivity_warning">Hvis du slår på Autosense-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil KH-avvik gi feil i sensitivitetsberegningen !!</string>
@@ -343,7 +322,6 @@
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Bolus i stedet for temp basal for raskere resultat</string>
     <string name="enableuam_summary">Oppdag uannonsert måltid (UAM)</string>
-    <string name="activate_profile">Aktiver profil</string>
     <string name="invalid">UGYLDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Prosent</string>
     <string name="careportal_newnstreatment_timeshift_label">Tidsforskyving</string>
@@ -357,12 +335,6 @@
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
     <string name="wearcontrol_title">Kontroller fra klokke</string>
     <string name="wearcontrol_summary">Sett temp målverdi og angi behandlinger fra klokken.</string>
-    <string name="food">Mat</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Fett</string>
     <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
     <string name="gradually_increase_notification_volume">Øk volumet gradvis for alarmer og varsler</string>
     <string name="localalertsettings_title">Lokale varsler</string>
@@ -440,8 +412,6 @@
     <string name="g5appnotdetected">Vennligst oppdater din Dexcom app til en versjon som støttes</string>
     <string name="dexcom_app_not_installed">Dexcom appen er ikke installert.</string>
     <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="loop_smbsetbypump_label">SMB satt med pumpe</string>
     <string name="overview_show_activity">Aktivitet</string>
@@ -453,7 +423,6 @@
     <string name="overview_show_basals">Basaler</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktivert</string>
-    <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
     <string name="closedmodedisabledinpreferences">Lukket Loop deaktivert i innstillinger</string>
     <string name="autosensdisabledinpreferences">Autosens deaktivert i innstillinger</string>
@@ -473,8 +442,6 @@
     <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
     <string name="smbalwaysdisabled">SMB Alltid På og SMB Etter Karbohydrater er deaktivert fordi BS kilden ikke støtter avansert filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB ikke tillatt i åpen loop</string>
-    <string name="food_short">Mat</string>
-    <string name="reset">tilbakestill</string>
     <string name="openapssmb_maxiob_title">Maks total IOB OpenAPS ikke kan overstige [U]</string>
     <string name="openapssmb_maxiob_summary">Denne verdien kalles Maks IOB av OpenAPS\nOpenAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
     <string name="absorption_cutoff_title">Maks absorpsjonstid for måltid [h]</string>
@@ -529,9 +496,6 @@
     <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>
     <string name="nav_plugin_preferences">Plugin innstillinger</string>
-    <string name="completed_well_done">Fullført, godt gjort!</string>
-    <string name="not_completed_yet">Enda Ikke fullført</string>
-    <string name="time_elapsed">Tid brukt</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Motta BS verdier fra Poctech app</string>
     <string name="glunovo">Glunovo</string>
@@ -597,15 +561,6 @@
     <string name="tidepool_upload_tbr">Last opp temp basaler</string>
     <string name="tidepool_upload_profile">Last opp profilbytter, temp targets</string>
     <string name="tidepool_upload_bg">Last opp BS tester</string>
-    <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
-    <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
-    <string name="storage">intern lagringsbegrensning</string>
-    <string name="diskfull">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
-    <string name="versionChecker">Versjonskontroll</string>
-    <string name="old_version">gammel versjon</string>
-    <string name="very_old_version">veldig gammel versjon</string>
-    <string name="application_expired">Applikasjon utløpt - oppdater</string>
-    <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <string name="twohours">2t</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
@@ -615,50 +570,21 @@
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Advarsel: Treg KH absorpsjon oppdaget: %2$d%% av tiden. Dobbeltsjekk din beregning. COB can være misvisende og du risikerer å få for mye insulin !!!!!</font>]]></string>
     <string name="partialboluswizard">Doser denne delen av bolus wizard resultat [%]</string>
     <string name="deliverpartofboluswizard">Bolus veiviser utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB algoritmen.</string>
-    <string name="snooze">Utsett</string>
     <string name="increasingmaxbasal">Øker maks basaldose fordi innstillingen er lavere enn din maks basal i profilen</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profilnavn:</string>
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheter</string>
-    <string name="doyouwantswitchprofile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
     <string name="objectives_button_unfinish">Sletting ferdig</string>
     <string name="objectives_button_unstart">Sletting startet</string>
     <string name="doyouwantresetstart">Ønsker du å omstarte læringsmålet? Du vil miste fullførte trinn.</string>
     <string name="setupwizard_units_prompt">Velg enheter som du vil vise verdier i</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">MÅL</string>
-    <string name="clone_label">Klon</string>
-    <string name="saveorresetchangesfirst">Lagre eller nullstill gjeldende endringer først</string>
-    <string name="deletecurrentprofile">Slette gjeldende profil?</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
-    <string name="profilenamecontainsdot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
-    <string name="age">Alder</string>
-    <string name="weight_label">Vekt</string>
-    <string name="id">ID:</string>
-    <string name="submit">Lagre</string>
-    <string name="mostcommonprofile">Mest vanlig profil:</string>
-    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
-    <string name="invalidage">Ugyldig alder</string>
-    <string name="invalidweight">Ugyldig vekt</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
-    <string name="average">Gjennomsnitt</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">Dag TIR</string>
-    <string name="night_tir">Natt TIR</string>
-    <string name="detailed_14_days">Detaljert 14 dager</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Overvåking av aktivitet</string>
-    <string name="doyouwantresetstats">Vil du tilbakestille aktivitets statistikk?</string>
-    <string name="statistics">Statistikk</string>
     <string name="randombg">Tilfeldig BS</string>
     <string name="description_source_randombg">Generer tilfeldige BS data (kun demo formål)</string>
     <string name="randombg_short">BS</string>
@@ -668,7 +594,6 @@
     <string name="clearqueueconfirm">Slett køen? All data i køen vil gå tapt!</string>
     <string name="ebstopsloop">Bruk av forlenget bolus funksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
-    <string name="phonechecker">\"Telefonkontroll \"</string>
     <string name="chartmenu">Diagram meny</string>
     <string name="loop_smbrequest_time_label">SMB forespurt</string>
     <string name="loop_smbexecution_time_label">SMB utført</string>
@@ -701,7 +626,6 @@
     <string name="basalpctfromtdd_label">% av basal</string>
     <string name="dpvdefaultprofile">DPV standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Klarte ikke å opprette profil. Profilen er ikke gyldig.</string>
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
@@ -744,24 +668,13 @@
     <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller NSClient</string>
     <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
     <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
-    <string name="calculation_in_progress">Beregning pågår</string>
-    <string name="missing_profile_name">Mangler profilnavn</string>
-    <string name="error_in_ic_values">Feil i IK faktoren</string>
-    <string name="error_in_basal_values">Feil i basalverdiene</string>
-    <string name="error_in_target_values">Feil i BS mål verdiene</string>
-    <string name="error_in_isf_values">Feil i IF verdien</string>
     <string name="run_question">Kjør %s?</string>
-    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
-    <string name="view">Visning</string>
-    <string name="errors">Feil</string>
     <string name="ns_sync_slow">Reduser opplastingshastighet</string>
     <string name="data_status">BS data status</string>
     <string name="remove_bg_readings">Fjern BS målinger</string>
     <string name="statuslights_cannula_age">kanyle alder</string>
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
-    <string name="recalculated_data_used">Rekalkulerte siste data</string>
-    <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
     <string name="identification">Identifikasjon (e-post, Facebook eller Discord nick osv.)</string>
     <string name="identification_not_set">Identifikasjon ikke satt i utviklermodus</string>
     <string name="a11y_dialog">dialogvindu</string>
@@ -771,21 +684,9 @@
     <string name="not_available_full">Ikke tilgjengelig</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_bg_quality">blodsukkermålingens kvalitet</string>
-    <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
-    <string name="a11y_bg_quality_doubles">doble registreringer</string>
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blodsukker</string>
     <string name="a11y_bg_outdated">utdatert</string>
-    <string name="a11y_add_new_profile">legg til ny profil</string>
-    <string name="a11y_clone_profile">kopier gjeldende profil</string>
-    <string name="a11y_delete_current_profile">slett gjeldende profil</string>
-    <string name="a11y_add_new_to_list">legg til ny i liste</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Velg mørk, lys eller bruk systemets fargetema</string>
-    <string name="app_color_scheme">App fargetema</string>
-    <string name="dark_theme">Mørkt tema</string>
-    <string name="light_theme">Lyst tema</string>
-    <string name="follow_system_theme">Bruk systemets fargetema</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temptarget ukjent forhåndsinnstilling: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende Temp Target?</string>
@@ -821,7 +722,6 @@
     <string name="app_default">Standardverdi</string>
     <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
     <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
-    <string name="select_profile">Velg profil du vil redigere</string>
     <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="select_for_removal">Velg hva som skal fjernes</string>
@@ -834,13 +734,6 @@
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
-    <string name="veryLow" comment="below 3.1">Veldig lavt</string>
-    <string name="low" comment="3.1-3.9">Lavt</string>
-    <string name="high" comment="10.0-13.9">Høyt</string>
-    <string name="veryHigh" comment="above 13.9">Veldig høyt</string>
-    <string name="below" comment="below &quot;in range&quot;">Under</string>
-    <string name="in_range">I målområdet</string>
-    <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop registreringer</string>
     <string name="show_hide_records">Skjul loop registreringer</string>
     <string name="loop_status">Loop status</string>
