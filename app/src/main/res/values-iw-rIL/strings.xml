@@ -35,7 +35,6 @@
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
     <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
     <string name="description_treatments">שמירת כלל הטיפולים שנעשו</string>
-    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
     <string name="treatments_insulin_label_string">אינסולין:</string>
     <string name="treatments_carbs_label_string">פחמימות:</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
@@ -93,7 +92,6 @@
     <string name="closedloop">לולאה סגורה</string>
     <string name="openloop">לולאה פתוחה</string>
     <string name="lowglucosesuspend">השהיה עקב ערך סוכר נמוך</string>
-    <string name="disabledloop">לולאה כבויה</string>
     <string name="openloop_newsuggestion">הצעה חדשה זמינה</string>
     <string name="carbssuggestion">המלצת פחמימות</string>
     <string name="unsupportednsversion">גרסה לא נתמכת של Nightscout</string>
@@ -226,8 +224,6 @@
     <string name="clearlog">נקה יומן</string>
     <string name="nowritepermission">ל-NSClient אין הרשאת כתיבה. סיסמת API שגויה?</string>
     <string name="wear_settings">הגדרות Wear</string>
-    <string name="wear_detailedIOB_title">הצגת IOB מפורט</string>
-    <string name="wear_detailedIOB_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
     <string name="patientage">סוג המטופל\\ת</string>
     <string name="child">ילד\\ה</string>
@@ -289,11 +285,6 @@
     <string name="devslope_shortname">שיפוע</string>
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
-    <string name="xdripstatus_settings">מצב xDrip (שעון)</string>
-    <string name="xdripstatus">שורת מצב xDrip (שעון)</string>
-    <string name="xdripstatus_shortname">xDS</string>
-    <string name="wear_showbgi_title">הצג השפעת רמת הסוכר</string>
-    <string name="wear_showbgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
     <string name="overview_extendedbolus_cancel_button">ביטול בולוס ממושך</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="careportal_sensor_label">סנסור</string>
