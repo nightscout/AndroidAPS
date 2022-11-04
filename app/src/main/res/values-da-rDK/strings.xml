@@ -417,7 +417,6 @@
     <string name="overview_show_basals">Basaler</string>
     <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
     <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
-    <string name="profileswitch_ismissing">Profilskift mangler. Venligst lav et profilskift eller tryk \"Aktiver profil\" i LokalProfil.</string>
     <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
     <string name="closedmodedisabledinpreferences">Lukket loop tilstand deaktiveret i præferencer</string>
     <string name="autosensdisabledinpreferences">Autosens deaktiveret i præferencer</string>
