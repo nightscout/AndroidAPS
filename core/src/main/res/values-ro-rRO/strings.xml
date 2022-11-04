@@ -111,6 +111,18 @@
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
     <string name="notconfigured">Nu este configurat</string>
     <string name="loopsuspended">Buclă suspendată</string>
+    <string name="trend_arrow">Săgeată tendinţă</string>
+    <string name="value_unavailable_short">indisponibil</string>
+    <string name="required">req</string>
+    <string name="average">Medie</string>
+    <string name="tir">Timp în țintă</string>
+    <string name="tdd_total">Total TDD</string>
+    <string name="none"><![CDATA[<nimic>]]></string>
+    <string name="remove_label">ȘTERGE</string>
+    <string name="activate_profile">Activează profil</string>
+    <string name="reset">resetare</string>
+    <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
