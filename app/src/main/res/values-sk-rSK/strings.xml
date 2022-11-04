@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">Prijímať hodnoty glykémií z xDrip+.</string>
     <string name="description_treatments">Ukladá všetky ošetrenia do databázy</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
-    <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
     <string name="treatments_insulin_label_string">Inzulín:</string>
     <string name="treatments_carbs_label_string">Sacharidy:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Uzavretý okruh</string>
     <string name="openloop">Otvorený okruh</string>
     <string name="lowglucosesuspend">Pozastavenie pri nízkej glykémii (LGS)</string>
-    <string name="disabledloop">Uzavretý okruh deaktivovaný</string>
     <string name="openloop_newsuggestion">Dostupné nové doporučenie</string>
     <string name="carbssuggestion">Návrh sacharidov</string>
     <string name="unsupportednsversion">Nepodporovaná verzia Nighscoutu</string>
@@ -231,8 +229,6 @@
     <string name="clearlog">Vymazať log</string>
     <string name="nowritepermission">NSClient nemá právo na zápis. Nesprávne API secret?</string>
     <string name="wear_settings">Nastavenie hodiniek</string>
-    <string name="wear_detailedIOB_title">Zobraziť detailný IOB</string>
-    <string name="wear_detailedIOB_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="nosuccess">Neúspešné - skontrolujte telefón</string>
     <string name="patientage">Typ pacienta</string>
     <string name="child">Dieťa</string>
@@ -294,11 +290,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
-    <string name="xdripstatus_settings">Stav z xDrip+ (hodinky)</string>
-    <string name="xdripstatus">Stavový riadok xDrip+ (hodinky)</string>
-    <string name="xdripstatus_shortname">XDS</string>
-    <string name="wear_showbgi_title">Zobrazovať BGI</string>
-    <string name="wear_showbgi_summary">Pridať BGI do stavového riadku</string>
     <string name="overview_extendedbolus_cancel_button">Zrušiť predĺžený bolus</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="careportal_sensor_label">Senzor</string>
