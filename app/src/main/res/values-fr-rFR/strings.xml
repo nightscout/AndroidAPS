@@ -16,7 +16,6 @@
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
     <string name="description_objectives">Programme d’apprentissage</string>
-    <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
     <string name="description_loop">Activer ou désactiver la mise en œuvre déclenchant la Boucle.</string>
     <string name="description_ns_client">Synchronise vos données avec Nightscout</string>
     <string name="description_ama">État de l’algorithme en 2017</string>
@@ -101,12 +100,8 @@
     <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IA Basal</string>
-    <string name="careportal_newnstreatment_other">Autre</string>
-    <string name="careportal_newnstreatment_meter">Lecteur</string>
-    <string name="careportal_newnstreatment_sensor">Capteur</string>
     <string name="carb_time_label">Décalage horaire</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Source de Glycémie</string>
     <string name="overview_tempbasal_button">Basal Temporaire</string>
     <string name="overview_extendedbolus_button">Bolus étendu</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
@@ -348,12 +343,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="reuse_profile_pct_hours">Réutiliser %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre</string>
-    <string name="food">Aliments</string>
-    <string name="none"><![CDATA[<aucune>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Protéines</string>
-    <string name="shortfat">Gras (Lipides)</string>
     <string name="raise_notifications_as_android_notifications">Utiliser les notifications système pour les alertes et notifications</string>
     <string name="gradually_increase_notification_volume">Augmentation progressive du volume pour les alertes et les notifications</string>
     <string name="localalertsettings_title">Alertes locales</string>
@@ -464,7 +453,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="record_insulin_cartridge_change">Enreg. changement de réservoir</string>
     <string name="smbalwaysdisabled">SMB toujours et post-ingestion de glucides désactivé car la source de glycémies actuelle ne supporte pas de filtrage avancé</string>
     <string name="smbnotallowedinopenloopmode">SMB non autorisé en mode Boucle Ouverte</string>
-    <string name="food_short">Aliments</string>
     <string name="openapssmb_maxiob_title">IA totale maximale pour OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contaxte OpenAPS\nOpenAPS n’ajoutera pas plus d’insuline si l\'IA (Insuline Active) actuelle est supérieure à cette valeur</string>
     <string name="absorption_cutoff_title">Durée maximale d’absorption pour un repas [h]</string>
@@ -673,7 +661,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Profil par défaut DPV</string>
     <string name="setupwizard_pump_riley_link_status">État du RileyLink :</string>
-    <string name="filter">Filtrer</string>
     <string name="copytolocalprofile_invalid">Impossible de créer le profil. Le profil est invalide.</string>
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
@@ -750,12 +737,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_clone_profile">dupliquer le profil actuel</string>
     <string name="a11y_delete_current_profile">supprimer le profil actuel</string>
     <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Choisissez le thème sombre, clair ou pour suivre le thème système</string>
-    <string name="app_color_scheme">Thèmes de couleurs de l\'appli</string>
-    <string name="dark_theme">Thème sombre</string>
-    <string name="light_theme">Thème clair</string>
-    <string name="follow_system_theme">Utiliser le thème de l’appareil</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temporaire : %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
