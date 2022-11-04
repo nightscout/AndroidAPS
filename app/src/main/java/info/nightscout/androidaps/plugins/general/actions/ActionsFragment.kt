@@ -17,7 +17,6 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActionsFragmentBinding
-import info.nightscout.androidaps.dialogs.CareDialog
 import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
@@ -56,6 +55,7 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.activities.TDDStatsActivity
+import info.nightscout.ui.dialogs.CareDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

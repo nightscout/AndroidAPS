@@ -60,20 +60,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/careportal_newnstreatment_meter" />
+                android:text="@string/bg_meter" />
 
             <RadioButton
                 android:id="@+id/sensor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/careportal_newnstreatment_sensor" />
+                android:text="@string/bg_sensor" />
 
             <RadioButton
                 android:id="@+id/other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/careportal_newnstreatment_other" />
+                android:text="@string/bg_other" />
 
         </RadioGroup>
 

@@ -10,7 +10,6 @@ import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFr
 import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
 import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
 import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
-import info.nightscout.androidaps.dialogs.CareDialog
 import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
@@ -73,8 +72,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentsUserEntryFragment(): TreatmentsUserEntryFragment
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
-
-    @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
 
     @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 

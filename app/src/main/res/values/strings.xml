@@ -153,12 +153,8 @@
     <string name="carbssuggestion">Carbs Suggestion</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">Other</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Carb time</string>
     <string name="profile_label">Profile</string>
-    <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
@@ -435,7 +431,6 @@
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <string name="food">Food</string>
-    <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>

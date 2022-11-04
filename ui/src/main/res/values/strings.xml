@@ -35,5 +35,11 @@
     <string name="most_common_profile">Most common profile:</string>
     <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
 
+    <!-- CareDialog -->
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Other</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+    <string name="none"><![CDATA[<none>]]></string>
 
 </resources>

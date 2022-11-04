@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.content.Context
 import android.os.Bundle
@@ -11,30 +11,30 @@ import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.androidaps.databinding.DialogCareBinding
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
+import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.fromConstant
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.logging.LTag
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogCareBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 
 class CareDialog : DialogFragmentWithDate() {
@@ -142,8 +142,10 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        val bg = Profile.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose
-            ?: 0.0, profileFunction.getUnits())
+        val bg = Profile.fromMgdlToUnits(
+            glucoseStatusProvider.glucoseStatusData?.glucose
+                ?: 0.0, profileFunction.getUnits()
+        )
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -202,7 +204,7 @@ class CareDialog : DialogFragmentWithDate() {
                     binding.sensor.isChecked -> TherapyEvent.MeterType.SENSOR
                     else                     -> TherapyEvent.MeterType.MANUAL
                 }
-            actions.add(rh.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType))
+            actions.add(rh.gs(R.string.glucose_type) + ": " + translator.translate(meterType))
             actions.add(rh.gs(R.string.bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + rh.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
@@ -225,13 +227,13 @@ class CareDialog : DialogFragmentWithDate() {
         therapyEvent.enteredBy = enteredBy
 
         val source = when  (options) {
-            EventType.BGCHECK        -> Sources.BgCheck
-            EventType.SENSOR_INSERT  -> Sources.SensorInsert
-            EventType.BATTERY_CHANGE -> Sources.BatteryChange
-            EventType.NOTE           -> Sources.Note
-            EventType.EXERCISE       -> Sources.Exercise
-            EventType.QUESTION       -> Sources.Question
-            EventType.ANNOUNCEMENT   -> Sources.Announcement
+            EventType.BGCHECK        -> UserEntry.Sources.BgCheck
+            EventType.SENSOR_INSERT  -> UserEntry.Sources.SensorInsert
+            EventType.BATTERY_CHANGE -> UserEntry.Sources.BatteryChange
+            EventType.NOTE           -> UserEntry.Sources.Note
+            EventType.EXERCISE       -> UserEntry.Sources.Exercise
+            EventType.QUESTION       -> UserEntry.Sources.Question
+            EventType.ANNOUNCEMENT   -> UserEntry.Sources.Announcement
         }
 
         activity?.let { activity ->
@@ -243,7 +245,7 @@ class CareDialog : DialogFragmentWithDate() {
                     )
                 valuesWithUnit.add(0, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 valuesWithUnit.add(1, ValueWithUnit.TherapyEventType(therapyEvent.type))
-                uel.log(Action.CAREPORTAL, source, notes, valuesWithUnit)
+                uel.log(UserEntry.Action.CAREPORTAL, source, notes, valuesWithUnit)
             }, null)
         }
         return true
