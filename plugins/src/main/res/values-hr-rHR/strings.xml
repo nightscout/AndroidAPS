@@ -7,4 +7,17 @@
     <string name="sms_delta">Delta:</string>
     <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
     <!-- Insulin -->
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <!-- Overview -->
 </resources>
