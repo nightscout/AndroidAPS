@@ -116,6 +116,18 @@
     <string name="pumpsuspended">Помпата е спряна</string>
     <string name="notconfigured">Не е конфигуриран</string>
     <string name="loopsuspended">Loop изключен</string>
+    <string name="trend_arrow">Стрелка тенденция</string>
+    <string name="value_unavailable_short">---</string>
+    <string name="required">нужн</string>
+    <string name="average">Средно</string>
+    <string name="tir">Време в границите</string>
+    <string name="tdd_total">ТДД общо</string>
+    <string name="none"><![CDATA[<празно>]]></string>
+    <string name="remove_label">ИЗТРИИ</string>
+    <string name="activate_profile">Активирай профила</string>
+    <string name="reset">нулиране</string>
+    <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
+    <string name="profile">Профил</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
