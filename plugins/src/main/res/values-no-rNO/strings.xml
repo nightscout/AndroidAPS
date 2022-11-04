@@ -118,15 +118,64 @@
     <string name="dia_too_short">DIA på %1$f er for kort - bruker %2$f i stedet!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <!-- Food-->
+    <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
+    <string name="filter">Filter</string>
+    <string name="food">Mat</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Fett</string>
+    <string name="category">Kategori</string>
+    <string name="subcategory">Underkategori</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">App fargetema</string>
+    <string name="dark_theme">Mørkt tema</string>
+    <string name="light_theme">Lyst tema</string>
+    <string name="follow_system_theme">Bruk systemets fargetema</string>
     <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
+    <string name="a11y_add_new_to_list">legg til ny i liste</string>
+    <string name="units_colon">Enheter:</string>
+    <string name="missing_profile_name">Mangler profilnavn</string>
+    <string name="error_in_ic_values">Feil i IK faktoren</string>
+    <string name="error_in_basal_values">Feil i basalverdiene</string>
+    <string name="error_in_target_values">Feil i BS mål verdiene</string>
+    <string name="error_in_isf_values">Feil i IF verdien</string>
+    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
+    <string name="view">Visning</string>
+    <string name="errors">Feil</string>
+    <string name="select_profile">Velg profil du vil redigere</string>
+    <string name="profile_name">Profilnavn:</string>
+    <string name="a11y_add_new_profile">legg til ny profil</string>
+    <string name="a11y_clone_profile">kopier gjeldende profil</string>
+    <string name="a11y_delete_current_profile">slett gjeldende profil</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">MÅL</string>
+    <string name="clone_label">Klon</string>
+    <string name="basal_short">BAS</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Rekalkulerte siste data</string>
+    <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
+    <string name="a11y_bg_quality_doubles">doble registreringer</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
+    <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">gammel versjon</string>
+    <string name="very_old_version">veldig gammel versjon</string>
+    <string name="application_expired">Applikasjon utløpt - oppdater</string>
+    <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="not_completed_yet">Enda Ikke fullført</string>
+    <string name="time_elapsed">Tid brukt</string>
     <!-- Overview -->
 </resources>
