@@ -16,7 +16,6 @@
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
     <string name="description_config_builder">Utilizado para configurar complementos activos</string>
     <string name="description_objectives">Programa de aprendizaje</string>
-    <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
     <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
     <string name="description_ns_client">Sincroniza tus datos con Nightscout</string>
     <string name="description_ama">Estado del algoritmo en 2017</string>
@@ -101,12 +100,8 @@
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
     <string name="unsupportednsversion">Versión de Nightscout no soportada</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">Otro</string>
-    <string name="careportal_newnstreatment_meter">Medidor</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Tiempo de absorción</string>
     <string name="profile_label">Perfil</string>
-    <string name="careportal_newnstreatment_glucosetype">Tipo de glucosa</string>
     <string name="overview_tempbasal_button">Basal temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
@@ -347,12 +342,6 @@
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Control desde el reloj</string>
     <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
-    <string name="food">Comida</string>
-    <string name="none"><![CDATA[<ninguno>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Grasa</string>
     <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente el volumen de las alarmas y de las notificaciones</string>
     <string name="localalertsettings_title">Alarmas locales</string>
@@ -463,7 +452,6 @@
     <string name="record_insulin_cartridge_change">Anotar cambio del cartucho de insulina</string>
     <string name="smbalwaysdisabled">SMB siempre y tras carbohidratos deshabilitados porque la fuente activa de glucosa no admite filtro avanzado</string>
     <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de lazo abierto</string>
-    <string name="food_short">Comida</string>
     <string name="openapssmb_maxiob_title">Máximo IOB total que OpenAPS no puede superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor se denomina \"Max IOB\", en el contexto de OpenAPS\nOpenAPS no podrá superar esta cantidad de insulina activa (IOB)</string>
     <string name="absorption_cutoff_title">Tiempo máximo de absorción de la comida [h]</string>
@@ -672,7 +660,6 @@
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Perfil DPV por defecto</string>
     <string name="setupwizard_pump_riley_link_status">Estado de RileyLink:</string>
-    <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">No se puede crear el perfil. El perfil es inválido.</string>
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
     <string name="advisoralarm">Ejecutar alarma cuando es hora de comer</string>
@@ -748,12 +735,6 @@
     <string name="a11y_clone_profile">clonar el perfil actual</string>
     <string name="a11y_delete_current_profile">borrar el perfil actual</string>
     <string name="a11y_add_new_to_list">añadir nuevo a la lista</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Elegir tema oscuro, claro o seguir con el predeterminado del sistema</string>
-    <string name="app_color_scheme">Esquema de color de aplicación</string>
-    <string name="dark_theme">Tema oscuro</string>
-    <string name="light_theme">Tema claro</string>
-    <string name="follow_system_theme">Usar tema del dispositivo</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
