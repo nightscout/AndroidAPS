@@ -33,7 +33,6 @@
     <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
     <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
     <string name="description_treatments">Salvează toate tratamentele făcute</string>
-    <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
     <string name="treatments_insulin_label_string">Insulină:</string>
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -91,7 +90,6 @@
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
     <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
-    <string name="disabledloop">Buclă inactivă</string>
     <string name="openloop_newsuggestion">O nouă sugestie este disponibilă</string>
     <string name="carbssuggestion">Sugestie carbohidrați</string>
     <string name="unsupportednsversion">Versiune incompatibilă de Nightscout</string>
@@ -222,8 +220,6 @@
     <string name="clearlog">Șterge istoricul</string>
     <string name="nowritepermission">NSCLIENT nu are permisiuni de scriere. Cheia API este corect scrisă?</string>
     <string name="wear_settings">Setări Wear</string>
-    <string name="wear_detailedIOB_title">Arată IOB detaliat</string>
-    <string name="wear_detailedIOB_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="nosuccess">fără succes - verificați telefonul</string>
     <string name="patientage">Tip de pacient</string>
     <string name="child">Copil</string>
@@ -285,11 +281,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
-    <string name="xdripstatus_settings">Stare xDrip+ (ceas)</string>
-    <string name="xdripstatus">Linie de stare xDrip+ (ceas)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Arată BGI</string>
-    <string name="wear_showbgi_summary">Adaugă BGI în linia de status</string>
     <string name="overview_extendedbolus_cancel_button">Renunță la bolusul extins</string>
     <string name="doprofileswitch">Schimbă profilul</string>
     <string name="careportal_sensor_label">Senzor</string>
