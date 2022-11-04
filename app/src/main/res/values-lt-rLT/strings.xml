@@ -409,7 +409,6 @@
     <string name="overview_show_basals">Bazė</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="engineering_mode_enabled">Inžinerinis režimas įjungtas</string>
-    <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
     <string name="autosensdisabledinpreferences">Autosens funkcija išjungta nustatymuose</string>
