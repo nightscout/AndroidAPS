@@ -3064,7 +3064,9 @@ class Pump(
 
                 setTbrProgressReporter.setCurrentProgressStage(RTCommandProgressStage.SettingTBRDuration(0))
 
-                navigateToRTScreen(rtNavigationContext, ParsedScreen.TemporaryBasalRateDurationScreen::class, pumpSuspended)
+                // Now move to the duration screen by pressing MENU.
+                rtNavigationContext.shortPressButton(RTNavigationButton.MENU)
+                waitUntilScreenAppears(rtNavigationContext, ParsedScreen.TemporaryBasalRateDurationScreen::class)
 
                 adjustQuantityOnScreen(
                     rtNavigationContext,
