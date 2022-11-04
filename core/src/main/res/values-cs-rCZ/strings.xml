@@ -301,7 +301,6 @@
     <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo neurčený šifrovací algoritmus!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Ověření podpisu</string>
     <string name="running_invalid_version">Zjistili jsme, že používáte neplatnou verzi, smyčka zakázána!</string>
     <string name="versionavailable">Verze %1$s je k dispozici</string>
     <string name="version_expire">Platnost verze %1$s vyprší dne %2$s</string>
