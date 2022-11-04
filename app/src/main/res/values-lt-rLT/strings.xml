@@ -15,7 +15,6 @@
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
     <string name="description_objectives">Mokymosi programa</string>
-    <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
     <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
     <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout</string>
     <string name="description_ama">2017 m. algoritmas</string>
@@ -94,12 +93,8 @@
     <string name="carbssuggestion">Angliavandenių pasiūlymas</string>
     <string name="unsupportednsversion">Nepalaikoma Nightscout versija</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
-    <string name="careportal_newnstreatment_other">Kiti</string>
-    <string name="careportal_newnstreatment_meter">Matuoklis</string>
-    <string name="careportal_newnstreatment_sensor">Sensorius</string>
     <string name="carb_time_label">AV laikas</string>
     <string name="profile_label">Profilis</string>
-    <string name="careportal_newnstreatment_glucosetype">Gliukozės tipas</string>
     <string name="overview_tempbasal_button">Laikina bazė</string>
     <string name="overview_extendedbolus_button">Ištęstas bolusas</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versija:</string>
@@ -334,12 +329,6 @@
     <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Laikrodžio valdikliai</string>
     <string name="wearcontrol_summary">Nustatyti Laikinus Tikslus ir įvesti terapinius įrašus iš laikrodžio.</string>
-    <string name="food">Maistas</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">Energ. vertė</string>
-    <string name="shortprotein">Balt.</string>
-    <string name="shortfat">Rieb</string>
     <string name="raise_notifications_as_android_notifications">Naudoti sistemos perspėjimus aliarmams ir įspėjimams</string>
     <string name="gradually_increase_notification_volume">Palaipsniui didinkite įspėjimų ir pranešimų garso lygį</string>
     <string name="localalertsettings_title">Lokalūs perspėjimai</string>
@@ -449,7 +438,6 @@
     <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
     <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes kraujo gliukozės duomenų šaltinis neturi reikalingo filtravimo</string>
     <string name="smbnotallowedinopenloopmode">SMB neleidžiami atviro ciklo režime</string>
-    <string name="food_short">Maistas</string>
     <string name="openapssmb_maxiob_title">Maksimalus bendras AIO, kurio negali viršyti OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Ši vertė yra vadinama Maks AIO OpenAPS kontekste\nOpenAPS nepridės daugiau insulino, jei dabartinis AIO yra didesnis už šią vertę</string>
     <string name="absorption_cutoff_title">Maksimalus maisto įsisavinimo laikas [h]</string>
@@ -640,7 +628,6 @@
     <string name="basalpctfromtdd_label">% bazės</string>
     <string name="dpvdefaultprofile">Numatytasis profilis</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
-    <string name="filter">Filtruoti</string>
     <string name="copytolocalprofile_invalid">Nepavyksta sukurti profilio. Profilis neteisingas.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
@@ -695,7 +682,6 @@
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="not_available_full">Negalimas</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="sort_label">Rūšiuoti</string>
     <string name="login">Prisijungti</string>
