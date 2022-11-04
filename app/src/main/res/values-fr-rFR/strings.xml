@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Algorithme le plus récent pour les utilisateurs avancés avec SI dynamique/automatique</string>
     <string name="description_overview">Affiche l’état actuel de votre Boucle et des boutons d’actions les plus courantes</string>
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
-    <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
     <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
@@ -87,7 +86,6 @@
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
-    <string name="overview_calculator_label">Assistant</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
@@ -159,7 +157,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="button1">Bouton 1</string>
     <string name="button2">Bouton 2</string>
     <string name="button3">Bouton 3</string>
-    <string name="units_colon">Unités :</string>
     <string name="units">Unités</string>
     <string name="prefs_range_title">Fourchette de visualisation</string>
     <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l\'aperçu et la montre</string>
@@ -172,7 +169,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="MM640g">Medtronic 640g</string>
     <string name="ongoingnotificaction">Notification en cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Tableau de %1$d éléments.\nValeur Actuelle :</string>
     <string name="openapsma_autosensdata_label">Données Autosens</string>
@@ -185,7 +181,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_shortname">BOUCLE</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DynSI</string>
-    <string name="localprofile_shortname">PL</string>
     <string name="overview_shortname">ACCUEIL</string>
     <string name="virtualpump_shortname">POMPEV</string>
     <string name="treatments_shortname">TRAIT</string>
@@ -312,7 +307,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="absorption_maxtime_summary">Le temps estimé en heures pour une absorbption totale des glucides d’un repas</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Garder l\'écran allumé</string>
     <string name="keep_screen_on_summary">Empêcher Android d\'éteindre l\'écran. Ceci consommera beaucoup de batterie lorsque vous n’êtes pas connecté à une prise de courant.</string>
     <string name="sensitivity_warning">En activant la fonction Autosens, n’oubliez pas de rentrer tous les glucides consommés. Sinon les déviations de glucides seront incorrectement identifiées pour les changements de sensibilité !!</string>
@@ -329,7 +323,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmb">Activer SMB</string>
     <string name="enablesmb_summary">Utiliser les Super Micro Bolus au lieu des débits de base temporaires pour une action rapide</string>
     <string name="enableuam_summary">Détection des Repas Non Signalés</string>
-    <string name="activate_profile">Activer le profil</string>
     <string name="invalid">INVALIDE</string>
     <string name="careportal_newnstreatment_percentage_label">Pourcentage</string>
     <string name="careportal_newnstreatment_timeshift_label">Décalage horaire</string>
@@ -420,8 +413,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="g5appnotdetected">SVP actualisez votre app Dexcom vers une version compatible</string>
     <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
     <string name="do_not_bolus_record_only">Ne pas administrer de bolus, enregistrer uniquement</string>
-    <string name="category">Catégorie</string>
-    <string name="subcategory">Sous-catégorie</string>
     <string name="bolusrecordedonly">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="loop_smbsetbypump_label">SMB défini par la pompe</string>
     <string name="overview_show_activity">Activité</string>
@@ -599,23 +590,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Nom du profil :</string>
     <string name="selected_profile">Sélectionné :</string>
     <string name="unitsnosemicolon">Unités</string>
-    <string name="doyouwantswitchprofile">Voulez-vous changer de profil et annuler les modifications faites dans le profil actuel ?</string>
     <string name="objectives_button_unfinish">Refaire l\'objectif</string>
     <string name="objectives_button_unstart">Suppression démarrée</string>
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
     <string name="setupwizard_units_prompt">Sélectionnez les unités dans lesquelles vous souhaitez afficher les valeurs</string>
-    <string name="dia_short">DAI</string>
-    <string name="ic_short">G/I</string>
-    <string name="isf_short">SI</string>
-    <string name="target_short">CIBLE</string>
-    <string name="clone_label">Dupliquer</string>
-    <string name="saveorresetchangesfirst">Sauver ou réinitialiser les modifications actuelles en premier</string>
-    <string name="deletecurrentprofile">Supprimer le profil actuel ?</string>
     <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
-    <string name="profilenamecontainsdot">Le nom du profil contient des points.\nCe n\'est pas pris en charge par NS.\nLe profil n\'est pas remonté dans NS.</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
     <string name="invalidpct">% saisi invalide</string>
@@ -702,15 +683,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_therapy_events_summary">Accepter les événements de thérapie (canule, insuline, changement de batterie, etc.) entrés via NS ou NSClient</string>
     <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
     <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
-    <string name="missing_profile_name">Nom de profil manquant</string>
-    <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
-    <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
-    <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
-    <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
     <string name="run_question">Exécuter %s?</string>
-    <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
-    <string name="view">Vue</string>
-    <string name="errors">Erreurs</string>
     <string name="ns_sync_slow">Ralentir les téléchargements</string>
     <string name="data_status">État des données Gly</string>
     <string name="remove_bg_readings">Supprimer des Glycémies</string>
@@ -733,10 +706,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="a11y_insulin_label">insuline</string>
     <string name="a11y_blood_glucose">glycémie</string>
     <string name="a11y_bg_outdated">obsolète</string>
-    <string name="a11y_add_new_profile">ajouter un nouveau profil</string>
-    <string name="a11y_clone_profile">dupliquer le profil actuel</string>
-    <string name="a11y_delete_current_profile">supprimer le profil actuel</string>
-    <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temporaire : %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
@@ -772,7 +741,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="app_default">Application par défaut</string>
     <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
     <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
-    <string name="select_profile">Sélectionnez le profil à modifier</string>
     <string name="refresh_from_nightscout">Rafraîchir à partir de Nightscout</string>
     <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
     <string name="select_for_removal">Sélectionner pour suppression</string>
