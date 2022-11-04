@@ -16,4 +16,5 @@
     <!--    Widget-->
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
 </resources>
