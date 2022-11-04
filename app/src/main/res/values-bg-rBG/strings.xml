@@ -15,7 +15,6 @@
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
     <string name="description_objectives">Разучаване на програмата</string>
-    <string name="description_food">Показва въведените в Nightscout храни</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
     <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
@@ -95,12 +94,8 @@
     <string name="carbssuggestion">Предложение</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
-    <string name="careportal_newnstreatment_other">Друго</string>
-    <string name="careportal_newnstreatment_meter">Глюкомер</string>
-    <string name="careportal_newnstreatment_sensor">Сензор</string>
     <string name="carb_time_label">ВХ след</string>
     <string name="profile_label">Профил</string>
-    <string name="careportal_newnstreatment_glucosetype">Тип КЗ</string>
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
@@ -338,12 +333,6 @@
     <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
-    <string name="food">Храна</string>
-    <string name="none"><![CDATA[<празно>]]></string>
-    <string name="shortkilojoul">килодж.</string>
-    <string name="shortenergy">Ен</string>
-    <string name="shortprotein">Бел.</string>
-    <string name="shortfat">Маз.</string>
     <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
     <string name="gradually_increase_notification_volume">Постепенно увеличаване на звука за сигнали и аларми</string>
     <string name="localalertsettings_title">Локални аларми</string>
@@ -454,7 +443,6 @@
     <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
     <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
     <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
-    <string name="food_short">Храна</string>
     <string name="openapssmb_maxiob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>
     <string name="openapssmb_maxiob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
     <string name="absorption_cutoff_title">Макс. време за усвояване на храна (часове)</string>
@@ -649,7 +637,6 @@
     <string name="basalpctfromtdd_label">% от базата</string>
     <string name="dpvdefaultprofile">Профил по подразбиране</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink статус:</string>
-    <string name="filter">Филтър</string>
     <string name="copytolocalprofile_invalid">Създаването на профила невъзможно. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
     <string name="advisoralarm">Алармата, когато е време за хранене.</string>
@@ -704,7 +691,6 @@
     <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="a11y_delete_current_profile">изтриване на текущия профил</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="overview_editquickwizard_percentage">% от профила</string>
     <string name="login">Вход</string>
