@@ -14,5 +14,8 @@
     <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
     <string name="a11y_carb_reminder">hatırlatıcıyı kur</string>
     <!--    Widget-->
+    <string name="configure">Şeffaflığı yapılandır</string>
     <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
