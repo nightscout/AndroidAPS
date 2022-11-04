@@ -423,7 +423,6 @@
     <string name="overview_show_basals">Basali</string>
     <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
     <string name="engineering_mode_enabled">Engineering mode abilitata</string>
-    <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
     <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
     <string name="autosensdisabledinpreferences">Autosens disabilitato nelle preferenze</string>
