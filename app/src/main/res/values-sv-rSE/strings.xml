@@ -15,7 +15,6 @@
     <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
     <string name="description_objectives">Inlärningsprogram</string>
-    <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
     <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
     <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
     <string name="description_ama">Så som algoritmen var definierad år 2017</string>
@@ -96,12 +95,8 @@ Eversense-appen.</string>
     <string name="carbssuggestion">KH-förslag</string>
     <string name="unsupportednsversion">Versionen av Nightscout stöds inte</string>
     <string name="treatments_wizard_basaliob_label">IOB från basal</string>
-    <string name="careportal_newnstreatment_other">Annat</string>
-    <string name="careportal_newnstreatment_meter">Mätare</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">KH-tid</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Glukostyp</string>
     <string name="overview_tempbasal_button">Temp basal</string>
     <string name="overview_extendedbolus_button">Förlängd bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
@@ -338,12 +333,6 @@ Eversense-appen.</string>
     <string name="reuse_profile_pct_hours">Återanvänd %1$d%% %2$dtim</string>
     <string name="wearcontrol_title">Kontrollera från klockan</string>
     <string name="wearcontrol_summary">Sätt temp målvärde och ange behandlingar från klockan.</string>
-    <string name="food">Matdatabas</string>
-    <string name="none"><![CDATA[<ingen>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Fett</string>
     <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
     <string name="gradually_increase_notification_volume">Öka volymen gradvis för larm och aviseringar</string>
     <string name="localalertsettings_title">Lokala larm</string>
@@ -454,7 +443,6 @@ Eversense-appen.</string>
     <string name="record_insulin_cartridge_change">Logga byte av insulinreservoar</string>
     <string name="smbalwaysdisabled">SMB Alltid På och SMB Efter Kolhydrater är inaktiverat pga att den aktiva BG-källan inte stöder avancerad filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i Open Loop</string>
-    <string name="food_short">Mat</string>
     <string name="openapssmb_maxiob_title">Max IOB som OpenAPS inte kan överstiga [U]</string>
     <string name="openapssmb_maxiob_summary">Det här värdet kallas Max IOB av OpenAPS. Om denna mängd insulin on board (IOB) nås, kan inte OpenAPS lägga till mer.</string>
     <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
@@ -645,7 +633,6 @@ Eversense-appen.</string>
     <string name="basalpctfromtdd_label">% av basal</string>
     <string name="dpvdefaultprofile">DPV-standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">Riley Link-status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Kan inte att skapa profilen. Profilen är felaktig.</string>
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
@@ -718,7 +705,6 @@ Eversense-appen.</string>
     <string name="a11y_clone_profile">klona nuvarande profil</string>
     <string name="a11y_delete_current_profile">ta bort aktuell profil</string>
     <string name="a11y_add_new_to_list">lägg till ny i listan</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Tempmål okänd förinställning: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt temp-mål?</string>
