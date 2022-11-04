@@ -15,7 +15,6 @@
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
     <string name="description_objectives">Program do nauki</string>
-    <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
     <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
     <string name="description_ns_client">Synchronizuje twoje dane z Nightscout</string>
     <string name="description_ama">Stan algorytmu w 2017</string>
@@ -94,12 +93,8 @@
     <string name="carbssuggestion">Sugestia węglowodanów</string>
     <string name="unsupportednsversion">Niewspierana wersja Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
-    <string name="careportal_newnstreatment_other">Inne</string>
-    <string name="careportal_newnstreatment_meter">Glukometr</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Czas węglow.</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Typ glukozy</string>
     <string name="overview_tempbasal_button">BazaTymczasowa</string>
     <string name="overview_extendedbolus_button">Bolus Przedłużony</string>
     <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
@@ -335,12 +330,6 @@
     <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Sterowanie z zegarka</string>
     <string name="wearcontrol_summary">Ustawiaj wartości docelowe i wprowadzaj leczenie z zegarka.</string>
-    <string name="food">Posiłek</string>
-    <string name="none"><![CDATA[<brak>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Bi</string>
-    <string name="shortfat">Tł</string>
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
     <string name="gradually_increase_notification_volume">Stopniowo zwiększaj głośność ostrzeżeń i powiadomień</string>
     <string name="localalertsettings_title">Alarmy lokalne</string>
@@ -450,7 +439,6 @@
     <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
     <string name="smbalwaysdisabled">SMB zawsze i po węglow. wyłączone z uwagi na brak źródła BG z zaawansowanym filtrowaniem</string>
     <string name="smbnotallowedinopenloopmode">SMB nie dozwolone w trybie otwartej pętli</string>
-    <string name="food_short">Posiłek</string>
     <string name="openapssmb_maxiob_title">Maksymalna, całkowita IOB, której OpenAPS nie może przekroczyć [U]</string>
     <string name="openapssmb_maxiob_summary">Ta wartość jest nazywana Max IOB w OpenAPS\nOpenAPS nie poda więcej insuliny jeżeli obecna IOB jest większa niż ta wartość</string>
     <string name="absorption_cutoff_title">Maksymalny czas wchłaniania posiłku [h]</string>
@@ -643,7 +631,6 @@
     <string name="basalpctfromtdd_label">% bazy</string>
     <string name="dpvdefaultprofile">Domyślny profil DPV</string>
     <string name="setupwizard_pump_riley_link_status">Stan RileyLink:</string>
-    <string name="filter">Filtr</string>
     <string name="copytolocalprofile_invalid">Nie można utworzyć profilu. Profil jest nieprawidłowy.</string>
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
@@ -698,7 +685,6 @@
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
     <string name="not_available_full">Niedostępne</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="remove_selected_items">Usuń wybrane pozycje</string>
     <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
