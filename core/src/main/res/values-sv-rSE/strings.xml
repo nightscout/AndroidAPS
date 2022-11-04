@@ -272,7 +272,6 @@
     <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Signaturverifierare</string>
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
     <string name="version_expire">Version %1$s upphör att gälla %2$s</string>
