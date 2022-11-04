@@ -35,7 +35,6 @@
     <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
     <string name="description_source_xdrip">Modtag BG-værdier fra xDrip+.</string>
     <string name="description_treatments">Gemmer alle behandlinger, der er foretaget</string>
-    <string name="description_xdrip_status_line">Vis oplysninger om dit Loop på din xDrip+ urskive.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Kulhydrater:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -93,7 +92,6 @@
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åben Loop</string>
     <string name="lowglucosesuspend">Lav glukose suspendering</string>
-    <string name="disabledloop">Loop deaktiveret</string>
     <string name="openloop_newsuggestion">Nyt forslag tilgængeligt</string>
     <string name="carbssuggestion">Kulhydrat Forslag</string>
     <string name="unsupportednsversion">Ikke understøttet version af Nightscout</string>
@@ -226,8 +224,6 @@
     <string name="clearlog">Ryd log</string>
     <string name="nowritepermission">NSCLIENT har ingen skrivetilladelse. Forkert API-secret?</string>
     <string name="wear_settings">Indstillinger for Wear</string>
-    <string name="wear_detailedIOB_title">Vis detaljeret IOB</string>
-    <string name="wear_detailedIOB_summary">Bryd IOB ned i bolus og basal IOB på urskiven</string>
     <string name="nosuccess">mislykkedes - tjek venligst telefonen</string>
     <string name="patientage">Patienttype</string>
     <string name="child">Barn</string>
@@ -289,11 +285,6 @@
     <string name="devslope_shortname">AFVHÆL</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Manglende telefonstatus tilladelse</string>
-    <string name="xdripstatus_settings">xDrip-status (ur)</string>
-    <string name="xdripstatus">xDrip Statuslinje (ur)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Vis BGI</string>
-    <string name="wear_showbgi_summary">Tilføj BGI til statuslinje</string>
     <string name="overview_extendedbolus_cancel_button">Annuller Forlænget Bolus</string>
     <string name="doprofileswitch">Skift profil</string>
     <string name="careportal_sensor_label">Sensor</string>
