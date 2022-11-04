@@ -99,4 +99,7 @@
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
