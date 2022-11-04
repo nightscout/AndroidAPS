@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
     <string name="description_treatments">Guarda todos los tratamientos que se realizaron</string>
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
-    <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Lazo cerrado</string>
     <string name="openloop">Lazo abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
-    <string name="disabledloop">Lazo desactivado</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
     <string name="unsupportednsversion">Versión de Nightscout no soportada</string>
@@ -231,8 +229,6 @@
     <string name="clearlog">Borrar log</string>
     <string name="nowritepermission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
     <string name="wear_settings">Ajustes de reloj</string>
-    <string name="wear_detailedIOB_title">Mostrar detalles IOB</string>
-    <string name="wear_detailedIOB_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="nosuccess">sin efecto - por favor verificar en móvil</string>
     <string name="patientage">Tipo de paciente</string>
     <string name="child">Menor de edad</string>
@@ -294,11 +290,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Acerca de</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permiso de estado del teléfono</string>
-    <string name="xdripstatus_settings">Estado de xDrip+ (reloj)</string>
-    <string name="xdripstatus">Línea de estado de xDrip+ (reloj)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Mostrar BGI (Índice de glucosa en sangre)</string>
-    <string name="wear_showbgi_summary">Agregar BGI a la línea de estado</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar bolo extendido</string>
     <string name="doprofileswitch">Cambio de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
