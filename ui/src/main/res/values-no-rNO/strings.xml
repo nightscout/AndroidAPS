@@ -16,4 +16,6 @@
     <!--    Widget-->
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
