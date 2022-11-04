@@ -111,6 +111,18 @@
     <string name="pumpsuspended">Pompa wstrzymana</string>
     <string name="notconfigured">Nie skonfigurowano</string>
     <string name="loopsuspended">Pętla wstrzymana</string>
+    <string name="trend_arrow">Strzałka trendu</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">wym</string>
+    <string name="average">Średnio</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD Całkowita</string>
+    <string name="none"><![CDATA[<brak>]]></string>
+    <string name="remove_label">USUŃ</string>
+    <string name="activate_profile">Aktywuj profil</string>
+    <string name="reset">ponowne uruchomienie</string>
+    <string name="profileswitch_ismissing">Brakuje ZmianyProfilu. Proszę wykonać ZmianęProfilu lub nacisnąć \"Aktywuj Profil\" w ProfiluLokalnym</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
