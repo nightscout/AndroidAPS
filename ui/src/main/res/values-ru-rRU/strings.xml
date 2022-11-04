@@ -17,4 +17,5 @@
     <string name="configure">Настроить прозрачность</string>
     <string name="widget_description">Виджет AAPS</string>
     <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
