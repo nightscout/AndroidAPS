@@ -6,4 +6,5 @@
     <string name="permission">Permissão</string>
     <string name="error_asking_for_permissions">Erro alterando permissões</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
+    <!--       Stats -->
 </resources>
