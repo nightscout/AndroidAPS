@@ -423,7 +423,6 @@
     <string name="overview_show_basals">Базал</string>
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="engineering_mode_enabled">Режим отладки включен</string>
-    <string name="profileswitch_ismissing">Профиль не переключен. Пожалуйста переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
     <string name="pumpisnottempbasalcapable">Эта помпа не рассчитана на подачу временного базала</string>
     <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
     <string name="autosensdisabledinpreferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
