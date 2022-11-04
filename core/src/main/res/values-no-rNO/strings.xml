@@ -140,6 +140,15 @@
     <string name="a11y_high">høyt</string>
     <string name="a11y_inrange">i målområdet</string>
     <string name="a11y_low">lavt</string>
+    <string name="average">Gjennomsnitt</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">FJERN</string>
+    <string name="activate_profile">Aktiver profil</string>
+    <string name="reset">tilbakestill</string>
+    <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
