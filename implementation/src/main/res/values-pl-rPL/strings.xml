@@ -6,4 +6,5 @@
     <string name="permission">Uprawnienia</string>
     <string name="alert_dialog_permission_battery_optimization_failed">To urządzenie nie obsługuje białej listy optymalizacji baterii - mogą wystąpić problemy z wydajnością.</string>
     <!--       Stats -->
+    <string name="hba1c">HbA1c: </string>
 </resources>
