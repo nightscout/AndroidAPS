@@ -117,4 +117,7 @@
     <string name="rapid_acting_oref">Rychle působící - Oref</string>
     <string name="dia_too_short">DIA %1$f je příliš krátké - použito %2$f !</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
