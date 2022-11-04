@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">Recevoir les glycémies depuis xDrip+.</string>
     <string name="description_treatments">Enregistre tous les traitements qui ont été effectués</string>
     <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
-    <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Glucides :</string>
     <string name="treatments_iob_label_string">IA: </string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Boucle Fermée</string>
     <string name="openloop">Boucle Ouverte</string>
     <string name="lowglucosesuspend">Arrêt Glycémie Basse</string>
-    <string name="disabledloop">Boucle désactivée</string>
     <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
     <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
@@ -232,8 +230,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="clearlog">Effacer histo</string>
     <string name="nowritepermission">NSCLIENT ne possède pas la permission d\'écriture. Mauvais API secret?</string>
     <string name="wear_settings">Paramètres Wear</string>
-    <string name="wear_detailedIOB_title">Afficher l\'IA détaillée</string>
-    <string name="wear_detailedIOB_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="nosuccess">Sans succès - vérifiez votre téléphone</string>
     <string name="patientage">Type de patient</string>
     <string name="child"> Enfant</string>
@@ -295,11 +291,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
-    <string name="xdripstatus_settings">état Xdrip+ (montre)</string>
-    <string name="xdripstatus">Barre d\'état pour xDrip+ (Montre)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Afficher l’Impact Glycémie</string>
-    <string name="wear_showbgi_summary">Ajouter l’IGly sur la vue générale</string>
     <string name="overview_extendedbolus_cancel_button">Annuler Bolus étendu</string>
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_sensor_label">Capteur</string>
