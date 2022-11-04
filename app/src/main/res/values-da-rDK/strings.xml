@@ -16,7 +16,6 @@
     <string name="description_actions">Nogle knapper til hurtigt at få adgang til almindelige funktioner</string>
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
     <string name="description_objectives">Oplæringsprogram</string>
-    <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
     <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
     <string name="description_ns_client">Synkroniserer dine data med NightScout</string>
     <string name="description_ama">Status for algoritmen i 2017</string>
@@ -96,12 +95,8 @@
     <string name="carbssuggestion">Kulhydrat Forslag</string>
     <string name="unsupportednsversion">Ikke understøttet version af Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">Andet</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Kulhydrat tid</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Glukose type</string>
     <string name="overview_tempbasal_button">Midlertidig basal </string>
     <string name="overview_extendedbolus_button">Forlænget bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
@@ -341,12 +336,6 @@
     <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
     <string name="wearcontrol_title">Kontrolleringer fra Ur</string>
     <string name="wearcontrol_summary">Sæt midlertidige mål og indtast behandlinger fra uret.</string>
-    <string name="food">Mad</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Fedt</string>
     <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>
     <string name="gradually_increase_notification_volume">Gradvis øg lydstyrken for advarsler og meddelelser</string>
     <string name="localalertsettings_title">Lokale advarsler</string>
@@ -457,7 +446,6 @@
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
-    <string name="food_short">Mad</string>
     <string name="openapssmb_maxiob_title">Maks IOB OpenAPS ikke kan gå over [U]</string>
     <string name="openapssmb_maxiob_summary">Denne værdi kaldes Max IOB i OpenAPS kontekst\nOpenAPS vil ikke tilføje mere insulin, hvis den aktuelle IOB er større end denne værdi</string>
     <string name="absorption_cutoff_title">Måltid max absorptionstid [h]</string>
@@ -660,7 +648,6 @@
     <string name="basalpctfromtdd_label">% af basal</string>
     <string name="dpvdefaultprofile">DPV standardprofil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Kunne ikke oprette profil. Profilen er ugyldig.</string>
     <string name="cta_dont_kill_my_app_info">Luk ikke min app?</string>
     <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
@@ -736,12 +723,6 @@
     <string name="a11y_clone_profile">klon nuværende profil</string>
     <string name="a11y_delete_current_profile">slet nuværende profil</string>
     <string name="a11y_add_new_to_list">tilføj ny til listen</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Vælg mørk, lys eller følg systemtemaet</string>
-    <string name="app_color_scheme">App Farvetema</string>
-    <string name="dark_theme">Mørkt tema</string>
-    <string name="light_theme">Lyst tema</string>
-    <string name="follow_system_theme">Brug enhedens tema</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Midlertidigmål ukendt forudindstilling: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annullér aktuelt midlertidig mål?</string>
