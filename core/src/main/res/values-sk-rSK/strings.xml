@@ -140,6 +140,10 @@
     <string name="a11y_high">vysoká</string>
     <string name="a11y_inrange">v rozsahu</string>
     <string name="a11y_low">nízka</string>
+    <string name="average">Priemer</string>
+    <string name="tir">Čas v rozsahu</string>
+    <string name="tdd_total">CDD celkom</string>
+    <string name="none"><![CDATA[<prázdne>]]></string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -301,7 +305,6 @@
     <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Overenie podpisu</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
     <string name="version_expire">Verzia %1$s expiruje dňa %2$s</string>
