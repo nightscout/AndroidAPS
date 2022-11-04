@@ -301,7 +301,6 @@
     <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">İmza doğrulayıcı</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>
