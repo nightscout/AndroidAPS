@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
-    <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
     <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
     <string name="description_sensitivity_oref1">הרגישות מחושבת מנתונים מ-8 או 24 השעות האחרונות (הרגישות הנמוכה מביניהם). הפחמימות (אם לא נספגו) מפסיקות להיחשב לאחר משך זמן שהוגדר בהגדרות. תוסף זה מחשב גם ארוחות לא ידועות מראש (UAM).</string>
@@ -83,7 +82,6 @@
     <string name="constraints_violation">הפרת מגבלות</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_treatment_label">טיפול</string>
-    <string name="overview_calculator_label">מחשבון</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="xdrip">xDrip+</string>
@@ -153,7 +151,6 @@
     <string name="button1">כפתור 1</string>
     <string name="button2">כפתור 2</string>
     <string name="button3">כפתור 3</string>
-    <string name="units_colon">יחידות:</string>
     <string name="units">יחידות</string>
     <string name="prefs_range_title">טווח הצגה</string>
     <string name="prefs_range_summary">סימוני גבוה ונמוך בתרשים סקירה כללית ובשעון חכם</string>
@@ -166,7 +163,6 @@
     <string name="MM640g">Minimed 640G</string>
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>
-    <string name="localprofile">פרופיל</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
@@ -179,7 +175,6 @@
     <string name="loop_shortname">לולאה</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DynISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">בית</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="treatments_shortname">TREAT</string>
@@ -306,7 +301,6 @@
     <string name="absorption_maxtime_summary">מספר השעות בהן צפוי שכל הפחמימות מארוחה ייספגו</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">מעלה</string>
-    <string name="basal_short">בזאלי</string>
     <string name="keep_screen_on_title">השאר את המסך דולק</string>
     <string name="keep_screen_on_summary">מניעת כיבוי המסך. הדבר צורך הרבה כח סוללה.</string>
     <string name="sensitivity_warning">בהפעלת פונקציית ה-Autosens יש לזכור שחייבים להזין למערכת את כל הפחמימות שנאכלו. אחרת פחמימות לא יזוהו נכון כשינוי ברגישות!</string>
@@ -322,7 +316,6 @@
     <string name="enablesmb">אפשר SMB</string>
     <string name="enablesmb_summary">השתמש בסופר מיקרו בולוסים במקום בבזאלי זמני לפעילות מהירה יותר</string>
     <string name="enableuam_summary">זיהוי של ארוחות לא מוכרזות</string>
-    <string name="activate_profile">הפעלת פרופיל</string>
     <string name="invalid">לא חוקי</string>
     <string name="careportal_newnstreatment_percentage_label">אחוזים</string>
     <string name="careportal_newnstreatment_timeshift_label">היסט זמן</string>
@@ -413,8 +406,6 @@
     <string name="g5appnotdetected">עדכנו את יישום ה-Dexcom שלכם לגרסה נתמכת</string>
     <string name="dexcom_app_not_installed">אפליקציית Dexcom אינה מותקנת.</string>
     <string name="do_not_bolus_record_only">רישום בולוס ללא הזרקה</string>
-    <string name="category">קטגוריה</string>
-    <string name="subcategory">תת קטגוריה</string>
     <string name="bolusrecordedonly">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="loop_smbsetbypump_label">SMB מוגדר באמצעות משאבה</string>
     <string name="overview_show_activity">פעילות</string>
@@ -588,23 +579,13 @@
     <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
     <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">שם הפרופיל:</string>
     <string name="selected_profile">נבחר:</string>
     <string name="unitsnosemicolon">יחידות</string>
-    <string name="doyouwantswitchprofile">האם ברצונכם להחליף את הפרופיל ולזנוח את השינויים שבוצעו בפרופיל הנוכחי?</string>
     <string name="objectives_button_unfinish">ביטול השלמה</string>
     <string name="objectives_button_unstart">ביטול התחלה</string>
     <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
     <string name="setupwizard_units_prompt">בחרו את היחידות שבהן ברצונכם להציג ערכים</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">ע\' מטרה</string>
-    <string name="clone_label">שכפול</string>
-    <string name="saveorresetchangesfirst">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
-    <string name="deletecurrentprofile">למחוק את הפרופיל הנוכחי?</string>
     <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
-    <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
@@ -690,15 +671,7 @@
     <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
     <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
-    <string name="missing_profile_name">חסר שם לפרופיל</string>
-    <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
-    <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
-    <string name="error_in_target_values">שגיאה בערכי המטרה</string>
-    <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
     <string name="run_question">להפעיל %s?</string>
-    <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
-    <string name="view">תצוגה</string>
-    <string name="errors">שגיאות</string>
     <string name="ns_sync_slow">האט העלאות</string>
     <string name="data_status">מצב נתוני הסוכר</string>
     <string name="remove_bg_readings">הסר קריאות רמת הסוכר</string>
@@ -721,10 +694,6 @@
     <string name="a11y_insulin_label">אינסולין</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
-    <string name="a11y_add_new_profile">הוסף פרופיל חדש</string>
-    <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
-    <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
-    <string name="a11y_add_new_to_list">הוסף לרשימה</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
@@ -758,7 +727,6 @@
     <string name="app_default">ברירת המחדל של היישום</string>
     <string name="show_invalidated_records">הצג רשומות מבוטלות\\מחוקות</string>
     <string name="hide_invalidated_records">הסתר רשומות מבוטלות\\מחוקות</string>
-    <string name="select_profile">בחרו פרופיל לעריכה</string>
     <string name="refresh_from_nightscout">רענן מנייטסקאוט</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <string name="select_for_removal">בחרו להסרה</string>
