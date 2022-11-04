@@ -113,4 +113,7 @@
     <string name="rapid_acting_oref">Бързодействащ по Oref</string>
     <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
