@@ -200,7 +200,6 @@
     <string name="short_tabtitles">сокращенные имена табул</string>
     <string name="always_use_shortavg">всегда используйте укороченное среднее приращение вместо простого</string>
     <string name="always_use_shortavg_summary">Полезно когда данные из нефильтрованных источников вроде xDrip+ начинают \"шуметь\".</string>
-    <string name="profile">профиль</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
     <string name="openapsama_autosens_max_summary">Значение по умолчанию: 1,2\n Это множитель для autosens ( и вскоре autotune) с лимитом 20%% который определяет лимит верхнего значения autosens, который в свою очередь предопределяет верхнюю границу базала, границы изменения чувствительности к инсулину ISF и нижние границы целевой ГК.</string>
@@ -474,7 +473,6 @@
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник данных СК не поддерживает комплексное фильтрование</string>
     <string name="smbnotallowedinopenloopmode">В режиме незамкнутого цикла open loop супер микро болюс SMB не допускается</string>
     <string name="food_short">Еда</string>
-    <string name="reset">сброс</string>
     <string name="openapssmb_maxiob_title">Предел суммарного активного инсулина IOB для OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Эта величина называется Max IOB в OpenAPS context\nOpenAPS не будет добавлять инсулин если текущий активный инсулин ее превысит</string>
     <string name="absorption_cutoff_title">Максимальное время усваимости пищи [h]</string>
@@ -640,25 +638,7 @@
     <string name="profilenamecontainsdot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
-    <string name="age">Возраст</string>
-    <string name="weight_label">Вес</string>
-    <string name="id">Идентификатор:</string>
-    <string name="submit">Отправить</string>
-    <string name="mostcommonprofile">Наиболее часто применяемый профиль:</string>
-    <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
-    <string name="invalidage">Некорректное значение возраст</string>
-    <string name="invalidweight">Некорректное значение вес</string>
     <string name="invalidpct">Некорректный ввод %</string>
-    <string name="average">Средний</string>
-    <string name="tir">Время в целевом диапазоне TIR</string>
-    <string name="day_tir">Время в целевом диапазоне днем</string>
-    <string name="night_tir">Время в целевом диапазоне ночью</string>
-    <string name="detailed_14_days">Подробно 14 дней</string>
-    <string name="std_deviation">СтандОткл: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Монитор активности</string>
-    <string name="doyouwantresetstats">Хотите сбросить статистику активности?</string>
-    <string name="statistics">Статистика</string>
     <string name="randombg">Случайные значения ГК</string>
     <string name="description_source_randombg">Генерировать случайные данные ГК (только демо-режим)</string>
     <string name="randombg_short">BG/ГК</string>
@@ -743,7 +723,6 @@
     <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
     <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
     <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
-    <string name="calculation_in_progress">Идет подсчет</string>
     <string name="missing_profile_name">Отсутствует название профиля</string>
     <string name="error_in_ic_values">Ошибка в значении углеводного коэффициента IC</string>
     <string name="error_in_basal_values">Ошибка в величине базала</string>
@@ -833,13 +812,6 @@
     <string name="show_loop">Показать цикл</string>
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
-    <string name="veryLow" comment="below 3.1">Очень низкий</string>
-    <string name="low" comment="3.1-3.9">Низкий</string>
-    <string name="high" comment="10.0-13.9">Высокий</string>
-    <string name="veryHigh" comment="above 13.9">Очень высокий</string>
-    <string name="below" comment="below &quot;in range&quot;">Ниже целевых</string>
-    <string name="in_range">В целевом диапазоне</string>
-    <string name="above" comment="above &quot;in range&quot;">Выше целевых</string>
     <string name="show_loop_records">Показать записи цикла</string>
     <string name="show_hide_records">Скрыть записи цикла</string>
     <string name="loop_status">Статус цикла</string>
