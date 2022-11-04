@@ -1,16 +1,16 @@
-package info.nightscout.androidaps.plugins.constraints.phoneChecker
+package info.nightscout.plugins.constraints.phoneChecker
 
 import android.content.Context
 import android.os.Build
 import com.scottyab.rootbeer.RootBeer
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.plugins.R
+import info.nightscout.shared.logging.AAPSLogger
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,8 +25,8 @@ class PhoneCheckerPlugin @Inject constructor(
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
-    .pluginName(R.string.phonechecker),
-    aapsLogger, rh, injector
+    .pluginName(R.string.phone_checker),
+               aapsLogger, rh, injector
 ), Constraints {
 
     var phoneRooted: Boolean = false

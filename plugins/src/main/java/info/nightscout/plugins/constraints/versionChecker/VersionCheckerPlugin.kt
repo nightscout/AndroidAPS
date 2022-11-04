@@ -1,15 +1,14 @@
-package info.nightscout.androidaps.plugins.constraints.versionChecker
+package info.nightscout.plugins.constraints.versionChecker
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.extensions.daysToMillis
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.plugins.R
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
@@ -33,7 +32,7 @@ class VersionCheckerPlugin @Inject constructor(
         .neverVisible(true)
         .alwaysEnabled(true)
         .showInList(false)
-        .pluginName(R.string.versionChecker),
+        .pluginName(R.string.version_checker),
     aapsLogger, rh, injector
 ), Constraints {
 
@@ -43,7 +42,7 @@ class VersionCheckerPlugin @Inject constructor(
     }
 
     private val gracePeriod: GracePeriod
-        get() = if ((BuildConfig.VERSION_NAME.contains("RC", ignoreCase = true))) {
+        get() = if ((config.VERSION_NAME.contains("RC", ignoreCase = true))) {
             GracePeriod.RC
         } else {
             GracePeriod.RELEASE
@@ -109,4 +108,6 @@ class VersionCheckerPlugin @Inject constructor(
 
     private fun isOldVersion(gracePeriod: Long): Boolean =
         dateUtil.now() > sp.getLong(R.string.key_last_time_this_version_detected_as_ok, 0) + gracePeriod
+
+    private fun Long.daysToMillis() = TimeUnit.DAYS.toMillis(this)
 }

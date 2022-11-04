@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.constraints.dstHelper
+package info.nightscout.plugins.constraints.dstHelper
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
@@ -14,7 +13,9 @@ import org.junit.Test
 import org.mockito.Mock
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class DstHelperPluginTest : TestBase() {
 
@@ -29,8 +30,7 @@ class DstHelperPluginTest : TestBase() {
 
     @Before
     fun mock() {
-        plugin = DstHelperPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh,
-                                 sp, activePlugin, loop)
+        plugin = DstHelperPlugin(injector, aapsLogger, rh, sp, activePlugin, loop)
     }
 
     @Test

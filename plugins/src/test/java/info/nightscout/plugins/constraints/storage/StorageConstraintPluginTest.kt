@@ -1,19 +1,19 @@
-package info.nightscout.androidaps.plugins.constraints.storage
+package info.nightscout.plugins.constraints.storage
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.shared.logging.AAPSLogger
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.`when`
 
 class StorageConstraintPluginTest : TestBase() {
 

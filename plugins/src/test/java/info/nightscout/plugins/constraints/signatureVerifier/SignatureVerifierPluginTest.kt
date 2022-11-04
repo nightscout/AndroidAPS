@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.constraints.signatureVerifier
+package info.nightscout.plugins.constraints.signatureVerifier
 
 import android.content.Context
 import dagger.android.AndroidInjector

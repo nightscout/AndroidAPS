@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.constraints.signatureVerifier
+package info.nightscout.plugins.constraints.signatureVerifier
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.plugins.R
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.spongycastle.util.encoders.Hex

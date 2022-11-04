@@ -1,5 +1,6 @@
-package info.nightscout.androidaps.plugins.constraints.versionChecker
+package info.nightscout.plugins.constraints.versionChecker
 
+import info.nightscout.androidaps.plugins.constraints.versionChecker.AllowedVersions
 import org.joda.time.LocalDate
 import org.json.JSONArray
 import org.json.JSONObject
@@ -11,7 +12,7 @@ import org.junit.Test
 
 class AllowedVersionsTest {
 
-    fun generateSupportedVersions(): String =
+    private fun generateSupportedVersions(): String =
         JSONArray()
             // Android API versions
             .put(JSONObject().apply {

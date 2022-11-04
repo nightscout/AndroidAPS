@@ -1,15 +1,20 @@
-package info.nightscout.androidaps.plugins.constraints.bgQualityCheck
+package info.nightscout.plugins.constraints.bgQualityCheck
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.plugins.R
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -35,7 +40,7 @@ class BgQualityCheckPlugin @Inject constructor(
         .neverVisible(true)
         .alwaysEnabled(true)
         .showInList(false)
-        .pluginName(R.string.dst_plugin_name),
+        .pluginName(R.string.bg_quality),
     aapsLogger, rh, injector
 ), Constraints {
 

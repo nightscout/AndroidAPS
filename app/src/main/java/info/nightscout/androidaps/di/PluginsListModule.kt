@@ -16,13 +16,8 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
@@ -54,6 +49,11 @@ import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
+import info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin
+import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import info.nightscout.plugins.constraints.storage.StorageConstraintPlugin
+import info.nightscout.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
