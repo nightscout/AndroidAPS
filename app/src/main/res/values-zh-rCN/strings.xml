@@ -15,7 +15,6 @@
     <string name="description_actions">一些快速访问常用功能的按钮</string>
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
-    <string name="description_food">显示 Nightscout 中定义的食物预设</string>
     <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="description_ns_client">将数据与 Nightscout 同步</string>
     <string name="description_ama">算法的状态在2017年</string>
@@ -95,12 +94,8 @@
     <string name="carbssuggestion">碳水建议</string>
     <string name="unsupportednsversion">不支持的 Nightscout 版本</string>
     <string name="treatments_wizard_basaliob_label">基础 IOB</string>
-    <string name="careportal_newnstreatment_other">其他</string>
-    <string name="careportal_newnstreatment_meter">血糖仪</string>
-    <string name="careportal_newnstreatment_sensor">传感器</string>
     <string name="carb_time_label">碳水时间</string>
     <string name="profile_label">配置文件</string>
-    <string name="careportal_newnstreatment_glucosetype">血糖类型</string>
     <string name="overview_tempbasal_button">临时基础</string>
     <string name="overview_extendedbolus_button">扩展大剂量</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
@@ -339,12 +334,6 @@
     <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
     <string name="wearcontrol_title">从手表上控制</string>
     <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
-    <string name="food">食物</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">蛋白质</string>
-    <string name="shortfat">脂肪</string>
     <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
     <string name="gradually_increase_notification_volume">逐渐增加警报和通知的音量</string>
     <string name="localalertsettings_title">本地警报</string>
@@ -455,7 +444,6 @@
     <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled 因为实时的血糖来源不支持高级筛选</string>
     <string name="smbnotallowedinopenloopmode">在开环模式下不允许使用SMB－微型大剂量</string>
-    <string name="food_short">食物</string>
     <string name="openapssmb_maxiob_title">OpenAPS的IOB活性胰岛素总数的最大值不能超过[U]</string>
     <string name="openapssmb_maxiob_summary">该值在OpenAPS中称为最大 IOB\n如果当前IOB大于此值，则OpenAPS不会输注更多胰岛素</string>
     <string name="absorption_cutoff_title">膳食最大吸收时间 [h]</string>
@@ -651,7 +639,6 @@
     <string name="basalpctfromtdd_label">基础率%</string>
     <string name="dpvdefaultprofile">DPV默认个人配置</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink 状态:</string>
-    <string name="filter">筛选</string>
     <string name="copytolocalprofile_invalid">无法创建配置文件。配置文件无效。</string>
     <string name="cta_dont_kill_my_app_info">不要杀死我的应用程序？</string>
     <string name="advisoralarm">在应当吃饭时提醒</string>
@@ -727,12 +714,6 @@
     <string name="a11y_clone_profile">克隆当前配置文件</string>
     <string name="a11y_delete_current_profile">删除当前配置文件</string>
     <string name="a11y_add_new_to_list">新增条目到列表</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">选择暗色，亮色，或跟随系统主题</string>
-    <string name="app_color_scheme">App颜色主题</string>
-    <string name="dark_theme">暗色主题</string>
-    <string name="light_theme">亮色主题</string>
-    <string name="follow_system_theme">跟随系统主题</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
