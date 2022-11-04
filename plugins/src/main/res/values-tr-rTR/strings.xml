@@ -118,15 +118,64 @@
     <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
     <!-- Food-->
+    <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
+    <string name="filter">Filtre</string>
+    <string name="food">Yiyecek</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Yağ</string>
+    <string name="category">Kategori</string>
+    <string name="subcategory">Alt kategori</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Uyg. Renk Şeması</string>
+    <string name="dark_theme">Koyu tema</string>
+    <string name="light_theme">Açık tema</string>
+    <string name="follow_system_theme">Cihaz temasını kullan</string>
     <!-- Profile -->
+    <string name="localprofile_shortname">YP</string>
+    <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
+    <string name="a11y_add_new_to_list">listeye yeni ekle</string>
+    <string name="units_colon">Birim:</string>
+    <string name="missing_profile_name">Profil adı eksik</string>
+    <string name="error_in_ic_values">IC değerinde hata</string>
+    <string name="error_in_basal_values">Bazal değerlerde hata</string>
+    <string name="error_in_target_values">Hedef değerlerde hata</string>
+    <string name="error_in_isf_values">ISF değerinde hata</string>
+    <string name="invalid_profile_not_accepted">Geçersiz profil %1$s NS tarafından kabul edilmiyor</string>
+    <string name="view">Görünüm</string>
+    <string name="errors">Hatalar</string>
+    <string name="select_profile">Düzenlenecek profili seç</string>
+    <string name="profile_name">Profil adı:</string>
+    <string name="a11y_add_new_profile">yeni profil ekle</string>
+    <string name="a11y_clone_profile">mevcut profili klonla</string>
+    <string name="a11y_delete_current_profile">mevcut profil sil</string>
+    <string name="dia_short">İES İnsülin Etki Süresi</string>
+    <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
+    <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
+    <string name="target_short">HDF</string>
+    <string name="clone_label">Klon</string>
+    <string name="basal_short">BAZ</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>
+    <string name="bg_too_close">KŞ çok yakın:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">tekrar hesaplandı</string>
+    <string name="a11y_bg_quality_doubles">çift giriş</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">24 saat veya daha kısa süre içinde yaz saati değişikliği</string>
+    <string name="dst_loop_disabled_warning">Yaz Saati Uygulaması 3 saatten daha kısa bir süre önce değişti - Kapalı döngü devre dışı</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">eski sürüm</string>
+    <string name="very_old_version">çok eski sürüm</string>
+    <string name="application_expired">Uygulamanın süresi doldu</string>
+    <string name="new_version_warning">En az %1$d gündür yeni sürüm mevcut! %2$d gün sonra LGS\'ye (Düşük Glukoz gönderimine) dönülecek, %3$d gün sonra da döngü devre dışı bırakılacaktır</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="not_completed_yet">Henüz tamamlanmadı</string>
+    <string name="time_elapsed">Geçen süre</string>
     <!-- Overview -->
 </resources>
