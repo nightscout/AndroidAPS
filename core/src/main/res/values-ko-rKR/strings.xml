@@ -257,7 +257,6 @@
     <string name="prefdecrypt_issue_wrong_format">암호화 설정이 누락되었음, 설정 형식이 유효하지 않습니다!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">지원되지 않는 또는 명시되지 않은 암호화 알고리즘!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">서명 확인</string>
     <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <!-- Permissions -->
