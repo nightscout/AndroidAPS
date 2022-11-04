@@ -76,4 +76,7 @@
     <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
     <string name="dia_too_short">DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! </string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
