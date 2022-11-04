@@ -100,4 +100,7 @@
     <string name="rapid_acting_oref">Szybko-Działający Oref</string>
     <string name="dia_too_short">DIA %1$f zbyt krótki - przyjmuję %2$f w zamian!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
