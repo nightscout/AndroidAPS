@@ -423,7 +423,6 @@
     <string name="overview_show_basals">Bazály</string>
     <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
     <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
-    <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
     <string name="autosensdisabledinpreferences">Automatická detekcia citlivosti zakázaná v nastaveniach</string>
