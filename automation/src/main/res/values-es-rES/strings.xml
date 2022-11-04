@@ -107,7 +107,6 @@
     <string name="please_choose_a_trigger_type">Selecciona un disparador</string>
     <string name="please_choose_a_operation_type">Elija un tipo de operación</string>
     <string name="triggers">Disparadores:</string>
-    <string name="remove_label">ELIMINAR</string>
     <string name="preconditions">Precondiciones:</string>
     <string name="automation_event">Automatización de eventos</string>
     <string name="reorder_label">Reordenar</string>
