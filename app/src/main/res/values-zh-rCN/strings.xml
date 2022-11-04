@@ -194,7 +194,6 @@
     <string name="short_tabtitles">标题名称缩写</string>
     <string name="always_use_shortavg">总是使用短时间的平均增量代替简单增量</string>
     <string name="always_use_shortavg_summary">当血糖数据未经过滤时，如xDrip+数据嘈杂，此功能非常有用。</string>
-    <string name="profile">配置文件</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">默认值: 3 这是一个关键的 OpenAPS 安全阀值。这是限制你的闭环可以最大扩张3倍的日最大基础率。你可能不需要改变这个值 但你应该这个值的含义。日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值: 4 这是另一个的关键 OpenAPS 安全阀值, 日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值。这意味着你的基础率, 无论你的泵上的最大基础率设置的多少，也 不能超过你的当前基础率的4倍。这是为了防止人们在了解该算法的工作原理之前进入危险的领域 。同样, 默认值为 4倍; 大多数人将永远不需要调整, 而是更有可能需要调整其他设置,</string>
     <string name="openapsama_autosens_max_summary">默认值: 1.2 \n 这是 autosens 的安全阀值 对 autosens ( 很快autotune) 比率的高值设置最大增加20%% 最大限制, 这反过来决定了 autosens 可以调整的基础率的上限值, 可以调整的胰岛素敏感系数的下限值, 以及它可以设置血糖目标的下限值。</string>
@@ -466,7 +465,6 @@
     <string name="smbalwaysdisabled">SMB always and after carbs disabled 因为实时的血糖来源不支持高级筛选</string>
     <string name="smbnotallowedinopenloopmode">在开环模式下不允许使用SMB－微型大剂量</string>
     <string name="food_short">食物</string>
-    <string name="reset">重置</string>
     <string name="openapssmb_maxiob_title">OpenAPS的IOB活性胰岛素总数的最大值不能超过[U]</string>
     <string name="openapssmb_maxiob_summary">该值在OpenAPS中称为最大 IOB\n如果当前IOB大于此值，则OpenAPS不会输注更多胰岛素</string>
     <string name="absorption_cutoff_title">膳食最大吸收时间 [h]</string>
@@ -619,20 +617,7 @@
     <string name="profilenamecontainsdot">配置文件名称包含点。\n这不受 NS 支持。\n配置未上载到 NS。</string>
     <string name="low_mark_comment">血糖范围区域的下限值(仅显示，不影响算法)</string>
     <string name="high_mark_comment">血糖范围区域的上限值(仅显示，不影响算法)</string>
-    <string name="age">年龄</string>
-    <string name="weight_label">重量</string>
-    <string name="id">ID：</string>
-    <string name="submit">提交</string>
-    <string name="mostcommonprofile">最常见的配置文件:</string>
-    <string name="invalidage">输入的年龄无效</string>
-    <string name="invalidweight">输入的权重无效</string>
     <string name="invalidpct">输入的百分比无效</string>
-    <string name="average">平均</string>
-    <string name="tir">TIR</string>
-    <string name="hba1c">糖化血红蛋白: </string>
-    <string name="activitymonitor">活动监视器</string>
-    <string name="doyouwantresetstats">您想要重置所有的统计信息吗？</string>
-    <string name="statistics">统计</string>
     <string name="randombg">随机血糖</string>
     <string name="description_source_randombg">生成随机血糖数据（仅限demo演示模式）</string>
     <string name="randombg_short">血糖</string>
@@ -716,7 +701,6 @@
     <string name="ns_receive_therapy_events_summary">允许通过NS或NS客户端接收(导管更换、胰岛素更换、电池更换等) 护理事件</string>
     <string name="ns_receive_cgm">接收/回填CGM数据</string>
     <string name="ns_receive_cgm_summary">接受来自NS 的 CGM 数据</string>
-    <string name="calculation_in_progress">正在进行计算</string>
     <string name="missing_profile_name">缺少配置文件名称</string>
     <string name="error_in_ic_values">IC数值错误</string>
     <string name="error_in_basal_values">基础率数值错误</string>
@@ -805,13 +789,6 @@
     <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
-    <string name="veryLow" comment="below 3.1">非常低</string>
-    <string name="low" comment="3.1-3.9">低</string>
-    <string name="high" comment="10.0-13.9">高</string>
-    <string name="veryHigh" comment="above 13.9">非常高</string>
-    <string name="below" comment="below &quot;in range&quot;">底部</string>
-    <string name="in_range">在范围内</string>
-    <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="show_loop_records">显示闭环记录</string>
     <string name="show_hide_records">隐藏闭环记录</string>
     <string name="loop_status">闭环状态</string>
