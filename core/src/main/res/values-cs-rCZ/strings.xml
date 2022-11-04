@@ -140,6 +140,15 @@
     <string name="a11y_high">vysoká</string>
     <string name="a11y_inrange">v rozsahu</string>
     <string name="a11y_low">nízká</string>
+    <string name="average">Průměr</string>
+    <string name="tir">Čas v rozsahu</string>
+    <string name="tdd_total">CDD celkem</string>
+    <string name="none"><![CDATA[<prázdný>]]></string>
+    <string name="remove_label">ODSTRANIT</string>
+    <string name="activate_profile">Aktivovat profil</string>
+    <string name="reset">Resetovat</string>
+    <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
