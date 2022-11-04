@@ -195,7 +195,6 @@ Eversense-appen.</string>
     <string name="short_tabtitles">Förkorta namnen på flikarna</string>
     <string name="always_use_shortavg">Använd alltid kort medeldelta istället för enkel delta</string>
     <string name="always_use_shortavg_summary">Användbart när ofiltrerade källor ger brusiga värden.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardvärde: 3 Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina temp basaler till maximalt 3x din största basaldos. Du behöver oftast inte ändra detta värde. Läs på och förstå skillnaden mellan 3x nuvarande och 3x daglig max som säkerhetsinställningar.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardvärde: 4 Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina tempbasaler till maximalt 4 gånger din nuvarande basaldos, oberoende av din maximala basaldos. Detta för att undvika att man av misstag gör farliga inställningar. Om man når taket i denna inställning så kanske ändringar i andra inställningar behövs. De flesta behöver inte ändra denna inställning.</string>
     <string name="openapsama_autosens_max_summary">Standardvärde: 1.2\nDetta är en multiplikatorbegränsare för autosens/autotune som gör att automatiken kan justera upp basaler, sänka insulinkänslighet (ISF) och/eller målvärde med upp till 20%.</string>
@@ -465,7 +464,6 @@ Eversense-appen.</string>
     <string name="smbalwaysdisabled">SMB Alltid På och SMB Efter Kolhydrater är inaktiverat pga att den aktiva BG-källan inte stöder avancerad filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i Open Loop</string>
     <string name="food_short">Mat</string>
-    <string name="reset">Återställ</string>
     <string name="openapssmb_maxiob_title">Max IOB som OpenAPS inte kan överstiga [U]</string>
     <string name="openapssmb_maxiob_summary">Det här värdet kallas Max IOB av OpenAPS. Om denna mängd insulin on board (IOB) nås, kan inte OpenAPS lägga till mer.</string>
     <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
@@ -614,19 +612,7 @@ Eversense-appen.</string>
     <string name="profilenamecontainsdot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
-    <string name="age">Ålder</string>
-    <string name="weight_label">Vikt</string>
-    <string name="id">ID:</string>
-    <string name="submit">Spara</string>
-    <string name="mostcommonprofile">Den vanligaste profilen:</string>
-    <string name="invalidage">Ogiltig inmatning (ålder)</string>
-    <string name="invalidweight">Ogiltig inmatning (vikt)</string>
     <string name="invalidpct">Ogiltig %-inmatning</string>
-    <string name="average">Medel</string>
-    <string name="tir">TIR</string>
-    <string name="activitymonitor">Aktivitetsövervakare</string>
-    <string name="doyouwantresetstats">Vill du återställa aktivitetsstatistiken?</string>
-    <string name="statistics">Statistik</string>
     <string name="randombg">Slumpgenerator för BG</string>
     <string name="description_source_randombg">Generera slumpmässiga BG-data (endast demo-läge)</string>
     <string name="randombg_short">BG</string>
@@ -707,7 +693,6 @@ Eversense-appen.</string>
     <string name="ns_receive_therapy_events_summary">Acceptera händelser (kanyl-, insulin-, batteribyte etc) som angetts via NS eller NSClient</string>
     <string name="ns_receive_cgm">Ladda ner CGM-data</string>
     <string name="ns_receive_cgm_summary">Acceptera CGM-data från NS</string>
-    <string name="calculation_in_progress">Beräkning pågår</string>
     <string name="missing_profile_name">Profilnamn saknas</string>
     <string name="error_in_ic_values">Fel i KH-kvoter</string>
     <string name="error_in_basal_values">Fel i basaldoser</string>
