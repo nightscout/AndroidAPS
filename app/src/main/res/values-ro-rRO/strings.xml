@@ -15,7 +15,6 @@
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
     <string name="description_objectives">Program de învăţare</string>
-    <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
     <string name="description_loop">Activare sau dezactivare a implementării declanşatoare pentru buclă.</string>
     <string name="description_ns_client">Sincronizare a datelor cu Nightscout</string>
     <string name="description_ama">Starea algoritmului în 2017</string>
@@ -94,12 +93,8 @@
     <string name="carbssuggestion">Sugestie carbohidrați</string>
     <string name="unsupportednsversion">Versiune incompatibilă de Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB bazală</string>
-    <string name="careportal_newnstreatment_other">Altul</string>
-    <string name="careportal_newnstreatment_meter">Glucometru</string>
-    <string name="careportal_newnstreatment_sensor">Senzor</string>
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Tip glicemie</string>
     <string name="overview_tempbasal_button">Bazală temporară</string>
     <string name="overview_extendedbolus_button">Bolus extins</string>
     <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
@@ -334,12 +329,6 @@
     <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
     <string name="wearcontrol_summary">Setare Ținte-Temporare și se introduc Tratamente din ceas.</string>
-    <string name="food">Mâncare</string>
-    <string name="none"><![CDATA[<nimic>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Grăsime</string>
     <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
     <string name="gradually_increase_notification_volume">Creşterea treptată a volumului pentru alerte şi notificări</string>
     <string name="localalertsettings_title">Alerte locale</string>
@@ -449,7 +438,6 @@
     <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
     <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
     <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
-    <string name="food_short">Mâncare</string>
     <string name="openapssmb_maxiob_title">Maximul total IOB peste care OpenAPS nu poate trece [U]</string>
     <string name="openapssmb_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS,\nOpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
     <string name="absorption_cutoff_title">Timpul maxim de absorbție a mesei [h]</string>
@@ -640,7 +628,6 @@
     <string name="basalpctfromtdd_label">% din bazală</string>
     <string name="dpvdefaultprofile">Profil implicit DPV</string>
     <string name="setupwizard_pump_riley_link_status">Stare RileyLink:</string>
-    <string name="filter">Filtru</string>
     <string name="copytolocalprofile_invalid">Nu se poate crea profilul. Profilul este invalid.</string>
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
@@ -695,7 +682,6 @@
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <string name="not_available_full">Nu este disponibil</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
     <string name="sort_label">Sortează</string>
