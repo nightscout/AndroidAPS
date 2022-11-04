@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
     <string name="description_treatments">Сохраняет все выполненные назначения</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
-    <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
     <string name="treatments_insulin_label_string">инсулин:</string>
     <string name="treatments_carbs_label_string">углеводы:</string>
     <string name="treatments_iob_label_string">IOB:   активн инс</string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Замкнутый цикл</string>
     <string name="openloop">открытый цикл</string>
     <string name="lowglucosesuspend">Приостановка помпы на низкой ГК</string>
-    <string name="disabledloop">цикличность неактивирована</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="carbssuggestion">Предложены углеводы</string>
     <string name="unsupportednsversion">Неподдерживаемая версия Nightscout</string>
@@ -231,8 +229,6 @@
     <string name="clearlog">очистка лога</string>
     <string name="nowritepermission">NS не имеет разрешения внести изменения. неверный API secret?</string>
     <string name="wear_settings">настройки смарт-часов Wear</string>
-    <string name="wear_detailedIOB_title">показать IOB подробно</string>
-    <string name="wear_detailedIOB_summary">разбивка IOB на болюсный и базальный IOB на циферблате смарт-часов</string>
     <string name="nosuccess">неудача - проверьте телефон</string>
     <string name="patientage">Тип пациента</string>
     <string name="child">ребенок</string>
@@ -294,11 +290,6 @@
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
-    <string name="xdripstatus_settings">Cтрока состояния xDrip (часы)</string>
-    <string name="xdripstatus">Cтрока состояния xDrip (часы)</string>
-    <string name="xdripstatus_shortname">Статус xDrip</string>
-    <string name="wear_showbgi_title">показать BGI</string>
-    <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
     <string name="overview_extendedbolus_cancel_button">Отмена удлиненного болюса</string>
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_sensor_label">Сенсор</string>
