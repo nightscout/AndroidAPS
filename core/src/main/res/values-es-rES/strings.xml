@@ -281,7 +281,6 @@
     <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Verificador de firma</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
     <string name="version_expire">La versión %1$s expira el %2$s</string>
