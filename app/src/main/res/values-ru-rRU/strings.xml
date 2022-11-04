@@ -16,7 +16,6 @@
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
     <string name="description_objectives">Обучающая программа</string>
-    <string name="description_food">Показывает предварительные настройки приема пищи из Nightscout</string>
     <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
     <string name="description_ns_client">Синхронизирует данные с Nightscout</string>
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
@@ -101,12 +100,8 @@
     <string name="carbssuggestion">Предложены углеводы</string>
     <string name="unsupportednsversion">Неподдерживаемая версия Nightscout</string>
     <string name="treatments_wizard_basaliob_label">базал IOB</string>
-    <string name="careportal_newnstreatment_other">другое</string>
-    <string name="careportal_newnstreatment_meter">глюкометр</string>
-    <string name="careportal_newnstreatment_sensor">сенсор</string>
     <string name="carb_time_label">Подождать до еды</string>
     <string name="profile_label">профиль</string>
-    <string name="careportal_newnstreatment_glucosetype">тип глюкозы</string>
     <string name="overview_tempbasal_button">ВремБазал</string>
     <string name="overview_extendedbolus_button">Пролонгированный болюс</string>
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
@@ -347,12 +342,6 @@
     <string name="reuse_profile_pct_hours">Повторно использовать %1$d%% %2$dч</string>
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить назначения с часов.</string>
-    <string name="food">Еда</string>
-    <string name="none"><![CDATA[<отсутствует>]]></string>
-    <string name="shortkilojoul">кДж</string>
-    <string name="shortenergy">Энергия</string>
-    <string name="shortprotein">Белки</string>
-    <string name="shortfat">Жиры</string>
     <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
     <string name="gradually_increase_notification_volume">Постепенно увеличивать громкость оповещений и уведомлений</string>
     <string name="localalertsettings_title">Локальные оповещения</string>
@@ -463,7 +452,6 @@
     <string name="record_insulin_cartridge_change">Запись о замене картриджа инсулина</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник данных СК не поддерживает комплексное фильтрование</string>
     <string name="smbnotallowedinopenloopmode">В режиме незамкнутого цикла open loop супер микро болюс SMB не допускается</string>
-    <string name="food_short">Еда</string>
     <string name="openapssmb_maxiob_title">Предел суммарного активного инсулина IOB для OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Эта величина называется Max IOB в OpenAPS context\nOpenAPS не будет добавлять инсулин если текущий активный инсулин ее превысит</string>
     <string name="absorption_cutoff_title">Максимальное время усваимости пищи [h]</string>
@@ -672,7 +660,6 @@
     <string name="basalpctfromtdd_label">% базального</string>
     <string name="dpvdefaultprofile">Значение для профиля по умолчанию</string>
     <string name="setupwizard_pump_riley_link_status">Статус RileyLink:</string>
-    <string name="filter">Фильтр</string>
     <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
     <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
     <string name="advisoralarm">Напомнить о еде</string>
@@ -749,12 +736,6 @@
     <string name="a11y_clone_profile">клонировать текущий профиль</string>
     <string name="a11y_delete_current_profile">удалить текущий профиль</string>
     <string name="a11y_add_new_to_list">добавить новый в список</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Выберите темную, светлую или системную тему</string>
-    <string name="app_color_scheme">Цветовая схема приложения</string>
-    <string name="dark_theme">Тёмная тема</string>
-    <string name="light_theme">Светлая тема</string>
-    <string name="follow_system_theme">Использовать тему устройства</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Отменить врем цели?</string>
