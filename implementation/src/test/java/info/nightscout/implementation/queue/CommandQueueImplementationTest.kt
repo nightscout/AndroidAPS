@@ -17,11 +17,11 @@ import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.CustomCommand
@@ -47,7 +47,7 @@ import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var powerManager: PowerManager
@@ -62,7 +62,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         rxBus: RxBus,
         aapsSchedulers: AapsSchedulers,
         rh: ResourceHelper,
-        constraintChecker: ConstraintChecker,
+        constraintChecker: Constraints,
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
         context: Context,

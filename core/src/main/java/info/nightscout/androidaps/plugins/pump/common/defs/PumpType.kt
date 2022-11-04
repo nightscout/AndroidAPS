@@ -370,9 +370,25 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DiaconnCapabilities,
-        source = Sources.DiaconnG8,
-        useHardwareLink = true
-    );
+        source = Sources.DiaconnG8),
+		
+    //EOPatch Pump
+    EOFLOW_EOPATCH2(description = "Eoflow Eopatch2",
+        manufacturer = ManufacturerType.Eoflow,
+        model = "Eopatch",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 25.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 15.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 15.0,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.EopatchCapabilities,
+        isPatchPump = true,
+        source = Sources.EOPatch2);
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -460,7 +476,8 @@ enum class PumpType {
                 InterfaceIDs.PumpType.MDI                         -> MDI
                 InterfaceIDs.PumpType.USER                        -> USER
                 InterfaceIDs.PumpType.DIACONN_G8                  -> DIACONN_G8
-                InterfaceIDs.PumpType.CACHE                       -> TODO()
+                InterfaceIDs.PumpType.EOPATCH2                    -> EOFLOW_EOPATCH2
+                InterfaceIDs.PumpType.CACHE                       -> CACHE
             }
     }
 
@@ -591,6 +608,7 @@ enum class PumpType {
             MDI                       -> InterfaceIDs.PumpType.MDI
             USER                      -> InterfaceIDs.PumpType.USER
             DIACONN_G8                -> InterfaceIDs.PumpType.DIACONN_G8
+            EOFLOW_EOPATCH2           -> InterfaceIDs.PumpType.EOPATCH2
             CACHE                     -> InterfaceIDs.PumpType.CACHE
         }
 }

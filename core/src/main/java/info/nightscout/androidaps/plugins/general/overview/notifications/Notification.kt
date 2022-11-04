@@ -130,6 +130,7 @@ open class Notification {
         const val MDT_INVALID_HISTORY_DATA = 76
         const val IDENTIFICATION_NOT_SET = 77
         const val PERMISSION_BT = 78
+        const val EOELOW_PATCH_ALERTS = 79
 
         const val USER_MESSAGE = 1000
 

@@ -33,7 +33,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProfileFunctionImplementation @Inject constructor(
+class ProfileFunctionImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val rxBus: RxBus,

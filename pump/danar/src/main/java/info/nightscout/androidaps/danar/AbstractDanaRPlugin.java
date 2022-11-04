@@ -10,7 +10,6 @@ import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -22,23 +21,23 @@ import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.Dana;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.Pump;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -55,7 +54,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     protected PumpDescription pumpDescription = new PumpDescription();
     protected DanaPump danaPump;
-    protected ConstraintChecker constraintChecker;
+    protected Constraints constraintChecker;
     protected RxBus rxBus;
     protected ActivePlugin activePlugin;
     protected SP sp;
@@ -67,7 +66,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             HasAndroidInjector injector,
             DanaPump danaPump,
             ResourceHelper rh,
-            ConstraintChecker constraintChecker,
+            Constraints constraintChecker,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             CommandQueue commandQueue,

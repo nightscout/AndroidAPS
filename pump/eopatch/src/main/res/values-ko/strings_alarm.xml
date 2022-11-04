@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">인슐린 없음\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a003">패치 폐기\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a004">주입구 막힘\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a005">부팅 후 자가 진단 실패\n패치 사용이 중단되었습니다. 지금 패치를 교체하세요.</string>
+    <string name="string_a007">부적합한 온도\n인슐린 주입 또는 \'패치 적용\' 프로세스가 중단되었습니다.  즉시 적합한 온도 조건으로 이동하세요.</string>
+    <string name="string_a016">바늘 삽입 오류\n바늘 작동버튼 상태를 점검 후 \'재시도\'를 터치하세요.</string>
+    <string name="string_a018">패치 배터리 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a019">패치 배터리 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a020">패치 적용 타임아웃\n\'패치 적용\' 프로세스가 만료되었습니다. 적용 중인 패치를 사용 중단하려면 \'확인\'을 터치하세요. 즉시 패치를 교체하세요.</string>
+    <string name="string_a022">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a023">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a034">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a041">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a042">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a043">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a044">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a106">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a107">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a108">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a116">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a117">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_a118">패치 오류\n패치 사용 및 인슐린 주입이 중단되었습니다. 즉시 패치를 교체하세요.</string>
+    <string name="string_b000">패치 사용기간이 %s 에 만료됩니다. 패치 교체를 준비하세요.</string>
+    <string name="string_b001">인슐린 주입정지 종료\n\'주입재개\'를 눌러 기초 주입을 다시 시작하세요.</string>
+    <string name="string_b003">인슐린 부족\n곧 패치를 교체하세요.</string>
+    <string name="string_b005">패치 사용기간 만료\n즉시 패치를 교체하세요.</string>
+    <string name="string_b006">패치 폐기 임박\n즉시 패치를 교체하세요.</string>
+    <string name="string_b012">패치 적용 미완료\n\'패치 적용\' 프로세스를 완료하세요.</string>
+    <string name="string_b018">패치 배터리 부족\n패치 교체를 준비하세요.</string>
+</resources>

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -51,7 +51,7 @@ class DiaconnG8Plugin @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     commandQueue: CommandQueue,

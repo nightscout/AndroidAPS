@@ -24,7 +24,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
@@ -54,7 +54,7 @@ class DanaRSPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     commandQueue: CommandQueue,

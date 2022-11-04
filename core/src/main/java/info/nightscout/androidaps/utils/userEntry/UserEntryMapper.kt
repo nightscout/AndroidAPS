@@ -139,6 +139,7 @@ class UserEntryMapper {
         Omnipod (UserEntry.Sources.Omnipod),
         OmnipodEros (UserEntry.Sources.OmnipodEros),
         OmnipodDash (UserEntry.Sources.OmnipodDash),
+        EOPatch2 (UserEntry.Sources.EOPatch2),
         MDI (UserEntry.Sources.MDI),
         VirtualPump (UserEntry.Sources.VirtualPump),
         SMS (UserEntry.Sources.SMS),

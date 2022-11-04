@@ -23,7 +23,7 @@ jobs:
           test-command: ./gradlew testFullDebugUnitTest
 
       - android/run-tests:
-          test-command: ./gradlew jacocoAllDebugReport
+          test-command: ./gradlew --stacktrace jacocoAllDebugReport
 
       # Then start the emulator and run the Instrumentation tests!
       #      - android/start-emulator-and-run-tests:
