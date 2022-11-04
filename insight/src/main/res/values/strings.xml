@@ -17,7 +17,6 @@
     <string name="not_inserted">Not inserted</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basal</string>
-    <string name="tdd_total">TDD Total</string>
     <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
