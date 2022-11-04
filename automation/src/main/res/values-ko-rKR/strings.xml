@@ -102,7 +102,6 @@
     <string name="please_choose_an_action_type">실행 유형을 선택하세요</string>
     <string name="please_choose_a_trigger_type">트리거 유형을 선택하세요</string>
     <string name="triggers">트리거:</string>
-    <string name="remove_label">삭제</string>
     <string name="preconditions">전제 조건:</string>
     <string name="automation_event">자동화 이벤트</string>
     <string name="reorder_label">정렬</string>
