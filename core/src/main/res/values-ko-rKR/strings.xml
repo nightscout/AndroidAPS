@@ -109,6 +109,18 @@
     <string name="pumpsuspended">펌프 일시중지됨</string>
     <string name="notconfigured">설정되지 않음</string>
     <string name="loopsuspended">Loop 일시중지</string>
+    <string name="trend_arrow">경향 화살표</string>
+    <string name="value_unavailable_short">사용불가</string>
+    <string name="required">필요량</string>
+    <string name="average">평균</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">삭제</string>
+    <string name="activate_profile">프로파일 활성화하기</string>
+    <string name="reset">재설정</string>
+    <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
+    <string name="profile">프로파일</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
