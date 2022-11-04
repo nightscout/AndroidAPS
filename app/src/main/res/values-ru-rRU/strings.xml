@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
     <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
-    <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
     <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
@@ -87,7 +86,6 @@
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="overview_treatment_label">болюс</string>
-    <string name="overview_calculator_label">калькулятор</string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
@@ -158,7 +156,6 @@
     <string name="button1">кнопка 1</string>
     <string name="button2">кнопка 2</string>
     <string name="button3">кнопка 3</string>
-    <string name="units_colon">Единицы:</string>
     <string name="units">Единицы</string>
     <string name="prefs_range_title">диапазон для визуализации</string>
     <string name="prefs_range_summary">Нижняя и верхняя граница диаграммы в отчетах и Smartwatch</string>
@@ -171,7 +168,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">текущие уведомления</string>
     <string name="old_data">старые данные</string>
-    <string name="localprofile">Профиль</string>
     <string name="openapsama">Помощник болюса OpenAPS AMA</string>
     <string name="array_of_elements">Массив %1$d элементов. \nActual актуальная величина:</string>
     <string name="openapsma_autosensdata_label">данные autosens</string>
@@ -184,7 +180,6 @@
     <string name="loop_shortname">ЗЦ</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">ДинISF</string>
-    <string name="localprofile_shortname">ЛП</string>
     <string name="overview_shortname">НАЧАЛО</string>
     <string name="virtualpump_shortname">ВиртПомпа</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
@@ -311,7 +306,6 @@
     <string name="absorption_maxtime_summary">Ожидаемое время усваивания всех углеводов пищи в часах</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">ЗАГРУЗ</string>
-    <string name="basal_short">БАЗАЛ</string>
     <string name="keep_screen_on_title">Не отключать экран</string>
     <string name="keep_screen_on_summary">Не давать системе Android отключать экран. Это увеличит потребление энергии при отключенной сети питания.</string>
     <string name="sensitivity_warning">Активируя Autosense не забывайте вводить все съеденные углеводы. Иначе отклонения в углеводах будут неверно определены как изменение чувствительности !!</string>
@@ -328,7 +322,6 @@
     <string name="enablesmb">Включить супер микро болюс SMB</string>
     <string name="enablesmb_summary">Для ускорения действия используйте супер микро болюсы SMB вместо временного базала</string>
     <string name="enableuam_summary">Поиск незапланированного приема пищи</string>
-    <string name="activate_profile">АКТИВИРОВАТЬ ПРОФИЛЬ</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="careportal_newnstreatment_percentage_label">Процент</string>
     <string name="careportal_newnstreatment_timeshift_label">Сдвиг по времени</string>
@@ -419,8 +412,6 @@
     <string name="g5appnotdetected">Пожалуйста, обновите приложение Dexcom до поддерживаемой версии</string>
     <string name="dexcom_app_not_installed">Приложение Dexcom не установлено</string>
     <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
-    <string name="category">Категория</string>
-    <string name="subcategory">Подкатегория</string>
     <string name="bolusrecordedonly">Болюс будет только протоколироваться (не подаваться помпой)</string>
     <string name="loop_smbsetbypump_label">Супер микро болюс SMB задан помпой</string>
     <string name="overview_show_activity">Нагрузка</string>
@@ -598,23 +589,13 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Название профиля:</string>
     <string name="selected_profile">Выбрано:</string>
     <string name="unitsnosemicolon">Единицы</string>
-    <string name="doyouwantswitchprofile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
     <string name="objectives_button_unfinish">Очистить завершенные</string>
     <string name="objectives_button_unstart">Очистить начатые</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
     <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
-    <string name="dia_short">Время действия инсулина DIA</string>
-    <string name="ic_short">IC углкоэф ГУ/инс</string>
-    <string name="isf_short">ISF (чувствительность к инсулину)</string>
-    <string name="target_short">ЦЕЛЬ</string>
-    <string name="clone_label">Клонировать</string>
-    <string name="saveorresetchangesfirst">Сначала сохраните или сбросьте текущие изменения</string>
-    <string name="deletecurrentprofile">Удалить текущий профиль?</string>
     <string name="copytolocalprofile">Создать новый локальный профиль из этого?</string>
-    <string name="profilenamecontainsdot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
     <string name="invalidpct">Некорректный ввод %</string>
@@ -701,15 +682,7 @@
     <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
     <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
     <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
-    <string name="missing_profile_name">Отсутствует название профиля</string>
-    <string name="error_in_ic_values">Ошибка в значении углеводного коэффициента IC</string>
-    <string name="error_in_basal_values">Ошибка в величине базала</string>
-    <string name="error_in_target_values">Ошибка в целевых значениях</string>
-    <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
     <string name="run_question">Запустить %s?</string>
-    <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
-    <string name="view">Посмотреть</string>
-    <string name="errors">Ошибки</string>
     <string name="ns_sync_slow">Замедлить выгрузку</string>
     <string name="data_status">Состояние данных ГК</string>
     <string name="remove_bg_readings">Удалить значения ГК</string>
@@ -732,10 +705,6 @@
     <string name="a11y_insulin_label">инсулин</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови (ГК)</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
-    <string name="a11y_add_new_profile">добавить новый профиль</string>
-    <string name="a11y_clone_profile">клонировать текущий профиль</string>
-    <string name="a11y_delete_current_profile">удалить текущий профиль</string>
-    <string name="a11y_add_new_to_list">добавить новый в список</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Отменить врем цели?</string>
@@ -771,7 +740,6 @@
     <string name="app_default">По умолчанию приложения</string>
     <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
     <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
-    <string name="select_profile">Выберите профиль для изменения</string>
     <string name="refresh_from_nightscout">Обновить из Nightscout</string>
     <string name="remove_selected_items">Удалить выбранные элементы</string>
     <string name="select_for_removal">Выберите для удаления</string>
