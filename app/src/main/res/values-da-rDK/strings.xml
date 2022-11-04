@@ -195,7 +195,6 @@
     <string name="short_tabtitles">Forkort titel</string>
     <string name="always_use_shortavg">Brug altid kort gennemsnitlig delta i stedet for simpel delta</string>
     <string name="always_use_shortavg_summary">Nyttigt, når data fra ufiltrerede kilder som xDrip bliver støjende.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardværdi: 3 Dette er en vigtig OpenAPS sikkerhedsforanstaltning. Hvad dette gør, er at begrænse dine basaler til at være 3x din største basal rate. Du vil sandsynligvis ikke være nødt til at ændre dette, men du skal være opmærksom på, at det er hvad der er omtalt som “3x max dagligt; 4x aktuel” i sikkerhedsforanstaltningerne.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardværdi: 4 Dette er den anden halvdel af de vigtigste OpenAPS-sikkerhedsforanstaltninger, og den anden halvdel af \"3x maks. daglig, 4x aktuel\" i sikkerhedsforanstaltningerme. Det betyder, at din basal, uanset maks. basalrate på din pumpe, ikke kan være højere end dette antal gange det aktuelle niveau af din basal. Det er for at forhindre folk i at komme ind på et farligt område ved at opstille for høje maks basaler, før man forstår, hvordan algoritmen fungerer. Igen er standardværdien 4x; de fleste mennesker behøver aldrig at rette dette og i stedet være mere tilbøjelige til at tilpasse andre indstillinger, hvis de føler, at de er \"ved at løbe ind i\" denne sikkerhedsforanstaltning.</string>
     <string name="openapsama_autosens_max_summary">Standardværdi: 1.2\nDette er en multiplikator top for autosens (og snart autotune) for at angive en 20%% maks. grænse for, hvor høj autosens kan være, hvilket til gengæld bestemmer, hvor høj autosens kan tilpasse sig, hvor lav den kan justere ISF, og hvor lav den kan angive BG-målet.</string>
@@ -468,7 +467,6 @@
     <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
     <string name="food_short">Mad</string>
-    <string name="reset">nulstil</string>
     <string name="openapssmb_maxiob_title">Maks IOB OpenAPS ikke kan gå over [U]</string>
     <string name="openapssmb_maxiob_summary">Denne værdi kaldes Max IOB i OpenAPS kontekst\nOpenAPS vil ikke tilføje mere insulin, hvis den aktuelle IOB er større end denne værdi</string>
     <string name="absorption_cutoff_title">Måltid max absorptionstid [h]</string>
@@ -628,24 +626,7 @@
     <string name="profilenamecontainsdot">Profilnavn indeholder punktum.\nDette understøttes ikke af NS.\nProfilen er ikke uploadet til NS.</string>
     <string name="low_mark_comment">Nedre værdi for målområde (kun visning)</string>
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
-    <string name="age">Alder</string>
-    <string name="weight_label">Vægt</string>
-    <string name="id">ID:</string>
-    <string name="submit">Send</string>
-    <string name="mostcommonprofile">Mest almindelige profil:</string>
-    <string name="invalidage">Ugyldig angivelse af alder</string>
-    <string name="invalidweight">Ugyldig angivelse af vægt</string>
     <string name="invalidpct">Ugyldig angivelse af %</string>
-    <string name="average">Gennemsnit</string>
-    <string name="tir">Tid i målområde</string>
-    <string name="day_tir">Dags TIR</string>
-    <string name="night_tir">Nat TIR</string>
-    <string name="detailed_14_days">Detaljerede 14 dage</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Aktivitetsovervågning</string>
-    <string name="doyouwantresetstats">Ønsker du at nulstille aktivitetsstatistik?</string>
-    <string name="statistics">Statistikker</string>
     <string name="randombg">Tilfældigt BS</string>
     <string name="description_source_randombg">Generér tilfældige BS-data (kun demotilstand)</string>
     <string name="randombg_short">BG</string>
@@ -729,7 +710,6 @@
     <string name="ns_receive_therapy_events_summary">Accepter terapihændelser (Kanyle, insulin, batteriskift osv.), der indtastes gennem NS eller NSClient</string>
     <string name="ns_receive_cgm">Modtag/tilbagefyld CGM-data</string>
     <string name="ns_receive_cgm_summary">Accepter CGM-data fra NS</string>
-    <string name="calculation_in_progress">Beregning i gang</string>
     <string name="missing_profile_name">Manglende profilnavn</string>
     <string name="error_in_ic_values">Fejl i IC-værdier</string>
     <string name="error_in_basal_values">Fejl i basal rate værdier</string>
@@ -819,13 +799,6 @@
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sortér</string>
-    <string name="veryLow" comment="below 3.1">Meget lav</string>
-    <string name="low" comment="3.1-3.9">Lav</string>
-    <string name="high" comment="10.0-13.9">Høj</string>
-    <string name="veryHigh" comment="above 13.9">Meget høj</string>
-    <string name="below" comment="below &quot;in range&quot;">Under</string>
-    <string name="in_range">Inden for området</string>
-    <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop poster</string>
     <string name="show_hide_records">Skjul loop poster</string>
     <string name="loop_status">Loop status</string>
