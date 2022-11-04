@@ -191,7 +191,6 @@
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Utilizar sempre delta médio curto em vez de delta simples</string>
     <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como xDrip+.</string>
-    <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido pela OpenAPS. O que faz é limitar a basal a 3x a basal máxima. Se necessário modificar este valor, por favor tenha em conta que os dados apontam para que os limites de segurança sejam \"3 x máx diário ; 4 x valor atual\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor Sensibilidade à Insulina (FSI) e baixar o valor alvo de glicose no sangue.</string>
@@ -460,7 +459,6 @@
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
-    <string name="reset">repor</string>
     <string name="openapssmb_maxiob_title">Máximo total de IA que a OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Máx IA em contexto da OpenAPS\n A OpenAPS não adicionará mais insulina se a IA atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
@@ -609,17 +607,7 @@
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
-    <string name="mostcommonprofile">Perfil mais comum:</string>
-    <string name="invalidage">Entrada de idade inválida</string>
-    <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="average">Média</string>
-    <string name="tir">TIR</string>
-    <string name="activitymonitor">Monitor de actividade</string>
-    <string name="doyouwantresetstats">Quer reiniciar as estatísticas de actividade?</string>
-    <string name="statistics">Estatísticas</string>
     <string name="randombg">Glicose Aleatória</string>
     <string name="description_source_randombg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
     <string name="randombg_short">Glicose</string>
@@ -700,7 +688,6 @@
     <string name="ns_receive_therapy_events_summary">Aceitar tratamentos (catéter, insulina, mudança de bateria etc) inseridos através do NS ou NSCliente</string>
     <string name="ns_receive_cgm">Receber/preencher dados do MCG</string>
     <string name="ns_receive_cgm_summary">Aceitar dados do MCG provenientes do NS</string>
-    <string name="calculation_in_progress">Cálculo em curso</string>
     <string name="missing_profile_name">Nome do perfil ausente</string>
     <string name="error_in_ic_values">Erro nos valores de IHC</string>
     <string name="error_in_basal_values">Erro nos valores da basal</string>
