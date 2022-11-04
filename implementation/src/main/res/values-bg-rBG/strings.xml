@@ -18,4 +18,5 @@
     <string name="need_location_permission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
     <string name="need_storage_permission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
+    <!--       Stats -->
 </resources>
