@@ -117,4 +117,7 @@
     <string name="rapid_acting_oref">Быстро действующий Oref</string>
     <string name="dia_too_short">Значение времени действия инс %1$f слишком мало - применено %2$f!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
