@@ -201,7 +201,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="short_tabtitles">Raccourcir les titres des onglets</string>
     <string name="always_use_shortavg">Utiliser delta basé sur moyenne courte</string>
     <string name="always_use_shortavg_summary">Utile lorsque les données provenant de sources non filtrées comme xDrip+ deviennent incohérentes.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
     <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20% en limite maximale du ratio Autosens. En consequence, ceci va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI), et la valeur minimale de la cible glycémique.</string>
@@ -475,7 +474,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smbalwaysdisabled">SMB toujours et post-ingestion de glucides désactivé car la source de glycémies actuelle ne supporte pas de filtrage avancé</string>
     <string name="smbnotallowedinopenloopmode">SMB non autorisé en mode Boucle Ouverte</string>
     <string name="food_short">Aliments</string>
-    <string name="reset">réinitialiser</string>
     <string name="openapssmb_maxiob_title">IA totale maximale pour OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contaxte OpenAPS\nOpenAPS n’ajoutera pas plus d’insuline si l\'IA (Insuline Active) actuelle est supérieure à cette valeur</string>
     <string name="absorption_cutoff_title">Durée maximale d’absorption pour un repas [h]</string>
@@ -641,25 +639,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profilenamecontainsdot">Le nom du profil contient des points.\nCe n\'est pas pris en charge par NS.\nLe profil n\'est pas remonté dans NS.</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
-    <string name="age">Âge </string>
-    <string name="weight_label">Poids </string>
-    <string name="id">ID :</string>
-    <string name="submit">Envoyer</string>
-    <string name="mostcommonprofile">Profil le plus courant :</string>
-    <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour obtenir le résultat \"temps dans la cible\". Votre aide est appréciée.</string>
-    <string name="invalidage">Âge invalide</string>
-    <string name="invalidweight">Poids invalide</string>
     <string name="invalidpct">% saisi invalide</string>
-    <string name="average">Moyenne</string>
-    <string name="tir">Cible Gly</string>
-    <string name="day_tir">TIR Jour</string>
-    <string name="night_tir">TIR Nuit</string>
-    <string name="detailed_14_days">Détail de 14 jours</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c : </string>
-    <string name="activitymonitor">Moniteur d\'activité</string>
-    <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
-    <string name="statistics">Statistiques</string>
     <string name="randombg">Gly Aléatoire</string>
     <string name="description_source_randombg">Générer des glycémies aléatoires (mode démo uniquement)</string>
     <string name="randombg_short">Gly</string>
@@ -744,7 +724,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_receive_therapy_events_summary">Accepter les événements de thérapie (canule, insuline, changement de batterie, etc.) entrés via NS ou NSClient</string>
     <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
     <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
-    <string name="calculation_in_progress">Calcul en cours</string>
     <string name="missing_profile_name">Nom de profil manquant</string>
     <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
     <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
@@ -834,13 +813,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
-    <string name="veryLow" comment="below 3.1">Très bas</string>
-    <string name="low" comment="3.1-3.9">Bas</string>
-    <string name="high" comment="10.0-13.9">Haut</string>
-    <string name="veryHigh" comment="above 13.9">Très haut</string>
-    <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
-    <string name="in_range">Dans la cible</string>
-    <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
     <string name="loop_status">État de la boucle</string>
