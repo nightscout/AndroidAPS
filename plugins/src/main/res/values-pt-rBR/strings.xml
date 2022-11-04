@@ -105,15 +105,63 @@
     <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
     <!-- Food-->
+    <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
+    <string name="filter">Filtros</string>
+    <string name="food">Alimentos</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Gor</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Subcategoria</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Esquema de cores do aplicativo</string>
+    <string name="dark_theme">Tema escuro</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="follow_system_theme">Usar tema do dispositivo</string>
     <!-- Profile -->
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
+    <string name="a11y_add_new_to_list">adicionar novo à lista</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="missing_profile_name">Nome do perfil ausente</string>
+    <string name="error_in_ic_values">Erro nos valores de I:C</string>
+    <string name="error_in_basal_values">Erro nos valores da basal</string>
+    <string name="error_in_target_values">Erro nos valores de alvo</string>
+    <string name="error_in_isf_values">Erro nos valores de FSI</string>
+    <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceito do NS</string>
+    <string name="view">Visualização</string>
+    <string name="select_profile">Selecione um perfil para editar</string>
+    <string name="profile_name">Nome do Perfil:</string>
+    <string name="a11y_add_new_profile">adicionar novo perfil</string>
+    <string name="a11y_clone_profile">clonar perfil atual</string>
+    <string name="a11y_delete_current_profile">excluir perfil atual</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">FSI</string>
+    <string name="target_short">ALV</string>
+    <string name="clone_label">Clonar</string>
+    <string name="basal_short">BAS</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Dados recalculados foram utilizados</string>
+    <string name="bg_too_close">Glicemia muito próxima:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculada</string>
+    <string name="a11y_bg_quality_doubles">entradas duplicadas</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
+    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Closed Loop desligado</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">versão antiga</string>
+    <string name="very_old_version">versão muito antiga</string>
+    <string name="application_expired">Aplicativo expirou</string>
+    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a LGS após %2$d dias, o loop será desativado após %3$d dias</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="not_completed_yet">Incompleto</string>
+    <string name="time_elapsed">Tempo decorrido</string>
     <!-- Overview -->
 </resources>
