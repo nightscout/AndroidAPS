@@ -116,6 +116,10 @@
     <string name="pumpsuspended">משאבה מושהית</string>
     <string name="notconfigured">לא מוגדר</string>
     <string name="loopsuspended">לולאה מושהית</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">הסר</string>
+    <string name="activate_profile">הפעלת פרופיל</string>
+    <string name="reset">איפוס</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
