@@ -21,7 +21,6 @@
     <string name="description_smb">Najnowszy algorytm dla zaawansowanych użytkowników</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
-    <string name="description_profile_local">Zdefiniuj profil, który jest dostępny offline.</string>
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
     <string name="description_sensitivity_oref1">Wrażliwość oblicza się na podstawie danych z ostatnich 8 lub 24 godzin (przy użyciu danych o wyższej wrażliwości). Węglowodany (jeśli nie są wchłonięte) są skracane po upływie czasu określonego w ustawieniach. Wtyczka również oblicza UAM.</string>
@@ -81,7 +80,6 @@
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
     <string name="overview_treatment_label">Terapia</string>
-    <string name="overview_calculator_label">Kalkulator</string>
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
     <string name="xdrip">xDrip+</string>
@@ -151,7 +149,6 @@
     <string name="button1">Przycisk 1</string>
     <string name="button2">Przycisk 2</string>
     <string name="button3">Przycisk 3</string>
-    <string name="units_colon">Jednostki:</string>
     <string name="units">Jednostki</string>
     <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
     <string name="prefs_range_summary">Oznaczenia wysokiego i niskiego cukru na wykresie w oknie przegląd i na smartwatch\'u</string>
@@ -164,7 +161,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Lista %1$d elementów.\n Bieżąca wartość:</string>
     <string name="openapsma_autosensdata_label">Dane Autosens</string>
@@ -176,7 +172,6 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="treatments_shortname">TREAT</string>
@@ -303,7 +298,6 @@
     <string name="absorption_maxtime_summary">Oczekiwany czas w godzinach, w którym wszystkie węglowodany zostają wchłonięte</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Utrzymuj ekran włączony</string>
     <string name="keep_screen_on_summary">Nie pozwól, aby system Android wyłączał ekran. Zwiększy to zużycie energii, gdy zasilanie sieciowe jest wyłączone.</string>
     <string name="sensitivity_warning">Przy włączonej funkcji Autosens pamiętaj, żeby wprowadzać wszystkie węglowodany. W innym wypadku odchylenia węglowodanów będą błędnie identyfikowane jako zmiany wrażliwości !!</string>
@@ -316,7 +310,6 @@
     <string name="enablesmb">Włącz SMB</string>
     <string name="enablesmb_summary">Używaj SMB (Super Mikro Bolusów) zamiast bazy tymczasowej dla szybszego działania </string>
     <string name="enableuam_summary">Detekcja niezapowiedzianych posiłków (UAM)</string>
-    <string name="activate_profile">Aktywuj profil</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="careportal_newnstreatment_percentage_label">Procent</string>
     <string name="careportal_newnstreatment_timeshift_label">Zmiana czasu</string>
@@ -406,8 +399,6 @@
     <string name="g5appnotdetected">Proszę uaktualnij swoją Apkę Dexcom do wersji wspieranej</string>
     <string name="dexcom_app_not_installed">Apka Dexcom nie jest zainstalowana.</string>
     <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
-    <string name="category">Kategoria</string>
-    <string name="subcategory">Podkategoria</string>
     <string name="bolusrecordedonly">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
     <string name="overview_show_activity">Aktywność</string>
@@ -569,23 +560,13 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Nazwa profilu:</string>
     <string name="selected_profile">Wybrany:</string>
     <string name="unitsnosemicolon">Jednostki</string>
-    <string name="doyouwantswitchprofile">Czy chcesz przełączyć profil i porzucić zmiany wprowadzone w bieżącym profilu?</string>
     <string name="objectives_button_unfinish">Wyczyść skończone</string>
     <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="setupwizard_units_prompt">Wybierz jednostki, w których chcesz wyświetlać wartości</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">CEL</string>
-    <string name="clone_label">Sklonuj</string>
-    <string name="saveorresetchangesfirst">Najpierw zapisz lub wycofaj bieżące zmiany</string>
-    <string name="deletecurrentprofile">Skasować bieżący profil?</string>
     <string name="copytolocalprofile">Utworzyć nowy profil na bazie wybranego profilu?</string>
-    <string name="profilenamecontainsdot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
     <string name="low_mark_comment">Dolna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="high_mark_comment">Górna wartość zakresu docelowego (tylko do wyświetlania)</string>
     <string name="invalidpct">Nieprawidłowa wartość procentowa</string>
@@ -669,15 +650,7 @@
     <string name="ns_receive_therapy_events_summary">Akceptuj zdarzenia związane z leczeniem (kaniula, insulina, zmiana baterii itp.) wprowadzone przez NS lub NSClient</string>
     <string name="ns_receive_cgm">Odbieraj/uzupełnij dane CGM</string>
     <string name="ns_receive_cgm_summary">Akceptuj dane CGM z NS</string>
-    <string name="missing_profile_name">Brak nazwy profilu</string>
-    <string name="error_in_ic_values">Błąd w przelicznikach IC</string>
-    <string name="error_in_basal_values">Błąd w wartościach bazy</string>
-    <string name="error_in_target_values">Błąd w wartościach docelowych</string>
-    <string name="error_in_isf_values">Błąd w wartościach ISF</string>
     <string name="run_question">Uruchomić %s?</string>
-    <string name="invalid_profile_not_accepted">Błędny profil %1$s nie został zaakceptowany z NS</string>
-    <string name="view">Podgląd</string>
-    <string name="errors">Błędy</string>
     <string name="ns_sync_slow">Wysyłaj dane wolniej</string>
     <string name="data_status">Stan danych glikemii</string>
     <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
