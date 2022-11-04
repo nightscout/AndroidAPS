@@ -13,5 +13,11 @@
     <string name="remind_to_bolus_later">Напомни за болус по-късно</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="statistics">Статистика</string>
+    <string name="calculation_in_progress">Калкулация в прогресс</string>
+    <string name="id">Номер:</string>
+    <string name="submit">Изпрати</string>
+    <string name="age">Възраст</string>
+    <string name="weight_label">Тегло</string>
     <!-- CareDialog -->
 </resources>
