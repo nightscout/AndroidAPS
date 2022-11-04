@@ -84,6 +84,8 @@
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
+    <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
+    <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -228,6 +230,9 @@
     <string name="tir">TIR</string>
     <string name="tdd_total">TDD Total</string>
     <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">REMOVE</string>
+    <string name="activate_profile">Activate profile</string>
+    <string name="reset">reset</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
