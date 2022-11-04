@@ -200,7 +200,6 @@
     <string name="short_tabtitles">Kısa sekme başlıkları</string>
     <string name="always_use_shortavg">Her zaman basit delta yerine kısa ortalama delta kullan</string>
     <string name="always_use_shortavg_summary">xDrip+ gibi filtrelenmemiş kaynaklardan gelen veriler gürültülü olduğunda kullanışlıdır.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3 Bu OpenAPS için önemli bir güvenlik ayarıdır. Maksimum bazal Iob\'u, en büyük bazal oranınızın üç katı (varsayılan olarak) ile sınırlar. Genel olarak, bu değeri değiştirmemelisiniz. Ama \"3x max günlük, 4x şuan\" ın bir güvenlik ayarı olarak ne anlama geldiğini bilmelisiniz.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
     <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nOtoduyarlılık (yakında otoayar) çarpanı. Varsayılan değere %20 maksimum limit atamak, otoduyarlılığın bazalları ne kadar yüksek ayarlayabileceğini, ISF ve KŞ hedefini de ne kadar düşük ayarlayabileceğini belirler.</string>
@@ -475,7 +474,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smbalwaysdisabled">Aktif KŞ kaynağı gelişmiş filtrelemeyi desteklemediği için SMB (Super Micro Bolus) her zaman ve karbonhidratlardan sonra devre dışı bırakıldı</string>
     <string name="smbnotallowedinopenloopmode">Açık Döngü modunda SMB\'ye (Super Micro Bolus) izin verilmiyor</string>
     <string name="food_short">Yiyecek</string>
-    <string name="reset">sıfırla</string>
     <string name="openapssmb_maxiob_title">OpenAPS tarafından aşılamayacak maksimum toplam AİNS (Aktif İnsülin)[U]</string>
     <string name="openapssmb_maxiob_summary">Bu değer OpenAPS bağlamında Max AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez</string>
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
@@ -641,25 +639,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="profilenamecontainsdot">Profil adı noktalar içeriyor.\nBu NS tarafından desteklenmiyor.\n Profil NS\'a yüklenmez.</string>
     <string name="low_mark_comment">Aralıktan daha düşük değer (sadece görüntüle)</string>
     <string name="high_mark_comment">Aralıktan daha yüksek değer (Sadece görüntüle)</string>
-    <string name="age">Yaş</string>
-    <string name="weight_label">Ağırlık</string>
-    <string name="id">Kimlik:</string>
-    <string name="submit">Sunum</string>
-    <string name="mostcommonprofile">En yaygın profil:</string>
-    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
-    <string name="invalidage">Geçersiz yaş girişi</string>
-    <string name="invalidweight">Geçersiz ağırlık girişi</string>
     <string name="invalidpct">Geçersiz % giriş</string>
-    <string name="average">Ortalama</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">Gündüz TIR</string>
-    <string name="night_tir">Gece TIR</string>
-    <string name="detailed_14_days">Ayrıntılı 14 gün</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Aktivite monitörü</string>
-    <string name="doyouwantresetstats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
-    <string name="statistics">İstatistikler</string>
     <string name="randombg">Rastgele KŞ</string>
     <string name="description_source_randombg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
     <string name="randombg_short">KŞ</string>
@@ -745,7 +725,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_receive_therapy_events_summary">NS veya NSClient aracılığıyla girilen tedavi olaylarını (kanül, insülin, pil değişimi vb.) kabul edin</string>
     <string name="ns_receive_cgm">SGİ (CGM) verilerini alma/doldurma</string>
     <string name="ns_receive_cgm_summary">NS\'tan SGİ (CGM) verilerini kabul edin</string>
-    <string name="calculation_in_progress">Hesaplanıyor</string>
     <string name="missing_profile_name">Profil adı eksik</string>
     <string name="error_in_ic_values">IC değerinde hata</string>
     <string name="error_in_basal_values">Bazal değerlerde hata</string>
@@ -835,13 +814,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
-    <string name="veryLow" comment="below 3.1">Çok düşük</string>
-    <string name="low" comment="3.1-3.9">Düşük</string>
-    <string name="high" comment="10.0-13.9">Yüksek</string>
-    <string name="veryHigh" comment="above 13.9">Çok yüksek</string>
-    <string name="below" comment="below &quot;in range&quot;">Altında</string>
-    <string name="in_range">Aralık içinde</string>
-    <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
     <string name="show_loop_records">Döngü kayıtlarını göster</string>
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <string name="loop_status">Döngü durumu</string>
