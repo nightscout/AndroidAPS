@@ -49,4 +49,7 @@
     <string name="description_insulin_lyumjev">Unapred podešena postavka insulina za Lyumjev</string>
     <string name="description_insulin_free_peak">Omogućava definisanje vrhunca aktivnosti insulina i trebaju ga koriste samo napredni korisnici</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
