@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
     <string name="description_treatments">Lagre data om alle behandlinger som er utført</string>
     <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
-    <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Karbo:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åpen Loop</string>
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
-    <string name="disabledloop">Loop er deaktivert</string>
     <string name="openloop_newsuggestion">Ny anbefaling tilgjengelig</string>
     <string name="carbssuggestion">Karbo forslag</string>
     <string name="unsupportednsversion">Versjonen av Nightscout støttes ikke</string>
@@ -231,8 +229,6 @@
     <string name="clearlog">Tøm logg</string>
     <string name="nowritepermission">NSCLIENT har ingen skriverettighet. Feil API-nøkkel?</string>
     <string name="wear_settings">Klokkeinnstillinger</string>
-    <string name="wear_detailedIOB_title">Vis detaljert IOB</string>
-    <string name="wear_detailedIOB_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="nosuccess">feilet - sjekk telefonen</string>
     <string name="patientage">Pasienttype</string>
     <string name="child">Barn</string>
@@ -294,11 +290,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
-    <string name="xdripstatus_settings">xDrip+ Status (klokke)</string>
-    <string name="xdripstatus">xDrip+ Statuslinje (klokke)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Vis BGI</string>
-    <string name="wear_showbgi_summary">Legg til BGI i statuslinje</string>
     <string name="overview_extendedbolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
     <string name="careportal_sensor_label">Sensor</string>
