@@ -126,7 +126,7 @@
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="value_unavailable_short">indisponible</string>
+    <string name="value_unavailable_short">n/d</string>
     <string name="required">requis</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
@@ -301,7 +301,6 @@
     <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Vérificateur de signature</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
     <string name="version_expire">La version %1$s expire le %2$s</string>
