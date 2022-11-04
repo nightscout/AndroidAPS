@@ -35,7 +35,6 @@
     <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
     <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
     <string name="description_treatments">Sla alle behandelingen op</string>
-    <string name="description_xdrip_status_line">Toon informatie over de Loop op jouw xDrip+ wijzerplaat.</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Koolhydraten:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -93,7 +92,6 @@
     <string name="closedloop">Closed loop</string>
     <string name="openloop">Open loop</string>
     <string name="lowglucosesuspend">Stop bij laag</string>
-    <string name="disabledloop">Loop gedeactiveerd</string>
     <string name="openloop_newsuggestion">Nieuw voorstel beschikbaar</string>
     <string name="carbssuggestion">Koolhydraten Voorstel</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
@@ -226,8 +224,6 @@
     <string name="clearlog">Logboek wissen</string>
     <string name="nowritepermission">NSCLIENT heeft geen schrijfrechten. Verkeerde API secret?</string>
     <string name="wear_settings">Wear instellingen</string>
-    <string name="wear_detailedIOB_title">Toon gedetailleerde IOB</string>
-    <string name="wear_detailedIOB_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="nosuccess">Niet geslaagd - controleer de telefoon</string>
     <string name="patientage">Type patiënt</string>
     <string name="child">Kind</string>
@@ -289,11 +285,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Over</string>
     <string name="smscommunicator_missingphonestatepermission">Machtiging ontbreekt voor telefoon gebruik</string>
-    <string name="xdripstatus_settings">xDrip+ Status (horloge)</string>
-    <string name="xdripstatus">xDrip+ Statuslijn (horloge)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Toon BGI</string>
-    <string name="wear_showbgi_summary">Voeg BGI toe aan status lijn</string>
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="careportal_sensor_label">Sensor</string>
