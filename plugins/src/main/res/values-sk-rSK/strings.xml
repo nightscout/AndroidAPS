@@ -115,9 +115,36 @@
     <string name="insulin_peak">Vrchol</string>
     <string name="free_peak_oref">Voliteľný vrchol - Oref</string>
     <string name="rapid_acting_oref">Rýchlo pôsobiaci - Oref</string>
+    <string name="ultra_rapid_oref">Ultra rýchly - Oref</string>
     <string name="dia_too_short">DIA %1$f je príliš krátke - AAPS namiesto toho použilo %2$f !</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="xdrip_status">Stavový riadok xDrip+ (hodinky)</string>
+    <string name="xdrip_status_shortname">XDS</string>
+    <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
+    <string name="xdrip_status_detailed_iob_title">Zobraziť detailný IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
+    <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
+    <string name="xdrip_status_show_bgi_title">Zobrazovať BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Pridať BGI do stavového riadku</string>
+    <string name="xdrip_status_settings">Stav z xDrip+ (hodinky)</string>
     <!-- Food-->
+    <string name="food_short">Jedlo</string>
+    <string name="description_food">Zobrazenie prednastavených jedál, definovaných v Nightscoute</string>
+    <string name="filter">Filter</string>
+    <string name="food">Jedlo</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Tuk</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher">Prepínač tém</string>
+    <string name="theme_switcher_summary">Vyber tmavú, svetlú, alebo systémovú tému</string>
+    <string name="app_color_scheme">Farebná schéma</string>
+    <string name="dark_theme">Tmavá téma</string>
+    <string name="light_theme">Svetlá téma</string>
+    <string name="follow_system_theme">Použiť tému zariadenia</string>
+    <!-- Profile -->
 </resources>
