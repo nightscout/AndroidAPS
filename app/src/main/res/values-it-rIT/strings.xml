@@ -36,7 +36,6 @@
     <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
     <string name="description_treatments">Salva tutti i trattamenti che sono stati fatti</string>
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
-    <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -98,7 +97,6 @@
     <string name="closedloop">Loop chiuso</string>
     <string name="openloop">Loop aperto</string>
     <string name="lowglucosesuspend">Sospensione a glicemia bassa (LGS)</string>
-    <string name="disabledloop">Loop disabilitato</string>
     <string name="openloop_newsuggestion">Nuovo suggerimento disponibile</string>
     <string name="carbssuggestion">Suggerimento CHO</string>
     <string name="unsupportednsversion">Versione non supportata di Nightscout</string>
@@ -231,8 +229,6 @@
     <string name="clearlog">Cancella log</string>
     <string name="nowritepermission">NSCLIENT non ha l\'autorizzazione di scrittura. API secret errato?</string>
     <string name="wear_settings">Impostazioni smartwatch</string>
-    <string name="wear_detailedIOB_title">Mostra IOB dettagliato</string>
-    <string name="wear_detailedIOB_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="nosuccess">non riuscito - controlla il telefono</string>
     <string name="patientage">Tipo paziente</string>
     <string name="child">Bambino</string>
@@ -294,11 +290,6 @@
     <string name="devslope_shortname">PENDEV</string>
     <string name="nav_about">Informazioni su</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
-    <string name="xdripstatus_settings">Stato xDrip+ (smartwatch)</string>
-    <string name="xdripstatus">Statusline xDrip+ (smartwatch)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Mostra BGI</string>
-    <string name="wear_showbgi_summary">Aggiungi BGI alla statusline</string>
     <string name="overview_extendedbolus_cancel_button">Cancella bolo esteso</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_sensor_label">Sensore</string>
