@@ -200,7 +200,6 @@
     <string name="short_tabtitles">Nombres cortos en pestañas</string>
     <string name="always_use_shortavg">Usar siempre el delta medio corto, en lugar del delta simple</string>
     <string name="always_use_shortavg_summary">Útil cuando los datos de fuentes sin filtrar como los de xDrip+ son inestables</string>
-    <string name="profile">Perfiles</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor predeterminado: 3. Este valor es una protección de seguridad clave de OpenAPS. Limita la basal máxima que puede usar AAPS a un máximo de tres veces tu basal. Probablemente nunca necesites modificar este valor. Antes de modificarlo deberías tener en cuenta las discusiones sobre \"3x máx diaria; 4x actual\" por motivos de seguridad</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor predeterminado: 4. Esta es la otra mitad de los ajustes de seguridad de OpenAPS y de \"3x máx diaria, 4x actual\". Esto significa que tu basal, independientemente del valor de basal máxima que tengas configurado en la bomba, nunca podrá superar este valor multiplicado por tu basal actual. Esto se usa para evitar que las personas se encuentren en situaciones peligrosas por aumentar excesivamente la basal, sin entender como funciona el algoritmo. La mayoría de las personas nunca tendrán que cambiar estos valores. Si estás cerca de alcanzar éstos límites, deberías de ajustar otras configuraciones</string>
     <string name="openapsama_autosens_max_summary">Valor predeterminado: 1.2\nEste parámetro establece un límite de seguridad máximo por defecto del 20% en autosens (y pronto en Autotune), que limita los valores máximos que puede: aumentar las basales, disminuir el factor de sensibilidad (ISF) y disminuir el objetivo de glucosa</string>
@@ -474,7 +473,6 @@
     <string name="smbalwaysdisabled">SMB siempre y tras carbohidratos deshabilitados porque la fuente activa de glucosa no admite filtro avanzado</string>
     <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de lazo abierto</string>
     <string name="food_short">Comida</string>
-    <string name="reset">reestablecer</string>
     <string name="openapssmb_maxiob_title">Máximo IOB total que OpenAPS no puede superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor se denomina \"Max IOB\", en el contexto de OpenAPS\nOpenAPS no podrá superar esta cantidad de insulina activa (IOB)</string>
     <string name="absorption_cutoff_title">Tiempo máximo de absorción de la comida [h]</string>
@@ -640,25 +638,7 @@
     <string name="profilenamecontainsdot">El nombre de perfil contiene puntos.\nEsto no está soportado por NS.\nEl perfil no se carga en NS.</string>
     <string name="low_mark_comment">Valor de glucosa baja (sólo visualización)</string>
     <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
-    <string name="age">Edad</string>
-    <string name="weight_label">Peso</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
-    <string name="mostcommonprofile">Perfil más común:</string>
-    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
-    <string name="invalidage">Entrada de edad no válida</string>
-    <string name="invalidweight">Peso no válido</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="average">Promedio</string>
-    <string name="tir">Tiempo en rango</string>
-    <string name="day_tir">TIR Diurno</string>
-    <string name="night_tir">TIR Nocturno</string>
-    <string name="detailed_14_days">Datos detallados de 14 días</string>
-    <string name="std_deviation">Desviación estándar: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Monitor de actividad</string>
-    <string name="doyouwantresetstats">¿Desea restablecer las estadísticas de actividad?</string>
-    <string name="statistics">Estadísticas</string>
     <string name="randombg">Glucosa aleatoria</string>
     <string name="description_source_randombg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
     <string name="randombg_short">Glucosa</string>
@@ -742,7 +722,6 @@
     <string name="ns_receive_therapy_events_summary">Aceptar registros de terapia (cánula, insulina, cambios de batería, etc.) añadidos mediante Nightscout o NSClient</string>
     <string name="ns_receive_cgm">Recibir/Rellenar datos del MCG</string>
     <string name="ns_receive_cgm_summary">Aceptar valores MCG desde Nightscout</string>
-    <string name="calculation_in_progress">Cálculo en curso</string>
     <string name="missing_profile_name">Falta el nombre de perfil</string>
     <string name="error_in_ic_values">Error en valores IC</string>
     <string name="error_in_basal_values">Error en valores basales</string>
@@ -832,13 +811,6 @@
     <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
-    <string name="veryLow" comment="below 3.1">Muy bajo</string>
-    <string name="low" comment="3.1-3.9">Bajo</string>
-    <string name="high" comment="10.0-13.9">Alto</string>
-    <string name="veryHigh" comment="above 13.9">Muy alto</string>
-    <string name="below" comment="below &quot;in range&quot;">Bajo</string>
-    <string name="in_range">En rango</string>
-    <string name="above" comment="above &quot;in range&quot;">Alto</string>
     <string name="show_loop_records">Mostrar registros del lazo</string>
     <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="loop_status">Estado del lazo</string>
