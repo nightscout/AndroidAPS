@@ -16,7 +16,6 @@
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
     <string name="description_objectives">Leerprogramma</string>
-    <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
     <string name="description_ama">Het algoritme uit 2017</string>
@@ -96,12 +95,8 @@
     <string name="carbssuggestion">Koolhydraten Voorstel</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
-    <string name="careportal_newnstreatment_other">Andere</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">KH tijdsduur</string>
     <string name="profile_label">Profiel</string>
-    <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
@@ -341,12 +336,6 @@
     <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
-    <string name="food">Voeding</string>
-    <string name="none"><![CDATA[<geen>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Prot</string>
-    <string name="shortfat">Vet</string>
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
     <string name="gradually_increase_notification_volume">Volume van notificaties en meldingen geleidelijk verhogen</string>
     <string name="localalertsettings_title">Lokaal gegenereerde waarschuwingen</string>
@@ -457,7 +446,6 @@
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
     <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
-    <string name="food_short">Voeding</string>
     <string name="openapssmb_maxiob_title">Max totaal IOB dat OpenAPS niet kan overschrijden [E]</string>
     <string name="openapssmb_maxiob_summary">Deze waarde heet MAX IOB in OpenAPS context\nOpenAPS zal geen extra insuline toedienen als de actuele IOB onderstaande waarde overschreden heeft</string>
     <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
@@ -660,7 +648,6 @@
     <string name="basalpctfromtdd_label">% van basaal</string>
     <string name="dpvdefaultprofile">DPV Basis profiel</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink Status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Kan profiel niet aanmaken. Profiel is ongeldig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
@@ -736,12 +723,6 @@
     <string name="a11y_clone_profile">huidig profiel dupliceren</string>
     <string name="a11y_delete_current_profile">huidig profiel verwijderen</string>
     <string name="a11y_add_new_to_list">nieuwe toevoegen aan lijst</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Kies donker, licht of volg het systeemthema</string>
-    <string name="app_color_scheme">Kleurenschema</string>
-    <string name="dark_theme">Donker thema</string>
-    <string name="light_theme">Licht thema</string>
-    <string name="follow_system_theme">Gebruik apparaat thema</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Tijdelijke doel onbekende preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
