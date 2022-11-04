@@ -100,4 +100,7 @@
     <string name="rapid_acting_oref">速效 Oref</string>
     <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
