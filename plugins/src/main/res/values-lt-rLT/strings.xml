@@ -99,4 +99,7 @@
     <string name="rapid_acting_oref">Greito veikimo Oref</string>
     <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
