@@ -68,7 +68,6 @@
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
-    <string name="description_food">Displays the food presets defined in Nightscout</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ama">State of the algorithm in 2017</string>
@@ -88,7 +87,6 @@
     <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
     <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
-    <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -149,18 +147,13 @@
     <string name="apsmode_title">APS Mode</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
-   <string name="lowglucosesuspend">Low Glucose Suspend</string>
-    <string name="disabledloop">Loop Disabled</string>
+    <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">Other</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Carb time</string>
     <string name="profile_label">Profile</string>
-    <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
@@ -290,8 +283,6 @@
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
     <string name="nowritepermission">NSCLIENT has no write permission. Wrong API secret?</string>
     <string name="wear_settings">Wear settings</string>
-    <string name="wear_detailedIOB_title">Show detailed IOB</string>
-    <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="nosuccess">not successful - please check phone</string>
     <string name="patientage">Patient type</string>
     <string name="child">Child</string>
@@ -370,11 +361,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="xdripstatus_settings">xDrip+ Status (watch)</string>
-    <string name="xdripstatus">xDrip+ Statusline (watch)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Show BGI</string>
-    <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -443,12 +429,6 @@
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
-    <string name="food">Food</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Fat</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
@@ -586,7 +566,6 @@
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
-    <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
@@ -808,8 +787,6 @@
     <string name="show_calculation">Show calcuation</string>
     <string name="show_removed">Show removed</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
-    <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
-    <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
     <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
@@ -854,7 +831,6 @@
     <string name="basalpctfromtdd_label">% of basal</string>
     <string name="dpvdefaultprofile">DPV Default profile</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
