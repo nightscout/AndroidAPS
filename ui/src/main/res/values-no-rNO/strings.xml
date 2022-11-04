@@ -17,5 +17,12 @@
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="statistics">Statistikk</string>
+    <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="id">ID:</string>
+    <string name="submit">Lagre</string>
+    <string name="age">Alder</string>
+    <string name="weight_label">Vekt</string>
+    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
     <!-- CareDialog -->
 </resources>
