@@ -200,7 +200,6 @@
     <string name="short_tabtitles">Accorcia titoli schede</string>
     <string name="always_use_shortavg">Usa sempre il delta medio ridotto</string>
     <string name="always_use_shortavg_summary">Utile quando i dati provenienti da sorgenti non filtrate come xDrip+ diventano \"rumorosi\" (instabili).</string>
-    <string name="profile">Profilo</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">[Valore predefinito: 3] Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare le tue basali a essere 3 volte, al più, la tua velocità basale massima. Probabilmente non avrai bisogno di cambiare questo valore, ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">[Valore predefinito: 4] Questo è un ulteriore parametro di sicurezza chiave in OpenAPS. La tua basale temporanea, indipendentemente dalla basale massima impostata sul micro, non può mai essere più alta di questo valore moltiplicato per la tua basale corrente in ogni specifico momento. Questo serve a impedire alle persone di addentrarsi in \"territori pericolosi\" impostando basali massime eccessivamente alte prima di aver capito come funziona l\'algoritmo. Ancora una volta, il valore predefinito è 4x; la maggior parte delle persone non avrà bisogno di modificare questo valore e avrà, invece, maggiori probabilità di dover regolare altre impostazioni se ha la sensazione di \"scontrarsi\" con questo limite di sicurezza.</string>
     <string name="openapsama_autosens_max_summary">[Valore predefinito: 1.2]\nQuesto è un moltiplicatore di sicurezza per autosens (e presto autotune) per impostare un limite massimo del 20%% (col valore predefinito) su quanto alto può essere il rapporto di autosens, che a sua volta determina quanto in alto autosens può regolare le basali, quanto in basso può regolare ISF e quanto in basso può impostare il target glicemico.</string>
@@ -474,7 +473,6 @@
     <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
     <string name="smbnotallowedinopenloopmode">SMB non consentito in modalità loop aperto</string>
     <string name="food_short">Cibo</string>
-    <string name="reset">reset</string>
     <string name="openapssmb_maxiob_title">Max IOB totale a cui limitare OpenAPS [U]</string>
     <string name="openapssmb_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se IOB corrente è maggiore di questo valore</string>
     <string name="absorption_cutoff_title">Max tempo assorbimento pasto [h]</string>
@@ -640,25 +638,7 @@
     <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
-    <string name="age">Età</string>
-    <string name="weight_label">Peso</string>
-    <string name="id">ID:</string>
-    <string name="submit">Invia</string>
-    <string name="mostcommonprofile">Profilo più comune:</string>
-    <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati (in modo anonimo). Un ID è assegnato a questa installazione di AAPS. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
-    <string name="invalidage">Inserimento età non valido</string>
-    <string name="invalidweight">Inserimento peso non valido</string>
     <string name="invalidpct">Inserimento % non valido</string>
-    <string name="average">Media</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">TIR giorno</string>
-    <string name="night_tir">TIR notte</string>
-    <string name="detailed_14_days">Dettaglio 14 giorni</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Monitor attività</string>
-    <string name="doyouwantresetstats">Vuoi resettare le statistiche sull\'attività?</string>
-    <string name="statistics">Statistiche</string>
     <string name="randombg">BG casuale</string>
     <string name="description_source_randombg">Genera dati glicemia casuali (solo modalità demo)</string>
     <string name="randombg_short">BG</string>
@@ -742,7 +722,6 @@
     <string name="ns_receive_therapy_events_summary">Accetta eventi terapia (cambio cannula, insulina, batteria, ecc.) inseriti tramite NS o NSClient</string>
     <string name="ns_receive_cgm">Ricevi/riempi dati CGM</string>
     <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
-    <string name="calculation_in_progress">Calcolo in corso</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
     <string name="error_in_basal_values">Errore nei valori della basale</string>
@@ -832,13 +811,6 @@
     <string name="show_loop">Mostra loop</string>
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
-    <string name="veryLow" comment="below 3.1">Molto basso</string>
-    <string name="low" comment="3.1-3.9">Basso</string>
-    <string name="high" comment="10.0-13.9">Alto</string>
-    <string name="veryHigh" comment="above 13.9">Molto alto</string>
-    <string name="below" comment="below &quot;in range&quot;">Sotto</string>
-    <string name="in_range">In range</string>
-    <string name="above" comment="above &quot;in range&quot;">Sopra</string>
     <string name="show_loop_records">Mostra record di loop</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <string name="loop_status">Stato loop</string>
