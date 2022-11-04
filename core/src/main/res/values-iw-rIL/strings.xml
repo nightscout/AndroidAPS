@@ -274,7 +274,6 @@
     <string name="prefdecrypt_issue_wrong_format">תצורת הצפנה חסרה, פורמט ההגדרות אינו חוקי!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">אלגוריתם ההצפנה לא צוין או שלא נתמך!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">מאמת חתימה</string>
     <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה לא תקפה. הלולאה מושבתת!</string>
     <string name="versionavailable">גרסה %1$s זמינה</string>
     <string name="version_expire">גרסה: %1$s תפוג תוקפה: %2$s</string>
