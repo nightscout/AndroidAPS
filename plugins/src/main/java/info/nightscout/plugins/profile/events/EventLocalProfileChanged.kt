@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.profile.local.events
+package info.nightscout.plugins.profile.events
 
 import info.nightscout.androidaps.events.Event
 

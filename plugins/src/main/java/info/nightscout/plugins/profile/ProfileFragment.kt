@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.profile.local
+package info.nightscout.plugins.profile
 
 import android.os.Bundle
 import android.text.Editable
@@ -11,31 +11,29 @@ import android.widget.ArrayAdapter
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.ui.TimeListEdit
+import info.nightscout.plugins.R
+import info.nightscout.plugins.databinding.ProfileFragmentBinding
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
+import info.nightscout.plugins.ui.TimeListEdit
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -45,20 +43,21 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class LocalProfileFragment : DaggerFragment() {
+class ProfileFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+    @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var activityNames: ActivityNames
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var inMenu = false
@@ -68,7 +67,7 @@ class LocalProfileFragment : DaggerFragment() {
     private val save = Runnable {
         doEdit()
         basalView?.updateLabel(rh.gs(R.string.basal_label) + ": " + sumLabel())
-        localProfilePlugin.getEditedProfile()?.let {
+        profilePlugin.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
@@ -81,32 +80,32 @@ class LocalProfileFragment : DaggerFragment() {
         override fun afterTextChanged(s: Editable) {}
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            localProfilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
-            localProfilePlugin.currentProfile()?.name = binding.name.text.toString()
+            profilePlugin.currentProfile()?.dia = SafeParse.stringToDouble(binding.dia.text)
+            profilePlugin.currentProfile()?.name = binding.name.text.toString()
             doEdit()
         }
     }
 
     private fun sumLabel(): String {
-        val profile = localProfilePlugin.getEditedProfile()
+        val profile = profilePlugin.getEditedProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + rh.gs(R.string.insulin_unit_shortname)
     }
 
-    private var _binding: LocalprofileFragmentBinding? = null
+    private var _binding: ProfileFragmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = LocalprofileFragmentBinding.inflate(inflater, container, false)
+        _binding = ProfileFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
-        inMenu = parentClass == SingleFragmentActivity::class.java
+        inMenu = parentClass == activityNames.singleFragmentActivity
         updateProtectedUi()
         processVisibility(0)
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -120,16 +119,16 @@ class LocalProfileFragment : DaggerFragment() {
         binding.diaLabel.labelFor = binding.dia.editTextId
         binding.unlock.setOnClickListener { queryProtection() }
 
-        val profiles = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
+        val profiles = profilePlugin.profile?.getProfileList() ?: ArrayList()
         val activeProfile = profileFunction.getProfileName()
         val profileIndex = profiles.indexOf(activeProfile)
-        localProfilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
+        profilePlugin.currentProfileIndex = if (profileIndex >= 0) profileIndex else 0
     }
 
     fun build() {
         val pumpDescription = activePlugin.activePump.pumpDescription
-        if (localProfilePlugin.numOfProfiles == 0) localProfilePlugin.addNewProfile()
-        val currentProfile = localProfilePlugin.currentProfile() ?: return
+        if (profilePlugin.numOfProfiles == 0) profilePlugin.addNewProfile()
+        val currentProfile = profilePlugin.currentProfile() ?: return
         val units = if (currentProfile.mgdl) Constants.MGDL else Constants.MMOL
 
         binding.name.removeTextChangedListener(textWatch)
@@ -223,28 +222,28 @@ class LocalProfileFragment : DaggerFragment() {
         }
 
         context?.let { context ->
-            val profileList: ArrayList<CharSequence> = localProfilePlugin.profile?.getProfileList() ?: ArrayList()
+            val profileList: ArrayList<CharSequence> = profilePlugin.profile?.getProfileList() ?: ArrayList()
             binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
         } ?: return
 
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            if (localProfilePlugin.isEdited) {
+            if (profilePlugin.isEdited) {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(
-                        activity, rh.gs(R.string.doyouwantswitchprofile),
+                        activity, rh.gs(R.string.do_you_want_switch_profile),
                         {
-                            localProfilePlugin.currentProfileIndex = position
-                            localProfilePlugin.isEdited = false
+                            profilePlugin.currentProfileIndex = position
+                            profilePlugin.isEdited = false
                             build()
                         }, null
                     )
                 }
             } else {
-                localProfilePlugin.currentProfileIndex = position
+                profilePlugin.currentProfileIndex = position
                 build()
             }
         }
-        localProfilePlugin.getEditedProfile()?.let {
+        profilePlugin.getEditedProfile()?.let {
             binding.basalGraph.show(ProfileSealed.Pure(it))
             binding.icGraph.show(ProfileSealed.Pure(it))
             binding.isfGraph.show(ProfileSealed.Pure(it))
@@ -253,40 +252,40 @@ class LocalProfileFragment : DaggerFragment() {
         }
 
         binding.profileAdd.setOnClickListener {
-            if (localProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", rh.gs(R.string.saveorresetchangesfirst)) }
+            if (profilePlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
-                uel.log(Action.NEW_PROFILE, Sources.LocalProfile)
-                localProfilePlugin.addNewProfile()
+                uel.log(UserEntry.Action.NEW_PROFILE, UserEntry.Sources.LocalProfile)
+                profilePlugin.addNewProfile()
                 build()
             }
         }
 
         binding.profileClone.setOnClickListener {
-            if (localProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", rh.gs(R.string.saveorresetchangesfirst)) }
+            if (profilePlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", rh.gs(R.string.save_or_reset_changes_first)) }
             } else {
                 uel.log(
-                    Action.CLONE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(
-                        localProfilePlugin.currentProfile()?.name
+                    UserEntry.Action.CLONE_PROFILE, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
+                        profilePlugin.currentProfile()?.name
                             ?: ""
                     )
                 )
-                localProfilePlugin.cloneProfile()
+                profilePlugin.cloneProfile()
                 build()
             }
         }
 
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.deletecurrentprofile), {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.delete_current_profile), {
                     uel.log(
-                        Action.PROFILE_REMOVED, Sources.LocalProfile, ValueWithUnit.SimpleString(
-                            localProfilePlugin.currentProfile()?.name
+                        UserEntry.Action.PROFILE_REMOVED, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
+                            profilePlugin.currentProfile()?.name
                                 ?: ""
                         )
                     )
-                    localProfilePlugin.removeCurrentProfile()
+                    profilePlugin.removeCurrentProfile()
                     build()
                 }, null)
             }
@@ -299,27 +298,25 @@ class LocalProfileFragment : DaggerFragment() {
         binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(R.string.mgdl) else rh.gs(R.string.mmol))
 
         binding.profileswitch.setOnClickListener {
-            ProfileSwitchDialog()
-                .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", localProfilePlugin.currentProfile()?.name) } }
-                .show(childFragmentManager, "ProfileSwitchDialog")
+            activityNames.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
         }
 
         binding.reset.setOnClickListener {
-            localProfilePlugin.loadSettings()
+            profilePlugin.loadSettings()
             build()
         }
 
         binding.save.setOnClickListener {
-            if (!localProfilePlugin.isValidEditState(activity)) {
+            if (!profilePlugin.isValidEditState(activity)) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
             uel.log(
-                Action.STORE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(
-                    localProfilePlugin.currentProfile()?.name
+                UserEntry.Action.STORE_PROFILE, UserEntry.Sources.LocalProfile, ValueWithUnit.SimpleString(
+                    profilePlugin.currentProfile()?.name
                         ?: ""
                 )
             )
-            localProfilePlugin.storeSettings(activity)
+            profilePlugin.storeSettings(activity)
             build()
         }
         updateGUI()
@@ -349,7 +346,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     fun doEdit() {
-        localProfilePlugin.isEdited = true
+        profilePlugin.isEdited = true
         updateGUI()
     }
 
@@ -363,8 +360,8 @@ class LocalProfileFragment : DaggerFragment() {
 
     private fun updateGUI() {
         if (_binding == null) return
-        val isValid = localProfilePlugin.isValidEditState(activity)
-        val isEdited = localProfilePlugin.isEdited
+        val isValid = profilePlugin.isValidEditState(activity)
+        val isEdited = profilePlugin.isEdited
         if (isValid) {
             this.view?.setBackgroundColor(rh.gac(context, R.attr.okBackgroundColor))
             binding.profileList.isEnabled = true

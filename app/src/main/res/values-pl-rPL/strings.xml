@@ -83,7 +83,7 @@
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="setbasalquestion">Akceptuj nową bazę tymczasową:</string>
     <string name="overview_treatment_label">Terapia</string>
-    <string name="overview_calculator_label">Kalkulator</string>
+    <string name="calculator_label">Kalkulator</string>
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
     <string name="xdrip">xDrip+</string>

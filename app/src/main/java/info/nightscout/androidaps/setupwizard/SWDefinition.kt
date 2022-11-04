@@ -27,8 +27,8 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragm
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.plugins.profile.ProfileFragment
+import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -62,7 +62,7 @@ class SWDefinition @Inject constructor(
     rh: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val localProfilePlugin: LocalProfilePlugin,
+    private val profilePlugin: ProfilePlugin,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val objectivesPlugin: ObjectivesPlugin,
@@ -273,12 +273,12 @@ class SWDefinition @Inject constructor(
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
-            .add(LocalProfileFragment()))
+            .add(ProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
+            profilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
                 ?: false
         }
-        .visibility { localProfilePlugin.isEnabled() }
+        .visibility { profilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)
         .add(SWInfoText(injector)

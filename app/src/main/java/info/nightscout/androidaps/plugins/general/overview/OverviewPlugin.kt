@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -27,6 +28,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
@@ -66,6 +68,25 @@ class OverviewPlugin @Inject constructor(
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
+
+    @FunctionalInterface
+    interface RunnableWithContext : Runnable {
+
+        var context: Context?
+    }
+
+    override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String) {
+        rxBus.send(
+            EventNewNotification(
+                NotificationWithAction(injector, id, text, level)
+                    .also { n ->
+                        n.action(actionButtonId) {
+                            n.contextForAction?.let { OKDialog.show(it, title, message, null) }
+                        }
+                    })
+        )
+    }
+
     override fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable) {
         rxBus.send(
             EventNewNotification(

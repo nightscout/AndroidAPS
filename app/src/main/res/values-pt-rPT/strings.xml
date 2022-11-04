@@ -83,7 +83,7 @@
     <string name="constraints_violation">Violação das restrições</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
-    <string name="overview_calculator_label">Calculadora</string>
+    <string name="calculator_label">Calculadora</string>
     <string name="changeyourinput">Altere o seu input!</string>
     <string name="configbuilder_bgsource">Fonte da Glicose</string>
     <string name="xdrip">xDrip+</string>

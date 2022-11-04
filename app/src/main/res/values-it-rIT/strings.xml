@@ -89,7 +89,7 @@
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="setbasalquestion">Accetta nuova basale temporanea:</string>
     <string name="overview_treatment_label">Trattamento</string>
-    <string name="overview_calculator_label">Calcolatore</string>
+    <string name="calculator_label">Calcolatore</string>
     <string name="changeyourinput">Cambia il tuo input!</string>
     <string name="configbuilder_bgsource">Origine BG</string>
     <string name="configbuilder_bgsource_description">Da dove AAPS dovrebbe ottenere i suoi dati?</string>

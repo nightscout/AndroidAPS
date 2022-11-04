@@ -39,8 +39,8 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
@@ -63,7 +63,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+    @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var rh: ResourceHelper
@@ -134,7 +134,7 @@ class AutotuneFragment : DaggerFragment() {
                                  rh.gs(R.string.autotune_copy_localprofile_button),
                                  rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName,
                                  Runnable {
-                                     localProfilePlugin.addProfile(localProfilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
+                                     profilePlugin.addProfile(profilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())
                                      uel.log(
                                          UserEntry.Action.NEW_PROFILE,

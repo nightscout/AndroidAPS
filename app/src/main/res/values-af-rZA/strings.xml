@@ -78,7 +78,7 @@
     <string name="constraints_violation">Beperkings skending</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
-    <string name="overview_calculator_label">Rekenaar</string>
+    <string name="calculator_label">Rekenaar</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="apsmode_title">APS modus</string>

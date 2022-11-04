@@ -35,7 +35,7 @@ import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
@@ -236,7 +236,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(240)
-    abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase
+    abstract fun bindLocalProfilePlugin(plugin: ProfilePlugin): PluginBase
 
     @Binds
     @AllConfigs

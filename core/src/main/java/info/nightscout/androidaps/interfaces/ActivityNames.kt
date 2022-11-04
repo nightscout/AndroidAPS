@@ -14,6 +14,7 @@ interface ActivityNames {
     val tddStatsActivity: Class<*>
     val errorHelperActivity: Class<*>
     val bolusProgressHelperActivity: Class<*>
+    val singleFragmentActivity: Class<*>
 
     /**
      * Show ErrorHelperActivity and start alarm
@@ -24,4 +25,5 @@ interface ActivityNames {
      */
     fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int = 0)
     fun runWizard(fragmentManager: FragmentManager, carbs: Int, name: String)
+    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?)
 }

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.profile.local
+package info.nightscout.plugins.profile
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
@@ -7,38 +7,48 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileSource
+import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.XDripBroadcast
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.plugins.R
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
-import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Integer.min
-import java.util.*
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @OpenForTesting
 @Singleton
-class LocalProfilePlugin @Inject constructor(
+class ProfilePlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
@@ -49,15 +59,16 @@ class LocalProfilePlugin @Inject constructor(
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil,
     private val config: Config
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.PROFILE)
-    .fragmentClass(LocalProfileFragment::class.java.name)
-    .enableByDefault(true)
-    .pluginIcon(R.drawable.ic_local_profile)
-    .pluginName(R.string.localprofile)
-    .shortName(R.string.localprofile_shortname)
-    .description(R.string.description_profile_local)
-    .setDefault(),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.PROFILE)
+        .fragmentClass(ProfileFragment::class.java.name)
+        .enableByDefault(true)
+        .pluginIcon(R.drawable.ic_local_profile)
+        .pluginName(R.string.localprofile)
+        .shortName(R.string.localprofile_shortname)
+        .description(R.string.description_profile_local)
+        .setDefault(),
     aapsLogger, rh, injector
 ), ProfileSource {
 
@@ -74,10 +85,10 @@ class LocalProfilePlugin @Inject constructor(
 
         internal var name: String? = null
         internal var mgdl: Boolean = false
-        internal var dia: Double = Constants.defaultDIA
-        internal var ic: JSONArray? = null
-        internal var isf: JSONArray? = null
-        internal var basal: JSONArray? = null
+        var dia: Double = Constants.defaultDIA
+        var ic: JSONArray? = null
+        var isf: JSONArray? = null
+        var basal: JSONArray? = null
         internal var targetLow: JSONArray? = null
         internal var targetHigh: JSONArray? = null
 
@@ -100,7 +111,7 @@ class LocalProfilePlugin @Inject constructor(
     var profiles: ArrayList<SingleProfile> = ArrayList()
 
     val numOfProfiles get() = profiles.size
-    internal var currentProfileIndex = 0
+    var currentProfileIndex = 0
 
     fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
@@ -109,10 +120,10 @@ class LocalProfilePlugin @Inject constructor(
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(profiles[currentProfileIndex]) {
             if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
-                ToastUtils.errorToast(activity, rh.gs(R.string.value_out_of_hard_limits, rh.gs(info.nightscout.androidaps.core.R.string.profile_dia), dia))
+                ToastUtils.errorToast(activity, rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), dia))
                 return false
             }
-            if (name.isNullOrEmpty()){
+            if (name.isNullOrEmpty()) {
                 ToastUtils.errorToast(activity, rh.gs(R.string.missing_profile_name))
                 return false
             }
@@ -123,11 +134,11 @@ class LocalProfilePlugin @Inject constructor(
             val low = blockFromJsonArray(targetLow, dateUtil)
             val high = blockFromJsonArray(targetHigh, dateUtil)
             if (mgdl) {
-                if (blockFromJsonArray(isf, dateUtil)?.all {  hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
+                if (blockFromJsonArray(isf, dateUtil)?.all { hardLimits.isInRange(it.amount, HardLimits.MIN_ISF, HardLimits.MAX_ISF) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_isf_values))
                     return false
                 }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
                     return false
                 }
@@ -144,7 +155,7 @@ class LocalProfilePlugin @Inject constructor(
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_isf_values))
                     return false
                 }
-                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false)  {
+                if (blockFromJsonArray(basal, dateUtil)?.all { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_basal_values))
                     return false
                 }
@@ -152,7 +163,7 @@ class LocalProfilePlugin @Inject constructor(
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
-                if (high?.all {  hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
+                if (high?.all { hardLimits.isInRange(Profile.toMgdl(it.amount, GlucoseUnit.MMOL), HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]) } == false) {
                     ToastUtils.errorToast(activity, rh.gs(R.string.error_in_target_values))
                     return false
                 }
@@ -216,7 +227,7 @@ class LocalProfilePlugin @Inject constructor(
             if (name.contains(".")) namesOK = false
         }
         if (!namesOK) activity?.let {
-            OKDialog.show(it, "", rh.gs(R.string.profilenamecontainsdot))
+            OKDialog.show(it, "", rh.gs(R.string.profile_name_contains_dot))
         }
     }
 
@@ -261,18 +272,14 @@ class LocalProfilePlugin @Inject constructor(
                     sp.name = p.toString()
                     newProfiles.add(sp)
                 } else {
-                    val n = NotificationWithAction(
-                        injector,
+                    activePlugin.activeOverview.addNotificationWithDialogResponse(
                         Notification.INVALID_PROFILE_NOT_ACCEPTED,
                         rh.gs(R.string.invalid_profile_not_accepted, p.toString()),
-                        Notification.NORMAL
+                        Notification.NORMAL,
+                        R.string.view,
+                        rh.gs(R.string.errors),
+                        validityCheck.reasons.joinToString(separator = "\n")
                     )
-                    n.action(R.string.view) {
-                        n.contextForAction?.let {
-                            OKDialog.show(it, rh.gs(R.string.errors), validityCheck.reasons.joinToString(separator = "\n"), null)
-                        }
-                    }
-                    rxBus.send(EventNewNotification(n))
                 }
             }
             if (newProfiles.size > 0) {
@@ -460,7 +467,7 @@ class LocalProfilePlugin @Inject constructor(
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var sp: SP
         @Inject lateinit var config: Config
-        @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+        @Inject lateinit var profilePlugin: ProfilePlugin
         @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         init {
@@ -478,9 +485,9 @@ class LocalProfilePlugin @Inject constructor(
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
                 @Suppress("LiftReturnOrAssignment")
                 if (createdAt > lastLocalChange || createdAt % 1000 == 0L) {// whole second means edited in NS
-                    localProfilePlugin.loadFromStore(store)
+                    profilePlugin.loadFromStore(store)
                     aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
-                    return Result.success(workDataOf("Data" to profileJson.toString().substring(0..min(5000, profileJson.length()))))
+                    return Result.success(workDataOf("Data" to profileJson.toString().substring(0..Integer.min(5000, profileJson.length()))))
                 } else
                     return Result.success(workDataOf("Result" to "Unchanged. Ignoring"))
             }

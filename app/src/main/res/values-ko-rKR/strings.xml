@@ -82,7 +82,7 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
-    <string name="overview_calculator_label">계산기</string>
+    <string name="calculator_label">계산기</string>
     <string name="changeyourinput">입력값을 변경하세요!</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
     <string name="xdrip">xDrip+</string>

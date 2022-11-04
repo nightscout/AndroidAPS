@@ -89,7 +89,7 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Kalkulačka</string>
+    <string name="calculator_label">Kalkulačka</string>
     <string name="changeyourinput">Změňte zadání!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>

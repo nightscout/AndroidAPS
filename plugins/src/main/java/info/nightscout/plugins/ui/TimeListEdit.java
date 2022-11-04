@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.ui;
+package info.nightscout.plugins.ui;
 
 import android.content.Context;
 import android.text.Editable;
@@ -24,10 +24,11 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.R;
-import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.ui.NumberPicker;
+import info.nightscout.plugins.R;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.logging.AAPSLogger;
 
 /**
  * Created by mike on 29.12.2016.

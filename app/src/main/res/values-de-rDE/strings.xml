@@ -85,7 +85,7 @@
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Rechner</string>
+    <string name="calculator_label">Rechner</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="xdrip">xDrip+</string>

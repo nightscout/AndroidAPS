@@ -84,7 +84,7 @@
     <string name="constraints_violation">违反约束条件</string>
     <string name="setbasalquestion">接受新的临时基础率</string>
     <string name="overview_treatment_label">治疗</string>
-    <string name="overview_calculator_label">计算器</string>
+    <string name="calculator_label">计算器</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="xdrip">xDrip+</string>

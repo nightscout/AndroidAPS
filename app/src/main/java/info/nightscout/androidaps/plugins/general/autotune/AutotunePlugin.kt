@@ -14,8 +14,8 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
@@ -46,7 +46,7 @@ class AutotunePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
-    private val localProfilePlugin: LocalProfilePlugin,
+    private val profilePlugin: ProfilePlugin,
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
@@ -318,15 +318,15 @@ class AutotunePlugin @Inject constructor(
             if (profileList[p] == newProfile.profilename)
                 indexLocalProfile = p
         if (indexLocalProfile == -1) {
-            localProfilePlugin.addProfile(localProfilePlugin.copyFrom(newProfile.getProfile(circadian), newProfile.profilename))
+            profilePlugin.addProfile(profilePlugin.copyFrom(newProfile.getProfile(circadian), newProfile.profilename))
             return
         }
-        localProfilePlugin.currentProfileIndex = indexLocalProfile
-        localProfilePlugin.currentProfile()?.dia = newProfile.dia
-        localProfilePlugin.currentProfile()?.basal = newProfile.basal()
-        localProfilePlugin.currentProfile()?.ic = newProfile.ic(circadian)
-        localProfilePlugin.currentProfile()?.isf = newProfile.isf(circadian)
-        localProfilePlugin.storeSettings()
+        profilePlugin.currentProfileIndex = indexLocalProfile
+        profilePlugin.currentProfile()?.dia = newProfile.dia
+        profilePlugin.currentProfile()?.basal = newProfile.basal()
+        profilePlugin.currentProfile()?.ic = newProfile.ic(circadian)
+        profilePlugin.currentProfile()?.isf = newProfile.isf(circadian)
+        profilePlugin.storeSettings()
     }
 
     fun saveLastRun() {

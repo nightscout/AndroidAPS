@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.annotation.RawRes
 import androidx.fragment.app.FragmentManager
 import info.nightscout.androidaps.MainActivity
+import info.nightscout.androidaps.activities.SingleFragmentActivity
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.services.AlarmSoundService
@@ -16,17 +18,12 @@ import javax.inject.Inject
 
 class ActivityNamesImpl @Inject constructor() : ActivityNames {
 
-    override val mainActivityClass: Class<*>
-        get() = MainActivity::class.java
+    override val mainActivityClass: Class<*> = MainActivity::class.java
+    override val tddStatsActivity: Class<*> = TDDStatsActivity::class.java
+    override val errorHelperActivity: Class<*> = ErrorHelperActivity::class.java
+    override val bolusProgressHelperActivity: Class<*> = BolusProgressHelperActivity::class.java
+    override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
 
-    override val tddStatsActivity: Class<*>
-        get() = TDDStatsActivity::class.java
-
-    override val errorHelperActivity: Class<*>
-        get() = ErrorHelperActivity::class.java
-
-    override val bolusProgressHelperActivity: Class<*>
-        get() = BolusProgressHelperActivity::class.java
 
     override fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(ctx, errorHelperActivity)
@@ -45,5 +42,11 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
             }
         }.show(fragmentManager, "Food Item")
 
+    }
+
+    override fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?) {
+        ProfileSwitchDialog()
+            .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", profileName) } }
+            .show(fragmentManager, "ProfileSwitchDialog")
     }
 }

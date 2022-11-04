@@ -34,7 +34,7 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
-import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
+import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.utils.protection.PasswordCheck
@@ -51,7 +51,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
-    @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
+    @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): ProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
     @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
