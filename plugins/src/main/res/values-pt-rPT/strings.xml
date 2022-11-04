@@ -99,4 +99,7 @@
     <string name="rapid_acting_oref">Oref Acção-Rápida</string>
     <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
