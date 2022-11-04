@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Neuester Algorithmus für fortgeschrittene Benutzer mit dynamischer/automatischer ISF</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
-    <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
     <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
@@ -83,7 +82,6 @@
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Rechner</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="xdrip">xDrip+</string>
@@ -153,7 +151,6 @@
     <string name="button1">Schaltfläche 1</string>
     <string name="button2">Schaltfläche 2</string>
     <string name="button3">Schaltfläche 3</string>
-    <string name="units_colon">Einheiten:</string>
     <string name="units">Einheiten</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
     <string name="prefs_range_summary">Hoch- und Niedrig-Werte für die Übersicht- und die Smartwatch-Anzeige</string>
@@ -166,7 +163,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Anhaltende Benachrichtigung</string>
     <string name="old_data">VERALTETE DATEN</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array mit %1$d Elementen.\nWert:</string>
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
@@ -179,7 +175,6 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VP</string>
     <string name="treatments_shortname">BEH</string>
@@ -306,7 +301,6 @@
     <string name="absorption_maxtime_summary">Zeit in Stunden, in der zu erwarten ist, dass alle Kohlenhydrate resorbiert sein werden.</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Bildschirm aktiv lassen</string>
     <string name="keep_screen_on_summary">Hindere Android daran, den Bildschirm abzuschalten. Dies erhöht den Energieverbrauch, wenn das Gerät nicht an einem Ladegerät angeschlossen ist.</string>
     <string name="sensitivity_warning">Stelle bei aktivierter Autosens-Funktion sicher, dass du alle eingenommenen Kohlenhydrate eingibst. Ansonsten können die Kohlenhydrat-Abweichungen zu falschen Sensitivitätswerten führen!</string>
@@ -322,7 +316,6 @@
     <string name="enablesmb">Aktiviere SMB</string>
     <string name="enablesmb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enableuam_summary">Erkennung von unangekündigten Mahlzeiten</string>
-    <string name="activate_profile">Aktiviere Profil</string>
     <string name="invalid">Ungültig</string>
     <string name="careportal_newnstreatment_percentage_label">Prozentsatz</string>
     <string name="careportal_newnstreatment_timeshift_label">Zeitverschiebung</string>
@@ -413,8 +406,6 @@
     <string name="g5appnotdetected">Bitte aktualisiere deine Dexcom App auf eine unterstützte Version</string>
     <string name="dexcom_app_not_installed">Dexcom App ist nicht installiert.</string>
     <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
-    <string name="category">Kategorie</string>
-    <string name="subcategory">Unterkategorie</string>
     <string name="bolusrecordedonly">Bolus wird nur aufgezeichnet (Pumpe gibt kein Insulin ab!)</string>
     <string name="loop_smbsetbypump_label">SMB von der Pumpe abgegeben</string>
     <string name="overview_show_activity">Aktivität</string>
@@ -587,23 +578,13 @@ Unerwartetes Verhalten.</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profilname:</string>
     <string name="selected_profile">Ausgewählt:</string>
     <string name="unitsnosemicolon">Einheiten</string>
-    <string name="doyouwantswitchprofile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
     <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
     <string name="objectives_button_unstart">Ziel neu starten</string>
     <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
     <string name="setupwizard_units_prompt">Wähle die Einheit, in der die Werte angezeigt werden sollen.</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">ZIEL</string>
-    <string name="clone_label">Klonen</string>
-    <string name="saveorresetchangesfirst">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
-    <string name="deletecurrentprofile">Aktuelles Profil löschen?</string>
     <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
-    <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
@@ -689,15 +670,7 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
-    <string name="missing_profile_name">Fehlender Profilname</string>
-    <string name="error_in_ic_values">Fehler in IC-Werten</string>
-    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
-    <string name="error_in_target_values">Fehler in den Zielwerten</string>
-    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="run_question">%s ausführen?</string>
-    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
-    <string name="view">Ansicht</string>
-    <string name="errors">Fehler</string>
     <string name="ns_sync_slow">Hochladen verlangsamen</string>
     <string name="data_status">Status BZ-Daten</string>
     <string name="remove_bg_readings">BG-Werte entfernen</string>
@@ -720,10 +693,6 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_insulin_label">Insulin</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="a11y_add_new_profile">Neues Profil hinzufügen</string>
-    <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
-    <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
-    <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temp-Target unbekannte Voreinstellung: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Ausführung des Temp-Targets abbrechen?</string>
@@ -759,7 +728,6 @@ Unerwartetes Verhalten.</string>
     <string name="app_default">Standardwert der Anwendung</string>
     <string name="show_invalidated_records">Zeige ungültige / gelöschte Einträge</string>
     <string name="hide_invalidated_records">Verberge ungültige / gelöschte Einträge</string>
-    <string name="select_profile">Profil zum Bearbeiten auswählen</string>
     <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
     <string name="remove_selected_items">Ausgewähltes Objekt löschen</string>
     <string name="select_for_removal">Zum Entfernen auswählen</string>
