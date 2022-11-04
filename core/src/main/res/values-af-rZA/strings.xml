@@ -57,7 +57,6 @@
     <!--    Ntp-->
     <!-- Maintenance -->
     <!-- VersionChecker -->
-    <string name="signature_verifier">Handtekening verifieerder</string>
     <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
     <string name="versionavailable">Weergawe %1$s beskikbaar</string>
     <!-- Permissions -->
