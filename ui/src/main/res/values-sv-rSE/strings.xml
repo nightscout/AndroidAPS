@@ -10,5 +10,11 @@
     <string name="a11y_carb_reminder">ställ in påminnelse</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="statistics">Statistik</string>
+    <string name="calculation_in_progress">Beräkning pågår</string>
+    <string name="id">ID:</string>
+    <string name="submit">Spara</string>
+    <string name="age">Ålder</string>
+    <string name="weight_label">Vikt</string>
     <!-- CareDialog -->
 </resources>
