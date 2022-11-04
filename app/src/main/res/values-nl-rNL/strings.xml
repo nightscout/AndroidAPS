@@ -417,7 +417,6 @@
     <string name="overview_show_basals">Basalen</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
-    <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
     <string name="autosensdisabledinpreferences">Autosens gedeactiveerd in de instellingen</string>
