@@ -200,7 +200,6 @@
     <string name="short_tabtitles">Korte navn i menyfaner</string>
     <string name="always_use_shortavg">Bruk alltid kort gjennomsnittsverdi delta i stedet for enkel delta</string>
     <string name="always_use_shortavg_summary">Nyttig når data fra ufiltrerte kilder som xDrip+ registrerer mye støy.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine basaler til maks 3x av din høyeste basalverdi. Du vil trolig ikke behøve å endre denne verdien, men les og forstå hva som menes med \"3x max daglig; 4x gjeldende\" som sikkerhetsinnstilling.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine temp basal til max 4 ganger din nåværende basal dose, uansett hva som er maks basal i pumpen. Dette er for å unngå at man setter farlige høye maks basal doser uten at man har forstått algoritmene. Når du taket i denne begrensningen bør du i stedet fokusere på å endre andre innstillinger.</string>
     <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDetta er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISK kan reduseres og hvor lavt BS målverdi kan settes.</string>
@@ -474,7 +473,6 @@
     <string name="smbalwaysdisabled">SMB Alltid På og SMB Etter Karbohydrater er deaktivert fordi BS kilden ikke støtter avansert filtrering</string>
     <string name="smbnotallowedinopenloopmode">SMB ikke tillatt i åpen loop</string>
     <string name="food_short">Mat</string>
-    <string name="reset">tilbakestill</string>
     <string name="openapssmb_maxiob_title">Maks total IOB OpenAPS ikke kan overstige [U]</string>
     <string name="openapssmb_maxiob_summary">Denne verdien kalles Maks IOB av OpenAPS\nOpenAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
     <string name="absorption_cutoff_title">Maks absorpsjonstid for måltid [h]</string>
@@ -640,25 +638,7 @@
     <string name="profilenamecontainsdot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
-    <string name="age">Alder</string>
-    <string name="weight_label">Vekt</string>
-    <string name="id">ID:</string>
-    <string name="submit">Lagre</string>
-    <string name="mostcommonprofile">Mest vanlig profil:</string>
-    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
-    <string name="invalidage">Ugyldig alder</string>
-    <string name="invalidweight">Ugyldig vekt</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
-    <string name="average">Gjennomsnitt</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">Dag TIR</string>
-    <string name="night_tir">Natt TIR</string>
-    <string name="detailed_14_days">Detaljert 14 dager</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Overvåking av aktivitet</string>
-    <string name="doyouwantresetstats">Vil du tilbakestille aktivitets statistikk?</string>
-    <string name="statistics">Statistikk</string>
     <string name="randombg">Tilfeldig BS</string>
     <string name="description_source_randombg">Generer tilfeldige BS data (kun demo formål)</string>
     <string name="randombg_short">BS</string>
@@ -744,7 +724,6 @@
     <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller NSClient</string>
     <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
     <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
-    <string name="calculation_in_progress">Beregning pågår</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="error_in_ic_values">Feil i IK faktoren</string>
     <string name="error_in_basal_values">Feil i basalverdiene</string>
@@ -834,13 +813,6 @@
     <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
-    <string name="veryLow" comment="below 3.1">Veldig lavt</string>
-    <string name="low" comment="3.1-3.9">Lavt</string>
-    <string name="high" comment="10.0-13.9">Høyt</string>
-    <string name="veryHigh" comment="above 13.9">Veldig høyt</string>
-    <string name="below" comment="below &quot;in range&quot;">Under</string>
-    <string name="in_range">I målområdet</string>
-    <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="show_loop_records">Vis loop registreringer</string>
     <string name="show_hide_records">Skjul loop registreringer</string>
     <string name="loop_status">Loop status</string>
