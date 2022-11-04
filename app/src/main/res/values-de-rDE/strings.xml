@@ -417,7 +417,6 @@
     <string name="overview_show_basals">Basal</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
-    <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
     <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
     <string name="autosensdisabledinpreferences">Autosens in den Einstellungen deaktiviert</string>
