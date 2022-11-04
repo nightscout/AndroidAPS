@@ -84,7 +84,7 @@
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_treatment_label">Болус</string>
-    <string name="overview_calculator_label">Калкулатор</string>
+    <string name="calculator_label">Калкулатор</string>
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="xdrip">xDrip+</string>

@@ -83,7 +83,7 @@
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
     <string name="overview_treatment_label">Tratament</string>
-    <string name="overview_calculator_label">Calculator</string>
+    <string name="calculator_label">Calculator</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="xdrip">xDrip+</string>

@@ -35,7 +35,6 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.activities.StatsActivity
 import info.nightscout.androidaps.activities.TreatmentsActivity
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -48,14 +47,13 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -68,8 +66,10 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.activities.StatsActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale

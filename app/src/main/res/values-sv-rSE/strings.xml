@@ -85,7 +85,7 @@ Eversense-appen.</string>
     <string name="constraints_violation">Begränsning nådd</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
-    <string name="overview_calculator_label">Kalkylator</string>
+    <string name="calculator_label">Kalkylator</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="xdrip">xDrip+</string>

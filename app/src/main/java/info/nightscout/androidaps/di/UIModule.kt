@@ -11,7 +11,7 @@ import info.nightscout.ui.widget.Widget
 abstract class UIModule {
 
     @ContributesAndroidInjector abstract fun skinListPreferenceInjector(): SkinListPreference
-    @ContributesAndroidInjector abstract fun aapsWidgetInjector(): Widget
+    @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
 }

@@ -89,7 +89,7 @@
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="overview_treatment_label">болюс</string>
-    <string name="overview_calculator_label">калькулятор</string>
+    <string name="calculator_label">калькулятор</string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>

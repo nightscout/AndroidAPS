@@ -27,12 +27,10 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
@@ -57,7 +55,9 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.androidaps.utils.T.Companion.mins
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -477,7 +477,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                             val profileStoreJson = profiles[profiles.length() - 1] as JSONObject
                             rxBus.send(EventNSClientNewLog("PROFILE", "profile received", NsClient.Version.V1))
                             dataWorkerStorage.enqueue(
-                                OneTimeWorkRequest.Builder(LocalProfilePlugin.NSProfileWorker::class.java)
+                                OneTimeWorkRequest.Builder(ProfilePlugin.NSProfileWorker::class.java)
                                     .setInputData(dataWorkerStorage.storeInputData(profileStoreJson))
                                     .build()
                             )
@@ -519,7 +519,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                         val foods = data.getJSONArray("food")
                         if (foods.length() > 0) rxBus.send(EventNSClientNewLog("DATA", "received " + foods.length() + " foods", NsClient.Version.V1))
                         dataWorkerStorage.enqueue(
-                            OneTimeWorkRequest.Builder(FoodWorker::class.java)
+                            OneTimeWorkRequest.Builder(FoodPlugin.FoodWorker::class.java)
                                 .setInputData(dataWorkerStorage.storeInputData(foods))
                                 .build()
                         )

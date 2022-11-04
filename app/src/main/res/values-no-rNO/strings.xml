@@ -89,7 +89,7 @@
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
-    <string name="overview_calculator_label">Kalkulator</string>
+    <string name="calculator_label">Kalkulator</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>

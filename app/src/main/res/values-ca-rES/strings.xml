@@ -82,7 +82,7 @@
     <string name="constraints_violation">Violació de restriccions</string>
     <string name="setbasalquestion">Acceptar nova basal temporal:</string>
     <string name="overview_treatment_label">Tractament</string>
-    <string name="overview_calculator_label">Calculadora</string>
+    <string name="calculator_label">Calculadora</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
     <string name="configbuilder_bgsource">Origen glucèmia</string>
     <string name="xdrip">xDrip+</string>

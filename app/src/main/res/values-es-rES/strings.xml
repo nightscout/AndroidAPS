@@ -89,7 +89,7 @@
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_treatment_label">Tratamiento</string>
-    <string name="overview_calculator_label">Calculadora</string>
+    <string name="calculator_label">Calculadora</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>

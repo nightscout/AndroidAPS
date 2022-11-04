@@ -89,7 +89,7 @@
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
-    <string name="overview_calculator_label">Assistant</string>
+    <string name="calculator_label">Assistant</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>

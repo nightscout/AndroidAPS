@@ -25,13 +25,10 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.androidaps.setupwizard.elements.SWBreak
 import info.nightscout.androidaps.setupwizard.elements.SWButton
 import info.nightscout.androidaps.setupwizard.elements.SWEditEncryptedPassword
@@ -39,7 +36,6 @@ import info.nightscout.androidaps.setupwizard.elements.SWEditIntNumber
 import info.nightscout.androidaps.setupwizard.elements.SWEditNumber
 import info.nightscout.androidaps.setupwizard.elements.SWEditNumberWithUnits
 import info.nightscout.androidaps.setupwizard.elements.SWEditString
-import info.nightscout.androidaps.setupwizard.elements.SWEditUrl
 import info.nightscout.androidaps.setupwizard.elements.SWFragment
 import info.nightscout.androidaps.setupwizard.elements.SWHtmlLink
 import info.nightscout.androidaps.setupwizard.elements.SWInfoText
@@ -50,6 +46,8 @@ import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.plugins.profile.ProfileFragment
+import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,13 +60,12 @@ class SWDefinition @Inject constructor(
     rh: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val localProfilePlugin: LocalProfilePlugin,
+    private val profilePlugin: ProfilePlugin,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val objectivesPlugin: ObjectivesPlugin,
     private val configBuilder: ConfigBuilder,
     private val loopPlugin: LoopPlugin,
-    private val nsClientPlugin: NSClientPlugin,
     private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
@@ -258,12 +255,12 @@ class SWDefinition @Inject constructor(
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
-            .add(LocalProfileFragment()))
+            .add(ProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
+            profilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
                 ?: false
         }
-        .visibility { localProfilePlugin.isEnabled() }
+        .visibility { profilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)
         .add(SWInfoText(injector)

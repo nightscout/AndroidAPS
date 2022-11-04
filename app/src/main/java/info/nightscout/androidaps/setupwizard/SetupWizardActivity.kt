@@ -9,13 +9,12 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventProfileStoreChanged
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -31,7 +30,6 @@ import kotlin.math.min
 class SetupWizardActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -76,38 +74,44 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         swDefinition.activity = this
-        disposable.add(rxBus
-            .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventPumpStatusChanged::class.java)
+                .observeOn(aapsSchedulers.main)
+                .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+                .observeOn(aapsSchedulers.main)
+                .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventNSClientStatus::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventNSClientStatus::class.java)
+                .observeOn(aapsSchedulers.main)
+                .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventProfileSwitchChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventProfileSwitchChanged::class.java)
+                .observeOn(aapsSchedulers.main)
+                .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventProfileStoreChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateButtons() }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventProfileStoreChanged::class.java)
+                .observeOn(aapsSchedulers.main)
+                .subscribe({ updateButtons() }, fabricPrivacy::logException)
         )
-        disposable.add(rxBus
-            .toObservable(EventSWUpdate::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ event: EventSWUpdate ->
-                if (event.redraw) generateLayout()
-                updateButtons()
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventSWUpdate::class.java)
+                .observeOn(aapsSchedulers.main)
+                .subscribe({ event: EventSWUpdate ->
+                               if (event.redraw) generateLayout()
+                               updateButtons()
+                           }, fabricPrivacy::logException)
         )
         updateButtons()
     }

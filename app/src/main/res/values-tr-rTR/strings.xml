@@ -89,7 +89,7 @@
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_treatment_label">Tedavi</string>
-    <string name="overview_calculator_label">Hesap makinesi</string>
+    <string name="calculator_label">Hesap makinesi</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>

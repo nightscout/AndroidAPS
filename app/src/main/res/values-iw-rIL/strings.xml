@@ -85,7 +85,7 @@
     <string name="constraints_violation">הפרת מגבלות</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_treatment_label">טיפול</string>
-    <string name="overview_calculator_label">מחשבון</string>
+    <string name="calculator_label">מחשבון</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="xdrip">xDrip+</string>

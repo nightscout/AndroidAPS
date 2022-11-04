@@ -79,7 +79,7 @@
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
-    <string name="overview_calculator_label">Υπολογιστής</string>
+    <string name="calculator_label">Υπολογιστής</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="apsmode_title">Λειτουργία APS</string>

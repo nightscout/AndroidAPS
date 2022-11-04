@@ -56,13 +56,13 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(rh.gs(eq(R.string.ultrafastactinginsulincomment))).thenReturn("Fiasp")
+        `when`(rh.gs(eq(R.string.ultra_fast_acting_insulin_comment))).thenReturn("Fiasp")
         assertEquals("Fiasp", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(rh.gs(eq(R.string.ultrarapid_oref))).thenReturn("Ultra-Rapid Oref")
+        `when`(rh.gs(eq(R.string.ultra_rapid_oref))).thenReturn("Ultra-Rapid Oref")
         assertEquals("Ultra-Rapid Oref", sut.friendlyName)
     }
 

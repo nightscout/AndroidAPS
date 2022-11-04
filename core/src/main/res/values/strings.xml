@@ -49,7 +49,6 @@
     <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_danars_settings" translatable="false">danars_settings</string>
-    <string name="key_xdripstatus_settings" translatable="false">xdripstatus_settings</string>
     <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
     <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
@@ -85,6 +84,10 @@
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
+    <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
+    <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -225,6 +228,15 @@
     <string name="a11y_high">high</string>
     <string name="a11y_inrange">in range</string>
     <string name="a11y_low">low</string>
+    <string name="average">Average</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">REMOVE</string>
+    <string name="activate_profile">Activate profile</string>
+    <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
+    <string name="profile">Profile</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -410,7 +422,6 @@
     <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
     <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
-    <string name="signature_verifier">Signature verifier</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
     <string name="version_expire">Version %1$s expire on %2$s</string>

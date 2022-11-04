@@ -85,7 +85,7 @@
     <string name="constraints_violation">Begrænsninger overtrådt</string>
     <string name="setbasalquestion">Acceptér ny midlertidig basal:</string>
     <string name="overview_treatment_label">Behandling</string>
-    <string name="overview_calculator_label">Beregner</string>
+    <string name="calculator_label">Beregner</string>
     <string name="changeyourinput">Skift dit input!</string>
     <string name="configbuilder_bgsource">BG kilde</string>
     <string name="xdrip">xDrip+</string>

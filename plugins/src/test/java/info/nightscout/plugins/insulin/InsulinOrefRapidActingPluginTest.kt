@@ -56,7 +56,7 @@ class InsulinOrefRapidActingPluginTest {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(rh.gs(eq(R.string.fastactinginsulincomment))).thenReturn("Novorapid, Novolog, Humalog")
+        `when`(rh.gs(eq(R.string.fast_acting_insulin_comment))).thenReturn("Novorapid, Novolog, Humalog")
         assertEquals("Novorapid, Novolog, Humalog", sut.commentStandardText())
     }
 

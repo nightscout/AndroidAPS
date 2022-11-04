@@ -109,7 +109,6 @@
     <string name="please_choose_a_trigger_type">Choose a trigger type</string>
     <string name="please_choose_a_operation_type">Choose a operation type</string>
     <string name="triggers">Triggers:</string>
-    <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
     <string name="automation_event">Automation event</string>
     <string name="reorder_label">Reorder</string>

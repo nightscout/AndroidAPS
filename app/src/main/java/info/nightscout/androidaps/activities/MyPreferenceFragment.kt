@@ -37,10 +37,8 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDyn
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
@@ -68,7 +66,9 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionTyp
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP

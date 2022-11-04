@@ -85,7 +85,7 @@
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Bolus wizard</string>
+    <string name="calculator_label">Bolus wizard</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="xdrip">xDrip+</string>

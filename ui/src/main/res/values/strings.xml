@@ -19,4 +19,24 @@
     <string name="configure">Configure opacity</string>
     <string name="widget_description">AAPS widget</string>
 
+    <!--     Activities-->
+    <string name="activity_monitor">Activity monitor</string>
+    <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
+    <string name="statistics">Statistics</string>
+    <string name="calculation_in_progress">Calculation in progress</string>
+    <string name="invalid_age">Invalid age entry</string>
+    <string name="invalid_weight">Invalid weight entry</string>
+    <string name="id">ID:</string>
+    <string name="submit">Submit</string>
+    <string name="age">Age</string>
+    <string name="weight_label">Weight</string>
+    <string name="most_common_profile">Most common profile:</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+
+    <!-- CareDialog -->
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Other</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+
 </resources>

@@ -26,7 +26,7 @@
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_show_wizard_button"
-                android:title="@string/overview_calculator_label" />
+                android:title="@string/calculator_label" />
 
             <SwitchPreference
                 android:defaultValue="true"

@@ -89,7 +89,7 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Kalkulačka</string>
+    <string name="calculator_label">Kalkulačka</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>

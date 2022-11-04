@@ -48,7 +48,6 @@
     <string name="key_ns_effective_profile_switch_last_synced_id" translatable="false">ns_effective_profile_switch_last_synced_id</string>
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
     <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
-    <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_ns_sync_slow" translatable="false">ns_sync_slow</string>
     <string name="key_nsclient_token" translatable="false">nsclient_token</string>
     <string name="key_nsclientv2_lastmodified" translatable="false">nsclientv2_lastmodified</string>
@@ -66,7 +65,6 @@
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
-    <string name="description_food">Displays the food presets defined in Nightscout</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ns_client_v3">Synchronizes your data with Nightscout using v3 API</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
@@ -75,7 +73,6 @@
     <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
-    <string name="description_profile_local">Define a profile which is available offline.</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
     <string name="description_sensitivity_oref1">Sensitivity is calculated from 8h or 24h data in the past (using either which is more sensitive). Carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
@@ -87,7 +84,6 @@
     <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
     <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
-    <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -142,7 +138,6 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
-    <string name="overview_calculator_label">Calculator</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
@@ -151,17 +146,12 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
-    <string name="disabledloop">Loop Disabled</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
-    <string name="careportal_newnstreatment_other">Other</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Carb time</string>
     <string name="profile_label">Profile</string>
-    <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
@@ -219,7 +209,6 @@
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
-    <string name="units_colon">Units:</string>
     <string name="units">Units</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
@@ -232,7 +221,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
-    <string name="localprofile">Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -245,7 +233,6 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HOME</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="treatments_shortname">TREAT</string>
@@ -254,7 +241,6 @@
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip+ gets noisy.</string>
-    <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
@@ -290,15 +276,11 @@
     <string name="show_queue">Show queue</string>
     <string name="queue">Queue:</string>
     <string name="status">Status:</string>
-    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
-    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
     <string name="nowritepermission">NSCLIENT has no write permission. Wrong API secret?</string>
     <string name="wear_settings">Wear settings</string>
-    <string name="wear_detailedIOB_title">Show detailed IOB</string>
-    <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="nosuccess">not successful - please check phone</string>
     <string name="patientage">Patient type</string>
     <string name="child">Child</string>
@@ -377,11 +359,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="xdripstatus_settings">xDrip+ Status (watch)</string>
-    <string name="xdripstatus">xDrip+ Statusline (watch)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Show BGI</string>
-    <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -413,7 +390,6 @@
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Keep screen on</string>
     <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
@@ -434,7 +410,6 @@
     <string name="enablesmb">Enable SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
-    <string name="activate_profile">Activate profile</string>
     <string name="invalid">INVALID</string>
     <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
     <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
@@ -450,12 +425,6 @@
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
-    <string name="food">Food</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Fat</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
@@ -553,8 +522,6 @@
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
-    <string name="category">Category</string>
-    <string name="subcategory">Subcategory</string>
     <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
     <string name="overview_show_activity">Activity</string>
@@ -566,7 +533,6 @@
     <string name="overview_show_basals">Basals</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
@@ -593,9 +559,7 @@
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
-    <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
-    <string name="reset">reset</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
@@ -665,9 +629,6 @@
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="nav_plugin_preferences">Plugin preferences</string>
-    <string name="completed_well_done">Completed, well done!</string>
-    <string name="not_completed_yet">Not completed yet</string>
-    <string name="time_elapsed">Time elapsed</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receive BG values from Poctech app</string>
     <string name="glunovo">Glunovo</string>
@@ -758,16 +719,6 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
-    <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
-    <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
-    <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
-    <string name="storage">internal storage constraint</string>
-    <string name="diskfull">Free at least %1$d MB from internal storage! Loop disabled!</string>
-    <string name="versionChecker">Version Checker</string>
-    <string name="old_version">old version</string>
-    <string name="very_old_version">very old version</string>
-    <string name="application_expired">Application expired</string>
-    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
@@ -778,16 +729,13 @@
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
-    <string name="snooze">Snooze</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profile name:</string>
     <string name="selected_profile">Selected:</string>
     <string name="unitsnosemicolon">Units</string>
-    <string name="doyouwantswitchprofile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
     <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
     <string name="objectives_button_unfinish">Clear finished</string>
@@ -796,36 +744,10 @@
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">TARG</string>
-    <string name="clone_label">Clone</string>
-    <string name="saveorresetchangesfirst">Save or reset current changes first</string>
-    <string name="deletecurrentprofile">Delete current profile?</string>
     <string name="copytolocalprofile">Create new profile from this profile?</string>
-    <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
-    <string name="age">Age</string>
-    <string name="weight_label">Weight</string>
-    <string name="id">ID:</string>
-    <string name="submit">Submit</string>
-    <string name="mostcommonprofile">Most common profile:</string>
-    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
-    <string name="invalidage">Invalid age entry</string>
-    <string name="invalidweight">Invalid weight entry</string>
     <string name="invalidpct">Invalid % entry</string>
-    <string name="average">Average</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">Day TIR</string>
-    <string name="night_tir">Night TIR</string>
-    <string name="detailed_14_days">Detailed 14 days</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Activity monitor</string>
-    <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
-    <string name="statistics">Statistics</string>
     <string name="randombg">Random BG</string>
     <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
     <string name="randombg_short">BG</string>
@@ -833,15 +755,10 @@
     <string name="show_calculation">Show calcuation</string>
     <string name="show_removed">Show removed</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
-    <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
-    <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
-    <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
-    <string name="key_snooze_loopdisabled" translatable="false">snooze_loopdisabled</string>
     <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
-    <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Chart menu</string>
     <string name="databroadcaster" translatable="false">Data Broadcaster</string>
     <string name="loop_smbrequest_time_label">SMB request time</string>
@@ -879,7 +796,6 @@
     <string name="basalpctfromtdd_label">% of basal</string>
     <string name="dpvdefaultprofile">DPV Default profile</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
@@ -905,7 +821,6 @@
     <string name="key_ns_upload" translatable="false">ns_upload</string>
     <string name="ns_upload_summary">Profiles, boluses, carbs, temporary basals are uploaded to NS</string>
     <string name="ns_upload">Upload data to NS</string>
-    <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
     <string name="ns_receive_profile_store">Receive profile store</string>
     <string name="ns_receive_profile_store_summary">Synchronize profiles from NS profile editor</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
@@ -932,27 +847,15 @@
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
     <string name="ns_receive_cgm">Receive/backfill CGM data</string>
     <string name="ns_receive_cgm_summary">Accept CGM data from NS</string>
-    <string name="calculation_in_progress">Calculation in progress</string>
-    <string name="missing_profile_name">Missing profile name</string>
-    <string name="error_in_ic_values">Error in IC values</string>
-    <string name="error_in_basal_values">Error in basal values</string>
-    <string name="error_in_target_values">Error in target values</string>
-    <string name="error_in_isf_values">Error in ISF values</string>
     <string name="run_question">Run %s?</string>
-    <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
-    <string name="view">View</string>
-    <string name="errors">Errors</string>
     <string name="ns_sync_slow">Slow down uploads</string>
     <string name="data_status">BG data status</string>
     <string name="remove_bg_readings">Remove BG readings</string>
     <string name="statuslights_cannula_age">cannula age</string>
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
-    <string name="recalculated_data_used">Recalculated data used</string>
-    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
-    <string name="key_last_processed_intelligo_timestamp" translatable="false">
-        last_processed_intelligo_timestamp</string>
+    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="a11y_dialog">dialog</string>
@@ -962,24 +865,9 @@
     <string name="not_available_full">Not available</string>
     <string name="a11y_graph">graph</string>
     <string name="a11y_bg_quality">blood glucose quality</string>
-    <string name="a11y_bg_quality_recalculated">recalculated</string>
-    <string name="a11y_bg_quality_doubles">double entries</string>
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
-    <string name="a11y_add_new_profile">add new profile</string>
-    <string name="a11y_clone_profile">clone current profile</string>
-    <string name="a11y_delete_current_profile">delete current profile</string>
-    <string name="a11y_add_new_to_list">add new to list</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Choose dark, light, or to follow the system theme</string>
-    <string name="app_color_scheme">App Color Scheme</string>
-    <string name="dark_theme">Dark theme</string>
-    <string name="light_theme">Light theme</string>
-    <string name="follow_system_theme">Use device theme</string>
-    <string name="value_dark_theme" translatable="false">dark</string>
-    <string name="value_light_theme" translatable="false">light</string>
-    <string name="value_system_theme" translatable="false">system</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
@@ -1015,7 +903,6 @@
     <string name="app_default">Application default</string>
     <string name="show_invalidated_records">Show invalidated / removed records</string>
     <string name="hide_invalidated_records">Hide invalidated / removed records</string>
-    <string name="select_profile">Select profile to edit</string>
     <string name="refresh_from_nightscout">Refresh from Nightscout</string>
     <string name="remove_selected_items">Remove selected items</string>
     <string name="select_for_removal">Select for removal</string>
@@ -1028,13 +915,6 @@
     <string name="show_loop">Show loop</string>
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
-    <string name="veryLow" comment="below 3.1">Very low</string>
-    <string name="low" comment="3.1-3.9">Low</string>
-    <string name="high" comment="10.0-13.9">High</string>
-    <string name="veryHigh" comment="above 13.9">Very high</string>
-    <string name="below" comment="below &quot;in range&quot;">Below</string>
-    <string name="in_range">In range</string>
-    <string name="above" comment="above &quot;in range&quot;">Above</string>
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
     <string name="loop_status">Loop status</string>

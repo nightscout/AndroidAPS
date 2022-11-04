@@ -10,7 +10,6 @@ import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFr
 import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
 import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
 import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
-import info.nightscout.androidaps.dialogs.CareDialog
 import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
@@ -28,18 +27,16 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
-import info.nightscout.androidaps.plugins.general.autotune.AutotuneFragment
-import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
-import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolFragment
 import info.nightscout.androidaps.utils.protection.PasswordCheck
+import info.nightscout.plugins.general.autotune.AutotuneFragment
 
 @Module
 @Suppress("unused")
@@ -50,11 +47,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutotuneFragment(): AutotuneFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
-
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
-
-    @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
-    @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
     @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
@@ -73,8 +66,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentsUserEntryFragment(): TreatmentsUserEntryFragment
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
-
-    @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
 
     @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 

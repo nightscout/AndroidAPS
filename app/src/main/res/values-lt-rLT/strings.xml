@@ -83,7 +83,7 @@
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_treatment_label">Terapija</string>
-    <string name="overview_calculator_label">Skaičiuotuvas</string>
+    <string name="calculator_label">Skaičiuotuvas</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
     <string name="xdrip">xDrip+</string>
