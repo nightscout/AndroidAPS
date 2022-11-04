@@ -187,7 +187,6 @@
     <string name="short_tabtitles">탭 이름 단축</string>
     <string name="always_use_shortavg">단순증분값 대신 단기평균증분값을 항상 사용합니다.</string>
     <string name="always_use_shortavg_summary">xDrip+처럼 필터링되지 않은 혈당 출처에서 받은 데이터의 노이즈가 심할 경우 유용함.</string>
-    <string name="profile">프로파일</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
     <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
@@ -452,7 +451,6 @@
     <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>
     <string name="smbnotallowedinopenloopmode">Open Loop모드에선 SMB가 허용되지 않습니다.</string>
     <string name="food_short">Food</string>
-    <string name="reset">재설정</string>
     <string name="openapssmb_maxiob_title">OpenAPS가 초과 할 수 없는 총 IOB의 최대량 [U]</string>
     <string name="openapssmb_maxiob_summary">이 값은 OpenAPS에서 Max IOB라고 합니다\n현재 IOB가 이 값보다 크면 OpenAPS는 인슐린을 추가로 주입하지 않습니다.</string>
     <string name="absorption_cutoff_title">식사 최대 흡수 시간 [h]</string>
@@ -593,17 +591,7 @@
     <string name="profilenamecontainsdot">프로파일명에 점을 포함하고 있습니다.\n이는 NS에서 지원하지 않습니다.\n프로파일이 NS에 업로드되지 않습니다.</string>
     <string name="low_mark_comment">혈당 정상범위의 하한값(표시 전용)</string>
     <string name="high_mark_comment">혈당 정상범위의 상한값(표시 전용)</string>
-    <string name="id">ID:</string>
-    <string name="submit">확인</string>
-    <string name="mostcommonprofile">가장 많이 사용된 프로파일:</string>
-    <string name="invalidage">유효하지 않은 나이입니다</string>
-    <string name="invalidweight">유효하지 않은 몸무게입니다</string>
     <string name="invalidpct">유효하지 않은 % 입력</string>
-    <string name="average">평균</string>
-    <string name="tir">TIR</string>
-    <string name="activitymonitor">활동 모니터</string>
-    <string name="doyouwantresetstats">활동 통계를 초기화하시겠습니까?</string>
-    <string name="statistics">통계</string>
     <string name="randombg">무작위 혈당</string>
     <string name="description_source_randombg">무작위로 혈당을 생성합니다(데모 버전 전용)</string>
     <string name="randombg_short">BG</string>
@@ -678,7 +666,6 @@
     <string name="ns_receive_therapy_events_summary">NS 또는 NSClient에서 입력한 처치 이벤트 (캐뉼라, 인슐린, 배터리 교체 등) 수락하기</string>
     <string name="ns_receive_cgm">CGM 데이터 받기/다시 채우기</string>
     <string name="ns_receive_cgm_summary">NS로부터 CGM 데이터 수락하기</string>
-    <string name="calculation_in_progress">계산 진행 중</string>
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="login">로그인</string>
