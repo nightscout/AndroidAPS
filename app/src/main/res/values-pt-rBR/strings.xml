@@ -193,7 +193,6 @@
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
     <string name="always_use_shortavg_summary">Útil quando há ruído nos dados das fontes sem filtro como o xDrip.</string>
-    <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor atual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias muito elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
@@ -434,7 +433,6 @@
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicemia activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
-    <string name="reset">repor</string>
     <string name="openapssmb_maxiob_title">Máximo total de IOB OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
@@ -578,19 +576,7 @@
     <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não foi enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
-    <string name="age">Idade</string>
-    <string name="weight_label">Peso</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
-    <string name="mostcommonprofile">Perfil mais comum:</string>
-    <string name="invalidage">Entrada de idade inválida</string>
-    <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="average">Média</string>
-    <string name="tir">TIR</string>
-    <string name="activitymonitor">Monitor de atividade</string>
-    <string name="doyouwantresetstats">Quer reiniciar as estatísticas de atividade?</string>
-    <string name="statistics">Estatísticas</string>
     <string name="randombg">Glic. Aleatória</string>
     <string name="description_source_randombg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
     <string name="randombg_short">GLIC</string>
@@ -699,9 +685,6 @@
     <string name="no_records_available">Nenhum registro disponível</string>
     <string name="show_loop">Exibir loop</string>
     <string name="sort_label">Ordenar</string>
-    <string name="below" comment="below &quot;in range&quot;">Abaixo</string>
-    <string name="in_range">Dentro da meta</string>
-    <string name="above" comment="above &quot;in range&quot;">Acima</string>
     <string name="show_loop_records">Exibir registros do loop</string>
     <string name="show_hide_records">Ocultar registros do loop</string>
     <string name="loop_status">Status do loop</string>
