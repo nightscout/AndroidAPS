@@ -117,4 +117,7 @@
     <string name="rapid_acting_oref">Hızlı etkili Oref</string>
     <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
