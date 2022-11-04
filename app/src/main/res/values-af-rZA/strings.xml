@@ -14,7 +14,6 @@
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <string name="description_objectives">Onderrig program</string>
-    <string name="description_food">Vertoon kos-voorafinstellings soos omskryf in Nightscout</string>
     <string name="description_loop">Aktiveer of deaktiveer die implementering die lus wakker maak.</string>
     <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
     <string name="description_ama">Status van die algoritme in 2017</string>
@@ -86,10 +85,6 @@
     <string name="openloop_newsuggestion">Nuwe voorstel beskikbaar</string>
     <string name="unsupportednsversion">Weergawe van Nightscout nie ondersteun</string>
     <string name="treatments_wizard_basaliob_label">Basale IAB</string>
-    <string name="careportal_newnstreatment_other">Ander</string>
-    <string name="careportal_newnstreatment_meter">Meter</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_glucosetype">Glukose tipe</string>
     <string name="overview_tempbasal_button">TydelikeBasaal</string>
     <string name="overview_extendedbolus_button">Verlengde Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
@@ -255,12 +250,6 @@
     <string name="hypo_target">hipo doelwit</string>
     <string name="wearcontrol_title">Kontroles van horlosie</string>
     <string name="wearcontrol_summary">Stel tydeleike doelwitte en behandelings vanaf horlosie.</string>
-    <string name="food">Kos</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Vet</string>
     <string name="raise_notifications_as_android_notifications">Gebruik stelsel kennisgewings vir waarskuwings en kennisgewings</string>
     <string name="localalertsettings_title">Lokale alarms</string>
     <string name="enable_missed_bg_readings_alert">Stel in kennis as geen BG data ontvang is</string>
@@ -352,7 +341,6 @@
     <string name="record_insulin_cartridge_change">Rekord insulien kasset verandering</string>
     <string name="smbalwaysdisabled">SMB is altyd na koolhidrate versper omdat aktiewe BG bron nie gevorderde filter ondersteun nie</string>
     <string name="smbnotallowedinopenloopmode">SMB nie toegelaat in open lus modus</string>
-    <string name="food_short">Kos</string>
     <string name="openapssmb_maxiob_title">Maksimum totale IAB OpenAPS kan nie oor [U] gaan</string>
     <string name="openapssmb_maxiob_summary">Hierdie waarde is Maks IAB genoem in OpenAPS kontekst\nOpenAPS sal nie meer insulien byvoeg as huidige IAB is groter as hierdie waarde</string>
     <string name="absorption_cutoff_title">Maaltyd maks absorpsie tyd [h]</string>
@@ -460,7 +448,6 @@
     <string name="format_percent">%1$d%%</string>
     <string name="overview_show_predictions">Projeksies</string>
     <string name="prime">Prima</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <!-- Aidex Cgms -->
 </resources>
