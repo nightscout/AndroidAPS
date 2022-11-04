@@ -16,7 +16,6 @@
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
     <string name="description_objectives">תוכנית הלימוד</string>
-    <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
     <string name="description_loop">הפעלת או השבתת הלולאה.</string>
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
     <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
@@ -96,12 +95,8 @@
     <string name="carbssuggestion">המלצת פחמימות</string>
     <string name="unsupportednsversion">גרסה לא נתמכת של Nightscout</string>
     <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
-    <string name="careportal_newnstreatment_other">אחר</string>
-    <string name="careportal_newnstreatment_meter">מד</string>
-    <string name="careportal_newnstreatment_sensor">חיישן</string>
     <string name="carb_time_label">זמן פחמימות</string>
     <string name="profile_label">פרופיל</string>
-    <string name="careportal_newnstreatment_glucosetype">סוג גלוקוז</string>
     <string name="overview_tempbasal_button">בזאלי זמני</string>
     <string name="overview_extendedbolus_button">בולוס ממושך</string>
     <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
@@ -341,12 +336,6 @@
     <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
-    <string name="food">מזון</string>
-    <string name="none"><![CDATA[<none>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">אנרגיה</string>
-    <string name="shortprotein">חלבון</string>
-    <string name="shortfat">שומן</string>
     <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
     <string name="gradually_increase_notification_volume">הגבר את עוצמת הקול בהדרגה להתראות ולהודעות</string>
     <string name="localalertsettings_title">התראות מקומיות</string>
@@ -457,7 +446,6 @@
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
     <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
-    <string name="food_short">מזון</string>
     <string name="openapssmb_maxiob_title">מינון אינסולין פעיל מרבי ממנו OpenAPS לא יחרוג (יחידות) </string>
     <string name="openapssmb_maxiob_summary">ב-OpenAPS ערך זה נקרא מקסימום אינסולין פעיל (maxIOB). \nלא יוזרק עוד אינסולין אם כמות האינסולין הפעיל הנוכחי גדול מערך זה</string>
     <string name="absorption_cutoff_title">זמן ספיגה מקסימלי של הארוחה [h]</string>
@@ -662,7 +650,6 @@
     <string name="basalpctfromtdd_label">% של הבזאלי</string>
     <string name="dpvdefaultprofile">פרופיל ברירת מחדל DPV</string>
     <string name="setupwizard_pump_riley_link_status">מצב ריילילינק:</string>
-    <string name="filter">סינון</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
@@ -738,12 +725,6 @@
     <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
     <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
     <string name="a11y_add_new_to_list">הוסף לרשימה</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">לבחירת ערכת נושא כהה, בהירה או ע\"פ ערכת הנושא של המכשיר</string>
-    <string name="app_color_scheme">סכמת צבעים</string>
-    <string name="dark_theme">ערכת נושא כהה</string>
-    <string name="light_theme">ערכת נושא בהירה</string>
-    <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
