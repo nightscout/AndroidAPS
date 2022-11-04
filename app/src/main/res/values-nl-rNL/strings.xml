@@ -195,7 +195,6 @@
     <string name="short_tabtitles">Afgekorte tab titels</string>
     <string name="always_use_shortavg">Gebruik altijd korte gemiddeld verschil ipv gewone verschil</string>
     <string name="always_use_shortavg_summary">Nuttig wanneer gegevens van niet gefilterde bronnen zoals xDrip+ veel ruis heeft.</string>
-    <string name="profile">Profiel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standaard waarde: 3.0 Dit is een belangrijke veiligheid parameter van OpenAPS. Dit limiteert je basaal met een max van 3 maal je hoogste basale dosis. Normaal hoef je deze niet te veranderen. Het is echter belangrijk dat je de ingebouwde limieten kent.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft. Dit is een veiligheidsmaatregel om te voorkomen dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
     <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor voor autosense (en binnenkort autotune) die zorgt dat de autosens ratio maximaal 20%% kan zijn. Dit maximum bepaalt in hoeverre je basaal kan worden verhoogd, en hoeveel je ISF en BG doel verlaagd kunnen worden.</string>
@@ -468,7 +467,6 @@
     <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
     <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
     <string name="food_short">Voeding</string>
-    <string name="reset">Reset</string>
     <string name="openapssmb_maxiob_title">Max totaal IOB dat OpenAPS niet kan overschrijden [E]</string>
     <string name="openapssmb_maxiob_summary">Deze waarde heet MAX IOB in OpenAPS context\nOpenAPS zal geen extra insuline toedienen als de actuele IOB onderstaande waarde overschreden heeft</string>
     <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
@@ -628,24 +626,7 @@
     <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
-    <string name="age">Leeftijd</string>
-    <string name="weight_label">Gewicht</string>
-    <string name="id">ID:</string>
-    <string name="submit">Verzenden</string>
-    <string name="mostcommonprofile">Meest voorkomende profiel:</string>
-    <string name="invalidage">Ongeldige leeftijd invoer</string>
-    <string name="invalidweight">Ongeldige gewicht invoer</string>
     <string name="invalidpct">Ongeldig % invoer</string>
-    <string name="average">Gemiddelde</string>
-    <string name="tir">TIR</string>
-    <string name="day_tir">TIR overdag</string>
-    <string name="night_tir">TIR s\'nachts</string>
-    <string name="detailed_14_days">14 dagen details</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Activiteitsmonitor</string>
-    <string name="doyouwantresetstats">Wil je de activiteitenstatistieken resetten?</string>
-    <string name="statistics">Statistieken</string>
     <string name="randombg">Willekeurige BG</string>
     <string name="description_source_randombg">Willekeurige BG gegevens genereren (alleen Demo modus)</string>
     <string name="randombg_short">BG</string>
@@ -729,7 +710,6 @@
     <string name="ns_receive_therapy_events_summary">Accepteer behandelingen (cannule, insuline, batterijwissel etc) ingevoerd via NS of NSClient</string>
     <string name="ns_receive_cgm">Ontvang / backfill CGM gegevens</string>
     <string name="ns_receive_cgm_summary">Accepteer CGM data van NS</string>
-    <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
     <string name="missing_profile_name">Profielnaam ontbreekt</string>
     <string name="error_in_ic_values">Fout in IC waarden</string>
     <string name="error_in_basal_values">Fout in basaal waarden</string>
@@ -819,13 +799,6 @@
     <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
-    <string name="veryLow" comment="below 3.1">Zeer laag</string>
-    <string name="low" comment="3.1-3.9">Laag</string>
-    <string name="high" comment="10.0-13.9">Hoog</string>
-    <string name="veryHigh" comment="above 13.9">Zeer hoog</string>
-    <string name="below" comment="below &quot;in range&quot;">Onder</string>
-    <string name="in_range">Binnen bereik</string>
-    <string name="above" comment="above &quot;in range&quot;">Boven</string>
     <string name="show_loop_records">Toon loop records</string>
     <string name="show_hide_records">Verberg loop records</string>
     <string name="loop_status">Loop status</string>
