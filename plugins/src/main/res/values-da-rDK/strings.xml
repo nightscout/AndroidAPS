@@ -103,4 +103,7 @@
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="dia_too_short">DIA af %1$f for kort - bruger %2$f i stedet!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
