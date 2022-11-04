@@ -33,7 +33,6 @@
     <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
-    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Hidratos:</string>
     <string name="treatments_iob_label_string">IA:</string>
@@ -91,7 +90,6 @@
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
     <string name="lowglucosesuspend">Suspensão Glicose Baixa</string>
-    <string name="disabledloop">Loop Desactivado</string>
     <string name="openloop_newsuggestion">Disponível nova sugestão</string>
     <string name="carbssuggestion">Sugestão de Hidratos</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
@@ -222,8 +220,6 @@
     <string name="clearlog">Limpar Registo</string>
     <string name="nowritepermission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="wear_settings">Definições do Relógio</string>
-    <string name="wear_detailedIOB_title">Mostrar IA detalhada</string>
-    <string name="wear_detailedIOB_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
     <string name="patientage">Tipo de Paciente</string>
     <string name="child">Criança</string>
@@ -285,11 +281,6 @@
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="nav_about">Acerca</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="xdripstatus_settings">Estado xDrip+ (relógio)</string>
-    <string name="xdripstatus">Linha Estado xDrip+ (relógio)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Mostrar BGI</string>
-    <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
