@@ -14,7 +14,6 @@
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
-    <string name="description_food">Εμφανίζει τις επιλογές τροφίμων που ορίζεται στο Nightscout</string>
     <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
     <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
     <string name="description_ama">Κατάσταση του αλγόριθμου για το 2017</string>
@@ -87,10 +86,6 @@
     <string name="openloop_newsuggestion">Νέα πρόταση διαθέσιμη</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
-    <string name="careportal_newnstreatment_other">Άλλο</string>
-    <string name="careportal_newnstreatment_meter">Μετρητής</string>
-    <string name="careportal_newnstreatment_sensor">Αισθητήρας</string>
-    <string name="careportal_newnstreatment_glucosetype">Τύπος Γλυκόζης</string>
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
@@ -255,12 +250,6 @@
     <string name="hypo_target">στόχος υπογλυκαιμίας</string>
     <string name="wearcontrol_title">Έλεγχος από ρολόι</string>
     <string name="wearcontrol_summary">Ρυθμίστε Στόχους-Προσ Ρυθμού και βάλτε Θεραπείες από το ρολόι.</string>
-    <string name="food">Γεύμα</string>
-    <string name="none"><![CDATA[<κενό>]]></string>
-    <string name="shortkilojoul">kj</string>
-    <string name="shortenergy">Ενέργεια</string>
-    <string name="shortprotein">Πρωτεΐνες</string>
-    <string name="shortfat">Λίπος</string>
     <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>
     <string name="localalertsettings_title">Τοπικές Ειδοποιήσεις</string>
     <string name="enable_missed_bg_readings_alert">Προειδοποίηση αν δεν ληφθούν δεδομένα μετρήσεων BG</string>
@@ -352,7 +341,6 @@
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
     <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
-    <string name="food_short">Φαγητό</string>
     <string name="openapssmb_maxiob_title">Μέγιστη συνολική IOB το OpenAPS δεν μπορεί να πάει πάνω από [U]</string>
     <string name="openapssmb_maxiob_summary">Αυτή η τιμή ονομάζεται μέγιστη IOB στο OpenAPS\nTο OpenAPS δεν θα προσθέσει περισσότερη ινσουλίνη αν η τρέχουσα IOB είναι μεγαλύτερη από αυτή την τιμή</string>
     <string name="absorption_cutoff_title">Μέγιστος χρόνος απορρόφησης γεύματος [h]</string>
@@ -463,7 +451,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <!-- Aidex Cgms -->
 </resources>
