@@ -26,7 +26,6 @@
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="invalid_age">Invalid age entry</string>
     <string name="invalid_weight">Invalid weight entry</string>
-    <string name="reset">reset</string>
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
     <string name="profile">Profile</string>
