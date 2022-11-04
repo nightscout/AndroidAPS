@@ -424,7 +424,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_show_basals">Basals</string>
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
-    <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
     <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
     <string name="autosensdisabledinpreferences">Autosens désactivé dans les préférences</string>
