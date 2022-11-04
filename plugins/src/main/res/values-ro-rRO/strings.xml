@@ -99,4 +99,7 @@
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
     <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
