@@ -118,15 +118,63 @@
     <string name="dia_too_short">Значение времени действия инс %1$f слишком мало - применено %2$f!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
     <!-- Food-->
+    <string name="filter">Фильтр</string>
+    <string name="food">Еда</string>
+    <string name="shortkilojoul">кДж</string>
+    <string name="shortenergy">Энергия</string>
+    <string name="shortprotein">Белки</string>
+    <string name="shortfat">Жиры</string>
+    <string name="category">Категория</string>
+    <string name="subcategory">Подкатегория</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Цветовая схема приложения</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="follow_system_theme">Использовать тему устройства</string>
     <!-- Profile -->
+    <string name="localprofile_shortname">ЛП</string>
+    <string name="description_profile_local">Определите профиль, доступный в автономном режиме.</string>
+    <string name="a11y_add_new_to_list">добавить новый в список</string>
+    <string name="units_colon">Единицы:</string>
+    <string name="missing_profile_name">Отсутствует название профиля</string>
+    <string name="error_in_ic_values">Ошибка в значении углеводного коэффициента IC</string>
+    <string name="error_in_basal_values">Ошибка в величине базала</string>
+    <string name="error_in_target_values">Ошибка в целевых значениях</string>
+    <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
+    <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
+    <string name="view">Посмотреть</string>
+    <string name="errors">Ошибки</string>
+    <string name="select_profile">Выберите профиль для изменения</string>
+    <string name="profile_name">Название профиля:</string>
+    <string name="a11y_add_new_profile">добавить новый профиль</string>
+    <string name="a11y_clone_profile">клонировать текущий профиль</string>
+    <string name="a11y_delete_current_profile">удалить текущий профиль</string>
+    <string name="dia_short">Время действия инсулина DIA</string>
+    <string name="ic_short">IC углкоэф ГУ/инс</string>
+    <string name="isf_short">ISF (чувствительность к инсулину)</string>
+    <string name="target_short">ЦЕЛЬ</string>
+    <string name="clone_label">Клонировать</string>
+    <string name="basal_short">БАЗАЛ</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Используются пересчитанные данные</string>
+    <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">пересчитано</string>
+    <string name="a11y_bg_quality_doubles">двойные записи</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Изменение сезонного времени произошло меньше 3 часов назад-Закрытый цикл выключен</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">старая версия</string>
+    <string name="very_old_version">очень старая версия</string>
+    <string name="application_expired">Истек срок действия приложения</string>
+    <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="not_completed_yet">Не завершено</string>
+    <string name="time_elapsed">Прошло времени</string>
     <!-- Overview -->
 </resources>
