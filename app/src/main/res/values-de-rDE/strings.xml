@@ -35,7 +35,6 @@
     <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
     <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
     <string name="description_treatments">Speichert alle eingegebenen Behandlungen</string>
-    <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -93,7 +92,6 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Unterbrechung bei niedrigem BZ (LGS)</string>
-    <string name="disabledloop">Loop deaktiviert</string>
     <string name="openloop_newsuggestion">Neue Empfehlung verfügbar</string>
     <string name="carbssuggestion">Kohlenhydrate Vorschlag</string>
     <string name="unsupportednsversion">Nicht unterstützte Nightscout-Version</string>
@@ -226,8 +224,6 @@
     <string name="clearlog">Logs leeren</string>
     <string name="nowritepermission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
     <string name="wear_settings">Wear-Einstellungen</string>
-    <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
-    <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
     <string name="patientage">Patiententyp</string>
     <string name="child">Kind</string>
@@ -289,11 +285,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Über</string>
     <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
-    <string name="xdripstatus_settings">xDrip+ Status (Uhr)</string>
-    <string name="xdripstatus">xDrip+ Statuszeile (Uhr)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Zeige BGI</string>
-    <string name="wear_showbgi_summary">Füge BGI zur Statuszeile hinzu.</string>
     <string name="overview_extendedbolus_cancel_button">Verzögerten Bolus abbrechen</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_sensor_label">Sensor</string>
