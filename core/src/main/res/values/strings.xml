@@ -49,7 +49,6 @@
     <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_danars_settings" translatable="false">danars_settings</string>
-    <string name="key_xdripstatus_settings" translatable="false">xdripstatus_settings</string>
     <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
     <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
@@ -228,6 +227,7 @@
     <string name="average">Average</string>
     <string name="tir">TIR</string>
     <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<none>]]></string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
