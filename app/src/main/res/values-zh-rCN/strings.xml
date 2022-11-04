@@ -34,7 +34,6 @@
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
     <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
     <string name="description_treatments">保存所做的所有治疗</string>
-    <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
     <string name="treatments_insulin_label_string">胰岛素:</string>
     <string name="treatments_carbs_label_string">碳水化合物:</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
@@ -92,7 +91,6 @@
     <string name="closedloop">闭环</string>
     <string name="openloop">开环</string>
     <string name="lowglucosesuspend">低血糖维持模式</string>
-    <string name="disabledloop">闭环禁用</string>
     <string name="openloop_newsuggestion">新的建议可用</string>
     <string name="carbssuggestion">碳水建议</string>
     <string name="unsupportednsversion">不支持的 Nightscout 版本</string>
@@ -225,8 +223,6 @@
     <string name="clearlog">清除日志</string>
     <string name="nowritepermission">NSCLIENT 没有写权限。可能是NS的 API 密钥输错了？</string>
     <string name="wear_settings">手表设置</string>
-    <string name="wear_detailedIOB_title">显示详细 IOB</string>
-    <string name="wear_detailedIOB_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="nosuccess">未成功-请检查手机</string>
     <string name="patientage">患者类型</string>
     <string name="child">儿童</string>
@@ -288,11 +284,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">关于</string>
     <string name="smscommunicator_missingphonestatepermission">缺少手机状态权限</string>
-    <string name="xdripstatus_settings">xDrip+状态 (手表)</string>
-    <string name="xdripstatus">xDrip+状态线 (手表)</string>
-    <string name="xdripstatus_shortname">xdrip</string>
-    <string name="wear_showbgi_title">显示血糖线</string>
-    <string name="wear_showbgi_summary">添加血糖线到状态线</string>
     <string name="overview_extendedbolus_cancel_button">取消扩展大剂量</string>
     <string name="doprofileswitch">配置文件切换</string>
     <string name="careportal_sensor_label">传感器</string>
