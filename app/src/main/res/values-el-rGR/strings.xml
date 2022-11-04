@@ -30,7 +30,6 @@
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
     <string name="description_treatments">Σώζει όλες τις θεραπείες που έγιναν</string>
-    <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
     <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -85,7 +84,6 @@
     <string name="apsmode_title">Λειτουργία APS</string>
     <string name="closedloop">Κλειστό Κύκλωμα</string>
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
-    <string name="disabledloop">Κύκλωμα απενεργοποιημένο</string>
     <string name="openloop_newsuggestion">Νέα πρόταση διαθέσιμη</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
@@ -184,8 +182,6 @@
     <string name="clearlog">Διαγραφή αρχείου καταγραφής</string>
     <string name="nowritepermission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
     <string name="wear_settings">Ρυθμίσεις Wear</string>
-    <string name="wear_detailedIOB_title">Δείξε αναλυτικά IOB</string>
-    <string name="wear_detailedIOB_summary">Χώρισε την IOB σε bolus και βασικό στο ρολόι</string>
     <string name="nosuccess">αποτυχία - ελέγξτε τηλέφωνο</string>
     <string name="child">Παιδί</string>
     <string name="teenage">Έφηβος</string>
@@ -215,9 +211,6 @@
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="nav_about">Σχετικά με</string>
     <string name="smscommunicator_missingphonestatepermission">Λείπει η άδεια κατάστασης τηλεφώνου</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Δείξε BGI</string>
-    <string name="wear_showbgi_summary">Πρόσθεσε BGI στην γραμμή κατάστασης</string>
     <string name="overview_extendedbolus_cancel_button">Ακύρωση Εκτεταμμένου bolus</string>
     <string name="ns_alarmoptions">Επιλογές συναγερμού</string>
     <string name="nsalarm_staledatavalue_label">Οριακή τιμή για παλιά δεδομένα [min]</string>
