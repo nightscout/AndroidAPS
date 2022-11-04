@@ -23,9 +23,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
-import info.nightscout.implementation.di.CommandQueueModule
-import info.nightscout.plugins.di.InsulinModule
-import info.nightscout.plugins.di.SMSCommunicatorModule
+import info.nightscout.implementation.di.ImplementationModule
+import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton
@@ -34,46 +33,50 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
-        DatabaseModule::class,
-        PluginsModule::class,
+        AppModule::class,
+        PluginsListModule::class,
         SkinsModule::class,
         ActivitiesModule::class,
         FragmentsModule::class,
-        AppModule::class,
         ReceiversModule::class,
         ServicesModule::class,
-        AutomationModule::class,
         AutotuneModule::class,
-        CommandQueueModule::class,
         ObjectivesModule::class,
         WizardModule::class,
-        PumpCommonModule::class,
-        RileyLinkModule::class,
-        MedtronicModule::class,
-        OmnipodDashModule::class,
-        OmnipodErosModule::class,
         APSModule::class,
         WorkflowModule::class,
         PreferencesModule::class,
         OverviewModule::class,
         DataClassesModule::class,
-        SMSCommunicatorModule::class,
-        UIModule::class,
+        WorkersModule::class,
+        UiModule::class,
+
+        // Gradle modules
+        AutomationModule::class,
         CoreModule::class,
-        DanaModule::class,
+        DatabaseModule::class,
+        ImplementationModule::class,
+        PluginsModule::class,
+        SharedModule::class,
+        OpenHumansModule::class,
+        UIModule::class,
+
+        // pumps
+        ComboModule::class,
         DanaHistoryModule::class,
+        DanaModule::class,
         DanaRModule::class,
         DanaRSModule::class,
-        ComboModule::class,
+        DiaconnG8Module::class,
+        EopatchModule::class,
         InsightModule::class,
         InsightDatabaseModule::class,
-        WorkersModule::class,
-        DiaconnG8Module::class,
-        OpenHumansModule::class,
-        EopatchModule::class,
-        SharedModule::class,
-        UiModule::class,
-        InsulinModule::class
+        MedtronicModule::class,
+        OmnipodDashModule::class,
+        OmnipodErosModule::class,
+        PumpCommonModule::class,
+        RileyLinkModule::class,
+
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

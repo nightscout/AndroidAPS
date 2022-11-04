@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.general.food.FoodFragment">
+    tools:context=".general.food.FoodFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/filter_input_layout"

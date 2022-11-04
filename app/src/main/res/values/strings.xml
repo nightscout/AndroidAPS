@@ -68,7 +68,6 @@
     <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_objectives">Learning program</string>
-    <string name="description_food">Displays the food presets defined in Nightscout</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ns_client">Synchronizes your data with Nightscout</string>
     <string name="description_ama">State of the algorithm in 2017</string>
@@ -430,11 +429,6 @@
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
-    <string name="food">Food</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Fat</string>
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
@@ -572,7 +566,6 @@
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
-    <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
@@ -838,7 +831,6 @@
     <string name="basalpctfromtdd_label">% of basal</string>
     <string name="dpvdefaultprofile">DPV Default profile</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
-    <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>

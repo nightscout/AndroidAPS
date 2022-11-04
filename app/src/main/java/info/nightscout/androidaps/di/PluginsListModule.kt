@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
-import info.nightscout.androidaps.plugins.general.food.FoodPlugin
+import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
@@ -68,7 +68,7 @@ import javax.inject.Qualifier
 
 @Suppress("unused")
 @Module
-abstract class PluginsModule {
+abstract class PluginsListModule {
 
     @Binds
     @AllConfigs

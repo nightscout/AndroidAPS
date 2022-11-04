@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import android.content.Context
 import androidx.annotation.RawRes
+import androidx.fragment.app.FragmentManager
 
 /**
  * Interface to use activities located in different modules
@@ -22,4 +23,5 @@ interface ActivityNames {
      * @param soundId sound resource. if == 0 alarm is not started
      */
     fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int = 0)
+    fun runWizard(fragmentManager: FragmentManager, carbs: Int, name: String)
 }

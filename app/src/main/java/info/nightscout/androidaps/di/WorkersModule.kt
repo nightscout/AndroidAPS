@@ -2,7 +2,6 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker
@@ -36,7 +35,6 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesNSClientAddAckWorker(): NSClientAddAckWorker
     @ContributesAndroidInjector abstract fun contributesNSClientUpdateRemoveAckWorker(): NSClientUpdateRemoveAckWorker
     @ContributesAndroidInjector abstract fun contributesNSClientMbgWorker(): NSClientMbgWorker
-    @ContributesAndroidInjector abstract fun contributesFoodWorker(): FoodPlugin.FoodWorker
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
 }

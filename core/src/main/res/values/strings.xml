@@ -227,6 +227,7 @@
     <string name="average">Average</string>
     <string name="tir">TIR</string>
     <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<none>]]></string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

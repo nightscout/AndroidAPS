@@ -40,6 +40,5 @@
     <string name="bg_other">Other</string>
     <string name="bg_meter">Meter</string>
     <string name="bg_sensor">Sensor</string>
-    <string name="none"><![CDATA[<none>]]></string>
 
 </resources>

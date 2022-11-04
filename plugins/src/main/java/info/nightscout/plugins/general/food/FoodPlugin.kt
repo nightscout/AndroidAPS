@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.general.food
+package info.nightscout.plugins.general.food
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.transactions.SyncNsFoodTransaction
@@ -18,6 +17,7 @@ import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.plugins.R
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject

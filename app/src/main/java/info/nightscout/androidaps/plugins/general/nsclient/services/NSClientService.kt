@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.food.FoodPlugin.FoodWorker
+import info.nightscout.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker

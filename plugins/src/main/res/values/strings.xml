@@ -137,6 +137,7 @@
     <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_xdrip_status_settings" translatable="false">xdripstatus_settings</string>
 
+    <!-- Statusline -->
     <string name="xdrip_status">xDrip+ Statusline (watch)</string>
     <string name="xdrip_status_shortname">xds</string>
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
@@ -146,5 +147,15 @@
     <string name="xdrip_status_show_bgi_title">Show BGI</string>
     <string name="xdrip_status_show_bgi_summary">Add BGI to status line</string>
     <string name="xdrip_status_settings">xDrip+ Status (watch)</string>
+
+    <!-- Food-->
+    <string name="food_short">Food</string>
+    <string name="description_food">Displays the food presets defined in Nightscout</string>
+    <string name="filter">Filter</string>
+    <string name="food">Food</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Fat</string>
 
 </resources>

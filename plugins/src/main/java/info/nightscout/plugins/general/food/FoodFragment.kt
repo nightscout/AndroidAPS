@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.food
+package info.nightscout.plugins.general.food
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,30 +12,30 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
-import info.nightscout.androidaps.databinding.FoodFragmentBinding
-import info.nightscout.androidaps.databinding.FoodItemBinding
-import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.plugins.R
+import info.nightscout.plugins.databinding.FoodFragmentBinding
+import info.nightscout.plugins.databinding.FoodItemBinding
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -49,6 +49,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
     private var unfiltered: List<Food> = arrayListOf()
@@ -223,13 +224,7 @@ class FoodFragment : DaggerFragment() {
                     val food = v.tag as Food
                     activity?.let { activity ->
                         protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                            if (isAdded)
-                                WizardDialog().also { dialog ->
-                                    dialog.arguments = Bundle().also { bundle ->
-                                        bundle.putDouble("carbs_input", food.carbs.toDouble())
-                                        bundle.putString("notes_input", " ${food.name} - ${food.carbs}g")
-                                    }
-                                }.show(childFragmentManager, "Food Item")
+                            if (isAdded) activityNames.runWizard(childFragmentManager, food.carbs, food.name)
                         })
                     }
                 }
