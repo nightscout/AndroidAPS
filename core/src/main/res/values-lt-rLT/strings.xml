@@ -267,7 +267,6 @@
     <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Parašo tikrinimas</string>
     <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
     <string name="version_expire">Versija %1$s baigia galioti %2$s</string>
