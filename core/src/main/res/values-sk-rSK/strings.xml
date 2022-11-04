@@ -140,6 +140,10 @@
     <string name="a11y_high">vysoká</string>
     <string name="a11y_inrange">v rozsahu</string>
     <string name="a11y_low">nízka</string>
+    <string name="average">Priemer</string>
+    <string name="tir">Čas v rozsahu</string>
+    <string name="tdd_total">CDD celkom</string>
+    <string name="none"><![CDATA[<prázdne>]]></string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
