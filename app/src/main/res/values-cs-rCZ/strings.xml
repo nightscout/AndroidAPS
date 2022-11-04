@@ -423,7 +423,6 @@
     <string name="overview_show_basals">Bazály</string>
     <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
     <string name="engineering_mode_enabled">Expertní mód povolen</string>
-    <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
     <string name="autosensdisabledinpreferences">Autosens zakázán v nastavení</string>
