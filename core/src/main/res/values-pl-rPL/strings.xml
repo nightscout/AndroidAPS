@@ -267,7 +267,6 @@
     <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Weryfikator podpisu</string>
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
     <string name="version_expire">Wersja %1$s wygasa %2$s</string>
