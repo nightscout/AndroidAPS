@@ -34,7 +34,6 @@
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
     <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
     <string name="description_treatments">Записва всички процедури, които са били направени</string>
-    <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
     <string name="treatments_insulin_label_string">Инсулин:</string>
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -92,7 +91,6 @@
     <string name="closedloop">Затворен кръг</string>
     <string name="openloop">Отворен кръг</string>
     <string name="lowglucosesuspend">Спиране на базал при ниска КЗ</string>
-    <string name="disabledloop">Loop изключен</string>
     <string name="openloop_newsuggestion">Има ново предложение</string>
     <string name="carbssuggestion">Предложение</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
@@ -225,8 +223,6 @@
     <string name="clearlog">Изчисти лога</string>
     <string name="nowritepermission">NSClient няма права за запис. Грешна API парола?</string>
     <string name="wear_settings">Настройки на часовник</string>
-    <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
-    <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="patientage">Тип пациент</string>
     <string name="child">Дете</string>
@@ -288,11 +284,6 @@
     <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingphonestatepermission">Липсва разрешение до данни от телефона</string>
-    <string name="xdripstatus_settings">xDrip+ статус (часовник)</string>
-    <string name="xdripstatus">xDrip+ линия със статута (часовник)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Показвай BGI</string>
-    <string name="wear_showbgi_summary">Добави BGI към статуса</string>
     <string name="overview_extendedbolus_cancel_button">Спри удължен болус</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_sensor_label">Сензор</string>
