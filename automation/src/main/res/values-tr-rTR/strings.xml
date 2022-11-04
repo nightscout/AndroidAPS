@@ -107,7 +107,6 @@
     <string name="please_choose_a_trigger_type">Tetikleyici tipini seçin</string>
     <string name="please_choose_a_operation_type">İşlem tipini seçin</string>
     <string name="triggers">Tetikleyiciler:</string>
-    <string name="remove_label">KALDIR</string>
     <string name="preconditions">Ön koşullar:</string>
     <string name="automation_event">Otomasyon durumu</string>
     <string name="reorder_label">Yeniden sırala</string>
