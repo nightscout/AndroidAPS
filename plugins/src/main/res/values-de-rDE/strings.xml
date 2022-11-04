@@ -102,15 +102,63 @@
     <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
     <!-- Food-->
+    <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
+    <string name="filter">Filter</string>
+    <string name="food">Essen</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Prot</string>
+    <string name="shortfat">Ft</string>
+    <string name="category">Kategorie</string>
+    <string name="subcategory">Unterkategorie</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">App Farbschema</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="follow_system_theme">Systemdesign verwenden</string>
     <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
+    <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
+    <string name="units_colon">Einheiten:</string>
+    <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="error_in_ic_values">Fehler in IC-Werten</string>
+    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
+    <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="view">Ansicht</string>
+    <string name="errors">Fehler</string>
+    <string name="select_profile">Profil zum Bearbeiten auswählen</string>
+    <string name="profile_name">Profilname:</string>
+    <string name="a11y_add_new_profile">Neues Profil hinzufügen</string>
+    <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
+    <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">ZIEL</string>
+    <string name="clone_label">Klonen</string>
+    <string name="basal_short">BAS</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Verwendete Daten neu berechnet</string>
+    <string name="bg_too_close">BZ zu nah:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">neu berechnet</string>
+    <string name="a11y_bg_quality_doubles">doppelte Einträge</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Zeitumstellung in weniger als 24 Stunden</string>
+    <string name="dst_loop_disabled_warning">Zeitumstellung vor weniger als 3 Stunden - Closed Loop deaktiviert</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">Vorherige Version</string>
+    <string name="very_old_version">sehr alte Version</string>
+    <string name="application_expired">Anwendung abgelaufen</string>
+    <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="time_elapsed">Verstrichene Zeit</string>
     <!-- Overview -->
 </resources>
