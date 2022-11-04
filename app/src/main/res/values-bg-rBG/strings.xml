@@ -194,7 +194,6 @@
     <string name="short_tabtitles">Използвай къси имена</string>
     <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
     <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум.</string>
-    <string name="profile">Профил</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от \"3x от най-високия дневен; 4x от текущия\". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
     <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максималният множител на autosens (а скоро autotune), за да позволи 20%% максимален лимит на autosens коефициента, който от своя страна настройва базалите, колко може да намали инсулиновата чувствителност, и колко ниско може да свали целевата КЗ.</string>
@@ -465,7 +464,6 @@
     <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
     <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
     <string name="food_short">Храна</string>
-    <string name="reset">нулиране</string>
     <string name="openapssmb_maxiob_title">Максималният общ IOB OpenAPS не може да бъде повече от [U]</string>
     <string name="openapssmb_maxiob_summary">Тази стойност се нарича Max IOB в контекста на OpenAPS. OpenAPS няма да добавя инсулин, ако текущата IOB е по-голяма от тази стойност</string>
     <string name="absorption_cutoff_title">Макс. време за усвояване на храна (часове)</string>
@@ -617,24 +615,7 @@
     <string name="profilenamecontainsdot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
-    <string name="age">Възраст</string>
-    <string name="weight_label">Тегло</string>
-    <string name="id">Номер:</string>
-    <string name="submit">Изпрати</string>
-    <string name="mostcommonprofile">Най-често използван профил:</string>
-    <string name="invalidage">Невалидна възраст</string>
-    <string name="invalidweight">Невалидно тегло</string>
     <string name="invalidpct">Невалидна стойност в %</string>
-    <string name="average">Средно</string>
-    <string name="tir">Време в границите</string>
-    <string name="day_tir">Дневен TIR</string>
-    <string name="night_tir">Нощен TIR</string>
-    <string name="detailed_14_days">Детайлни 14 дена</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Мониторинг на активност</string>
-    <string name="doyouwantresetstats">Искате да нулирате статистиката?</string>
-    <string name="statistics">Статистика</string>
     <string name="randombg">Произволна КЗ</string>
     <string name="description_source_randombg">Генерира произволни захари(демо режим)</string>
     <string name="randombg_short">КЗ</string>
@@ -715,7 +696,6 @@
     <string name="ns_receive_therapy_events_summary">Приемай смени (канула, инсулин, батерия и др.) зададени от NS или NS Клиент</string>
     <string name="ns_receive_cgm">Приеми история от данни от сензора</string>
     <string name="ns_receive_cgm_summary">Приемай постояни данни от сензора идващи от NS</string>
-    <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="missing_profile_name">Липсва име на профила</string>
     <string name="error_in_ic_values">Грешка в стойността на ВЧ (IC)</string>
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
@@ -736,10 +716,6 @@
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="overview_editquickwizard_percentage">% от профила</string>
-    <string name="veryLow" comment="below 3.1">Много ниска</string>
-    <string name="low" comment="3.1-3.9">Ниска</string>
-    <string name="high" comment="10.0-13.9">Висока</string>
-    <string name="veryHigh" comment="above 13.9">Много висока</string>
     <string name="login">Вход</string>
     <string name="device_all">Всички</string>
     <!-- Aidex Cgms -->
