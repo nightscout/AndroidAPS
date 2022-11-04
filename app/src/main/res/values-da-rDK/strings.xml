@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Seneste algoritme for avancerede brugere med dynamisk/automatisk ISF</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
-    <string name="description_profile_local">Definér en profil, der er tilgængelig offline.</string>
     <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten er beregnet på samme måde som Oref0, men du kan angive tidsramme for fortiden. Minimal optagelse af kulhydrater beregnes fra maks. kulhydrat optagelse fra præferencer.</string>
     <string name="description_sensitivity_oref1">Sensitiviteten beregnes fra 8t-eller 24t-data i fortiden (Ved hjælp af den der er mest sensitiv). Kulhydrater (hvis ikke optaget) er opdelt, efter den tid der er angivet i Indstillinger. Pluginnet beregner også UAM.</string>
@@ -83,7 +82,6 @@
     <string name="constraints_violation">Begrænsninger overtrådt</string>
     <string name="setbasalquestion">Acceptér ny midlertidig basal:</string>
     <string name="overview_treatment_label">Behandling</string>
-    <string name="overview_calculator_label">Beregner</string>
     <string name="changeyourinput">Skift dit input!</string>
     <string name="configbuilder_bgsource">BG kilde</string>
     <string name="xdrip">xDrip+</string>
@@ -153,7 +151,6 @@
     <string name="button1">Knap 1</string>
     <string name="button2">Knap 2</string>
     <string name="button3">Knap 3</string>
-    <string name="units_colon">Enheder:</string>
     <string name="units">Enheder</string>
     <string name="prefs_range_title">Område for Visualisering</string>
     <string name="prefs_range_summary">Højeste og laveste værdi for diagrammerne i Oversigt og Smartwatch</string>
@@ -166,7 +163,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Igangværende Notifikation</string>
     <string name="old_data">GAMLE DATA</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Række af %1$d elementer.\nFaktisk værdi:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
@@ -179,7 +175,6 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DynISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HJEM</string>
     <string name="virtualpump_shortname">VPUMPE</string>
     <string name="treatments_shortname">BEHANDL</string>
@@ -306,7 +301,6 @@
     <string name="absorption_maxtime_summary">Tid i timer, hvor det forventes at alle kulhydrater fra måltidet vil blive absorberet</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Hold skærmen tændt</string>
     <string name="keep_screen_on_summary">Forhindrer Android i at slukke for skærmen. Det vil forbruge meget energi, når den ikke er tilsluttet stikkontakt.</string>
     <string name="sensitivity_warning">Ved at slå funktionen Autosense til husk at indtaste alle spiste kulhydrater. Ellers vil kulhydrat afvigelser blive identificeret forkert som følsomheds ændring !!</string>
@@ -322,7 +316,6 @@
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Brug Super Mikro Boluser i stedet for midlertidig basal for hurtigere handling</string>
     <string name="enableuam_summary">Detektering af uanmeldte måltider</string>
-    <string name="activate_profile">Aktivér profil</string>
     <string name="invalid">UGYLDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Procent</string>
     <string name="careportal_newnstreatment_timeshift_label">Tidsskift</string>
@@ -413,8 +406,6 @@
     <string name="g5appnotdetected">Opdater venligst din Dexcom app til understøttet version</string>
     <string name="dexcom_app_not_installed">Dexcom app er ikke installeret.</string>
     <string name="do_not_bolus_record_only">Ikke bolus, registrer kun</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolus registreres kun (bliver ikke leveret af pumpe)</string>
     <string name="loop_smbsetbypump_label">SMB indstillet af pumpe</string>
     <string name="overview_show_activity">Aktivitet</string>
@@ -586,23 +577,13 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profilnavn:</string>
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheder</string>
-    <string name="doyouwantswitchprofile">Vil du skifte profil og kassere ændringer, der er foretaget i den aktuelle profil?</string>
     <string name="objectives_button_unfinish">Ryd færdigt</string>
     <string name="objectives_button_unstart">Ryd startet</string>
     <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
     <string name="setupwizard_units_prompt">Vælg enheder du vil vise værdier i</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">MÅL</string>
-    <string name="clone_label">Klon</string>
-    <string name="saveorresetchangesfirst">Gem eller nulstil aktuelle ændringer først</string>
-    <string name="deletecurrentprofile">Fjern aktuelle profil?</string>
     <string name="copytolocalprofile">Opret ny profil fra denne profil?</string>
-    <string name="profilenamecontainsdot">Profilnavn indeholder punktum.\nDette understøttes ikke af NS.\nProfilen er ikke uploadet til NS.</string>
     <string name="low_mark_comment">Nedre værdi for målområde (kun visning)</string>
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
     <string name="invalidpct">Ugyldig angivelse af %</string>
@@ -688,15 +669,7 @@
     <string name="ns_receive_therapy_events_summary">Accepter terapihændelser (Kanyle, insulin, batteriskift osv.), der indtastes gennem NS eller NSClient</string>
     <string name="ns_receive_cgm">Modtag/tilbagefyld CGM-data</string>
     <string name="ns_receive_cgm_summary">Accepter CGM-data fra NS</string>
-    <string name="missing_profile_name">Manglende profilnavn</string>
-    <string name="error_in_ic_values">Fejl i IC-værdier</string>
-    <string name="error_in_basal_values">Fejl i basal rate værdier</string>
-    <string name="error_in_target_values">Fejl i målværdier</string>
-    <string name="error_in_isf_values">Fejl i ISF-værdier</string>
     <string name="run_question">Kør %s?</string>
-    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s blev ikke accepteret fra NS</string>
-    <string name="view">Vis</string>
-    <string name="errors">Fejl</string>
     <string name="ns_sync_slow">Reducer upload hastighed</string>
     <string name="data_status">BG data status</string>
     <string name="remove_bg_readings">Fjern BG aflæsninger</string>
@@ -719,10 +692,6 @@
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
-    <string name="a11y_add_new_profile">tilføj ny profil</string>
-    <string name="a11y_clone_profile">klon nuværende profil</string>
-    <string name="a11y_delete_current_profile">slet nuværende profil</string>
-    <string name="a11y_add_new_to_list">tilføj ny til listen</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Midlertidigmål ukendt forudindstilling: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Annullér aktuelt midlertidig mål?</string>
@@ -758,7 +727,6 @@
     <string name="app_default">Program standard</string>
     <string name="show_invalidated_records">Vis ugyldige / fjernede poster</string>
     <string name="hide_invalidated_records">Skjul ugyldige / fjernede poster</string>
-    <string name="select_profile">Vælg profil, du vil redigere</string>
     <string name="refresh_from_nightscout">Opdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="select_for_removal">Vælg for at fjerne</string>
