@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Najnovší algoritmus pre pokročilých užívateľov s dynamickým/automatickým ISF</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
-    <string name="description_profile_local">Definujte profil, ktorý je dostupný offline.</string>
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="description_sensitivity_aaps">Citlivosť je počítaná tým istým spôsobom ako v Oref0, ale je možné špecifikovať časové okno do minulosti. Minimálne vstrebávanie sacharidov je počítané dynamicky z maximálnej doby vstrebávania, definovanej v nastaveniach.</string>
     <string name="description_sensitivity_oref1">Citlivosť je počítaná za posledných 8h, alebo 24h (použiť to, ktoré je citlivejšie) a sacharidy (pokiaľ nie sú vstrebané), sú orezané po čase definovanom v nastaveniach. Modul tiež počíta s UAM (neoznámené jedlo).</string>
@@ -87,7 +86,6 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Kalkulačka</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
@@ -158,7 +156,6 @@
     <string name="button1">Tlačidlo 1</string>
     <string name="button2">Tlačidlo 2</string>
     <string name="button3">Tlačidlo 3</string>
-    <string name="units_colon">Jednotky:</string>
     <string name="units">Jednotky</string>
     <string name="prefs_range_title">Rozsah pre zobrazenie</string>
     <string name="prefs_range_summary">Značka vysokej a nízkej hodnoty v prehľade a na hodinkách Wear</string>
@@ -171,7 +168,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Priebežné notifikácie</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Pole %1$d prvkov.\nAktuálna hodnota:</string>
     <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
@@ -184,7 +180,6 @@
     <string name="loop_shortname">OKRUH</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
-    <string name="localprofile_shortname">LPRF</string>
     <string name="overview_shortname">PREH</string>
     <string name="virtualpump_shortname">VPUM</string>
     <string name="treatments_shortname">OŠET</string>
@@ -311,7 +306,6 @@
     <string name="absorption_maxtime_summary">Čas v hodinách, počas ktorého predpokladáme, že všetky sacharidy budú vstrebané</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAZ</string>
     <string name="keep_screen_on_title">Nechať obrazovku zapnutú</string>
     <string name="keep_screen_on_summary">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky vybije veľmi rýchlo batériu!</string>
     <string name="sensitivity_warning">Pri zapnutej automatickej detekcii citlivosti, nezabudnite vkladať všetky prijaté sacharidy. V opačnom prípade, budú odchýlky mylne vyhodnocované, ako zmena citlivosti !!</string>
@@ -328,7 +322,6 @@
     <string name="enablesmb">Povoliť SMB</string>
     <string name="enablesmb_summary">Použiť Super Mikro Bolusy namiesto dočasných bazálov, pre zrýchleniu účinku</string>
     <string name="enableuam_summary">Detekcia neoznámených jedál</string>
-    <string name="activate_profile">Aktivovať profil</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="careportal_newnstreatment_percentage_label">% zmena</string>
     <string name="careportal_newnstreatment_timeshift_label">Posun času</string>
@@ -419,8 +412,6 @@
     <string name="g5appnotdetected">Prosím aktualizuj tvoju Dexcom aplikáciu na podporovanú verziu</string>
     <string name="dexcom_app_not_installed">Dexcom aplikácia nie je nainštalovaná.</string>
     <string name="do_not_bolus_record_only">Nepodať bolus, iba zaznamenať</string>
-    <string name="category">Kategória</string>
-    <string name="subcategory">Podkategória</string>
     <string name="bolusrecordedonly">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
     <string name="loop_smbsetbypump_label">SMB podané pumpou</string>
     <string name="overview_show_activity">Aktivita</string>
@@ -598,23 +589,13 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Názov profilu:</string>
     <string name="selected_profile">Vybrané:</string>
     <string name="unitsnosemicolon">Jednotky</string>
-    <string name="doyouwantswitchprofile">Chcete prepnúť profil a zahodiť zmeny vykonané v aktuálnom profile?</string>
     <string name="objectives_button_unfinish">Vymazanie dokončené</string>
     <string name="objectives_button_unstart">Vymazanie začaté</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">I:C</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">CIEĽ</string>
-    <string name="clone_label">Klonovať</string>
-    <string name="saveorresetchangesfirst">Najskôr uložte, alebo resetujte aktuálne zmeny</string>
-    <string name="deletecurrentprofile">Zmazať aktuálny profil?</string>
     <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový lokálny profil?</string>
-    <string name="profilenamecontainsdot">Názov profilu obsahuje bodky.\nToto nie je podporované v NS.\nProfil nebude prenesený do NS.</string>
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="invalidpct">Neplatný vstup %</string>
@@ -702,15 +683,7 @@
     <string name="ns_receive_therapy_events_summary">Prijať liečebné udalosti (výmena setu, inzulínu, batérie atď.) zadané prostredníctvom NS, alebo NSClienta</string>
     <string name="ns_receive_cgm">Prijímať/doplňovať glykémie</string>
     <string name="ns_receive_cgm_summary">Prijať CGM dáta z NS</string>
-    <string name="missing_profile_name">Chýba názov profilu</string>
-    <string name="error_in_ic_values">Chyba v hodnotách inz./sach. prevodu</string>
-    <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
-    <string name="error_in_target_values">Chyba v cieľových hodnotách</string>
-    <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
     <string name="run_question">Spustiť %s?</string>
-    <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebol akceptovaný z NS</string>
-    <string name="view">Zobraziť</string>
-    <string name="errors">Chyby</string>
     <string name="ns_sync_slow">Spomaliť nahrávanie</string>
     <string name="data_status">Stav dát glykémie</string>
     <string name="remove_bg_readings">Odstrániť glykémie</string>
@@ -733,10 +706,6 @@
     <string name="a11y_insulin_label">inzulín</string>
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
-    <string name="a11y_add_new_profile">pridať nový profil</string>
-    <string name="a11y_clone_profile">klonovať aktuálny profil</string>
-    <string name="a11y_delete_current_profile">zmazať aktuálny profil</string>
-    <string name="a11y_add_new_to_list">pridať nový do zoznamu</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
@@ -772,7 +741,6 @@
     <string name="app_default">Predvolené aplikáciou</string>
     <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
     <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
-    <string name="select_profile">Vyberte profil pre úpravu</string>
     <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
     <string name="select_for_removal">Vyberte pre odstránenie</string>
