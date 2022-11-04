@@ -16,7 +16,6 @@
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
-    <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
     <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
     <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
     <string name="description_ama">2017\'da algoritmanın durumu</string>
@@ -101,12 +100,8 @@
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
     <string name="treatments_wizard_basaliob_label">Bazal AİNS</string>
-    <string name="careportal_newnstreatment_other">Diğer</string>
-    <string name="careportal_newnstreatment_meter">GlkMetre</string>
-    <string name="careportal_newnstreatment_sensor">Sensör</string>
     <string name="carb_time_label">Karb. zamanı</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
     <string name="overview_extendedbolus_button">Yayma Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
@@ -348,12 +343,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="reuse_profile_pct_hours">%1$d%% %2$dh\'yi yeniden kullan</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
-    <string name="food">Yiyecek</string>
-    <string name="none"><![CDATA[<yok>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Yağ</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="gradually_increase_notification_volume">Uyarılar ve bildirimler için ses seviyesini kademeli olarak artırın</string>
     <string name="localalertsettings_title">Yerel uyarılar</string>
@@ -464,7 +453,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
     <string name="smbalwaysdisabled">Aktif KŞ kaynağı gelişmiş filtrelemeyi desteklemediği için SMB (Super Micro Bolus) her zaman ve karbonhidratlardan sonra devre dışı bırakıldı</string>
     <string name="smbnotallowedinopenloopmode">Açık Döngü modunda SMB\'ye (Super Micro Bolus) izin verilmiyor</string>
-    <string name="food_short">Yiyecek</string>
     <string name="openapssmb_maxiob_title">OpenAPS tarafından aşılamayacak maksimum toplam AİNS (Aktif İnsülin)[U]</string>
     <string name="openapssmb_maxiob_summary">Bu değer OpenAPS bağlamında Max AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez</string>
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
@@ -673,7 +661,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="basalpctfromtdd_label">% bazalın</string>
     <string name="dpvdefaultprofile">DPV Varsayılan profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink durumu:</string>
-    <string name="filter">Filtre</string>
     <string name="copytolocalprofile_invalid">Profil oluşturulamıyor. Profil geçersiz.</string>
     <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
@@ -751,12 +738,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_clone_profile">mevcut profili klonla</string>
     <string name="a11y_delete_current_profile">mevcut profil sil</string>
     <string name="a11y_add_new_to_list">listeye yeni ekle</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Sistem teması veya koyu ve açık tema için seçim yapın.</string>
-    <string name="app_color_scheme">Uyg. Renk Şeması</string>
-    <string name="dark_theme">Koyu tema</string>
-    <string name="light_theme">Açık tema</string>
-    <string name="follow_system_theme">Cihaz temasını kullan</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
