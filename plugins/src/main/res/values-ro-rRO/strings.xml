@@ -97,8 +97,18 @@
     <string name="insulin_peak_time">Timp vârf [min]</string>
     <string name="free_peak_oref">Oref Vârf-Liber</string>
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
-    <string name="ultrarapid_oref">Oref Insulină-UltraRapidă</string>
     <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <!-- Overview -->
 </resources>
