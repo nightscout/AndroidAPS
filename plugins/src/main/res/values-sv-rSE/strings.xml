@@ -97,8 +97,6 @@
     <string name="insulin_peak_time">Peaktid [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog, Apidra</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
 </resources>
