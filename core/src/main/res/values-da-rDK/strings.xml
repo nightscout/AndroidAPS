@@ -274,7 +274,6 @@
     <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Signaturgodkender</string>
     <string name="running_invalid_version">Vi har opdaget, at du kører en ugyldig version. Loop deaktiveret!</string>
     <string name="versionavailable">Version %1$s tilgængelig</string>
     <string name="version_expire">Version %1$s udløber den %2$s</string>
