@@ -200,7 +200,6 @@
     <string name="short_tabtitles">Krátké názvy modulů</string>
     <string name="always_use_shortavg">Vždy používat krátkodobý průměrný rozdíl glykémií místo rozdílu posledních 2 hodnot</string>
     <string name="always_use_shortavg_summary">Výhodné, pokud data z xDripu+ obsahují velký šum.</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3 Toto je klíčová hodnota zabezpečení. Říká, že maximální nastavitelný bazál je trojnásobkem maximálního denního bazálu. Patrně to nebudete muset měnit, případně si přečtete o tématu \"3x max denní; 4x aktuální\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4 Toto je druhá klíčová hodnota. Říká, že maximální hodnota dočasného bazálu nikdy nebude větší, než čtyřnásobek aktuálního bazálu. Je to proto, aby se lidé nedostali do nebezpečných hodnot dříve, než pochopí jak OpenAPS pracuje. Znovu, výchozí hodnota je 4 a většina lidí ji nikdy nebude muset změnit. Pokud nestačí, obvykle je problém někde jinde.</string>
     <string name="openapsama_autosens_max_summary">Výchozí hodnota: 1.2\nToto je bezpečnostní nastavení pro detekci sensitivity (a brzy autotune). Říká, že autosense může zvýšit bazály, snížit ISF a snížit cílovou hodnotu glykémie o 20 %.</string>
@@ -474,7 +473,6 @@
     <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>
     <string name="smbnotallowedinopenloopmode">SBM není povoleno v otevřené smyčce</string>
     <string name="food_short">Jídlo</string>
-    <string name="reset">Resetovat</string>
     <string name="openapssmb_maxiob_title">Maximální celková hodnota IOB, kterou OpenAPS nemůže překročit [U]</string>
     <string name="openapssmb_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána Max IOB.\nOpenAPS nikdy nepřidá inzulín, pokud je současné IOB větší než tato hodnota</string>
     <string name="absorption_cutoff_title">Maximální doba absorpce sacharidů [h]</string>
@@ -640,25 +638,7 @@
     <string name="profilenamecontainsdot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
-    <string name="age">Věk</string>
-    <string name="weight_label">Váha</string>
-    <string name="id">ID:</string>
-    <string name="submit">Odeslat</string>
-    <string name="mostcommonprofile">Nejběžnější profil:</string>
-    <string name="survey_comment">Poznámka: Pouze data viditelná na této obrazovce budou odesílána anonymně. ID je přiřazeno k této instalaci produktu AAPS. Data můžete znovu odeslat, pokud se váš hlavní profil změní, ale nechte ho běžet alespoň týden, aby byl výsledek viditelný v čase v rozsahu. Vážíme si Vaši pomoci.</string>
-    <string name="invalidage">Neplatná položka věku</string>
-    <string name="invalidweight">Neplatná položka váhy</string>
     <string name="invalidpct">Neplatný vstup %</string>
-    <string name="average">Průměr</string>
-    <string name="tir">Čas v rozsahu</string>
-    <string name="day_tir">Denní TIR</string>
-    <string name="night_tir">Noční TIR</string>
-    <string name="detailed_14_days">Podrobně 14 dní</string>
-    <string name="std_deviation">SD: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">Monitor aktivity</string>
-    <string name="doyouwantresetstats">Chcete resetovat statistiky aktivity?</string>
-    <string name="statistics">Statistika</string>
     <string name="randombg">Náhodná glykémie</string>
     <string name="description_source_randombg">Generovat náhodná data glykémie (pouze režim Demo)</string>
     <string name="randombg_short">GLYK</string>
@@ -743,7 +723,6 @@
     <string name="ns_receive_therapy_events_summary">Přijmout léčebné události (výměna setu, inzulínu, baterie atd.) zadané prostřednictvím NS nebo NSClienta</string>
     <string name="ns_receive_cgm">Přijímat/doplňovat glykémie</string>
     <string name="ns_receive_cgm_summary">Přijmout CGM data z NS</string>
-    <string name="calculation_in_progress">Probíhá výpočet</string>
     <string name="missing_profile_name">Chybí název profilu</string>
     <string name="error_in_ic_values">Chyba v hodnotách sach. poměru</string>
     <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
@@ -833,13 +812,6 @@
     <string name="show_loop">Zobrazit smyčku</string>
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="sort_label">Seřadit</string>
-    <string name="veryLow" comment="below 3.1">Velmi nízká</string>
-    <string name="low" comment="3.1-3.9">Nízká</string>
-    <string name="high" comment="10.0-13.9">Vysoká</string>
-    <string name="veryHigh" comment="above 13.9">Velmi vysoká</string>
-    <string name="below" comment="below &quot;in range&quot;">Pod</string>
-    <string name="in_range">V rozsahu</string>
-    <string name="above" comment="above &quot;in range&quot;">Nad</string>
     <string name="show_loop_records">Zobrazit záznamy smyčky</string>
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
     <string name="loop_status">Stav smyčky</string>
