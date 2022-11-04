@@ -17,5 +17,12 @@
     <string name="configure">Şeffaflığı yapılandır</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="statistics">İstatistikler</string>
+    <string name="calculation_in_progress">Hesaplanıyor</string>
+    <string name="id">Kimlik:</string>
+    <string name="submit">Sunum</string>
+    <string name="age">Yaş</string>
+    <string name="weight_label">Ağırlık</string>
+    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
     <!-- CareDialog -->
 </resources>
