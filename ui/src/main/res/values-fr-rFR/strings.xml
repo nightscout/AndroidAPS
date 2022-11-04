@@ -16,4 +16,6 @@
     <!--    Widget-->
     <string name="configure">Configurer l’opacité</string>
     <string name="widget_description">Widget AAPS</string>
+    <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
