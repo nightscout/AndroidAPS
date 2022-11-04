@@ -402,7 +402,6 @@
     <string name="overview_show_basals">Basal</string>
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
-    <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
     <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
     <string name="autosensdisabledinpreferences">설정에서 Autosens가 비활성화 되었습니다.</string>
