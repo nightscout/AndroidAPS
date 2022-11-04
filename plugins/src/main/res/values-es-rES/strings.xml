@@ -90,20 +90,17 @@
     <string name="sms_basal">Dosis Basal:</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
     <!-- Insulin -->
-    <string name="dia">DIA</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Ajustes de insulina preestablecidos para Humalog y NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Ajuste de insulina preestablecido para Fiasp</string>
-    <string name="description_insulin_lyumjev">Ajuste de insulina preestablecido para Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite personalizar el pico de acción máxima de la insulina. Debe ser utilizado únicamente por usuarios avanzados</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
-    <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
-    <string name="insulin_peak">Pico</string>
-    <string name="free_peak_oref">Personalizar Pico</string>
-    <string name="rapid_acting_oref">Acción Rápida</string>
-    <string name="ultrarapid_oref">Acción Ultra Rápida</string>
-    <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <!-- Overview -->
 </resources>
