@@ -50,9 +50,12 @@
     <string name="description_insulin_free_peak">Omogućava definisanje vrhunca aktivnosti insulina i trebaju ga koriste samo napredni korisnici</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Prikažite informacije o tvom loop-u na tvom xDrip+ satu.</string>
     <!-- Food-->
+    <string name="description_food">Prikazuje unapred podešene postavke hrane definisane u Nightscout-u</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <string name="description_profile_local">Definiši profil koji je dostupan bez internet veze.</string>
     <!-- BG Quality -->
     <!-- DST Helper -->
     <!-- Storage constraint -->
