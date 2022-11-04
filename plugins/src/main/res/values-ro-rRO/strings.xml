@@ -100,15 +100,54 @@
     <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
     <!-- Food-->
+    <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
+    <string name="filter">Filtru</string>
+    <string name="food">Mâncare</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Grăsime</string>
+    <string name="category">Categorie</string>
+    <string name="subcategory">Subcategorie</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Schemă de culori aplicații</string>
     <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definire profil care să fie valabil offline.</string>
+    <string name="units_colon">Unități:</string>
+    <string name="missing_profile_name">Lipsește numele profilului</string>
+    <string name="error_in_ic_values">Eroare in valorile IC</string>
+    <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
+    <string name="error_in_target_values">Eroare in valorile tinta</string>
+    <string name="error_in_isf_values">Eroare in valorile ISF</string>
+    <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
+    <string name="view">Vizualizare</string>
+    <string name="errors">Erori</string>
+    <string name="profile_name">Nume profil:</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">TARG</string>
+    <string name="clone_label">Clonează</string>
+    <string name="basal_short">BZL</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Date recalculate utilizate</string>
+    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
+    <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">versiune veche</string>
+    <string name="very_old_version">versiune foarte veche</string>
+    <string name="application_expired">Aplicația a expirat</string>
+    <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="not_completed_yet">Încă incomplet</string>
+    <string name="time_elapsed">Timp scurs</string>
     <!-- Overview -->
 </resources>
