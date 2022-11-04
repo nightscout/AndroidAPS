@@ -1,17 +1,18 @@
-package info.nightscout.androidaps.plugins.general.autotune.data
+package info.nightscout.plugins.general.autotune.data
 
-import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
+import java.util.TimeZone
 
 /**
  * Created by Rumen Georgiev on 2/24/2018.
  */
 class BGDatum {
+
     //Added by Rumen for autotune
     var id: Long = 0
     var date = 0L
@@ -27,7 +28,10 @@ class BGDatum {
         private set
     var dateUtil: DateUtil
 
-    constructor(dateUtil: DateUtil) { this.dateUtil = dateUtil}
+    constructor(dateUtil: DateUtil) {
+        this.dateUtil = dateUtil
+    }
+
     constructor(json: JSONObject, dateUtil: DateUtil) {
         this.dateUtil = dateUtil
         try {

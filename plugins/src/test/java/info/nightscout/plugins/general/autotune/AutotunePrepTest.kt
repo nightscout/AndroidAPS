@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.LocalInsulin
@@ -14,11 +13,14 @@ import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.extensions.shiftBlock
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.general.autotune.data.*
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
@@ -29,14 +31,13 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.io.File
-import java.util.*
+import java.util.TimeZone
 
 class AutotunePrepTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var autotuneFS: AutotuneFS
     @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var repository: AppRepository
     private lateinit var autotunePrep: AutotunePrep
     private lateinit var autotuneIob: TestAutotuneIob
@@ -55,8 +56,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
     fun autotunePrepTest1() { // Test if categorisation with standard treatments with carbs is Ok
         val inputIobJson = File("src/test/res/autotune/test1/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
-        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalculation)
-        autotunePrep = AutotunePrep(aapsLogger, sp, dateUtil, autotuneFS, autotuneIob)
+        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, autotuneFS, iobOapsCalculation)
+        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test1/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/test/res/autotune/test1/autotune.2022-05-21.json").readText()
@@ -94,8 +95,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
     fun autotunePrepTest2() { // Test if categorisation without carbs (full UAM) and categorize UAM as basal false is Ok
         val inputIobJson = File("src/test/res/autotune/test2/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
-        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalculation)
-        autotunePrep = AutotunePrep(aapsLogger, sp, dateUtil, autotuneFS, autotuneIob)
+        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, autotuneFS, iobOapsCalculation)
+        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test2/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/test/res/autotune/test2/autotune.2022-05-21.json").readText()
@@ -133,8 +134,8 @@ class AutotunePrepTest : TestBaseWithProfile() {
     fun autotunePrepTest3() { // Test if categorisation without carbs (full UAM) and categorize UAM as basal true is Ok
         val inputIobJson = File("src/test/res/autotune/test3/oaps-iobCalc.2022-05-21.json").readText() //json files build with iob/activity calculated by OAPS
         val iobOapsCalculation = buildIobOaps(JSONArray(inputIobJson))
-        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, activePlugin, autotuneFS, iobOapsCalculation)
-        autotunePrep = AutotunePrep(aapsLogger, sp, dateUtil, autotuneFS, autotuneIob)
+        autotuneIob = TestAutotuneIob(aapsLogger, repository, profileFunction, sp, dateUtil, autotuneFS, iobOapsCalculation)
+        autotunePrep = AutotunePrep(sp, dateUtil, autotuneFS, autotuneIob)
         val inputProfileJson = File("src/test/res/autotune/test3/profile.pump.json").readText()
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prepJson = File("src/test/res/autotune/test3/autotune.2022-05-21.json").readText()
@@ -305,10 +306,9 @@ class AutotunePrepTest : TestBaseWithProfile() {
     class TestAutotuneIob(
         val aapsLogger: AAPSLogger,
         repository: AppRepository,
-        val profileFunction: ProfileFunction,
-        val sp: SP,
-        val dateUtil: DateUtil,
-        val activePlugin: ActivePlugin,
+        profileFunction: ProfileFunction,
+        sp: SP,
+        dateUtil: DateUtil,
         autotuneFS: AutotuneFS,
         private val iobOapsCalculation: ArrayList<IobTotal>
     ) : AutotuneIob(

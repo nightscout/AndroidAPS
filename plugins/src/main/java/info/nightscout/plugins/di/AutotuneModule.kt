@@ -1,12 +1,15 @@
-package info.nightscout.androidaps.dependencyInjection
+package info.nightscout.plugins.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.general.autotune.AutotuneCore
-import info.nightscout.androidaps.plugins.general.autotune.AutotuneIob
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep
-import info.nightscout.androidaps.plugins.general.autotune.AutotuneFS
-import info.nightscout.androidaps.plugins.general.autotune.data.*
+import info.nightscout.plugins.general.autotune.AutotuneCore
+import info.nightscout.plugins.general.autotune.AutotuneFS
+import info.nightscout.plugins.general.autotune.AutotuneIob
+import info.nightscout.plugins.general.autotune.AutotunePrep
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.BGDatum
+import info.nightscout.plugins.general.autotune.data.CRDatum
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 
 @Module
 @Suppress("unused")

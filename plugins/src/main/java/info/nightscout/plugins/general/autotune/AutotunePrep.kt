@@ -1,66 +1,71 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.plugins.general.autotune.data.*
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.BGDatum
+import info.nightscout.plugins.general.autotune.data.CRDatum
+import info.nightscout.plugins.general.autotune.data.DiaDeviation
+import info.nightscout.plugins.general.autotune.data.PeakDeviation
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 @Singleton
 class AutotunePrep @Inject constructor(
-    private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val autotuneFS: AutotuneFS,
     private val autotuneIob: AutotuneIob
 ) {
-    fun categorize(tunedprofile: ATProfile): PreppedGlucose? {
-        val preppedGlucose = categorizeBGDatums(tunedprofile, tunedprofile.localInsulin)
+
+    fun categorize(tunedProfile: ATProfile): PreppedGlucose? {
+        val preppedGlucose = categorizeBGDatums(tunedProfile, tunedProfile.localInsulin)
         val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
         if (tuneInsulin) {
             var minDeviations = 1000000.0
             val diaDeviations: MutableList<DiaDeviation> = ArrayList()
             val peakDeviations: MutableList<PeakDeviation> = ArrayList()
-            val currentDIA = tunedprofile.localInsulin.dia
-            val currentPeak = tunedprofile.localInsulin.peak
+            val currentDIA = tunedProfile.localInsulin.dia
+            val currentPeak = tunedProfile.localInsulin.peak
 
             var dia = currentDIA - 2
             val endDIA = currentDIA + 2
-            while (dia <= endDIA)
-            {
+            while (dia <= endDIA) {
                 var sqrtDeviations = 0.0
                 var deviations = 0.0
                 var deviationsSq = 0.0
                 val localInsulin = LocalInsulin("Ins_$currentPeak-$dia", currentPeak, dia)
-                val curve_output = categorizeBGDatums(tunedprofile, localInsulin, false)
-                val basalGlucose = curve_output?.basalGlucoseData
+                val curveOutput = categorizeBGDatums(tunedProfile, localInsulin, false)
+                val basalGlucose = curveOutput?.basalGlucoseData
 
                 basalGlucose?.let {
                     for (hour in 0..23) {
-                        for (i in 0..(basalGlucose.size-1)) {
+                        for (i in basalGlucose.indices) {
                             val myHour = ((basalGlucose[i].date - MidnightTime.calc(basalGlucose[i].date)) / T.hours(1).msecs()).toInt()
                             if (hour == myHour) {
-                                sqrtDeviations += Math.pow(Math.abs(basalGlucose[i].deviation), 0.5)
-                                deviations += Math.abs(basalGlucose[i].deviation)
-                                deviationsSq += Math.pow(basalGlucose[i].deviation, 2.0)
+                                sqrtDeviations += abs(basalGlucose[i].deviation).pow(0.5)
+                                deviations += abs(basalGlucose[i].deviation)
+                                deviationsSq += basalGlucose[i].deviation.pow(2.0)
                             }
                         }
                     }
 
-                    val meanDeviation = Round.roundTo(Math.abs(deviations / basalGlucose.size), 0.001)
-                    val smrDeviation = Round.roundTo(Math.pow(sqrtDeviations / basalGlucose.size, 2.0), 0.001)
-                    val rmsDeviation = Round.roundTo(Math.pow(deviationsSq / basalGlucose.size, 0.5), 0.001)
+                    val meanDeviation = Round.roundTo(abs(deviations / basalGlucose.size), 0.001)
+                    val smrDeviation = Round.roundTo((sqrtDeviations / basalGlucose.size).pow(2.0), 0.001)
+                    val rmsDeviation = Round.roundTo((deviationsSq / basalGlucose.size).pow(0.5), 0.001)
                     log("insulinEndTime $dia meanDeviation: $meanDeviation SMRDeviation: $smrDeviation RMSDeviation: $rmsDeviation (mg/dL)")
                     diaDeviations.add(
                         DiaDeviation(
@@ -85,31 +90,30 @@ class AutotunePrep @Inject constructor(
             minDeviations = 1000000.0
             var peak = currentPeak - 10
             val endPeak = currentPeak + 10
-            while (peak <= endPeak)
-            {
+            while (peak <= endPeak) {
                 var sqrtDeviations = 0.0
                 var deviations = 0.0
                 var deviationsSq = 0.0
                 val localInsulin = LocalInsulin("Ins_$peak-$currentDIA", peak, currentDIA)
-                val curve_output = categorizeBGDatums(tunedprofile, localInsulin, false)
-                val basalGlucose = curve_output?.basalGlucoseData
+                val curveOutput = categorizeBGDatums(tunedProfile, localInsulin, false)
+                val basalGlucose = curveOutput?.basalGlucoseData
 
                 basalGlucose?.let {
                     for (hour in 0..23) {
-                        for (i in 0..(basalGlucose.size - 1)) {
+                        for (i in basalGlucose.indices) {
                             val myHour = ((basalGlucose[i].date - MidnightTime.calc(basalGlucose[i].date)) / T.hours(1).msecs()).toInt()
                             if (hour == myHour) {
                                 //console.error(basalGlucose[i].deviation);
-                                sqrtDeviations += Math.pow(Math.abs(basalGlucose[i].deviation), 0.5)
-                                deviations += Math.abs(basalGlucose[i].deviation)
-                                deviationsSq += Math.pow(basalGlucose[i].deviation, 2.0)
+                                sqrtDeviations += abs(basalGlucose[i].deviation).pow(0.5)
+                                deviations += abs(basalGlucose[i].deviation)
+                                deviationsSq += basalGlucose[i].deviation.pow(2.0)
                             }
                         }
                     }
 
                     val meanDeviation = Round.roundTo(deviations / basalGlucose.size, 0.001)
-                    val smrDeviation = Round.roundTo(Math.pow(sqrtDeviations / basalGlucose.size, 2.0), 0.001)
-                    val rmsDeviation = Round.roundTo(Math.pow(deviationsSq / basalGlucose.size, 0.5), 0.001)
+                    val smrDeviation = Round.roundTo((sqrtDeviations / basalGlucose.size).pow(2.0), 0.001)
+                    val rmsDeviation = Round.roundTo((deviationsSq / basalGlucose.size).pow(0.5), 0.001)
                     log("insulinPeakTime $peak meanDeviation: $meanDeviation SMRDeviation: $smrDeviation RMSDeviation: $rmsDeviation (mg/dL)")
                     peakDeviations.add(
                         PeakDeviation
@@ -122,7 +126,7 @@ class AutotunePrep @Inject constructor(
                     )
                 }
 
-                deviations = Round.roundTo(deviations, 0.001);
+                deviations = Round.roundTo(deviations, 0.001)
                 if (deviations < minDeviations)
                     minDeviations = Round.roundTo(deviations, 0.001)
                 peak += 5
@@ -136,7 +140,7 @@ class AutotunePrep @Inject constructor(
     }
 
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    fun categorizeBGDatums(tunedprofile: ATProfile, localInsulin: LocalInsulin, verbose: Boolean = true): PreppedGlucose? {
+    fun categorizeBGDatums(tunedProfile: ATProfile, localInsulin: LocalInsulin, verbose: Boolean = true): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
         val treatments: MutableList<Carbs> = autotuneIob.meals
         val boluses: MutableList<Bolus> = autotuneIob.boluses
@@ -148,14 +152,14 @@ class AutotunePrep @Inject constructor(
                 glucoseData.add(glucose[i])
             }
         }
-        if (glucose.size == 0 || glucoseData.size == 0 ) {
+        if (glucose.isEmpty() || glucoseData.size == 0) {
             //aapsLogger.debug(LTag.AUTOTUNE, "No BG value received")
             if (verbose)
                 log("No BG value received")
             return null
         }
 
-        glucoseData.sortWith(object: Comparator<GlucoseValue>{ override fun compare(o1: GlucoseValue, o2: GlucoseValue): Int = (o2.timestamp - o1.timestamp).toInt() })
+        glucoseData.sortWith { o1, o2 -> (o2.timestamp - o1.timestamp).toInt() }
 
         // Bloc below replace bloc between #55 and #71
         // boluses and maxCarbs not used here ?,
@@ -189,10 +193,10 @@ class AutotunePrep @Inject constructor(
         var k = 0 // index of first value used by bucket
         //for loop to validate and bucket the data
         for (i in 1 until glucoseData.size) {
-            val BGTime = glucoseData[i].timestamp
+            val bgTime = glucoseData[i].timestamp
             val lastBGTime = glucoseData[k].timestamp
-            val elapsedMinutes = (BGTime - lastBGTime) / (60 * 1000)
-            if (Math.abs(elapsedMinutes) >= 2) {
+            val elapsedMinutes = (bgTime - lastBGTime) / (60 * 1000)
+            if (abs(elapsedMinutes) >= 2) {
                 //j++; // move to next bucket
                 k = i // store index of first value used by bucket
                 bucketedData.add(BGDatum(glucoseData[i], dateUtil))
@@ -229,14 +233,14 @@ class AutotunePrep @Inject constructor(
         for (i in bucketedData.size - 5 downTo 1) {
             val glucoseDatum = bucketedData[i]
             //log.debug(glucoseDatum);
-            val BGTime = glucoseDatum.date
+            val bgTime = glucoseDatum.date
 
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
             val treatment = if (treatments.size > 0) treatments[treatments.size - 1] else null
             var myCarbs = 0.0
             if (treatment != null) {
-                if (treatment.timestamp < BGTime) {
+                if (treatment.timestamp < bgTime) {
                     if (treatment.amount > 0.0) {
                         mealCOB += treatment.amount
                         mealCarbs += treatment.amount
@@ -267,7 +271,7 @@ class AutotunePrep @Inject constructor(
             glucoseDatum.avgDelta = avgDelta
 
             //sens = ISF
-            val sens = tunedprofile.isf
+            val sens = tunedProfile.isf
 
             // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
             // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
@@ -280,7 +284,7 @@ class AutotunePrep @Inject constructor(
             currentPumpBasal = Round.roundTo(currentPumpBasal / 4, 0.001) //CurrentPumpBasal for iob calculation is average of 4 last pumpProfile Basal rate
             */
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            val currentBasal = tunedprofile.getBasal(BGTime)
+            val currentBasal = tunedProfile.getBasal(bgTime)
 
             // basalBGI is BGI of basal insulin activity.
             val basalBGI = Round.roundTo(currentBasal * sens / 60 * 5, 0.01) // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
@@ -289,14 +293,14 @@ class AutotunePrep @Inject constructor(
             //var iob = getIOB(IOBInputs)[0];
             // in autotune iob is calculated with 6 hours of history data, tunedProfile and average pumpProfile basal rate...
             //log("currentBasal: " + currentBasal + " BGTime: " + BGTime + " / " + dateUtil!!.timeStringWithSeconds(BGTime) + "******************************************************************************************")
-            val iob = autotuneIob.getIOB(BGTime, localInsulin)    // add localInsulin to be independent to InsulinPlugin
+            val iob = autotuneIob.getIOB(bgTime, localInsulin)    // add localInsulin to be independent to InsulinPlugin
 
             // activity times ISF times 5 minutes is BGI
-            val BGI = Round.roundTo(-iob.activity * sens * 5, 0.01)
+            val bgi = Round.roundTo(-iob.activity * sens * 5, 0.01)
             // datum = one glucose data point (being prepped to store in output)
-            glucoseDatum.bgi = BGI
+            glucoseDatum.bgi = bgi
             // calculating deviation
-            var deviation = avgDelta - BGI
+            var deviation = avgDelta - bgi
 
             // set positive deviations to zero if BG is below 80
             if (bg < 80 && deviation > 0) {
@@ -309,10 +313,10 @@ class AutotunePrep @Inject constructor(
 
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
-                val ci = Math.max(deviation, sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0))
-                val absorbed = ci * tunedprofile.ic / sens
+                val ci = max(deviation, sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0))
+                val absorbed = ci * tunedProfile.ic / sens
                 // Store the COB, and use it as the starting point for the next data point.
-                mealCOB = Math.max(0.0, mealCOB - absorbed)
+                mealCOB = max(0.0, mealCOB - absorbed)
             }
 
             // Calculate carb ratio (CR) independently of CSF and ISF
@@ -323,7 +327,7 @@ class AutotunePrep @Inject constructor(
             if (mealCOB > 0 || calculatingCR) {
                 // set initial values when we first see COB
                 crCarbs += myCarbs
-                if (calculatingCR == false) {
+                if (!calculatingCR) {
                     crInitialIOB = iob.iob
                     crInitialBG = glucoseDatum.value
                     crInitialCarbTime = glucoseDatum.date
@@ -354,13 +358,13 @@ class AutotunePrep @Inject constructor(
                     crDatum.crCarbs = crCarbs
                     //log.debug(CRDatum);
                     //String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime + ",   \"CRCarbs\": " + CRCarbs + "}";
-                    val CRElapsedMinutes = Math.round((crEndTime - crInitialCarbTime) / (1000 * 60).toFloat())
+                    val crElapsedMinutes = ((crEndTime - crInitialCarbTime) / (1000 * 60).toFloat()).roundToInt()
 
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
-                    if (CRElapsedMinutes < 60 || i == 1 && mealCOB > 0) {
+                    if (crElapsedMinutes < 60 || i == 1 && mealCOB > 0) {
                         //aapsLogger.debug(LTag.AUTOTUNE, "Ignoring $CRElapsedMinutes m CR period.")
                         if (verbose)
-                            log("Ignoring $CRElapsedMinutes m CR period.")
+                            log("Ignoring $crElapsedMinutes m CR period.")
                     } else {
                         crData.add(crDatum)
                     }
@@ -376,11 +380,7 @@ class AutotunePrep @Inject constructor(
                 absorbing = if (iob.iob < currentBasal / 2) {
                     false
                     // otherwise, as long as deviations are positive, keep tracking carb deviations
-                } else if (deviation > 0) {
-                    true
-                } else {
-                    false
-                }
+                } else deviation > 0
                 if (!absorbing && mealCOB == 0.0) {
                     mealCarbs = 0.0
                 }
@@ -405,11 +405,7 @@ class AutotunePrep @Inject constructor(
                         log("${csfGlucoseData[csfGlucoseData.size - 1].mealAbsorption} carb absorption")
                 }
                 if (iob.iob > 2 * currentBasal || deviation > 6 || uam) {
-                    uam = if (deviation > 0) {
-                        true
-                    } else {
-                        false
-                    }
+                    uam = deviation > 0
                     if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start"
                         //aapsLogger.debug(LTag.AUTOTUNE, "${glucoseDatum.uamAbsorption} unannnounced meal absorption")
@@ -431,11 +427,11 @@ class AutotunePrep @Inject constructor(
                     // When BGI is smaller than about 1/4 of basalBGI, we want to use that data to tune basals
                     // When BGI is negative and more than about 1/4 of basalBGI, we can use that data to tune ISF,
                     // unless avgDelta is positive: then that's some sort of unexplained rise we don't want to use for ISF, so that means basals
-                    if (basalBGI > -4 * BGI) {
+                    if (basalBGI > -4 * bgi) {
                         type = "basal"
                         basalGlucoseData.add(glucoseDatum)
                     } else {
-                        if (avgDelta > 0 && avgDelta > -2 * BGI) {
+                        if (avgDelta > 0 && avgDelta > -2 * bgi) {
                             //type="unknown"
                             type = "basal"
                             basalGlucoseData.add(glucoseDatum)
@@ -449,8 +445,12 @@ class AutotunePrep @Inject constructor(
             // debug line to print out all the things
             //aapsLogger.debug(LTag.AUTOTUNE, "${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round.roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
             if (verbose)
-                log("${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${Math.round(mealCarbs)} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${Round
-                        .roundTo(BGI, 0.1)} IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(BGTime)} dev: $deviation avgDelta: $avgDelta $type")
+                log(
+                    "${(if (absorbing) 1 else 0)} mealCOB: ${Round.roundTo(mealCOB, 0.1)} mealCarbs: ${mealCarbs.roundToInt()} basalBGI: ${Round.roundTo(basalBGI, 0.1)} BGI: ${
+                        Round
+                            .roundTo(bgi, 0.1)
+                    } IOB: ${iob.iob} Activity: ${iob.activity} at ${dateUtil.timeStringWithSeconds(bgTime)} dev: $deviation avgDelta: $avgDelta $type"
+                )
         }
 
 //****************************************************************************************************************************************
@@ -460,33 +460,33 @@ class AutotunePrep @Inject constructor(
             crDatum.crInsulin = dosed(crDatum.crInitialCarbTime, crDatum.crEndTime, boluses)
         }
         // categorize.js Lines 384-436
-        val CSFLength = csfGlucoseData.size
-        var ISFLength = isfGlucoseData.size
-        val UAMLength = uamGlucoseData.size
+        val csfLength = csfGlucoseData.size
+        var isfLength = isfGlucoseData.size
+        val uamLength = uamGlucoseData.size
         var basalLength = basalGlucoseData.size
         if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) {
             //aapsLogger.debug(LTag.AUTOTUNE, "Categorizing all UAM data as basal.")
             if (verbose)
                 log("Categorizing all UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
-        } else if (CSFLength > 12) {
+        } else if (csfLength > 12) {
             //aapsLogger.debug(LTag.AUTOTUNE, "Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
             if (verbose)
                 log("Found at least 1h of carb: assuming meals were announced, and categorizing UAM data as basal.")
             basalGlucoseData.addAll(uamGlucoseData)
         } else {
-            if (2 * basalLength < UAMLength) {
+            if (2 * basalLength < uamLength) {
                 //log.debug(basalGlucoseData, UAMGlucoseData);
                 //aapsLogger.debug(LTag.AUTOTUNE, "Warning: too many deviations categorized as UnAnnounced Meals")
                 //aapsLogger.debug(LTag.AUTOTUNE, "Adding $UAMLength UAM deviations to $basalLength basal ones")
                 if (verbose) {
                     log("Warning: too many deviations categorized as UnAnnounced Meals")
-                    log("Adding $UAMLength UAM deviations to $basalLength basal ones")
+                    log("Adding $uamLength UAM deviations to $basalLength basal ones")
                 }
                 basalGlucoseData.addAll(uamGlucoseData)
                 //log.debug(basalGlucoseData);
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
-                basalGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })  //deviation rouded to 0.01, so *100 to avoid crash during sort
+                basalGlucoseData.sortWith { o1, o2 -> (100 * o1.deviation - 100 * o2.deviation).toInt() }  //deviation rouded to 0.01, so *100 to avoid crash during sort
                 val newBasalGlucose: MutableList<BGDatum> = ArrayList()
                 for (i in 0 until basalGlucoseData.size / 2) {
                     newBasalGlucose.add(basalGlucoseData[i])
@@ -497,13 +497,13 @@ class AutotunePrep @Inject constructor(
                 if (verbose)
                     log("and selecting the lowest 50%, leaving ${basalGlucoseData.size} basal+UAM ones")
             }
-            if (2 * ISFLength < UAMLength) {
+            if (2 * isfLength < uamLength) {
                 //aapsLogger.debug(LTag.AUTOTUNE, "Adding $UAMLength UAM deviations to $ISFLength ISF ones")
                 if (verbose)
-                    log("Adding $UAMLength UAM deviations to $ISFLength ISF ones")
+                    log("Adding $uamLength UAM deviations to $isfLength ISF ones")
                 isfGlucoseData.addAll(uamGlucoseData)
                 // if too much data is excluded as UAM, add in the UAM deviations to ISF, but then discard the highest 50%
-                isfGlucoseData.sortWith(object: Comparator<BGDatum>{ override fun compare(o1: BGDatum, o2: BGDatum): Int = (100 * o1.deviation - 100 * o2.deviation).toInt() })   //deviation rouded to 0.01, so *100 to avoid crash during sort
+                isfGlucoseData.sortWith { o1, o2 -> (100 * o1.deviation - 100 * o2.deviation).toInt() }   //deviation rouded to 0.01, so *100 to avoid crash during sort
                 val newISFGlucose: MutableList<BGDatum> = ArrayList()
                 for (i in 0 until isfGlucoseData.size / 2) {
                     newISFGlucose.add(isfGlucoseData[i])
@@ -517,15 +517,15 @@ class AutotunePrep @Inject constructor(
             }
         }
         basalLength = basalGlucoseData.size
-        ISFLength = isfGlucoseData.size
-        if (4 * basalLength + ISFLength < CSFLength && ISFLength < 10) {
+        isfLength = isfGlucoseData.size
+        if (4 * basalLength + isfLength < csfLength && isfLength < 10) {
             //aapsLogger.debug(LTag.AUTOTUNE, "Warning: too many deviations categorized as meals")
             //aapsLogger.debug(LTag.AUTOTUNE, "Adding $CSFLength CSF deviations to $ISFLength ISF ones")
             if (verbose) {
                 log("Warning: too many deviations categorized as meals")
                 //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
                 //var basalGlucoseData = basalGlucoseData.concat(CSFGlucoseData);
-                log("Adding $CSFLength CSF deviations to $ISFLength ISF ones")
+                log("Adding $csfLength CSF deviations to $isfLength ISF ones")
             }
             isfGlucoseData.addAll(csfGlucoseData)
             csfGlucoseData = ArrayList()
@@ -543,7 +543,7 @@ class AutotunePrep @Inject constructor(
     private fun dosed(start: Long, end: Long, treatments: List<Bolus>): Double {
         var insulinDosed = 0.0
         //aapsLogger.debug(LTag.AUTOTUNE, "No treatments to process.")
-        if (treatments.size == 0) {
+        if (treatments.isEmpty()) {
             log("No treatments to process.")
             return 0.0
         }

@@ -6,7 +6,9 @@ import dagger.Module
     includes = [
         InsulinModule::class,
         FoodModule::class,
-        SMSCommunicatorModule::class
+        SMSCommunicatorModule::class,
+        AutotuneModule::class,
+        ProfileModule::class
     ]
 )
 

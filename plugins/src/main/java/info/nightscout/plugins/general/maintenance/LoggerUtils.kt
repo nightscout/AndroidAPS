@@ -1,6 +1,7 @@
-package info.nightscout.androidaps.plugins.general.maintenance
+package info.nightscout.plugins.general.maintenance
 
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,15 +22,15 @@ class LoggerUtils @Inject constructor(
      *
      * @return
      */
-/*
-    This is failing after slf4j update to 2.0.0
-    It would be better to find a way to read the value from xml
-    So far replaced by static value
-    val logDirectory: String
-        get() {
-            val lc = LoggerFactory.getILoggerFactory() as LoggerContext
-            return lc.getProperty("EXT_FILES_DIR")
-        }
-*/
+    /*
+        This is failing after slf4j update to 2.0.0
+        It would be better to find a way to read the value from xml
+        So far replaced by static value
+        val logDirectory: String
+            get() {
+                val lc = LoggerFactory.getILoggerFactory() as LoggerContext
+                return lc.getProperty("EXT_FILES_DIR")
+            }
+    */
     val logDirectory get() = prefFileListProvider.logsPath
 }

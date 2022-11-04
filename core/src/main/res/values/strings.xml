@@ -86,6 +86,8 @@
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
     <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -233,6 +235,8 @@
     <string name="remove_label">REMOVE</string>
     <string name="activate_profile">Activate profile</string>
     <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
+    <string name="profile">Profile</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

@@ -1,32 +1,41 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import android.view.View
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Autotune
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
-import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
+import info.nightscout.plugins.general.autotune.events.EventAutotuneUpdateGui
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,17 +63,19 @@ class AutotunePlugin @Inject constructor(
     private val buildHelper: BuildHelper,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .fragmentClass(AutotuneFragment::class.qualifiedName)
-    .pluginIcon(R.drawable.ic_autotune)
-    .pluginName(R.string.autotune)
-    .shortName(R.string.autotune_shortname)
-    .preferencesId(R.xml.pref_autotune)
-    .showInList(buildHelper.isEngineeringMode() && buildHelper.isDev())
-    .description(R.string.autotune_description),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .fragmentClass(AutotuneFragment::class.qualifiedName)
+        .pluginIcon(R.drawable.ic_autotune)
+        .pluginName(R.string.autotune)
+        .shortName(R.string.autotune_shortname)
+        .preferencesId(R.xml.pref_autotune)
+        .showInList(buildHelper.isEngineeringMode() && buildHelper.isDev())
+        .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
+
     @Volatile override var lastRunSuccess: Boolean = false
     @Volatile var result: String = ""
     @Volatile override var calculationRunning: Boolean = false
@@ -106,7 +117,7 @@ class AutotunePlugin @Inject constructor(
             calculationRunning = false
             return
         }
-        selectedProfile = if (profileToTune.isEmpty()) profileFunction.getProfileName() else profileToTune
+        selectedProfile = profileToTune.ifEmpty { profileFunction.getProfileName() }
         profileFunction.getProfile()?.let { currentProfile ->
             profile = profileStore.getSpecificProfile(profileToTune)?.let { ProfileSealed.Pure(it) } ?: currentProfile
         }
@@ -132,7 +143,7 @@ class AutotunePlugin @Inject constructor(
             val from = starttime + i * 24 * 60 * 60 * 1000L         // get 24 hours BG values from 4 AM to 4 AM next day
             val to = from + 24 * 60 * 60 * 1000L
             log("Tune day " + (i + 1) + " of " + daysBack)
-            tunedProfile?.let { it ->
+            tunedProfile?.let {
                 autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                 if (autotuneIob.boluses.size == 0) {
                     result = rh.gs(R.string.autotune_error)
@@ -209,7 +220,8 @@ class AutotunePlugin @Inject constructor(
                             UserEntry.Action.PROFILE_SWITCH,
                             UserEntry.Sources.Automation,
                             rh.gs(R.string.autotune),
-                            ValueWithUnit.SimpleString(tunedP.profilename))
+                            ValueWithUnit.SimpleString(tunedP.profilename)
+                        )
                     }
                     rxBus.send(EventLocalProfileChanged())
                 }
@@ -265,8 +277,8 @@ class AutotunePlugin @Inject constructor(
         val jsonSettings = JSONObject()
         val insulinInterface = activePlugin.activeInsulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
-        val startDateString = dateUtil.toISOString(firstloopstart).substring(0,10)
-        val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L).substring(0,10)
+        val startDateString = dateUtil.toISOString(firstloopstart).substring(0, 10)
+        val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L).substring(0, 10)
         val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
         val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
         val optInsulinCurve = if (sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
@@ -291,7 +303,7 @@ class AutotunePlugin @Inject constructor(
 
             val peaktime: Int = insulinInterface.peak
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
-                jsonSettings.put("curve","ultra-rapid")
+                jsonSettings.put("curve", "ultra-rapid")
             else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING)
                 jsonSettings.put("curve", "rapid-acting")
             else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
@@ -304,7 +316,9 @@ class AutotunePlugin @Inject constructor(
                 jsonSettings.put("insulinPeakTime", peaktime)
             }
             jsonString = jsonSettings.toString(4).replace("\\/", "/")
-        } catch (e: JSONException) { }
+        } catch (e: JSONException) {
+            aapsLogger.error(LTag.AUTOTUNE, e.localizedMessage ?: e.toString())
+        }
         return jsonString
     }
 
@@ -332,7 +346,7 @@ class AutotunePlugin @Inject constructor(
     fun saveLastRun() {
         val json = JSONObject()
         json.put("lastNbDays", lastNbDays)
-        json.put("lastRun",lastRun)
+        json.put("lastRun", lastRun)
         json.put("pumpProfile", pumpProfile.profile.toPureNsJson(dateUtil))
         json.put("pumpProfileName", pumpProfile.profilename)
         json.put("pumpPeak", pumpProfile.peak)
@@ -378,13 +392,14 @@ class AutotunePlugin @Inject constructor(
                 atProfile.profilename = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
                 for (i in 0..23) {
-                    atProfile.basalUntuned[i] = JsonHelper.safeGetInt(json,"missingDays_$i")
+                    atProfile.basalUntuned[i] = JsonHelper.safeGetInt(json, "missingDays_$i")
                 }
             }
             result = JsonHelper.safeGetString(json, "result", "")
             updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
             lastRunSuccess = true
         } catch (e: Exception) {
+            aapsLogger.error(LTag.AUTOTUNE, e.localizedMessage ?: e.toString())
         }
     }
 

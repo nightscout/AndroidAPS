@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import android.content.Context
 import android.graphics.Paint
@@ -20,12 +20,10 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.databinding.AutotuneFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.extensions.toVisibility
@@ -37,16 +35,18 @@ import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
-import info.nightscout.androidaps.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.plugins.R
+import info.nightscout.plugins.databinding.AutotuneFragmentBinding
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.events.EventAutotuneUpdateGui
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -126,7 +126,7 @@ class AutotuneFragment : DaggerFragment() {
             updateGui()
         }
 
-        binding.autotuneCopylocal.setOnClickListener {
+        binding.autotuneCopyLocal.setOnClickListener {
             val localName = rh.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             autotunePlugin.tunedProfile?.let { tunedProfile ->
@@ -265,14 +265,14 @@ class AutotuneFragment : DaggerFragment() {
             }
         }
 
-        binding.tuneLastrun.setOnClickListener {
+        binding.tuneLastRun.setOnClickListener {
             if (!autotunePlugin.calculationRunning) {
                 autotunePlugin.loadLastRun()
                 binding.tuneDays.value = autotunePlugin.lastNbDays.toDouble()
                 updateGui()
             }
         }
-        binding.tuneLastrun.paintFlags = binding.tuneLastrun.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.tuneLastRun.paintFlags = binding.tuneLastRun.paintFlags or Paint.UNDERLINE_TEXT_FLAG
     }
 
     @Synchronized
@@ -315,7 +315,7 @@ class AutotuneFragment : DaggerFragment() {
         }
         binding.autotuneRun.visibility = View.GONE
         binding.autotuneCheckInputProfile.visibility = View.GONE
-        binding.autotuneCopylocal.visibility = View.GONE
+        binding.autotuneCopyLocal.visibility = View.GONE
         binding.autotuneUpdateProfile.visibility = View.GONE
         binding.autotuneRevertProfile.visibility = View.GONE
         binding.autotuneProfileswitch.visibility = View.GONE
@@ -326,7 +326,7 @@ class AutotuneFragment : DaggerFragment() {
             }
 
             autotunePlugin.lastRunSuccess     -> {
-                binding.autotuneCopylocal.visibility = View.VISIBLE
+                binding.autotuneCopyLocal.visibility = View.VISIBLE
                 binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
                 binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
                 binding.autotuneProfileswitch.visibility = View.VISIBLE
@@ -339,7 +339,7 @@ class AutotuneFragment : DaggerFragment() {
                 binding.autotuneCheckInputProfile.visibility = View.VISIBLE
             }
         }
-        binding.tuneLastrun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+        binding.tuneLastRun.text = dateUtil.dateAndTimeString(autotunePlugin.lastRun)
         showResults()
     }
 

@@ -1,15 +1,16 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.LocalInsulin
-import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
-import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
+import info.nightscout.plugins.utils.Percentile
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
 
 @Singleton
 class AutotuneCore @Inject constructor(
@@ -47,8 +48,7 @@ class AutotuneCore @Inject constructor(
 
         // tune DIA
         var newDia = dia
-        if (diaDeviations.size > 0)
-        {
+        if (diaDeviations.isNotEmpty()) {
             val currentDiaMeanDev = diaDeviations[2].meanDeviation
             val currentDiaRMSDev = diaDeviations[2].rmsDeviation
             //Console.WriteLine(DIA,currentDIAMeanDev,currentDIARMSDev);
@@ -56,35 +56,28 @@ class AutotuneCore @Inject constructor(
             var minRmsDeviations = 1000000.0
             var meanBest = 2
             var rmsBest = 2
-            for (i in 0..diaDeviations.size-1)
-            {
+            for (i in diaDeviations.indices) {
                 val meanDeviations = diaDeviations[i].meanDeviation
                 val rmsDeviations = diaDeviations[i].rmsDeviation
-                if (meanDeviations < minMeanDeviations)
-                {
+                if (meanDeviations < minMeanDeviations) {
                     minMeanDeviations = Round.roundTo(meanDeviations, 0.001)
                     meanBest = i
                 }
-                if (rmsDeviations < minRmsDeviations)
-                {
+                if (rmsDeviations < minRmsDeviations) {
                     minRmsDeviations = Round.roundTo(rmsDeviations, 0.001)
                     rmsBest = i
                 }
             }
             log("Best insulinEndTime for meanDeviations: ${diaDeviations[meanBest].dia} hours")
             log("Best insulinEndTime for RMSDeviations: ${diaDeviations[rmsBest].dia} hours")
-            if (meanBest < 2 && rmsBest < 2)
-            {
+            if (meanBest < 2 && rmsBest < 2) {
                 if (diaDeviations[1].meanDeviation < currentDiaMeanDev * 0.99 && diaDeviations[1].rmsDeviation < currentDiaRMSDev * 0.99)
                     newDia = diaDeviations[1].dia
-            }
-            else if (meanBest > 2 && rmsBest > 2)
-            {
+            } else if (meanBest > 2 && rmsBest > 2) {
                 if (diaDeviations[3].meanDeviation < currentDiaMeanDev * 0.99 && diaDeviations[3].rmsDeviation < currentDiaRMSDev * 0.99)
                     newDia = diaDeviations[3].dia
             }
-            if (newDia > 12.0)
-            {
+            if (newDia > 12.0) {
                 log("insulinEndTime maximum is 12h: not raising further")
                 newDia = 12.0
             }
@@ -96,8 +89,7 @@ class AutotuneCore @Inject constructor(
 
         // tune insulinPeakTime
         var newPeak = peak
-        if (peakDeviations.size > 2)
-        {
+        if (peakDeviations.size > 2) {
             val currentPeakMeanDev = peakDeviations[2].meanDeviation
             val currentPeakRMSDev = peakDeviations[2].rmsDeviation
             //Console.WriteLine(currentPeakMeanDev);
@@ -105,37 +97,31 @@ class AutotuneCore @Inject constructor(
             var minRmsDeviations = 1000000.0
             var meanBest = 2
             var rmsBest = 2
-            for (i in 0..peakDeviations.size-1)
-            {
-                val meanDeviations = peakDeviations[i].meanDeviation;
-                val rmsDeviations = peakDeviations[i].rmsDeviation;
-                if (meanDeviations < minMeanDeviations)
-                {
+            for (i in peakDeviations.indices) {
+                val meanDeviations = peakDeviations[i].meanDeviation
+                val rmsDeviations = peakDeviations[i].rmsDeviation
+                if (meanDeviations < minMeanDeviations) {
                     minMeanDeviations = Round.roundTo(meanDeviations, 0.001)
                     meanBest = i
                 }
-                if (rmsDeviations < minRmsDeviations)
-                {
+                if (rmsDeviations < minRmsDeviations) {
                     minRmsDeviations = Round.roundTo(rmsDeviations, 0.001)
                     rmsBest = i
                 }
             }
             log("Best insulinPeakTime for meanDeviations: ${peakDeviations[meanBest].peak} minutes")
             log("Best insulinPeakTime for RMSDeviations: ${peakDeviations[rmsBest].peak} minutes")
-            if (meanBest < 2 && rmsBest < 2)
-            {
+            if (meanBest < 2 && rmsBest < 2) {
                 if (peakDeviations[1].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[1].rmsDeviation < currentPeakRMSDev * 0.99)
                     newPeak = peakDeviations[1].peak
-            }
-            else if (meanBest > 2 && rmsBest > 2)
-            {
+            } else if (meanBest > 2 && rmsBest > 2) {
                 if (peakDeviations[3].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[3].rmsDeviation < currentPeakRMSDev * 0.99)
                     newPeak = peakDeviations[3].peak
             }
             if (newPeak != peak)
-                log("Adjusting insulinPeakTime from " + peak + " to " + newPeak + " minutes")
+                log("Adjusting insulinPeakTime from $peak to $newPeak minutes")
             else
-                log("Leaving insulinPeakTime unchanged at " + peak)
+                log("Leaving insulinPeakTime unchanged at $peak")
         }
 
         // Calculate carb ratio (CR) independently of csf and isf
@@ -180,22 +166,22 @@ class AutotuneCore @Inject constructor(
         for (i in 0..23) {
             newHourlyBasalProfile[i] = hourlyBasalProfile[i]
         }
-        val basalUntuned = previousAutotune.basalUntuned
+        val basalUnTuned = previousAutotune.basalUntuned
 
         //autotune-core (lib/autotune/index.js) #210-#266
         // look at net deviations for each hour
         for (hour in 0..23) {
             var deviations = 0.0
             for (i in basalGlucose.indices) {
-                val BGTime = Calendar.getInstance()
+                val bgTime = Calendar.getInstance()
                 //var BGTime: Date? = null
                 if (basalGlucose[i].date != 0L) {
-                    BGTime.setTimeInMillis(basalGlucose[i].date)
+                    bgTime.timeInMillis = basalGlucose[i].date
                     //BGTime = Date(basalGlucose[i].date)
                 } else {
                     log("Could not determine last BG time")
                 }
-                val myHour = BGTime.get(Calendar.HOUR_OF_DAY)
+                val myHour = bgTime.get(Calendar.HOUR_OF_DAY)
                 //val myHour = BGTime!!.hours
                 if (hour == myHour) {
                     //log.debug(basalGlucose[i].deviation);
@@ -280,7 +266,7 @@ class AutotuneCore @Inject constructor(
                 }
                 //log.debug(hour, newHourlyBasalProfile);
                 newHourlyBasalProfile[hour] = Round.roundTo(0.8 * hourlyBasalProfile[hour] + 0.1 * newHourlyBasalProfile[lastAdjustedHour] + 0.1 * newHourlyBasalProfile[nextAdjustedHour], 0.001)
-                basalUntuned[hour]++
+                basalUnTuned[hour]++
                 log("Adjusting hour " + hour + " basal from " + hourlyBasalProfile[hour] + " to " + newHourlyBasalProfile[hour] + " based on hour " + lastAdjustedHour + " = " + newHourlyBasalProfile[lastAdjustedHour] + " and hour " + nextAdjustedHour + " = " + newHourlyBasalProfile[nextAdjustedHour])
             } else {
                 lastAdjustedHour = hour
@@ -301,7 +287,6 @@ class AutotuneCore @Inject constructor(
         var mealCarbs = 0
         var totalMealCarbs = 0
         var totalDeviations = 0.0
-        val fullNewCSF: Double
         //log.debug(CSFGlucose[0].mealAbsorption);
         //log.debug(CSFGlucose[0]);
         //autotune-core (lib/autotune/index.js) #346-#365
@@ -321,8 +306,8 @@ class AutotuneCore @Inject constructor(
                 totalDeviations += deviations
             } else {
                 //todo Philoul check 0 * min5minCarbImpact ???
-                deviations += Math.max(0 * min5minCarbImpact, csfGlucose[i].deviation)
-                mealCarbs = Math.max(mealCarbs, csfGlucose[i].mealCarbs)
+                deviations += max(0 * min5minCarbImpact, csfGlucose[i].deviation)
+                mealCarbs = max(mealCarbs, csfGlucose[i].mealCarbs)
             }
         }
         // at midnight, write down the mealcarbs as total meal carbs (to prevent special case of when only one meal and it not finishing absorbing by midnight)
@@ -334,7 +319,7 @@ class AutotuneCore @Inject constructor(
             totalDeviations += deviations
         }
         //log.debug(totalDeviations, totalMealCarbs);
-        fullNewCSF = if (totalMealCarbs == 0) {
+        val fullNewCSF: Double = if (totalMealCarbs == 0) {
             // if no meals today, csf is unchanged
             csf
         } else {
@@ -420,22 +405,22 @@ class AutotuneCore @Inject constructor(
         for (i in isfGlucose.indices) {
             val deviation = isfGlucose[i].deviation
             isfDeviations.add(deviation)
-            val BGI = isfGlucose[i].bgi
-            bGIs.add(BGI)
+            val bgi = isfGlucose[i].bgi
+            bGIs.add(bgi)
             val avgDelta = isfGlucose[i].avgDelta
             avgDeltas.add(avgDelta)
-            val ratio = 1 + deviation / BGI
+            val ratio = 1 + deviation / bgi
             //log.debug("Deviation:",deviation,"BGI:",BGI,"avgDelta:",avgDelta,"ratio:",ratio);
             ratios.add(ratio)
             count++
         }
-        Collections.sort(avgDeltas)
-        Collections.sort(bGIs)
-        Collections.sort(isfDeviations)
-        Collections.sort(ratios)
-        var p50deviation = IobCobCalculatorPlugin.percentile(isfDeviations.toTypedArray(), 0.50)
-        var p50BGI = IobCobCalculatorPlugin.percentile(bGIs.toTypedArray(), 0.50)
-        val p50ratios = Round.roundTo(IobCobCalculatorPlugin.percentile(ratios.toTypedArray(), 0.50), 0.001)
+        avgDeltas.sort()
+        bGIs.sort()
+        isfDeviations.sort()
+        ratios.sort()
+        var p50deviation = Percentile.percentile(isfDeviations.toTypedArray(), 0.50)
+        var p50BGI = Percentile.percentile(bGIs.toTypedArray(), 0.50)
+        val p50ratios = Round.roundTo(Percentile.percentile(ratios.toTypedArray(), 0.50), 0.001)
         var fullNewISF = isf
         if (count < 10) {
             // leave isf unchanged if fewer than 5 isf data points
@@ -446,13 +431,12 @@ class AutotuneCore @Inject constructor(
         }
         fullNewISF = Round.roundTo(fullNewISF, 0.001)
         // adjust the target isf to be a weighted average of fullNewISF and pumpISF
-        val adjustmentFraction: Double
         /*
         // TODO: philoul may be allow adjustmentFraction in settings with safety limits ?)
         if (typeof(pumpProfile.autotune_isf_adjustmentFraction) !== 'undefined') {
             adjustmentFraction = pumpProfile.autotune_isf_adjustmentFraction;
         } else {*/
-        adjustmentFraction = 1.0
+        val adjustmentFraction = 1.0
         //        }
 
         // low autosens ratio = high isf
@@ -501,7 +485,7 @@ class AutotuneCore @Inject constructor(
         previousAutotune.basal = basalProfile
         previousAutotune.isf = isf
         previousAutotune.ic = Round.roundTo(carbRatio, 0.001)
-        previousAutotune.basalUntuned = basalUntuned
+        previousAutotune.basalUntuned = basalUnTuned
         previousAutotune.dia = newDia
         previousAutotune.peak = newPeak
         val localInsulin = LocalInsulin("Ins_$newPeak-$newDia", newPeak, newDia)

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.autotune.events
+package info.nightscout.plugins.general.autotune.events
 
 import info.nightscout.androidaps.events.Event
 

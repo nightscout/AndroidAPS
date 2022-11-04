@@ -1,18 +1,19 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.general.autotune.data.*
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
@@ -22,14 +23,13 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.io.File
-import java.util.*
+import java.util.TimeZone
 
 class AutotuneCoreTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var autotuneFS: AutotuneFS
     @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var activePlugin: ActivePlugin
     private lateinit var autotuneCore: AutotuneCore
     private var min5mCarbImpact = 0.0
     private var autotuneMin = 0.0

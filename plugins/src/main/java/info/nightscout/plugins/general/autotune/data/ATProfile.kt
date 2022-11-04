@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.autotune.data
+package info.nightscout.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
@@ -8,7 +8,14 @@ import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
@@ -19,7 +26,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.*
+import java.util.TimeZone
 import javax.inject.Inject
 
 class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: HasAndroidInjector) {
@@ -56,18 +63,19 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
 
-    fun getBasal(timestamp: Long): Double = basal[Profile.secondsFromMidnight(timestamp)/3600]
+    fun getBasal(timestamp: Long): Double = basal[Profile.secondsFromMidnight(timestamp) / 3600]
 
     // for localProfilePlugin Synchronisation
     fun basal() = jsonArray(basal)
     fun ic(circadian: Boolean = false): JSONArray {
-        if(circadian)
-            return jsonArray(pumpProfile.icBlocks, avgIC/pumpProfileAvgIC)
+        if (circadian)
+            return jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC)
         return jsonArray(ic)
     }
+
     fun isf(circadian: Boolean = false): JSONArray {
-        if(circadian)
-            return jsonArray(pumpProfile.isfBlocks, avgISF/pumpProfileAvgISF)
+        if (circadian)
+            return jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF)
         return jsonArray(Profile.fromMgdlToUnits(isf, profile.units))
     }
 
@@ -88,7 +96,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     fun profiletoOrefJSON(): String {
         var jsonString = ""
         val json = JSONObject()
-       val insulinInterface: Insulin = activePlugin.activeInsulin
+        val insulinInterface: Insulin = activePlugin.activeInsulin
         try {
             json.put("name", profilename)
             json.put("min_5m_carbimpact", sp.getDouble("openapsama_min_5m_carbimpact", 3.0))
@@ -115,7 +123,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                     JSONObject()
                         .put("start", time)
                         .put("minutes", h * 60)
-                        .put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)
+                        .put(
+                            "rate", profile.getBasalTimeFromMidnight(secondfrommidnight)
                         )
                 )
             }
@@ -134,7 +143,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("units", GlucoseUnit.MGDL.asText)
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")
-        } catch (e: JSONException) {}
+        } catch (e: JSONException) {
+        }
 
         return jsonString
     }
@@ -144,8 +154,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         try {
             json.put("dia", dia)
             if (circadian) {
-                json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF/pumpProfileAvgISF))
-                json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC/pumpProfileAvgIC))
+                json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
+                json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC))
             } else {
                 json.put("sens", jsonArray(Profile.fromMgdlToUnits(isf, profile.units)))
                 json.put("carbratio", jsonArray(ic))
@@ -156,8 +166,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         return pureProfileFromJson(json, dateUtil, profile.units.asText)
     }
 
-    fun profileStore(circadian: Boolean = false): ProfileStore?
-    {
+    fun profileStore(circadian: Boolean = false): ProfileStore? {
         var profileStore: ProfileStore? = null
         val json = JSONObject()
         val store = JSONObject()
@@ -170,7 +179,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("store", store)
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
             profileStore = ProfileStore(injector, json, dateUtil)
-        } catch (e: JSONException) { }
+        } catch (e: JSONException) {
+        }
         return profileStore
     }
 

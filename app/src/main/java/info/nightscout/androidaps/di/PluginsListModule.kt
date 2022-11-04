@@ -24,18 +24,14 @@ import info.nightscout.androidaps.plugins.constraints.signatureVerifier.Signatur
 import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
-import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
-import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
@@ -58,12 +54,16 @@ import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.plugins.general.autotune.AutotunePlugin
+import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.insulin.InsulinLyumjevPlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.plugins.insulin.InsulinOrefUltraRapidActingPlugin
+import info.nightscout.plugins.profile.ProfilePlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")

@@ -28,7 +28,6 @@
     <string name="invalid_weight">Invalid weight entry</string>
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
-    <string name="profile">Profile</string>
     <string name="age">Age</string>
     <string name="weight_label">Weight</string>
     <string name="most_common_profile">Most common profile:</string>

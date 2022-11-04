@@ -1,13 +1,21 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
-import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
-import info.nightscout.androidaps.R
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
+import info.nightscout.plugins.general.maintenance.LoggerUtils
 import org.json.JSONException
 import org.slf4j.LoggerFactory
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.FileWriter
+import java.io.IOException
+import java.io.PrintWriter
 import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -28,7 +36,6 @@ class AutotuneFS @Inject constructor(
     val AAPSBOLUSESPREF = "aaps-boluses."
     val PREPPEDPREF = "aaps-autotune."
     val SETTINGS = "settings.json"
-    val PROFIL = "profil"
     val PUMPPROFILE = "pumpprofile.json"
     val TUNEDPROFILE = "newaapsprofile."
     val LOGPREF = "autotune."

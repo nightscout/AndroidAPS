@@ -1,9 +1,9 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum
-import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum
-import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
+import info.nightscout.plugins.general.autotune.data.BGDatum
+import info.nightscout.plugins.general.autotune.data.CRDatum
+import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

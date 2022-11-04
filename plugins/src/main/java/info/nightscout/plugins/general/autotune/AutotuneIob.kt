@@ -1,29 +1,32 @@
-package info.nightscout.androidaps.plugins.general.autotune
+package info.nightscout.plugins.general.autotune
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.*
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.ExtendedBolus
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TemporaryBasal
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.ceil
@@ -44,7 +47,7 @@ open class AutotuneIob @Inject constructor(
     lateinit var glucose: List<GlucoseValue> // newest at index 0
     private lateinit var tempBasals: ArrayList<TemporaryBasal>
     var startBG: Long = 0
-    var endBG: Long = 0
+    private var endBG: Long = 0
     private fun range(): Long = (60 * 60 * 1000L * dia + T.hours(2).msecs()).toLong()
 
     fun initializeData(from: Long, to: Long, tunedProfile: ATProfile) {
@@ -236,11 +239,10 @@ open class AutotuneIob @Inject constructor(
     }
 
     open fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
-        val bolusIob = getCalculationToTimeTreatments(time, localInsulin).round()
-        return bolusIob
+        return getCalculationToTimeTreatments(time, localInsulin).round()
     }
 
-    fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
+    private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
         val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
         for (pos in boluses.indices) {
@@ -257,7 +259,7 @@ open class AutotuneIob @Inject constructor(
     }
 
 
-    fun convertToBoluses(eb: ExtendedBolus): MutableList<Bolus> {
+    private fun convertToBoluses(eb: ExtendedBolus): MutableList<Bolus> {
         val result: MutableList<Bolus> = ArrayList()
         val aboutFiveMinIntervals = ceil(eb.duration / 5.0).toInt()
         val spacing = eb.duration / aboutFiveMinIntervals.toDouble()
@@ -277,7 +279,7 @@ open class AutotuneIob @Inject constructor(
         return result
     }
 
-    fun convertToBoluses(tbr: TemporaryBasal, profile: Profile, tunedProfile: Profile): MutableList<Bolus> {
+    private fun convertToBoluses(tbr: TemporaryBasal, profile: Profile, tunedProfile: Profile): MutableList<Bolus> {
         val result: MutableList<Bolus> = ArrayList()
         val realDuration = tbr.durationInMinutes
         val basalRate = profile.getBasal(tbr.timestamp)

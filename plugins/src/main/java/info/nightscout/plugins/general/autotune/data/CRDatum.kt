@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.autotune.data
+package info.nightscout.plugins.general.autotune.data
 
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
@@ -20,7 +20,10 @@ class CRDatum {
     var crInsulinTotal = 0.0
     var dateUtil: DateUtil
 
-    constructor(dateUtil: DateUtil) { this.dateUtil = dateUtil}
+    constructor(dateUtil: DateUtil) {
+        this.dateUtil = dateUtil
+    }
+
     constructor(json: JSONObject, dateUtil: DateUtil) {
         this.dateUtil = dateUtil
         try {

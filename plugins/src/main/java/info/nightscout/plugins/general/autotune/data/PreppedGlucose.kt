@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.plugins.general.autotune.data
+package info.nightscout.plugins.general.autotune.data
 
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 
 class PreppedGlucose {
 

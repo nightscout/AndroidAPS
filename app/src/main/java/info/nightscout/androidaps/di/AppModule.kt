@@ -42,7 +42,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
@@ -71,6 +70,7 @@ import info.nightscout.implementation.queue.CommandQueueImplementation
 import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
 import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
+import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP

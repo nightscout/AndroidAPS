@@ -270,8 +270,6 @@
     <string name="show_queue">Show queue</string>
     <string name="queue">Queue:</string>
     <string name="status">Status:</string>
-    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
-    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
@@ -529,7 +527,6 @@
     <string name="overview_show_basals">Basals</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
     <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
