@@ -21,7 +21,6 @@
     <string name="description_smb">Naujausias algoritmas patyrusiems vartotojams</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
-    <string name="description_profile_local">Nustatykite vietinį profilį.</string>
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas Nustatymuose.</string>
     <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui. Įskiepis taip pat įskaičiuoja NDM (nedeklaruotą maistą).</string>
@@ -81,7 +80,6 @@
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_treatment_label">Terapija</string>
-    <string name="overview_calculator_label">Skaičiuotuvas</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
     <string name="xdrip">xDrip+</string>
@@ -151,7 +149,6 @@
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
-    <string name="units_colon">Vienetai:</string>
     <string name="units">Vienetai</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
     <string name="prefs_range_summary">Aukštoji ir žemoji riba Apžvalgos grafikuose bei išmaniuosiuose laikrodžiuose</string>
@@ -163,7 +160,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Nuolatinis pranešimas</string>
     <string name="old_data">SENI DUOMENYS</string>
-    <string name="localprofile">Profilis</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d elementų masyvas. \naktuali vertė:</string>
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
@@ -175,7 +171,6 @@
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">CIKLAS</string>
     <string name="oaps_shortname">AtvCiklas</string>
-    <string name="localprofile_shortname">VP</string>
     <string name="overview_shortname">PRADŽIA</string>
     <string name="virtualpump_shortname">VPompa</string>
     <string name="treatments_shortname">ĮRAŠ</string>
@@ -302,7 +297,6 @@
     <string name="absorption_maxtime_summary">Laikas, per kurį visi maisto angliavandeniai, tikėtina, bus įsisavinti</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">Siunt</string>
-    <string name="basal_short">VB</string>
     <string name="keep_screen_on_title">Laikyti ekraną įjungtą</string>
     <string name="keep_screen_on_summary">Neleidžia Android sistemai išjungti ekrano. Naudojama daug energijos, jei telefonas neprijungtas prie maitinimo šaltinio.</string>
     <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami gliukozės svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
@@ -315,7 +309,6 @@
     <string name="enablesmb">Įjungti SMB</string>
     <string name="enablesmb_summary">Naudoti Super Mikro Bolusus vietoj laikinos bazės greitesniam veikimui</string>
     <string name="enableuam_summary">Nedeklaruoto maisto (NDM) aptikimas</string>
-    <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="invalid">KLAIDA</string>
     <string name="careportal_newnstreatment_percentage_label">Procentais</string>
     <string name="careportal_newnstreatment_timeshift_label">Laiko perstūmimas</string>
@@ -405,8 +398,6 @@
     <string name="g5appnotdetected">Atnaujinkite savo Dexcom programėlės versiją</string>
     <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
     <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
-    <string name="category">Kategorija</string>
-    <string name="subcategory">Subkategorija</string>
     <string name="bolusrecordedonly">Bolusai bus tik įrašyti (nebus suleisti iš pompos)</string>
     <string name="loop_smbsetbypump_label">SMB nustatyta iš pompos</string>
     <string name="overview_show_activity">Aktyvumas</string>
@@ -567,23 +558,13 @@
     <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profilio pavadinimas:</string>
     <string name="selected_profile">Parinkta:</string>
     <string name="unitsnosemicolon">Vienetai</string>
-    <string name="doyouwantswitchprofile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
-    <string name="dia_short">IVT</string>
-    <string name="ic_short">IA</string>
-    <string name="isf_short">JIF</string>
-    <string name="target_short">TIKSLAS</string>
-    <string name="clone_label">Klonuoti</string>
-    <string name="saveorresetchangesfirst">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
-    <string name="deletecurrentprofile">Ištrinti esamą profilį?</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
-    <string name="profilenamecontainsdot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="invalidpct">Netinkamas % įrašas</string>
@@ -666,15 +647,7 @@
     <string name="ns_receive_therapy_events_summary">Priimti terapijos įvykius (kaniulės, insulino, baterijos keitimą ir pan.), įvestus per NS arba NSClient</string>
     <string name="ns_receive_cgm">Gauti/užpildyti atgaline data NGJ duomenis</string>
     <string name="ns_receive_cgm_summary">Priimti NGJ duomenis iš NS</string>
-    <string name="missing_profile_name">Profilio pavadinimas nėra įrašytas</string>
-    <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
-    <string name="error_in_basal_values">Bazės reikšmių klaida</string>
-    <string name="error_in_target_values">Tikslinės glikemijos reikšmės klaida</string>
-    <string name="error_in_isf_values">JIF reikšmės klaida</string>
     <string name="run_question">Vykdyti %s?</string>
-    <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
-    <string name="view">Rodymas</string>
-    <string name="errors">Klaidos</string>
     <string name="ns_sync_slow">Sulėtinti įkėlimus</string>
     <string name="data_status">KG duomenų būklė</string>
     <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
