@@ -195,7 +195,6 @@
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
     <string name="always_use_shortavg">התבסס על הפרש ממוצע קצר במקום הפרש פשוט\\רגיל</string>
     <string name="always_use_shortavg_summary">לשימוש כאשר נתונים ממקור לא מפוקח כמו xDrip אינם יציבים.</string>
-    <string name="profile">פרופיל</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
     <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של Autosens (ובקרוב Autotune) שמגדירה 20% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
@@ -468,7 +467,6 @@
     <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
     <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
     <string name="food_short">מזון</string>
-    <string name="reset">איפוס</string>
     <string name="openapssmb_maxiob_title">מינון אינסולין פעיל מרבי ממנו OpenAPS לא יחרוג (יחידות) </string>
     <string name="openapssmb_maxiob_summary">ב-OpenAPS ערך זה נקרא מקסימום אינסולין פעיל (maxIOB). \nלא יוזרק עוד אינסולין אם כמות האינסולין הפעיל הנוכחי גדול מערך זה</string>
     <string name="absorption_cutoff_title">זמן ספיגה מקסימלי של הארוחה [h]</string>
@@ -630,24 +628,7 @@
     <string name="profilenamecontainsdot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
-    <string name="age">גיל</string>
-    <string name="weight_label">משקל</string>
-    <string name="id">מס\' זיהוי:</string>
-    <string name="submit">עדכן</string>
-    <string name="mostcommonprofile">הפרופיל הנפוץ ביותר:</string>
-    <string name="invalidage">רשומת גיל לא חוקית</string>
-    <string name="invalidweight">רשומת משקל לא חוקית</string>
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
-    <string name="average">ממוצע</string>
-    <string name="tir">זמן בטווח</string>
-    <string name="day_tir">זמן בטווח ביום</string>
-    <string name="night_tir">זמן בטווח בלילה</string>
-    <string name="detailed_14_days">פירוט 14 יום</string>
-    <string name="std_deviation">סטיית תקן: %1$s</string>
-    <string name="hba1c">HbA1c: </string>
-    <string name="activitymonitor">מוניטור פעילות</string>
-    <string name="doyouwantresetstats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
-    <string name="statistics">סטטיסטיקה</string>
     <string name="randombg">נתוני סוכר אקראיים</string>
     <string name="description_source_randombg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
     <string name="randombg_short">ערכי גלוקוז בדם</string>
@@ -731,7 +712,6 @@
     <string name="ns_receive_therapy_events_summary">קבלת אירועי טיפול (צינורית, אינסולין, החלפת סוללה) שצוינו באמצעות נייטסקאוט או NSClient</string>
     <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
-    <string name="calculation_in_progress">מבצע חישוב</string>
     <string name="missing_profile_name">חסר שם לפרופיל</string>
     <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
     <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
@@ -819,13 +799,6 @@
     <string name="show_loop">הצג לולאה</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
-    <string name="veryLow" comment="below 3.1">נמוך מאוד</string>
-    <string name="low" comment="3.1-3.9">נמוך</string>
-    <string name="high" comment="10.0-13.9">גבוה</string>
-    <string name="veryHigh" comment="above 13.9">גבוה מאוד</string>
-    <string name="below" comment="below &quot;in range&quot;">מתחת</string>
-    <string name="in_range">בטווח</string>
-    <string name="above" comment="above &quot;in range&quot;">מעל</string>
     <string name="show_loop_records">הצג רשומות לולאה</string>
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="loop_status">סטטוס הלולאה</string>
