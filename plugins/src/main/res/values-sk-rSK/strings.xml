@@ -117,4 +117,7 @@
     <string name="rapid_acting_oref">Rýchlo pôsobiaci - Oref</string>
     <string name="dia_too_short">DIA %1$f je príliš krátke - AAPS namiesto toho použilo %2$f !</string>
     <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
 </resources>
