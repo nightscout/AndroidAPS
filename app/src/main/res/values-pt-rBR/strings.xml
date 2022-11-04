@@ -15,7 +15,6 @@
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
     <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
     <string name="description_ns_client">Sincroniza seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
@@ -95,12 +94,8 @@
     <string name="carbssuggestion">Sugestão de Carbs</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
-    <string name="careportal_newnstreatment_other">Outro</string>
-    <string name="careportal_newnstreatment_meter">Medidor</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Hora do carboidrato</string>
     <string name="profile_label">Perfil</string>
-    <string name="careportal_newnstreatment_glucosetype">Tipo de glicose</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus estendido</string>
     <string name="configbuilder_nightscoutversion_label">Versão do Nightscout:</string>
@@ -321,12 +316,6 @@
     <string name="hypo_target">alvo hipo</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
-    <string name="food">Alimentos</string>
-    <string name="none"><![CDATA[<nenhum>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Gor</string>
     <string name="raise_notifications_as_android_notifications">Usar as notificações do sistema para alertas e notificações</string>
     <string name="localalertsettings_title">Alertas local</string>
     <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma glicemia seja recebida</string>
@@ -425,7 +414,6 @@
     <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicemia activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
-    <string name="food_short">Alimentos</string>
     <string name="openapssmb_maxiob_title">Máximo total de IOB OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
@@ -612,7 +600,6 @@
     <string name="basalpctfromtdd_label">% da basal</string>
     <string name="dpvdefaultprofile">Perfil padrão DPV</string>
     <string name="setupwizard_pump_riley_link_status">Estado do RileyLink:</string>
-    <string name="filter">Filtros</string>
     <string name="copytolocalprofile_invalid">Não foi possível criar o perfil. Perfil inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre meu aplicativo?</string>
     <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
@@ -649,12 +636,6 @@
     <string name="a11y_clone_profile">clonar perfil atual</string>
     <string name="a11y_delete_current_profile">excluir perfil atual</string>
     <string name="a11y_add_new_to_list">adicionar novo à lista</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Escolha o tema escuro, claro ou para seguir o tema do dispositivo</string>
-    <string name="app_color_scheme">Esquema de cores do aplicativo</string>
-    <string name="dark_theme">Tema escuro</string>
-    <string name="light_theme">Tema claro</string>
-    <string name="follow_system_theme">Usar tema do dispositivo</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Alvo temporário pré-definido desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos temporários em execução?</string>
