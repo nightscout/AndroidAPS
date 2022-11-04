@@ -11,4 +11,5 @@
     <!--    Widget-->
     <string name="widget_description">Widget do AAPS</string>
     <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
