@@ -191,7 +191,6 @@
     <string name="short_tabtitles">Scurtează titlurile secțiunilor</string>
     <string name="always_use_shortavg">Folosește întotdeauna media scurtă a diferenței în locul diferenței simple</string>
     <string name="always_use_shortavg_summary">Folositor când datele de la surse nefiltrate precum xDrip+ devin \'\'zgomotoase\".</string>
-    <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3\nAceasta este o setare de critică de securitate a OpenAPS. Asta înseamnă că se limitează bazala lade 3x valoarea maximă a bazalelor tale.Cel mai probabil nu veți schimba această valoare, dar trebuie să țineți cont de ce se discută despre “3x max zilnic; 4x curent” ca valori de siguranță.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a \"3x max zilnic; 4x curent\" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
     <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20%% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
@@ -460,7 +459,6 @@
     <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
     <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
     <string name="food_short">Mâncare</string>
-    <string name="reset">resetare</string>
     <string name="openapssmb_maxiob_title">Maximul total IOB peste care OpenAPS nu poate trece [U]</string>
     <string name="openapssmb_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS,\nOpenAPS nu va adăuga mai multă insulină dacă IOB este mai mare ca această valoare</string>
     <string name="absorption_cutoff_title">Timpul maxim de absorbție a mesei [h]</string>
@@ -609,17 +607,7 @@
     <string name="profilenamecontainsdot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
-    <string name="id">ID:</string>
-    <string name="submit">Trimiteți</string>
-    <string name="mostcommonprofile">Cel mai frecvent profil:</string>
-    <string name="invalidage">Valoare vârstă invalidă</string>
-    <string name="invalidweight">Valoare greutate invalidă</string>
     <string name="invalidpct">Intrare % invalidă</string>
-    <string name="average">Medie</string>
-    <string name="tir">Timp în țintă</string>
-    <string name="activitymonitor">Monitorizare activitate</string>
-    <string name="doyouwantresetstats">Doriți să resetați statisticile de activitate?</string>
-    <string name="statistics">Statistici</string>
     <string name="randombg">Glicemie aleatoare</string>
     <string name="description_source_randombg">Generare glicemie aleator (doar mod Demo)</string>
     <string name="randombg_short">Gl</string>
@@ -700,7 +688,6 @@
     <string name="ns_receive_therapy_events_summary">Acceptaţi evenimentele de tratament (canulă, insulină, modificarea bateriei etc.) introduse prin NS sau NSClient</string>
     <string name="ns_receive_cgm">Primire/completare date CGM</string>
     <string name="ns_receive_cgm_summary">Acceptați datele CGM din NS</string>
-    <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="missing_profile_name">Lipsește numele profilului</string>
     <string name="error_in_ic_values">Eroare in valorile IC</string>
     <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
