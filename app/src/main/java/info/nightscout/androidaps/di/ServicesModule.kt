@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Dismiss
 import info.nightscout.androidaps.plugins.general.persistentNotification.DummyService
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataLayerListenerServiceMobile
 import info.nightscout.androidaps.services.AlarmSoundService
-import info.nightscout.androidaps.services.LocationService
+import info.nightscout.automation.services.LocationService
 
 @Module
 @Suppress("unused")

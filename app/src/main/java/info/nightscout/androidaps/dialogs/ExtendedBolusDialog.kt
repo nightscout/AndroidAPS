@@ -16,9 +16,9 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.ToastUtils
@@ -28,7 +28,7 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BO
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -55,8 +55,10 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         savedInstanceState.putDouble("duration", binding.duration.value)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         onCreateViewGeneral()
         _binding = DialogExtendedbolusBinding.inflate(inflater, container, false)
         return binding.root
@@ -69,13 +71,17 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
         val extendedStep = pumpDescription.extendedBolusStep
-        binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
-            ?: extendedStep, extendedStep, maxInsulin, extendedStep, DecimalFormat("0.00"), false, binding.okcancel.ok)
+        binding.insulin.setParams(
+            savedInstanceState?.getDouble("insulin")
+                ?: extendedStep, extendedStep, maxInsulin, extendedStep, DecimalFormat("0.00"), false, binding.okcancel.ok
+        )
 
         val extendedDurationStep = pumpDescription.extendedBolusDurationStep
         val extendedMaxDuration = pumpDescription.extendedBolusMaxDuration
-        binding.duration.setParams(savedInstanceState?.getDouble("duration")
-            ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, binding.okcancel.ok)
+        binding.duration.setParams(
+            savedInstanceState?.getDouble("duration")
+                ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, binding.okcancel.ok
+        )
         binding.insulinLabel.labelFor = binding.insulin.editTextId
         binding.durationLabel.labelFor = binding.duration.editTextId
     }
@@ -98,9 +104,11 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log(Action.EXTENDED_BOLUS, Sources.ExtendedBolusDialog,
+                uel.log(
+                    Action.EXTENDED_BOLUS, Sources.ExtendedBolusDialog,
                     ValueWithUnit.Insulin(insulinAfterConstraint),
-                    ValueWithUnit.Minute(durationInMinutes))
+                    ValueWithUnit.Minute(durationInMinutes)
+                )
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -115,12 +123,12 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
     override fun onResume() {
         super.onResume()
-        if(!queryingProtection) {
+        if (!queryingProtection) {
             queryingProtection = true
             activity?.let { activity ->
                 val cancelFail = {
                     queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }

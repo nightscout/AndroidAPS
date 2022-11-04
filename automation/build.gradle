@@ -12,7 +12,7 @@ apply from: "${project.rootDir}/core/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
 android {
-    namespace 'info.nightscout.androidaps.automation'
+    namespace 'info.nightscout.automation'
 }
 
 dependencies {

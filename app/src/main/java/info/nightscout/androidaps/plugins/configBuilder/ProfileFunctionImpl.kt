@@ -8,7 +8,6 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwitch
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.utils.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
@@ -22,6 +21,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.fromConstant
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
@@ -48,7 +48,7 @@ class ProfileFunctionImpl @Inject constructor(
     private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) : ProfileFunction {
 
-    val cache = ConcurrentHashMap<Long, Profile?>()
+    private var cache = ConcurrentHashMap<Long, Profile?>()
 
     private val disposable = CompositeDisposable()
 
@@ -183,7 +183,7 @@ class ProfileFunctionImpl @Inject constructor(
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now()) ?: return false
         val validity = ProfileSealed.PS(ps).isValid(
-            rh.gs(info.nightscout.androidaps.automation.R.string.careportal_profileswitch),
+            rh.gs(R.string.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,
