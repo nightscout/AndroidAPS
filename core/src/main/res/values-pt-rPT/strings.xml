@@ -109,6 +109,18 @@
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="notconfigured">Não configurado</string>
     <string name="loopsuspended">Loop suspenso</string>
+    <string name="trend_arrow">Seta de tendência</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">req</string>
+    <string name="average">Média</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDI Total</string>
+    <string name="none"><![CDATA[<nenhum>]]></string>
+    <string name="remove_label">REMOVER</string>
+    <string name="activate_profile">Activar perfil</string>
+    <string name="reset">repor</string>
+    <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
+    <string name="profile">Perfil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
