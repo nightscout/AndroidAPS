@@ -15,7 +15,6 @@
     <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
-    <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
     <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
     <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
     <string name="description_ama">Estat de l\'algoritme el 2017</string>
@@ -93,10 +92,6 @@
     <string name="carbssuggestion">Proposta de carbs</string>
     <string name="unsupportednsversion">Versió no compatible de Nightscout</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
-    <string name="careportal_newnstreatment_other">Altres</string>
-    <string name="careportal_newnstreatment_meter">Glucòmetre</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
-    <string name="careportal_newnstreatment_glucosetype">Tipus de glucèmia</string>
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bolus estès</string>
     <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
@@ -218,7 +213,6 @@
     <string name="overview_extendedbolus_cancel_button">Cancel·lar bolus estès</string>
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="login">Iniciar sessió</string>
     <!-- Aidex Cgms -->
