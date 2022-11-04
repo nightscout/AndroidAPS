@@ -9,4 +9,6 @@
     <string name="remind_to_bolus_later">Påminn om bolus senare</string>
     <string name="a11y_carb_reminder">ställ in påminnelse</string>
     <!--    Widget-->
+    <!--     Activities-->
+    <!-- CareDialog -->
 </resources>
