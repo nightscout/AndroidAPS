@@ -20,7 +20,6 @@
     <string name="description_smb">Ο πιο πρόσφατος αλγόριθμος για προχωρημένους χρήστες</string>
     <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
     <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
-    <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
     <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
@@ -77,7 +76,6 @@
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
-    <string name="overview_calculator_label">Υπολογιστής</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="apsmode_title">Λειτουργία APS</string>
@@ -139,7 +137,6 @@
     <string name="configbuilder_shortname">Διαμόρφωση</string>
     <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">ΑΡΧΙΚΗ</string>
     <string name="virtualpump_shortname">Εικ. αντλία</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
@@ -224,7 +221,6 @@
     <string name="absorption_maxtime_summary">Χρόνος σε ώρες που περιμένουμε να απορροφηθούν όλοι οι υδατάνθρακες ενός γεύματος</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Κρατήστε την οθόνη ενεργή</string>
     <string name="keep_screen_on_summary">Αποτρέψετε το Android να απενεργοποιήσει την οθόνη. Χωρίς σύνδεση με το φορτιστή, αποφορτίζει πολύ γρήγορα την μπαταρία.</string>
     <string name="sensitivity_warning">Ενεργοποιώντας το autosense θυμηθείτε να εισάγετε όλους τους υδατάνθρακες. Διαφορετικά, οι αποκλίσεις των υδατανθράκων θα εντοπιστούν λανθασμένα ως αλλαγή ευαισθησίας!!</string>
@@ -237,7 +233,6 @@
     <string name="enablesmb">Ενεργοποίηση SMB</string>
     <string name="enablesmb_summary">Χρησιμοποιήστε Super Micro Boluses αντί προσωρινού ρυθμού για ταχύτερα αποτελέσματα</string>
     <string name="enableuam_summary">Ανίχνευση απαρατήρητων γευμάτων</string>
-    <string name="activate_profile">Ενεργοποίηση προφίλ</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
     <string name="careportal_newnstreatment_percentage_label">Ποσοστό</string>
     <string name="careportal_newnstreatment_timeshift_label">Αλλαγή της ώρας</string>
@@ -310,8 +305,6 @@
     <string name="g5appnotdetected">Ενημερώστε την εφαρμογή G5 στην υποστηριζόμενη έκδοση</string>
     <string name="dexcom_app_not_installed">Η εφαρμογή Dexcom δεν είναι εγκατεστημένη.</string>
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
-    <string name="category">Κατηγορία</string>
-    <string name="subcategory">Υποκατηγορία</string>
     <string name="loop_smbsetbypump_label">Το SMB ρυθμίστηκε από την αντλία</string>
     <string name="overview_show_activity">Δραστηριότητα</string>
     <string name="overview_show_sensitivity">Ευαισθησία</string>
