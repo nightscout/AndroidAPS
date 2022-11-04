@@ -16,7 +16,6 @@
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
     <string name="description_objectives">Výukový program</string>
-    <string name="description_food">Zobrazení jídel definovaných v NS</string>
     <string name="description_loop">Povolení nebo zakázání smyčky.</string>
     <string name="description_ns_client">Synchronizace dat s NS</string>
     <string name="description_ama">Stav algoritmu v roce 2017</string>
@@ -101,12 +100,8 @@
     <string name="carbssuggestion">Návrh sacharidů</string>
     <string name="unsupportednsversion">Nepodporovaná verze Nightscoutu</string>
     <string name="treatments_wizard_basaliob_label">Bazální IOB</string>
-    <string name="careportal_newnstreatment_other">Jiné</string>
-    <string name="careportal_newnstreatment_meter">Glukoměr</string>
-    <string name="careportal_newnstreatment_sensor">Senzor</string>
     <string name="carb_time_label">Čas jídla</string>
     <string name="profile_label">Profil</string>
-    <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="overview_extendedbolus_button">Prodloužený bolus</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
@@ -347,12 +342,6 @@
     <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
     <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear.</string>
-    <string name="food">Jídlo</string>
-    <string name="none"><![CDATA[<prázdný>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Tuk</string>
     <string name="raise_notifications_as_android_notifications">Používat systémové notifikace pro výstrahy a oznámení</string>
     <string name="gradually_increase_notification_volume">Postupně zvyšovat hlasitost výstrah a oznámení</string>
     <string name="localalertsettings_title">Místní výstrahy</string>
@@ -463,7 +452,6 @@
     <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
     <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>
     <string name="smbnotallowedinopenloopmode">SBM není povoleno v otevřené smyčce</string>
-    <string name="food_short">Jídlo</string>
     <string name="openapssmb_maxiob_title">Maximální celková hodnota IOB, kterou OpenAPS nemůže překročit [U]</string>
     <string name="openapssmb_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána Max IOB.\nOpenAPS nikdy nepřidá inzulín, pokud je současné IOB větší než tato hodnota</string>
     <string name="absorption_cutoff_title">Maximální doba absorpce sacharidů [h]</string>
@@ -672,7 +660,6 @@
     <string name="basalpctfromtdd_label">% bazálu</string>
     <string name="dpvdefaultprofile">Výchozí profil DPV</string>
     <string name="setupwizard_pump_riley_link_status">Status RileyLink:</string>
-    <string name="filter">Filtr</string>
     <string name="copytolocalprofile_invalid">Nelze vytvořit profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
     <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
@@ -749,12 +736,6 @@
     <string name="a11y_clone_profile">klonovat aktuální profil</string>
     <string name="a11y_delete_current_profile">odstranit aktuální profil</string>
     <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
-    <!-- Theme switcher dark and light mode-->
-    <string name="theme_switcher_summary">Vyberte téma tmavé, světlé nebo podle systémového motivu</string>
-    <string name="app_color_scheme">Barevné schéma</string>
-    <string name="dark_theme">Tmavé téma</string>
-    <string name="light_theme">Světlé téma</string>
-    <string name="follow_system_theme">Použít téma zařízení</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Dočasný cíl neznámá předvolba: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
