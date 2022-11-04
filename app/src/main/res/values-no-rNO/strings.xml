@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
     <string name="description_overview">Viser loopens nåværende tilstand og knapper for de vanligste funksjonene</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
-    <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
     <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
     <string name="description_sensitivity_aaps">Sensitiviteten beregnes på samme måte som i Oref0, men du kan angi hvor mye av historikken som skal tas med i beregningen. Minimum opptak av karbohydrater beregnes ut fra maks karbohydratopptak angitt i dine innstillinger.</string>
     <string name="description_sensitivity_oref1">Sensitivitet beregnes fra 8t og 24t historiske data (velger alltid det resultatet som gir høyest insulinsensitivitet). Karbohydrater (som ikke er absorbert) blir avsluttet etter tiden som er angitt i innstillinger. Plugin beregner også UAM.</string>
@@ -87,7 +86,6 @@
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_treatment_label">Behandling</string>
-    <string name="overview_calculator_label">Kalkulator</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
@@ -158,7 +156,6 @@
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
     <string name="button3">Knapp 3</string>
-    <string name="units_colon">Enheter:</string>
     <string name="units">Enheter</string>
     <string name="prefs_range_title">Område for visualisering</string>
     <string name="prefs_range_summary">Høy og lav verdi for grafen i Oversikt og smartklokke</string>
@@ -171,7 +168,6 @@
     <string name="MM640g">MM640G</string>
     <string name="ongoingnotificaction">Pågående varslinger</string>
     <string name="old_data">GAMLE DATA</string>
-    <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
     <string name="openapsma_autosensdata_label">Autosens-data</string>
@@ -184,7 +180,6 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">HJEM</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="treatments_shortname">BEH</string>
@@ -311,7 +306,6 @@
     <string name="absorption_maxtime_summary">Tid i timer hvor det forventes at alle karbohydrater fra måltid vil være absorbert</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Hold skjermen påslått</string>
     <string name="keep_screen_on_summary">Forhindre Android fra å slå av skjermen. Mobilen vil bruke mye batteri hvis den ikke plugges til strømledning.</string>
     <string name="sensitivity_warning">Hvis du slår på Autosense-funksjonen må du huske å angi alle spiste karbohydrater. Ellers vil KH-avvik gi feil i sensitivitetsberegningen !!</string>
@@ -328,7 +322,6 @@
     <string name="enablesmb">Aktiver SMB</string>
     <string name="enablesmb_summary">Bruk Super Mikro Bolus i stedet for temp basal for raskere resultat</string>
     <string name="enableuam_summary">Oppdag uannonsert måltid (UAM)</string>
-    <string name="activate_profile">Aktiver profil</string>
     <string name="invalid">UGYLDIG</string>
     <string name="careportal_newnstreatment_percentage_label">Prosent</string>
     <string name="careportal_newnstreatment_timeshift_label">Tidsforskyving</string>
@@ -419,8 +412,6 @@
     <string name="g5appnotdetected">Vennligst oppdater din Dexcom app til en versjon som støttes</string>
     <string name="dexcom_app_not_installed">Dexcom appen er ikke installert.</string>
     <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør</string>
-    <string name="category">Kategori</string>
-    <string name="subcategory">Underkategori</string>
     <string name="bolusrecordedonly">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="loop_smbsetbypump_label">SMB satt med pumpe</string>
     <string name="overview_show_activity">Aktivitet</string>
@@ -598,23 +589,13 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profilnavn:</string>
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheter</string>
-    <string name="doyouwantswitchprofile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
     <string name="objectives_button_unfinish">Sletting ferdig</string>
     <string name="objectives_button_unstart">Sletting startet</string>
     <string name="doyouwantresetstart">Ønsker du å omstarte læringsmålet? Du vil miste fullførte trinn.</string>
     <string name="setupwizard_units_prompt">Velg enheter som du vil vise verdier i</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">MÅL</string>
-    <string name="clone_label">Klon</string>
-    <string name="saveorresetchangesfirst">Lagre eller nullstill gjeldende endringer først</string>
-    <string name="deletecurrentprofile">Slette gjeldende profil?</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
-    <string name="profilenamecontainsdot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
@@ -702,15 +683,7 @@
     <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller NSClient</string>
     <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
     <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
-    <string name="missing_profile_name">Mangler profilnavn</string>
-    <string name="error_in_ic_values">Feil i IK faktoren</string>
-    <string name="error_in_basal_values">Feil i basalverdiene</string>
-    <string name="error_in_target_values">Feil i BS mål verdiene</string>
-    <string name="error_in_isf_values">Feil i IF verdien</string>
     <string name="run_question">Kjør %s?</string>
-    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
-    <string name="view">Visning</string>
-    <string name="errors">Feil</string>
     <string name="ns_sync_slow">Reduser opplastingshastighet</string>
     <string name="data_status">BS data status</string>
     <string name="remove_bg_readings">Fjern BS målinger</string>
@@ -733,10 +706,6 @@
     <string name="a11y_insulin_label">insulin</string>
     <string name="a11y_blood_glucose">blodsukker</string>
     <string name="a11y_bg_outdated">utdatert</string>
-    <string name="a11y_add_new_profile">legg til ny profil</string>
-    <string name="a11y_clone_profile">kopier gjeldende profil</string>
-    <string name="a11y_delete_current_profile">slett gjeldende profil</string>
-    <string name="a11y_add_new_to_list">legg til ny i liste</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temptarget ukjent forhåndsinnstilling: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende Temp Target?</string>
@@ -772,7 +741,6 @@
     <string name="app_default">Standardverdi</string>
     <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
     <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
-    <string name="select_profile">Velg profil du vil redigere</string>
     <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="select_for_removal">Velg hva som skal fjernes</string>
