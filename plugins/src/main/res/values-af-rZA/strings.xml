@@ -47,8 +47,18 @@
     <string name="insulin_peak_time">Piek tyd [min]</string>
     <string name="free_peak_oref">Vry-piek Oref</string>
     <string name="rapid_acting_oref">Snelaksie Oref</string>
-    <string name="ultrarapid_oref">Ultra-Snel Oref</string>
     <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <!-- Overview -->
 </resources>
