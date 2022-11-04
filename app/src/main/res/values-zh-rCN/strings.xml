@@ -415,7 +415,6 @@
     <string name="overview_show_basals">基础率</string>
     <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
     <string name="engineering_mode_enabled">已启用工程模式</string>
-    <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
     <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
     <string name="autosensdisabledinpreferences">Autosens 在参数选项中被禁用了</string>
