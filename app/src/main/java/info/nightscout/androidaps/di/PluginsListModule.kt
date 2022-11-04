@@ -31,7 +31,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
-import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
+import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin

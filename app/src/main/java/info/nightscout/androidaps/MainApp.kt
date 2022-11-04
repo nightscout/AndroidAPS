@@ -34,7 +34,7 @@ import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
+import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
