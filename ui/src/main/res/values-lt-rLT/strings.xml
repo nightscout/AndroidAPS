@@ -10,5 +10,11 @@
     <string name="a11y_carb_reminder">nustatyti priminimą</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="statistics">Statistika</string>
+    <string name="calculation_in_progress">Skaičiuojama</string>
+    <string name="id">ID:</string>
+    <string name="submit">Pateikti</string>
+    <string name="age">Amžius</string>
+    <string name="weight_label">Svoris</string>
     <!-- CareDialog -->
 </resources>
