@@ -274,7 +274,6 @@
     <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">验证签名</string>
     <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
     <string name="versionavailable">版本 %1$s 可用</string>
     <string name="version_expire">版本 %1$s 将在 %2$s 过期</string>
