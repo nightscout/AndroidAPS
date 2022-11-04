@@ -414,7 +414,6 @@ Eversense-appen.</string>
     <string name="overview_show_basals">Basaler</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inaktiverat.</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
-    <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="pumpisnottempbasalcapable">Pumpen kan inte hantera temp basaler</string>
     <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
     <string name="autosensdisabledinpreferences">Autosens inaktiverat i Inställningar</string>
