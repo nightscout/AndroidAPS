@@ -15,7 +15,6 @@
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
     <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
     <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
@@ -94,12 +93,8 @@
     <string name="carbssuggestion">Sugestão de Hidratos</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
-    <string name="careportal_newnstreatment_other">Outro</string>
-    <string name="careportal_newnstreatment_meter">Medidor</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Hora dos Hidratos</string>
     <string name="profile_label">Perfil</string>
-    <string name="careportal_newnstreatment_glucosetype">Tipo de Glicose</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus Prolongado</string>
     <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
@@ -334,12 +329,6 @@
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
-    <string name="food">Alimentos</string>
-    <string name="none"><![CDATA[<nenhum>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Gor</string>
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas locais</string>
@@ -449,7 +438,6 @@
     <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
-    <string name="food_short">Alimentos</string>
     <string name="openapssmb_maxiob_title">Máximo total de IA que a OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Máx IA em contexto da OpenAPS\n A OpenAPS não adicionará mais insulina se a IA atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
@@ -640,7 +628,6 @@
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
-    <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">Não é possível criar o perfil. O perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
@@ -695,7 +682,6 @@
     <string name="identification">Identificação (e-mail, nick FB ou Discord, etc)</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
     <string name="not_available_full">Indisponível</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="login">Login</string>
     <!-- Aidex Cgms -->
