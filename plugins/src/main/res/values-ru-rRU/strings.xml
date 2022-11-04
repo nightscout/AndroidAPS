@@ -115,8 +115,18 @@
     <string name="insulin_peak">Пик</string>
     <string name="free_peak_oref">Свободный от пиков Oref</string>
     <string name="rapid_acting_oref">Быстро действующий Oref</string>
-    <string name="ultrarapid_oref">Сверхбыстрый Oref</string>
     <string name="dia_too_short">Значение времени действия инс %1$f слишком мало - применено %2$f!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <!-- Overview -->
 </resources>
