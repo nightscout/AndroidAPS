@@ -29,13 +29,23 @@ import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.shared.SafeParse
@@ -105,7 +115,7 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.name}")
+        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.simpleName}")
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -189,7 +199,7 @@ class WizardDialog : DaggerDialogFragment() {
                 context?.let { context ->
                     wizard?.confirmAndExecute(context)
                 }
-                aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.name}")
+                aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.simpleName}")
             }
             dismiss()
         }
@@ -200,7 +210,7 @@ class WizardDialog : DaggerDialogFragment() {
         binding.iobCheckboxIcon.setOnClickListener { binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked; processIobCheckBox(); }
         // cancel button
         binding.okcancel.cancel.setOnClickListener {
-            aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.name}")
+            aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.simpleName}")
             dismiss()
         }
         // checkboxes
@@ -512,7 +522,7 @@ class WizardDialog : DaggerDialogFragment() {
             activity?.let { activity ->
                 val cancelFail = {
                     queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }

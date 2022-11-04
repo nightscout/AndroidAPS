@@ -12,9 +12,16 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.ToastUtils
@@ -24,7 +31,7 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BO
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.LTag
 import java.text.DecimalFormat
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -151,7 +158,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 val cancelFail = {
                     queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }

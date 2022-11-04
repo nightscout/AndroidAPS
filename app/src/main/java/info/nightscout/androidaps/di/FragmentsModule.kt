@@ -28,13 +28,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
-import info.nightscout.androidaps.plugins.general.automation.AutomationFragment
-import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseActionDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseOperationDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
-import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTriggerDialog
 import info.nightscout.androidaps.plugins.general.autotune.AutotuneFragment
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
@@ -55,7 +48,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesPreferencesFragment(): MyPreferenceFragment
 
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
-    @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
     @ContributesAndroidInjector abstract fun contributesAutotuneFragment(): AutotuneFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
@@ -83,17 +75,11 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
-    @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
-    @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
-    @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
 
     @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 
     @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
     @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
-    @ContributesAndroidInjector abstract fun contributesChooseActionDialog(): ChooseActionDialog
-    @ContributesAndroidInjector abstract fun contributesChooseTriggerDialog(): ChooseTriggerDialog
-    @ContributesAndroidInjector abstract fun contributesChooseOperationDialog(): ChooseOperationDialog
     @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
     @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog

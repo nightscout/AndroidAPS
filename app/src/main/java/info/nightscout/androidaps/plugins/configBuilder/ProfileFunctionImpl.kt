@@ -9,7 +9,13 @@ import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwitch
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.extensions.fromConstant
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
@@ -42,7 +48,7 @@ class ProfileFunctionImpl @Inject constructor(
     private val deviceStatusData: DeviceStatusData
 ) : ProfileFunction {
 
-    var cache = ConcurrentHashMap<Long, Profile?>()
+    private var cache = ConcurrentHashMap<Long, Profile?>()
 
     private val disposable = CompositeDisposable()
 
@@ -177,7 +183,7 @@ class ProfileFunctionImpl @Inject constructor(
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now()) ?: return false
         val validity = ProfileSealed.PS(ps).isValid(
-            rh.gs(info.nightscout.androidaps.automation.R.string.careportal_profileswitch),
+            rh.gs(info.nightscout.automation.R.string.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,
