@@ -1661,7 +1661,34 @@ class Pump(
             val currentSystemTimeZone = TimeZone.currentSystemDefault()
             val currentLocalDate = currentSystemDateTime.toLocalDateTime(currentSystemTimeZone).date
 
-            navigateToRTScreen(rtNavigationContext, ParsedScreen.MyDataDailyTotalsScreen::class, pumpSuspended)
+            fun processTDDScreen(dailyTotalsScreen: ParsedScreen.MyDataDailyTotalsScreen) {
+                val historyEntry = TDDHistoryEntry(
+                    // Fix the date since the Combo does not show years in TDD screens.
+                    date = dailyTotalsScreen.date.withFixedYearFrom(currentLocalDate).atStartOfDayIn(currentPumpUtcOffset!!.asTimeZone()),
+                    totalDailyAmount = dailyTotalsScreen.totalDailyAmount
+                )
+
+                logger(LogLevel.DEBUG) {
+                    "Got TDD history entry ${dailyTotalsScreen.index} / ${dailyTotalsScreen.totalNumEntries} ; " +
+                        "date = ${historyEntry.date} ; " +
+                        "TDD = ${historyEntry.totalDailyAmount.toStringWithDecimal(3)}"
+                }
+
+                tddHistoryEntries.add(historyEntry)
+
+                tddHistoryProgressReporter.setCurrentProgressStage(
+                    RTCommandProgressStage.FetchingTDDHistory(dailyTotalsScreen.index, dailyTotalsScreen.totalNumEntries)
+                )
+            }
+
+            // Navigate to the TDD screens and process the very first shown TDD screen. We
+            // process the first screeen separately since the longPressRTButtonUntil() function
+            // uses the supplied block as a predicate to check if it should _continue_ pressing
+            // the button, meaning that it will always press the button at least initially,
+            // moving to entry #2 in the TDD history. Thus, if we don't look at the screen now,
+            // we miss entry #1, which is the current day.
+            val firstTDDScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MyDataDailyTotalsScreen::class, pumpSuspended) as ParsedScreen.MyDataDailyTotalsScreen
+            processTDDScreen(firstTDDScreen)
 
             longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.DOWN) { parsedScreen ->
                 if (parsedScreen !is ParsedScreen.MyDataDailyTotalsScreen) {
@@ -1669,23 +1696,7 @@ class Pump(
                     return@longPressRTButtonUntil LongPressRTButtonsCommand.ReleaseButton
                 }
 
-                val historyEntry = TDDHistoryEntry(
-                    // Fix the date since the Combo does not show years in TDD screens.
-                    date = parsedScreen.date.withFixedYearFrom(currentLocalDate).atStartOfDayIn(currentPumpUtcOffset!!.asTimeZone()),
-                    totalDailyAmount = parsedScreen.totalDailyAmount
-                )
-
-                logger(LogLevel.DEBUG) {
-                    "Got TDD history entry ${parsedScreen.index} / ${parsedScreen.totalNumEntries} ; " +
-                    "date = ${historyEntry.date} ; " +
-                    "TDD = ${historyEntry.totalDailyAmount.toStringWithDecimal(3)}"
-                }
-
-                tddHistoryEntries.add(historyEntry)
-
-                tddHistoryProgressReporter.setCurrentProgressStage(
-                    RTCommandProgressStage.FetchingTDDHistory(parsedScreen.index, parsedScreen.totalNumEntries)
-                )
+                processTDDScreen(parsedScreen)
 
                 return@longPressRTButtonUntil if (parsedScreen.index >= parsedScreen.totalNumEntries)
                     LongPressRTButtonsCommand.ReleaseButton
