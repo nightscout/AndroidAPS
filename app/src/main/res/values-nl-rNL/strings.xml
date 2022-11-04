@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
-    <string name="description_profile_local">Gebruik profiel(en) die je in AAPS aanmaakt en offline kunt gebruiken.</string>
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
     <string name="description_sensitivity_oref1">Gevoeligheid wordt berekend met gegevens van de afgelopen 8 of 24 uur (de meest gevoelige van die twee) en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de instellingen. Berekent ook UAM.</string>
@@ -83,7 +82,6 @@
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Bolus wizard</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="xdrip">xDrip+</string>
@@ -153,7 +151,6 @@
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
     <string name="button3">Knop 3</string>
-    <string name="units_colon">Eenheden:</string>
     <string name="units">Eenheden</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
@@ -166,7 +163,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Permanent bericht</string>
     <string name="old_data">Oude gegevens</string>
-    <string name="localprofile">Profiel</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
@@ -179,7 +175,6 @@
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
-    <string name="localprofile_shortname">LP</string>
     <string name="overview_shortname">OVZ</string>
     <string name="virtualpump_shortname">VPUMP</string>
     <string name="treatments_shortname">BEHAND</string>
@@ -306,7 +301,6 @@
     <string name="absorption_maxtime_summary">Verwachte tijd in uren totdat alle koolhydraten opgenomen zijn</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Laat scherm aan</string>
     <string name="keep_screen_on_summary">Voorkomen dat Android het scherm uitschakelt. Dit kost veel accuvoeding als je de telefoon niet aan de oplader hebt.</string>
     <string name="sensitivity_warning">Bij het gebruik van Autosense, vergeet niet alle opgenomen koolhydraten in te geven. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden !!</string>
@@ -322,7 +316,6 @@
     <string name="enablesmb">Activeer SMB</string>
     <string name="enablesmb_summary">SMB in plaats van tijdelijke basalen voor snellere reactie</string>
     <string name="enableuam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
-    <string name="activate_profile">Activeer profiel</string>
     <string name="invalid">Ongeldig</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
     <string name="careportal_newnstreatment_timeshift_label">Tijd verschuiving</string>
@@ -413,8 +406,6 @@
     <string name="g5appnotdetected">Gelieve Dexcom app naar ondersteunde versie te updaten</string>
     <string name="dexcom_app_not_installed">Dexcom app is niet geïnstalleerd.</string>
     <string name="do_not_bolus_record_only">Geen bolus toedienen enkel in behandelingen zetten</string>
-    <string name="category">Categorie</string>
-    <string name="subcategory">Subcategorie</string>
     <string name="bolusrecordedonly">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_activity">Activiteit</string>
@@ -586,23 +577,13 @@
     <string name="format_carbs_ic">%1$.0fg KH-ratio: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg KH-ratio: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Profielnaam:</string>
     <string name="selected_profile">Geselecteerd:</string>
     <string name="unitsnosemicolon">Eenheden</string>
-    <string name="doyouwantswitchprofile">Wilt u van profiel wisselen en de wijzigingen in het huidige profiel ongedaan maken?</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
     <string name="objectives_button_unstart">Start wissen</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">KH-ratio</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">DOEL</string>
-    <string name="clone_label">Dupliceren</string>
-    <string name="saveorresetchangesfirst">Huidige wijzigingen eerst opslaan of ongedaan maken</string>
-    <string name="deletecurrentprofile">Huidige profiel verwijderen?</string>
     <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
-    <string name="profilenamecontainsdot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
     <string name="invalidpct">Ongeldig % invoer</string>
@@ -688,15 +669,7 @@
     <string name="ns_receive_therapy_events_summary">Accepteer behandelingen (cannule, insuline, batterijwissel etc) ingevoerd via NS of NSClient</string>
     <string name="ns_receive_cgm">Ontvang / backfill CGM gegevens</string>
     <string name="ns_receive_cgm_summary">Accepteer CGM data van NS</string>
-    <string name="missing_profile_name">Profielnaam ontbreekt</string>
-    <string name="error_in_ic_values">Fout in IC waarden</string>
-    <string name="error_in_basal_values">Fout in basaal waarden</string>
-    <string name="error_in_target_values">Fout in streefdoel</string>
-    <string name="error_in_isf_values">Fout in ISF waarden</string>
     <string name="run_question">%s uitvoeren?</string>
-    <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
-    <string name="view">Weergeven</string>
-    <string name="errors">Foutmeldingen</string>
     <string name="ns_sync_slow">Vertraag uploads</string>
     <string name="data_status">BG data status</string>
     <string name="remove_bg_readings">Verwijder BG metingen</string>
@@ -719,10 +692,6 @@
     <string name="a11y_insulin_label">insuline</string>
     <string name="a11y_blood_glucose">bloed glucose</string>
     <string name="a11y_bg_outdated">verouderd</string>
-    <string name="a11y_add_new_profile">nieuw profiel toevoegen</string>
-    <string name="a11y_clone_profile">huidig profiel dupliceren</string>
-    <string name="a11y_delete_current_profile">huidig profiel verwijderen</string>
-    <string name="a11y_add_new_to_list">nieuwe toevoegen aan lijst</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Tijdelijke doel onbekende preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Huidige tijdelijk streefdoel annuleren?</string>
@@ -758,7 +727,6 @@
     <string name="app_default">Applicatie standaardwaarden</string>
     <string name="show_invalidated_records">Toon ongeldig gemarkeerde / verwijderde records</string>
     <string name="hide_invalidated_records">Verberg ongeldig gemarkeerde / verwijderde records</string>
-    <string name="select_profile">Kies profiel om te bewerken</string>
     <string name="refresh_from_nightscout">Vernieuw vanaf Nightscout</string>
     <string name="remove_selected_items">Geselecteerde items verwijderen</string>
     <string name="select_for_removal">Selecteer om te verwijderen</string>
