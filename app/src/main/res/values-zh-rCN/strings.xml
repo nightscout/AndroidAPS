@@ -22,7 +22,6 @@
     <string name="description_smb_dynamic_isf">面向高级用户的最新算法，可以动态/自动调整ISF胰岛素敏感系数</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
-    <string name="description_profile_local">定义一个离线可使用的配置文件。</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
     <string name="description_sensitivity_oref1">根据过去的8小时或24小时数据计算胰岛素灵敏度（使用更敏感的数据）。碳水化合物（如果没有被吸收）则在首选项中指定的时间后被核减。插件还计算UAM。</string>
@@ -82,7 +81,6 @@
     <string name="constraints_violation">违反约束条件</string>
     <string name="setbasalquestion">接受新的临时基础率</string>
     <string name="overview_treatment_label">治疗</string>
-    <string name="overview_calculator_label">计算器</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="xdrip">xDrip+</string>
@@ -152,7 +150,6 @@
     <string name="button1">按钮1</string>
     <string name="button2">按钮2</string>
     <string name="button3">按钮3</string>
-    <string name="units_colon">单位:</string>
     <string name="units">单位</string>
     <string name="prefs_range_title">可视化范围</string>
     <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>
@@ -165,7 +162,6 @@
     <string name="MM640g">美敦力640g</string>
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
-    <string name="localprofile">配置文件</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
@@ -178,7 +174,6 @@
     <string name="loop_shortname">闭环</string>
     <string name="oaps_shortname">OpenAPS</string>
     <string name="dynisf_shortname">动态ISF</string>
-    <string name="localprofile_shortname">本地配置文件</string>
     <string name="overview_shortname">主页</string>
     <string name="virtualpump_shortname">虚拟泵</string>
     <string name="treatments_shortname">治疗</string>
@@ -305,7 +300,6 @@
     <string name="absorption_maxtime_summary">预计膳食中所有的碳水化合物被吸收的时间，以小时为单位</string>
     <string name="openaps_short">OpenAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">基础率</string>
     <string name="keep_screen_on_title">保持屏幕常亮</string>
     <string name="keep_screen_on_summary">阻止 Android 系统关闭手机屏幕。这将非常耗电</string>
     <string name="sensitivity_warning">如果要打开 Autosense功能, 记住输入所有吃的碳水化合物。否则碳水化合物的偏差将被识别为错误的灵敏度变化!!</string>
@@ -320,7 +314,6 @@
     <string name="enablesmb">启用微型大剂量</string>
     <string name="enablesmb_summary">使用微型大剂量代替使用临时基础率，更快的干预</string>
     <string name="enableuam_summary">检测未输入的膳食</string>
-    <string name="activate_profile">激活配置文件</string>
     <string name="invalid">无效</string>
     <string name="careportal_newnstreatment_percentage_label">百分比</string>
     <string name="careportal_newnstreatment_timeshift_label">时间偏移</string>
@@ -411,8 +404,6 @@
     <string name="g5appnotdetected">请将您的 dexcom app 更新为支持的版本</string>
     <string name="dexcom_app_not_installed">未安装德康app。</string>
     <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
-    <string name="category">类别</string>
-    <string name="subcategory">子类别</string>
     <string name="bolusrecordedonly">仅记录大剂量数值(泵不会输注)</string>
     <string name="loop_smbsetbypump_label">通过泵设置SMB微型大剂量</string>
     <string name="overview_show_activity">活动</string>
@@ -577,23 +568,13 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">个人配置名称：</string>
     <string name="selected_profile">已选择:</string>
     <string name="unitsnosemicolon">单位</string>
-    <string name="doyouwantswitchprofile">是否要切换配置文件并放弃对当前配置文件所作的更改?</string>
     <string name="objectives_button_unfinish">清除已完成</string>
     <string name="objectives_button_unstart">清除已启动</string>
     <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
     <string name="setupwizard_units_prompt">选择你想要的血糖显示单位。</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
-    <string name="target_short">TARG</string>
-    <string name="clone_label">克隆</string>
-    <string name="saveorresetchangesfirst">首先保存或重置当前更改</string>
-    <string name="deletecurrentprofile">删除当前配置文件</string>
     <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
-    <string name="profilenamecontainsdot">配置文件名称包含点。\n这不受 NS 支持。\n配置未上载到 NS。</string>
     <string name="low_mark_comment">血糖范围区域的下限值(仅显示，不影响算法)</string>
     <string name="high_mark_comment">血糖范围区域的上限值(仅显示，不影响算法)</string>
     <string name="invalidpct">输入的百分比无效</string>
@@ -679,15 +660,7 @@
     <string name="ns_receive_therapy_events_summary">允许通过NS或NS客户端接收(导管更换、胰岛素更换、电池更换等) 护理事件</string>
     <string name="ns_receive_cgm">接收/回填CGM数据</string>
     <string name="ns_receive_cgm_summary">接受来自NS 的 CGM 数据</string>
-    <string name="missing_profile_name">缺少配置文件名称</string>
-    <string name="error_in_ic_values">IC数值错误</string>
-    <string name="error_in_basal_values">基础率数值错误</string>
-    <string name="error_in_target_values">目标数值错误</string>
-    <string name="error_in_isf_values">ISF数值错误</string>
     <string name="run_question">运行 %s？</string>
-    <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
-    <string name="view">查看</string>
-    <string name="errors">错误</string>
     <string name="ns_sync_slow">放慢上传速度</string>
     <string name="data_status">血糖数据状态</string>
     <string name="remove_bg_readings">删除血糖读数</string>
@@ -710,10 +683,6 @@
     <string name="a11y_insulin_label">胰岛素</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">已过期</string>
-    <string name="a11y_add_new_profile">添加新配置文件</string>
-    <string name="a11y_clone_profile">克隆当前配置文件</string>
-    <string name="a11y_delete_current_profile">删除当前配置文件</string>
-    <string name="a11y_add_new_to_list">新增条目到列表</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
     <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
@@ -748,7 +717,6 @@
     <string name="app_default">应用程序预设</string>
     <string name="show_invalidated_records">显示无效/已删除的记录</string>
     <string name="hide_invalidated_records">隐藏无效/已删除的记录</string>
-    <string name="select_profile">选择要编辑的配置文件</string>
     <string name="refresh_from_nightscout">从 Nightscout 刷新</string>
     <string name="remove_selected_items">删除选中项？</string>
     <string name="select_for_removal">选择要删除的</string>
