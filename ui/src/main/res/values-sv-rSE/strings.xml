@@ -17,4 +17,6 @@
     <string name="age">Ålder</string>
     <string name="weight_label">Vikt</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>
