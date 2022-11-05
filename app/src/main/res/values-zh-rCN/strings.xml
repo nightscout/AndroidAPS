@@ -32,19 +32,6 @@
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
     <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
     <string name="description_treatments">保存所做的所有治疗</string>
-    <string name="treatments_insulin_label_string">胰岛素:</string>
-    <string name="treatments_carbs_label_string">碳水化合物:</string>
-    <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
-    <string name="treatments_iobtotal_label_string">总 IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">总IOB activity(活动):</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">比率：</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB活性胰岛素:</string>
-    <string name="tempbasals_iobtotal_label_string">总 IOB:</string>
-    <string name="treatments_wizard_tt_label">临时目标</string>
-    <string name="treatments_wizard_correction_label">矫正值</string>
-    <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
     <string name="openapsma_run">现在运行</string>
     <string name="vitualpump_label">虚拟泵</string>
     <string name="openapsma_lastrun_label">上一次运行</string>
@@ -80,7 +67,6 @@
     <string name="openapsma_disabled">插件已禁用</string>
     <string name="constraints_violation">违反约束条件</string>
     <string name="setbasalquestion">接受新的临时基础率</string>
-    <string name="overview_treatment_label">治疗</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="xdrip">xDrip+</string>
@@ -91,7 +77,6 @@
     <string name="openloop_newsuggestion">新的建议可用</string>
     <string name="carbssuggestion">碳水建议</string>
     <string name="unsupportednsversion">不支持的 Nightscout 版本</string>
-    <string name="treatments_wizard_basaliob_label">基础 IOB</string>
     <string name="carb_time_label">碳水时间</string>
     <string name="profile_label">配置文件</string>
     <string name="overview_tempbasal_button">临时基础</string>
@@ -138,7 +123,6 @@
     <string name="overview_editquickwizard_valid">有效：</string>
     <string name="overview_editquickwizardlistactivity_add">添加</string>
     <string name="overview_quickwizard_item_edit_button">编辑</string>
-    <string name="mealbolus">饮食</string>
     <string name="correctionbous">矫正</string>
     <string name="actions">手动操作</string>
     <string name="ns_upload_only">(禁用很危险) NS仅上传</string>
@@ -167,8 +151,6 @@
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
     <string name="openapsma_scriptdebugdata_label">脚本调试</string>
     <string name="openapsama_useautosens">使用Autosens功能</string>
-    <string name="refresheventsfromnightscout">从NS刷新</string>
-    <string name="deletefuturetreatments">删除未来的治疗项</string>
     <string name="actions_shortname">操作</string>
     <string name="configbuilder_shortname">配置</string>
     <string name="loop_shortname">闭环</string>
@@ -242,9 +224,6 @@
     <string name="duration10h">10 小时</string>
     <string name="resume">恢复</string>
     <string name="reconnect">重新连接泵</string>
-    <string name="bg_trend_label">15分钟 趋势</string>
-    <string name="treatments_wizard_cob_label">碳水</string>
-    <string name="superbolus">超级大剂量Superbolus</string>
     <string name="ns_logappstartedevent">记录app启动事件到NS服务器</string>
     <string name="restartingapp">正在退出应用程序以应用设置。</string>
     <string name="configbuilder_insulin_description">你使用哪种类型的胰岛素？</string>
@@ -462,7 +441,6 @@
     <string name="virtualpump_type">虚拟泵类型</string>
     <string name="virtualpump_definition">泵定义</string>
     <string name="virtualpump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">向导设置</string>
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
     <string name="wear_display_settings">显示设置</string>
     <string name="wear_general_settings">常规设置</string>
@@ -495,8 +473,6 @@
     <string name="resistance_lowers_target_summary">当检测到胰岛素抵抗时，降低血糖的目标值。</string>
     <string name="sensitivity_raises_target_title">敏感时提高目标</string>
     <string name="sensitivity_raises_target_summary">当检测到胰岛素敏感时，提高血糖的目标值。</string>
-    <string name="show_invalidated">显示无效项</string>
-    <string name="hide_invalidated">隐藏失效项</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
     <string name="storedsettingsfound">发现曾经保存过的设置</string>
@@ -516,8 +492,6 @@
     <string name="resettodefaults">重置为默认值</string>
     <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
-    <string name="treatments_wizard_total_label">总计</string>
-    <string name="calculation_short">计算</string>
     <string name="sendlogfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
     <string name="loop_openmode_min_change">最小请求更改[%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
@@ -550,17 +524,12 @@
     <string name="partialboluswizard">输注大剂量向导结果的一部分[%]</string>
     <string name="deliverpartofboluswizard">大剂量向导执行计算，但只有这部分计算结果的胰岛素被输注。适用于SMB算法。</string>
     <string name="increasingmaxbasal">增加最大基础率，因为设置参数低于你配置文件中的最大基础率</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">已选择:</string>
     <string name="unitsnosemicolon">单位</string>
     <string name="objectives_button_unfinish">清除已完成</string>
     <string name="objectives_button_unstart">清除已启动</string>
     <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
     <string name="setupwizard_units_prompt">选择你想要的血糖显示单位。</string>
-    <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
     <string name="low_mark_comment">血糖范围区域的下限值(仅显示，不影响算法)</string>
     <string name="high_mark_comment">血糖范围区域的上限值(仅显示，不影响算法)</string>
     <string name="invalidpct">输入的百分比无效</string>
@@ -615,7 +584,6 @@
     <string name="chart_menu">图表菜单</string>
     <string name="clear_filter">清除筛选</string>
     <string name="cannula">输注导管</string>
-    <string name="userentry">用户条目</string>
     <string name="common_values">\n选择您三餐的最大碳水值和最大胰岛素剂量\n</string>
     <string name="summary_email_for_crash_report">此项为选填信息，会附在反馈的崩溃报告中，以便我们在紧急情况下与您联系。</string>
     <string name="email_address">电子邮件地址</string>
@@ -623,7 +591,6 @@
     <string name="privacy_summary">如果你想得到应用程序重大缺陷的通知，你可以选择提供电子邮件地址、Facebook或Discord等信息。这不是一项自动化的服务。在可能存在危险时，开发人员才会联系您。</string>
     <string name="full_sync">完全同步</string>
     <string name="full_sync_comment">完全同步数据? 这可能需要很长时间，在完成以前你将无法在NS中看到新数据。</string>
-    <string name="prime">充盈</string>
     <string name="ns_sync_options">同步</string>
     <string name="ns_upload_summary">将用户配置，大剂量，碳水化合物，临时基础率的数据上传到NS网站</string>
     <string name="ns_upload">上传数据到NS网站</string>
@@ -696,22 +663,9 @@
     <string name="wear_unknown_action_string">未知操作命令：</string>
     <string name="overview_editquickwizard_percentage">百分比</string>
     <string name="app_default">应用程序预设</string>
-    <string name="show_invalidated_records">显示无效/已删除的记录</string>
-    <string name="hide_invalidated_records">隐藏无效/已删除的记录</string>
-    <string name="refresh_from_nightscout">从 Nightscout 刷新</string>
     <string name="remove_selected_items">删除选中项？</string>
-    <string name="select_for_removal">选择要删除的</string>
-    <string name="profile_changes">配置文件更改</string>
-    <string name="tempt_targets">临时目标</string>
-    <string name="carbs_and_bolus">碳水与大剂量</string>
-    <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
-    <string name="no_records_available">当前暂无记录</string>
-    <string name="hide_loop">隐藏闭环</string>
-    <string name="show_loop">显示闭环</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="sort_label">排序</string>
-    <string name="show_loop_records">显示闭环记录</string>
-    <string name="show_hide_records">隐藏闭环记录</string>
     <string name="loop_status">闭环状态</string>
     <string name="graph_scale">图形缩放</string>
     <string name="profile1">配置文件 1</string>
