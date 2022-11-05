@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Žádná akce nevybrána, nic se neprovede</string>
+    <string name="constraint_applied">Aplikováno omezení!</string>
+    <string name="bolus_constraint_applied">Aplikováno omezení bolusu</string>
+    <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
+    <string name="temp_target_short">DC</string>
+    <string name="dialog_canceled">Dialog zrušen</string>
+    <string name="start_activity_tt">Spustit dočasný cíl Aktivita</string>
+    <string name="start_eating_soon_tt">Spustit dočasný cíl Před jídlem</string>
+    <string name="start_hypo_tt">Spustit dočasný cíl Hypoglykémie</string>
+    <string name="time_offset">Časový posun</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Upozornit později na bolus</string>
+    <string name="a11y_carb_reminder">nastavit připomenutí</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurovat průhlednost</string>
+    <string name="widget_description">Widget AAPS</string>
+</resources>

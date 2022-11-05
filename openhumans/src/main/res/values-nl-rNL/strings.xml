@@ -12,7 +12,6 @@
     <string name="only_upload_if_charging">Alleen uploaden tijdens opladen</string>
     <string name="open_humans_uploading">Uploaden naar Open Humans…</string>
     <string name="open_humans_notifications">Open Humans notificaties</string>
-    <string name="uploading_to_open_humans">AndroidAPS is aan het uploaden naar Open Humans. Dit kan even duren.</string>
     <string name="you_have_been_signed_out_of_open_humans">Je bent uitgelogd van Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik hier om opnieuw in te loggen als dit niet opzettelijk was.</string>
     <string name="upload_now">Nu Uploaden</string>

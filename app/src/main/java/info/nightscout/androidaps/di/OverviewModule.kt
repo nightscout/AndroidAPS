@@ -9,6 +9,5 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 @Suppress("unused")
 abstract class OverviewModule {
     @ContributesAndroidInjector abstract fun notificationWithActionInjector(): NotificationWithAction
-
     @ContributesAndroidInjector abstract fun graphDataInjector(): GraphData
 }

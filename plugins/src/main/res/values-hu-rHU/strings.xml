@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="sms_basal">Bázis:</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
+</resources>

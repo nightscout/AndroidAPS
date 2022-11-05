@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.aps.loop.APSResult
 
 interface Loop {
 
+    fun isEnabled(): Boolean
     class LastRun {
 
         var request: APSResult? = null

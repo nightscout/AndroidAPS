@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
+    <string name="constraint_applied">применено ограничение!</string>
+    <string name="bolus_constraint_applied">применено ограничение болюса</string>
+    <string name="carbs_constraint_applied">применено ограничение углеводов</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Диалог отменен</string>
+    <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
+    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
+    <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
+    <string name="time_offset">Смещение по времени</string>
+    <string name="unit_minute_short">мин</string>
+    <string name="remind_to_bolus_later">Напомнить о болюсе позже</string>
+    <string name="a11y_carb_reminder">установить напоминание</string>
+    <!--    Widget-->
+    <string name="configure">Настроить прозрачность</string>
+    <string name="widget_description">Виджет AAPS</string>
+</resources>

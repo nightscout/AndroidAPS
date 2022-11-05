@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Skan</string>
+    <string name="riley_link_ble_config_scan_stop">Staak</string>
+    <string name="riley_link_ble_config_scan_selected">Verkose</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Skan</string>
+    <string name="riley_link_ble_config_scan_scanning">Skandeer</string>
+    <string name="riley_link_ble_config_scan_finished">Skandering voltooi</string>
+    <string name="riley_link_ble_config_scan_error">Skaderings fout: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Nooit</string>
+    <string name="riley_link_ble_config_remove_riley_link">Verwyder</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Instellings</string>
+    <string name="rileylink_settings_tab2">Geskiedenis</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pomp Status</string>
+    <string name="title_activity_rileylink_settings">RileyLink Instellings</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_name">Naam:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Verbindingstatus:</string>
+    <string name="rileylink_connection_error">Verbindingsfout:</string>
+    <string name="rileylink_device">Toestel</string>
+    <string name="rileylink_device_type">Toestel Tipe:</string>
+    <string name="rileylink_pump_serial_number">Pomp Reeks Nommer:</string>
+    <string name="rileylink_pump_frequency">Pomp Frekwensie:</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth Inisiasie…</string>
+    <string name="rileylink_state_bt_error">Bluetooth Fout</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Gereed</string>
+    <string name="rileylink_state_not_started">Nie Begin</string>
+    <string name="rileylink_state_rl_init">RileyLink inisiasie…</string>
+    <string name="rileylink_state_rl_error">RileyLink Fout</string>
+    <string name="rileylink_state_pc_error">Probleel om met pomp te praat</string>
+    <string name="rileylink_state_connected">Gekoppel</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Toestel is nie RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink onverkry</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth afgeskakel</string>
+    <string name="rileylink_error_no_bt_adapter">Geen Bluetooth Toestel</string>
+    <string name="rileylink_error_tuneup_failed">Opstel het gefaal</string>
+    <string name="rileylink_error_pump_unreachable">Pomp onbereikbaar</string>
+    <string name="rileylink_error_pod_unreachable">Pod onbereikbaar</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
+    <string name="riley_link_common_yes">Ja</string>
+    <string name="riley_link_common_no">Nee</string>
+    <!-- RileyLink - Preferences -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dae</item>
+        <item quantity="other">%1$d dae</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d ure</item>
+    </plurals>
+</resources>

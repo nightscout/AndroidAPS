@@ -20,7 +20,7 @@
     <string name="disconnected">Frakoblet</string>
     <string name="disconnecting">Frakobler</string>
     <string name="waiting_for_disconnection">Venter på frakobling</string>
-    <string name="androidaps_start">AndroidAPS startet</string>
+    <string name="androidaps_start">AAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
@@ -114,6 +114,32 @@
     <string name="addnew">Legg til ny</string>
     <string name="addnew_above">Legg til ny over</string>
     <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
+    <string name="bg_label">BS</string>
+    <string name="calibration">Kalibrering</string>
+    <string name="alarminxmin">Aktiver alarm om %1$d min</string>
+    <string name="treatmentdeliveryerror">Det er registrert en feil med bolus-leveransen. Sjekk manuelt om den er levert og hvor mye</string>
+    <string name="bolus_reminder">Bolus påminnelse</string>
+    <string name="duration_label">Varighet</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpen er pauset</string>
+    <string name="notconfigured">Ikke konfigurert</string>
+    <string name="loopsuspended">Loop pauset</string>
+    <string name="trend_arrow">Trend pil</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">nødv</string>
+    <string name="a11y_arrow_double_down">synker raskt</string>
+    <string name="a11y_arrow_single_down">synkende</string>
+    <string name="a11y_arrow_forty_five_down">synker rolig</string>
+    <string name="a11y_arrow_flat">stabilt</string>
+    <string name="a11y_arrow_forty_five_up">stiger raskt</string>
+    <string name="a11y_arrow_single_up">stiger</string>
+    <string name="a11y_arrow_double_up">stiger raskt</string>
+    <string name="a11y_arrow_none">ingen</string>
+    <string name="a11y_arrow_unknown">ukjent</string>
+    <string name="a11y_high">høyt</string>
+    <string name="a11y_inrange">i målområdet</string>
+    <string name="a11y_low">lavt</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -280,7 +306,7 @@
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <string name="version_expire">Versjon %1$s utløper den %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AndroidAPS fra Innstillinger \nellers vil ikke AndroidAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig!)</string>
+    <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>
     <string name="tuesday_short">T</string>
@@ -361,6 +387,7 @@
     <string name="uel_export_settings">EKSPORTER INNSTILLINGER</string>
     <string name="uel_import_settings">IMPORTER INNSTILLINGER</string>
     <string name="uel_reset_databases">TILBAKESTILL DATABASER</string>
+    <string name="uel_cleanup_databases">OPPRYDDING DATABASER</string>
     <string name="uel_export_databases">EKSPORTER DATABASER</string>
     <string name="uel_import_databases">IMPORTER DATABASER</string>
     <string name="uel_otp_export">OTP EKSPORT</string>
@@ -397,7 +424,7 @@
     <string name="valueoutofrange">»%1$s« er utenfor lovlige grenseverdier</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f er utenfor lovlige grenseverdier</string>
     <string name="basal_value">Basal verdi</string>
-    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AndroidAPS-versjonen. Vennligst oppdater.</string>
+    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AAPS-versjonen. Vennligst oppdater.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
     <string name="carbs_g">CARBS %1$d g</string>
@@ -485,11 +512,13 @@
     <string name="autotune_update_local_profile_message">Oppdater %1$s profil med Autotune profil?</string>
     <string name="autotune_revert_local_profile_message">Tilbakestill %1$s profil med inngangsprofil?</string>
     <string name="autotune_profile_invalid">Ugyldig profil</string>
-    <string name="autotune_run_without_autoswitch">Autotune utført uten profilbytte</string>
-    <string name="autotune_run_with_autoswitch">Autotune utført og profil automatisk skiftet ut</string>
+    <string name="autotune_run_without_autoswitch">Autotune ble kjørt uten profilbytte</string>
+    <string name="autotune_run_with_autoswitch">Autotune utført og profil ble automatisk skiftet ut</string>
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

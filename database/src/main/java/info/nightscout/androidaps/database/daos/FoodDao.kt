@@ -7,7 +7,6 @@ import info.nightscout.androidaps.database.entities.Food
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
-@Suppress("FunctionName")
 @Dao
 internal interface FoodDao : TraceableDao<Food> {
 
@@ -16,6 +15,12 @@ internal interface FoodDao : TraceableDao<Food> {
 
     @Query("DELETE FROM $TABLE_FOODS")
     override fun deleteAllEntries()
+
+    @Query("DELETE FROM $TABLE_FOODS WHERE dateCreated < :than")
+    override fun deleteOlderThan(than: Long): Int
+
+    @Query("DELETE FROM $TABLE_FOODS WHERE referenceId IS NOT NULL")
+    override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_FOODS ORDER BY id DESC limit 1")
     fun getLastId(): Maybe<Long>

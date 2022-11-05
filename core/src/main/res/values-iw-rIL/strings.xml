@@ -20,7 +20,6 @@
     <string name="disconnected">מנותק</string>
     <string name="disconnecting">מתנתק</string>
     <string name="waiting_for_disconnection">ממתין לניתוק</string>
-    <string name="androidaps_start">AndroidAPS הופעל</string>
     <string name="formatinsulinunits1">%1$.1f יח\'</string>
     <string name="formatinsulinunits">%1$.2f יח\'</string>
     <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
@@ -111,6 +110,12 @@
     <string name="addnew">הוסף חדש</string>
     <string name="addnew_above">הוסף חדש למעלה</string>
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
+    <string name="alarminxmin">הפעל התראה בעוד %1$d דקות</string>
+    <string name="treatmentdeliveryerror">דווחה שגיאה בבולוס. נא לבדוק את הכמות שהוזרקה באופן ידני</string>
+    <string name="shortgramm">גר\'</string>
+    <string name="pumpsuspended">משאבה מושהית</string>
+    <string name="notconfigured">לא מוגדר</string>
+    <string name="loopsuspended">לולאה מושהית</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -157,7 +162,7 @@
     <!--    Temptarget-->
     <string name="mins">%1$d דק\'</string>
     <!--    Translator-->
-    <string name="careportal">פורטל טיפולים</string>
+    <string name="careportal">פורטל הטיפולים</string>
     <string name="careportal_bgcheck">בדיקת רמת סוכר בדם</string>
     <string name="careportal_mbg">רמת סוכר ידנית או כיול</string>
     <string name="careportal_announcement">הכרזה</string>
@@ -274,7 +279,6 @@
     <string name="versionavailable">גרסה %1$s זמינה</string>
     <string name="version_expire">גרסה: %1$s תפוג תוקפה: %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי!)</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">ב\'</string>
     <string name="tuesday_short">ג\'</string>
@@ -478,11 +482,10 @@
     <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
     <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
     <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
-    <string name="autotune_run_without_autoswitch">כוונון אוטומטי מופעל ללא החלפת פרופיל</string>
-    <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

@@ -11,14 +11,10 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="nav_exit">Έξοδος</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
     <string name="description_food">Εμφανίζει τις επιλογές τροφίμων που ορίζεται στο Nightscout</string>
-    <string name="description_insulin_rapid">Η ινσουλίνη που ορίζεται Humalog και NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Η ινσουλίνη που ορίζεται για Fiasp</string>
-    <string name="description_insulin_free_peak">Σας επιτρέπει να ορίσετε το μέγιστο της δράσης της ινσουλίνης και πρέπει να χρησιμοποιείται μόνο από προχωρημένους χρήστες</string>
     <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
     <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
     <string name="description_ama">Κατάσταση του αλγόριθμου για το 2017</string>
@@ -34,13 +30,10 @@
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
     <string name="description_treatments">Σώζει όλες τις θεραπείες που έγιναν</string>
-    <string name="description_wear">Παρακολουθεί και ελέγχει το AndroidAPS χρησιμοποιώντας το ρολόι σας WearOS.</string>
     <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
-    <string name="description_sms_communicator">Ελεγξτε απομακρυσμένα το AndroidAPS χρησιμοποιώντας τις εντολές SMS.</string>
     <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="sms_iob">IOB:</string>
     <string name="treatments_iobtotal_label_string">Συνολική IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Συνολική δραστηριότητα IOB:</string>
     <string name="tempbasals_realduration_label_string">Διάρκεια:</string>
@@ -48,9 +41,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
-    <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Υδατάνθρακες</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
@@ -66,15 +57,12 @@
     <string name="openapsma_noglucosedata">Μη διαθέσιμα δεδομένα γλυκόζης</string>
     <string name="openapsma_request_label">Αίτημα</string>
     <string name="delta">Διαφορά</string>
-    <string name="sms_delta">Διαφορά:</string>
     <string name="configbuilder">Διαμόρφωση</string>
     <string name="overview">Επισκόπηση</string>
     <string name="treatments">Θεραπείες</string>
     <string name="virtualpump">Εικονική Αντλία</string>
     <string name="configbuilder_pump">Αντλία</string>
-    <string name="configbuilder_pump_description">Ποια αντλία θα θέλατε να χρησιμοποιήσετε με το AndroidAPS;</string>
     <string name="configbuilder_profile">Προφίλ</string>
-    <string name="configbuilder_profile_description">Ποιο προφίλ πρέπει να χρησιμοποιήσει το AndroidAPS;</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Ποιος APS αλγόριθμος πρέπει να κάνει θεραπείες;</string>
     <string name="configbuilder_general">Γενικά</string>
@@ -82,7 +70,6 @@
     <string name="configbuilder_constraints_description">Ποιοι περιορισμοί έχουν εφαρμοστεί;</string>
     <string name="constraints">Περιορισμοί</string>
     <string name="configbuilder_loop">Κύκλωμα</string>
-    <string name="configbuilder_loop_description">Χρησιμοποιήστε αυτό για να ενεργοποιήσετε την ενσωμάτωση του κυκλώματος AndroidAPS.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Μετά από επεξεργασία περιορισμών</string>
     <string name="loop_tbrsetbypump_label">Προσωρινός Ρυθμός ορίστηκε από την αντλία</string>
@@ -92,13 +79,9 @@
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_treatment_label">Θεραπεία</string>
-    <string name="overview_calculator_label">Υπολογιστής</string>
-    <string name="constraintapllied">Εφαρμόστηκαν Περιορισμοί!</string>
-    <string name="sms_bolus">Bolus:</string>
-    <string name="sms_basal">Βασικός Ρυθμός:</string>
+    <string name="calculator_label">Υπολογιστής</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
-    <string name="configbuilder_bgsource_description">Από πού πρέπει το AndroidAPS να πάρει τα δεδομένα του;</string>
     <string name="apsmode_title">Λειτουργία APS</string>
     <string name="closedloop">Κλειστό Κύκλωμα</string>
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
@@ -106,12 +89,9 @@
     <string name="openloop_newsuggestion">Νέα πρόταση διαθέσιμη</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
-    <string name="bolusconstraintapplied">Ενεργός Περιορισμός Bolus</string>
-    <string name="carbsconstraintapplied">Ενεργός περιορισμός Υδατανθράκων</string>
     <string name="careportal_newnstreatment_other">Άλλο</string>
     <string name="careportal_newnstreatment_meter">Μετρητής</string>
     <string name="careportal_newnstreatment_sensor">Αισθητήρας</string>
-    <string name="careportal_newnstreatment_duration_label">Διάρκεια</string>
     <string name="careportal_newnstreatment_glucosetype">Τύπος Γλυκόζης</string>
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
@@ -130,33 +110,6 @@
     <string name="end_user_license_agreement_text">ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΝΑ ΚΑΝΕΤΕ ΙΑΤΡΙΚΗ ΑΠΟΦΑΣΗ. ΔΕΝ ΥΠΑΡΧΕΙ ΕΓΓΥΗΣΗ ΓΙΑ ΤΟ ΠΡΟΓΡΑΜΜΑ, ΣΤΟ ΒΑΘΜΟ ΠΟΥ ΕΠΙΤΡΕΠΕΤΑΙ ΑΠΟ ΤΟ ΕΦΑΡΜΟΣΤΕΟ ΔΙΚΑΙΟ. ΕΚΤΟΣ ΟΠΟΙΑΣΔΗΠΟΤΕ ΔΙΑΒΑΘΜΙΣΜΕΝΗ ΚΑΤΑ ΤΗΝ ΕΓΓΡΑΦΗ ΤΩΝ ΚΑΤΟΧΟΙ ΠΝΕΥΜΑΤΙΚΩΝ ΔΙΚΑΙΩΜΑΤΩΝ ΚΑΙ/Ή ΑΛΛΑ ΜΕΡΗ ΠΑΡΕΧΟΝΤΑΙ ΤΟ ΠΡΟΓΡΑΜΜΑ \"ΩΣ ΕΧΕΙ\" ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ, ΕΞΑΙΡΟΥΜΕΝΕΣ Ή ΣΙΩΠΗΡΕΣ, ΣΥΜΠΕΡΙΛΑΜΒΑΝΟΜΕΝΩΝ, ΕΝΔΕΙΚΤΙΚΑ, ΤΩΝ ΣΙΩΠΗΡΩΝ ΕΓΓΥΗΣΕΩΝ ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ΚΑΙ ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Ο ΟΛΟΚΛΗΡΩΜΕΝΟΣ ΚΙΝΔΥΝΟΣ ΟΣΟΝ ΑΦΟΡΑ ΤΗΝ ΠΟΙΟΤΗΤΑ ΚΑΙ ΤΗΝ ΑΠΟΔΟΣΗ ΤΟΥ ΠΡΟΓΡΑΜΜΑΤΟΣ ΕΙΝΑΙ ΔΙΚΟ ΣΑΣ. ΕΑΝ ΤΟ ΠΡΟΓΡΑΜΜΑ ΔΕΝ ΕΙΝΑΙ ΕΛΑΤΤΩΜΑΤΙΚΟ, ΠΡΕΠΕΙ ΝΑ ΕΞΕΤΑΣΤΕ ΤΟ ΚΟΣΤΟΣ ΟΛΩΝ ΤΩΝ ΑΠΑΡΑΙΤΗΤΩΝ ΣΥΝΤΗΡΗΣΕΩΝ, ΕΠΙΣΚΕΥΩΝ Ή ΔΙΟΡΘΩΣΕΩΝ.</string>
     <string name="end_user_license_agreement_i_understand">ΚΑΤΑΛΑΒΑ ΚΑΙ ΣΥΜΦΩΝΩ</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
-    <string name="smscommunicator">SMS Επικοινωνία</string>
-    <string name="smscommunicator_allowednumbers">Επιτρεπτά τηλεφωνικά νούμερα</string>
-    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_calibrationreplywithcode">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_bolusfailed">Αποτυχία Bolus</string>
-    <string name="smscommunicator_remotecommandsallowed">Άδεια για απομακρυσμένες εντολές μέσω SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Το κύκλωμα απενεργοποιήθηκε</string>
-    <string name="smscommunicator_loophasbeenenabled">Το κύκλωμα ενεργοποιήθηκε</string>
-    <string name="smscommunicator_loopisenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="smscommunicator_remotecommandnotallowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
-    <string name="smscommunicator_remotebolusnotallowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
-    <string name="smscommunicator_profilereplywithcode">Για αλλαγή προφίλ σε %1$s %2$d%% στείλτε κωδικό %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Για έναρξη βασικού %1$d%% για %2$d λεπτά στείλτε κωδικό %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Για αναστολή κυκλκώματος για %1$d λεπτών στείλτε με κωδικό %2$s</string>
-    <string name="smscommunicator_tempbasalset">Προσωρινός Ρυθμός %1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
-    <string name="smscommunicator_extendedset">Εκτεταμένο bolus %1$.2fU για %2$d λεπτά ξεκίνησε επιτυχώς</string>
-    <string name="smscommunicator_tempbasalset_percent">Προσωρινός Ρυθμός %1$d%% για %2$d λεπτά ξεκίνησε επιτυχώς</string>
-    <string name="smscommunicator_tempbasalfailed">Εκκίνηση Προσωρινού Ρυθμού απέτυχε</string>
-    <string name="smscommunicator_extendedfailed">Έναρξη εκτεταμένου bolus απέτυχε</string>
-    <string name="smscommunicator_basalstopreplywithcode">Για κλείσιμο Προσωρινού Ρυθμού στείλτε κωδικό %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Για κλείσιμο Εκτεταμένου bolus στείλτε κωδικό %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Ο Προσωρινός Ρυθμός ακυρώθηκε</string>
-    <string name="smscommunicator_extendedcanceled">Εκτεταμένο bolus ακυρώθηκε</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Ακύρωση Προσωρινού Ρυθμού απέτυχε</string>
-    <string name="smscommunicator_extendedcancelfailed">Η ακύρωση του Εκτεταμένου bolus απέτυχε</string>
-    <string name="smscommunicator_unknowncommand">Άγνωστη εντολή ή λάθος απάντηση</string>
     <string name="quickwizard">Γρήγορος Οδηγός</string>
     <string name="quickwizardsettings">Ρυθμίσεις Γρήγορου Οδηγού</string>
     <string name="overview_editquickwizard_buttontext">Κείμενο στο πλήκτρο:</string>
@@ -180,13 +133,9 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
     <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
-    <string name="basalvaluebelowminimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
-    <string name="sms_actualbg">BG:</string>
-    <string name="sms_lastbg">Τελευταία BG:</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Συνεχής Ειδοποίηση</string>
     <string name="old_data">Παλιά Δεδομένα</string>
-    <string name="sms_minago">πριν από %1$d λεπτά</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Πεδίο %1$d Στοιχεία.\nΤρέχουσα τιμή:</string>
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
@@ -203,7 +152,6 @@
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="wear_shortname">WEAR</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Συντομογραφίες ενοτήτων</string>
     <string name="always_use_shortavg">Χρησιμοποιείτε πάντα τη βραχυπρόθεσμη μέση διαφορά αντί της απλής διαφοράς</string>
     <string name="profile">Προφίλ</string>
@@ -215,10 +163,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Προεπιλεγμένη τιμή: 2\nΗ αναβολή Bolus ενεργοποιείται αφού κάνετε ένα γευματικό bolus, έτσι το κύκλωμα δεν θα εξουδετερώσει με χαμηλό προσωρινό μόλις έχετε φάει. Το παράδειγμα εδώ και η προεπιλογή είναι 2: έτσι μια τρίωρη DIA σημαίνει ότι το bolus αναβολής θα είναι σταδιακά πάνω από 1,5 ώρα (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Προσοχή!\nΣυνήθως δεν χρειάζεται να αλλάξετε αυτές τις τιμές. Κάντε κλικ ΕΔΩ, ΔΙΑΒΑΣΤΕ τις πληροφορίες και σιγουρευτείτε ότι τις καταλαβαίνετε πριν τις αλλάξετε.</string>
-    <string name="smscommunicator_invalidphonennumber">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
-    <string name="overview_calibration">Καλιμπράρισμα</string>
-    <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
-    <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="executing">Εκτελείτε</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
     <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
@@ -249,9 +193,6 @@
     <string name="adult">Ενήλικας</string>
     <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s χρειάζεται λίστα βελτιστοποίησης μπαταρίας για σωστή απόδοση</string>
-    <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
-    <string name="loopsuspendedfor">Αναστολή (%1$d m)</string>
     <string name="suspendloopfor1h">Κύκλωμα σε αναστολή για 1h</string>
     <string name="suspendloopfor2h">Κύκλωμα σε αναστολή για 2h</string>
     <string name="suspendloopfor3h">Κύκλωμα σε αναστολή για 3h</string>
@@ -263,24 +204,17 @@
     <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
     <string name="resume">Επαναφορά</string>
     <string name="reconnect">Επανασύνδεση αντλίας</string>
-    <string name="smscommunicator_wrongduration">Λάθος διάρκεια</string>
-    <string name="smscommunicator_loopsuspended">Κύκλωμα σε αναστολή</string>
-    <string name="smscommunicator_loopresumed">Επαναφορά κυκλώματος</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Η εφαρμογή καταγραφής ξεκινά από το NS</string>
     <string name="restartingapp">Έξοδος από το application για την εφαρμογή των ρυθμίσεων</string>
     <string name="configbuilder_insulin_description">Ποιο τύπο ινσουλίνης χρησιμοποιείτε;</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Ενεργοποίηση superbolus στον σύντομο οδηγό</string>
     <string name="enablesuperbolus_summary">Ενεργοποιήστε την λειτουργία superbolus στον σύντομο οδηγό. Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ!</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="nav_about">Σχετικά με</string>
-    <string name="smscommunicator_missingsmspermission">Απουσία δικαιωμάτων SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Λείπει η άδεια κατάστασης τηλεφώνου</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Δείξε BGI</string>
@@ -316,12 +250,6 @@
     <string name="enablesmb">Ενεργοποίηση SMB</string>
     <string name="enablesmb_summary">Χρησιμοποιήστε Super Micro Boluses αντί προσωρινού ρυθμού για ταχύτερα αποτελέσματα</string>
     <string name="enableuam_summary">Ανίχνευση απαρατήρητων γευμάτων</string>
-    <string name="insulin_oref_peak">Μέγιστη τιμή καμπύλης IOB</string>
-    <string name="insulin_peak_time">Μέγιστο καμπύλης [λεπτά]</string>
-    <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
-    <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
-    <string name="ultrarapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
-    <string name="dia_too_short">DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! </string>
     <string name="activate_profile">Ενεργοποίηση προφίλ</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
     <string name="careportal_newnstreatment_percentage_label">Ποσοστό</string>
@@ -336,14 +264,11 @@
     <string name="wearcontrol_title">Έλεγχος από ρολόι</string>
     <string name="wearcontrol_summary">Ρυθμίστε Στόχους-Προσ Ρυθμού και βάλτε Θεραπείες από το ρολόι.</string>
     <string name="food">Γεύμα</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<κενό>]]></string>
     <string name="shortkilojoul">kj</string>
     <string name="shortenergy">Ενέργεια</string>
     <string name="shortprotein">Πρωτεΐνες</string>
     <string name="shortfat">Λίπος</string>
-    <string name="executingrightnow">Η εντολή εκτελείται τώρα</string>
-    <string name="missed_bg_readings">Χαμένες μετρήσεις BG</string>
     <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>
     <string name="localalertsettings_title">Τοπικές Ειδοποιήσεις</string>
     <string name="enable_missed_bg_readings_alert">Προειδοποίηση αν δεν ληφθούν δεδομένα μετρήσεων BG</string>
@@ -403,9 +328,6 @@
     <string name="allow_automated_crash_reporting">Να επιτρέπεται η αυτόματη αποστολή αναφορών σφάλματος και χαρακτηριστικά χρήσης δεδομένων στους προγραμματιστές μέσω του fabric.io. service.</string>
     <string name="g5appnotdetected">Ενημερώστε την εφαρμογή G5 στην υποστηριζόμενη έκδοση</string>
     <string name="dexcom_app_not_installed">Η εφαρμογή Dexcom δεν είναι εγκατεστημένη.</string>
-    <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
-    <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <string name="category">Κατηγορία</string>
     <string name="subcategory">Υποκατηγορία</string>
@@ -416,8 +338,6 @@
     <string name="overview_show_cob">Ενεργοί Υδατάνθρακες</string>
     <string name="overview_show_iob">Ενεργή Ινσουλίνη</string>
     <string name="overview_show_basals">Βασικοί</string>
-    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
-    <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
     <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
@@ -436,7 +356,6 @@
     <string name="limitingiob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
-    <string name="readstatusfailed">Η ανάγνωση κατάστασης απέτυχε</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
@@ -468,7 +387,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Διαιρέτης Αναβολής bolus</string>
     <string name="openapsama_max_daily_safety_multiplier">Μέγιστος ημερήσιος πολλαπλασιαστής ασφαλείας</string>
     <string name="openapsama_current_basal_safety_multiplier">Τρέχων πολλαπλασιαστής ασφαλείας βασικού ρυθμού</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Τύπος εικονικής αντλίας</string>
     <string name="virtualpump_definition">Ορισμός Αντλίας</string>
     <string name="virtualpump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
@@ -480,15 +398,12 @@
     <string name="welcometosetupwizard">Καλώς ήρθατε στον οδηγό εγκατάστασης. Θα σας καθοδηγήσει μέσα από το πρόγραμμα εγκατάστασης\n</string>
     <string name="readstatus">Κατάσταση ανάγνωσης</string>
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
-    <string name="setupwizard_loop_description">Πατήστε το παρακάτω πλήκτρο για να ενεργοποιήσετε το AndroidAPS για να προτείνει/κάνει αλλαγές στον βασικό ρυθμό</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
     <string name="nsclientinfotext">Το NSClient χειρίζεται τη σύνδεση με το Nightscout. Μπορείτε να παραλείψετε αυτό τώρα αλλά δεν θα μπορείτε να ολοκληρώσετε τους Στόχους μέχρι να κάνετε τις ρυθμίσεις του.</string>
     <string name="diawarning">Προσοχή: Τα νέα προφίλ ινσουλίνης απαιτούν DIA τουλάχιστον 5 ωρών. Η DIA 5-6 ώρες στα νέα προφίλ είναι ισοδύναμα με DIA των 3 ωρών στα παλιά προφίλ ινσουλινών.</string>
     <string name="setupwizard_aps_description">Επιλέξτε έναν από τους διαθέσιμους αλγόριθμους. Ταξινομούνται από το παλαιότερο στον νεότερο. Ένας νεότερος είναι συνήθως καλύτερος και πιο επιθετικός. Επομένως, αν είστε καινούριος στο κλειστό κύκλωμα, θα πρέπει πρώτα να επιλέξετε μόνο το AMA και όχι το τελευταίο. Μην ξεχάσετε να διαβάσετε το εγχειρίδιο του OpenAPS και να κάνετε τις ρυθμίσεις προτού αρχίσετε να το χρησιμοποιείτε.</string>
     <string name="startobjective">Ξεκινήστε τον πρώτο στόχο</string>
-    <string name="permission">Άδεια</string>
     <string name="askforpermission">Ζητείστε άδεια</string>
-    <string name="request">Αίτημα</string>
     <string name="open_navigation">Άνοιγμα μενού πλοήγησης</string>
     <string name="close_navigation">Κλείσιμο μενού πλοήγησης</string>
     <string name="nav_plugin_preferences">Επιλογές προσθήκης</string>
@@ -503,7 +418,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">Ο χαμηλός προσωρινός στόχος μειώνει την ευαισθησία</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Χαμηλότερη ευαισθησία για προσωρινό στόχο < 100]]></string>
     <string name="storedsettingsfound">Βρέθηκαν αποθηκευμένες ρυθμίσεις</string>
-    <string name="allow_hardware_pump_text">Προσοχή: Εάν ενεργοποιήσετε και συνδεθείτε με μια αντλία, το AndroidAPS θα αντιγράψει τις ρυθμίσεις βασικού από το προφίλ στην αντλία, αντικαθιστώντας τον υπάρχων βασικό ρυθμό της αντλίας. Βεβαιωθείτε ότι έχετε τον σωστό βασικό ρυθμό στο AndroidAPS. Εάν δεν είστε βέβαιοι ή δεν θέλετε να αντικαταστήσετε τον βασικό ρυθμό στην αντλία σας, πατήστε Άκυρο και επαναλάβετε εναλλαγή προς την αντλία σε μεταγενέστερο χρόνο.</string>
     <string name="error_adding_treatment_title">Ελλιπή δεδομένα θεραπείας</string>
     <string name="maintenance_settings">Ρυθμίσεις συντήρησης</string>
     <string name="maintenance_amount">Αριθμός αρχείων καταγραφής για αποστολή</string>
@@ -518,7 +432,6 @@
     <string name="nav_logsettings">Ρυθμίσεις Αρχείου Καταγραφής</string>
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <string name="nsmalfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
-    <string name="time_offset">Χρονική μετατόπιση</string>
     <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
     <string name="treatments_wizard_total_label">Σύνολο</string>
     <string name="calculation_short">Υπολογ</string>
@@ -527,7 +440,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Αλλαγή αρχείου αισθητήρα σε NS</string>
-    <string name="dexcom_lognssensorchange_summary">Δημιουργία συμβάντος «Αλλαγή αισθητήρα» στο NS αυτόματα με έναρξη αισθητήρα</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
@@ -547,10 +459,6 @@
     <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
     <string name="storage">περιορισμός εσωτερικής μνήμης</string>
     <string name="diskfull">Ελευθερώστε τουλάχιστον %1$d MB από εσωτερική μνήμη! Κύκλωμα απενεργοποιήθηκε!</string>
-    <string name="wrongformat">Λάθος μορφή αρχείου</string>
-    <string name="sms_wrongcode">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
-    <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
-    <string name="profileswitchcreated">Δημιουργήθηκε αλλαγή προφίλ</string>
     <string name="versionChecker">Έλεγχος Έκδοσης</string>
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
@@ -560,13 +468,10 @@
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
     <string name="snooze">Αναβολή</string>
     <string name="increasingmaxbasal">Αυξείστε την μέγιστη βασική τιμή, επειδή η ρύθμιση είναι χαμηλότερη από τη μέγιστη βασική στο προφίλ σας</string>
-    <string name="smscommunicator_messagebody">Μη έγκυρο μήνυμα</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">min</string>
-    <!-- SMS Communicator & OTP Authenticator -->
     <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <!-- Aidex Cgms -->

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.db
 
+import android.content.Context
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.events.*
@@ -7,6 +8,7 @@ import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
+import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,13 +17,15 @@ import javax.inject.Singleton
 class CompatDBHelper @Inject constructor(
     val aapsLogger: AAPSLogger,
     val repository: AppRepository,
-    val rxBus: RxBus
+    val rxBus: RxBus,
+    val context: Context
 ) {
 
     fun dbChangeDisposable(): Disposable = repository
         .changeObservable()
         .doOnSubscribe {
             rxBus.send(EventNewBG(null))
+            Widget.updateWidget(context)
         }
         .subscribe {
             /**
@@ -34,6 +38,7 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<GlucoseValue>().maxByOrNull { gv -> gv.timestamp }?.let { gv ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
                 rxBus.send(EventNewBG(gv))
+                Widget.updateWidget(context)
                 newestGlucoseValue = gv
             }
             it.filterIsInstance<GlucoseValue>().minOfOrNull { gv -> gv.timestamp }?.let { timestamp ->

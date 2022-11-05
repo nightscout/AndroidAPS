@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
+    <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
+    <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
+    <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
+    <string name="time_offset">Przesunięcie czasu</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Przypomnij o bolusie</string>
+    <!--    Widget-->
+</resources>

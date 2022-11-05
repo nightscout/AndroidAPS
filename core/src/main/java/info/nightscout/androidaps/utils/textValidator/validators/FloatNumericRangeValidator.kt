@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils.textValidator.validators
 
 import android.widget.EditText
+import info.nightscout.shared.SafeParse
 
 /**
  * A validator that returns true only if the input field contains only numbers
@@ -12,7 +13,7 @@ class FloatNumericRangeValidator(_customErrorMessage: String?, private val float
 
     override fun isValid(editText: EditText): Boolean {
         return try {
-            val value = editText.text.toString().toFloat()
+            val value = SafeParse.stringToFloat(editText.text.toString())
             value in floatMin..floatMax
         } catch (e: NumberFormatException) {
             false

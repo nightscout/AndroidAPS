@@ -98,6 +98,7 @@ sealed class ProfileSealed(
     override fun isValid(from: String, pump: Pump, config: Config, rh: ResourceHelper, rxBus: RxBus, hardLimits: HardLimits, sendNotifications: Boolean): Profile.ValidityCheck {
         val validityCheck = Profile.ValidityCheck()
         val description = pump.pumpDescription
+
         for (basal in basalBlocks) {
             val basalAmount = basal.amount * percentage / 100.0
             if (!description.is30minBasalRatesCapable) {
@@ -142,6 +143,7 @@ sealed class ProfileSealed(
                 break
             }
         }
+
         if (!hardLimits.isInRange(dia, hardLimits.minDia(), hardLimits.maxDia())) {
             validityCheck.isValid = false
             validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), dia))

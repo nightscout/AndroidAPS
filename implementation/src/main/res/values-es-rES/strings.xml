@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
+    <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
+    <string name="request">Solicitar</string>
+    <string name="permission">Permiso</string>
+    <string name="error_asking_for_permissions">Error al solicitar permisos</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por los ajustes - pueden ocurrir problemas de funcionamiento.</string>
+</resources>

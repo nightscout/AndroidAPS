@@ -168,16 +168,20 @@ class NSDeviceStatus @Inject constructor(
                 pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < dateUtil.now() -> Levels.URGENT
                 pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                             -> Levels.URGENT
                 pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")       -> Levels.URGENT
-                !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV")      -> Levels.URGENT
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV")      -> Levels.URGENT
                 pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < dateUtil.now()   -> Levels.WARN
                 pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                               -> Levels.WARN
                 pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")         -> Levels.WARN
-                !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")        -> Levels.WARN
+                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")        -> Levels.WARN
                 else                                                                                                -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
+            val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
             val fields = nsSettingsStatus.pumpExtendedSettingsFields()
-            if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("U ")
+            if (pumpData.reservoirDisplayOverride != "") {
+                string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
+            }
+            else if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("$insulinUnit ")
             if (fields.contains("battery") && pumpData.isPercent) string.append(pumpData.percent).append("% ")
             if (fields.contains("battery") && !pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
             if (fields.contains("clock")) string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
@@ -200,6 +204,7 @@ class NSDeviceStatus @Inject constructor(
             deviceStatusPumpData.clock = clock
             if (pump.has("status") && pump.getJSONObject("status").has("status")) deviceStatusPumpData.status = pump.getJSONObject("status").getString("status")
             if (pump.has("reservoir")) deviceStatusPumpData.reservoir = pump.getDouble("reservoir")
+            if (pump.has("reservoir_display_override")) deviceStatusPumpData.reservoirDisplayOverride = pump.getString("reservoir_display_override")
             if (pump.has("battery") && pump.getJSONObject("battery").has("percent")) {
                 deviceStatusPumpData.isPercent = true
                 deviceStatusPumpData.percent = pump.getJSONObject("battery").getInt("percent")

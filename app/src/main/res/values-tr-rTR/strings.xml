@@ -13,15 +13,10 @@
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
-    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı butonlar</string>
+    <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
     <string name="description_objectives">Eğitim programı</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
-    <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
-    <string name="description_insulin_ultra_rapid">Fiasp için insülin Profili</string>
-    <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
-    <string name="description_insulin_free_peak">İnsülin aktivitesinin zirvesini tanımlamanıza izin verir ve yalnızca ileri düzey kullanıcılar tarafından kullanılmalıdır.</string>
     <string name="description_loop">Döngüyü tetikleyen uygulamayı etkinleştirin veya devre dışı bırakın.</string>
     <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
     <string name="description_ama">2017\'da algoritmanın durumu</string>
@@ -40,13 +35,11 @@
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydeder</string>
-    <string name="description_wear">WearOS saatinizi kullanarak AndroidAPS\'yi izleyin ve kontrol edin.</string>
+    <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
     <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
-    <string name="description_sms_communicator">SMS komutlarını kullanarak uzaktan AndroidAPS kontrolü.</string>
     <string name="treatments_insulin_label_string">İnsülin:</string>
     <string name="treatments_carbs_label_string">Karbonhidrat:</string>
     <string name="treatments_iob_label_string">AİNS:</string>
-    <string name="sms_iob">AİNS:</string>
     <string name="treatments_iobtotal_label_string">Toplam AİNS:</string>
     <string name="treatments_iobactivitytotal_label_string">Toplam AİNS etkinliği:</string>
     <string name="tempbasals_realduration_label_string">Süre:</string>
@@ -54,9 +47,7 @@
     <string name="tempbasals_netinsulin_label_string">İns:</string>
     <string name="tempbasals_iob_label_string">AİNS:</string>
     <string name="tempbasals_iobtotal_label_string">Toplam AİNS:</string>
-    <string name="treatments_wizard_bg_label">KŞ</string>
     <string name="treatments_wizard_tt_label">GH</string>
-    <string name="treatments_wizard_carbs_label">Karbonhidrat</string>
     <string name="treatments_wizard_correction_label">Düzeltme</string>
     <string name="bolus_iob_label">Bolus AİNS</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
@@ -73,15 +64,14 @@
     <string name="openapsma_noglucosedata">Glikoz verisi yok</string>
     <string name="openapsma_request_label">İstek</string>
     <string name="delta">Delta</string>
-    <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigürasyon ayarları</string>
     <string name="overview">Genel Bakış</string>
     <string name="treatments">Tedaviler</string>
     <string name="virtualpump">Sanal pompa</string>
     <string name="configbuilder_pump">Pompa</string>
-    <string name="configbuilder_pump_description">Hangi pompa ile AndroidAPS kullanmak istersiniz?</string>
+    <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">AndroidAPS Hangi profili kullanmalı?</string>
+    <string name="configbuilder_profile_description">AAPS Hangi profili kullanmalı?</string>
     <string name="configbuilder_aps">APS (YPS)</string>
     <string name="configbuilder_aps_description">Hangi APS algoritması terapi ayarlamalarını yapsın?</string>
     <string name="configbuilder_general">Genel</string>
@@ -89,7 +79,7 @@
     <string name="configbuilder_constraints_description">Hangi kısıtlamaları uygula?</string>
     <string name="constraints">Kısıtlamalar</string>
     <string name="configbuilder_loop">Döngü</string>
-    <string name="configbuilder_loop_description">AndroidAPS döngü entegrasyonunu etkinleştirmek için bunu kullanın.</string>
+    <string name="configbuilder_loop_description">AAPS\'nin döngü entegrasyonunu etkinleştirmek için bunu kullanın.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">İşlenmiş kısıtlamalardan sonra</string>
     <string name="loop_tbrsetbypump_label">Pompa tarafından ayarlanan geçici bazal</string>
@@ -97,16 +87,12 @@
     <string name="safety">Güvenlik</string>
     <string name="openapsma_disabled">Eklenti devre dışı</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
-    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek teslim edilen miktarı manuel olarak kontrol edin</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_treatment_label">Tedavi</string>
-    <string name="overview_calculator_label">Hesap makinesi</string>
-    <string name="constraintapllied">Sınırlaması uygulanır!</string>
-    <string name="sms_bolus">Bolus:</string>
-    <string name="sms_basal">Bazal:</string>
+    <string name="calculator_label">Hesap makinesi</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
-    <string name="configbuilder_bgsource_description">AndroidAPS verilerini nereden alsın?</string>
+    <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS modu</string>
     <string name="closedloop">Kapalı Döngü</string>
@@ -117,13 +103,10 @@
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
     <string name="treatments_wizard_basaliob_label">Bazal AİNS</string>
-    <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
-    <string name="carbsconstraintapplied">Karbonhidrat kısıtlaması uygulandı</string>
     <string name="careportal_newnstreatment_other">Diğer</string>
     <string name="careportal_newnstreatment_meter">GlkMetre</string>
     <string name="careportal_newnstreatment_sensor">Sensör</string>
     <string name="carb_time_label">Karb. zamanı</string>
-    <string name="careportal_newnstreatment_duration_label">Süre</string>
     <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glikoz türü</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
@@ -163,60 +146,6 @@
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
     <string name="save">Kaydet</string>
     <string name="reloadprofile">Profili yeniden yükle</string>
-    <string name="smscommunicator">SMS Kominikatör</string>
-    <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
-    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode">%1$.2fÜ Bolus gönderilecek, kod ile cevap ver %2$s</string>
-    <string name="smscommunicator_mealbolusreplywithcode">%1$.2fU Yemek bolusu göndermek için %2$s koduyla yanıt verin</string>
-    <string name="smscommunicator_temptargetwithcode">Geçici Hedefi %1$s yapmak için %2$s koduyla yanıt verin</string>
-    <string name="smscommunicator_temptargetcancel">Geçici Hedefi iptal etmek için %1$s koduyla yanıt verin</string>
-    <string name="smscommunicator_stopsmswithcode">SMS Uzak Hizmet desteğini devre dışı bırakmak için %1$s koduyla yanıt verin.\n\nBu hizmeti yalnızca AAPS yüklü ana telefondan yeniden etkinleştirebileceğinizi unutmayın.</string>
-    <string name="smscommunicator_stoppedsms">SMS Uzak Hizmeti durduruldu. Yeniden etkinleştirmek için ana telefondaki APPS\'i kullanın.</string>
-    <string name="smscommunicator_calibrationreplywithcode">Kalibrasyon için %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
-    <string name="smscommunicator_bolusfailed">Bolus başarısız oldu</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Bir sms bolusu ile bir sonraki bolus arasında geçmesi gereken minimum dakika sayısı</string>
-    <string name="smscommunicator_remotebolusmindistance">Bir sms bolus gönderimi ile bir sonraki bolus arasında en az kaç dakika geçsin?</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Güvenliğiniz için en az 2 telefon numarası eklemeniz gerekir.</string>
-    <string name="bolusrequested">%1$.2f U gönderilecek</string>
-    <string name="smscommunicator_bolusdelivered">%1$.2f U Bolus başarıyla gönderildi</string>
-    <string name="smscommunicator_mealbolusdelivered">%1$.2f U Yemek Bolusu başarıyla gönderildi</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Hedef %2$d dakika boyunca %1$s</string>
-    <string name="smscommunicator_tt_set">Hedef %2$d dakika boyunca %1$s olarak başarıyla ayarlandı</string>
-    <string name="smscommunicator_tt_canceled">Geçici Hedef başarıyla iptal edildi</string>
-    <string name="smscommunicator_remotecommandsallowed">SMS ile uzaktan komutlara izin ver</string>
-    <string name="smscommunicator_loophasbeendisabled">Döngü devre dışı bırakıldı</string>
-    <string name="smscommunicator_loophasbeenenabled">Döngü etkinleştirildi</string>
-    <string name="smscommunicator_loopisenabled">Döngü etkin</string>
-    <string name="smscommunicator_pumpconnectwithcode">Pompaya bağlanmak için %1$s koduyla yanıt verin</string>
-    <string name="smscommunicator_pumpconnectfail">Pompa bağlantısı başarısız</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pompanın bağlantısını %1$d dakika boyunca kesmek için %2$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_pumpdisconnected">Pompa bağlantısı kesildi</string>
-    <string name="smscommunicator_reconnect">Pompa yeniden bağlandı</string>
-    <string name="smscommunicator_remotecommandnotallowed">Uzaktan komuta izin verilmez</string>
-    <string name="smscommunicator_remotebolusnotallowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
-    <string name="smscommunicator_basalreplywithcode">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_profilereplywithcode">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_extendedreplywithcode">%2$d dakika boyunca %1$.2f U yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_carbsreplywithcode">%2$s\'de %1$dg girmek için %3$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_basalpctreplywithcode">%2$d dk boyunca bazal %1$d%% başlatmak için %3$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_suspendreplywithcode">Döngüyü %1$d dakika askıya almak için %2$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_loopresumereplywithcode">Döngüye devam etmek için %1$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_loopenablereplywithcode">Döngüyü etkinleştirmek için %1$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Döngüyü iptal etmek için %1$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_tempbasalset">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
-    <string name="smscommunicator_extendedset">%1$.2fU yayma bolus %2$d dakika boyunca başarıyla başlatıldı</string>
-    <string name="smscommunicator_carbsset">%1$d g karbonhidrat başarıyla sisteme girildi</string>
-    <string name="smscommunicator_carbsfailed">%1$d g karbonhidrat girilemedi</string>
-    <string name="smscommunicator_tempbasalset_percent">%2$d dakikalık geçici bazal %1$d%% başarıyla başlatıldı</string>
-    <string name="smscommunicator_tempbasalfailed">Geçici bazal başlatma başarısız oldu</string>
-    <string name="smscommunicator_extendedfailed">Yayma bolus başlatma başarısız oldu</string>
-    <string name="smscommunicator_basalstopreplywithcode">Geçici bazalı durdurmak için %1$s kodunu gir</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Yayma bolusu durdurmak için %1$s koduyla yanıtlayın</string>
-    <string name="smscommunicator_tempbasalcanceled">Geçici bazal iptal edildi</string>
-    <string name="smscommunicator_extendedcanceled">Yayma bolus iptal edildi</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Geçici bazal iptal edilemedi</string>
-    <string name="smscommunicator_extendedcancelfailed">Yayma bolus iptal edilemedi</string>
-    <string name="smscommunicator_unknowncommand">Bilinmeyen komut veya yanlış cevap</string>
     <string name="quickwizard">Hızlı Asistan</string>
     <string name="quickwizardsettings">Hızlı asistan ayarları</string>
     <string name="overview_editquickwizard_buttontext">Buton Metni:</string>
@@ -238,7 +167,6 @@
     <string name="button3">Buton 3</string>
     <string name="units_colon">Birim:</string>
     <string name="units">Birim</string>
-    <string name="dia">İES</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
     <string name="prefs_range_summary">Genel bakış ve akıllı saat göstergesi için yüksek ve düşük değerler</string>
     <string name="low_mark">DÜŞÜK işareti</string>
@@ -247,13 +175,9 @@
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Ayarları Wear\'da açın</string>
     <string name="basal_rate">Bazal oranı</string>
-    <string name="basalvaluebelowminimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
-    <string name="sms_actualbg">KŞ:</string>
-    <string name="sms_lastbg">Son KŞ:</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Sürekli Bildirim</string>
     <string name="old_data">ESKİ VERİ</string>
-    <string name="sms_minago">%1$ddak önce</string>
     <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
@@ -273,7 +197,6 @@
     <string name="treatments_shortname">TEDAVİ</string>
     <string name="objectives_shortname">GRV</string>
     <string name="wear_shortname">WEAR</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Kısa sekme başlıkları</string>
     <string name="always_use_shortavg">Her zaman basit delta yerine kısa ortalama delta kullan</string>
     <string name="always_use_shortavg_summary">xDrip+ gibi filtrelenmemiş kaynaklardan gelen veriler gürültülü olduğunda kullanışlıdır.</string>
@@ -288,13 +211,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
 Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
-    <string name="smscommunicator_invalidphonennumber">Geçersiz SMS telefon numarası</string>
-    <string name="overview_calibration">Kalibrasyon</string>
-    <string name="xdripnotinstalled">xDrip+ uygulaması yüklenmemiş</string>
-    <string name="calibrationsent">Kalibrasyon xDrip+ a gönderildi</string>
-    <string name="smscommunicator_calibrationsent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ kalibrasyonları almıyor</string>
-    <string name="pumpsuspended">Pompa durduldu</string>
     <string name="executing">Yürütülüyor</string>
     <string name="virtualpump_settings">Sanal pompa ayarları</string>
     <string name="virtualpump_uploadstatus_title">Nightscout\'a durum aktar</string>
@@ -320,7 +236,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_detailedIOB_title">Ayrıntılı AİNS göster</string>
     <string name="wear_detailedIOB_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal olarak ayırın</string>
     <string name="nosuccess">başarısız - lütfen telefonu kontrol edin</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Hasta tipi</string>
     <string name="child">Çocuk</string>
     <string name="teenage">Ergen</string>
@@ -330,11 +245,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="patientage_summary">Güvenlik limitlerini ayarlamak için lütfen hasta tipini seçin</string>
     <string name="patient_name">Hasta Adı</string>
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Kullanıcı</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
-    <string name="loopsuspended">Döngü duraklatıldı</string>
-    <string name="loopsuspendedfor">(%1$d dk) Duraklatıldı</string>
     <string name="suspendloopfor1h">Döngüyü 1saat duraklat</string>
     <string name="suspendloopfor2h">Döngüyü 2saat duraklat</string>
     <string name="suspendloopfor3h">Döngüyü 3saat duraklat</string>
@@ -353,18 +264,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="duration10h">10 Saat</string>
     <string name="resume">Devam et</string>
     <string name="reconnect">Pompayı tekrar bağla</string>
-    <string name="smscommunicator_wrongduration">Yanlış süre</string>
-    <string name="smscommunicator_loopsuspended">Döngü duraklatıldı</string>
-    <string name="smscommunicator_loopresumed">Döngü devam ettirildi</string>
     <string name="bg_trend_label">15 dk eğilim</string>
     <string name="treatments_wizard_cob_label">AKRB</string>
     <string name="superbolus">Süperbolus</string>
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">İNS</string>
     <string name="enablesuperbolus">Sihirbazda süperbolusu etkinleştir</string>
     <string name="enablesuperbolus_summary">Bolus sihirbazında süperbolus işlevselliğini etkinleştirin. Gerçekten ne yaptığınızı öğrenene kadar etkinleştirmeyin. BİLİNÇSİZ KULLANILDIĞINDA AŞIRI DOZ İNSÜLIN VERİLEBİLİR!</string>
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
@@ -390,7 +295,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="nav_about">Hakkında</string>
-    <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
     <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
     <string name="xdripstatus_settings">xDrip+ Durumu (saat)</string>
     <string name="xdripstatus">xDrip+ Durum Çizgisi (saat)</string>
@@ -430,7 +334,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="sensitivityweightedaverage">Ağırlıklı ortalama duyarlılık</string>
     <string name="notloadedplugins">Tüm profiller yüklenmedi!</string>
     <string name="valuesnotstored">Değerler kaydedilmedi!</string>
-    <string name="ns_localbroadcasts">Diğer uygulamalara (xDrip+ gibi) yayınları etkinleştirin. Yüklü birden fazla APPS veya NSClient örneğiniz varsa etkinleştirmeyin!</string>
+    <string name="ns_localbroadcasts">Diğer uygulamalara (xDrip+ gibi) yayınları etkinleştirin. Yüklü birden fazla APPS veya AAPSClient örneğiniz varsa etkinleştirmeyin!</string>
     <string name="ns_localbroadcasts_title">Yerel yayınları etkinleştirin.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
@@ -440,14 +344,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmb">SMB (Super Micro Bolus) etkinleştir</string>
     <string name="enablesmb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
     <string name="enableuam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
-    <string name="insulin_oref_peak">AİNS Eğrisi Tepe Zamanı</string>
-    <string name="insulin_peak_time">Tepe zamanı [min]</string>
-    <string name="insulin_peak">Tepe</string>
-    <string name="free_peak_oref">Serbest tepe Oref</string>
-    <string name="rapid_acting_oref">Hızlı etkili Oref</string>
-    <string name="ultrarapid_oref">Ultra Hızlı Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
     <string name="activate_profile">Profili etkinleştir</string>
     <string name="invalid">GEÇERSİZ</string>
     <string name="careportal_newnstreatment_percentage_label">Yüzde</string>
@@ -463,14 +359,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
     <string name="food">Yiyecek</string>
-    <string name="shortgramm">gr</string>
     <string name="none"><![CDATA[<yok>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Yağ</string>
-    <string name="executingrightnow">Komut şu anda çalıştırıldı</string>
-    <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="raise_notifications_as_android_notifications">Uyarılar ve bildirimler için sistem bildirimlerini kullan</string>
     <string name="gradually_increase_notification_volume">Uyarılar ve bildirimler için ses seviyesini kademeli olarak artırın</string>
     <string name="localalertsettings_title">Yerel uyarılar</string>
@@ -533,7 +426,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ignore5m">5dk yoksay</string>
     <string name="ignore15m">15dk yoksay</string>
     <string name="ignore30m">30dk yoksay</string>
-    <string name="required">iht.</string>
     <string name="nav_historybrowser">Geçmiş tarayıcısı</string>
     <string name="wear_notifysmb_title">SMB\'ye (Super Micro Bolus) bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi (Super Micro Bolus) standart bir bolus gibi göster.</string>
@@ -548,9 +440,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="g5appnotdetected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
     <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
-    <string name="start_activity_tt">Egzersiz Başlat GH</string>
-    <string name="start_eating_soon_tt">Yakında Öğün GH</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Alt kategori</string>
@@ -563,8 +452,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_show_cob">Aktif Karbonhidrat</string>
     <string name="overview_show_iob">Aktif İnsülin</string>
     <string name="overview_show_basals">Bazallar</string>
-    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
-    <string name="start_hypo_tt">Hipo GH başlat</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
     <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
     <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
@@ -583,7 +470,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="limitingiob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sert sınır</string>
-    <string name="readstatusfailed">Durumu okumak başarısız oldu</string>
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
     <string name="smbalwaysdisabled">Aktif KŞ kaynağı gelişmiş filtrelemeyi desteklemediği için SMB (Super Micro Bolus) her zaman ve karbonhidratlardan sonra devre dışı bırakıldı</string>
@@ -620,7 +506,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapsama_bolussnooze_dia_divisor">Bolus erteleme dia bölen</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_current_basal_safety_multiplier">Mevcut bazal güvenlik çarpanı</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="virtualpump_type">Sanal pompa tipi</string>
     <string name="virtualpump_definition">Pompa tanımı</string>
     <string name="virtualpump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nTBR: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
@@ -632,7 +517,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="readstatus">Durum oku</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
-    <string name="setupwizard_loop_description">AndroidAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
+    <string name="setupwizard_loop_description">AAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient, Nightscout\'a bağlantıyı sağlar. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
@@ -641,12 +526,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
     <string name="startobjective">İlk görevinize başlayın</string>
-    <string name="permission">Yetki</string>
     <string name="askforpermission">İzin için sorunuz</string>
-    <string name="needsystemwindowpermission">Uygulama, bildirimler için sistem iznine ihtiyaç duyuyor</string>
-    <string name="needlocationpermission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
-    <string name="needstoragepermission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>
-    <string name="request">İstek</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
@@ -657,6 +537,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="description_source_poctech">Poctech uygulamasından KŞ değerlerini alır</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Glunovo uygulamasından değerler alır</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Intelligo uygulamasından değerler alır</string>
     <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
     <string name="high_temptarget_raises_sensitivity_title">Yüksek geçici hedefler duyarlılığı artırır</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Geçici Hedefler için duyarlılığı artırın >= 100]]></string>
@@ -672,7 +554,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri sırala</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
-    <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
+    <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
     <string name="maintenance_settings">Bakım ayarları</string>
     <string name="maintenance_email">E-Posta alıcısı</string>
@@ -690,8 +572,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="nav_logsettings">Günlük ayarları</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
-    <string name="time_offset">Saat farkı</string>
-    <string name="bolus_reminder">Bolusu daha sonra hatırlat</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="treatments_wizard_total_label">Toplam</string>
     <string name="calculation_short">Hesap</string>
@@ -700,7 +580,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_openmode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="profile_total">== ∑  %1$s Ü</string>
     <string name="dexcom_lognssensorchange_title">Sensör değişimlerini NS\'a kaydet</string>
-    <string name="dexcom_lognssensorchange_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" etkinliği oluştur</string>
+    <string name="dexcom_lognssensorchange_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
@@ -722,11 +602,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="dst_loop_disabled_warning">Yaz Saati Uygulaması 3 saatten daha kısa bir süre önce değişti - Kapalı döngü devre dışı</string>
     <string name="storage">dahili depolama birimi</string>
     <string name="diskfull">Dahili depolama biriminden en az %1$d MB yer kaldı! Döngü devre dışı!</string>
-    <string name="wrongformat">Yanlış Format</string>
-    <string name="wrongTbrDuration">Geçici Bazal Oranı süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
-    <string name="sms_wrongcode">Hatalı kod. Komut iptal edildi.</string>
-    <string name="notconfigured">Yapılandırılmadı</string>
-    <string name="profileswitchcreated">Profil değiştirme yapıldı</string>
     <string name="versionChecker">Sürüm Kontrolcüsü</string>
     <string name="old_version">eski sürüm</string>
     <string name="very_old_version">çok eski sürüm</string>
@@ -743,12 +618,10 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
     <string name="snooze">Ertele</string>
     <string name="increasingmaxbasal">Profilinizdeki maksimum bazal değeriniz düşük olduğu için maksimum bazal değeri artırma</string>
-    <string name="smscommunicator_messagebody">Geçersiz mesaj</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">dk.</string>
     <string name="profile_name">Profil adı:</string>
     <string name="selected_profile">Seçildi:</string>
     <string name="unitsnosemicolon">Birim</string>
@@ -773,7 +646,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="id">Kimlik:</string>
     <string name="submit">Sunum</string>
     <string name="mostcommonprofile">En yaygın profil:</string>
-    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AndroidAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
+    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
     <string name="invalidage">Geçersiz yaş girişi</string>
     <string name="invalidweight">Geçersiz ağırlık girişi</string>
     <string name="invalidpct">Geçersiz % giriş</string>
@@ -802,27 +675,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_smbexecution_time_label">SMB (Super Micro Bolus) uygulama süresi</string>
     <string name="loop_tbrrequest_time_label">Geçici bazal zamanı</string>
     <string name="loop_tbrexecution_time_label">Geçici bazal uygulama süresi</string>
-    <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator uygulamasından %1$s için PIN girin</string>
-    <string name="smscommunicator_otp_pin">İlave zorunlu şifre (PIN)</string>
-    <string name="smscommunicator_otp_pin_summary">Oluşturulan Her Tek Kullanımlık Şifrenin sonunda ezberlenmesi ve yapıştırılması gereken ek şifre</string>
-    <string name="smscomunicator_tab_otp_label">Kimlik doğrulayıcı (OTP-Authenticator) kurulumu</string>
-    <string name="smscommunicator_code_verify_label">Kontrol edilecek kod:</string>
-    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">Doğrulama kodu, Authenticator uygulaması (OTP olarak bilinir) tarafından görüntülenen 6 haneden ve ardından 3 veya daha fazla zorunlu PIN hanesinden oluşur.</string>
-    <string name="smscommunicator_otp_reset_btn">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
-    <string name="smscommunicator_otp_reset_title">Kimlik Doğrulayıcı Anahtarını Sıfırla</string>
-    <string name="smscommunicator_otp_reset_prompt">Kimlik Doğrulayıcı (Authenticator) anahtarını sıfırlamak istediğinizden emin misiniz? Şu anda yapılandırılmış tüm Kimlik Doğrulayıcıları geçersiz kılar ve bunları yeniden ayarlamanız gerekir.</string>
-    <string name="smscommunicator_otp_reset_successful">Yeni Kimlik Doğrulayıcı (Authenticator) Anahtarı oluşturuldu! Kimlik doğrulayıcıları için lütfen güncellenmiş QRCode\'u kullanın.</string>
-    <string name="smscommunicator_otp_export_title">OTP dışa aktarma</string>
-    <string name="smscommunicator_otp_export_prompt">OTP secret panoya kopyalamak istediğinizden emin misiniz?\n\nYalnızca kimlik doğrulama uygulamanızın QRCode\'u tarama sorunları varsa, bunu elle girmek veya uygulamayı kullanarak OTP donanımı yapılandırmak istiyorsanız buna ihtiyacınız olabilir.</string>
-    <string name="smscommunicator_otp_export_successful">OTP secret (Base32 formatında) dışa aktarıldı ve panoya kopyalandı. Doğrulayıcıya veya OTP donanım yazıcısına yapıştırın!</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Doğrulayıcıyı (Authenticator) yükleyin</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. AndroidAPS OTP kod kurulumu için QR kodu tarayın</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Tek Kullanımlık Parolayı (OTP) Test Edin</string>
-    <string name="smscommunicator_otp_reset_header">Doğrulayıcıları (Authenticators) Sıfırla</string>
-    <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Doğrulayıcıyı (Authenticator) sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
     <string name="overview_show_deviationslope">Sapma eğimi</string>
@@ -853,26 +705,15 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="filter">Filtre</string>
     <string name="copytolocalprofile_invalid">Profil oluşturulamıyor. Profil geçersiz.</string>
     <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Pompa ulaşılamazsa SMS gönder</string>
-    <string name="smscommunicator_pump_ureachable">Pompaya ulaşılamadığını bildir</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
-    <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
-    <string name="bolusadvisor">Bolus danışmanı</string>
-    <string name="bolusadvisormessage">Yüksek glisemiksiniz. Şimdi yemek yemek yerine daha iyi glisemi beklemeniz önerilir. Şimdi bir düzeltme bolusu yapmak ve yemek zamanı geldiğinde size hatırlatmak ister misiniz? Bu durumda karbonhidrat kaydı yapılmaz ve size hatırlattığımızda sihirbazı tekrar kullanmanız gerekir.</string>
-    <string name="enablebolusadvisor">Bolus danışmanını etkinleştir</string>
-    <string name="enablebolusadvisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
-    <string name="timetoeat">Yemek zamanı</string>
-    <string name="bolusreminder">Bolus hatırlatıcısı</string>
     <string name="enablebolusreminder">Bolus hatırlatıcıyı etkinleştir</string>
     <string name="enablebolusreminder_summary">Sihirbazla daha sonra bolus için hatırlatıcı kullanın
          (\"bolus sonrası\")</string>
-    <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="fabric_upload_disabled">Çökme günlükleri yükleme devre dışı bırakıldı!</string>
     <string name="graph_menu_divider_header">Grafik</string>
     <string name="chart_menu">Grafik menüsü</string>
     <string name="clear_filter">Filtreyi temizle</string>
-    <string name="trend_arrow">Trend oku</string>
     <string name="cannula">Kanül</string>
     <string name="userentry">Kullanıcı girişi</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
@@ -904,8 +745,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="ns_receive_therapy_events_summary">NS veya NSClient aracılığıyla girilen tedavi olaylarını (kanül, insülin, pil değişimi vb.) kabul edin</string>
     <string name="ns_receive_cgm">SGİ (CGM) verilerini alma/doldurma</string>
     <string name="ns_receive_cgm_summary">NS\'tan SGİ (CGM) verilerini kabul edin</string>
-    <string name="sms_timeout_while_wating">Önceki pompa iletişiminin bitmesini beklerken zaman aşımı</string>
-    <string name="smscommunicator_another_bolus_in_queue">Sırada başka bir bolus var. Daha sonra tekrar deneyin.</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
     <string name="missing_profile_name">Profil adı eksik</string>
     <string name="error_in_ic_values">IC değerinde hata</string>
@@ -931,18 +770,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11_correction_percentage">% ile doğru sonuç</string>
     <string name="a11_correction_units">ünite ile doğru sonuç</string>
     <string name="not_available_full">Mevcut değil</string>
-    <string name="a11y_high">yüksek</string>
-    <string name="a11y_inrange">aralık içinde</string>
-    <string name="a11y_low">düşük</string>
-    <string name="a11y_arrow_double_down">hızla düşüyor</string>
-    <string name="a11y_arrow_single_down">düşüyor</string>
-    <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
-    <string name="a11y_arrow_flat">sabit</string>
-    <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
-    <string name="a11y_arrow_single_up">yükseliyor</string>
-    <string name="a11y_arrow_double_up">hızla yükseliyor</string>
-    <string name="a11y_arrow_none">yok</string>
-    <string name="a11y_arrow_unknown">bilinmiyor</string>
     <string name="a11y_graph">grafik</string>
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_bg_quality_recalculated">tekrar hesaplandı</string>
@@ -950,7 +777,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="a11y_insulin_label">insülin</string>
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
-    <string name="a11y_carb_reminder">hatırlatıcıyı kur</string>
     <string name="a11y_add_new_profile">yeni profil ekle</string>
     <string name="a11y_clone_profile">mevcut profili klonla</string>
     <string name="a11y_delete_current_profile">mevcut profil sil</string>
@@ -1009,7 +835,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
-    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
     <string name="veryLow" comment="below 3.1">Çok düşük</string>
     <string name="low" comment="3.1-3.9">Düşük</string>
     <string name="high" comment="10.0-13.9">Yüksek</string>
@@ -1019,8 +844,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="above" comment="above &quot;in range&quot;">Üstünde</string>
     <string name="show_loop_records">Döngü kayıtlarını göster</string>
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
-    <string name="widget_description">AndroidAPS widget</string>
-    <string name="configure">Şeffaflığı yapılandır</string>
     <string name="loop_status">Döngü durumu</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="profile1">Profil 1</string>
@@ -1028,7 +851,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="login">Giriş</string>
     <string name="remove_all">Tümünü kaldır</string>
     <string name="reset_start">Başlatmayı sıfırla</string>
-    <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
     <string name="a11y_open_settings">ayarları aç</string>
     <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
     <string name="device_all">Tümü</string>
@@ -1045,6 +867,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
     <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
-    <string name="error_asking_for_permissions">İzin istenirken hata</string>
     <string name="dynisf_adjust_sensitivity">Duyarlılığı ve KŞ\'ni ayarlayın</string>
+    <string name="database_cleanup">Veritabanı temizleme</string>
+    <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
+    <string name="cleared_entries">Temizlenen girişler</string>
 </resources>

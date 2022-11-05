@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Letture BG mancanti</string>
+    <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
+    <string name="request">Richiesta</string>
+    <string name="permission">Autorizzazione</string>
+    <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
+</resources>

@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="24dp"
-                android:text="@string/treatments_wizard_bg_label"
+                android:text="@string/bg_label"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <CheckBox
@@ -288,7 +288,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="86dp"
-                android:text="@string/treatments_wizard_carbs_label"
+                android:text="@string/carbs"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView

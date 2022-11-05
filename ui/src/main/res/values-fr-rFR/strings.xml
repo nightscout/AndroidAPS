@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
+    <string name="constraint_applied">Restriction appliquée !</string>
+    <string name="bolus_constraint_applied">Restriction de bolus appliquée</string>
+    <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
+    <string name="temp_target_short">CT</string>
+    <string name="dialog_canceled">Boîte de dialogue annulée</string>
+    <string name="start_activity_tt">Début Activités</string>
+    <string name="start_eating_soon_tt">Début Repas Imminent</string>
+    <string name="start_hypo_tt">Début Traitement Hypo</string>
+    <string name="time_offset">Décalage horaire</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
+    <string name="a11y_carb_reminder">définir un rappel</string>
+    <!--    Widget-->
+    <string name="configure">Configurer l’opacité</string>
+    <string name="widget_description">Widget AAPS</string>
+</resources>

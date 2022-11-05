@@ -7,17 +7,23 @@ import androidx.core.content.FileProvider
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
+import info.nightscout.plugins.general.maintenance.LoggerUtils
+import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
-import java.io.*
-import java.util.*
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.Arrays
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
@@ -50,7 +56,7 @@ class MaintenancePlugin @Inject constructor(
 ) {
 
     fun sendLogs() {
-        val recipient = sp.getString(R.string.key_maintenance_logs_email, "logs@androidaps.org")
+        val recipient = sp.getString(R.string.key_maintenance_logs_email, "logs@aaps.app")
         val amount = sp.getInt(R.string.key_maintenance_logs_amount, 2)
         val logs = getLogFiles(amount)
         val zipDir = fileListProvider.ensureTempDirExists()
@@ -69,14 +75,14 @@ class MaintenancePlugin @Inject constructor(
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
         }
-        val autotunefiles = logDir.listFiles { _: File?, name: String ->
+        val autotuneFiles = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("autotune") && name.endsWith(".zip"))
         }
         val amount = sp.getInt(R.string.key_logshipper_amount, keep)
         val keepIndex = amount - 1
-        if (autotunefiles != null && autotunefiles.isNotEmpty()) {
-            Arrays.sort(autotunefiles) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
-            var delAutotuneFiles = listOf(*autotunefiles)
+        if (autotuneFiles != null && autotuneFiles.isNotEmpty()) {
+            Arrays.sort(autotuneFiles) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
+            var delAutotuneFiles = listOf(*autotuneFiles)
             if (keepIndex < delAutotuneFiles.size) {
                 delAutotuneFiles = delAutotuneFiles.subList(keepIndex, delAutotuneFiles.size)
                 for (file in delAutotuneFiles) {

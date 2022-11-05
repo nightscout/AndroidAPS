@@ -49,7 +49,6 @@
     <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_danars_settings" translatable="false">danars_settings</string>
-    <string name="key_xdripstatus_settings" translatable="false">xdripstatus_settings</string>
     <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
     <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
@@ -74,6 +73,21 @@
     <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
     <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
+    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
+    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
+    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
+    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
+    <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
+    <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
+    <string name="key_smscommunicator_report_pump_unreachable" translatable="false">smscommunicator_report_pump_unreachable</string>
+    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
+    <string name="key_local_profile_last_change" translatable="false">local_profile_last_change</string>
+    <string name="key_ns_receive_profile_store" translatable="false">ns_receive_profile_store</string>
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -94,7 +108,7 @@
     <string name="disconnected">Disconnected</string>
     <string name="disconnecting">Disconnecting</string>
     <string name="waiting_for_disconnection">Waiting for disconnection</string>
-    <string name="androidaps_start">AndroidAPS started</string>
+    <string name="androidaps_start">AAPS started</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -188,6 +202,41 @@
     <string name="addnew">Add new</string>
     <string name="addnew_above">Add new above</string>
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
+    <string name="bg_label">BG</string>
+    <string name="calibration">Calibration</string>
+    <string name="alarminxmin">Run alarm in %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus reported an error. Manually check real delivered amount</string>
+    <string name="bolus_reminder">Bolus reminder</string>
+    <string name="duration_label">Duration</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pump suspended</string>
+    <string name="notconfigured">Not configured</string>
+    <string name="loopsuspended">Loop suspended</string>
+    <string name="trend_arrow">Trend arrow</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">req</string>
+    <string name="a11y_arrow_double_down">falling rapidly</string>
+    <string name="a11y_arrow_single_down">falling</string>
+    <string name="a11y_arrow_forty_five_down">falling slowly</string>
+    <string name="a11y_arrow_flat">stable</string>
+    <string name="a11y_arrow_forty_five_up">rising slowly</string>
+    <string name="a11y_arrow_single_up">rising</string>
+    <string name="a11y_arrow_double_up">rising rapidly</string>
+    <string name="a11y_arrow_none">none</string>
+    <string name="a11y_arrow_unknown">unknown</string>
+    <string name="a11y_high">high</string>
+    <string name="a11y_inrange">in range</string>
+    <string name="a11y_low">low</string>
+    <string name="average">Average</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">REMOVE</string>
+    <string name="activate_profile">Activate profile</string>
+    <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">ProfileSwitch missing. Please do a profile switch or press \"Activate Profile\" in the LocalProfile.</string>
+    <string name="profile">Profile</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -373,13 +422,12 @@
     <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
     <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
     <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
-    <string name="signature_verifier">Signature verifier</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
     <string name="version_expire">Version %1$s expire on %2$s</string>
 
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
+    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>
@@ -462,6 +510,7 @@
     <string name="uel_export_settings">EXPORT SETTINGS</string>
     <string name="uel_import_settings">IMPORT SETTINGS</string>
     <string name="uel_reset_databases">RESET DATABASES</string>
+    <string name="uel_cleanup_databases">CLEANUP DATABASES</string>
     <string name="uel_export_databases">EXPORT DATABASES</string>
     <string name="uel_import_databases">IMPORT DATABASES</string>
     <string name="uel_otp_export">OTP EXPORT</string>
@@ -500,7 +549,7 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
-    <string name="nsclient_version_does_not_match">NSClient version doesn\'t match AndroidAPS version. Please update.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient version doesn\'t match AAPS version. Please update.</string>
 
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -597,11 +646,14 @@
     <string name="autotune_log_ic_isf" translatable="false">| %1$4.4s | %2$3.3f |\t%3$3.3f |\n</string>
     <string name="autotune_log_basal" translatable="false">|\t%1$02.0f\t| %2$3.3f |%3$3.3f\t| %5$.0f%% / %4$d\n</string>
     <string name="autotune_log_sum_basal"  translatable="false">|\t∑\t|\t%1$3.1f |\t%2$3.1f |\n</string>
-    <string name="autotune_run_without_autoswitch">Autotune runned without profile switch</string>
-    <string name="autotune_run_with_autoswitch">Autotune runned and profile automatically switched</string>
+    <string name="autotune_run_without_autoswitch">Autotune ran without profile switch</string>
+    <string name="autotune_run_with_autoswitch">Autotune ran and profile automatically switched</string>
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
     <string name="needconnectpermission">Application needs bluetooth permission</string>
+
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

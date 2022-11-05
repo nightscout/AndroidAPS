@@ -25,8 +25,6 @@
     <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS</string>
     <string name="objectives_manualenacts">Handmatige aanpassingen</string>
     <string name="accomplished">Voltooid: %1$s</string>
-    <string name="objectives_usage_objective">Leer hoe AndroidAPS te gebruiken</string>
-    <string name="objectives_usage_gate">Voer verschillende acties uit in AndroidAPS</string>
     <string name="objectives_useprofileswitch">Stel profiel in op 90% voor 10 min (houd profielnaam lang ingedrukt op Overzicht scherm)</string>
     <string name="objectives_usedisconnectpump">Simuleer douchen. Ontkoppel de pomp voor 1u (houd Open Loop lang ingedrukt)</string>
     <string name="objectives_usereconnectpump">... en op dezelfde manier weer aankoppelen</string>

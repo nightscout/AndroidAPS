@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.common
 
 enum class ManufacturerType(val description: String) {
-    AndroidAPS("AndroidAPS"),
+    AAPS("AAPS"),
     Medtronic("Medtronic"),
     Sooil("SOOIL"),
     Tandem("Tandem"),
@@ -10,5 +10,6 @@ enum class ManufacturerType(val description: String) {
     Cellnovo("Cellnovo"),
     Roche("Roche"),
     Ypsomed("Ypsomed"),
-    G2e("G2e");
+    G2e("G2e"),
+    Eoflow("Eoflow");
 }

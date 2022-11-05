@@ -97,6 +97,7 @@ data class UserEntry(
         EXPORT_SETTINGS (ColorGroup.Aaps),
         IMPORT_SETTINGS (ColorGroup.Aaps),
         RESET_DATABASES (ColorGroup.Aaps),
+        CLEANUP_DATABASES (ColorGroup.Aaps),
         EXPORT_DATABASES (ColorGroup.Aaps),
         IMPORT_DATABASES (ColorGroup.Aaps),
         OTP_EXPORT (ColorGroup.Aaps),
@@ -171,6 +172,7 @@ data class UserEntry(
         Omnipod,            //No entry currently
         OmnipodEros,
         OmnipodDash,        //No entry currently
+        EOPatch2,
         MDI,
         VirtualPump,
         SMS,                //From SMS plugin

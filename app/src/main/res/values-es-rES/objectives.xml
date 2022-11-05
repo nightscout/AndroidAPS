@@ -25,8 +25,8 @@
     <string name="objectives_pumpstatusavailableinns">Estado de la bomba disponible en NS</string>
     <string name="objectives_manualenacts">Aprobación Manual</string>
     <string name="accomplished">Completado: %1$s</string>
-    <string name="objectives_usage_objective">Aprende a controlar AndroidAPS</string>
-    <string name="objectives_usage_gate">Realice diferentes acciones en AndroidAPS</string>
+    <string name="objectives_usage_objective">Aprenda cómo controlar AAPS</string>
+    <string name="objectives_usage_gate">Ejecutar diferentes acciones en AAPS</string>
     <string name="objectives_useprofileswitch">Establecer perfil 90% durante 10 min (Pulsación larga en nombre del perfil en Resumen)</string>
     <string name="objectives_usedisconnectpump">Simular ducha. Desconectar bomba durante 1h (Pulsación larga en el lazo abierto)</string>
     <string name="objectives_usereconnectpump">... y volver a conectar de la misma manera</string>

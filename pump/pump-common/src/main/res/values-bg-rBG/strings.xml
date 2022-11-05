@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Помпата не поддържа тази операция.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Операцията не се поддържа от помпата (ВСЕ ОЩЕ).</string>
+    <string name="common_resultok">ОК</string>
+    <string name="pump_serial_number">Сериен номер на помпа</string>
+    <string name="bolus_delivered">%1$.2fЕ / %2$.2fЕ доставени</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Никога не сме се свързвали</string>
+    <string name="pump_status_waking_up">Събуждане</string>
+    <string name="pump_status_error_comm">Грешка в комуникацията</string>
+    <string name="pump_status_timeout_comm">Изтече времето за връзка</string>
+    <string name="pump_status_pump_unreachable">Помпата е недостъпна</string>
+    <string name="pump_status_invalid_config">Грешна конфигурация</string>
+    <string name="pump_status_active">Активна</string>
+    <string name="pump_status_sleeping">Спинка си</string>
+    <string name="pump_status_not_initialized">Под не е инициализиран</string>
+    <string name="pump_status_suspended">Прекратено</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Базали</string>
+    <string name="history_group_configuration">Конфигурации</string>
+    <string name="history_group_notification">Известия</string>
+    <string name="history_group_statistic">Статистика</string>
+    <string name="history_group_unknown">Неизвестни</string>
+    <string name="history_group_all">Всички</string>
+    <string name="history_group_bolus">Болуси</string>
+    <string name="history_group_prime">Пълнене</string>
+    <string name="history_group_alarm">Аларми</string>
+    <string name="history_group_glucose">Кръвна захар</string>
+    <string name="history_group_other">Друго</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Сканирай</string>
+    <string name="ble_config_scan_stop">Спри</string>
+    <string name="ble_config_scan_selected">Избрано</string>
+    <string name="ble_config_scan_scanning">Сканиране</string>
+    <string name="ble_config_scan_finished">Завършено сканиране</string>
+    <string name="ble_config_scan_error">Грешка при сканиране: %1$d</string>
+    <string name="ble_config_connected_never">Никога</string>
+    <string name="ble_config_remove">Изтрий</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth е изключен</string>
+    <string name="ble_error_no_bt_adapter">Няма Bluetooth адаптер</string>
+    <string name="ble_error_pump_unreachable">Помпата е недостъпна</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Базалните профили/настройки не са позволен в помпата. Включванете го от настройките на помпата.</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Грешен максимален болус в помпата ( трябвба да е %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Грешен макс мазал в помпата (трябва да е %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Тип:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d ден</item>
+        <item quantity="other">%1$d дни</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d часа</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
+</resources>

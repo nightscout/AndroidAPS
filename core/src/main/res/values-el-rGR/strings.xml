@@ -27,6 +27,11 @@
     <string name="time">Χρόνος</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="addnew">Προσθήκη νέου</string>
+    <string name="treatmentdeliveryerror">Το Bolus ανέφερε ένα σφάλμα. Ελέγξτε χειροκίνητα την ποσότητα που έχει πραγματικά χορηγηθεί</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
+    <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
+    <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -64,4 +69,5 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Βασικός Ρυθμός</string>
     <!-- Autotune -->
+    <!-- SmsCommunicator -->
 </resources>

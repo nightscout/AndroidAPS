@@ -23,8 +23,10 @@ import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.di.DaggerAppComponent
 import info.nightscout.androidaps.di.StaticInjector
+import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.LocalAlertUtils
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -32,30 +34,27 @@ import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
+import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.widget.updateWidget
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.utils.ActivityMonitor
+import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import rxdogtag2.RxDogTag
 import java.io.IOException
-import java.net.SocketException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Provider
@@ -76,7 +75,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
+    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
@@ -139,10 +138,10 @@ class MainApp : DaggerApplication() {
             }, 10000
         )
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "KeepAlive",
+            KeepAliveWorker.KA_0,
             ExistingPeriodicWorkPolicy.REPLACE,
             PeriodicWorkRequest.Builder(KeepAliveWorker::class.java, 15, TimeUnit.MINUTES)
-                .setInputData(Data.Builder().putString("schedule", "KeepAlive").build())
+                .setInputData(Data.Builder().putString("schedule", KeepAliveWorker.KA_0).build())
                 .setInitialDelay(5, TimeUnit.SECONDS)
                 .build()
         )
@@ -155,7 +154,7 @@ class MainApp : DaggerApplication() {
         //  schedule widget update
         refreshWidget = Runnable {
             handler.postDelayed(refreshWidget, 60000)
-            updateWidget(this)
+            Widget.updateWidget(this)
         }
         handler.postDelayed(refreshWidget, 60000)
     }
@@ -166,7 +165,7 @@ class MainApp : DaggerApplication() {
             if (e is UndeliverableException) {
                 e = e.cause!!
             }
-            if (e is IOException || e is SocketException) {
+            if (e is IOException) {
                 // fine, irrelevant network problem or API that throws on cancellation
                 return@setErrorHandler
             }
@@ -184,7 +183,7 @@ class MainApp : DaggerApplication() {
                 Thread.currentThread().uncaughtExceptionHandler?.uncaughtException(Thread.currentThread(), e)
                 return@setErrorHandler
             }
-            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e)
+            aapsLogger.warn(LTag.CORE, "Undeliverable exception received, not sure what to do", e.toString())
         }
     }
 

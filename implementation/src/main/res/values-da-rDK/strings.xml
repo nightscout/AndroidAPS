@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="missed_bg_readings">Manglende BS målinger </string>
+    <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
+    <string name="request">Anmod</string>
+    <string name="permission">Tilladelse</string>
+    <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
+</resources>

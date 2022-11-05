@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
+    <string name="dialog_canceled">דו-שיח בוטל</string>
+    <string name="start_activity_tt">התחל פעילות TT</string>
+    <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
+    <string name="start_hypo_tt">הפעלת היפו TT</string>
+    <string name="time_offset">היסט זמן</string>
+    <string name="unit_minute_short">דק\'</string>
+    <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
+    <string name="a11y_carb_reminder">קביעת תזכורת</string>
+    <!--    Widget-->
+</resources>

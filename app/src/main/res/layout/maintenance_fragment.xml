@@ -212,6 +212,21 @@
                         app:layout_row="0" />
 
                     <info.nightscout.androidaps.utils.ui.SingleClickButton
+                        android:id="@+id/cleanup_db"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_database_cleanup"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/database_cleanup"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="1" />
+
+                    <info.nightscout.androidaps.utils.ui.SingleClickButton
                         android:id="@+id/nav_resetdb"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -224,7 +239,7 @@
                         app:layout_column="1"
                         app:layout_columnWeight="1"
                         app:layout_gravity="fill"
-                        app:layout_row="0" />
+                        app:layout_row="1" />
 
                 </androidx.gridlayout.widget.GridLayout>
 

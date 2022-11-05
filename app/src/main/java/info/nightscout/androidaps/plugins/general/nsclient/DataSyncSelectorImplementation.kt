@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -25,7 +25,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     private val nsClientPlugin: NSClientPlugin,
     private val activePlugin: ActivePlugin,
     private val appRepository: AppRepository,
-    private val localProfilePlugin: LocalProfilePlugin
+    private val profilePlugin: ProfilePlugin
 ) : DataSyncSelector {
 
     class QueueCounter(
@@ -940,8 +940,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         val lastChange = sp.getLong(R.string.key_local_profile_last_change, 0)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
-            if (localProfilePlugin.profile?.allProfilesValid != true) return
-            val profileJson = localProfilePlugin.profile?.data ?: return
+            if (profilePlugin.profile?.allProfilesValid != true) return
+            val profileJson = profilePlugin.profile?.data ?: return
             nsClientPlugin.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
         }
     }

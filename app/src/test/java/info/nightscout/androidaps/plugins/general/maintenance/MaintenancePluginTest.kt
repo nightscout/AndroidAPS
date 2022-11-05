@@ -3,10 +3,11 @@ package info.nightscout.androidaps.plugins.general.maintenance
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
+import info.nightscout.plugins.general.maintenance.LoggerUtils
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -27,7 +28,7 @@ class MaintenancePluginTest : TestBase() {
     @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var config: Config
 
-    lateinit var sut: MaintenancePlugin
+    private lateinit var sut: MaintenancePlugin
 
     @Before
     fun mock() {

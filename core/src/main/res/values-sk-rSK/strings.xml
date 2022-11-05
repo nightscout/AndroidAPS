@@ -20,7 +20,7 @@
     <string name="disconnected">Odpojené</string>
     <string name="disconnecting">Odpájanie</string>
     <string name="waiting_for_disconnection">Čakám na odpojenie</string>
-    <string name="androidaps_start">AndroidAPS spustený</string>
+    <string name="androidaps_start">AAPS spustený</string>
     <string name="formatinsulinunits1">%1$.1f JI</string>
     <string name="formatinsulinunits">%1$.2f JI</string>
     <string name="formatsignedinsulinunits">%1$+.2f JI</string>
@@ -114,6 +114,32 @@
     <string name="addnew">Pridať nový</string>
     <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
+    <string name="bg_label">Glykémia</string>
+    <string name="calibration">Kalibrácia</string>
+    <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus zaznamenal chybu. Overte prosím manuálne reálne podané množstvo</string>
+    <string name="bolus_reminder">Pripomenutie bolusu</string>
+    <string name="duration_label">Trvanie</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pumpa pozastavená</string>
+    <string name="notconfigured">Nenakonfigurované</string>
+    <string name="loopsuspended">Uzavretý okruh pozastavený</string>
+    <string name="trend_arrow">Trendová šípka</string>
+    <string name="a11y_autosens_label">Automatická detekcia citlivosti</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">pož.</string>
+    <string name="a11y_arrow_double_down">rýchly pokles</string>
+    <string name="a11y_arrow_single_down">klesajúca</string>
+    <string name="a11y_arrow_forty_five_down">pomaly klesajúca</string>
+    <string name="a11y_arrow_flat">stabilná</string>
+    <string name="a11y_arrow_forty_five_up">pomaly stúpajúca</string>
+    <string name="a11y_arrow_single_up">stúpajúca</string>
+    <string name="a11y_arrow_double_up">rýchlo stúpajúca</string>
+    <string name="a11y_arrow_none">žiadny</string>
+    <string name="a11y_arrow_unknown">neznámy</string>
+    <string name="a11y_high">vysoká</string>
+    <string name="a11y_inrange">v rozsahu</string>
+    <string name="a11y_low">nízka</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -361,6 +387,7 @@
     <string name="uel_export_settings">EXPORTOVAŤ NASTAVENIA</string>
     <string name="uel_import_settings">IMPORTOVAŤ NASTAVENIA</string>
     <string name="uel_reset_databases">RESETOVAŤ DATABÁZY</string>
+    <string name="uel_cleanup_databases">VYČISTIŤ DATABÁZU</string>
     <string name="uel_export_databases">EXPORTOVAŤ DATABÁZY</string>
     <string name="uel_import_databases">IMPORTOVAŤ DATABÁZY</string>
     <string name="uel_otp_export">EXPORT OTP</string>
@@ -490,6 +517,8 @@
     <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
     <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
     <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

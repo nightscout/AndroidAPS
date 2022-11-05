@@ -12,7 +12,7 @@ import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.androidaps.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.extensions.convertedToAbsolute
@@ -23,7 +23,7 @@ import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -72,7 +72,7 @@ class DataHandlerMobile @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val trendCalculator: TrendCalculator,
     private val dateUtil: DateUtil,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
@@ -469,7 +469,7 @@ class DataHandlerMobile @Inject constructor(
         message += rh.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
         message += rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
         if (insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0)
-            message += "\n" + rh.gs(R.string.constraintapllied)
+            message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -487,7 +487,7 @@ class DataHandlerMobile @Inject constructor(
             "\n" + rh.gs(R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(R.string.duration) + ": " + command.duration + "h"
         if (carbsAfterConstraints - command.carbs != 0) {
-            message += "\n" + rh.gs(R.string.constraintapllied)
+            message += "\n" + rh.gs(R.string.constraint_applied)
         }
         if (carbsAfterConstraints <= 0) {
             sendError("Carbs = 0! No action taken!")
@@ -512,7 +512,7 @@ class DataHandlerMobile @Inject constructor(
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
         var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraintapllied)
+        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -526,7 +526,7 @@ class DataHandlerMobile @Inject constructor(
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
         var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraintapllied)
+        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -1079,7 +1079,7 @@ class DataHandlerMobile @Inject constructor(
     private fun generateStatusString(profile: Profile?, currentBasal: String, iobSum: String, iobDetail: String, bgiString: String): String {
         var status = ""
         profile ?: return rh.gs(R.string.noprofile)
-        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabledloop) + "\n"
+        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
 
         val iobString =
             if (sp.getBoolean(R.string.key_wear_detailediob, false)) "$iobSum $iobDetail"

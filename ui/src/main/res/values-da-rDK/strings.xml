@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Ingen handling valgt, intet vil ske</string>
+    <string name="dialog_canceled">Dialog annulleret</string>
+    <string name="start_activity_tt">Start Aktivitets mål</string>
+    <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>
+    <string name="start_hypo_tt">Begynd Hypo mål</string>
+    <string name="time_offset">Tidsforskydning</string>
+    <string name="unit_minute_short">min.</string>
+    <string name="remind_to_bolus_later">Påmind om at bolus senere</string>
+    <string name="a11y_carb_reminder">Indstil påmindelse</string>
+    <!--    Widget-->
+    <string name="widget_description">AAPS widget</string>
+</resources>

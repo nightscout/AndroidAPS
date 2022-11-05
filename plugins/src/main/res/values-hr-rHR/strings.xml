@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="description_sms_communicator">Daljinsko upravljanje AndroidAPS-om pomoću SMS naredbi.</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Skenirajte kod za postavljanje AAPS OTP kodova</string>
+    <string name="smscommunicator_otp_reset_warning">Poništavanjem autentifikatora činite sve već osigurane autentifikatore nevažećima. Morat ćete ih ponovno postaviti!</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
+    <!-- Insulin -->
+</resources>

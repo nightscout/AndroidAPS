@@ -26,7 +26,7 @@
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_show_wizard_button"
-                android:title="@string/overview_calculator_label" />
+                android:title="@string/calculator_label" />
 
             <SwitchPreference
                 android:defaultValue="true"
@@ -132,7 +132,7 @@
                 android:defaultValue="true"
                 android:key="@string/key_show_calibration_button"
                 android:summary="@string/show_calibration_button_summary"
-                android:title="@string/overview_calibration" />
+                android:title="@string/calibration" />
 
         </androidx.preference.PreferenceScreen>
 
@@ -489,8 +489,8 @@
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_usebolusadvisor"
-                android:summary="@string/enablebolusadvisor_summary"
-                android:title="@string/enablebolusadvisor" />
+                android:summary="@string/enable_bolus_advisor_summary"
+                android:title="@string/enable_bolus_advisor" />
 
             <SwitchPreference
                 android:defaultValue="false"

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operacja nie jest wspierana przez pompę i/lub sterownik pompy.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operacja nie jest JESZCZE wspierana przez pompę.</string>
+    <string name="common_resultok">OK</string>
+    <string name="pump_serial_number">Numer seryjny pompy</string>
+    <string name="bolus_delivered">podano %1$.2f U / %2$.2f U</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Nigdy nie połączona</string>
+    <string name="pump_status_waking_up">Wybudzanie</string>
+    <string name="pump_status_error_comm">Błąd komunikacji</string>
+    <string name="pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
+    <string name="pump_status_pump_unreachable">Pompa nieosiągalna</string>
+    <string name="pump_status_invalid_config">Nieprawidłowe ustawienia</string>
+    <string name="pump_status_active">Aktywna</string>
+    <string name="pump_status_sleeping">Uśpiona</string>
+    <string name="pump_status_not_initialized">Nie zainicjowany</string>
+    <string name="pump_status_suspended">Wstrzymany</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Dawki Bazowe</string>
+    <string name="history_group_configuration">Ustawienia</string>
+    <string name="history_group_notification">Powiadomienia</string>
+    <string name="history_group_statistic">Statystyki</string>
+    <string name="history_group_unknown">Nieznane</string>
+    <string name="history_group_all">Wszystko</string>
+    <string name="history_group_bolus">Bolusy</string>
+    <string name="history_group_prime">Napełnianie</string>
+    <string name="history_group_alarm">Alarmy</string>
+    <string name="history_group_glucose">Glukoza</string>
+    <string name="history_group_other">Inne</string>
+    <!-- Time -->
+    <string name="time_today">Dziś</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Skanuj</string>
+    <string name="ble_config_scan_stop">Stop</string>
+    <string name="ble_config_scan_selected">Wybrany</string>
+    <string name="ble_config_scan_scanning">Skanowanie</string>
+    <string name="ble_config_scan_finished">Skanowanie zakończono</string>
+    <string name="ble_config_scan_error">Błąd skanowania: %1$d</string>
+    <string name="ble_config_connected_never">Nigdy</string>
+    <string name="ble_config_remove">Usuń</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth wyłączony</string>
+    <string name="ble_error_no_bt_adapter">Brak modułu Bluetooth</string>
+    <string name="ble_error_pump_unreachable">Pompa nieosiągalna</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Ustawienia bazy/ wzorców nie są włączone w pompie. Włącz je na pompie.</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Ustawiony na pompie typ Bolus Maksymalny jest niewłaściwy (musi być %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Ustawiony na pompie typ Bolus Maksymalny jest niewłaściwy (musi być %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Typ:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dzień</item>
+        <item quantity="few">%1$d dni</item>
+        <item quantity="many">%1$d dni</item>
+        <item quantity="other">%1$d dni</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d godzina</item>
+        <item quantity="few">%1$d godziny</item>
+        <item quantity="many">%1$d godzin</item>
+        <item quantity="other">%1$d godzin</item>
+    </plurals>
+</resources>

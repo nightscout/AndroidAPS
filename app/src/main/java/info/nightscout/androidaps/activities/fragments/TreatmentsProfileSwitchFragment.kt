@@ -28,10 +28,10 @@ import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -55,7 +55,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+    @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
@@ -241,8 +241,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                                     ValueWithUnit.SimpleString(profileSwitch.profileName)
                                 )
                                 val nonCustomized = profileSealed.convertToNonCustomizedProfile(dateUtil)
-                                localProfilePlugin.addProfile(
-                                    localProfilePlugin.copyFrom(
+                                profilePlugin.addProfile(
+                                    profilePlugin.copyFrom(
                                         nonCustomized,
                                         profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_")
                                     )

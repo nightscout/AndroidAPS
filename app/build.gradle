@@ -105,7 +105,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-b"
+        version "3.1.0.3-dev-c"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -119,7 +119,7 @@ android {
         full {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
-            resValue "string", "app_name", "AndroidAPS"
+            resValue "string", "app_name", "AAPS"
             versionName version
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_launcher",
@@ -136,21 +136,21 @@ android {
                     appIconRound: "@null"
             ]
         }
-        nsclient {
-            applicationId "info.nightscout.nsclient"
+        aapsclient {
+            applicationId "info.nightscout.aapsclient"
             dimension "standard"
-            resValue "string", "app_name", "NSClient"
-            versionName version + "-nsclient"
+            resValue "string", "app_name", "AAPSClient"
+            versionName version + "-aapsclient"
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
             ]
         }
-        nsclient2 {
-            applicationId "info.nightscout.nsclient2"
+        aapsclient2 {
+            applicationId "info.nightscout.aapsclient2"
             dimension "standard"
-            resValue "string", "app_name", "NSClient2"
-            versionName version + "-nsclient"
+            resValue "string", "app_name", "AAPSClient2"
+            versionName version + "-aapsclient"
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_yellowowl",
                     appIconRound: "@null"
@@ -159,6 +159,10 @@ android {
     }
 
     useLibrary "org.apache.http.legacy"
+
+    dataBinding {   //Deleting it causes a binding error
+        enabled = true
+    }
 }
 
 allprojects {
@@ -169,22 +173,31 @@ allprojects {
 dependencies {
     wearApp project(':wear')
 
+    // in order to use internet's versions you'd need to enable Jetifier again
+    // https://github.com/nightscout/graphview.git
+    // https://github.com/nightscout/iconify.git
+    implementation project(':graphview')
+    implementation project(':libraries')
     implementation project(':shared')
     implementation project(':core')
-    implementation project(':automation')
-    implementation project(':combo')
+    implementation project(':ui')
+    implementation project(':plugins')
+    implementation project(':implementation')
     implementation project(':database')
-    implementation project(':dana')
-    implementation project(':danars')
-    implementation project(':danar')
+    implementation project(':pump:combo')
+    implementation project(':pump:dana')
+    implementation project(':pump:danars')
+    implementation project(':pump:danar')
+    implementation project(':pump:diaconn')
+    implementation project(':pump:eopatch')
     implementation project(':insight')
-    implementation project(':pump-common')
-    implementation project(':rileylink')
-    implementation project(':medtronic')
-    implementation project(':omnipod-common')
-    implementation project(':omnipod-eros')
-    implementation project(':omnipod-dash')
-    implementation project(':diaconn')
+    implementation project(':pump:medtronic')
+    implementation project(':pump:pump-common')
+    implementation project(':pump:rileylink')
+    implementation project(':pump:omnipod-common')
+    implementation project(':pump:omnipod-eros')
+    implementation project(':pump:omnipod-dash')
+    implementation project(':automation')
     implementation project(':openhumans')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')

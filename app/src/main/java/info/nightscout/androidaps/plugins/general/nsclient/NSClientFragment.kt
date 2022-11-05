@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
+import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -136,6 +136,6 @@ class NSClientFragment : DaggerFragment(), MenuProvider {
         binding.url.text = nsClientPlugin.url()
         binding.status.text = nsClientPlugin.status
         val size = dataSyncSelector.queueSize()
-        binding.queue.text = if (size >= 0) size.toString() else rh.gs(R.string.notavailable)
+        binding.queue.text = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
     }
 }

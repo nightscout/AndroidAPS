@@ -12,27 +12,45 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.plugins.profile.ProfileFragment
+import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.androidaps.setupwizard.elements.*
+import info.nightscout.androidaps.setupwizard.elements.SWBreak
+import info.nightscout.androidaps.setupwizard.elements.SWButton
+import info.nightscout.androidaps.setupwizard.elements.SWEditEncryptedPassword
+import info.nightscout.androidaps.setupwizard.elements.SWEditIntNumber
+import info.nightscout.androidaps.setupwizard.elements.SWEditNumber
+import info.nightscout.androidaps.setupwizard.elements.SWEditNumberWithUnits
+import info.nightscout.androidaps.setupwizard.elements.SWEditString
+import info.nightscout.androidaps.setupwizard.elements.SWEditUrl
+import info.nightscout.androidaps.setupwizard.elements.SWFragment
+import info.nightscout.androidaps.setupwizard.elements.SWHtmlLink
+import info.nightscout.androidaps.setupwizard.elements.SWInfoText
+import info.nightscout.androidaps.setupwizard.elements.SWPlugin
+import info.nightscout.androidaps.setupwizard.elements.SWPreference
+import info.nightscout.androidaps.setupwizard.elements.SWRadioButton
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
-import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,7 +62,7 @@ class SWDefinition @Inject constructor(
     rh: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val localProfilePlugin: LocalProfilePlugin,
+    private val profilePlugin: ProfilePlugin,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val objectivesPlugin: ObjectivesPlugin,
@@ -110,7 +128,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionWindow = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(rh.gs(R.string.needsystemwindowpermission)))
+            .label(rh.gs(R.string.need_system_window_permission)))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -121,7 +139,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionBattery = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(rh.gs(R.string.needwhitelisting, rh.gs(R.string.app_name))))
+            .label(rh.gs(R.string.need_whitelisting, rh.gs(R.string.app_name))))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -132,7 +150,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionBt = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(rh.gs(R.string.needlocationpermission)))
+            .label(rh.gs(R.string.need_location_permission)))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -143,7 +161,7 @@ class SWDefinition @Inject constructor(
     private val screenPermissionStore = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
-            .label(rh.gs(R.string.needstoragepermission)))
+            .label(rh.gs(R.string.need_storage_permission)))
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
@@ -255,12 +273,12 @@ class SWDefinition @Inject constructor(
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
-            .add(LocalProfileFragment()))
+            .add(ProfileFragment()))
         .validator {
-            localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
+            profilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
                 ?: false
         }
-        .visibility { localProfilePlugin.isEnabled() }
+        .visibility { profilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)
         .add(SWInfoText(injector)

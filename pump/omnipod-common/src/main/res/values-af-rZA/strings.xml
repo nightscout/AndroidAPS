@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_heading_actions">Aksies</string>
+    <!-- Omnipod - Error -->
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Bevestiging</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_suspend_delivery">Opgeskort</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_reservoir">Stoor</string>
+    <string name="omnipod_common_overview_errors">Foute</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">Kanselleer</string>
+    <string name="omnipod_common_wizard_button_next">Volgende</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Gaan uit</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_category_other">Ander</string>
+    <string name="omnipod_common_preferences_category_notifications">Kennisgewings</string>
+    <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_running">Loop tans</string>
+    <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_set_bolus">Stel Bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Stel Tydelike Basale</string>
+    <!-- Omnipod - Alerts -->
+    <!-- Omnipod - Short status -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Ja</string>
+    <string name="omnipod_common_no">Nee</string>
+    <string name="omnipod_common_ok">OK</string>
+    <string name="omnipod_common_cancel">Kanselleer</string>
+    <string name="omnipod_common_warning">Waarskuwing</string>
+    <!-- Omnipod - Times -->
+    <plurals name="omnipod_common_minutes">
+        <item quantity="one">%1$d minuut</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
+    <plurals name="omnipod_common_hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d ure</item>
+    </plurals>
+    <plurals name="omnipod_common_days">
+        <item quantity="one">%1$d dae</item>
+        <item quantity="other">%1$d dae</item>
+    </plurals>
+</resources>

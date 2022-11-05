@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Scan</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Επιλεγμένο</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
+    <string name="riley_link_ble_config_scan_scanning">Σάρωση</string>
+    <string name="riley_link_ble_config_scan_finished">Η σάρωση ολοκληρώθηκε</string>
+    <string name="riley_link_ble_config_scan_error">Λάθος σάρωσης: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Ποτέ</string>
+    <string name="riley_link_ble_config_remove_riley_link">Διαγραφή</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Ρυθμίσεις</string>
+    <string name="rileylink_settings_tab2">Ιστορικό</string>
+    <string name="rileylink_status">Κατάσταση RileyLink</string>
+    <string name="medtronic_pump_status">Κατάσταση Αντλίας</string>
+    <string name="title_activity_rileylink_settings">Ρυθμίσεις RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_name">Όνομα:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Κατάσταση Σύνδεσης:</string>
+    <string name="rileylink_connection_error">Σφάλμα σύνδεσης:</string>
+    <string name="rileylink_device">Συσκευή</string>
+    <string name="rileylink_device_type">Τύπος Συσκευής:</string>
+    <string name="rileylink_pump_serial_number">Σειριακός Αριθμός Αντλίας:</string>
+    <string name="rileylink_pump_frequency">Συχνότητα Αντλίας:</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Επαναφορά Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Σφάλμα Bluetooth</string>
+    <string name="rileylink_state_bt_ready">Bluetooth Έτοιμο</string>
+    <string name="rileylink_state_not_started">Δεν ξεκίνησε</string>
+    <string name="rileylink_state_rl_init">Αρχικοποίηση του RileyLink…</string>
+    <string name="rileylink_state_rl_error">RileyLink Σφάλμα</string>
+    <string name="rileylink_state_pc_tune_up">Συντονισμός RileyLink και Αντλίας</string>
+    <string name="rileylink_state_pc_error">Πρόβλημα σύνδεσης με την Αντλία</string>
+    <string name="rileylink_state_connected">Συνδέθηκε</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Η συσκευή δεν είναι RileyLink</string>
+    <string name="rileylink_error_unreachable">Το RileyLink μη προσπελάσιμο</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth απενεργοποιημένο</string>
+    <string name="rileylink_error_no_bt_adapter">Δεν υπάρχει προσαρμογέας Bluetooth</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp απέτυχε</string>
+    <string name="rileylink_error_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
+    <string name="rileylink_error_pod_unreachable">Το Pod δεν είναι διαθέσιμο</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Αντλία Medtronic</string>
+    <string name="riley_link_common_yes">Ναι</string>
+    <string name="riley_link_common_no">Όχι</string>
+    <!-- RileyLink - Preferences -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d ημέρες</item>
+        <item quantity="other">%1$d ημέρες</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d ώρες</item>
+    </plurals>
+</resources>

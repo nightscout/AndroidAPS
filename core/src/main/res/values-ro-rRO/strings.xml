@@ -20,7 +20,6 @@
     <string name="disconnected">Deconectat</string>
     <string name="disconnecting">Se deconectează</string>
     <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
-    <string name="androidaps_start">AndroidAPS a pornit</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -106,6 +105,12 @@
     <string name="remove_button">Șterge</string>
     <string name="addnew">Adăugare</string>
     <string name="wrong_pump_data">Datele vin de la o pompa diferita. Schimba driver-ul de pompa pentru a reseta starea pompei.</string>
+    <string name="alarminxmin">Rulează alarma în %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Livrare de insulină suspendată</string>
+    <string name="notconfigured">Nu este configurat</string>
+    <string name="loopsuspended">Buclă suspendată</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -268,7 +273,6 @@
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din Setările de sistem \naltfel AndroidAPS nu va avea jurnalizare (importanta pentru monitorizare si verifica funcționarea corecta a algoritmilor)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
     <string name="tuesday_short">Ma</string>
@@ -419,6 +423,7 @@
     <string name="sort_label">Sortează</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

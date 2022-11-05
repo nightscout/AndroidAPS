@@ -20,7 +20,7 @@
     <string name="disconnected">Bağlantı kesildi</string>
     <string name="disconnecting">Bağlantı kesiliyor</string>
     <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
-    <string name="androidaps_start">AndroidAPS başladı</string>
+    <string name="androidaps_start">AAPS başladı</string>
     <string name="formatinsulinunits1">%1$.1f Ü</string>
     <string name="formatinsulinunits">%1$.2f Ü</string>
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
@@ -114,6 +114,32 @@
     <string name="addnew">Yeni ekle</string>
     <string name="addnew_above">Yukarı yeni ekle</string>
     <string name="wrong_pump_data">Veriler farklı pompadan geliyor. Pompa durumunu sıfırlamak için pompa sürücüsünü değiştirin.</string>
+    <string name="bg_label">KŞ</string>
+    <string name="calibration">Kalibrasyon</string>
+    <string name="alarminxmin">Alarmı %1$d dakika içinde çalıştır</string>
+    <string name="treatmentdeliveryerror">Bolus bir hata bildirdi. Gerçek teslim edilen miktarı manuel olarak kontrol edin</string>
+    <string name="bolus_reminder">Bolus hatırlatıcısı</string>
+    <string name="duration_label">Süre</string>
+    <string name="shortgramm">gr</string>
+    <string name="pumpsuspended">Pompa durduldu</string>
+    <string name="notconfigured">Yapılandırılmadı</string>
+    <string name="loopsuspended">Döngü duraklatıldı</string>
+    <string name="trend_arrow">Trend oku</string>
+    <string name="a11y_autosens_label">Oto duyarlılık</string>
+    <string name="value_unavailable_short">yok</string>
+    <string name="required">iht.</string>
+    <string name="a11y_arrow_double_down">hızla düşüyor</string>
+    <string name="a11y_arrow_single_down">düşüyor</string>
+    <string name="a11y_arrow_forty_five_down">yavaşça düşüyor</string>
+    <string name="a11y_arrow_flat">sabit</string>
+    <string name="a11y_arrow_forty_five_up">yavaşça yükseliyor</string>
+    <string name="a11y_arrow_single_up">yükseliyor</string>
+    <string name="a11y_arrow_double_up">hızla yükseliyor</string>
+    <string name="a11y_arrow_none">yok</string>
+    <string name="a11y_arrow_unknown">bilinmiyor</string>
+    <string name="a11y_high">yüksek</string>
+    <string name="a11y_inrange">aralık içinde</string>
+    <string name="a11y_low">düşük</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
     <string name="pumplimit">pompa sınırı</string>
@@ -280,7 +306,7 @@
     <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada Android APS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
+    <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada AAPS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">S</string>
@@ -361,6 +387,7 @@
     <string name="uel_export_settings">AYARLARI DIŞA AKTAR</string>
     <string name="uel_import_settings">AYARLARI İÇE AKTAR</string>
     <string name="uel_reset_databases">VERİTABANLARINI SIFIRLA</string>
+    <string name="uel_cleanup_databases">TEMİZLEME VERİTABANLARI</string>
     <string name="uel_export_databases">VERİTABANINI DIŞA AKTAR</string>
     <string name="uel_import_databases">VERİTABANINI İÇE AKTAR</string>
     <string name="uel_otp_export">OTP DIŞA AKTAR</string>
@@ -397,7 +424,7 @@
     <string name="valueoutofrange">»%1$s« sınırların dışında</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f sınırların dışında</string>
     <string name="basal_value">Bazal değer</string>
-    <string name="nsclient_version_does_not_match">NSClient sürümü, AndroidAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
+    <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f Ü</string>
     <string name="carbs_g">Karbonhidrat %1$d g</string>
@@ -485,11 +512,13 @@
     <string name="autotune_update_local_profile_message">OtoAyar Profili ile %1$s profili güncellensin mi?</string>
     <string name="autotune_revert_local_profile_message">Giriş Profili ile %1$s profili geri alınsın mı?</string>
     <string name="autotune_profile_invalid">Profil geçersiz</string>
-    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştırıldı</string>
-    <string name="autotune_run_with_autoswitch">OtoAyar çalıştırıldı ve profil otomatik olarak değiştirildi</string>
+    <string name="autotune_run_without_autoswitch">OtoAyar profil değiştirme olmadan çalıştı</string>
+    <string name="autotune_run_with_autoswitch">OtoAyar çalıştı ve profil otomatik olarak değiştirildi</string>
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
     <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

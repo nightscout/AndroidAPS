@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="xdrip_not_installed">xdrip+ не установлен</string>
+    <string name="calibration_sent">Калибровка отправлена на xDrip+</string>
+    <string name="bg_label">ГК</string>
+    <string name="missed_bg_readings">Пропущенные данные СК</string>
+    <string name="time_to_eat">Пора есть</string>
+    <string name="enable_bolus_advisor">Вкл помощник болюса</string>
+    <string name="enable_bolus_advisor_summary">Воспользуйтесь напоминанием для того, чтобы начать есть позже, вместо того, чтобы задействовать помощник болюса на высоких значениях ГК (\"пре-болюс\")</string>
+    <string name="bolus_advisor">Помощник болюса</string>
+    <string name="bolus_advisor_message">У вас высокая гликемия. Лучше подождать, чем есть сейчас. Хотите сделать болюс на коррекцию и установить напоминание о приеме пищи? В этом случае углеводы не будут записаны и после напоминания надо будет снова воспользоваться помощником.</string>
+    <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
+    <string name="executing_right_now">Команда выполняется</string>
+    <string name="basal_value_below_minimum">значение базала ниже минимума. профиль не создан!</string>
+    <string name="request">Запрос</string>
+    <string name="permission">Права доступа</string>
+    <string name="need_whitelisting">для корректной работы %1$s необходимо включить в белый список оптимизации батареи</string>
+    <string name="need_system_window_permission">Приложению требуется разрешение системного окна для уведомлений</string>
+    <string name="need_location_permission">Приложению требуется разрешение на доступ к местоположению для сканирования BT и идентификации WiFi</string>
+    <string name="need_storage_permission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
+    <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
+</resources>

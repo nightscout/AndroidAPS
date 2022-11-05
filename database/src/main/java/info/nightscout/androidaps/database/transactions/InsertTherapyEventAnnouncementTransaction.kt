@@ -13,7 +13,7 @@ class InsertTherapyEventAnnouncementTransaction(
                 timestamp = System.currentTimeMillis(),
                 type = TherapyEvent.Type.ANNOUNCEMENT,
                 duration = 0, note = error,
-                enteredBy = "AndroidAPS",
+                enteredBy = "AAPS",
                 glucose = null,
                 glucoseType = null,
                 glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,

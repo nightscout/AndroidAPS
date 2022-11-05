@@ -20,9 +20,6 @@ android {
 }
 
 dependencies {
-    // shared needed for OpenForTesting
-    implementation project(':shared')
-
     api "androidx.core:core-ktx:$core_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
@@ -48,5 +45,5 @@ dependencies {
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.androidaps.annotations.OpenForTesting'
+    annotation 'info.nightscout.androidaps.annotations.DbOpenForTesting'
 }

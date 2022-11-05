@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
+    <string name="dialog_canceled">Finestra di dialogo cancellata</string>
+    <string name="start_activity_tt">Avvia TT Attività fisica</string>
+    <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
+    <string name="start_hypo_tt">Avvia TT Ipoglicemia</string>
+    <string name="time_offset">Offset</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
+    <string name="a11y_carb_reminder">imposta promemoria</string>
+    <!--    Widget-->
+    <string name="widget_description">AAPS widget</string>
+</resources>

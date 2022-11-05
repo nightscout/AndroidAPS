@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="constraint_applied">Constraint applied!</string>
+    <string name="bolus_constraint_applied">Bolus constraint applied</string>
+    <string name="carbs_constraint_applied">Carbs constraint applied</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog canceled</string>
+    <string name="start_activity_tt">Start Activity TT</string>
+    <string name="start_eating_soon_tt">Start Eating soon TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Time offset</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Remind to bolus later</string>
+
+    <string name="a11y_carb_reminder">set reminder</string>
+
+    <!--    Widget-->
+    <string name="configure">Configure opacity</string>
+    <string name="widget_description">AAPS widget</string>
+
+    <!--     Activities-->
+    <string name="activity_monitor">Activity monitor</string>
+    <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
+    <string name="statistics">Statistics</string>
+    <string name="calculation_in_progress">Calculation in progress</string>
+    <string name="invalid_age">Invalid age entry</string>
+    <string name="invalid_weight">Invalid weight entry</string>
+    <string name="id">ID:</string>
+    <string name="submit">Submit</string>
+    <string name="age">Age</string>
+    <string name="weight_label">Weight</string>
+    <string name="most_common_profile">Most common profile:</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+
+    <!-- CareDialog -->
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Other</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+
+</resources>

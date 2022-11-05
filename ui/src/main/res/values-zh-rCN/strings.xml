@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
+    <string name="dialog_canceled">对话框已取消</string>
+    <string name="start_activity_tt">开始运动临时目标</string>
+    <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
+    <string name="start_hypo_tt">开始低的临时目标</string>
+    <string name="time_offset">时区偏移</string>
+    <string name="unit_minute_short">分钟</string>
+    <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
+    <string name="a11y_carb_reminder">设置提醒</string>
+    <!--    Widget-->
+</resources>

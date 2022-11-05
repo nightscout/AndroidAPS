@@ -20,7 +20,7 @@
     <string name="disconnected">Disconnesso</string>
     <string name="disconnecting">Disconnessione</string>
     <string name="waiting_for_disconnection">In attesa della disconnessione</string>
-    <string name="androidaps_start">AndroidAPS avviato</string>
+    <string name="androidaps_start">AAPS avviato</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -114,6 +114,12 @@
     <string name="addnew">Aggiungi nuovo</string>
     <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
+    <string name="alarminxmin">Esegui allarme in %1$d min</string>
+    <string name="treatmentdeliveryerror">Segnalato errore sul bolo. Controlla manualmente la reale quantità erogata</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Micro sospeso</string>
+    <string name="notconfigured">Non configurato</string>
+    <string name="loopsuspended">Loop sospeso</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -280,7 +286,7 @@
     <string name="versionavailable">Versione %1$s disponibile</string>
     <string name="version_expire">Versione: %1$s | Scadenza: %2$s</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Per favore riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
+    <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
     <string name="tuesday_short">M</string>
@@ -361,6 +367,7 @@
     <string name="uel_export_settings">ESPORTA IMPOSTAZIONI</string>
     <string name="uel_import_settings">IMPORTA IMPOSTAZIONI</string>
     <string name="uel_reset_databases">RESETTA DATABASE</string>
+    <string name="uel_cleanup_databases">PULIZIA DATABASE</string>
     <string name="uel_export_databases">ESPORTA DATABASE</string>
     <string name="uel_import_databases">IMPORTA DATABASE</string>
     <string name="uel_otp_export">ESPORTAZIONE OTP</string>
@@ -397,7 +404,7 @@
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
-    <string name="nsclient_version_does_not_match">La versione di NSClient non corrisponde alla versione di AndroidAPS. Aggiorna.</string>
+    <string name="nsclient_version_does_not_match">La versione di AAPSClient non corrisponde alla versione di AAPS. Aggiorna.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>
@@ -490,6 +497,7 @@
     <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
     <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
     <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
+    <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

@@ -13,15 +13,10 @@
     <string name="nav_resetdb">Datenbanken zurücksetzen</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="nav_exit">Schließen</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
     <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
     <string name="description_objectives">Das Programm kennenlernen</string>
     <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
-    <string name="description_insulin_rapid">Insulinprofil für Humalog und NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulinprofil für Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulin-Voreinstellung für Lyumjev</string>
-    <string name="description_insulin_free_peak">Erlaubt dir, das Wirkmaximum der Insulinaktivität zu definieren, und sollte nur von erfahrenen Anwendern genutzt werden</string>
     <string name="description_loop">Aktiviere oder deaktiviere die Anwendung, die den Loop ausführt.</string>
     <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
     <string name="description_ama">Stand des Algorithmus in 2017</string>
@@ -40,13 +35,10 @@
     <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
     <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
     <string name="description_treatments">Speichert alle eingegebenen Behandlungen</string>
-    <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
-    <string name="description_sms_communicator">AndroidAPS mit SMS-Befehlen fernsteuern.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="sms_iob">IOB:</string>
     <string name="treatments_iobtotal_label_string">Gesamt IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Ges. IOB Aktivität:</string>
     <string name="tempbasals_realduration_label_string">Dauer:</string>
@@ -54,9 +46,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
-    <string name="treatments_wizard_bg_label">BZ</string>
     <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_carbs_label">Kohlenhydrate</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="bolus_iob_label">Bolus-IOB</string>
     <string name="openapsma_run">Ausführen</string>
@@ -73,15 +63,12 @@
     <string name="openapsma_noglucosedata">Keine BZ-Werte verfügbar</string>
     <string name="openapsma_request_label">Anfrage</string>
     <string name="delta">Delta</string>
-    <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfiguration</string>
     <string name="overview">Übersicht</string>
     <string name="treatments">Behandlungen</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
     <string name="configbuilder_pump">Pumpe</string>
-    <string name="configbuilder_pump_description">Welche Pumpe möchtest Du mit AndroidAPS nutzen?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Welches Profil soll AndroidAPS nutzen?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Welcher APS-Algorithmus soll Therapieanpassungen vornehmen?</string>
     <string name="configbuilder_general">Allgemein</string>
@@ -89,7 +76,6 @@
     <string name="configbuilder_constraints_description">Welche Beschränkungen werden angewendet?</string>
     <string name="constraints">Beschränkungen</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_loop_description">Nutze dies, um die Loop-Integration von AndroidAPS zu aktivieren.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Beschränkungen angewendet</string>
     <string name="loop_tbrsetbypump_label">TBR der Pumpe</string>
@@ -97,16 +83,11 @@
     <string name="safety">Sicherheit</string>
     <string name="openapsma_disabled">Plugin ist deaktiviert</string>
     <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht.</string>
-    <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
     <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_treatment_label">Bolus</string>
-    <string name="overview_calculator_label">Rechner</string>
-    <string name="constraintapllied">Beschränkung angewendet!</string>
-    <string name="sms_bolus">Bolus:</string>
-    <string name="sms_basal">Basal:</string>
+    <string name="calculator_label">Rechner</string>
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
-    <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS-Modus</string>
     <string name="closedloop">Closed Loop</string>
@@ -117,13 +98,10 @@
     <string name="carbssuggestion">Kohlenhydrate Vorschlag</string>
     <string name="unsupportednsversion">Nicht unterstützte Nightscout-Version</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
-    <string name="bolusconstraintapplied">Bolus-Beschränkung angewendet</string>
-    <string name="carbsconstraintapplied">Kohlenhydrat-Beschränkung erreicht</string>
     <string name="careportal_newnstreatment_other">Anderes</string>
     <string name="careportal_newnstreatment_meter">Messgerät</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">KH-Zeit</string>
-    <string name="careportal_newnstreatment_duration_label">Dauer</string>
     <string name="profile_label">Profil</string>
     <string name="careportal_newnstreatment_glucosetype">Glukoseart</string>
     <string name="overview_tempbasal_button">TBR</string>
@@ -163,60 +141,6 @@
     <string name="end_user_license_agreement_i_understand">Ich verstehe und stimme zu.</string>
     <string name="save">Speichern</string>
     <string name="reloadprofile">Profil neuladen</string>
-    <string name="smscommunicator">SMS-Kommunikator</string>
-    <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
-    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode">Um einen Bolus von %1$.2f IE abzugeben, antworte mit dem Code %2$s.</string>
-    <string name="smscommunicator_mealbolusreplywithcode">Um einen Mahlzeitenbolus von %1$.2f IE abzugeben, antworte mit  dem Code %2$s.</string>
-    <string name="smscommunicator_temptargetwithcode">Um ein temporäres Ziel von %1$s zu setzen, antworte mit dem Code %2$s</string>
-    <string name="smscommunicator_temptargetcancel">Um das temporäre Ziel zu stoppen, antworte mit dem Code %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">Um die SMS-Fernsteuerung zu deaktivieren, antworte mit dem Code %1$s\n\nBeachte, dass Du diesen nur am AAPS-Master-Smartphone wieder aktivieren kannst.</string>
-    <string name="smscommunicator_stoppedsms">SMS-Fernsteuerung gestoppt. Verwende das AAPS-Master-Smartphone, um sie wieder zu aktivieren.</string>
-    <string name="smscommunicator_calibrationreplywithcode">Um die Kalibrierung %1$.2f zu senden, antworte mit dem Code %2$s.</string>
-    <string name="smscommunicator_bolusfailed">Bolus fehlgeschlagen</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Minimale Dauer in Minuten, die nach einem Remote-Bolus verstrichen sein muss, bevor ein neuer abgegeben werden kann.</string>
-    <string name="smscommunicator_remotebolusmindistance">Anzahl der Minuten, die mindestens zwischen zwei Remote-Bolusabgaben liegen müssen.</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Aus Sicherheitsgründen musst Du mindestens zwei Telefonnummern eintragen, um diese Voreinstellung zu ändern.</string>
-    <string name="bolusrequested">Werde %1$.2f IE abgeben</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
-    <string name="smscommunicator_mealbolusdelivered">Mahlzeiten-Bolus %1$.2f IE erfolgreich abgegeben</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Ziel %1$s für %2$d Minuten</string>
-    <string name="smscommunicator_tt_set">Ziel %1$s für %2$d Minuten erfolgreich gesetzt.</string>
-    <string name="smscommunicator_tt_canceled">Temporäres Ziel wurde erfolgreich abgebrochen</string>
-    <string name="smscommunicator_remotecommandsallowed">Erlaube Fernsteuerung per SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Loop wurde deaktiviert.</string>
-    <string name="smscommunicator_loophasbeenenabled">Lopp wurde aktiviert.</string>
-    <string name="smscommunicator_loopisenabled">Loop ist aktiviert.</string>
-    <string name="smscommunicator_pumpconnectwithcode">Um die Pumpe zu verbinden, antworte mit dem Code %1$s</string>
-    <string name="smscommunicator_pumpconnectfail">Verbindung zur Pumpe fehlgeschlagen</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Um die Verbindung zur Pumpe für %1$d Minuten zu trennen, antworte mit dem Code %2$s</string>
-    <string name="smscommunicator_pumpdisconnected">Verbindung zur Pumpe getrennt</string>
-    <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
-    <string name="smscommunicator_remotecommandnotallowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolusabgabe aus der Ferne nicht verfügbar. Versuche es später erneut.</string>
-    <string name="smscommunicator_basalreplywithcode">Um eine Basalrate von %1$.2f IE/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">Um das Profil auf %1$s %2$d%% zu setzen, antworte mit dem Code %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Um einen Verzögerungs-Bolus von %1$.2f IE über %2$d Minuten abzugeben, antworte mit dem Code %3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">Um %1$dg Kohlenhydrate um %2$s einzugeben, antworte mit dem Code %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Um die Basalrate von %1$d%% für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Um das Loopen für %1$d Minuten zu pausieren, antworte mit dem Code %2$s.</string>
-    <string name="smscommunicator_loopresumereplywithcode">Um den Loop fortzusetzen, antworte mit dem Code %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">Um den Loop zu aktivieren, antworte mit dem Code %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Um den Loop zu deaktivieren, antworte mit dem Code %1$s</string>
-    <string name="smscommunicator_tempbasalset">TBR mit %1$.2f IE/h für %2$d min wurde erfolgreich gestartet.</string>
-    <string name="smscommunicator_extendedset">Der erweiterte Bolus %1$.2f IE/h für %2$d Minuten wurde erfolgreich gestartet</string>
-    <string name="smscommunicator_carbsset">%1$d g Kohlenhydrate erfolgreich erfasst</string>
-    <string name="smscommunicator_carbsfailed">Eingabe von %1$d g Kohlenhydraten ist fehlgeschlagen.</string>
-    <string name="smscommunicator_tempbasalset_percent">Die temporäre Basalrate wurde erfolgreich für %2$d Minuten auf %1$d%% gesetzt.</string>
-    <string name="smscommunicator_tempbasalfailed">Das Starten der TBR ist fehlgeschlagen.</string>
-    <string name="smscommunicator_extendedfailed">Die Abgabe des erweiterten Bolus ist fehlgeschlagen.</string>
-    <string name="smscommunicator_basalstopreplywithcode">Antworte mit dem Code %1$s, um die temporäre Basalrate zu beenden.</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Antworte mit dem Code %1$s, um den erweiterten Bolus zu beenden.</string>
-    <string name="smscommunicator_tempbasalcanceled">TBR abgebrochen</string>
-    <string name="smscommunicator_extendedcanceled">Die Abgabe des erweiterten Bolus wurde abgebrochen.</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Das Abbrechen der TBR ist fehlgeschlagen.</string>
-    <string name="smscommunicator_extendedcancelfailed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen.</string>
-    <string name="smscommunicator_unknowncommand">Unbekannter Befehl oder falsche Antwort</string>
     <string name="quickwizard">QuickWizard</string>
     <string name="quickwizardsettings">QuickWizard-Einstellungen</string>
     <string name="overview_editquickwizard_buttontext">Schaltflächen-Text:</string>
@@ -238,7 +162,6 @@
     <string name="button3">Schaltfläche 3</string>
     <string name="units_colon">Einheiten:</string>
     <string name="units">Einheiten</string>
-    <string name="dia">DIA</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
     <string name="prefs_range_summary">Hoch- und Niedrig-Werte für die Übersicht- und die Smartwatch-Anzeige</string>
     <string name="low_mark">Niedrig-Markierung</string>
@@ -247,13 +170,9 @@
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
     <string name="basal_rate">Basalrate</string>
-    <string name="basalvaluebelowminimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
-    <string name="sms_actualbg">BZ:</string>
-    <string name="sms_lastbg">Letzter BZ:</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Anhaltende Benachrichtigung</string>
     <string name="old_data">VERALTETE DATEN</string>
-    <string name="sms_minago">%1$d\' her</string>
     <string name="localprofile">Profil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array mit %1$d Elementen.\nWert:</string>
@@ -273,7 +192,6 @@
     <string name="treatments_shortname">BEH</string>
     <string name="objectives_shortname">ZIEL</string>
     <string name="wear_shortname">UHR</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Kurze Tab-Überschriften</string>
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
     <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle wie xDrip+ Signalrauschen haben.</string>
@@ -287,13 +205,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standarwert: 2\nBolus snooze (\"Bolus-Schlummer\") bremst den Loop nach einem Mahleiten-Bolus, damit dieser nicht mit niedrigen TBR reagiert, wenn Du gerade gegessen hast. Beispiel: Der Standardwert 2 bewirkt, dass bei einem 3 Stunden DIA der Bolus snooze während 1.5 Stunden nach dem Bolus linear ausläuft (3 h Dia / 2 = 1.5 h Bolus snooze).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0 (AMA) or 8.0 (SMB)\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3 mg/dl/5min (AMA) bzw. 8 mg/dl/5min (SMB). Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung!\nNormalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
-    <string name="smscommunicator_invalidphonennumber">Falsche/ungültige Telefonnummer</string>
-    <string name="overview_calibration">Kalibrierung</string>
-    <string name="xdripnotinstalled">xDrip+ nicht installiert</string>
-    <string name="calibrationsent">Kalibrierung an xDrip+ gesendet+</string>
-    <string name="smscommunicator_calibrationsent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein+.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ erhält keine Kalibrierungen</string>
-    <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="executing">Wird ausgeführt</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
@@ -319,7 +230,6 @@
     <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
     <string name="wear_detailedIOB_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="nosuccess">Nicht erfolgreich - bitte Telefon prüfen</string>
-    <string name="notavailable">n/a</string>
     <string name="patientage">Patiententyp</string>
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
@@ -329,11 +239,7 @@
     <string name="patientage_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
     <string name="patient_name">Name des Patienten</string>
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
     <string name="Glimp">Glimp</string>
-    <string name="needwhitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
-    <string name="loopsuspended">Loop pausiert</string>
-    <string name="loopsuspendedfor">Pausiert (%1$d min)</string>
     <string name="suspendloopfor1h">Pausiere Loop für 1 h</string>
     <string name="suspendloopfor2h">Pausiere Loop für 2 h</string>
     <string name="suspendloopfor3h">Pausiere Loop für 3 h</string>
@@ -352,18 +258,12 @@
     <string name="duration10h">10 Std.</string>
     <string name="resume">Fortsetzen</string>
     <string name="reconnect">Pumpe erneut verbinden</string>
-    <string name="smscommunicator_wrongduration">Falsche Dauer</string>
-    <string name="smscommunicator_loopsuspended">Loop pausiert</string>
-    <string name="smscommunicator_loopresumed">Loop wurde fortgesetzt</string>
     <string name="bg_trend_label">15 min Trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Logge App-Start in Nightscout</string>
     <string name="restartingapp">App wird beendet, um neue Einstellungen zu laden.</string>
     <string name="configbuilder_insulin_description">Welchen Insulin-Typ verwendest Du?</string>
-    <string name="fastactinginsulincomment">NovoRapid, NovoLog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
-    <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Aktiviere Superbolus im Bolus-Rechner</string>
     <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Bolus-Rechner. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
@@ -389,7 +289,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Über</string>
-    <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
     <string name="smscommunicator_missingphonestatepermission">Fehlende Berechtigung für den Zugriff auf den Telefonstatus</string>
     <string name="xdripstatus_settings">xDrip+ Status (Uhr)</string>
     <string name="xdripstatus">xDrip+ Statuszeile (Uhr)</string>
@@ -429,7 +328,6 @@
     <string name="sensitivityweightedaverage">Durchschnittliche Sensitivität</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
-    <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
@@ -439,14 +337,6 @@
     <string name="enablesmb">Aktiviere SMB</string>
     <string name="enablesmb_summary">Benutze Super-Mikro-Boli anstelle von temporären Basalraten, um eine schnellere Wirkung zu erreichen.</string>
     <string name="enableuam_summary">Erkennung von unangekündigten Mahlzeiten</string>
-    <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
-    <string name="insulin_peak_time">Wirkungshoch [min]</string>
-    <string name="insulin_peak">Gipfel</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
     <string name="activate_profile">Aktiviere Profil</string>
     <string name="invalid">Ungültig</string>
     <string name="careportal_newnstreatment_percentage_label">Prozentsatz</string>
@@ -462,14 +352,11 @@
     <string name="wearcontrol_title">Steuerung durch die Uhr</string>
     <string name="wearcontrol_summary">Setze temporäre Ziele und Behandlungen mit der Uhr</string>
     <string name="food">Essen</string>
-    <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<nichts>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
     <string name="shortprotein">Prot</string>
     <string name="shortfat">Ft</string>
-    <string name="executingrightnow">Befehl wird zurzeit ausgeführt</string>
-    <string name="missed_bg_readings">BZ-Werte fehlen</string>
     <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
     <string name="gradually_increase_notification_volume">Lautstärke für Alarme und Benachrichtigungen schrittweise erhöhen</string>
     <string name="localalertsettings_title">Lokale Alarme</string>
@@ -532,7 +419,6 @@
     <string name="ignore5m">5 Min. ignorieren</string>
     <string name="ignore15m">15 Min. ignorieren</string>
     <string name="ignore30m">30 Min. ignorieren</string>
-    <string name="required">angef.</string>
     <string name="nav_historybrowser">Historie</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
@@ -547,9 +433,6 @@
     <string name="allow_automated_crash_reporting">Erlauben, dass automatische Fehler-Berichte und Nutzungsstatistiken an die Entwickler über den Service von Fabric.io gesendet werden</string>
     <string name="g5appnotdetected">Bitte aktualisiere deine Dexcom App auf eine unterstützte Version</string>
     <string name="dexcom_app_not_installed">Dexcom App ist nicht installiert.</string>
-    <string name="start_activity_tt">Starte Aktivitäts-TT</string>
-    <string name="start_eating_soon_tt">Starte Essens-TT</string>
-    <string name="temptargetshort">TT</string>
     <string name="do_not_bolus_record_only">Bolus nur erfassen</string>
     <string name="category">Kategorie</string>
     <string name="subcategory">Unterkategorie</string>
@@ -562,8 +445,6 @@
     <string name="overview_show_cob">Aktive Kohlenhydrate</string>
     <string name="overview_show_iob">Aktives Insulin</string>
     <string name="overview_show_basals">Basal</string>
-    <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
-    <string name="start_hypo_tt">Starte Hypo-TT</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
@@ -582,7 +463,6 @@
     <string name="limitingiob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>
-    <string name="readstatusfailed">Lesen des Status fehlgeschlagen</string>
     <string name="record_pump_site_change">Katheter-Wechsel erfassen</string>
     <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
     <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>
@@ -619,7 +499,6 @@
     <string name="openapsama_bolussnooze_dia_divisor">Bolus-Snooze-DIA-Divisor</string>
     <string name="openapsama_max_daily_safety_multiplier">Sicherheitsmultiplikator des Basalhöchstwertes</string>
     <string name="openapsama_current_basal_safety_multiplier">Sicherheitsmultiplikator der aktuellen Basalrate</string>
-    <string name="value_unavailable_short">N/A</string>
     <string name="virtualpump_type">Typ der virtuellen Pumpe</string>
     <string name="virtualpump_definition">Pumpen-Definition</string>
     <string name="virtualpump_pump_def">Bolus: Schritt=%1$s\nVerzögerter Bolus: [Schritt=%2$s, Dauer=%3$smin-%4$sh]\nBasal: Schritt=%5$s\nTBR: %6$s (bei %7$s), Dauer=%8$smin-%9$sh\n%10$s</string>
@@ -631,7 +510,6 @@
     <string name="welcometosetupwizard">Willkommen im Setup-Assistenten. Er führt Dich durch den Setup-Prozess\n</string>
     <string name="readstatus">Status lesen</string>
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
-    <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/de/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">Nightscout-Client ist für die Verbindung zu Nightscout zuständig. Du kannst diesen Teil jetzt überspringen, aber Du wirst nicht in der Lage sein, Zielsetzungen zu erfüllen, bis Du diesen eingerichtet hast.</string>
@@ -640,12 +518,7 @@
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
     <string name="startobjective">Starte deine erste Zielsetzung</string>
-    <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
-    <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
-    <string name="needlocationpermission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
-    <string name="needstoragepermission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
-    <string name="request">Anfordern</string>
     <string name="open_navigation">Menü öffnen</string>
     <string name="close_navigation">Menü schließen</string>
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
@@ -670,7 +543,6 @@
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
     <string name="storedsettingsfound">Gespeicherte Einstellungen gefunden</string>
-    <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>
@@ -688,8 +560,6 @@
     <string name="nav_logsettings">Log-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
-    <string name="time_offset">Zeitversatz</string>
-    <string name="bolus_reminder">Später an Bolus erinnern</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -699,7 +569,6 @@ Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="dexcom_lognssensorchange_title">Speichere Sensor Wechsel in Nightscout</string>
-    <string name="dexcom_lognssensorchange_summary">Ereignis \"Sensorwechsel\" bei Sensorstart automatisch in NS erstellen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
@@ -721,11 +590,6 @@ Unerwartetes Verhalten.</string>
     <string name="dst_loop_disabled_warning">Zeitumstellung vor weniger als 3 Stunden - Closed Loop deaktiviert</string>
     <string name="storage">interne Speicherbegrenzung</string>
     <string name="diskfull">Mindestens %1$d MB freier interer Speicher benötigt! Loop abgeschaltet!</string>
-    <string name="wrongformat">Falsches Format</string>
-    <string name="wrongTbrDuration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
-    <string name="sms_wrongcode">Falscher Code. Befehl wurde abgebrochen.</string>
-    <string name="notconfigured">Nicht konfiguriert</string>
-    <string name="profileswitchcreated">Profilwechsel wurde erstellt</string>
     <string name="versionChecker">Versionsprüfer</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
@@ -742,12 +606,10 @@ Unerwartetes Verhalten.</string>
     <string name="deliverpartofboluswizard">Der Bolus-Rechner führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
     <string name="snooze">Schlummern</string>
     <string name="increasingmaxbasal">Der Wert max basal wird erhöht, weil Du ihn niedriger eingestellt hast als die höchste Basalrate in Deinem Profil.</string>
-    <string name="smscommunicator_messagebody">Ungültiger Inhalt</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="unit_minute_short">Min.</string>
     <string name="profile_name">Profilname:</string>
     <string name="selected_profile">Ausgewählt:</string>
     <string name="unitsnosemicolon">Einheiten</string>
@@ -772,7 +634,6 @@ Unerwartetes Verhalten.</string>
     <string name="id">ID:</string>
     <string name="submit">Senden</string>
     <string name="mostcommonprofile">Meistgenutztes Profil:</string>
-    <string name="survey_comment">Hinweis: Nur Daten, die auf diesem Bildschirm sichtbar sind, werden anonym hochgeladen. Die ID wird dieser Installation von AndroidAPS zugeordnet. Du kannst erneut Daten senden, wenn sich Dein Hauptprofil geändert hat. Lasse es aber es mindestens eine Woche lang laufen, damit dessen Ergebnis in der Time in Range sichtbar wird. Danke für Deine Unterstützung.</string>
     <string name="invalidage">Ungültige Altersangabe</string>
     <string name="invalidweight">Ungültige Gewichtsangabe</string>
     <string name="invalidpct">Ungültige % Eingabe</string>
@@ -801,27 +662,6 @@ Unerwartetes Verhalten.</string>
     <string name="loop_smbexecution_time_label">SMB Ausführungszeit</string>
     <string name="loop_tbrrequest_time_label">Temp. BR Anfragezeit</string>
     <string name="loop_tbrexecution_time_label">Temp. BR Ausführungszeit</string>
-    <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
-    <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
-    <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
-    <string name="smscomunicator_tab_otp_label">Konfiguration des Authentifikators</string>
-    <string name="smscommunicator_code_verify_label">Zu prüfender Code:</string>
-    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
-    <string name="smscommunicator_code_verify_info">Der Verifizierungscode besteht aus 6 Ziffern, die von Authenticator App (auch OTP genannt) angezeigt werden, gefolgt von 3 oder mehr Ziffern der obligatorischen PIN.</string>
-    <string name="smscommunicator_otp_reset_btn">Authentifikators zurücksetzen</string>
-    <string name="smscommunicator_otp_reset_title">Authentifikatorschlüssel zurücksetzen</string>
-    <string name="smscommunicator_otp_reset_prompt">Willst Du wirklich den Authentifikatorschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
-    <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
-    <string name="smscommunicator_otp_export_title">OTP-Secret exportieren</string>
-    <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
-    <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
-    <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
-    <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
-    <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
     <string name="overview_show_treatments">Behandlungen</string>
     <string name="overview_show_deviationslope">Steigung der Abweichung</string>
@@ -852,26 +692,13 @@ Unerwartetes Verhalten.</string>
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Profil kann nicht erstellt werden. Profil ist ungültig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
-    <string name="smscommunicator_pump_ureachable">Hinweis Pumpe nicht erreichbar</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
-    <string name="alarminxmin">Alarm in %1$d Min.</string>
-    <string name="bolusadvisor">Bolus-Berater</string>
-    <string name="bolusadvisormessage">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
-    <string name="enablebolusadvisor">Bolus-Berater aktivieren</string>
-    <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
-    <string name="timetoeat">Zeit zum Essen</string>
-    <string name="bolusreminder">Bolus-Erinnerung</string>
     <string name="enablebolusreminder">Bolus-Erinnerung aktivieren</string>
-    <string name="enablebolusreminder_summary">Erinnerung an späteren Bolus mit dem Assistenten verwenden
-        (\"Post-Bolus\")</string>
-    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
     <string name="clear_filter">Filter löschen</string>
-    <string name="trend_arrow">Trendpfeil</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
@@ -903,8 +730,6 @@ Unerwartetes Verhalten.</string>
     <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
     <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
     <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
-    <string name="sms_timeout_while_wating">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
-    <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
     <string name="missing_profile_name">Fehlender Profilname</string>
     <string name="error_in_ic_values">Fehler in IC-Werten</string>
@@ -930,18 +755,6 @@ Unerwartetes Verhalten.</string>
     <string name="a11_correction_percentage">korrektes Ergebnis mit %</string>
     <string name="a11_correction_units">korrektes Ergebnis mit Einheiten</string>
     <string name="not_available_full">Nicht verfügbar</string>
-    <string name="a11y_high">hoch</string>
-    <string name="a11y_inrange">im Zielbereich</string>
-    <string name="a11y_low">niedrig</string>
-    <string name="a11y_arrow_double_down">schnell fallend</string>
-    <string name="a11y_arrow_single_down">fallend</string>
-    <string name="a11y_arrow_forty_five_down">langsam fallend</string>
-    <string name="a11y_arrow_flat">stabil</string>
-    <string name="a11y_arrow_forty_five_up">Langsamer Anstieg</string>
-    <string name="a11y_arrow_single_up">steigend</string>
-    <string name="a11y_arrow_double_up">schnell steigend</string>
-    <string name="a11y_arrow_none">kein(e)</string>
-    <string name="a11y_arrow_unknown">unbekannt</string>
     <string name="a11y_graph">Diagramm</string>
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_bg_quality_recalculated">neu berechnet</string>
@@ -949,7 +762,6 @@ Unerwartetes Verhalten.</string>
     <string name="a11y_insulin_label">Insulin</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="a11y_carb_reminder">Erinnerung einstellen</string>
     <string name="a11y_add_new_profile">Neues Profil hinzufügen</string>
     <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
     <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
@@ -1008,7 +820,6 @@ Unerwartetes Verhalten.</string>
     <string name="show_loop">Zeige Loop an</string>
     <string name="count_selected">%1$d ausgewählt</string>
     <string name="sort_label">Sortieren</string>
-    <string name="dialog_canceled">Dialog abgebrochen</string>
     <string name="veryLow" comment="below 3.1">Sehr niedrig</string>
     <string name="low" comment="3.1-3.9">Niedrig</string>
     <string name="high" comment="10.0-13.9">Hoch</string>
@@ -1018,8 +829,6 @@ Unerwartetes Verhalten.</string>
     <string name="above" comment="above &quot;in range&quot;">Über</string>
     <string name="show_loop_records">Zeige Loop Datensätze</string>
     <string name="show_hide_records">Verberge Loop Datensätze</string>
-    <string name="widget_description">AndroidAPS Widget</string>
-    <string name="configure">Deckkraft konfigurieren</string>
     <string name="loop_status">Loop Status</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="profile1">Profil 1</string>
@@ -1027,7 +836,6 @@ Unerwartetes Verhalten.</string>
     <string name="login">Login</string>
     <string name="remove_all">Alle entfernen</string>
     <string name="reset_start">Start zurücksetzen</string>
-    <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
     <string name="a11y_open_settings">Einstellungen öffnen</string>
     <string name="a11y_set_carb_timer">setze Alarm für KH Timer</string>
     <string name="device_all">Alle</string>
@@ -1044,6 +852,5 @@ Unerwartetes Verhalten.</string>
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
-    <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
     <string name="dynisf_adjust_sensitivity">Empfindlichkeit und BZ anpassen</string>
 </resources>

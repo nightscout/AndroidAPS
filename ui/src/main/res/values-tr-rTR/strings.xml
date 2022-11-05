@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
+    <string name="constraint_applied">Sınırlaması uygulanır!</string>
+    <string name="bolus_constraint_applied">Bolus kısıtlaması uygulandı</string>
+    <string name="carbs_constraint_applied">Karbonhidrat kısıtlaması uygulandı</string>
+    <string name="temp_target_short">GH</string>
+    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
+    <string name="start_activity_tt">Egzersiz Başlat GH</string>
+    <string name="start_eating_soon_tt">Yakında Öğün GH</string>
+    <string name="start_hypo_tt">Hipo GH başlat</string>
+    <string name="time_offset">Saat farkı</string>
+    <string name="unit_minute_short">dk.</string>
+    <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
+    <string name="a11y_carb_reminder">hatırlatıcıyı kur</string>
+    <!--    Widget-->
+    <string name="widget_description">AAPS widget</string>
+</resources>
