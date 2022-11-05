@@ -175,7 +175,6 @@
     <string name="ic_short">G/I</string>
     <string name="isf_short">SI</string>
     <string name="target_short">CIBLE</string>
-    <string name="clone_label">Dupliquer</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Données recalculées utilisées</string>
