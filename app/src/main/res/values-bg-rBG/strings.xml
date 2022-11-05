@@ -32,19 +32,6 @@
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
     <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
     <string name="description_treatments">Записва всички процедури, които са били направени</string>
-    <string name="treatments_insulin_label_string">Инсулин:</string>
-    <string name="treatments_carbs_label_string">Вълехидрати:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Общо активен IOB:</string>
-    <string name="tempbasals_realduration_label_string">Прод.:</string>
-    <string name="tempbasals_netratio_label_string">Съотношение:</string>
-    <string name="tempbasals_netinsulin_label_string">Инс:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_wizard_tt_label">Вр.цел</string>
-    <string name="treatments_wizard_correction_label">Корекция</string>
-    <string name="bolus_iob_label">IOB от болуси</string>
     <string name="openapsma_run">Старт сега</string>
     <string name="vitualpump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="openapsma_lastrun_label">Последно изпълнение</string>
@@ -80,7 +67,6 @@
     <string name="openapsma_disabled">Модула е изключен</string>
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
-    <string name="overview_treatment_label">Болус</string>
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="xdrip">xDrip+</string>
@@ -91,7 +77,6 @@
     <string name="openloop_newsuggestion">Има ново предложение</string>
     <string name="carbssuggestion">Предложение</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Базален IOB</string>
     <string name="carb_time_label">ВХ след</string>
     <string name="profile_label">Профил</string>
     <string name="overview_tempbasal_button">Временен базал</string>
@@ -138,7 +123,6 @@
     <string name="overview_editquickwizard_valid">Валиден от:</string>
     <string name="overview_editquickwizardlistactivity_add">Добави</string>
     <string name="overview_quickwizard_item_edit_button">Редакция</string>
-    <string name="mealbolus">Хранене</string>
     <string name="correctionbous">Корекция</string>
     <string name="actions">Действия</string>
     <string name="ns_upload_only">(ОПАСНО ЗА ДЕАКТИВИРАНЕ) Само качвай данни в NS</string>
@@ -167,8 +151,6 @@
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_scriptdebugdata_label">От скрипта</string>
     <string name="openapsama_useautosens">Използвайте функцията за Autosens</string>
-    <string name="refresheventsfromnightscout">Презареди от NS</string>
-    <string name="deletefuturetreatments">Изтрий записите в бъдещето</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
     <string name="loop_shortname">ЦИК</string>
@@ -242,9 +224,6 @@
     <string name="duration10h">10 часа</string>
     <string name="resume">Възстанови</string>
     <string name="reconnect">Свържи помпа</string>
-    <string name="bg_trend_label">Δ за 15мин</string>
-    <string name="treatments_wizard_cob_label">СОВ</string>
-    <string name="superbolus">Суперболус</string>
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
     <string name="restartingapp">Рестартиране за да се приложат новите настройки.</string>
     <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
@@ -461,7 +440,6 @@
     <string name="virtualpump_type">Виртуална помпа тип</string>
     <string name="virtualpump_definition">Описание на помпата</string>
     <string name="virtualpump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Настройки на съветник</string>
     <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
     <string name="wear_display_settings">Настройки за визуализация</string>
     <string name="wear_general_settings">Основни настройки</string>
@@ -494,8 +472,6 @@
     <string name="resistance_lowers_target_summary">Когато се установи резистентност, намалява целевата глюкоза.</string>
     <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
     <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
-    <string name="show_invalidated">Покажи невалидните</string>
-    <string name="hide_invalidated">Скрий невалидните</string>
     <string name="remove_items">Премахни артикули</string>
     <string name="sort_items">Подреди артикули</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
@@ -515,8 +491,6 @@
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
-    <string name="treatments_wizard_total_label">Общо</string>
-    <string name="calculation_short">Калк</string>
     <string name="sendlogfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
     <string name="loop_openmode_min_change">Минимална стойност за промяна [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
@@ -548,17 +522,12 @@
     <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
     <string name="increasingmaxbasal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
-    <string name="format_percent">%1$d %%</string>
     <string name="selected_profile">Избрано:</string>
     <string name="unitsnosemicolon">Единици</string>
     <string name="objectives_button_unfinish">Изчисти приключение</string>
     <string name="objectives_button_unstart">Изчисти стартираните</string>
     <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
     <string name="setupwizard_units_prompt">Изберете единиците, в които искате да работите</string>
-    <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
     <string name="invalidpct">Невалидна стойност в %</string>
@@ -614,14 +583,12 @@
     <string name="chart_menu">Меню на графиката</string>
     <string name="clear_filter">Премахни филтъра</string>
     <string name="cannula">Канюла</string>
-    <string name="userentry">Потербителска настройка</string>
     <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
     <string name="email_address">Електронна поща</string>
     <string name="privacy_settings">Настройки за поверителност</string>
     <string name="privacy_summary">Можете да посочите електронна поща, ако искате да бъдете уведомени за системни проблеми. Това не е автоматичен процес. Разработчиците ще се свържат с вас в случай на опасна ситуация.</string>
     <string name="full_sync">Пълна синхронизация</string>
     <string name="full_sync_comment">Пълна синхронизация? Може да отнеме много часове и докато не приключи вие няма да виждате нови данни в NS.</string>
-    <string name="prime">Пълнене</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болуси, въглехидрати, и временни базали се изпращат към NS</string>
     <string name="ns_upload">Изпратете данните към NS</string>
