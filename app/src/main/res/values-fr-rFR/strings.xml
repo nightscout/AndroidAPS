@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">Recevoir les glycémies depuis xDrip+.</string>
     <string name="description_treatments">Enregistre tous les traitements qui ont été effectués</string>
     <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
-    <string name="treatments_insulin_label_string">Insuline:</string>
-    <string name="treatments_carbs_label_string">Glucides :</string>
-    <string name="treatments_iob_label_string">IA: </string>
-    <string name="treatments_iobtotal_label_string">IA Totale:</string>
-    <string name="treatments_iobactivitytotal_label_string">Activité IA Totale:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IA:</string>
-    <string name="tempbasals_iobtotal_label_string">IA Totale :</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Corr.</string>
-    <string name="bolus_iob_label">IA Bolus</string>
     <string name="openapsma_run">Exécuter maintenant</string>
     <string name="vitualpump_label">POMPE VIRTUELLE</string>
     <string name="openapsma_lastrun_label">Dernière exécution</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">Plugin désactivé</string>
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
-    <string name="overview_treatment_label">Traitement</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
     <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">IA Basal</string>
     <string name="carb_time_label">Décalage horaire</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Basal Temporaire</string>
@@ -145,7 +130,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_editquickwizard_valid">Valide:</string>
     <string name="overview_editquickwizardlistactivity_add">Ajouter</string>
     <string name="overview_quickwizard_item_edit_button">Éditer</string>
-    <string name="mealbolus">Repas</string>
     <string name="correctionbous">Corr.</string>
     <string name="actions">Actions</string>
     <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
@@ -174,8 +158,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsma_autosensdata_label">Données Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Débogage du Script</string>
     <string name="openapsama_useautosens">Utiliser la fonction Autosens</string>
-    <string name="refresheventsfromnightscout">Actualiser depuis NS</string>
-    <string name="deletefuturetreatments">Supprimer les futurs traitements</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BOUCLE</string>
@@ -249,9 +231,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="duration10h">10 heures</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Rebrancher la pompe</string>
-    <string name="bg_trend_label">Delta 15 min</string>
-    <string name="treatments_wizard_cob_label">GA</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Démarrage AAPS entré dans NS</string>
     <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
     <string name="configbuilder_insulin_description">Quel type d\'insuline utilisez-vous ?</string>
@@ -476,7 +455,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="virtualpump_type">Type de pompe virtuelle</string>
     <string name="virtualpump_definition">Définition de pompe</string>
     <string name="virtualpump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Paramètres assistant</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_display_settings">Parametres d\'affichage</string>
     <string name="wear_general_settings">Paramètres généraux</string>
@@ -512,9 +490,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resistance_lowers_target_summary">Quand une résistance est détectée, baisse de la glycémie cible</string>
     <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
     <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
-    <string name="careportal_removestartedevents">Suppr. entrées \"Démarrage AAPS\"</string>
-    <string name="show_invalidated">Montrer les entrées invalides</string>
-    <string name="hide_invalidated">Masquer les entrées invalides</string>
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
@@ -537,8 +512,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="nsmalfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Envoi des fichiers logs d\'aujourd\'hui aux développeurs avec l\'heure. Cas imprévu.</string>
     <string name="loop_openmode_min_change">Changement minimum [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
@@ -572,17 +545,12 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="partialboluswizard">Injecter ce pourcentage du bolus calculé par l’assistant [%]</string>
     <string name="deliverpartofboluswizard">L\'assistant bolus effectue le calcul mais seulement ce pourcentage de l\'insuline calculée est délivré. Utile avec l\'algorithme SMB.</string>
     <string name="increasingmaxbasal">Augmentation de la valeur du débit Basal max parce que ce paramètre est inférieur au débit Basal max de votre profil</string>
-    <string name="format_bg_isf">%1$s SI: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Sélectionné :</string>
     <string name="unitsnosemicolon">Unités</string>
     <string name="objectives_button_unfinish">Refaire l\'objectif</string>
     <string name="objectives_button_unstart">Suppression démarrée</string>
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
     <string name="setupwizard_units_prompt">Sélectionnez les unités dans lesquelles vous souhaitez afficher les valeurs</string>
-    <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
     <string name="invalidpct">% saisi invalide</string>
@@ -638,7 +606,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="chart_menu">Menu graphique</string>
     <string name="clear_filter">Effacer le filtre</string>
     <string name="cannula">Canule</string>
-    <string name="userentry">Entrées utilisateur</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
     <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="email_address">Adresse e-mail</string>
@@ -646,7 +613,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="privacy_summary">Vous pouvez fournir une adresse e-mail facultative si vous voulez être informé des plantages de l\'application. Ce n\'est pas un service automatisé. Vous serez contacté par les développeurs dans des situations dangereuses.</string>
     <string name="full_sync">Synchronisation complète</string>
     <string name="full_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et jusqu\'à la fin, vous ne verrez pas de nouvelles données sur NS.</string>
-    <string name="prime">Amorcer</string>
     <string name="ns_sync_options">Synchronisation</string>
     <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>
     <string name="ns_upload">Télécharger des données vers NS</string>
@@ -720,22 +686,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_unknown_action_string">Commande inconnue :</string>
     <string name="overview_editquickwizard_percentage">Pourcentage</string>
     <string name="app_default">Application par défaut</string>
-    <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
-    <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
-    <string name="refresh_from_nightscout">Rafraîchir à partir de Nightscout</string>
     <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
-    <string name="select_for_removal">Sélectionner pour suppression</string>
-    <string name="profile_changes">Changements de profil</string>
-    <string name="tempt_targets">Cibles Temp</string>
-    <string name="carbs_and_bolus">Glucides et bolus</string>
-    <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
-    <string name="no_records_available">Aucun enregistrement disponible</string>
-    <string name="hide_loop">Masquer la boucle</string>
-    <string name="show_loop">Afficher les entrées boucle</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
-    <string name="show_loop_records">Afficher les entrées de la boucle</string>
-    <string name="show_hide_records">Masquer les entrées de la boucle</string>
     <string name="loop_status">État de la boucle</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="profile1">Profil 1</string>
