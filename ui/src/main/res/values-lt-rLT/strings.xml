@@ -17,4 +17,6 @@
     <string name="age">Amžius</string>
     <string name="weight_label">Svoris</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>
