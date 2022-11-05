@@ -34,4 +34,6 @@
     <string name="bg_other">Autre</string>
     <string name="bg_meter">Lecteur</string>
     <string name="bg_sensor">Capteur</string>
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>
