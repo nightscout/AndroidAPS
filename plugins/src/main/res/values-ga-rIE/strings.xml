@@ -18,6 +18,27 @@
     <string name="insulin_shortname">INS</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <!-- Food-->
+    <string name="food">Bia</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortfat">Saill</string>
+    <string name="category">Catagóir</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="units_colon">Aonaid:</string>
+    <string name="profile_name">Ainm Próifíle:</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="basal_short">BUN</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <!-- Overview -->
 </resources>

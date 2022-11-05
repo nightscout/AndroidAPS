@@ -99,7 +99,6 @@
     <string name="please_choose_an_action_type">Escolha um tipo de ação</string>
     <string name="please_choose_a_trigger_type">Escolha um tipo de gatilho</string>
     <string name="triggers">Gatilhos:</string>
-    <string name="remove_label">REMOVER</string>
     <string name="preconditions">Precondições:</string>
     <string name="automation_event">Evento de automação</string>
     <string name="reorder_label">Reordenar</string>

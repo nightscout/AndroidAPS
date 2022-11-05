@@ -97,8 +97,56 @@
     <string name="insulin_peak_time">Temps del pic [min]</string>
     <string name="free_peak_oref">Oref sense pic</string>
     <string name="rapid_acting_oref">Oref ràpida</string>
-    <string name="ultrarapid_oref">Oref ultra ràpida</string>
     <string name="dia_too_short">DIA de %1$f massa curt - utilitzant %2$f!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Mostrar informació del llaç a la vostra esfera xDrip+.</string>
+    <!-- Food-->
+    <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
+    <string name="filter">Filtre</string>
+    <string name="food">Aliments</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Greix</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Subcategoria</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Definir un perfil disponible fora de línia.</string>
+    <string name="units_colon">Unitats:</string>
+    <string name="missing_profile_name">Falta el nom del perfil</string>
+    <string name="error_in_ic_values">Error en els valors de IC</string>
+    <string name="error_in_basal_values">Error en els valors de basal</string>
+    <string name="error_in_target_values">Error en els valors de l\'objectiu </string>
+    <string name="error_in_isf_values">Error en els valors de ISF</string>
+    <string name="invalid_profile_not_accepted">Perfil invàlid %1$s no acceptat de NS</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errors</string>
+    <string name="profile_name">Nom del perfil:</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">OBJ</string>
+    <string name="clone_label">Duplicar</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Dades recalculades utilitzades</string>
+    <string name="bg_too_close">Glucèmia massa semblant: \n%1$s\n%2$s</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Canvi a horari d\'estiu en 24h o menys</string>
+    <string name="dst_loop_disabled_warning">Canvi a horari d\'estiu fa menys de 3h - Llaç tancat desactivat</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">versió antiga</string>
+    <string name="very_old_version">versió molt antiga</string>
+    <string name="application_expired">Aplicació expirada</string>
+    <string name="new_version_warning">Nova versió disponible almenys %1$d dies! Retorn a LGS (Low Glucose Suspend = suspensió per glucèmia baixa) en %2$d dies, el llaç serà desactivat en %3$d dies</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">No finalitzat encara</string>
+    <string name="time_elapsed">Temps transcorregut</string>
+    <!-- Overview -->
 </resources>

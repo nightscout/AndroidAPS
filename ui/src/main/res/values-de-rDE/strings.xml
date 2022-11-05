@@ -10,4 +10,12 @@
     <string name="remind_to_bolus_later">Später an Bolus erinnern</string>
     <string name="a11y_carb_reminder">Erinnerung einstellen</string>
     <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">Statistiken</string>
+    <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
+    <string name="id">ID:</string>
+    <string name="submit">Senden</string>
+    <string name="age">Alter</string>
+    <string name="weight_label">Gewicht</string>
+    <!-- CareDialog -->
 </resources>

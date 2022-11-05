@@ -16,4 +16,13 @@
     <!--    Widget-->
     <string name="configure">Настроить прозрачность</string>
     <string name="widget_description">Виджет AAPS</string>
+    <!--     Activities-->
+    <string name="statistics">Статистика</string>
+    <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="id">Идентификатор:</string>
+    <string name="submit">Отправить</string>
+    <string name="age">Возраст</string>
+    <string name="weight_label">Вес</string>
+    <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
+    <!-- CareDialog -->
 </resources>

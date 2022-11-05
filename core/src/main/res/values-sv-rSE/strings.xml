@@ -116,6 +116,30 @@
     <string name="pumpsuspended">Pump pausad</string>
     <string name="notconfigured">Inte konfigurerad</string>
     <string name="loopsuspended">Loop pausad</string>
+    <string name="trend_arrow">Trendpil</string>
+    <string name="value_unavailable_short">-</string>
+    <string name="required">beh</string>
+    <string name="a11y_arrow_double_down">sjunker snabbt</string>
+    <string name="a11y_arrow_single_down">sjunker</string>
+    <string name="a11y_arrow_forty_five_down">sjunker långsamt</string>
+    <string name="a11y_arrow_flat">stabilt</string>
+    <string name="a11y_arrow_forty_five_up">stiger långsamt</string>
+    <string name="a11y_arrow_single_up">stiger</string>
+    <string name="a11y_arrow_double_up">stiger snabbt</string>
+    <string name="a11y_arrow_none">ingen</string>
+    <string name="a11y_arrow_unknown">okänd</string>
+    <string name="a11y_high">hög</string>
+    <string name="a11y_inrange">inom målområdet</string>
+    <string name="a11y_low">låg</string>
+    <string name="average">Medel</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD totalt</string>
+    <string name="none"><![CDATA[<ingen>]]></string>
+    <string name="remove_label">TA BORT</string>
+    <string name="activate_profile">Aktivera profil</string>
+    <string name="reset">Återställ</string>
+    <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -272,7 +296,6 @@
     <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Signaturverifierare</string>
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
     <string name="version_expire">Version %1$s upphör att gälla %2$s</string>

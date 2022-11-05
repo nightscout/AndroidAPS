@@ -8,4 +8,10 @@
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Lembrete para bólus mais tarde</string>
     <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">Estatísticas</string>
+    <string name="calculation_in_progress">Cálculo em curso</string>
+    <string name="id">ID:</string>
+    <string name="submit">Enviar</string>
+    <!-- CareDialog -->
 </resources>

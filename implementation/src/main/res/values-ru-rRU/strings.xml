@@ -20,4 +20,17 @@
     <string name="need_storage_permission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
     <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Очень низкий</string>
+    <string name="low" comment="3.1-3.9">Низкий</string>
+    <string name="high" comment="10.0-13.9">Высокий</string>
+    <string name="veryHigh" comment="above 13.9">Очень высокий</string>
+    <string name="below" comment="below &quot;in range&quot;">Ниже целевых</string>
+    <string name="in_range">В целевом диапазоне</string>
+    <string name="above" comment="above &quot;in range&quot;">Выше целевых</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">СтандОткл: %1$s</string>
+    <string name="detailed_14_days">Подробно 14 дней</string>
+    <string name="day_tir">Время в целевом диапазоне днем</string>
+    <string name="night_tir">Время в целевом диапазоне ночью</string>
 </resources>

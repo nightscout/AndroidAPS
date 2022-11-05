@@ -120,6 +120,12 @@
     <string name="pumpsuspended">Bomba parada</string>
     <string name="notconfigured">Sin configurar</string>
     <string name="loopsuspended">Lazo suspendido</string>
+    <string name="none"><![CDATA[<ninguno>]]></string>
+    <string name="remove_label">ELIMINAR</string>
+    <string name="activate_profile">ACTIVAR PERFIL</string>
+    <string name="reset">reestablecer</string>
+    <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
+    <string name="profile">Perfil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -281,7 +287,6 @@
     <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Verificador de firma</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
     <string name="version_expire">La versión %1$s expira el %2$s</string>

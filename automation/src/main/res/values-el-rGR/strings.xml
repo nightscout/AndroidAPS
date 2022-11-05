@@ -85,6 +85,5 @@
     <string name="taskname">Όνομα εργασίας</string>
     <string name="edit_short">Επεξεργασία</string>
     <string name="triggers">Ενεργοποιήσεις:</string>
-    <string name="remove_label">ΜΕΤΑΚΙΝΗΣΗ</string>
     <string name="preconditions">Προϋποθέσεις:</string>
 </resources>

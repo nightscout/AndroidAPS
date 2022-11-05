@@ -85,6 +85,5 @@
     <string name="taskname">Aksie naam</string>
     <string name="edit_short">WYSIG</string>
     <string name="triggers">Snellers:</string>
-    <string name="remove_label">VERWYDER</string>
     <string name="preconditions">Vereistes:</string>
 </resources>

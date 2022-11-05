@@ -111,6 +111,18 @@
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
     <string name="notconfigured">Nu este configurat</string>
     <string name="loopsuspended">Buclă suspendată</string>
+    <string name="trend_arrow">Săgeată tendinţă</string>
+    <string name="value_unavailable_short">indisponibil</string>
+    <string name="required">req</string>
+    <string name="average">Medie</string>
+    <string name="tir">Timp în țintă</string>
+    <string name="tdd_total">Total TDD</string>
+    <string name="none"><![CDATA[<nimic>]]></string>
+    <string name="remove_label">ȘTERGE</string>
+    <string name="activate_profile">Activează profil</string>
+    <string name="reset">resetare</string>
+    <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -268,7 +280,6 @@
     <string name="prefdecrypt_issue_wrong_format">Lipseşte configuraţia de criptare, formatul setărilor este invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Verificare semnătură</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>

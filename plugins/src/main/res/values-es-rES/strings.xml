@@ -90,20 +90,60 @@
     <string name="sms_basal">Dosis Basal:</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
     <!-- Insulin -->
-    <string name="dia">DIA</string>
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Ajustes de insulina preestablecidos para Humalog y NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Ajuste de insulina preestablecido para Fiasp</string>
-    <string name="description_insulin_lyumjev">Ajuste de insulina preestablecido para Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite personalizar el pico de acción máxima de la insulina. Debe ser utilizado únicamente por usuarios avanzados</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
-    <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
-    <string name="insulin_peak">Pico</string>
-    <string name="free_peak_oref">Personalizar Pico</string>
-    <string name="rapid_acting_oref">Acción Rápida</string>
-    <string name="ultrarapid_oref">Acción Ultra Rápida</string>
-    <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+</string>
+    <!-- Food-->
+    <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
+    <string name="filter">Filtro</string>
+    <string name="food">Comida</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Grasa</string>
+    <string name="category">Categoría</string>
+    <string name="subcategory">Subcategoría</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Esquema de color de aplicación</string>
+    <string name="dark_theme">Tema oscuro</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="follow_system_theme">Usar tema del dispositivo</string>
+    <!-- Profile -->
+    <string name="localprofile_shortname">PERFIL</string>
+    <string name="description_profile_local">Define un perfil que esté disponible cuando tengas una desconexión</string>
+    <string name="a11y_add_new_to_list">añadir nuevo a la lista</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="missing_profile_name">Falta el nombre de perfil</string>
+    <string name="error_in_ic_values">Error en valores IC</string>
+    <string name="error_in_basal_values">Error en valores basales</string>
+    <string name="error_in_target_values">Error en los valores de objetivo</string>
+    <string name="error_in_isf_values">Error en valores ISF</string>
+    <string name="invalid_profile_not_accepted">Perfil no válido %1$s no aceptado desde Nightscout</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errores</string>
+    <string name="select_profile">Seleccione el perfil a editar</string>
+    <string name="profile_name">Nombre del perfil:</string>
+    <string name="a11y_add_new_profile">añadir nuevo perfil</string>
+    <string name="a11y_clone_profile">clonar el perfil actual</string>
+    <string name="a11y_delete_current_profile">borrar el perfil actual</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">OBJ</string>
+    <string name="clone_label">Clonar</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">versión antigua</string>
+    <string name="very_old_version">versión muy antigua</string>
+    <string name="application_expired">Aplicación caducada</string>
+    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Soporte a la función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">No logrado</string>
+    <string name="time_elapsed">Tiempo agotado</string>
+    <!-- Overview -->
 </resources>

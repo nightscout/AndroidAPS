@@ -3,4 +3,5 @@
     <string name="missed_bg_readings">Gemiste BG lesings</string>
     <string name="request">Versoek</string>
     <string name="permission">Toestemming</string>
+    <!--       Stats -->
 </resources>

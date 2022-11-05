@@ -116,6 +116,27 @@
     <string name="pumpsuspended">Pomp onderbreken</string>
     <string name="notconfigured">Niet ingesteld</string>
     <string name="loopsuspended">Loop pauzeren</string>
+    <string name="trend_arrow">Trendpijl</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">nodig</string>
+    <string name="a11y_arrow_double_down">snel dalend</string>
+    <string name="a11y_arrow_single_down">dalend</string>
+    <string name="a11y_arrow_forty_five_down">langzaam dalend</string>
+    <string name="a11y_arrow_flat">stabiel</string>
+    <string name="a11y_arrow_forty_five_up">langzaam stijgend</string>
+    <string name="a11y_arrow_single_up">stijgt</string>
+    <string name="a11y_arrow_double_up">snel stijgend</string>
+    <string name="a11y_arrow_none">geen</string>
+    <string name="a11y_arrow_unknown">onbekend</string>
+    <string name="a11y_high">hoog</string>
+    <string name="a11y_inrange">binnen bereik</string>
+    <string name="a11y_low">laag</string>
+    <string name="none"><![CDATA[<geen>]]></string>
+    <string name="remove_label">VERWIJDER</string>
+    <string name="activate_profile">Activeer profiel</string>
+    <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">Profiel wissel ontbreekt. Doe aub een profiel wissel of duw op Activeer Profiel in het Lokale profiel.</string>
+    <string name="profile">Profiel</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -274,7 +295,6 @@
     <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Handtekening controle</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <string name="version_expire">Versie %1$s verloopt op %2$s</string>

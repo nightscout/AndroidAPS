@@ -17,7 +17,6 @@
     <string name="not_inserted">삽입되지 않음</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basal</string>
-    <string name="tdd_total">TDD Total</string>
     <string name="tbr_formatter">%2$d / %3$d분 동안 %1$d%%</string>
     <string name="multiwave_bolus">Multiwave Bolus</string>
     <string name="eb_formatter">%3$d분 동안 %1$.2f / %2$.2f U</string>

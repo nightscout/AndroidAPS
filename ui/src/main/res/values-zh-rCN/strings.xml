@@ -10,4 +10,12 @@
     <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
     <string name="a11y_carb_reminder">设置提醒</string>
     <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">统计</string>
+    <string name="calculation_in_progress">正在进行计算</string>
+    <string name="id">ID：</string>
+    <string name="submit">提交</string>
+    <string name="age">年龄</string>
+    <string name="weight_label">重量</string>
+    <!-- CareDialog -->
 </resources>

@@ -97,8 +97,60 @@
     <string name="insulin_peak_time">Piko laikas [min]</string>
     <string name="free_peak_oref">Oref be piko</string>
     <string name="rapid_acting_oref">Greito veikimo Oref</string>
-    <string name="ultrarapid_oref">Staigaus veikimo Oref</string>
     <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Rodyti Ciklo informaciją laikrodyje, xDrip+ pradžios ekrane.</string>
+    <!-- Food-->
+    <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
+    <string name="filter">Filtruoti</string>
+    <string name="food">Maistas</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">Energ. vertė</string>
+    <string name="shortprotein">Balt.</string>
+    <string name="shortfat">Rieb</string>
+    <string name="category">Kategorija</string>
+    <string name="subcategory">Subkategorija</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">VP</string>
+    <string name="description_profile_local">Nustatykite vietinį profilį.</string>
+    <string name="a11y_add_new_to_list">pridėti naują į sąrašą</string>
+    <string name="units_colon">Vienetai:</string>
+    <string name="missing_profile_name">Profilio pavadinimas nėra įrašytas</string>
+    <string name="error_in_ic_values">Insulino ir AV santykio (I:A) reikšmės klaida</string>
+    <string name="error_in_basal_values">Bazės reikšmių klaida</string>
+    <string name="error_in_target_values">Tikslinės glikemijos reikšmės klaida</string>
+    <string name="error_in_isf_values">JIF reikšmės klaida</string>
+    <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
+    <string name="view">Rodymas</string>
+    <string name="errors">Klaidos</string>
+    <string name="profile_name">Profilio pavadinimas:</string>
+    <string name="a11y_add_new_profile">pridėti naują profilį</string>
+    <string name="a11y_clone_profile">klonuoti esamą profilį</string>
+    <string name="a11y_delete_current_profile">ištrinti esamą profilį</string>
+    <string name="dia_short">IVT</string>
+    <string name="ic_short">IA</string>
+    <string name="isf_short">JIF</string>
+    <string name="target_short">TIKSLAS</string>
+    <string name="clone_label">Klonuoti</string>
+    <string name="basal_short">VB</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
+    <string name="bg_too_close">KG per arti:\n%1$s\n%2$s</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val ar mažiau</string>
+    <string name="dst_loop_disabled_warning">Laiko persukimas įvyks po mažiau nei 3 val - Uždaras ciklas deaktyvuotas</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">sena versija</string>
+    <string name="very_old_version">labai sena versija</string>
+    <string name="application_expired">Aplikacijos laikas baigėsi</string>
+    <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d d.! Po %2$d grįšite prie stabdymo prie žemo, po %3$d ciklas bus išjungtas</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Dar nebaigta</string>
+    <string name="time_elapsed">Praėjo laiko</string>
+    <!-- Overview -->
 </resources>
