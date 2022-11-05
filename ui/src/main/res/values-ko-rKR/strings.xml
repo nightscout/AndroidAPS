@@ -13,4 +13,6 @@
     <string name="id">ID:</string>
     <string name="submit">확인</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>
