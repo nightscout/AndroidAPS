@@ -1,19 +1,21 @@
-package info.nightscout.androidaps.activities.fragments
+package info.nightscout.ui.activities.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
-import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
@@ -25,10 +27,12 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.TreatmentsUserEntryFragmentBinding
+import info.nightscout.ui.databinding.TreatmentsUserEntryItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -42,7 +46,6 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var translator: Translator
     @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
@@ -78,7 +81,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
         }
     }
 
-    fun swapAdapter() {
+    private fun swapAdapter() {
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
         disposable +=

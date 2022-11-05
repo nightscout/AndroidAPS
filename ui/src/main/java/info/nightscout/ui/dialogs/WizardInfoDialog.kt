@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,16 +8,15 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import info.nightscout.androidaps.databinding.DialogWizardinfoBinding
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogWizardinfoBinding
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -91,13 +90,13 @@ class WizardInfoDialog : DaggerDialogFragment() {
         binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, data.basalIOB)
         binding.basalIobCheckbox.isChecked = data.wasBasalIOBUsed
         // Superbolus
-        binding.sbinsulin.text = rh.gs(R.string.formatinsulinunits, data.superbolusInsulin)
+        binding.sbInsulin.text = rh.gs(R.string.formatinsulinunits, data.superbolusInsulin)
         binding.sbCheckbox.isChecked = data.wasSuperbolusUsed
         // Carbs
         binding.carbs.text = rh.gs(R.string.format_carbs_ic, data.carbs, data.ic)
-        binding.carbsinsulin.text = rh.gs(R.string.formatinsulinunits, data.carbsInsulin)
+        binding.carbsInsulin.text = rh.gs(R.string.formatinsulinunits, data.carbsInsulin)
         // Correction
-        binding.correctioninsulin.text = rh.gs(R.string.formatinsulinunits, data.otherCorrection)
+        binding.correctionInsulin.text = rh.gs(R.string.formatinsulinunits, data.otherCorrection)
         // Profile
         binding.profile.text = data.profileName
         // Notes
@@ -105,7 +104,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
         // Percentage
         binding.percentUsed.text = rh.gs(R.string.format_percent, data.percentageCorrection)
         // Total
-        binding.totalinsulin.text = rh.gs(R.string.formatinsulinunits, data.totalInsulin)
+        binding.totalInsulin.text = rh.gs(R.string.formatinsulinunits, data.totalInsulin)
     }
 
     override fun onStart() {

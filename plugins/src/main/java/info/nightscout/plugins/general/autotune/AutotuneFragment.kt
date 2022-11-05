@@ -46,7 +46,7 @@ import info.nightscout.plugins.databinding.AutotuneFragmentBinding
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.events.EventAutotuneUpdateGui
 import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
+import info.nightscout.androidaps.events.EventLocalProfileChanged
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -1,49 +1,54 @@
-package info.nightscout.androidaps.activities.fragments
+package info.nightscout.ui.activities.fragments
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.util.forEach
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateProfileSwitchTransaction
-import info.nightscout.androidaps.databinding.TreatmentsProfileswitchFragmentBinding
-import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
+import info.nightscout.androidaps.events.EventLocalProfileChanged
+import info.nightscout.androidaps.events.EventNSClientRestart
+import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
-import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.R
+import info.nightscout.ui.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
+import info.nightscout.ui.databinding.TreatmentsProfileswitchFragmentBinding
+import info.nightscout.ui.databinding.TreatmentsProfileswitchItemBinding
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -55,7 +60,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var profilePlugin: ProfilePlugin
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
@@ -130,7 +135,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         .getEffectiveProfileSwitchDataFromTime(now - millsToThePast, false)
         .map { carb -> carb.map { ProfileSealed.EPS(it) } }
 
-    fun swapAdapter() {
+    private fun swapAdapter() {
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
         disposable +=
@@ -196,7 +201,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
                 if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
-            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context , R.attr.activeColor))
+            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context, R.attr.activeColor))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch
@@ -241,8 +246,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                                     ValueWithUnit.SimpleString(profileSwitch.profileName)
                                 )
                                 val nonCustomized = profileSealed.convertToNonCustomizedProfile(dateUtil)
-                                profilePlugin.addProfile(
-                                    profilePlugin.copyFrom(
+                                activePlugin.activeProfileSource.addProfile(
+                                    activePlugin.activeProfileSource.copyFrom(
                                         nonCustomized,
                                         profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_")
                                     )

@@ -1,17 +1,20 @@
-package info.nightscout.androidaps.activities.fragments
+package info.nightscout.ui.activities.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.util.forEach
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
@@ -23,8 +26,6 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryBasalTransaction
-import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
-import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toStringFull
@@ -44,6 +45,10 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
+import info.nightscout.ui.R
+import info.nightscout.ui.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
+import info.nightscout.ui.databinding.TreatmentsTempbasalsFragmentBinding
+import info.nightscout.ui.databinding.TreatmentsTempbasalsItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -104,7 +109,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
         .getExtendedBolusDataFromTime(now - millsToThePast, false)
         .map { eb -> eb.map { profileFunction.getProfile(it.timestamp)?.let { profile -> it.toTemporaryBasal(profile) } } }
 
-    fun swapAdapter() {
+    private fun swapAdapter() {
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
         disposable +=

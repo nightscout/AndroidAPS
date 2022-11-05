@@ -1,17 +1,21 @@
-package info.nightscout.androidaps.activities.fragments
+package info.nightscout.ui.activities.fragments
 
 import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.util.forEach
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
@@ -23,9 +27,8 @@ import info.nightscout.androidaps.database.transactions.CutCarbsTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateBolusTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateCarbsTransaction
-import info.nightscout.androidaps.databinding.TreatmentsBolusCarbsFragmentBinding
-import info.nightscout.androidaps.databinding.TreatmentsBolusCarbsItemBinding
-import info.nightscout.androidaps.dialogs.WizardInfoDialog
+import info.nightscout.androidaps.events.EventNSClientRestart
+import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.events.EventTreatmentChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toVisibility
@@ -35,8 +38,6 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.plugins.general.nsclient.events.EventNSClientRestart
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -47,6 +48,10 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.TreatmentsBolusCarbsFragmentBinding
+import info.nightscout.ui.databinding.TreatmentsBolusCarbsItemBinding
+import info.nightscout.ui.dialogs.WizardInfoDialog
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -126,7 +131,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         .getBolusCalculatorResultsDataFromTime(now - millsToThePast, false)
         .map { calc -> calc.map { MealLink(bolusCalculatorResult = it) } }
 
-    fun swapAdapter() {
+    private fun swapAdapter() {
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
         disposable +=
@@ -232,7 +237,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"
-                        Bolus.Type.NORMAL  -> rh.gs(R.string.mealbolus)
+                        Bolus.Type.NORMAL  -> rh.gs(R.string.meal_bolus)
                         Bolus.Type.PRIMING -> rh.gs(R.string.prime)
                     }
                 holder.binding.cbBolusRemove.visibility = (ml.bolus.isValid && actionHelper.isRemoving).toVisibility()
@@ -371,7 +376,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
 
     private fun deleteFutureTreatments() {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.deletefuturetreatments) + "?", Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.delete_future_treatments) + "?", Runnable {
                 uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
                 disposable += repository
                     .getBolusesDataFromTime(dateUtil.now(), false)

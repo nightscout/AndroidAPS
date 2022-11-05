@@ -29,7 +29,7 @@ import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.plugins.general.autotune.events.EventAutotuneUpdateGui
 import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
+import info.nightscout.androidaps.events.EventLocalProfileChanged
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

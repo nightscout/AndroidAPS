@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities.fragments
+package info.nightscout.androidaps.activities
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository

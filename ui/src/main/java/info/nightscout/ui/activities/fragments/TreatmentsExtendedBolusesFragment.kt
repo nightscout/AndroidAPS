@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities.fragments
+package info.nightscout.ui.activities.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,8 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
+import info.nightscout.ui.activities.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -19,8 +18,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusTransaction
-import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
-import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusItemBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.isInProgress
@@ -39,6 +36,9 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.TreatmentsExtendedbolusFragmentBinding
+import info.nightscout.ui.databinding.TreatmentsExtendedbolusItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -85,7 +85,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    fun swapAdapter() {
+    private fun swapAdapter() {
         val now = System.currentTimeMillis()
         binding.recyclerview.isLoading = true
         disposable += if (showInvalidated)

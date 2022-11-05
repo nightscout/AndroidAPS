@@ -32,7 +32,7 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ProfileFragmentBinding
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
+import info.nightscout.androidaps.events.EventLocalProfileChanged
 import info.nightscout.plugins.ui.TimeListEdit
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.logging.AAPSLogger

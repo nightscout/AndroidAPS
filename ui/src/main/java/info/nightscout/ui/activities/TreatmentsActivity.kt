@@ -1,23 +1,23 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.TreatmentsBolusCarbsFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
-import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.ui.R
+import info.nightscout.ui.activities.fragments.TreatmentsBolusCarbsFragment
+import info.nightscout.ui.activities.fragments.TreatmentsCareportalFragment
+import info.nightscout.ui.activities.fragments.TreatmentsExtendedBolusesFragment
+import info.nightscout.ui.activities.fragments.TreatmentsProfileSwitchFragment
+import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment
+import info.nightscout.ui.activities.fragments.TreatmentsTemporaryBasalsFragment
+import info.nightscout.ui.activities.fragments.TreatmentsUserEntryFragment
+import info.nightscout.ui.databinding.TreatmentsFragmentBinding
 import javax.inject.Inject
 
 class TreatmentsActivity : NoSplashAppCompatActivity() {
@@ -41,7 +41,7 @@ class TreatmentsActivity : NoSplashAppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = rh.gs(R.string.carbs_and_bolus)
 
-        binding.treatmentsTabs.addOnTabSelectedListener(object : OnTabSelectedListener {
+        binding.treatmentsTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val fragment = when (tab.position) {
                     0    -> TreatmentsBolusCarbsFragment::class.java

@@ -3,13 +3,6 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsBolusCarbsFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsCareportalFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsProfileSwitchFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsTempTargetFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsTemporaryBasalsFragment
-import info.nightscout.androidaps.activities.fragments.TreatmentsUserEntryFragment
 import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.InsulinDialog
@@ -20,7 +13,6 @@ import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
 import info.nightscout.androidaps.dialogs.TreatmentDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
-import info.nightscout.androidaps.dialogs.WizardInfoDialog
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
@@ -57,13 +49,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesWearFragment(): WearFragment
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusCarbsFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsUserEntryFragment(): TreatmentsUserEntryFragment
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
@@ -79,7 +64,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
-    @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
     @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 }

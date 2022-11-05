@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.activities.fragments.TreatmentsExtendedBolusesFragment">
+    tools:context=".activities.fragments.TreatmentsTempTargetFragment">
 
     <ProgressBar
         android:id="@+id/progress_bar"

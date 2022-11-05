@@ -265,7 +265,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/sbinsulin"
+                android:id="@+id/sb_insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -299,7 +299,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/carbsinsulin"
+                android:id="@+id/carbs_insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -332,7 +332,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/correctioninsulin"
+                android:id="@+id/correction_insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -467,7 +467,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/totalinsulin"
+                android:id="@+id/total_insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"

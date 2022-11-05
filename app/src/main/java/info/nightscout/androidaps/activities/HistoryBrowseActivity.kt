@@ -12,7 +12,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.HistoryBrowserData
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
@@ -280,7 +279,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding.zoom.text = rangeToDisplay.toString()
     }
 
-    @Suppress("UNUSED_PARAMETER")
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug(LTag.UI, "updateGui $from")
