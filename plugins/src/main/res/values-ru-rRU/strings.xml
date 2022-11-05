@@ -155,7 +155,6 @@
     <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <string name="target_short">ЦЕЛЬ</string>
-    <string name="clone_label">Клонировать</string>
     <string name="basal_short">БАЗАЛ</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Используются пересчитанные данные</string>
