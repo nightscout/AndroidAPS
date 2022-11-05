@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
     <string name="description_treatments">Guarda todos los tratamientos que se realizaron</string>
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
-    <string name="treatments_carbs_label_string">Carbohidratos:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_iobactivitytotal_label_string">Actividad total IOB:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_tt_label">OT</string>
-    <string name="treatments_wizard_correction_label">Corrección</string>
-    <string name="bolus_iob_label">Bolo IOB</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última acción</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">El complemento está deshabilitado</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
-    <string name="overview_treatment_label">Tratamiento</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
     <string name="carbssuggestion">Sugerencia de carbohidratos</string>
     <string name="unsupportednsversion">Versión de Nightscout no soportada</string>
-    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="carb_time_label">Tiempo de absorción</string>
     <string name="profile_label">Perfil</string>
     <string name="overview_tempbasal_button">Basal temporal</string>
@@ -144,7 +129,6 @@
     <string name="overview_editquickwizard_valid">Validar:</string>
     <string name="overview_editquickwizardlistactivity_add">Añadir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">BOLO COMIDA</string>
     <string name="correctionbous">Corrección</string>
     <string name="actions">Acciones</string>
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
@@ -173,8 +157,6 @@
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
     <string name="openapsama_useautosens">Usar la función Autosens</string>
-    <string name="refresheventsfromnightscout">Actualizar desde Nightscout</string>
-    <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LAZO</string>
@@ -248,9 +230,6 @@
     <string name="duration10h">10 horas</string>
     <string name="resume">Reanudar</string>
     <string name="reconnect">Vuelva a conectar la bomba</string>
-    <string name="bg_trend_label">Tendencia 15min</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolo</string>
     <string name="ns_logappstartedevent">Registrar el inicio de la aplicación en Nightscout</string>
     <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
@@ -475,7 +454,6 @@
     <string name="virtualpump_type">Bomba virtual</string>
     <string name="virtualpump_definition">Definición de la bomba</string>
     <string name="virtualpump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, Duración =%3$smin -%4$sh] \nBasal: Paso =%5$s\nTBR: %6$s ( %7$s), Duración =%8$sMin -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Configuración del Asistente</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
     <string name="wear_display_settings">Ajustes de pantalla</string>
     <string name="wear_general_settings">Configuración general</string>
@@ -511,9 +489,6 @@
     <string name="resistance_lowers_target_summary">Cuando se detecta resistencia a la insulina, disminuye el objetivo de glucosa</string>
     <string name="sensitivity_raises_target_title">Sensibilidad aumenta el objetivo</string>
     <string name="sensitivity_raises_target_summary">Cuando se detecta sensibilidad a la insulina, aumenta el objetivo de glucosa</string>
-    <string name="careportal_removestartedevents">Eliminar registros de inicio de AAPS</string>
-    <string name="show_invalidated">Mostrar invalidados</string>
-    <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
@@ -536,8 +511,6 @@
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Cálculo</string>
     <string name="sendlogfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <string name="loop_openmode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
@@ -571,17 +544,12 @@
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
     <string name="increasingmaxbasal">Aumentar el valor basal máximo porque el ajuste es inferior a tu base máxima en el perfil</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
     <string name="objectives_button_unfinish">Limpieza finalizada</string>
     <string name="objectives_button_unstart">Limpieza iniciada</string>
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="setupwizard_units_prompt">Seleccione las unidades en las que desea visualizar los valores</string>
-    <string name="copytolocalprofile">¿Deseas crear nuevo perfil a partir de éste?</string>
     <string name="low_mark_comment">Valor de glucosa baja (sólo visualización)</string>
     <string name="high_mark_comment">Valor de glucosa alta (sólo visualización)</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -638,7 +606,6 @@
     <string name="chart_menu">Menú gráfico</string>
     <string name="clear_filter">Borrar filtro</string>
     <string name="cannula">Cánula</string>
-    <string name="userentry">Entrada de usuario</string>
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="email_address">Dirección de Correo Electrónico</string>
@@ -646,7 +613,6 @@
     <string name="privacy_summary">Puedes proporcionar una dirección de correo electrónico opcional si quieres ser notificado sobre fallos de la aplicación. Este no es un servicio automatizado. Los desarrolladores se comunicarán contigo en situaciones peligrosas.</string>
     <string name="full_sync">Sincronización completa</string>
     <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en Nightscout</string>
-    <string name="prime">CEBAR</string>
     <string name="ns_sync_options">Sincronización</string>
     <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a Nightscout</string>
     <string name="ns_upload">Subir datos a Nightscout</string>
@@ -720,22 +686,9 @@
     <string name="wear_unknown_action_string">Comando de acción desconocido:</string>
     <string name="overview_editquickwizard_percentage">Porcentaje</string>
     <string name="app_default">Aplicación por defecto</string>
-    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
-    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
-    <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
     <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
-    <string name="select_for_removal">Selecciona para eliminar</string>
-    <string name="profile_changes">Cambios de perfil</string>
-    <string name="tempt_targets">Objetivos temporales</string>
-    <string name="carbs_and_bolus">Carbohidratos y bolos</string>
-    <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos?</string>
-    <string name="no_records_available">No hay registros disponibles</string>
-    <string name="hide_loop">Ocultar lazo</string>
-    <string name="show_loop">Mostrar lazo</string>
     <string name="count_selected">%1$d selecionado</string>
     <string name="sort_label">Ordenar</string>
-    <string name="show_loop_records">Mostrar registros del lazo</string>
-    <string name="show_hide_records">Ocultar registros del lazo</string>
     <string name="loop_status">Estado del lazo</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="profile1">Perfil 1</string>
