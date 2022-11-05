@@ -9,7 +9,7 @@
         android:title="@string/absorptionsettings_title"
         app:initialExpandedChildrenCount="0">
 
-    <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="8.0"
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
             android:inputType="numberDecimal"

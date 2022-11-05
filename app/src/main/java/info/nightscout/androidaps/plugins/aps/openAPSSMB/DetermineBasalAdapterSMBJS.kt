@@ -206,8 +206,13 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         this.profile.put("enableSMB_with_COB", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_COB, false))
         this.profile.put("enableSMB_with_temptarget", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_temptarget, false))
         this.profile.put("allowSMB_with_high_temptarget", smbEnabled && sp.getBoolean(R.string.key_allowSMB_with_high_temptarget, false))
-        this.profile.put("enableSMB_always", smbEnabled && sp.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering)
-        this.profile.put("enableSMB_after_carbs", smbEnabled && sp.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering)
+
+        // mod 13: allow SMBalways and enableSMB_after_carbs if selected in preferences
+        // this.profile.put("enableSMB_always", smbEnabled && sp.getBoolean(R.string.key_enableSMB_always, false) && advancedFiltering)
+        // this.profile.put("enableSMB_after_carbs", smbEnabled && sp.getBoolean(R.string.key_enableSMB_after_carbs, false) && advancedFiltering)
+        this.profile.put("enableSMB_always", smbEnabled && sp.getBoolean(R.string.key_enableSMB_always, false)) // && advancedFiltering)
+        this.profile.put("enableSMB_after_carbs", smbEnabled && sp.getBoolean(R.string.key_enableSMB_after_carbs, false)) // && advancedFiltering)
+
         this.profile.put("maxSMBBasalMinutes", sp.getInt(R.string.key_smbmaxminutes, SMBDefaults.maxSMBBasalMinutes))
         this.profile.put("maxUAMSMBBasalMinutes", sp.getInt(R.string.key_uamsmbmaxminutes, SMBDefaults.maxUAMSMBBasalMinutes))
         //set the min SMB amount to be the amount set by the pump.
@@ -216,6 +221,31 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
         this.profile.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
+
+        // mod 7e: can I add use autoisf here?
+        this.profile.put("enable_autoISF", sp.getBoolean(R.string.key_enable_autoISF, false))
+        // mod 7f: can I add use autoisf with COB here?
+        this.profile.put("autoISF_max",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autoISF_max, "1.0")))
+        this.profile.put("autoISF_min",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autoISF_min, "1.0")))
+        this.profile.put("bgAccel_ISF_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_bgAccel_ISF_weight, "0.0")))
+        this.profile.put("bgBrake_ISF_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_bgBrake_ISF_weight, "0.0")))
+        // mod 14f: for pp_ISF without meal
+        this.profile.put("enable_pp_ISF_always", sp.getBoolean(R.string.key_enable_postprandial_ISF_always, false))
+        this.profile.put("pp_ISF_hours",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_pp_ISF_hours, "3.0")))
+        this.profile.put("pp_ISF_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_pp_ISF_weight, "0.0")))
+        this.profile.put("delta_ISFrange_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_delta_ISFrange_weight, "0.0")))
+        this.profile.put("lower_ISFrange_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_lower_ISFrange_weight, "0.0")))
+        this.profile.put("higher_ISFrange_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_higher_ISFrange_weight, "0.0")))
+        this.profile.put("enable_dura_ISF_with_COB", sp.getBoolean(R.string.key_enable_dura_ISF_with_COB, false))
+        // mod 7d: can I add autosens_min here?
+        this.profile.put("dura_ISF_weight",  SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_dura_ISF_weight, "0.0")))
+        // mod 10: include SMB manipulations to be accessible in determine-basal
+        this.profile.put("smb_delivery_ratio", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_smb_delivery_ratio, "0.5")))
+        this.profile.put("smb_delivery_ratio_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_smb_delivery_ratio_min, "0.5")))
+        this.profile.put("smb_delivery_ratio_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_smb_delivery_ratio_max, "0.5")))
+        this.profile.put("smb_delivery_ratio_bg_range", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_smb_delivery_ratio_bg_range, "0")))
+        this.profile.put("smb_max_range_extension", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_smb_max_range_extension, "1.0")))
+
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
         }
@@ -238,6 +268,24 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         mGlucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
         mGlucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
         mGlucoseStatus.put("date", glucoseStatus.date)
+
+        // mod 7: append 2 variables for 5% range
+        mGlucoseStatus.put("dura_ISF_minutes", glucoseStatus.dura_ISF_minutes)
+        mGlucoseStatus.put("dura_ISF_average", glucoseStatus.dura_ISF_average)
+        // mod 8: append variables for linear fit
+        mGlucoseStatus.put("slope05", glucoseStatus.slope05)
+        mGlucoseStatus.put("slope15", glucoseStatus.slope15)
+        mGlucoseStatus.put("slope40", glucoseStatus.slope40)
+        // mod 14g: append variables for quadratic fit
+        mGlucoseStatus.put("parabola_fit_correlation", glucoseStatus.r_squ)
+        mGlucoseStatus.put("parabola_fit_minutes", glucoseStatus.dura_p)
+        mGlucoseStatus.put("parabola_fit_last_delta", glucoseStatus.delta_pl)
+        mGlucoseStatus.put("parabola_fit_next_delta", glucoseStatus.delta_pn)
+        mGlucoseStatus.put("parabola_fit_a0", glucoseStatus.a_0)
+        mGlucoseStatus.put("parabola_fit_a1", glucoseStatus.a_1)
+        mGlucoseStatus.put("parabola_fit_a2", glucoseStatus.a_2)
+        mGlucoseStatus.put("bg_acceleration", glucoseStatus.bg_acceleration)
+
         this.mealData.put("carbs", mealData.carbs)
         this.mealData.put("mealCOB", mealData.mealCOB)
         this.mealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation)
@@ -252,7 +300,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         this.microBolusAllowed = microBolusAllowed
         smbAlwaysAllowed = advancedFiltering
         currentTime = now
-        saveCgmSource = isSaveCgmSource
+        saveCgmSource = true                // for non_Libre use; was:   isSaveCgmSource
     }
 
     private fun makeParam(jsonObject: JSONObject?, rhino: Context, scope: Scriptable): Any {

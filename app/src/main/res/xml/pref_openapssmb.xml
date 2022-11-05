@@ -205,6 +205,289 @@
 
         </androidx.preference.PreferenceScreen>
 
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_smb_autoISF"
+            android:title="@string/autoISF_settings_title">
+
+            <Preference android:summary="@string/autoISF_settings_summary" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_enable_autoISF"
+                android:title="@string/openapsama_enable_autoISF" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="1.0"
+                android:dialogMessage="@string/openapsama_autoISF_min_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autoISF_min"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autoISF_min"
+                validate:floatmaxNumber="1"
+                validate:floatminNumber="0.3"
+                validate:testType="floatNumericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="1.0"
+                android:dialogMessage="@string/openapsama_autoISF_max_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autoISF_max"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autoISF_max"
+                validate:floatmaxNumber="3"
+                validate:floatminNumber="1"
+                validate:testType="floatNumericRange" />
+
+            <androidx.preference.PreferenceScreen
+                android:key="acce_ISF_settings"
+                android:title="@string/acce_ISF_settings_title">
+
+                <Preference android:summary="@string/acce_ISF_settings_summary" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_bgAccel_ISF_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_bgAccel_ISF_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_bgAccel_ISF_weight"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_bgBrake_ISF_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_bgBrake_ISF_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_bgBrake_ISF_weight"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+            </androidx.preference.PreferenceScreen>
+
+            <androidx.preference.PreferenceScreen
+                android:key="bg_ISF_settings"
+                android:title="@string/bg_ISF_settings_title">
+
+                <Preference android:summary="@string/bg_ISF_settings_summary" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_lower_ISFrange_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_lower_ISFrange_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_lower_ISFrange_weight"
+                    validate:floatmaxNumber="2"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_higher_ISFrange_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_higher_ISFrange_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_higher_ISFrange_weight"
+                    validate:floatmaxNumber="2"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+            </androidx.preference.PreferenceScreen>
+
+            <androidx.preference.PreferenceScreen
+                android:key="pp_ISF_settings"
+                android:title="@string/pp_ISF_settings_title">
+
+                <Preference android:summary="@string/pp_ISF_settings_summary" />
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_enable_postprandial_ISF_always"
+                    android:summary="@string/enable_postprandial_ISF_always_summary"
+                    android:title="@string/enable_postprandial_ISF_always" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="3"
+                    android:dialogMessage="@string/openapsama_pp_ISF_hours_summary"
+                    android:digits="0123456789"
+                    android:inputType="number"
+                    android:key="@string/key_openapsama_pp_ISF_hours"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_pp_ISF_hours"
+                    validate:maxNumber="10"
+                    validate:minNumber="1"
+                    validate:testType="numericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_pp_ISF_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_pp_ISF_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_pp_ISF_weight"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+            </androidx.preference.PreferenceScreen>
+
+            <androidx.preference.PreferenceScreen
+                android:key="delta_ISF_settings"
+                android:title="@string/delta_ISF_settings_title">
+
+                <Preference android:summary="@string/delta_ISF_settings_summary" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_delta_ISFrange_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_delta_ISFrange_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_delta_ISFrange_weight"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+            </androidx.preference.PreferenceScreen>
+
+            <androidx.preference.PreferenceScreen
+                android:key="dura_ISF_settings"
+                android:title="@string/dura_ISF_settings_title">
+
+                <Preference android:summary="@string/dura_ISF_settings_summary" />
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_enable_dura_ISF_with_COB"
+                    android:summary="@string/enableautoISFwithcob_summary"
+                    android:title="@string/enableautoISFwithcob" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.0"
+                    android:dialogMessage="@string/openapsama_dura_ISF_weight_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="numberDecimal"
+                    android:key="@string/key_openapsama_dura_ISF_weight"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_dura_ISF_weight"
+                    validate:floatmaxNumber="3"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+            </androidx.preference.PreferenceScreen>
+
+            <androidx.preference.PreferenceScreen
+                android:key="smb_delivery_settings"
+                android:title="@string/smb_delivery_settings_title">
+
+                <Preference android:summary="@string/smb_delivery_settings_summary" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.5"
+                    android:dialogMessage="@string/openapsama_smb_delivery_ratio_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="number"
+                    android:key="@string/key_openapsama_smb_delivery_ratio"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_smb_delivery_ratio"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0.5"
+                    validate:testType="floatNumericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.5"
+                    android:dialogMessage="@string/openapsama_smb_delivery_ratio_min_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="number"
+                    android:key="@string/key_openapsama_smb_delivery_ratio_min"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_smb_delivery_ratio_min"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0.5"
+                    validate:testType="floatNumericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0.5"
+                    android:dialogMessage="@string/openapsama_smb_delivery_ratio_max_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="number"
+                    android:key="@string/key_openapsama_smb_delivery_ratio_max"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_smb_delivery_ratio_max"
+                    validate:floatmaxNumber="1"
+                    validate:floatminNumber="0.5"
+                    validate:testType="floatNumericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="0"
+                    android:dialogMessage="@string/openapsama_smb_delivery_ratio_bg_range_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="number"
+                    android:key="@string/key_openapsama_smb_delivery_ratio_bg_range"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_smb_delivery_ratio_bg_range"
+                    validate:floatmaxNumber="100"
+                    validate:floatminNumber="0"
+                    validate:testType="floatNumericRange" />
+
+                <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                    android:defaultValue="1"
+                    android:dialogMessage="@string/openapsama_smb_max_range_extension_summary"
+                    android:digits="0123456789.,"
+                    android:inputType="number"
+                    android:key="@string/key_openapsama_smb_max_range_extension"
+                    android:maxLines="20"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:title="@string/openapsama_smb_max_range_extension"
+                    validate:floatmaxNumber="5"
+                    validate:floatminNumber="1"
+                    validate:testType="floatNumericRange" />
+
+            </androidx.preference.PreferenceScreen>
+
+        </androidx.preference.PreferenceScreen>
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
