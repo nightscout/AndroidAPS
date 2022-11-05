@@ -18,4 +18,6 @@
     <string name="age">גיל</string>
     <string name="weight_label">משקל</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>
