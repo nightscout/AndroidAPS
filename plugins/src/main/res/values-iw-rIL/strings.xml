@@ -140,7 +140,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">ע\' מטרה</string>
-    <string name="clone_label">שכפול</string>
     <string name="basal_short">בזאלי</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
