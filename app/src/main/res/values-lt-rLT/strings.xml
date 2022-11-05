@@ -31,19 +31,6 @@
     <string name="description_source_ns_client">Gauti kraujo gliukozės vertes iš Nightscout</string>
     <string name="description_source_xdrip">Gauti kraujo gliukozės reikšmes iš xDrip+.</string>
     <string name="description_treatments">Išsaugoti visus terapijos pakeitimus</string>
-    <string name="treatments_insulin_label_string">Insulinas:</string>
-    <string name="treatments_carbs_label_string">AV:</string>
-    <string name="treatments_iob_label_string">AIO:</string>
-    <string name="treatments_iobtotal_label_string">Visas AIO:</string>
-    <string name="treatments_iobactivitytotal_label_string">Bendro AIO aktyvumas:</string>
-    <string name="tempbasals_realduration_label_string">Trukmė:</string>
-    <string name="tempbasals_netratio_label_string">Santykis:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">AIO:</string>
-    <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
-    <string name="treatments_wizard_tt_label">LT</string>
-    <string name="treatments_wizard_correction_label">Korekcija</string>
-    <string name="bolus_iob_label">Bolusų AIO</string>
     <string name="openapsma_run">Paleisti dabar</string>
     <string name="vitualpump_label">Virtuali pompa</string>
     <string name="openapsma_lastrun_label">Paskutinis veiksmas</string>
@@ -79,7 +66,6 @@
     <string name="openapsma_disabled">Įskiepis išjungtas</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
-    <string name="overview_treatment_label">Terapija</string>
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
     <string name="xdrip">xDrip+</string>
@@ -90,7 +76,6 @@
     <string name="openloop_newsuggestion">Gautas naujas pasiūlymas</string>
     <string name="carbssuggestion">Angliavandenių pasiūlymas</string>
     <string name="unsupportednsversion">Nepalaikoma Nightscout versija</string>
-    <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="carb_time_label">AV laikas</string>
     <string name="profile_label">Profilis</string>
     <string name="overview_tempbasal_button">Laikina bazė</string>
@@ -137,7 +122,6 @@
     <string name="overview_editquickwizard_valid">Galioja:</string>
     <string name="overview_editquickwizardlistactivity_add">Pridėti</string>
     <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
-    <string name="mealbolus">Maistas</string>
     <string name="correctionbous">Korekcija</string>
     <string name="actions">Veiksmai</string>
     <string name="ns_upload_only">(PAVOJINGA IŠJUNGTI) Tik įkeliama į NS</string>
@@ -165,8 +149,6 @@
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
     <string name="openapsma_scriptdebugdata_label">Scenarijų derinimas</string>
     <string name="openapsama_useautosens">Naudoti Autosens funkciją</string>
-    <string name="refresheventsfromnightscout">Atnaujinti iš NS</string>
-    <string name="deletefuturetreatments">Ištrinti ateities įrašus</string>
     <string name="actions_shortname">VEIKS</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">CIKLAS</string>
@@ -239,9 +221,6 @@
     <string name="duration10h">10 val.</string>
     <string name="resume">Atnaujinti</string>
     <string name="reconnect">Prijungti pompą</string>
-    <string name="bg_trend_label">15 min tendencija</string>
-    <string name="treatments_wizard_cob_label">AAO</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Siųsti programos paleidimo žymę į NS</string>
     <string name="restartingapp">Uždarant aplikaciją, taikyti nustatymus.</string>
     <string name="configbuilder_insulin_description">Kokio tipo insuliną naudojate?</string>
@@ -456,7 +435,6 @@
     <string name="virtualpump_type">Virtualios pompos tipas</string>
     <string name="virtualpump_definition">Pompos nustatymas</string>
     <string name="virtualpump_pump_def">Bolusas: Žingsnis=%1$s\nIštęstinis bolusas: [Žingsnis=%2$s, Trukmė=%3$smin-%4$sh]\nBazė: Žingsnis=%5$s\nLDB: %6$s (iš %7$s), Trukmė=%8$smin -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Išmaniojo laikrodžio nustatymai</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukti į Patarėjo rezultatą:</string>
     <string name="wear_display_settings">Ekrano nustatymai</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
@@ -506,8 +484,6 @@
     <string name="resettodefaults">Atkurti numatytuosius</string>
     <string name="nsmalfunction">NSClient sutrikimas. Reikėtų paleisti iš naujo NS ir NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
-    <string name="treatments_wizard_total_label">Viso</string>
-    <string name="calculation_short">Skaič.</string>
     <string name="sendlogfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <string name="loop_openmode_min_change">Minimalaus pokyčio užklausa [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
@@ -540,17 +516,12 @@
     <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
     <string name="increasingmaxbasal">Didinama maksimali valandinės bazės reikšmė, nes nustatytoji reikšmė yra mažesnė nei profilio maksimali val. bazės reikšmė</string>
-    <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Parinkta:</string>
     <string name="unitsnosemicolon">Vienetai</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
-    <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="invalidpct">Netinkamas % įrašas</string>
@@ -604,7 +575,6 @@
     <string name="chart_menu">Grafiko meniu</string>
     <string name="clear_filter">Valyti filtrą</string>
     <string name="cannula">Kaniulė</string>
-    <string name="userentry">Naudotojo įrašas</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
     <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
     <string name="email_address">El. pašto adresas</string>
@@ -612,7 +582,6 @@
     <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos strigimus. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
     <string name="full_sync">Pilna sinchronizacija</string>
     <string name="full_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai valandų ir kol ji nebus užbaigta, nematysite atnaujintų NS duomenų.</string>
-    <string name="prime">Užpildyti sistemą</string>
     <string name="ns_sync_options">Sinchronizacija</string>
     <string name="ns_upload_summary">Profiliai, bolusai, angliavandeniai, laikinos bazės įkeltos į NS</string>
     <string name="ns_upload">Įkelti duomenis į NS</string>
