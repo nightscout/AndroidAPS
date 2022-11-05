@@ -28,18 +28,6 @@
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
     <string name="description_treatments">Stoor alle behandelings wat gedoen was</string>
-    <string name="treatments_insulin_label_string">Insulien:</string>
-    <string name="treatments_carbs_label_string">Karbs:</string>
-    <string name="treatments_iob_label_string">IAB:</string>
-    <string name="treatments_iobtotal_label_string">Totale IAB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Totale IAB aktiwiteit:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Verhouding:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IAB:</string>
-    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
     <string name="openapsma_run">Begin nou</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
     <string name="openapsma_lastrun_label">Vorige lopie</string>
@@ -74,7 +62,6 @@
     <string name="openapsma_disabled">Plugin is gedeaktiveer</string>
     <string name="constraints_violation">Beperkings skending</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
-    <string name="overview_treatment_label">Behandeling</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="apsmode_title">APS modus</string>
@@ -82,7 +69,6 @@
     <string name="openloop">Oop lus</string>
     <string name="openloop_newsuggestion">Nuwe voorstel beskikbaar</string>
     <string name="unsupportednsversion">Weergawe van Nightscout nie ondersteun</string>
-    <string name="treatments_wizard_basaliob_label">Basale IAB</string>
     <string name="overview_tempbasal_button">TydelikeBasaal</string>
     <string name="overview_extendedbolus_button">Verlengde Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
@@ -108,7 +94,6 @@
     <string name="overview_editquickwizard_valid">Geldig:</string>
     <string name="overview_editquickwizardlistactivity_add">Voeg by</string>
     <string name="overview_quickwizard_item_edit_button">Wysig</string>
-    <string name="mealbolus">Maaltyd</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Aksies</string>
     <string name="pumpNotInitialized">Pomp nie geïnisialiseer nie!</string>
@@ -132,7 +117,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Skrip foutopspoor</string>
     <string name="openapsama_useautosens">Gebruik autosens kenmerk</string>
-    <string name="deletefuturetreatments">Skrap behandelings in die toekoms</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LUS</string>
@@ -191,8 +175,6 @@
     <string name="disconnectpumpfor3h">Ontkoppel pomp vir 3 h</string>
     <string name="resume">Hervat</string>
     <string name="reconnect">Herverbind Pomp</string>
-    <string name="treatments_wizard_cob_label">KOB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app begin na NS</string>
     <string name="restartingapp">Begin toepassing weer om instellings toe te pas.</string>
     <string name="configbuilder_insulin_description">Watter tipe insulien gebruik jy?</string>
@@ -361,7 +343,6 @@
     <string name="virtualpump_type">Virtuele Pomp</string>
     <string name="virtualpump_definition">Pomp definisie</string>
     <string name="virtualpump_pump_def">Bolus: Stap =%1$s\nVerlengde Bolus: [stap%2$s, duur = =%3$smin -%4$sh]\nBasal: stap =%5$s\nTBR: %6$s (deur %7$s), duur =%8$smin -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Ghoeroe-instellings</string>
     <string name="wear_wizard_settings_summary">Berekeninge is ingesluit in die ghoeroe verslag:</string>
     <string name="wear_display_settings">Vertooninstellings</string>
     <string name="wear_general_settings">Algemene instellings</string>
@@ -400,8 +381,6 @@
     <string name="resettodefaults">Herstel na verstek</string>
     <string name="nsmalfunction">NSClient onklaar. Oorweeg om NS en NSClient te herlaai.</string>
     <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
-    <string name="treatments_wizard_total_label">Totaal</string>
-    <string name="calculation_short">Bereken</string>
     <string name="sendlogfiles">Stuur vandag se loglêers aan ontwikkelaars saam met hierdie tyd. Onverwagte situasie.</string>
     <string name="loop_openmode_min_change">Minimale versoek verandering [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
@@ -425,12 +404,7 @@
     <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
     <string name="tidepool_upload_bg">Laai BG toetse op</string>
     <string name="twohours">2h</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="overview_show_predictions">Projeksies</string>
-    <string name="prime">Prima</string>
     <!-- WEAR OS-->
     <!-- Aidex Cgms -->
 </resources>
