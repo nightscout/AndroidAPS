@@ -115,12 +115,56 @@
     <string name="insulin_peak">Pic</string>
     <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
     <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
+    <string name="ultra_rapid_oref">Insuline Ultra Rapide Oref</string>
     <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="xdrip_status">Barre d\'état pour xDrip+ (Montre)</string>
+    <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
+    <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
+    <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
+    <string name="disabled_loop">Boucle désactivée</string>
+    <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
+    <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
+    <string name="xdrip_status_settings">état Xdrip+ (montre)</string>
     <!-- Food-->
+    <string name="food_short">Aliments</string>
+    <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
+    <string name="filter">Filtrer</string>
+    <string name="food">Aliments</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Lipides</string>
+    <string name="category">Catégorie</string>
+    <string name="subcategory">Sous-catégorie</string>
+    <string name="calculator_label">Assistant</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Choisissez le thème sombre, clair ou le thème système</string>
+    <string name="app_color_scheme">Thèmes de couleurs de l\'appli</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="light_theme">Thème clair</string>
+    <string name="follow_system_theme">Utiliser le thème de l’appareil</string>
     <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
+    <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
+    <string name="do_you_want_switch_profile">Voulez-vous changer de profil et annuler les modifications faites dans le profil actuel ?</string>
+    <string name="save_or_reset_changes_first">Sauver ou réinitialiser les modifications actuelles en premier</string>
+    <string name="delete_current_profile">Supprimer le profil actuel ?</string>
+    <string name="units_colon">Unités :</string>
+    <string name="missing_profile_name">Nom de profil manquant</string>
+    <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
+    <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
+    <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
+    <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
+    <string name="profile_name_contains_dot">Le nom du profil contient des points.\nCe n\'est pas pris en charge par NS.\nLe profil n\'est pas remonté dans NS.</string>
+    <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
+    <string name="view">Vue</string>
     <string name="errors">Erreurs</string>
     <string name="select_profile">Sélectionnez le profil à modifier</string>
     <string name="profile_name">Nom du profil :</string>
@@ -142,6 +186,7 @@
     <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
     <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <!-- Signature verifier -->
     <!-- Version Checker -->
     <string name="old_version">ancienne version</string>
@@ -150,7 +195,9 @@
     <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
     <string name="time_elapsed">Temps écoulé</string>
     <!-- Overview -->
+    <string name="snooze">Mise en veille</string>
 </resources>
