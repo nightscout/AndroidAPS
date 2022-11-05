@@ -130,7 +130,6 @@
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">DOEL</string>
-    <string name="clone_label">Dupliceren</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Herberekende data gebruikt</string>
