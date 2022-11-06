@@ -245,16 +245,6 @@
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Wycisz na 5 minut</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Format pliku</string>
-    <string name="metadata_label_created_at">Data utworzenia</string>
-    <string name="metadata_label_aaps_version">Wersja AAPS</string>
-    <string name="metadata_label_aaps_flavour">Wariant kompilacji</string>
-    <string name="metadata_label_device_name">Eksportowanie nazwy urządzenia pacjenta</string>
-    <string name="metadata_label_device_model">Eksportowanie modelu urządzenia</string>
-    <string name="metadata_label_encryption">Szyfrowanie pliku</string>
-    <string name="metadata_format_new">Nowy zaszyfrowany format</string>
-    <string name="metadata_format_debug">Nowy format testowy (niezaszyfrowany)</string>
-    <string name="metadata_format_other">Nieznany format eksportu</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
     <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
     <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
