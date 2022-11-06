@@ -1389,6 +1389,12 @@ class ComboV2Plugin @Inject constructor (
             }
         }
 
+        // Reset these states since they are associated
+        // with the now unpaired pump.
+        lastConnectionTimestamp = 0L
+        activeBasalProfile = null
+        lastActiveBasalProfileNumber = null
+
         // Reset the UI flows that are associated with the pump
         // that just got unpaired to prevent the UI from showing
         // information about that now-unpaired pump anymore.
