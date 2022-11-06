@@ -276,16 +276,6 @@
     <string name="format_hour_minute">%1$dhoras %2$dmin</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Formato del archivo</string>
-    <string name="metadata_label_created_at">Creado el</string>
-    <string name="metadata_label_aaps_version">Versión de AAPS</string>
-    <string name="metadata_label_aaps_flavour">Construir Variante</string>
-    <string name="metadata_label_device_name">Exportar el nombre del paciente del dispositivo</string>
-    <string name="metadata_label_device_model">Exportar modelo de dispositivo</string>
-    <string name="metadata_label_encryption">Encriptación de archivos</string>
-    <string name="metadata_format_new">Nuevo formato cifrado</string>
-    <string name="metadata_format_debug">Nuevo formato de depuración (sin cifrar)</string>
-    <string name="metadata_format_other">Formato de exportación desconocido</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado hace %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado en %1$s</string>
     <string name="exported_less_than_hour_ago">exportado hace menos de una hora</string>
