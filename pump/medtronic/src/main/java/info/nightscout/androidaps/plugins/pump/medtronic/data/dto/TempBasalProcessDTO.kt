@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
+import info.nightscout.rx.logging.AAPSLogger
 
 class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
                                       var aapsLogger: AAPSLogger,

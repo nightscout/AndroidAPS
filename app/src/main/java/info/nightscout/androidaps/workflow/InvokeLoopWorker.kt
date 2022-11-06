@@ -5,11 +5,11 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.rx.events.Event
 import javax.inject.Inject
 
 class InvokeLoopWorker(

@@ -1,18 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import android.bluetooth.BluetoothDevice;
+import static info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartBonding.OPTION_NUMERIC;
 
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartBonding;
+import android.bluetooth.BluetoothDevice;
 
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartBonding;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
-
-import static info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartBonding.OPTION_NUMERIC;
 
 @Singleton
 public class StartBondTask extends TaskBase {

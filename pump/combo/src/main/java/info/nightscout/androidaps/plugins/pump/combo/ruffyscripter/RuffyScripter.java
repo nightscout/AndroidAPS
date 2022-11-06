@@ -41,8 +41,8 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.Read
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetBasalProfileCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 
 /**
  * Provides scripting 'runtime' and operations. consider moving operations into a separate

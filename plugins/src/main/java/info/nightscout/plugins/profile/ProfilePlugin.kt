@@ -10,8 +10,6 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.events.EventLocalProfileChanged
-import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -26,7 +24,6 @@ import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
@@ -36,8 +33,11 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.plugins.R
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventLocalProfileChanged
+import info.nightscout.rx.events.EventProfileStoreChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException

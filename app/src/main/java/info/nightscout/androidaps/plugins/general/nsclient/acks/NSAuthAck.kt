@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.nsclient.acks
 
-import info.nightscout.androidaps.events.Event
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.Event
 import io.socket.client.Ack
 import org.json.JSONObject
 

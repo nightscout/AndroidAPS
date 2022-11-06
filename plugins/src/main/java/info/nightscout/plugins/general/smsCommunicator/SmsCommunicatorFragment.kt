@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.Sms
 import info.nightscout.androidaps.interfaces.SmsCommunicator
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.plugins.databinding.SmscommunicatorFragmentBinding
 import info.nightscout.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Collections

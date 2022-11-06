@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.stats.TirCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.rx.AapsSchedulers
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityStatsBinding
 import info.nightscout.ui.utils.ActivityMonitor

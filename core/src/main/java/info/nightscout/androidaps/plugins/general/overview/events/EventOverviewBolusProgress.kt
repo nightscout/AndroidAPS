@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.events
 
-import info.nightscout.androidaps.events.Event
+import info.nightscout.rx.events.Event
 
 object EventOverviewBolusProgress : Event() {
 

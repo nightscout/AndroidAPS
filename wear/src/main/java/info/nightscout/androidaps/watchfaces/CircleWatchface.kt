@@ -21,17 +21,18 @@ import com.ustwo.clockwise.wearable.WatchFace
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.RawDisplayData
-import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
-import info.nightscout.shared.weardata.EventData.ActionResendData
-import info.nightscout.shared.weardata.EventData.SingleBg
+import info.nightscout.rx.weardata.EventData
+import info.nightscout.rx.weardata.EventData.ActionResendData
+import info.nightscout.rx.weardata.EventData.SingleBg
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*

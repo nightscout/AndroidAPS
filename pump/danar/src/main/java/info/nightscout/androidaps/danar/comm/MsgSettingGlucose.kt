@@ -2,7 +2,8 @@ package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 
 /**
  * Created by mike on 05.07.2016.

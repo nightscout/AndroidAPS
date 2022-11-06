@@ -17,18 +17,19 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateAAPSStartedTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateTherapyEventTransaction
-import info.nightscout.androidaps.events.EventNSClientRestart
-import info.nightscout.androidaps.events.EventTherapyEventChange
+import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.TreatmentsCareportalFragmentBinding

@@ -9,13 +9,13 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.setupwizard.SWDefinition
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
+import info.nightscout.rx.events.EventConfigBuilderChange
 import javax.inject.Inject
 
 class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinition) : SWItem(injector, Type.PLUGIN) {

@@ -20,7 +20,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':pump:eopatch-core')
     implementation project(':libraries')
-    implementation project(':shared')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
     implementation project(':database')
     implementation project(':core')
 

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class EONotification constructor() : Notification() {

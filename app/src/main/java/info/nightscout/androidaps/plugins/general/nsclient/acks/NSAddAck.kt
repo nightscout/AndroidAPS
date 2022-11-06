@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.general.nsclient.acks
 
-import info.nightscout.androidaps.events.Event
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.events.EventNSClientRestart
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.Event
+import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import io.socket.client.Ack
 import org.json.JSONArray
 import org.json.JSONObject

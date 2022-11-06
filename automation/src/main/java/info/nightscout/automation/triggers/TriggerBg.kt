@@ -13,7 +13,8 @@ import info.nightscout.automation.elements.InputBg
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import org.json.JSONObject
 
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {

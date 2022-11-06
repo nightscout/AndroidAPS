@@ -28,7 +28,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -36,13 +35,14 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
 import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.automation.databinding.AutomationEventItemBinding
 import info.nightscout.automation.databinding.AutomationFragmentBinding
 import info.nightscout.automation.dialogs.EditEventDialog
 import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.triggers.TriggerConnector
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

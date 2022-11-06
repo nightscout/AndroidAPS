@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.receivers
 
-import info.nightscout.androidaps.annotations.OpenForTesting
 import android.content.Context
 import android.content.Intent
-import info.nightscout.androidaps.events.EventChargingState
-import info.nightscout.androidaps.events.EventNetworkChange
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventChargingState
+import info.nightscout.rx.events.EventNetworkChange
 import javax.inject.Inject
 import javax.inject.Singleton
 

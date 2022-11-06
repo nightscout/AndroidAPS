@@ -1,8 +1,8 @@
 package info.nightscout.automation.actions
 
+import info.nightscout.androidaps.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
-import info.nightscout.androidaps.queue.Callback
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

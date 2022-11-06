@@ -4,8 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 
 class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_MaterialComponents_Button) :

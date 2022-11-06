@@ -10,7 +10,8 @@ import android.support.wearable.complications.ComplicationData
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import info.nightscout.androidaps.data.RawDisplayData
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import java.io.IOException
 
 /*

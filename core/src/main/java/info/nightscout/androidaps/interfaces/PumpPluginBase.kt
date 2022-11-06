@@ -3,8 +3,7 @@ package info.nightscout.androidaps.interfaces
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.logging.AAPSLogger
 
 abstract class PumpPluginBase(
     pluginDescription: PluginDescription,

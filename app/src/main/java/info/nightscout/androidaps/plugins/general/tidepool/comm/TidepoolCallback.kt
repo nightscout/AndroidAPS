@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

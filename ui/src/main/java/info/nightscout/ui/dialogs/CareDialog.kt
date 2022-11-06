@@ -28,7 +28,8 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogCareBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable

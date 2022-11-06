@@ -10,9 +10,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callback
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationError
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandRTS
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 

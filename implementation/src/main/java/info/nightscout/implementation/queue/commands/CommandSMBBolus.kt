@@ -9,7 +9,8 @@ import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.implementation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 
 class CommandSMBBolus(

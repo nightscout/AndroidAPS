@@ -8,16 +8,16 @@ import android.widget.ScrollView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TidepoolFragmentBinding
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
-import io.reactivex.rxjava3.kotlin.plusAssign
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
 class TidepoolFragment : DaggerFragment() {

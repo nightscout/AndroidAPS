@@ -22,8 +22,9 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag
+;
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SnoozeAlertMessage;

@@ -4,10 +4,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.queue.Callback
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 abstract class Command(

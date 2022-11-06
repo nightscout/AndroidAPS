@@ -11,8 +11,8 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 
 public class ReadQuickInfoCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;

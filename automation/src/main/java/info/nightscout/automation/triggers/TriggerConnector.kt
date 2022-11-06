@@ -14,7 +14,8 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.ui.VerticalTextView
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import org.json.JSONArray
 import org.json.JSONObject
 

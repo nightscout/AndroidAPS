@@ -8,8 +8,8 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton

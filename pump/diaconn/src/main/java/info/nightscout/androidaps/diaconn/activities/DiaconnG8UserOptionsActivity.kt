@@ -15,7 +15,8 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat

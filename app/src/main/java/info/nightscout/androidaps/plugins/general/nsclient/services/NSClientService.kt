@@ -3,7 +3,12 @@ package info.nightscout.androidaps.plugins.general.nsclient.services
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.*
+import android.os.Binder
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.IBinder
+import android.os.PowerManager
+import android.os.SystemClock
 import androidx.work.OneTimeWorkRequest
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
@@ -11,15 +16,11 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker
@@ -33,14 +34,12 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog
-import info.nightscout.androidaps.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
-import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
@@ -48,9 +47,15 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.androidaps.utils.T.Companion.mins
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.plugins.general.food.FoodPlugin.FoodWorker
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -61,7 +66,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.net.URISyntaxException
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class NSClientService : DaggerService() {

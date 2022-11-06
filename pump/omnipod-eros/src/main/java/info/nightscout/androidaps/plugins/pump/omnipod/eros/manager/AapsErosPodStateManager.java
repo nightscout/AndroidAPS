@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
@@ -13,6 +11,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.shared.sharedPreferences.SP;
 
 @Singleton

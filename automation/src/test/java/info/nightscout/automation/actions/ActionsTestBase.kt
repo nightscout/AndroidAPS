@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock

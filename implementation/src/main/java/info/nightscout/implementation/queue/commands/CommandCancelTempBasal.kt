@@ -5,7 +5,8 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.implementation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 
 class CommandCancelTempBasal(

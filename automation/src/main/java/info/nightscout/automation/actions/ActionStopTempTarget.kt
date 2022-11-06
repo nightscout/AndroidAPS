@@ -10,7 +10,8 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.automation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

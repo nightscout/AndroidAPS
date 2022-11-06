@@ -5,7 +5,6 @@ import org.joda.time.DateTimeZone;
 import java.util.Collections;
 import java.util.Random;
 
-import info.nightscout.shared.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.AssignAddressCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.VersionResponse;
@@ -16,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ill
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.rx.logging.AAPSLogger;
 
 public class AssignAddressAction implements OmnipodAction<Void> {
     private final ErosPodStateManager podStateManager;

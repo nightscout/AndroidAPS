@@ -9,7 +9,6 @@ import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventBTChange
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.automation.AutomationPlugin
@@ -18,7 +17,8 @@ import info.nightscout.automation.elements.ComparatorConnect
 import info.nightscout.automation.elements.InputDropdownMenu
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.events.EventBTChange
+import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 import javax.inject.Inject
 

@@ -12,8 +12,9 @@ import dagger.android.DaggerService
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import kotlin.math.ln

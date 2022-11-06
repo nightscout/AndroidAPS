@@ -29,14 +29,12 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
-import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefFileNotFoundError
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefIOError
@@ -56,8 +54,10 @@ import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.storage.Storage
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import java.io.File
 import java.io.FileNotFoundException

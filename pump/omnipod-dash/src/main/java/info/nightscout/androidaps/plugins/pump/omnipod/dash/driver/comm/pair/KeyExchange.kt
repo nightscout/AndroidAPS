@@ -1,18 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import org.spongycastle.crypto.engines.AESEngine
 import org.spongycastle.crypto.macs.CMac
 import org.spongycastle.crypto.params.KeyParameter
 
 class KeyExchange(
     private val aapsLogger: AAPSLogger,
+    private val config: Config,
     private val x25519: X25519KeyGenerator,
     randomByteGenerator: RandomByteGenerator
 ) {
@@ -86,7 +87,7 @@ class KeyExchange(
             pdmNonce
         aesCmac(confKey, podConfData, podConf)
 
-        if (BuildConfig.DEBUG) {
+        if (config.DEBUG) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmPrivate: ${pdmPrivate.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "pdmPublic: ${pdmPublic.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "podPublic: ${podPublic.toHex()}")

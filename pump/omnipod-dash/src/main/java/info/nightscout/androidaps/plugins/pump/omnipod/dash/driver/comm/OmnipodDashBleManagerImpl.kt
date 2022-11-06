@@ -4,17 +4,34 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.BusyException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotSendCommandException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.FailedToConnectException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NotConnectedException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.CommandAckError
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.CommandReceiveError
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.CommandReceiveSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.CommandSendErrorConfirming
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.CommandSendErrorSending
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.CommandSendSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connected
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.ConnectionState
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.ConnectionWaitCondition
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.NotConnected
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Session
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -26,7 +43,8 @@ import kotlin.reflect.KClass
 class OmnipodDashBleManagerImpl @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
-    private val podState: OmnipodDashPodStateManager
+    private val podState: OmnipodDashPodStateManager,
+    private val config: Config
 ) : OmnipodDashBleManager {
 
     private val busy = AtomicBoolean(false)
@@ -124,7 +142,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val podDevice = bluetoothAdapter?.getRemoteDevice(podAddress)
                     ?: throw ConnectException("Bluetooth not available")
                 val conn = connection
-                    ?: Connection(podDevice, aapsLogger, context, podState)
+                    ?: Connection(podDevice, aapsLogger, config, context, podState)
                 connection = conn
                 if (conn.connectionState() is Connected && conn.session != null) {
                     emitter.onNext(PodEvent.AlreadyConnected(podAddress))
@@ -203,7 +221,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             emitter.onNext(PodEvent.BluetoothConnecting)
             val podDevice = adapter.getRemoteDevice(podAddress)
-            val conn = Connection(podDevice, aapsLogger, context, podState)
+            val conn = Connection(podDevice, aapsLogger, config, context, podState)
             connection = conn
             conn.connect(ConnectionWaitCondition(timeoutMs = 3 * Connection.BASE_CONNECT_TIMEOUT_MS))
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
@@ -212,13 +230,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val mIO = conn.msgIO ?: throw ConnectException("Connection lost")
             val ltkExchanger = LTKExchanger(
                 aapsLogger,
+                config,
                 mIO,
                 ids,
             )
             val pairResult = ltkExchanger.negotiateLTK()
             emitter.onNext(PodEvent.Paired(ids.podId))
             podState.updateFromPairing(ids.podId, pairResult)
-            if (BuildConfig.DEBUG) {
+            if (config.DEBUG) {
                 aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
             }
             emitter.onNext(PodEvent.EstablishingSession)

@@ -24,5 +24,6 @@ android {
 dependencies {
     implementation project(':core')
     implementation project(':pump:dana')
-    implementation project(':shared')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
 }

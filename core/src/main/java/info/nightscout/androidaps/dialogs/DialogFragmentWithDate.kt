@@ -16,8 +16,9 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.Calendar
 import java.util.concurrent.atomic.AtomicBoolean

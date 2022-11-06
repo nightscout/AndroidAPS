@@ -1,12 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.*
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasalManager
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
+import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject

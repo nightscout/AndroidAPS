@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 
 class ConfigurationActivity : WearPreferenceActivity() {

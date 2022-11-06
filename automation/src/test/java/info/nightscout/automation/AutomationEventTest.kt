@@ -6,13 +6,13 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionLoopEnable
 import info.nightscout.automation.actions.ActionStopProcessing
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerConnectorTest
 import info.nightscout.automation.triggers.TriggerDummy
+import info.nightscout.rx.bus.RxBus
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test

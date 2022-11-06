@@ -15,7 +15,8 @@ import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject

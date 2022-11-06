@@ -1,0 +1,24 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-allopen'
+apply plugin: 'com.hiya.jacoco-android'
+apply plugin: 'kotlinx-serialization'
+
+apply from: "${project.rootDir}/core/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
+//apply from: "${project.rootDir}/core/test_dependencies.gradle"
+//apply from: "${project.rootDir}/core/jacoco_global.gradle"
+
+android {
+
+    namespace 'info.nightscout.shared.impl'
+    defaultConfig {
+        minSdkVersion 23  // for wear
+    }
+}
+
+dependencies {
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
+}

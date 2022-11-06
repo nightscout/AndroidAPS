@@ -13,7 +13,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.SafeParse
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivitySurveyBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile

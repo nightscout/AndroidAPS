@@ -1,19 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
+import java.util.Arrays;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetGlobalTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetTemperature;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetVoltageLevelB4Priming;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BatteryVoltageLevelPairingResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.GlobalTimeResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse;
-
-import java.util.Arrays;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton

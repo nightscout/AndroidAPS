@@ -12,8 +12,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
