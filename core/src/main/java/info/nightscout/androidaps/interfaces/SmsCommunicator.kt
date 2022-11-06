@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.data.Sms
+import info.nightscout.interfaces.data.smsCommunicator.Sms
 
 interface SmsCommunicator {
 

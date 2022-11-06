@@ -45,6 +45,7 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.CommandQueue;
@@ -396,11 +397,11 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult setUserOptions() {
         if (!isConnected())
-            return new PumpEnactResult(injector).success(false);
+            return new PumpEnactResultImpl(injector).success(false);
         SystemClock.sleep(300);
         MsgSetUserOptions msg = new MsgSetUserOptions(injector);
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
-        return new PumpEnactResult(injector).success(!msg.getFailed());
+        return new PumpEnactResultImpl(injector).success(!msg.getFailed());
     }
 }

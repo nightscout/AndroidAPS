@@ -10,6 +10,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
@@ -20,9 +21,7 @@ import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.Profile
@@ -58,6 +57,8 @@ import info.nightscout.implementation.queue.commands.CommandStartPump
 import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
@@ -145,7 +146,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(R.string.executing_right_now)
+        PumpEnactResultImpl(injector).success(false).enacted(false).comment(R.string.executing_right_now)
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -268,12 +269,12 @@ class CommandQueueImplementation @Inject constructor(
                     .subscribeBy(
                         onSuccess = { result ->
                             result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
+                            callback?.result(PumpEnactResultImpl(injector).enacted(false).success(true))?.run()
 
                         },
                         onError = {
                             aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                            callback?.result(PumpEnactResultImpl(injector).enacted(false).success(false))?.run()
                         }
                     )
             }
@@ -290,13 +291,13 @@ class CommandQueueImplementation @Inject constructor(
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
-                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                callback?.result(PumpEnactResultImpl(injector).enacted(false).success(false))?.run()
                 return false
             }
             val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
-                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                callback?.result(PumpEnactResultImpl(injector).enacted(false).success(false))?.run()
                 return false
             }
             removeAll(CommandType.SMB_BOLUS)
@@ -349,7 +350,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized
     override fun cancelAllBoluses(id: Long?) {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResultImpl(injector).success(true).enacted(false), id))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -433,12 +434,12 @@ class CommandQueueImplementation @Inject constructor(
     override fun setProfile(profile: Profile, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).success(true).enacted(false))?.run()
             return false
         }
         if (isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).success(true).enacted(false))?.run()
             return false
         }
         // Compare with pump limits
@@ -447,7 +448,7 @@ class CommandQueueImplementation @Inject constructor(
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, rh.gs(R.string.basal_value_below_minimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
+                callback?.result(PumpEnactResultImpl(injector).success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
                 return false
             }
         }

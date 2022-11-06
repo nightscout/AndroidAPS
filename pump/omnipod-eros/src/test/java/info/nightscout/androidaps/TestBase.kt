@@ -1,14 +1,14 @@
 package info.nightscout.androidaps
 
-import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import info.nightscout.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLoggerTest
+import info.nightscout.rx.TestAapsSchedulers
+import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Before
 import org.junit.Rule
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
-import java.util.*
+import java.util.Locale
 
 open class TestBase {
 

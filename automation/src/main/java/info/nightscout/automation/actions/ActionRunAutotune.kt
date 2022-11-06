@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -49,11 +49,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
                     message = R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
-                callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
+                callback.result(PumpEnactResultImpl(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
                 message = R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
-                callback.result(PumpEnactResult(injector).success(false).comment(message)).run()
+                callback.result(PumpEnactResultImpl(injector).success(false).comment(message)).run()
             }
         }.start()
         return

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
@@ -66,14 +67,14 @@ class DashInitializePodViewModel @Inject constructor(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                         source.onSuccess(
-                            PumpEnactResult(injector)
+                            PumpEnactResultImpl(injector)
                                 .success(false)
                                 .comment(I8n.textFromException(throwable, rh))
                         )
                     },
                     onComplete = {
                         logger.debug("Pod activation part 1 completed")
-                        source.onSuccess(PumpEnactResult(injector).success(true))
+                        source.onSuccess(PumpEnactResultImpl(injector).success(true))
                     }
                 )
         }

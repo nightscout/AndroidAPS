@@ -12,8 +12,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import info.nightscout.androidaps.utils.serialisation.SealedClassHelper.gson
+import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import org.junit.Before
 import org.junit.Test

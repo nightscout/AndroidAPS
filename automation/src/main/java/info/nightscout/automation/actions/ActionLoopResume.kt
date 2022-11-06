@@ -2,7 +2,7 @@ package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -45,9 +45,9 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
                            })
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
             uel.log(UserEntry.Action.RESUME, Sources.Automation, title)
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.notsuspended)).run()
         }
     }
 

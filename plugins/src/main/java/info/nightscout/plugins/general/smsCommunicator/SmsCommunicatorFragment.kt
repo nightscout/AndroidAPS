@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.data.Sms
+import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy

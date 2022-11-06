@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -41,7 +42,7 @@ abstract class ActionViewModelBase(
                     logger.error(LTag.PUMP, "Caught exception in while executing action in ActionViewModelBase", throwable)
                     _isActionExecutingLiveData.postValue(false)
                     _actionResultLiveData.postValue(
-                        PumpEnactResult(injector).success(false).comment(
+                        PumpEnactResultImpl(injector).success(false).comment(
                             throwable.message ?: "Caught exception in while executing action in ActionViewModelBase"
                         )
                     )

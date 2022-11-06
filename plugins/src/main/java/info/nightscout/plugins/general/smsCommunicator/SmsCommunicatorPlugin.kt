@@ -14,7 +14,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Sms
+import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TemporaryTarget

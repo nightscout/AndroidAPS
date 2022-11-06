@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.Sms
+import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword

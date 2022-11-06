@@ -11,6 +11,7 @@ import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
@@ -19,7 +20,6 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.Dana;
 import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.interfaces.PluginType;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventConfigBuilderChange;
@@ -135,7 +136,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     // Pump interface
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
 
         if (sExecutionService == null) {
             getAapsLogger().error("setNewBasalProfile sExecutionService is null");
@@ -215,7 +216,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
@@ -268,7 +269,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
@@ -319,7 +320,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             if (!danaPump.isExtendedInProgress()) {

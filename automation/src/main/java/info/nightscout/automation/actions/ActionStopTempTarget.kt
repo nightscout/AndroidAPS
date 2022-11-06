@@ -1,7 +1,7 @@
 package info.nightscout.automation.actions
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -36,7 +36,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                        })
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
     }
 
     override fun isValid(): Boolean = true

@@ -3,7 +3,7 @@ package info.nightscout.plugins.general.smsCommunicator
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.data.Sms
+import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.SmsCommunicator

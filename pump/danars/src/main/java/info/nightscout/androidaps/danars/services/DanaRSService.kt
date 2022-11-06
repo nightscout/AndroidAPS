@@ -56,6 +56,7 @@ import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpTime
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetUserOption
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -260,7 +261,7 @@ class DanaRSService : DaggerService() {
 
     fun loadEvents(): PumpEnactResult {
         if (!danaRSPlugin.isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
+            val result = PumpEnactResultImpl(injector).success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -282,13 +283,13 @@ class DanaRSService : DaggerService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
         sendMessage(DanaRSPacketGeneralInitialScreenInformation(injector))
         danaPump.lastConnection = System.currentTimeMillis()
-        return PumpEnactResult(injector).success(msg.success())
+        return PumpEnactResultImpl(injector).success(msg.success())
     }
 
     fun setUserSettings(): PumpEnactResult {
         val message = DanaRSPacketOptionSetUserOption(injector)
         sendMessage(message)
-        return PumpEnactResult(injector).success(message.success())
+        return PumpEnactResultImpl(injector).success(message.success())
     }
 
     fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
@@ -498,7 +499,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = PumpEnactResultImpl(injector)
         if (!isConnected) return result
         var msg: DanaRSPacketHistory? = null
         when (type) {

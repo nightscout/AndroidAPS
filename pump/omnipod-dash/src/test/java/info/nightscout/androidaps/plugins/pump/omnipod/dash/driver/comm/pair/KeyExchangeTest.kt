@@ -1,23 +1,28 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
-import info.nightscout.shared.logging.AAPSLoggerTest
+import info.nightscout.interfaces.Config
+import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.spy
 import org.spongycastle.util.encoders.Hex
 
-class KeyExchangeTest {
+class KeyExchangeTest : TestBase() {
 
     val keyGenerator = X25519KeyGenerator()
     val keyGeneratorSpy = spy(keyGenerator)
 
     var randomByteGenerator: RandomByteGenerator = mock(RandomByteGenerator::class.java)
+
+    @Mock lateinit var config: Config
 
     @Test fun testLTK() {
         val aapsLogger = AAPSLoggerTest()
@@ -31,6 +36,7 @@ class KeyExchangeTest {
 
         val ke = KeyExchange(
             aapsLogger,
+            config,
             keyGeneratorSpy,
             randomByteGenerator
         )

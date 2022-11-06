@@ -7,15 +7,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -32,6 +30,8 @@ import info.nightscout.implementation.queue.commands.CommandCustomCommand
 import info.nightscout.implementation.queue.commands.CommandExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandLoadHistory
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -105,7 +105,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             if (it is CommandLoadHistory) {
                 it.activePlugin = activePlugin
             }
-            if (it is PumpEnactResult) {
+            if (it is PumpEnactResultImpl) {
                 it.rh = rh
             }
         }

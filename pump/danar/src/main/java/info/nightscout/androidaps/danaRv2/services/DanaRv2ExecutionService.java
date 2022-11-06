@@ -50,6 +50,7 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
@@ -429,14 +430,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult loadEvents() {
         if (!danaRv2Plugin.isInitialized()) {
-            PumpEnactResult result = new PumpEnactResult(injector).success(false);
+            PumpEnactResult result = new PumpEnactResultImpl(injector).success(false);
             result.comment("pump not initialized");
             return result;
         }
 
 
         if (!isConnected())
-            return new PumpEnactResult(injector).success(false);
+            return new PumpEnactResultImpl(injector).success(false);
         SystemClock.sleep(300);
         MsgHistoryEventsV2 msg = new MsgHistoryEventsV2(injector, danaPump.lastHistoryFetched);
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.lastHistoryFetched));
@@ -451,7 +452,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         else
             danaPump.lastHistoryFetched = 0;
         danaPump.setLastConnection(System.currentTimeMillis());
-        return new PumpEnactResult(injector).success(true);
+        return new PumpEnactResultImpl(injector).success(true);
     }
 
     public boolean updateBasalsInPump(final Profile profile) {
@@ -470,12 +471,12 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult setUserOptions() {
         if (!isConnected())
-            return new PumpEnactResult(injector).success(false);
+            return new PumpEnactResultImpl(injector).success(false);
         SystemClock.sleep(300);
         MsgSetUserOptions msg = new MsgSetUserOptions(injector);
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
-        return new PumpEnactResult(injector).success(!msg.getFailed());
+        return new PumpEnactResultImpl(injector).success(!msg.getFailed());
     }
 
 }

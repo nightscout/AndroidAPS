@@ -7,7 +7,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
@@ -84,7 +84,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 it.sp = sp
                 it.dateUtil = dateUtil
             }
-            if (it is PumpEnactResult) {
+            if (it is PumpEnactResultImpl) {
                 it.rh = rh
             }
         }
@@ -135,12 +135,100 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config, dateUtil, uel)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil, ruffyScripter)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
-        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
+        danaRSPlugin =
+            DanaRSPlugin(
+                injector,
+                aapsLogger,
+                aapsSchedulers,
+                rxBus,
+                context,
+                rh,
+                constraintChecker,
+                profileFunction,
+                sp,
+                commandQueue,
+                danaPump,
+                pumpSync,
+                detailedBolusInfoStorage,
+                temporaryBasalStorage,
+                fabricPrivacy,
+                dateUtil
+            )
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync)
-        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
-        openAPSSMBDynamicISFPlugin = OpenAPSSMBDynamicISFPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider, buildHelper)
-        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, openAPSSMBDynamicISFPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelperImpl(config, fileListProvider), iobCobCalculator, config, dateUtil)
+        openAPSSMBPlugin =
+            OpenAPSSMBPlugin(
+                injector,
+                aapsLogger,
+                rxBus,
+                constraintChecker,
+                rh,
+                profileFunction,
+                context,
+                activePlugin,
+                iobCobCalculator,
+                hardLimits,
+                profiler,
+                sp,
+                dateUtil,
+                repository,
+                glucoseStatusProvider
+            )
+        openAPSSMBDynamicISFPlugin =
+            OpenAPSSMBDynamicISFPlugin(
+                injector,
+                aapsLogger,
+                rxBus,
+                constraintChecker,
+                rh,
+                profileFunction,
+                context,
+                activePlugin,
+                iobCobCalculator,
+                hardLimits,
+                profiler,
+                sp,
+                dateUtil,
+                repository,
+                glucoseStatusProvider,
+                buildHelper
+            )
+        openAPSAMAPlugin =
+            OpenAPSAMAPlugin(
+                injector,
+                aapsLogger,
+                rxBus,
+                constraintChecker,
+                rh,
+                profileFunction,
+                context,
+                activePlugin,
+                iobCobCalculator,
+                hardLimits,
+                profiler,
+                fabricPrivacy,
+                dateUtil,
+                repository,
+                glucoseStatusProvider
+            )
+        safetyPlugin =
+            SafetyPlugin(
+                injector,
+                aapsLogger,
+                rh,
+                sp,
+                rxBus,
+                constraintChecker,
+                openAPSAMAPlugin,
+                openAPSSMBPlugin,
+                openAPSSMBDynamicISFPlugin,
+                sensitivityOref1Plugin,
+                activePlugin,
+                hardLimits,
+                BuildHelperImpl(config, fileListProvider),
+                iobCobCalculator,
+                config,
+                dateUtil
+            )
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)
         constraintsPluginsList.add(objectivesPlugin)

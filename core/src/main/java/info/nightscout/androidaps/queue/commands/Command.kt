@@ -2,7 +2,7 @@ package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.queue.Callback
@@ -48,7 +48,7 @@ abstract class Command(
     abstract fun log(): String
 
     fun cancel() {
-        val result = PumpEnactResult(injector)
+        val result = PumpEnactResultImpl(injector)
         result.success = false
         result.comment = rh.gs(R.string.connectiontimedout)
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
