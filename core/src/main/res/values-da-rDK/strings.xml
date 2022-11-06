@@ -264,16 +264,6 @@
     <string name="format_hour_minute">%1$dt %2$dm</string>
     <string name="mute5min">Lydløs i 5 minutter</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Filformat</string>
-    <string name="metadata_label_created_at">Oprettet den</string>
-    <string name="metadata_label_aaps_version">AAPS Version</string>
-    <string name="metadata_label_aaps_flavour">Build Variant</string>
-    <string name="metadata_label_device_name">Eksporterer enhedens patientnavn</string>
-    <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
-    <string name="metadata_label_encryption">Filkryptering</string>
-    <string name="metadata_format_new">Nyt krypteret format</string>
-    <string name="metadata_format_debug">Nyt debug format (ukrypteret)</string>
-    <string name="metadata_format_other">Ukendt eksportformat</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
     <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
     <string name="exported_less_than_hour_ago">eksporteret for mindre end time siden</string>
