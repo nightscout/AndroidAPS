@@ -247,16 +247,6 @@
     <string name="format_hour_minute">%1$dч:%2$dм</string>
     <string name="mute5min">Изключи за 5 минути</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Формат на файла</string>
-    <string name="metadata_label_created_at">Създаден на</string>
-    <string name="metadata_label_aaps_version">Версия на AAPS</string>
-    <string name="metadata_label_aaps_flavour">вариант</string>
-    <string name="metadata_label_device_name">Име на пациента</string>
-    <string name="metadata_label_device_model">Модел на телефона:</string>
-    <string name="metadata_label_encryption">Криптиране</string>
-    <string name="metadata_format_new">Нов формат</string>
-    <string name="metadata_format_debug">Нов формат (незащитен)</string>
-    <string name="metadata_format_other">Непознат формат</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
     <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
