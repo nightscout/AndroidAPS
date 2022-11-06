@@ -1032,13 +1032,31 @@ class ComboV2Plugin @Inject constructor (
                 // NOTE: This is called "status" because this is what the
                 // Nightscout pump plugin API schema expects. It is not to
                 // be confused with the "status" in the ComboCtl Pump class.
+                // Also not to be confused with the "status" field inside
+                // this "status" JSON object.
                 // See the Nightscout /devicestatus/ API docs for more.
                 put("status", JSONObject().apply {
                     val driverState = driverStateFlow.value
                     val suspended = isSuspended()
                     val bolusing = (driverState is DriverState.ExecutingCommand) &&
                         (driverState.description is ComboCtlPump.DeliveringBolusCommandDesc)
-                    put("status", driverState.label)
+                    // The value of the "status" string isn't well defined.
+                    // Commonly used ones seem to be "normal", "suspended",
+                    // and "bolusing". The latter two are already enforced
+                    // by the corresponding boolean flags, but we set them
+                    // in this string anyway. It may be a legacy feature
+                    // from older Nightscout iterations. Furthermore, we do
+                    // set this to "error" in case of pump errors to alert
+                    // users of Nightscout to possible problems with the pump.
+                    val statusLabel = if (bolusing)
+                        "bolusing"
+                    else if (suspended)
+                        "suspended"
+                    else if (driverState == DriverState.Error)
+                        "error"
+                    else
+                        "normal"
+                    put("status", statusLabel)
                     put("suspended", suspended)
                     put("bolusing", bolusing)
                     put("timestamp", dateUtil.toISOString(lastConnectionTimestamp))
