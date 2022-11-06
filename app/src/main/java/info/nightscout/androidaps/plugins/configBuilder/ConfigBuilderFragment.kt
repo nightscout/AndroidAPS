@@ -21,10 +21,10 @@ import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy

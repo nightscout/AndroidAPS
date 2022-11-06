@@ -8,7 +8,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.age
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants

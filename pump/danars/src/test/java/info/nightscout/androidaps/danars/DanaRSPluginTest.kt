@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage

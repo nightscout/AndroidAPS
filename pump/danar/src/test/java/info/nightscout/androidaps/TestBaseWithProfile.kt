@@ -6,7 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore

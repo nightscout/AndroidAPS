@@ -8,7 +8,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ResourceHelper

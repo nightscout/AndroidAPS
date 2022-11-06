@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.BusyException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotSendCommandException

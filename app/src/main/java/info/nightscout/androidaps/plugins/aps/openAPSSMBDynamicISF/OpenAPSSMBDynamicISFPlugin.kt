@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.DetermineBasalAdapterInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculator

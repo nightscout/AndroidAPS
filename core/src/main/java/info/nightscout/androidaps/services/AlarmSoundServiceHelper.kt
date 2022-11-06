@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import info.nightscout.androidaps.interfaces.NotificationHolder
+import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 

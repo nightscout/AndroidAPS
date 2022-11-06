@@ -31,7 +31,7 @@ import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.rx.bus.RxBus

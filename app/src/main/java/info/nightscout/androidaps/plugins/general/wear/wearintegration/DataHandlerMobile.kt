@@ -30,6 +30,7 @@ import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear

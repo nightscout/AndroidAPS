@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert

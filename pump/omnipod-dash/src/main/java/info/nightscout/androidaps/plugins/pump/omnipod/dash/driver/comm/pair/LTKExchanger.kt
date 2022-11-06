@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import info.nightscout.androidaps.extensions.hexStringToByteArray
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PairingException

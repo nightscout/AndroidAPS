@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import android.os.Build
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification

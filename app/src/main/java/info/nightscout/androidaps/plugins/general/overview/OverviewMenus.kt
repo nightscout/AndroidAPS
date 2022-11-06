@@ -12,8 +12,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.FabricPrivacy

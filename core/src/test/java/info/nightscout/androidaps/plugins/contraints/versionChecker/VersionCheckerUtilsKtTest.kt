@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.contraints.versionChecker
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.constraints.versionChecker.numericVersionPart

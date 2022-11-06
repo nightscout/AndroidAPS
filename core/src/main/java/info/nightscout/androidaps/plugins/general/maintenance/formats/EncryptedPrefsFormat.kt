@@ -6,6 +6,15 @@ import info.nightscout.androidaps.extensions.hexStringToByteArray
 import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.interfaces.data.maintenance.PrefFileNotFoundError
+import info.nightscout.interfaces.data.maintenance.PrefFormatError
+import info.nightscout.interfaces.data.maintenance.PrefIOError
+import info.nightscout.interfaces.data.maintenance.PrefMetadata
+import info.nightscout.interfaces.data.maintenance.PrefMetadataMap
+import info.nightscout.interfaces.data.maintenance.Prefs
+import info.nightscout.interfaces.data.maintenance.PrefsFormat
+import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
+import info.nightscout.interfaces.data.maintenance.PrefsStatus
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
@@ -23,9 +32,6 @@ class EncryptedPrefsFormat @Inject constructor(
 ) : PrefsFormat {
 
     companion object {
-
-        const val FORMAT_KEY_ENC = "aaps_encrypted"
-        const val FORMAT_KEY_NOENC = "aaps_structured"
 
         private const val KEY_CONSCIENCE = "if you remove/change this, please make sure you know the consequences!"
         private val FORMAT_TEST_REGEX = Regex("(\"format\"\\s*:\\s*\"aaps_[^\"]*\")")
@@ -69,7 +75,7 @@ class EncryptedPrefsFormat @Inject constructor(
                 meta.put(metaKey.key, metaEntry.value)
             }
 
-            container.put(PrefsMetadataKey.FILE_FORMAT.key, if (encrypted) FORMAT_KEY_ENC else FORMAT_KEY_NOENC)
+            container.put(PrefsMetadataKey.FILE_FORMAT.key, if (encrypted) PrefsFormat.FORMAT_KEY_ENC else PrefsFormat.FORMAT_KEY_NOENC)
             container.put("metadata", meta)
 
             val security = JSONObject()
@@ -127,7 +133,7 @@ class EncryptedPrefsFormat @Inject constructor(
             if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content")) {
                 val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
                 val security = container.getJSONObject("security")
-                val encrypted = fileFormat == FORMAT_KEY_ENC
+                val encrypted = fileFormat == PrefsFormat.FORMAT_KEY_ENC
                 var secure: PrefsStatus = PrefsStatus.OK
                 var decryptedOk = false
                 var contentJsonObj: JSONObject? = null
@@ -239,7 +245,7 @@ class EncryptedPrefsFormat @Inject constructor(
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
         if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
             val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
-            if ((fileFormat != FORMAT_KEY_ENC) && (fileFormat != FORMAT_KEY_NOENC)) {
+            if ((fileFormat != PrefsFormat.FORMAT_KEY_ENC) && (fileFormat != PrefsFormat.FORMAT_KEY_NOENC)) {
                 metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(rh.gs(R.string.metadata_format_other), PrefsStatus.ERROR)
             } else {
                 val meta = container.getJSONObject("metadata")

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.interfaces.PluginType
 
 @OpenForTesting
 class PluginDescription {

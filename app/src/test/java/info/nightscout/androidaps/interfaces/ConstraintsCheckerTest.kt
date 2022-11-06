@@ -32,6 +32,8 @@ import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.PluginType
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before

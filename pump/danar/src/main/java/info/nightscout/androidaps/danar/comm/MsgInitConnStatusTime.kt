@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.rx.events.EventRebuildTabs

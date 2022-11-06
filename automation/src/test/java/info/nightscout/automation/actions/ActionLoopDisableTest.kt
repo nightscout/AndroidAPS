@@ -1,6 +1,6 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.automation.R
 import org.junit.Assert

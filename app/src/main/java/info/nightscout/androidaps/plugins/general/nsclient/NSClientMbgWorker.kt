@@ -9,8 +9,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.extensions.therapyEventFromNsMbg
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.rx.logging.AAPSLogger

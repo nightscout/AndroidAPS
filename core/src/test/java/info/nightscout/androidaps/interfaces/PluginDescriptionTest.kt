@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import androidx.fragment.app.Fragment
+import info.nightscout.interfaces.PluginType
 import org.junit.Assert
 import org.junit.Test
 

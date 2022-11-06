@@ -397,16 +397,6 @@
     <string name="mute5min">Mute for 5 minutes</string>
 
     <!-- Maintenance -->
-    <string name="metadata_label_format">File format</string>
-    <string name="metadata_label_created_at">Created at</string>
-    <string name="metadata_label_aaps_version">AAPS Version</string>
-    <string name="metadata_label_aaps_flavour">Build Variant</string>
-    <string name="metadata_label_device_name">Exporting device patient name</string>
-    <string name="metadata_label_device_model">Exporting device model</string>
-    <string name="metadata_label_encryption">File encryption</string>
-    <string name="metadata_format_new">New encrypted format</string>
-    <string name="metadata_format_debug">New debug format (unencrypted)</string>
-    <string name="metadata_format_other">Unknown export format</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
     <string name="exported_at" comment="at placeholder we add export date">exported at %1$s</string>
     <string name="exported_less_than_hour_ago">exported less than hour ago</string>

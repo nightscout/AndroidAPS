@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
+import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.Safety
 import java.util.*
 
 interface ActivePlugin {

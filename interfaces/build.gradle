@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'kotlinx-serialization'
 

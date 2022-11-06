@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.os.Parcelable
-import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefMetadata
-import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsMetadataKey
+import info.nightscout.interfaces.data.maintenance.PrefMetadata
+import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
+import info.nightscout.interfaces.data.maintenance.PrefsImportDir
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import java.io.File

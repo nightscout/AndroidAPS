@@ -16,7 +16,7 @@ import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
-import info.nightscout.androidaps.interfaces.NotificationHolder
+import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.automation.R

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 import android.app.Notification
 import android.app.PendingIntent

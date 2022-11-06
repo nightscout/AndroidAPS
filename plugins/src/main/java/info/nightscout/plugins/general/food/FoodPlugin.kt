@@ -11,7 +11,7 @@ import info.nightscout.androidaps.database.transactions.SyncNsFoodTransaction
 import info.nightscout.androidaps.extensions.foodFromJson
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.JsonHelper

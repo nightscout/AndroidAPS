@@ -16,7 +16,7 @@ import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData

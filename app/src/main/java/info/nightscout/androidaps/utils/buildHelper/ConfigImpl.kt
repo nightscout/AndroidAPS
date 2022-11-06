@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.buildHelper
 
 import android.os.Build
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import javax.inject.Inject
 import javax.inject.Singleton
 

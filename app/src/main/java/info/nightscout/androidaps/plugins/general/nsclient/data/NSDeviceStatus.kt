@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.data
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration

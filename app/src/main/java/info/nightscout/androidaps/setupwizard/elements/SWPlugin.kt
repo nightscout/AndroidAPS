@@ -10,7 +10,7 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.setupwizard.SWDefinition

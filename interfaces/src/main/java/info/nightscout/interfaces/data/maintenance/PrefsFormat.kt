@@ -1,10 +1,10 @@
-package info.nightscout.androidaps.plugins.general.maintenance.formats
+package info.nightscout.interfaces.data.maintenance
 
 import android.content.Context
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.core.R
+import info.nightscout.interfaces.R
 import kotlinx.parcelize.Parcelize
 import java.io.File
 
@@ -38,8 +38,8 @@ enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @String
     fun formatForDisplay(context: Context, value: String): String {
         return when (this) {
             FILE_FORMAT -> when (value) {
-                EncryptedPrefsFormat.FORMAT_KEY_ENC   -> context.getString(R.string.metadata_format_new)
-                EncryptedPrefsFormat.FORMAT_KEY_NOENC -> context.getString(R.string.metadata_format_debug)
+                PrefsFormat.FORMAT_KEY_ENC   -> context.getString(R.string.metadata_format_new)
+                PrefsFormat.FORMAT_KEY_NOENC -> context.getString(R.string.metadata_format_debug)
                 else                                  -> context.getString(R.string.metadata_format_other)
             }
             CREATED_AT  -> value.replace("T", " ").replace("Z", " (UTC)")
@@ -57,6 +57,11 @@ typealias PrefMetadataMap = Map<PrefsMetadataKey, PrefMetadata>
 data class Prefs(val values: Map<String, String>, var metadata: PrefMetadataMap)
 
 interface PrefsFormat {
+    companion object {
+
+        const val FORMAT_KEY_ENC = "aaps_encrypted"
+        const val FORMAT_KEY_NOENC = "aaps_structured"
+    }
 
     fun savePreferences(file: File, prefs: Prefs, masterPassword: String? = null)
     fun loadPreferences(file: File, masterPassword: String? = null): Prefs

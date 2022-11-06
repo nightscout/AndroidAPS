@@ -8,7 +8,7 @@ import android.content.Context
 import android.os.SystemClock
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ServiceDiscoverer
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks

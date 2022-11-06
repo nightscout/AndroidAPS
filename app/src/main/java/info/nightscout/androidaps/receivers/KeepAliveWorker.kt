@@ -19,9 +19,9 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.extensions.buildDeviceStatus
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.LocalAlertUtils
+import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
