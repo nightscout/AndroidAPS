@@ -1,7 +1,7 @@
 package info.nightscout.implementation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.CarbTimer
+import info.nightscout.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.TimerUtil

@@ -182,6 +182,7 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
     implementation project(':core')
+    implementation project(':interfaces')
     implementation project(':ui')
     implementation project(':plugins')
     implementation project(':implementation')

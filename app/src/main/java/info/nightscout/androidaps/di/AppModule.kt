@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.BolusTimer
 import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.CarbTimer
+import info.nightscout.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder

@@ -26,4 +26,5 @@ dependencies {
     implementation project(':pump:dana')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
+    implementation project(':interfaces')
 }
