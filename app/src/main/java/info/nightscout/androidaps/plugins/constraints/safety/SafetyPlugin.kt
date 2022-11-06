@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpDescription
@@ -57,7 +57,8 @@ class SafetyPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val config: Config,
     private val dateUtil: DateUtil
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)

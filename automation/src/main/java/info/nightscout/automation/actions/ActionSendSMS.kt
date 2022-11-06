@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.automation.R

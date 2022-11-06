@@ -36,13 +36,13 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification

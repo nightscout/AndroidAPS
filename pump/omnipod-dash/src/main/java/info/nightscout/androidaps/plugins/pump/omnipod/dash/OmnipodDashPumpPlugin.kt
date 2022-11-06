@@ -14,7 +14,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Pump
@@ -22,9 +22,9 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.interfaces.pump.ManufacturerType
+import info.nightscout.interfaces.pump.actions.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress

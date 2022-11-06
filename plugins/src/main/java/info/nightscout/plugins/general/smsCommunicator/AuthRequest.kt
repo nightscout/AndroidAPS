@@ -6,7 +6,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.plugins.R

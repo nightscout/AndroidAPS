@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper

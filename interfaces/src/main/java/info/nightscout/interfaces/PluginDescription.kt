@@ -1,9 +1,8 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
-import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.annotations.InterfacesOpenForTesting
 
-@OpenForTesting
+@InterfacesOpenForTesting
 class PluginDescription {
 
     var mainType = PluginType.GENERAL

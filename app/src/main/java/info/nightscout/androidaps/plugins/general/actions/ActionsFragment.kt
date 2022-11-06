@@ -35,7 +35,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.skins.SkinProvider

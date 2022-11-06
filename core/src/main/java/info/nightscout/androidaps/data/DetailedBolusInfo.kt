@@ -5,12 +5,10 @@ import com.google.gson.Gson
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusTransaction
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateCarbsTransaction
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.T
 
 class DetailedBolusInfo {
 

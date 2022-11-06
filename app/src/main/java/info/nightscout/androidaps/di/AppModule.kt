@@ -31,7 +31,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator

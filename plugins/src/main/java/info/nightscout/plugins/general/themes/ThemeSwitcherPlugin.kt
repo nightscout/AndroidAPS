@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.plugins.R
@@ -26,13 +26,14 @@ class ThemeSwitcherPlugin @Inject constructor(
     rh: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
                    .mainType(PluginType.GENERAL)
                    .neverVisible(true)
                    .alwaysEnabled(true)
                    .showInList(false)
                    .pluginName(R.string.theme_switcher),
-               aapsLogger, rh, injector
+    aapsLogger, rh, injector
 ) {
 
     private val compositeDisposable = CompositeDisposable()

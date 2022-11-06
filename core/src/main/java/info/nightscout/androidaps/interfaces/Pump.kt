@@ -2,12 +2,12 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.interfaces.pump.actions.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.TimeChangeType
+import info.nightscout.interfaces.pump.ManufacturerType
 import org.json.JSONObject
 
 /**

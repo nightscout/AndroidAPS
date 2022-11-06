@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.common.defs
+package info.nightscout.interfaces.pump
 
-import java.util.*
+import java.util.Locale
 
 enum class DoseStepSize(private val entries: Array<DoseStepSizeEntry>) {
 

@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.rx.logging.AAPSLogger
@@ -17,7 +17,8 @@ class ActionsPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     config: Config
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ActionsFragment::class.qualifiedName)
     .enableByDefault(config.APS || config.PUMPCONTROL)

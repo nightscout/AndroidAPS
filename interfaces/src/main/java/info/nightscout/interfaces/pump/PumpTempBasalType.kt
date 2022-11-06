@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.common.defs
+package info.nightscout.interfaces.pump
 
 enum class PumpTempBasalType {
 

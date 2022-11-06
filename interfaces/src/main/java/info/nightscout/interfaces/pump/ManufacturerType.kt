@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.common
+package info.nightscout.interfaces.pump
 
 enum class ManufacturerType(val description: String) {
     AAPS("AAPS"),

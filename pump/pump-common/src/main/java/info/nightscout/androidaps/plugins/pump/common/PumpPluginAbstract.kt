@@ -15,7 +15,7 @@ import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpDescription
@@ -23,7 +23,7 @@ import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.common.ManufacturerType
+import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState

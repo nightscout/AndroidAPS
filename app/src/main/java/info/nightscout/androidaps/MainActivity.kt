@@ -48,7 +48,7 @@ import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.SmsCommunicator
+import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus

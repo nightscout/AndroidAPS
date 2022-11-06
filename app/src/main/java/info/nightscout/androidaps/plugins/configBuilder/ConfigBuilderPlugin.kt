@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.Pump
@@ -42,7 +42,8 @@ class ConfigBuilderPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ConfigBuilderFragment::class.java.name)
     .showInList(true)

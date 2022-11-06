@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.common.ManufacturerType
+import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.TimeChangeType
 import org.json.JSONObject

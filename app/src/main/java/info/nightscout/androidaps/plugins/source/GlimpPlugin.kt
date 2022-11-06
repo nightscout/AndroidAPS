@@ -12,7 +12,7 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
@@ -29,7 +29,8 @@ class GlimpPlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon(R.drawable.ic_glimp)

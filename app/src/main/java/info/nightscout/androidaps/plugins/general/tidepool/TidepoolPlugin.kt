@@ -10,7 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
@@ -52,7 +52,8 @@ class TidepoolPlugin @Inject constructor(
     private val sp: SP,
     private val rateLimit: RateLimit,
     private val receiverStatusStore: ReceiverStatusStore
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.GENERAL)
     .pluginName(R.string.tidepool)
     .shortName(R.string.tidepool_shortname)

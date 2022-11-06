@@ -16,7 +16,7 @@ import info.nightscout.androidaps.extensions.storeString
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Overview
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification

@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction

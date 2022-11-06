@@ -13,7 +13,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -46,7 +46,8 @@ class ObjectivesPlugin @Inject constructor(
     config: Config,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .fragmentClass(ObjectivesFragment::class.qualifiedName)
     .alwaysEnabled(config.APS)

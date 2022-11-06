@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.plugins.general.actions.defs
+package info.nightscout.interfaces.pump.actions
 
-import info.nightscout.androidaps.core.R
+import info.nightscout.interfaces.R
 
 class CustomAction @JvmOverloads constructor(val name: Int, val customActionType: CustomActionType, val iconResourceId: Int = R.drawable.ic_actions_profileswitch, var isEnabled: Boolean = true) {
 
