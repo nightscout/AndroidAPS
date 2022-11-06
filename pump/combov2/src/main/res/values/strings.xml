@@ -32,16 +32,18 @@
     <string name="key_combov2_unpair_pump" translatable="false">combov2_unpair_pump</string>
     <string name="combov2_start_pairing">Start pairing</string>
     <string name="combov2_pairing_in_progress">Combo pairing in progress</string>
-    <string name="combov2_pairing_start_steps">Steps to perform pairing with your Combo:\n \n 1.
-        On your pump, navigate to the Bluetooth Settings\n 2. Check if a device is already shown
-        as paired; if so, go to "Delete device" screen to delete/unpair that device\n 3. Go to the
-        "Add device" screen, and initiate pairing\n 4. Click on the "Start pairing" button below\n
-        5. When pairing is successfully completed, confirm the finished pairing on your pump and
-        return to the main screen by pressing the CHECK button twice</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">If no connection is established
-        after more than ~5 minutes:\n \n 1. Press Back or the "Cancel Pairing" button\n 2. Cancel
-        the pairing on the Combo (press both UP and MENU buttons at the same time to cancel pairing)
-        \n 3. Try to pair again</string>
+    <string name="combov2_pairing_start_steps">Steps to perform pairing with your Combo:\n\n
+1. On your pump, navigate to the Bluetooth Settings\n
+2. Check if a device is already shown as paired; if so, go to the "Delete device" pump screen to delete/unpair that device\n
+3. Go to the "Add device" pump screen, and initiate pairing on the pump\n
+4. Click on the "Start pairing" button below to initiate pairing in AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">After a while, the phone\'s name is shown on the pump\'s screen; press CHECK to confirm.\n\n
+When pairing is successfully completed, confirm the finished pairing on your pump and return to the main pump screen by pressing the CHECK button twice.\n\n
+If no connection is established after more than ~5 minutes:\n\n
+1. Press Back or the "Cancel Pairing" button\n
+2. Cancel the pairing on the Combo (press both UP and MENU
+buttons at the same time to cancel pairing)\n
+3. Try to pair again</string>
     <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Enter PIN</string>
     <string name="combov2_cancel_pairing">Cancel pairing</string>
