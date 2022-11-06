@@ -62,7 +62,9 @@ class SafetyPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value.set(aapsLogger, false, rh.gs(R.string.pumpisnottempbasalcapable), this)
-        if (glucoseStatusProvider.isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) value.set(aapsLogger, false, rh.gs(R.string.stale_bg_data, staleBgCheckPeriodMinutes), this)
+        if (activePlugin.activeBgSource.javaClass.simpleName != "DexcomPlugin" && glucoseStatusProvider.isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
+            value.set(aapsLogger, false, rh.gs(R.string.stale_bg_data, staleBgCheckPeriodMinutes), this)
+        }
         return value
     }
 
