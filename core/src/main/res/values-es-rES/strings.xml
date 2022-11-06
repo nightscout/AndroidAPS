@@ -147,8 +147,8 @@
     <string name="remove_label">ELIMINAR</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="reset">reestablecer</string>
-    <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
-    <string name="profile">Perfil</string>
+    <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
+    <string name="treatments_wizard_cob_label">COB</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
