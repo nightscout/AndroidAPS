@@ -17,7 +17,7 @@ import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;

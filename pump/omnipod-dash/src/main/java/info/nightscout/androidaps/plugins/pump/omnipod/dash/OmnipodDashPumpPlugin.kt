@@ -6,13 +6,13 @@ import android.os.HandlerThread
 import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile
@@ -60,7 +60,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.queue.commands.CustomCommand
+import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal

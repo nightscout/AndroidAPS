@@ -7,7 +7,7 @@ import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes

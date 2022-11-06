@@ -9,7 +9,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
@@ -19,8 +19,8 @@ import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.interfaces.ActivityNames
+import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
@@ -32,10 +32,10 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBo
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.Command.CommandType
-import info.nightscout.androidaps.queue.commands.CustomCommand
+import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper

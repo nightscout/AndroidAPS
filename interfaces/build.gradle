@@ -15,7 +15,9 @@ android {
 }
 
 dependencies {
+    api "androidx.appcompat:appcompat:$appcompat_version"
 }
+
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
     annotation 'info.nightscout.interfaces.annotations.InterfacesOpenForTesting'

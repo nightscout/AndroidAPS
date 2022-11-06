@@ -20,8 +20,8 @@ import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.BolusTimer
+import info.nightscout.interfaces.ActivityNames
+import info.nightscout.interfaces.BolusTimer
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
@@ -31,7 +31,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HtmlHelper

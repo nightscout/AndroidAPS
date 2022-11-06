@@ -14,7 +14,7 @@ import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes

@@ -17,14 +17,14 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogTreatmentBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.ToastUtils

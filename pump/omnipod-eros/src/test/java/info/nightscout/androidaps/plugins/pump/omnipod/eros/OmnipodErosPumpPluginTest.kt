@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync

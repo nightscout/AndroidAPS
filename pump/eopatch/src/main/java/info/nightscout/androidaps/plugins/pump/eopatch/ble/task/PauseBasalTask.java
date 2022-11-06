@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalPause;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
-import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper;
 import info.nightscout.rx.logging.AAPSLogger;

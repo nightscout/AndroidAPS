@@ -10,13 +10,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction

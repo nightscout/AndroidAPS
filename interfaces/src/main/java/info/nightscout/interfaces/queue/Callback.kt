@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.queue
+package info.nightscout.interfaces.queue
 
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.interfaces.data.PumpEnactResult
 
 abstract class Callback : Runnable {
 

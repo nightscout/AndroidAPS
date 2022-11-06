@@ -18,14 +18,14 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.events.EventQueueChanged
+import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.MealData
+import info.nightscout.interfaces.data.MealData
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal

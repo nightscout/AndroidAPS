@@ -29,8 +29,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.events.EventQueueChanged
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T

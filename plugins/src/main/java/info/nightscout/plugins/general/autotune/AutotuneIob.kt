@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.AppRepository

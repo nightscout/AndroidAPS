@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry

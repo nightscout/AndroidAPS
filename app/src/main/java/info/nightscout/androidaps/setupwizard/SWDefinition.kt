@@ -7,13 +7,13 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
@@ -114,13 +114,13 @@ class SWDefinition @Inject constructor(
         .validator { sp.contains(R.string.key_units) }
     private val displaySettings = SWScreen(injector, R.string.wear_display_settings)
         .skippable(false)
-        .add(SWEditNumberWithUnits(injector, Constants.LOWMARK * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
+        .add(SWEditNumberWithUnits(injector, Constants.LOW_MARK * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
             .preferenceId(R.string.key_low_mark)
             .updateDelay(5)
             .label(R.string.low_mark)
             .comment(R.string.low_mark_comment))
         .add(SWBreak(injector))
-        .add(SWEditNumberWithUnits(injector, Constants.HIGHMARK * Constants.MGDL_TO_MMOLL, 5.0, 20.0)
+        .add(SWEditNumberWithUnits(injector, Constants.HIGH_MARK * Constants.MGDL_TO_MMOLL, 5.0, 20.0)
             .preferenceId(R.string.key_high_mark)
             .updateDelay(5)
             .label(R.string.high_mark)

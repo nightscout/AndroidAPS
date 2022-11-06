@@ -26,7 +26,7 @@ import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
@@ -37,7 +37,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy

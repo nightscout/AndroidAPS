@@ -9,7 +9,7 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity

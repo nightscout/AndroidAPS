@@ -1,8 +1,7 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.interfaces.SmsCommunicator
 
 interface AndroidPermission {
 

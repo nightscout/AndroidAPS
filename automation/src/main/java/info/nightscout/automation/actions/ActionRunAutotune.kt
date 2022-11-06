@@ -5,10 +5,10 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Autotune
+import info.nightscout.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration

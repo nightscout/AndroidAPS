@@ -8,10 +8,10 @@ import android.os.SystemClock
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile

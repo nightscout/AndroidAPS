@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.userEntry
 
 import android.text.Spanned
 import dagger.Reusable
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
@@ -212,7 +212,7 @@ class UserEntryPresentationHelper @Inject constructor(
                     bg = Profile.toUnitsString(valueWithUnit.value, valueWithUnit.value * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
 
                 is ValueWithUnit.Mmoll                 ->
-                    bg = Profile.toUnitsString(valueWithUnit.value * Constants.MMOLL_TO_MGDL, valueWithUnit.value , profileFunction.getUnits())
+                    bg = Profile.toUnitsString(valueWithUnit.value * Constants.MMOLL_TO_MGDL, valueWithUnit.value, profileFunction.getUnits())
 
                 ValueWithUnit.UNKNOWN                  -> Unit
             }

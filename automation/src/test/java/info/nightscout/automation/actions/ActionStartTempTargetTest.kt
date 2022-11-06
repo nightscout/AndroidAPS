@@ -4,7 +4,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
 import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputTempTarget

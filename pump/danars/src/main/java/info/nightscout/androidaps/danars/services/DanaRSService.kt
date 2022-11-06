@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
@@ -55,12 +55,12 @@ import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionGetUserOption
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpTime
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetUserOption
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.Profile
@@ -70,7 +70,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy

@@ -9,7 +9,7 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogProfileviewerBinding
 import info.nightscout.androidaps.data.ProfileSealed

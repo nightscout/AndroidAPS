@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -17,7 +17,7 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble

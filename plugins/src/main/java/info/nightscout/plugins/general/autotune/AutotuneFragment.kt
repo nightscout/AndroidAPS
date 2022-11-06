@@ -19,7 +19,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry

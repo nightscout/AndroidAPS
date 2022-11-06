@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository

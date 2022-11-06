@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ResourceHelper
@@ -33,8 +33,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.events.EventQueueChanged
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog

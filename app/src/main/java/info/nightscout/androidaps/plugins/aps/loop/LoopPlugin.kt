@@ -13,7 +13,7 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
@@ -32,7 +32,7 @@ import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
@@ -57,7 +57,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy

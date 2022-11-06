@@ -11,7 +11,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.interfaces.BuildHelper

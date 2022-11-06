@@ -10,7 +10,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.diaconn.service.DiaconnG8Service
@@ -19,7 +19,7 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.Diaconn
+import info.nightscout.interfaces.Diaconn
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction

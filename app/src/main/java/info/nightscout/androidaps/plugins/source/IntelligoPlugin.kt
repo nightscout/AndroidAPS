@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue

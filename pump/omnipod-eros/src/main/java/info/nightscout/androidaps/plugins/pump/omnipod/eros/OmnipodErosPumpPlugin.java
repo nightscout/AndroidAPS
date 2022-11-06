@@ -35,11 +35,11 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.ActivityNames;
+import info.nightscout.interfaces.ActivityNames;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.Profile;
@@ -95,8 +95,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.Ri
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
+import info.nightscout.interfaces.queue.Callback;
+import info.nightscout.interfaces.queue.CustomCommand;
 import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;

@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraints

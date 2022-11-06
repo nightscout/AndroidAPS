@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync

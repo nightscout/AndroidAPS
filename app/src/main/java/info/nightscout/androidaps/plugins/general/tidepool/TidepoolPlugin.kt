@@ -5,7 +5,7 @@ import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange

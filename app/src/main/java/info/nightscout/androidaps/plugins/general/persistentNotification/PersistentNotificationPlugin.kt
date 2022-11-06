@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.toStringShort

@@ -2,7 +2,7 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.ui.NumberPicker

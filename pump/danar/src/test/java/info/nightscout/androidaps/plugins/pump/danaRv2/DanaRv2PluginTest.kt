@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.danaRv2
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin

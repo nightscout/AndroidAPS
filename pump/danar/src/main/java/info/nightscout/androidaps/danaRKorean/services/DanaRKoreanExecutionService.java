@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.Constants;
+import info.nightscout.interfaces.Constants;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
@@ -37,7 +37,7 @@ import info.nightscout.androidaps.danar.comm.MsgSettingShippingInfo;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;

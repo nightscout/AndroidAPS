@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.implementation.R
 import info.nightscout.rx.logging.LTag

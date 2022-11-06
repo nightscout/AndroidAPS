@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.queue.commands
+package info.nightscout.interfaces.queue
 
 import java.io.Serializable
 

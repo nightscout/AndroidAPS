@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.interfaces.SmsCommunicator

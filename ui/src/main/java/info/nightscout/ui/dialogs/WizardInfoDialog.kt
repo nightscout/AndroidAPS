@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.extensions.toJson

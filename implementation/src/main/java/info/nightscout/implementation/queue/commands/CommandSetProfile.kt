@@ -9,7 +9,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.interfaces.SmsCommunicator
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.implementation.R

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.interfaces.ProfileFunction

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger

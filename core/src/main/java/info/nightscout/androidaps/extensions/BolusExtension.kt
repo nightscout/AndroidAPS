@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.data.Iob
+import info.nightscout.interfaces.data.Iob
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus

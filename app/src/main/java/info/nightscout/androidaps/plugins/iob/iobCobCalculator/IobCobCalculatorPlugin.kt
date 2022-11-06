@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.MealData
+import info.nightscout.interfaces.data.MealData
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus

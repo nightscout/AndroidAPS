@@ -13,7 +13,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog

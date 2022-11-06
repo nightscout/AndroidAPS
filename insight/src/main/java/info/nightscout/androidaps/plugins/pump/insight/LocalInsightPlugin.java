@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.insight.database.InsightBolusID;

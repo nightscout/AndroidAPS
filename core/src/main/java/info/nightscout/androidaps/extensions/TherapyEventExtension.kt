@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.GlucoseUnit

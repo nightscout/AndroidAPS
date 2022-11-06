@@ -6,7 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile

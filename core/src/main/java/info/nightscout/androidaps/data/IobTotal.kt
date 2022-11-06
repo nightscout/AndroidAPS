@@ -9,7 +9,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Suppress("SpellCheckingInspection")
-class   IobTotal(val time: Long) : DataPointWithLabelInterface {
+class IobTotal(val time: Long) : DataPointWithLabelInterface {
 
     var iob = 0.0
     var activity = 0.0

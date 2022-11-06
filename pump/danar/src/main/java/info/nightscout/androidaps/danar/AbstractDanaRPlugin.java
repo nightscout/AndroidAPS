@@ -10,7 +10,7 @@ import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;

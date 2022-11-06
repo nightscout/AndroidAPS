@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -28,7 +28,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
-import info.nightscout.androidaps.queue.commands.CustomCommand
+import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T

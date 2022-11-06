@@ -39,7 +39,7 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;

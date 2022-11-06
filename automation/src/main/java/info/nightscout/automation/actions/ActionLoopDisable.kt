@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview

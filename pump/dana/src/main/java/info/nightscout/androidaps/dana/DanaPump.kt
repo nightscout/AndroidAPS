@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.dana
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.PumpSync

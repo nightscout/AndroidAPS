@@ -6,7 +6,7 @@ import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPreferenceChange

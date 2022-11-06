@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.embedments.InterfaceIDs

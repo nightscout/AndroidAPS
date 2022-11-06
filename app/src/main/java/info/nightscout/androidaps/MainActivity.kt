@@ -40,7 +40,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraints

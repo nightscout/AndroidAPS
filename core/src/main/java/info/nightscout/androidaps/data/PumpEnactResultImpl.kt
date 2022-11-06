@@ -5,8 +5,8 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.data.PumpEnactResult
 import org.json.JSONObject
-import java.lang.UnsupportedOperationException
 import javax.inject.Inject
 
 class PumpEnactResultImpl(injector: HasAndroidInjector) : PumpEnactResult {

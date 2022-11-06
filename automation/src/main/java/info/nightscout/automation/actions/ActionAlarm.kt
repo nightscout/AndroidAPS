@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.TimerUtil

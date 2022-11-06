@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
@@ -23,7 +23,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.*

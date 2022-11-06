@@ -10,7 +10,7 @@ import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEven
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.automation.R
 import info.nightscout.rx.bus.RxBus

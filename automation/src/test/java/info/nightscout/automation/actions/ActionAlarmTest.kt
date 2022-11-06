@@ -6,7 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.TimerUtil
 import info.nightscout.automation.R

@@ -18,7 +18,7 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository

@@ -1,15 +1,12 @@
-package info.nightscout.androidaps
-
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.utils.T.Companion.mins
+package info.nightscout.interfaces
 
 /**
  * Created by mike on 07.06.2016.
  */
 object Constants {
 
-    const val MGDL = ValueWithUnit.MGDL // This is Nightscout's representation
-    const val MMOL = ValueWithUnit.MMOL
+    const val MGDL = "mg/dl" // This is Nightscout's representation
+    const val MMOL = "mmol"
     const val MMOLL_TO_MGDL = 18.0 // 18.0182;
     const val MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL
     const val defaultDIA = 5.0
@@ -28,8 +25,7 @@ object Constants {
     const val CPP_MAX_PERCENTAGE = 250
     const val CPP_MIN_TIMESHIFT = -6
     const val CPP_MAX_TIMESHIFT = 23
-    const val MAX_PROFILE_SWITCH_DURATION = (7 * 24 * 60 // [min] ~ 7 days
-        ).toDouble()
+    const val MAX_PROFILE_SWITCH_DURATION = (7 * 24 * 60).toDouble()// [min] ~ 7 days
 
     //DanaR
     const val dailyLimitWarning = 0.95
@@ -65,14 +61,14 @@ object Constants {
     const val MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60
 
     //SMS Communicator
-    val SMS_CONFIRM_TIMEOUT = mins(5L).msecs()
+    const val SMS_CONFIRM_TIMEOUT = 5L * 60 * 1000
 
     //Storage [MB]
     const val MINIMUM_FREE_SPACE: Long = 200
 
     // Overview
-    const val LOWMARK = 76.0
-    const val HIGHMARK = 180.0
+    const val LOW_MARK = 76.0
+    const val HIGH_MARK = 180.0
 
     // STATISTICS
     const val STATS_TARGET_LOW_MMOL = 3.9

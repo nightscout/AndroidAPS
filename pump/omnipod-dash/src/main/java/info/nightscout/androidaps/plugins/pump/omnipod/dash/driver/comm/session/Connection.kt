@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.os.SystemClock
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids

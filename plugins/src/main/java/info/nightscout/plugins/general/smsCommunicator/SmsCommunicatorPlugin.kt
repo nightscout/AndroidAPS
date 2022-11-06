@@ -11,7 +11,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.interfaces.data.smsCommunicator.Sms
@@ -48,7 +48,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter

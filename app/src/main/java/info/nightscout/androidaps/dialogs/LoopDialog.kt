@@ -24,7 +24,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Constraint
@@ -37,7 +37,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T

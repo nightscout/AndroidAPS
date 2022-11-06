@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetInternalSuspendTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchInternalSuspendTimeResponse;
-import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper;
 import info.nightscout.rx.logging.AAPSLogger;

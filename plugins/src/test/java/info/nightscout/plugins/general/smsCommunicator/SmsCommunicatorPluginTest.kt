@@ -3,7 +3,7 @@ package info.nightscout.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.IobTotal
@@ -28,7 +28,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.interfaces.PluginType

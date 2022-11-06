@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import org.json.JSONObject
 

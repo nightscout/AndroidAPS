@@ -3,7 +3,7 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.JsonHelper

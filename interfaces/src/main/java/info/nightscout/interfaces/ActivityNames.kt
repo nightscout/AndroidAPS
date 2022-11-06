@@ -1,8 +1,8 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
+import androidx.fragment.app.FragmentManager
 import android.content.Context
 import androidx.annotation.RawRes
-import androidx.fragment.app.FragmentManager
 
 /**
  * Interface to use activities located in different modules

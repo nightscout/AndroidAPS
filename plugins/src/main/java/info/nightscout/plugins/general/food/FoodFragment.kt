@@ -18,7 +18,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.FabricPrivacy

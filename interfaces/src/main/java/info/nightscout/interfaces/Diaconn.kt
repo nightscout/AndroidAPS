@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 
 interface Diaconn {
 

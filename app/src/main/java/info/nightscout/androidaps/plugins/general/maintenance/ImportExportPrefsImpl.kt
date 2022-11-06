@@ -29,7 +29,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
-import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ImportExportPrefs

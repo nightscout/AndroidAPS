@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.interfaces.Constants;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
@@ -44,7 +44,7 @@ import info.nightscout.androidaps.danar.comm.MsgStatus;
 import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
@@ -57,7 +57,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventInitializationChanged;

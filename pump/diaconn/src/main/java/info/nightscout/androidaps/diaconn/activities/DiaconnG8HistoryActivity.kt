@@ -19,7 +19,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy

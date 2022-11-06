@@ -2,7 +2,7 @@ package info.nightscout.plugins.general.smsCommunicator
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.ResourceHelper

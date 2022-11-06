@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.aps.openAPSAMA
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.MealData
+import info.nightscout.interfaces.data.MealData
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes

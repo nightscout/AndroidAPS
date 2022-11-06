@@ -13,14 +13,14 @@ import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.GlucoseUnit

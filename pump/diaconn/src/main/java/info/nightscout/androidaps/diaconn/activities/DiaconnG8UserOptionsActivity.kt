@@ -10,9 +10,9 @@ import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.rx.logging.LTag

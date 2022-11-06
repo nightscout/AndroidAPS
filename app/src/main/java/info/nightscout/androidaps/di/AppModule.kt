@@ -10,10 +10,10 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.Autotune
-import info.nightscout.androidaps.interfaces.BolusTimer
+import info.nightscout.interfaces.ActivityNames
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.Autotune
+import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.CommandQueue
