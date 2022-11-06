@@ -35,11 +35,13 @@
     <string name="combov2_pairing_start_steps">Steps to perform pairing with your Combo:\n \n 1.
         On your pump, navigate to the Bluetooth Settings\n 2. Check if a device is already shown
         as paired; if so, go to "Delete device" screen to delete/unpair that device\n 3. Go to the
-        "Add device" screen, and initiate pairing\n 4. Click on the Start pairingbutton below</string>
+        "Add device" screen, and initiate pairing\n 4. Click on the "Start pairing" button below\n
+        5. When pairing is successfully completed, confirm the finished pairing on your pump and
+        return to the main screen by pressing the CHECK button twice</string>
     <string name="combov2_steps_if_no_connection_during_pairing">If no connection is established
         after more than ~5 minutes:\n \n 1. Press Back or the "Cancel Pairing" button\n 2. Cancel
-        the pairing on the Combo (press both UP and MENU buttons at the same time to cancel pairing)\n 3. Try to pair
-        again</string>
+        the pairing on the Combo (press both UP and MENU buttons at the same time to cancel pairing)
+        \n 3. Try to pair again</string>
     <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Enter PIN</string>
     <string name="combov2_cancel_pairing">Cancel pairing</string>
