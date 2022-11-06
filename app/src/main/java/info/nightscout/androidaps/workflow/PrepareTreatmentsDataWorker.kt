@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Thera
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.rx.bus.RxBus

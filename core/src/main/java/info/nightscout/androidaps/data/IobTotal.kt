@@ -4,7 +4,7 @@ import android.content.Context
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import org.json.JSONException
 import org.json.JSONObject
 

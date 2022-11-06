@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.interfaces.utils
 
 import org.json.JSONException
 import org.json.JSONObject

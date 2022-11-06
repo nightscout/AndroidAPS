@@ -25,9 +25,9 @@ import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.androidaps.utils.dragHelpers.OnStartDragListener
-import info.nightscout.androidaps.utils.dragHelpers.SimpleItemTouchHelperCallback
+import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.interfaces.dragHelpers.OnStartDragListener
+import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.rx.AapsSchedulers

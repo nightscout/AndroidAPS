@@ -4,7 +4,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.pump.DoseSettings
 import info.nightscout.interfaces.pump.DoseStepSize
 import info.nightscout.interfaces.pump.ManufacturerType

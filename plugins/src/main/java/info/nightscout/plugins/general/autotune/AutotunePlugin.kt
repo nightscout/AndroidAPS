@@ -8,7 +8,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.Autotune
+import info.nightscout.interfaces.Autotune
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -20,8 +20,8 @@ import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile

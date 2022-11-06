@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import info.nightscout.interfaces.utils.MidnightTime
 import org.junit.Assert
 import org.junit.Test
 import java.util.*

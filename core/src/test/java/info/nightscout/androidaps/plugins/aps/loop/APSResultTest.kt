@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
+import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Effec
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject

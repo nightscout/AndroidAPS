@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.TimerUtil
+import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.automation.AutomationEvent
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.actions.ActionAlarm

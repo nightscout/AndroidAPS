@@ -1,11 +1,11 @@
-package info.nightscout.androidaps.utils.locale
+package info.nightscout.interfaces.locale
 
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.LocaleList
 import androidx.preference.PreferenceManager
-import info.nightscout.androidaps.core.R
-import java.util.*
+import info.nightscout.interfaces.R
+import java.util.Locale
 
 object LocaleHelper {
     private fun selectedLanguage(context: Context): String =

@@ -5,7 +5,7 @@ import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.extensions.hexStringToByteArray
 import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.data.maintenance.PrefFileNotFoundError
 import info.nightscout.interfaces.data.maintenance.PrefFormatError
 import info.nightscout.interfaces.data.maintenance.PrefIOError

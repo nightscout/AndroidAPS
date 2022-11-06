@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.ui.VerticalTextView
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog

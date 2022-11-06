@@ -21,7 +21,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.implementation.R
 import info.nightscout.rx.logging.AAPSLogger

@@ -1,8 +1,8 @@
-package info.nightscout.androidaps.plugins.general.overview.notifications
+package info.nightscout.interfaces.notifications
 
 import android.content.Context
 import androidx.annotation.RawRes
-import info.nightscout.androidaps.utils.T
+import java.util.concurrent.TimeUnit
 
 open class Notification {
 
@@ -31,7 +31,7 @@ open class Notification {
         date = System.currentTimeMillis()
         this.text = text
         this.level = level
-        validTo = System.currentTimeMillis() + T.mins(validMinutes.toLong()).msecs()
+        validTo = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(validMinutes.toLong())
     }
 
     constructor(id: Int, text: String, level: Int) {

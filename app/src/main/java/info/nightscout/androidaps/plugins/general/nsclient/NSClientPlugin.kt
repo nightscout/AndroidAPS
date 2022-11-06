@@ -28,7 +28,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientS
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
+import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

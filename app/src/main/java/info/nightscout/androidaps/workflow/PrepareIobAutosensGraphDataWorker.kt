@@ -16,7 +16,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
+import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface

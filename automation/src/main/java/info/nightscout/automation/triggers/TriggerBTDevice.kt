@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.R

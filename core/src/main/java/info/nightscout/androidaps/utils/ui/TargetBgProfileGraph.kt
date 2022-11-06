@@ -9,7 +9,7 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import java.text.NumberFormat
 import kotlin.math.max
 import kotlin.math.min

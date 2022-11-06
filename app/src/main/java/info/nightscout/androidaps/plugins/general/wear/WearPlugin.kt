@@ -10,7 +10,7 @@ import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataHandlerMobile
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import info.nightscout.androidaps.utils.FabricPrivacy

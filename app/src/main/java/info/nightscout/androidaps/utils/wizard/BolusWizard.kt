@@ -38,8 +38,8 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.rx.bus.RxBus

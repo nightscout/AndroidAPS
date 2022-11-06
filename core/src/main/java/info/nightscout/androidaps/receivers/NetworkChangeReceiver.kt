@@ -8,7 +8,7 @@ import android.net.NetworkCapabilities
 import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.utils.StringUtils
+import info.nightscout.interfaces.utils.StringUtils
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.logging.AAPSLogger

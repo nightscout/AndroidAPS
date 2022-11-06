@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.nsclient.data
 
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 class NSAlarm(private var data: JSONObject) {

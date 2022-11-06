@@ -44,7 +44,7 @@ import info.nightscout.interfaces.data.maintenance.PrefsFormat
 import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.data.maintenance.PrefsStatus
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -52,8 +52,9 @@ import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog
 import info.nightscout.androidaps.utils.alertDialogs.TwoMessagesAlertDialog
 import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
 import info.nightscout.androidaps.utils.protection.PasswordCheck
-import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.interfaces.storage.Storage
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
+import info.nightscout.interfaces.data.maintenance.PrefsFile
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.logging.AAPSLogger

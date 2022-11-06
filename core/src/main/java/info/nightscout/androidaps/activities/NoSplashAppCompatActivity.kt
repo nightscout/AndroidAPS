@@ -2,7 +2,7 @@ package info.nightscout.androidaps.activities
 import android.content.Context
 import android.os.Bundle
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.utils.locale.LocaleHelper
+import info.nightscout.interfaces.locale.LocaleHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventThemeSwitch
 import io.reactivex.rxjava3.disposables.CompositeDisposable

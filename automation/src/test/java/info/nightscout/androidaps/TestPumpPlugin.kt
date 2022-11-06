@@ -13,7 +13,7 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.TimeChangeType
+import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.logging.AAPSLogger
 import org.json.JSONObject
 

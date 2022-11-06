@@ -38,14 +38,14 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientS
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
-import info.nightscout.androidaps.utils.JsonHelper.safeGetStringAllowNull
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
+import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.androidaps.utils.T.Companion.mins
 import info.nightscout.plugins.general.food.FoodPlugin.FoodWorker
 import info.nightscout.plugins.profile.ProfilePlugin

@@ -38,7 +38,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightExcepti
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
-import info.nightscout.androidaps.utils.HtmlHelper;
+import info.nightscout.interfaces.utils.HtmlHelper;
 import info.nightscout.androidaps.interfaces.ResourceHelper;
 
 public class InsightAlertService extends DaggerService implements InsightConnectionService.StateCallback {

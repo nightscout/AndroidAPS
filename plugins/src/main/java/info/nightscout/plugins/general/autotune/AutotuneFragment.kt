@@ -36,8 +36,8 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.AutotuneFragmentBinding

@@ -12,4 +12,7 @@
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
 
+    <!-- Locale -->
+    <string name="key_language" translatable="false">language</string>
+
 </resources>

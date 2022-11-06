@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.permissions
+package info.nightscout.interfaces.permissions
 
 import android.content.Context
 import android.content.Intent
@@ -17,4 +17,3 @@ class OptimizationPermissionContract : ActivityResultContract<Void?, Unit?>() {
         }
     }
 }
-

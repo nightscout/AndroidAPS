@@ -13,8 +13,8 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException

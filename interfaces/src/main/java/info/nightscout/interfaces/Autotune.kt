@@ -1,4 +1,4 @@
-package info.nightscout
+package info.nightscout.interfaces
 
 interface Autotune {
 

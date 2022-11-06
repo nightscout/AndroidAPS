@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.notifications
+package info.nightscout.interfaces.notifications
 
 class NotificationUserMessage  (text :String): Notification() {
 

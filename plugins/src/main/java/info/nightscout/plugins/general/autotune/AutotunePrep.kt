@@ -5,8 +5,8 @@ import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile

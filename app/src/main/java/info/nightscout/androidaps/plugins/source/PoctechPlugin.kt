@@ -16,7 +16,7 @@ import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

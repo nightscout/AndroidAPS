@@ -1,7 +1,7 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.interfaces.utils
 
 import android.util.LongSparseArray
-import java.util.*
+import java.util.Calendar
 
 object MidnightTime {
 

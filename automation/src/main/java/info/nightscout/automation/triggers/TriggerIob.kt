@@ -3,7 +3,7 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputInsulin

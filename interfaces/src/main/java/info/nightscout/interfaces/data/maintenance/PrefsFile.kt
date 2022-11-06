@@ -1,9 +1,6 @@
-package info.nightscout.androidaps.plugins.general.maintenance
+package info.nightscout.interfaces.data.maintenance
 
 import android.os.Parcelable
-import info.nightscout.interfaces.data.maintenance.PrefMetadata
-import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
-import info.nightscout.interfaces.data.maintenance.PrefsImportDir
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import java.io.File
@@ -18,4 +15,3 @@ data class PrefsFile(
     // metadata here is used only for list display
     val metadata: @RawValue Map<PrefsMetadataKey, PrefMetadata>
 ) : Parcelable
-

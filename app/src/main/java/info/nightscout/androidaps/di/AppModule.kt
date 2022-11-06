@@ -12,7 +12,7 @@ import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.Autotune
+import info.nightscout.interfaces.Autotune
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.CarbTimer
@@ -54,8 +54,8 @@ import info.nightscout.androidaps.utils.androidNotification.NotificationHolderIm
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
-import info.nightscout.androidaps.utils.storage.FileStorage
-import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.interfaces.storage.FileStorage
+import info.nightscout.interfaces.storage.Storage
 import info.nightscout.implementation.AndroidPermissionImpl
 import info.nightscout.implementation.BolusTimerImpl
 import info.nightscout.implementation.CarbTimerImpl

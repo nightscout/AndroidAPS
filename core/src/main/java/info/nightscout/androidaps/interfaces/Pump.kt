@@ -6,7 +6,7 @@ import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.androidaps.utils.TimeChangeType
+import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.interfaces.pump.ManufacturerType
 import org.json.JSONObject
 

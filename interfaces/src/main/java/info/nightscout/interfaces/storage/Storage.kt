@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.storage
+package info.nightscout.interfaces.storage
 
 import java.io.File
 

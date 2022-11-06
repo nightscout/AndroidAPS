@@ -4,7 +4,7 @@ import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import java.util.Locale

@@ -17,7 +17,7 @@ import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.locale.LocaleHelper.update
+import info.nightscout.interfaces.locale.LocaleHelper.update
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged

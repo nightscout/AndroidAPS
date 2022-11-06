@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 
 data class GlucoseStatus(
     val glucose: Double,

@@ -5,8 +5,8 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDuration

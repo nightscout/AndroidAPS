@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.interfaces.utils
 
 import android.content.Context
 import android.content.Intent

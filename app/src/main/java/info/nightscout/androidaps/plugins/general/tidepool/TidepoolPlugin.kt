@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolU
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.rx.AapsSchedulers

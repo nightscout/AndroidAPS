@@ -1,6 +1,5 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.interfaces.utils
 
-import android.os.Bundle
 import java.math.BigDecimal
 import java.security.InvalidParameterException
 import kotlin.math.abs

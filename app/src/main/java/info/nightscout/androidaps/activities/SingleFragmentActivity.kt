@@ -8,7 +8,7 @@ import android.view.MenuItem
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.utils.locale.LocaleHelper
+import info.nightscout.interfaces.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import javax.inject.Inject
 

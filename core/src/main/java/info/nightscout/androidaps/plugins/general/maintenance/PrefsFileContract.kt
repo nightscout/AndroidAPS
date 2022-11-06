@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.extensions.safeGetParcelableExtra
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
+import info.nightscout.interfaces.data.maintenance.PrefsFile
 
 class PrefsFileContract : ActivityResultContract<Void?, PrefsFile?>() {
 

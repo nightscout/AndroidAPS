@@ -9,7 +9,7 @@ import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.databinding.SmscommunicatorFragmentBinding
 import info.nightscout.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import info.nightscout.rx.AapsSchedulers
