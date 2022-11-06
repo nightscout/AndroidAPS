@@ -149,6 +149,15 @@
     <string name="reset">Resetovať</string>
     <string name="profileswitch_ismissing">Prepnutie profilu chýba. Vykonajte prepnutie profilu, alebo ho aktivujte na záložke lokálneho profilu.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Vyberte pre odstránenie</string>
+    <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
+    <string name="overview_treatment_label">Ošetrenie</string>
+    <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový profil?</string>
+    <string name="wear_wizard_settings">Nastavenie sprievodcu</string>
+    <string name="bg_trend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolusový IOB</string>
+    <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
