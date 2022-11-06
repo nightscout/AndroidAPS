@@ -619,7 +619,7 @@ class ComboV2Plugin @Inject constructor (
                 }
             } catch (e: CancellationException) {
                 throw e
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
             }
         }
 
@@ -1370,7 +1370,7 @@ class ComboV2Plugin @Inject constructor (
     suspend fun providePairingPIN(pairingPIN: PairingPIN) {
         try {
             pairingPINChannel?.send(pairingPIN)
-        } catch (ignored: ClosedSendChannelException) {
+        } catch (_: ClosedSendChannelException) {
         }
     }
 
@@ -1384,8 +1384,8 @@ class ComboV2Plugin @Inject constructor (
                 val pump = pumpManager?.acquirePump(bluetoothAddress) ?: return@runBlocking
                 pump.unpair()
                 pumpManager?.releasePump(bluetoothAddress)
-            } catch (ignored: ComboException) {
-            } catch (ignored: BluetoothException) {
+            } catch (_: ComboException) {
+            } catch (_: BluetoothException) {
             }
         }
 

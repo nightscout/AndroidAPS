@@ -69,9 +69,13 @@ class ComboV2PairingActivity : NoSplashAppCompatActivity() {
         //     xxx xxx xxxx
         binding.combov2PinEntryEdit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // Nothing needs to be done here; overridden method only exists
+                // to properly and fully implement the TextWatcher interface.
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Nothing needs to be done here; overridden method only exists
+                // to properly and fully implement the TextWatcher interface.
             }
 
             override fun afterTextChanged(s: Editable?) {
