@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.sync.nsclient.extensions
+package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.TemporaryBasal
@@ -7,8 +7,8 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =

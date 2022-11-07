@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.sync.nsclient.extensions
+package info.nightscout.androidaps.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil, profileFunction: ProfileFunction): JSONObject =

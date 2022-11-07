@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.sync.nsclient.data
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -127,7 +127,7 @@ class NSDeviceStatusHandler @Inject constructor(
                     val value = it.getString(key)
                     extended.append("<b>").append(key).append(":</b> ").append(value).append("<br>")
                 }
-                deviceStatusPumpData.extended = fromHtml(extended.toString())
+                deviceStatusPumpData.extended = HtmlHelper.fromHtml(extended.toString())
                 deviceStatusPumpData.activeProfileName = JsonHelper.safeGetStringAllowNull(it, "ActiveProfile", null)
             }
         }

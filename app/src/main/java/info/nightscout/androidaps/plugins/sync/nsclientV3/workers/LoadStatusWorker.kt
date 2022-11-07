@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 

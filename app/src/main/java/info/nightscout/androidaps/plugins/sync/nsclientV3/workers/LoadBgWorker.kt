@@ -10,14 +10,14 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject

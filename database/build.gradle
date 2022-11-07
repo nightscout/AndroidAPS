@@ -8,7 +8,6 @@ plugins {
 
 apply from: "${project.rootDir}/core/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
-apply from: "${project.rootDir}/core/allopen_dependencies.gradle"
 
 android {
 

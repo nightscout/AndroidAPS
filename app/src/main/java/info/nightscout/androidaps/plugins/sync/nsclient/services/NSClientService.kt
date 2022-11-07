@@ -22,7 +22,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.sync.nsclient.NSClientUpdateRemoveAckW
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSAuthAck
 import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
+import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
@@ -598,7 +599,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         }
     }
 
-    fun sendAlarmAck(alarmAck: info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck) {
+    fun sendAlarmAck(alarmAck: AlarmAck) {
         if (!isConnected || !hasWriteAuth) return
         socket?.emit("ack", alarmAck.level, alarmAck.group, alarmAck.silenceTime)
         rxBus.send(EventNSClientNewLog("ALARMACK ", alarmAck.level.toString() + " " + alarmAck.group + " " + alarmAck.silenceTime, NsClient.Version.V1))

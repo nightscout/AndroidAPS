@@ -1,15 +1,11 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.TimeZone
 
 private fun getShiftedTimeSecs(originalSeconds: Int, timeShiftHours: Int): Int {
     var shiftedSeconds = originalSeconds - timeShiftHours * 60 * 60

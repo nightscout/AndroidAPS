@@ -8,31 +8,30 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.bolusFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.carbsFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.offlineEventFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.profileSwitchFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryBasalFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.temporaryTargetFromJson
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.therapyEventFromJson
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.plugins.sync.nsclient.extensions.bolusFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.carbsFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.extendedBolusFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
+import info.nightscout.plugins.sync.nsclient.extensions.offlineEventFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.profileSwitchFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.temporaryBasalFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.temporaryTargetFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.therapyEventFromJson
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -75,7 +74,7 @@ class NSClientAddUpdateWorker(
             }
 
             //Find latest date in treatment
-            val mills = safeGetLong(json, "mills")
+            val mills = JsonHelper.safeGetLong(json, "mills")
             if (mills != 0L && mills < dateUtil.now())
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 

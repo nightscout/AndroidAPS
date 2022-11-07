@@ -1,6 +1,5 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.AppRepository
@@ -17,15 +16,15 @@ import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.toJson
+import info.nightscout.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
@@ -381,7 +380,7 @@ open class AutotuneIob @Inject constructor(
         fun toJson(): JSONObject? {
             val cpJson = JSONObject()
             return when (eventType) {
-                TherapyEvent.Type.TEMPORARY_BASAL ->
+                TherapyEvent.Type.TEMPORARY_BASAL  ->
                     temporaryBasal?.let { tbr ->
                         val profile = profileFunction.getProfile(tbr.timestamp)
                         profile?.let {
@@ -389,7 +388,7 @@ open class AutotuneIob @Inject constructor(
                         }
                     }
 
-                TherapyEvent.Type.COMBO_BOLUS ->
+                TherapyEvent.Type.COMBO_BOLUS      ->
                     extendedBolus?.let { ebr ->
                         val profile = profileFunction.getProfile(ebr.timestamp)
                         profile?.let {
@@ -399,7 +398,7 @@ open class AutotuneIob @Inject constructor(
 
                 TherapyEvent.Type.CORRECTION_BOLUS -> bolusTreatment?.toJson(true, dateUtil)
                 TherapyEvent.Type.CARBS_CORRECTION -> carbsTreatment?.toJson(true, dateUtil)
-                else -> cpJson
+                else                               -> cpJson
             }
         }
     }

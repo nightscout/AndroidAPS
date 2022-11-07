@@ -1,13 +1,13 @@
-package info.nightscout.androidaps.plugins.sync.nsclient.extensions
+package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 

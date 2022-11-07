@@ -1,11 +1,11 @@
-package info.nightscout.androidaps.plugins.sync.nsclient.extensions
+package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

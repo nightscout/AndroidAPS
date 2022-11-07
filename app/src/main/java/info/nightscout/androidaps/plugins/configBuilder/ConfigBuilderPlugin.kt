@@ -13,8 +13,6 @@ import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -23,6 +21,8 @@ import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventConfigBuilderChange
@@ -193,16 +193,16 @@ class ConfigBuilderPlugin @Inject constructor(
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
-            PluginType.INSULIN -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
+            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
             PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
-            PluginType.APS -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
-            PluginType.PROFILE -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
-            PluginType.BGSOURCE -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
-            PluginType.PUMP -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
+            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
+            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
+            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
+            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
             // Process only NSClients
-            PluginType.SYNC -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
+            PluginType.SYNC        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
 
-            else -> {
+            else                   -> {
             }
         }
         if (pluginsInCategory != null) {

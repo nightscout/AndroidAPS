@@ -6,10 +6,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject

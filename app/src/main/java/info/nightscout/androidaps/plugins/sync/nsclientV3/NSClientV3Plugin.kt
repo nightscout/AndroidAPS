@@ -12,25 +12,17 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventChargingState
-import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
@@ -40,15 +32,23 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModifi
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventChargingState
+import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.NSAndroidClientImpl
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.remotemodel.LastModified
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -208,16 +208,14 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun addToLog(ev: EventNSClientNewLog) {
-        handler.post {
-            synchronized(listLog) {
-                listLog.add(ev)
-                // remove the first line if log is too large
-                if (listLog.size >= Constants.MAX_LOG_LINES) {
-                    listLog.removeAt(0)
-                }
+        synchronized(listLog) {
+            listLog.add(ev)
+            // remove the first line if log is too large
+            if (listLog.size >= Constants.MAX_LOG_LINES) {
+                listLog.removeAt(0)
             }
-            rxBus.send(EventNSClientUpdateGUI())
         }
+        rxBus.send(EventNSClientUpdateGUI())
     }
 
     override fun textLog(): Spanned {
@@ -226,11 +224,11 @@ class NSClientV3Plugin @Inject constructor(
             synchronized(listLog) {
                 for (log in listLog) newTextLog.append(log.toPreparedHtml())
             }
-            return fromHtml(newTextLog.toString())
+            return HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
             ToastUtils.showToastInUiThread(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
-        return fromHtml("")
+        return HtmlHelper.fromHtml("")
     }
 
     override fun resend(reason: String) {

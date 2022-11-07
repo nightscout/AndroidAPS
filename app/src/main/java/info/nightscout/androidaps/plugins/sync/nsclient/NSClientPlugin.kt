@@ -19,11 +19,12 @@ import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
+import info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -167,16 +168,14 @@ class NSClientPlugin @Inject constructor(
     }
 
     private fun addToLog(ev: EventNSClientNewLog) {
-        handler.post {
-            synchronized(listLog) {
-                listLog.add(ev)
-                // remove the first line if log is too large
-                if (listLog.size >= Constants.MAX_LOG_LINES) {
-                    listLog.removeAt(0)
-                }
+        synchronized(listLog) {
+            listLog.add(ev)
+            // remove the first line if log is too large
+            if (listLog.size >= Constants.MAX_LOG_LINES) {
+                listLog.removeAt(0)
             }
-            rxBus.send(EventNSClientUpdateGUI())
         }
+        rxBus.send(EventNSClientUpdateGUI())
     }
 
     override fun textLog(): Spanned {
@@ -213,7 +212,7 @@ class NSClientPlugin @Inject constructor(
             return
         }
         nsClientService?.sendAlarmAck(
-            info.nightscout.androidaps.plugins.sync.nsclient.data.AlarmAck().also { ack ->
+            AlarmAck().also { ack ->
                 ack.level = originalAlarm.level()
                 ack.group = originalAlarm.group()
                 ack.silenceTime = silenceTimeInMilliseconds
