@@ -17,9 +17,9 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.BolusTimer
-import info.nightscout.androidaps.interfaces.CarbTimer
+import info.nightscout.interfaces.ActivityNames
+import info.nightscout.interfaces.BolusTimer
+import info.nightscout.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.GlucoseUnit
@@ -30,16 +30,17 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogCarbsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable

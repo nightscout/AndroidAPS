@@ -140,6 +140,14 @@
     <string name="a11y_high">высокий</string>
     <string name="a11y_inrange">в диапазоне</string>
     <string name="a11y_low">низкий</string>
+    <string name="average">Средний</string>
+    <string name="tdd_total">Суммарный суточный инсулин TDD</string>
+    <string name="none"><![CDATA[<отсутствует>]]></string>
+    <string name="remove_label">УДАЛИТЬ</string>
+    <string name="activate_profile">Активировать профиль</string>
+    <string name="reset">сброс</string>
+    <string name="profileswitch_ismissing">Профиль не переключен. Переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
+    <string name="profile">Профиль</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -301,7 +309,6 @@
     <string name="prefdecrypt_issue_wrong_format">Отсутствует конфигурация шифрования, формат параметров недопустим!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Верификатор подписи</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
     <string name="version_expire">Версия: %1$s истекает %2$s</string>

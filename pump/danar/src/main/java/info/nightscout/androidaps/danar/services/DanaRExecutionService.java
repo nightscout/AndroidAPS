@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Constants;
+import info.nightscout.interfaces.Constants;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
@@ -44,25 +44,26 @@ import info.nightscout.androidaps.danar.comm.MsgStatus;
 import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.interfaces.data.PumpEnactResult;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.events.EventProfileSwitchChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.CommandQueue;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.interfaces.ResourceHelper;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.rx.events.EventOverviewBolusProgress;
+import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.interfaces.queue.Callback;
+import info.nightscout.androidaps.queue.commands.Command;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventInitializationChanged;
+import info.nightscout.rx.events.EventProfileSwitchChanged;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public class DanaRExecutionService extends AbstractDanaRExecutionService {
@@ -396,11 +397,11 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult setUserOptions() {
         if (!isConnected())
-            return new PumpEnactResult(injector).success(false);
+            return new PumpEnactResultImpl(injector).success(false);
         SystemClock.sleep(300);
         MsgSetUserOptions msg = new MsgSetUserOptions(injector);
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
-        return new PumpEnactResult(injector).success(!msg.getFailed());
+        return new PumpEnactResultImpl(injector).success(!msg.getFailed());
     }
 }

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.AppRepository
@@ -19,12 +19,13 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject

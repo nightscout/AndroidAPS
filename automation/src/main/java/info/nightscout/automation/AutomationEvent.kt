@@ -8,7 +8,7 @@ import info.nightscout.automation.actions.ActionDummy
 import info.nightscout.automation.actions.ActionStopProcessing
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDummy
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject

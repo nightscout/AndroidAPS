@@ -6,14 +6,21 @@ import android.provider.Telephony
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.plugins.source.*
+import info.nightscout.androidaps.plugins.source.AidexPlugin
+import info.nightscout.androidaps.plugins.source.DexcomPlugin
+import info.nightscout.androidaps.plugins.source.EversensePlugin
+import info.nightscout.androidaps.plugins.source.GlimpPlugin
+import info.nightscout.androidaps.plugins.source.MM640gPlugin
+import info.nightscout.androidaps.plugins.source.PoctechPlugin
+import info.nightscout.androidaps.plugins.source.TomatoPlugin
+import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.utils.extensions.copyDouble
 import info.nightscout.androidaps.utils.extensions.copyLong
 import info.nightscout.androidaps.utils.extensions.copyString
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.BundleLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.BundleLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 open class DataReceiver : DaggerBroadcastReceiver() {

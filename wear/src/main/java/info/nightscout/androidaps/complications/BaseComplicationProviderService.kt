@@ -21,16 +21,17 @@ import info.nightscout.androidaps.comm.DataLayerListenerServiceWear.Companion.IN
 import info.nightscout.androidaps.complications.ComplicationTapBroadcastReceiver.Companion.getTapActionIntent
 import info.nightscout.androidaps.complications.ComplicationTapBroadcastReceiver.Companion.getTapWarningSinceIntent
 import info.nightscout.androidaps.data.RawDisplayData
-import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.Inevitable
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.shared.weardata.EventData.ActionResendData
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
+import info.nightscout.rx.weardata.EventData.ActionResendData
 import javax.inject.Inject
 
 /**

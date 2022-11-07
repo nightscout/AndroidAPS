@@ -5,7 +5,8 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 import kotlin.math.round
 

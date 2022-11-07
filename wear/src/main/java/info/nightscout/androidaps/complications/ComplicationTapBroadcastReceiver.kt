@@ -19,8 +19,9 @@ import info.nightscout.androidaps.interaction.menus.StatusMenuActivity
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 

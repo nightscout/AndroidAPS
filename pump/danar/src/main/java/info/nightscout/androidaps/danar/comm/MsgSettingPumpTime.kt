@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
 import org.joda.time.DateTime
-import java.util.*
+import java.util.Date
 
 class MsgSettingPumpTime(
     injector: HasAndroidInjector

@@ -3,9 +3,10 @@ package info.nightscout.androidaps.interfaces
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 
 /**
  * Created by mike on 09.06.2016.

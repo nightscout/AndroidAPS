@@ -11,4 +11,7 @@
     <string name="a11y_carb_reminder">establecer recordatorio</string>
     <!--    Widget-->
     <string name="widget_description">Widget de AAPS</string>
+    <!--     Activities-->
+    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
+    <!-- CareDialog -->
 </resources>

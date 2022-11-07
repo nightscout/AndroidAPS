@@ -8,7 +8,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -16,7 +16,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.TIR
 import info.nightscout.androidaps.interfaces.stats.TirCalculator
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.implementation.R
 import javax.inject.Inject

@@ -97,8 +97,45 @@
     <string name="insulin_peak_time">피크 시간 [min]</string>
     <string name="free_peak_oref">사용자지정-피크 Oref</string>
     <string name="rapid_acting_oref">초속효성 Oref</string>
-    <string name="ultrarapid_oref">초-초속효성 Oref</string>
     <string name="dia_too_short">DIA %1$f는 너무 짧습니다. 대신 %2$f을 사용하세요!</string>
-    <string name="fastactinginsulincomment">노보래피드, 휴마로그, 에피드라</string>
-    <string name="ultrafastactinginsulincomment">피아스프(Fiasp)</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
+    <!-- Food-->
+    <string name="description_food">Nightscout에서 정의된 음식 설정을 표시합니다.</string>
+    <string name="filter">필터</string>
+    <string name="food">음식</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">단백질</string>
+    <string name="shortfat">지방</string>
+    <string name="category">분류</string>
+    <string name="subcategory">하위 분류</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">오프라인에서 사용 가능한 프로파일을 정의하십시오.</string>
+    <string name="units_colon">단위:</string>
+    <string name="profile_name">프로파일명:</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">TARG</string>
+    <string name="clone_label">복사</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">24시간 미만의 썸머타임 변경</string>
+    <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">오래된 버전</string>
+    <string name="very_old_version">아주 오래된 버전</string>
+    <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! %2$d일 후엔 LGS(저혈당주입중지)으로 복귀되며, %3$d일이후엔 Loop가 비활성화 될 것입니다</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">아직 완료되지 않았습니다.</string>
+    <string name="time_elapsed">경과 시간</string>
+    <!-- Overview -->
 </resources>

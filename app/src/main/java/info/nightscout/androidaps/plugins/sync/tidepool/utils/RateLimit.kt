@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.plugins.sync.tidepool.utils
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import java.util.*
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
 

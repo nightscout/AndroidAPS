@@ -107,7 +107,6 @@
     <string name="please_choose_a_trigger_type">Escolha um tipo de condição</string>
     <string name="please_choose_a_operation_type">Escolha um tipo de operação</string>
     <string name="triggers">Condições:</string>
-    <string name="remove_label">REMOVER</string>
     <string name="preconditions">Precondições:</string>
     <string name="automation_event">Evento de automatização</string>
     <string name="reorder_label">Reordenar</string>

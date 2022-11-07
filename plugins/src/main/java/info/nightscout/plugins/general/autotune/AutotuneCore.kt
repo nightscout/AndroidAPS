@@ -1,7 +1,7 @@
 package info.nightscout.plugins.general.autotune
 
 import info.nightscout.androidaps.data.LocalInsulin
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose

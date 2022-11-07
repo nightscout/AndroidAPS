@@ -34,11 +34,13 @@ android {
 
 dependencies {
     implementation project(':database')
-    implementation project(':shared')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
     implementation project(':libraries')
     implementation project(':core')
     implementation project(':pump:pump-common')
     implementation project(':pump:omnipod-common')
+    implementation project(':interfaces')
 
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"

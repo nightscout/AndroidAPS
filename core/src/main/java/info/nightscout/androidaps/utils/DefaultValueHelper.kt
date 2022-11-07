@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.GlucoseUnit
@@ -103,14 +103,14 @@ class DefaultValueHelper @Inject constructor(
 
     fun determineHighLine(): Double {
         var highLineSetting = sp.getDouble(R.string.key_high_mark, bgTargetHigh)
-        if (highLineSetting < 1) highLineSetting = Constants.HIGHMARK
+        if (highLineSetting < 1) highLineSetting = Constants.HIGH_MARK
         highLineSetting = Profile.toCurrentUnits(profileFunction, highLineSetting)
         return highLineSetting
     }
 
     fun determineLowLine(): Double {
         var lowLineSetting = sp.getDouble(R.string.key_low_mark, bgTargetLow)
-        if (lowLineSetting < 1) lowLineSetting = Constants.LOWMARK
+        if (lowLineSetting < 1) lowLineSetting = Constants.LOW_MARK
         lowLineSetting = Profile.toCurrentUnits(profileFunction, lowLineSetting)
         return lowLineSetting
     }

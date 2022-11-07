@@ -5,7 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
@@ -13,9 +12,10 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.Medtr
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.shared.logging.AAPSLoggerTest
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.TestAapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before
 import org.junit.Rule
@@ -24,7 +24,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
-import java.util.*
+import java.util.Locale
 
 open class TestBase {
 

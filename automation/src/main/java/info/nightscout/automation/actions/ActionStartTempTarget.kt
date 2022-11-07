@@ -3,8 +3,8 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.Constants
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry
@@ -17,10 +17,10 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorExists
 import info.nightscout.automation.elements.InputDuration
@@ -28,7 +28,8 @@ import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -68,10 +69,10 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                                ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                            )
-                           callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+                           callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           callback.result(PumpEnactResult(injector).success(false).comment(R.string.error)).run()
+                           callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.error)).run()
                        })
     }
 

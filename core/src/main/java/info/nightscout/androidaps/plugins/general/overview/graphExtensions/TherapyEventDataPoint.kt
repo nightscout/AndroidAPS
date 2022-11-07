@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile

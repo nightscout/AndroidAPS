@@ -7,12 +7,12 @@ import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.permissions.OptimizationPermissionContract
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.permissions.OptimizationPermissionContract
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {

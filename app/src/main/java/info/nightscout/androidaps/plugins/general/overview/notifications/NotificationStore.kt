@@ -16,15 +16,16 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IconsProvider
-import info.nightscout.androidaps.interfaces.NotificationHolder
+import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 

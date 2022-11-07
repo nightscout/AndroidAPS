@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ObjectivesExamFragmentBinding
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.bus.RxBus
 import javax.inject.Inject
 
 class ObjectivesExamDialog : DaggerDialogFragment() {

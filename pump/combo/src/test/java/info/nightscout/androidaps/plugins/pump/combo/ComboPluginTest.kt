@@ -5,13 +5,18 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.combo.R
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.interfaces.PluginType
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -33,7 +38,7 @@ class ComboPluginTest : TestBase() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is PumpEnactResult) {
+            if (it is PumpEnactResultImpl) {
                 it.rh = rh
             }
         }

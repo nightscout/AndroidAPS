@@ -111,8 +111,57 @@
     <string name="insulin_peak">Връх</string>
     <string name="free_peak_oref">Със свободен пик по Oref</string>
     <string name="rapid_acting_oref">Бързодействащ по Oref</string>
-    <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
     <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
-    <string name="fastactinginsulincomment">Novorapid Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
+    <!-- Food-->
+    <string name="description_food">Показва въведените в Nightscout храни</string>
+    <string name="filter">Филтър</string>
+    <string name="food">Храна</string>
+    <string name="shortkilojoul">килодж.</string>
+    <string name="shortenergy">Ен</string>
+    <string name="shortprotein">Бел.</string>
+    <string name="shortfat">Маз.</string>
+    <string name="category">Категория</string>
+    <string name="subcategory">Подкатегория</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">ЛПр</string>
+    <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
+    <string name="units_colon">Единици:</string>
+    <string name="missing_profile_name">Липсва име на профила</string>
+    <string name="error_in_ic_values">Грешка в стойността на ВЧ (IC)</string>
+    <string name="error_in_basal_values">Грешка в базалните стойности</string>
+    <string name="error_in_target_values">Грешка в стойностите за цел</string>
+    <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
+    <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
+    <string name="view">Изглед</string>
+    <string name="errors">Грешки</string>
+    <string name="profile_name">Име на профила:</string>
+    <string name="a11y_delete_current_profile">изтриване на текущия профил</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">И / Въгл</string>
+    <string name="isf_short">Чувств</string>
+    <string name="target_short">Цел</string>
+    <string name="clone_label">Клонирай</string>
+    <string name="basal_short">БАЗА</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Рекалкулирани използвани данни</string>
+    <string name="bg_too_close">КЗ близо до:\n%1$s\n%2$s</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Смяна на времето след по-малко от 24ч</string>
+    <string name="dst_loop_disabled_warning">Смяна на времето след по-малко от 3 часа - минавам в отворен режим</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">стара версия</string>
+    <string name="very_old_version">много стара версия</string>
+    <string name="application_expired">Прилагането изтече</string>
+    <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Все още не сме неприключили</string>
+    <string name="time_elapsed">Изминало време</string>
+    <!-- Overview -->
 </resources>

@@ -2,24 +2,24 @@ package info.nightscout.androidaps.plugins.sensitivity
 
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.utils.extensions.isPSEvent5minBack
-import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
+import info.nightscout.androidaps.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.utils.extensions.isPSEvent5minBack
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -147,13 +147,16 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             else        -> "Sensitivity normal"
         }
         aapsLogger.debug(LTag.AUTOSENS, sensResult)
-        val output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
-            sensResult, data.size())
+        val output = fillResult(
+            ratio, current.cob, pastSensitivity, ratioLimit,
+            sensResult, data.size()
+        )
         aapsLogger.debug(
             LTag.AUTOSENS, "Sensitivity to: "
-            + dateUtil.dateAndTimeString(toTime) +
-            " ratio: " + output.ratio
-            + " mealCOB: " + current.cob)
+                + dateUtil.dateAndTimeString(toTime) +
+                " ratio: " + output.ratio
+                + " mealCOB: " + current.cob
+        )
         return output
     }
 
@@ -178,7 +181,10 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     override fun applyConfiguration(configuration: JSONObject) {
         try {
             if (configuration.has(rh.gs(R.string.key_absorption_maxtime))) sp.putDouble(R.string.key_absorption_maxtime, configuration.getDouble(rh.gs(R.string.key_absorption_maxtime)))
-            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_period))) sp.putDouble(R.string.key_openapsama_autosens_period, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_period)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_autosens_period))) sp.putDouble(
+                R.string.key_openapsama_autosens_period,
+                configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_period))
+            )
             if (configuration.has(rh.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_max)))
             if (configuration.has(rh.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_min)))
         } catch (e: JSONException) {

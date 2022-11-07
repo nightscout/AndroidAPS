@@ -1,5 +1,5 @@
 package info.nightscout.plugins.general.autotune.events
 
-import info.nightscout.androidaps.events.Event
+import info.nightscout.rx.events.Event
 
 class EventAutotuneUpdateGui : Event()

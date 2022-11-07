@@ -1,15 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafeClickListener
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogCommonBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.DialogHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class ActivationNotCompleteDialog : DaggerDialogFragment() {

@@ -74,8 +74,34 @@
     <string name="insulin_peak_time">Μέγιστο καμπύλης [λεπτά]</string>
     <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
     <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
-    <string name="ultrarapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
     <string name="dia_too_short">DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! </string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
+    <!-- Food-->
+    <string name="description_food">Εμφανίζει τις επιλογές τροφίμων που ορίζεται στο Nightscout</string>
+    <string name="food">Γεύμα</string>
+    <string name="shortkilojoul">kj</string>
+    <string name="shortenergy">Ενέργεια</string>
+    <string name="shortprotein">Πρωτεΐνες</string>
+    <string name="shortfat">Λίπος</string>
+    <string name="category">Κατηγορία</string>
+    <string name="subcategory">Υποκατηγορία</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">παλιά έκδοση</string>
+    <string name="very_old_version">πολύ παλιά έκδοση</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
+    <string name="time_elapsed">Ο χρόνος που πέρασε</string>
+    <!-- Overview -->
 </resources>

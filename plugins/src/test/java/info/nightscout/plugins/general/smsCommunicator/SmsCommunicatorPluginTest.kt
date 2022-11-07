@@ -3,32 +3,39 @@ package info.nightscout.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.plugins.R
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.data.Sms
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
-import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.ProfileSource
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.XDripBroadcast
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.XDripBroadcast
+import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.data.smsCommunicator.Sms
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
@@ -39,8 +46,8 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
 
 @Suppress("SpellCheckingInspection")
@@ -63,7 +70,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is PumpEnactResult) {
+            if (it is PumpEnactResultImpl) {
                 it.rh = rh
             }
             if (it is AuthRequest) {
@@ -97,50 +104,54 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }))
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
-                                                      loop, iobCobCalculator, xDripBroadcast,
-                                                      otp, config, dateUtilMocked, uel,
-                                                      glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(
+            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
+            loop, iobCobCalculator, xDripBroadcast,
+            otp, config, dateUtilMocked, uel,
+            glucoseStatusProvider, repository
+        )
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResult(injector).success(true)
+            callback.result = PumpEnactResultImpl(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).cancelTempBasal(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(0)
-            callback.result = PumpEnactResult(injector).success(true)
+            callback.result = PumpEnactResultImpl(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).cancelExtended(ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResult(injector).success(true)
+            callback.result = PumpEnactResultImpl(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).readStatus(ArgumentMatchers.anyString(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResult(injector).success(true).bolusDelivered(1.0)
+            callback.result = PumpEnactResultImpl(injector).success(true).bolusDelivered(1.0)
             callback.run()
             null
         }.`when`(commandQueue).bolus(anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(5)
-            callback.result = PumpEnactResult(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue)
+            .tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(5)
-            callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue)
+            .tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
-            callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
@@ -179,8 +190,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.loopisdisabled)).thenReturn("Loop is disabled")
         `when`(rh.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
         `when`(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
-        `when`(rh.gs(eq(R.string.sms_wrong_tbr_duration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock -> "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than " +
-            "0." }
+        `when`(rh.gs(eq(R.string.sms_wrong_tbr_duration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock ->
+            "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than " +
+                "0."
+        }
         `when`(rh.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled")
         `when`(rh.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled")
         `when`(rh.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")

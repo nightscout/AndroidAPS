@@ -3,14 +3,14 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDuration
@@ -18,7 +18,8 @@ import info.nightscout.automation.elements.InputPercent
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerProfilePercent
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -50,10 +51,10 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.ok)).run()
         }
     }
 

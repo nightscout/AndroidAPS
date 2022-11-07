@@ -3,21 +3,22 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -39,23 +40,23 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.error_field_must_not_be_empty)).run()
+            callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.error_field_must_not_be_empty)).run()
             return
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.noprofile)).run()
+            callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.noprofile)).run()
             return
         }
         if (inputProfileName.value == activeProfileName) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyset)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.alreadyset)).run()
             return
         }
         val profileStore = activePlugin.activeProfileSource.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists)).run()
+            callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.notexists)).run()
             return
         }
         uel.log(
@@ -64,7 +65,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             ValueWithUnit.Percent(100)
         )
         val result = profileFunction.createProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
-        callback.result(PumpEnactResult(injector).success(result).comment(R.string.ok)).run()
+        callback.result(PumpEnactResultImpl(injector).success(result).comment(R.string.ok)).run()
     }
 
     override fun generateDialog(root: LinearLayout) {

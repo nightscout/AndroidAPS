@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.events
 
 import android.content.Context
+import info.nightscout.rx.events.Event
 
 @Suppress("unused")
 class EventWearPreferenceChange : Event {

@@ -120,6 +120,30 @@
     <string name="pumpsuspended">Micro sospeso</string>
     <string name="notconfigured">Non configurato</string>
     <string name="loopsuspended">Loop sospeso</string>
+    <string name="trend_arrow">Freccia trend</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">ric</string>
+    <string name="a11y_arrow_double_down">discesa rapida</string>
+    <string name="a11y_arrow_single_down">discesa</string>
+    <string name="a11y_arrow_forty_five_down">discesa lenta</string>
+    <string name="a11y_arrow_flat">stabile</string>
+    <string name="a11y_arrow_forty_five_up">salita lenta</string>
+    <string name="a11y_arrow_single_up">salita</string>
+    <string name="a11y_arrow_double_up">salita rapida</string>
+    <string name="a11y_arrow_none">nessuno</string>
+    <string name="a11y_arrow_unknown">sconosciuto</string>
+    <string name="a11y_high">alto</string>
+    <string name="a11y_inrange">in range</string>
+    <string name="a11y_low">basso</string>
+    <string name="average">Media</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">TDD totale</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">RIMUOVI</string>
+    <string name="activate_profile">Attiva profilo</string>
+    <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
+    <string name="profile">Profilo</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -281,7 +305,6 @@
     <string name="prefdecrypt_issue_wrong_format">Configurazione crittografia mancante, il formato delle impostazioni non è valido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Verificatore firma</string>
     <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
     <string name="versionavailable">Versione %1$s disponibile</string>
     <string name="version_expire">Versione: %1$s | Scadenza: %2$s</string>

@@ -9,7 +9,8 @@ import android.support.wearable.complications.ComplicationText
 import androidx.annotation.DrawableRes
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.RawDisplayData
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min

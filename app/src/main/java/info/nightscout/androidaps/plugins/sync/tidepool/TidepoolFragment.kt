@@ -8,13 +8,13 @@ import android.widget.ScrollView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TidepoolFragmentBinding
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
+import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.sync.tidepool.comm.TidepoolUploader
-import info.nightscout.androidaps.plugins.sync.tidepool.events.EventTidepoolDoUpload
-import info.nightscout.androidaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -57,13 +57,13 @@ class TidepoolFragment : DaggerFragment() {
             .toObservable(EventTidepoolUpdateGUI::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                if (_binding == null) return@subscribe
-                tidepoolPlugin.updateLog()
-                binding.log.text = tidepoolPlugin.textLog
-                binding.status.text = tidepoolUploader.connectionStatus.name
-                binding.log.text = tidepoolPlugin.textLog
-                binding.logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
-            }, fabricPrivacy::logException)
+                           if (_binding == null) return@subscribe
+                           tidepoolPlugin.updateLog()
+                           binding.log.text = tidepoolPlugin.textLog
+                           binding.status.text = tidepoolUploader.connectionStatus.name
+                           binding.log.text = tidepoolPlugin.textLog
+                           binding.logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
+                       }, fabricPrivacy::logException)
     }
 
     @Synchronized

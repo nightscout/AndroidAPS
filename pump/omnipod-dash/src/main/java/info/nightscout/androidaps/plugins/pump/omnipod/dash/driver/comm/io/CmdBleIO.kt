@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodD
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandHello
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
 import java.util.concurrent.BlockingQueue
 
 sealed class BleConfirmResult

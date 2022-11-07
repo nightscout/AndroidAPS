@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.sync.nsclient
 import android.content.Context
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.events.EventChargingState
-import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventChargingState
+import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before

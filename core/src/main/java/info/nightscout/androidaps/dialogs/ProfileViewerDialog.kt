@@ -9,7 +9,6 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogProfileviewerBinding
 import info.nightscout.androidaps.data.ProfileSealed
@@ -17,16 +16,17 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.extensions.getCustomizedName
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.bus.RxBus
 import org.json.JSONObject
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -63,8 +63,10 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             time = bundle.getLong("time", 0)
@@ -107,8 +109,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.datelayout.visibility = View.VISIBLE
             }
 
-            Mode.CUSTOM_PROFILE -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it)}
+            Mode.CUSTOM_PROFILE  -> {
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
                 profile2 = null
                 profileName = customProfileName
                 date = ""
@@ -116,15 +118,15 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             Mode.PROFILE_COMPARE -> {
-                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it)}
-                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it)}
+                profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
+                profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it) }
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
                 binding.datelayout.visibility = View.GONE
             }
 
-            Mode.DB_PROFILE -> {
+            Mode.DB_PROFILE      -> {
                 //val profileList = databaseHelper.getProfileSwitchData(time, true)
                 val profileList = repository.getAllProfileSwitches().blockingGet()
                 profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0]) else null
@@ -237,12 +239,15 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev1 = val1
             prev2 = val2
         }
-        s.append(formatColors(
-            "    ∑ ",
-            profile1.baseBasalSum(),
-            profile2.baseBasalSum(),
-            DecimalFormat("0.00"),
-            rh.gs(R.string.insulin_unit_shortname)))
+        s.append(
+            formatColors(
+                "    ∑ ",
+                profile1.baseBasalSum(),
+                profile2.baseBasalSum(),
+                DecimalFormat("0.00"),
+                rh.gs(R.string.insulin_unit_shortname)
+            )
+        )
         return HtmlHelper.fromHtml(s.toString())
     }
 
@@ -293,8 +298,18 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1h = profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
             val val2l = profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
             val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
-            val txt1 = dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units.asText
-            val txt2 = dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units.asText
+            val txt1 =
+                dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(
+                    val1h,
+                    val1h * Constants.MGDL_TO_MMOLL,
+                    units
+                ) + " " + units.asText
+            val txt2 =
+                dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(
+                    val2h,
+                    val2h * Constants.MGDL_TO_MMOLL,
+                    units
+                ) + " " + units.asText
             if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h) {
                 s.append(formatColors(txt1, txt2))
                 s.append("<br>")

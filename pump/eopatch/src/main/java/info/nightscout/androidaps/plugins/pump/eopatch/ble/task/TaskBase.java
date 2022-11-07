@@ -1,19 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.NoActivatedPatchException;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.PatchDisconnectedException;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
-
 import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.NoActivatedPatchException;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.PatchDisconnectedException;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
+import info.nightscout.rx.logging.AAPSLogger;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 

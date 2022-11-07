@@ -16,15 +16,14 @@ import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHAppIDDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHCounterDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHStateDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHFragment
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHLoginActivity
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -59,7 +58,7 @@ class OpenHumansUploader @Inject internal constructor(
     private val rxBus: RxBus
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(info.nightscout.interfaces.PluginType.GENERAL)
         .pluginIcon(R.drawable.open_humans_white)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)

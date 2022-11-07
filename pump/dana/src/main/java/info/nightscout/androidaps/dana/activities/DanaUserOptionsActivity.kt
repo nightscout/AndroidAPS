@@ -2,20 +2,20 @@ package info.nightscout.androidaps.dana.activities
 
 import android.content.Context
 import android.os.Bundle
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
-import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat

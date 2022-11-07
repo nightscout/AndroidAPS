@@ -10,9 +10,9 @@ import java.io.OutputStream;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.comm.MessageBase;
 import info.nightscout.androidaps.danar.comm.MessageHashTableBase;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.utils.CRC;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 
 /**
  * Created by mike on 17.07.2016.

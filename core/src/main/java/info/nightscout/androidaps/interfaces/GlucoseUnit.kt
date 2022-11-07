@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 
 enum class GlucoseUnit(val asText: String) {
     MGDL(Constants.MGDL),

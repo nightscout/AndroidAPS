@@ -5,4 +5,5 @@
     <string name="request">Užklausa</string>
     <string name="permission">Leidimas</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
+    <!--       Stats -->
 </resources>

@@ -3,20 +3,20 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshOverview
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -40,9 +40,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
                 UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
                 ValueWithUnit.Minute(minutes.getMinutes())
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.alreadysuspended)).run()
         }
     }
 

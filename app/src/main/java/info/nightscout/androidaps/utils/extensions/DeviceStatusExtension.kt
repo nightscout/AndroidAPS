@@ -54,8 +54,8 @@ fun buildDeviceStatus(
         val requested = JSONObject()
         if (lastRun.tbrSetByPump?.enacted == true) { // enacted
             enacted = lastRun.request?.json()?.also {
-                it.put("rate", lastRun.tbrSetByPump!!.json(profile)["rate"])
-                it.put("duration", lastRun.tbrSetByPump!!.json(profile)["duration"])
+                it.put("rate", lastRun.tbrSetByPump!!.json(profile.getBasal())["rate"])
+                it.put("duration", lastRun.tbrSetByPump!!.json(profile.getBasal())["duration"])
                 it.put("received", true)
             }
             requested.put("duration", lastRun.request?.duration)

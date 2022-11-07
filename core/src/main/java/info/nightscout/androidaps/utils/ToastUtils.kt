@@ -13,10 +13,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.utils.resources.getThemeColor
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.bus.RxBus
 
 object ToastUtils {
 

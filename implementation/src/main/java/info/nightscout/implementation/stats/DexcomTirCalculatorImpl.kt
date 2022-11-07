@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.DexcomTIR
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton

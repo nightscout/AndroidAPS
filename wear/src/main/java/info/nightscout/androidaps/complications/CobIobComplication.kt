@@ -8,7 +8,8 @@ import android.support.wearable.complications.ComplicationText
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.SmallestDoubleString
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 
 /*
  * Created by dlvoy on 2019-11-12

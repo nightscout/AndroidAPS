@@ -7,25 +7,30 @@ import info.nightscout.androidaps.database.embedments.InsulinConfiguration
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.database.entities.ProfileSwitch
-import info.nightscout.androidaps.extensions.*
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.extensions.blockValueBySeconds
+import info.nightscout.androidaps.extensions.highTargetBlockValueBySeconds
+import info.nightscout.androidaps.extensions.lowTargetBlockValueBySeconds
+import info.nightscout.androidaps.extensions.shiftBlock
+import info.nightscout.androidaps.extensions.shiftTargetBlock
+import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.bus.RxBus
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
-import java.util.*
+import java.util.TimeZone
 
 sealed class ProfileSealed(
     val id: Long,

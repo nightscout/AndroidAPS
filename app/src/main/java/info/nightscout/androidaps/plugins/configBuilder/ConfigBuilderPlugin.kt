@@ -6,19 +6,30 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.events.EventAppInitialized
-import info.nightscout.androidaps.events.EventConfigBuilderChange
-import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.APS
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.BgSource
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileSource
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppInitialized
+import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventRebuildTabs
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -91,12 +102,18 @@ class ConfigBuilderPlugin @Inject constructor(
 
     private fun loadPref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
+        if (sp.contains(settingEnabled)) p.setPluginEnabled(
+            type,
+            sp.getBoolean(settingEnabled, false)
+        ) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type))
         val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-        if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+        if (sp.contains(settingVisible)) p.setFragmentVisible(
+            type,
+            sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)
+        ) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
             p.setFragmentVisible(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
@@ -106,15 +123,15 @@ class ConfigBuilderPlugin @Inject constructor(
         for (p in activePlugin.getPluginsList()) {
             aapsLogger.debug(
                 LTag.CONFIGBUILDER, p.name + ":" +
-                (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
-                (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
-                (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
-                (if (p.isEnabled(PluginType.APS)) " APS" else "") +
-                (if (p.isEnabled(PluginType.PUMP)) " PUMP" else "") +
-                (if (p.isEnabled(PluginType.CONSTRAINTS)) " CONSTRAINTS" else "") +
-                (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
-                (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
-                if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else ""
+                    (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
+                    (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
+                    (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
+                    (if (p.isEnabled(PluginType.APS)) " APS" else "") +
+                    (if (p.isEnabled(PluginType.PUMP)) " PUMP" else "") +
+                    (if (p.isEnabled(PluginType.CONSTRAINTS)) " CONSTRAINTS" else "") +
+                    (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
+                    (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
+                    if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else ""
             )
         }
     }
@@ -139,24 +156,29 @@ class ConfigBuilderPlugin @Inject constructor(
                 performPluginSwitch(changedPlugin, newState, type)
                 pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+                uel.log(
+                    Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                )
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, {
-                rxBus.send(EventConfigBuilderUpdateGui())
-                aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
-            })
+                                          rxBus.send(EventConfigBuilderUpdateGui())
+                                          aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
+                                      })
         }
     }
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
-        if(enabled && !changedPlugin.isEnabled()) {
-            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
-        }
-        else if(!enabled) {
-            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+        if (enabled && !changedPlugin.isEnabled()) {
+            uel.log(
+                Action.PLUGIN_ENABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+            )
+        } else if (!enabled) {
+            uel.log(
+                Action.PLUGIN_DISABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+            )
         }
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
@@ -171,16 +193,16 @@ class ConfigBuilderPlugin @Inject constructor(
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
-            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
+            PluginType.INSULIN -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
             PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
-            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
-            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
-            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
-            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
+            PluginType.APS -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
+            PluginType.PROFILE -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
+            PluginType.BGSOURCE -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
+            PluginType.PUMP -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
             // Process only NSClients
-            PluginType.SYNC        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
+            PluginType.SYNC -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
 
-            else                   -> {
+            else -> {
             }
         }
         if (pluginsInCategory != null) {

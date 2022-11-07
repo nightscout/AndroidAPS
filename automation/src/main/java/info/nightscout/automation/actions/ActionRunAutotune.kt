@@ -3,19 +3,20 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Autotune
+import info.nightscout.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -48,11 +49,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
                     message = R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
-                callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
+                callback.result(PumpEnactResultImpl(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
                 message = R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
-                callback.result(PumpEnactResult(injector).success(false).comment(message)).run()
+                callback.result(PumpEnactResultImpl(injector).success(false).comment(message)).run()
             }
         }.start()
         return

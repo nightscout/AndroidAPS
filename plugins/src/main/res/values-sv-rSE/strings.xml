@@ -97,8 +97,62 @@
     <string name="insulin_peak_time">Peaktid [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog, Apidra</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip+ urtavla.</string>
+    <!-- Food-->
+    <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
+    <string name="filter">Filter</string>
+    <string name="food">Matdatabas</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Fett</string>
+    <string name="category">Kategori</string>
+    <string name="subcategory">Underkategori</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definiera en profil som är tillgänglig offline.</string>
+    <string name="a11y_add_new_to_list">lägg till ny i listan</string>
+    <string name="units_colon">Enheter:</string>
+    <string name="missing_profile_name">Profilnamn saknas</string>
+    <string name="error_in_ic_values">Fel i KH-kvoter</string>
+    <string name="error_in_basal_values">Fel i basaldoser</string>
+    <string name="error_in_target_values">Fel i målvärden</string>
+    <string name="error_in_isf_values">Fel i korrektionskvoter</string>
+    <string name="invalid_profile_not_accepted">Ogiltig profil %1$s från NS accepteras inte</string>
+    <string name="view">Visa</string>
+    <string name="errors">Fel</string>
+    <string name="profile_name">Profilnamn:</string>
+    <string name="a11y_add_new_profile">lägg till ny profil</string>
+    <string name="a11y_clone_profile">klona nuvarande profil</string>
+    <string name="a11y_delete_current_profile">ta bort aktuell profil</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">Mål</string>
+    <string name="clone_label">Kopiera</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Omräknad data används</string>
+    <string name="bg_too_close">BG för nära:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">omräknad</string>
+    <string name="a11y_bg_quality_doubles">dubbla poster</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Sommar/vintertid inträffar inom 24 timmar</string>
+    <string name="dst_loop_disabled_warning">Sommar/vintertid ändrades för mindre än 3 timmar sedan. Closed Loop avstängt</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">gammal version</string>
+    <string name="very_old_version">väldigt gammal version</string>
+    <string name="application_expired">Applikationen inte giltig längre</string>
+    <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Inte slutfört ännu</string>
+    <string name="time_elapsed">Förfluten tid</string>
+    <!-- Overview -->
 </resources>

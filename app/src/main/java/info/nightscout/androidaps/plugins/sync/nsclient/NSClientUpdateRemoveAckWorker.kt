@@ -20,12 +20,12 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryBasal
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryTarget
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTherapyEvent
 import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewLog
+import info.nightscout.androidaps.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class NSClientUpdateRemoveAckWorker(

@@ -116,6 +116,30 @@
     <string name="pumpsuspended">泵暂停了</string>
     <string name="notconfigured">未配置</string>
     <string name="loopsuspended">闭环暂停了</string>
+    <string name="trend_arrow">趋势箭头</string>
+    <string name="value_unavailable_short">无可用</string>
+    <string name="required">要</string>
+    <string name="a11y_arrow_double_down">迅速下降</string>
+    <string name="a11y_arrow_single_down">下降</string>
+    <string name="a11y_arrow_forty_five_down">缓慢减少</string>
+    <string name="a11y_arrow_flat">稳定</string>
+    <string name="a11y_arrow_forty_five_up">缓慢增长</string>
+    <string name="a11y_arrow_single_up">上升</string>
+    <string name="a11y_arrow_double_up">快速上升</string>
+    <string name="a11y_arrow_none">无</string>
+    <string name="a11y_arrow_unknown">未知</string>
+    <string name="a11y_high">高</string>
+    <string name="a11y_inrange">在范围内</string>
+    <string name="a11y_low">低</string>
+    <string name="average">平均</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">胰岛素输注日总量</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">移除</string>
+    <string name="activate_profile">激活配置文件</string>
+    <string name="reset">重置</string>
+    <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
+    <string name="profile">配置文件</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
@@ -274,7 +298,6 @@
     <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">验证签名</string>
     <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
     <string name="versionavailable">版本 %1$s 可用</string>
     <string name="version_expire">版本 %1$s 将在 %2$s 过期</string>

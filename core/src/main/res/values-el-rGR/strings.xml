@@ -32,6 +32,14 @@
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="notconfigured">Δεν έχει ρυθμιστεί</string>
     <string name="loopsuspended">Κύκλωμα σε αναστολή</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="tdd_total">TDD σύνολο</string>
+    <string name="none"><![CDATA[<κενό>]]></string>
+    <string name="remove_label">ΜΕΤΑΚΙΝΗΣΗ</string>
+    <string name="activate_profile">Ενεργοποίηση προφίλ</string>
+    <string name="reset">επαναφορά</string>
+    <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
+    <string name="profile">Προφίλ</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -58,7 +66,6 @@
     <!--    Ntp-->
     <!-- Maintenance -->
     <!-- VersionChecker -->
-    <string name="signature_verifier">Έλεγχος υπογραφής</string>
     <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
     <!-- Permissions -->

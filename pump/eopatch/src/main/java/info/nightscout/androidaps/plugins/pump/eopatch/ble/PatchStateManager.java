@@ -6,18 +6,18 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.FetchAlarmTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.InternalSuspendedTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ReadBolusFinishTimeTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ReadTempBasalFinishTimeTask;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 

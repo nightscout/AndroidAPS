@@ -3,19 +3,19 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationUserMessage
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.notifications.NotificationUserMessage
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshOverview
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -39,7 +39,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
         rxBus.send(EventNewNotification(notification))
         disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(text.value)).subscribe()
         rxBus.send(EventRefreshOverview("ActionNotification"))
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
     }
 
     override fun toJSON(): String {

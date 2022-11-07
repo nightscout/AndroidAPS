@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.events
 
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
+import info.nightscout.rx.events.Event
 
 class EventEffectiveProfileSwitchChanged(effectiveProfileSwitch: EffectiveProfileSwitch?) : Event() {
     var startDate: Long = 0

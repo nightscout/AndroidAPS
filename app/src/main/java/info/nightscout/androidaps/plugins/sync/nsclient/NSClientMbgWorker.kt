@@ -6,11 +6,11 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.extensions.therapyEventFromNsMbg
+import info.nightscout.interfaces.Config
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 

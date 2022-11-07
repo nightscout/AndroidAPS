@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
-import info.nightscout.androidaps.utils.storage.Storage
+import info.nightscout.interfaces.storage.Storage
 import java.io.File
 
 class SingleStringStorage(var contents: String) : Storage {

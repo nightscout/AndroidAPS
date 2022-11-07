@@ -7,30 +7,39 @@ import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventCustomActionsChanged
+import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpPluginBase
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.interfaces.pump.ManufacturerType
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventCustomActionsChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
@@ -304,7 +313,7 @@ abstract class PumpPluginAbstract protected constructor(
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input")
-                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).carbsDelivered(0.0)
+                PumpEnactResultImpl(injector).success(false).enacted(false).bolusDelivered(0.0).carbsDelivered(0.0)
                     .comment(R.string.invalidinput)
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
@@ -320,7 +329,7 @@ abstract class PumpPluginAbstract protected constructor(
                 bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0)
+                PumpEnactResultImpl(injector).success(true).enacted(true).bolusDelivered(0.0)
                     .carbsDelivered(detailedBolusInfo.carbs).comment(R.string.common_resultok)
             }
         } finally {
@@ -341,7 +350,7 @@ abstract class PumpPluginAbstract protected constructor(
     protected abstract fun triggerUIChange()
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
+        PumpEnactResultImpl(injector).success(false).enacted(false).comment(resourceId)
 
     init {
         pumpDescription.fillFor(pumpType)

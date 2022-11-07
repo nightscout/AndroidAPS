@@ -13,16 +13,16 @@ import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.interfaces.XDripBroadcast
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,7 +32,8 @@ class EversensePlugin @Inject constructor(
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon(R.drawable.ic_eversense)

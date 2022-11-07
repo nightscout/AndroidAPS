@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danars.R
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class DanaRSPacketGeneralGetPumpCheck(

@@ -1,15 +1,20 @@
 package info.nightscout.plugins.constraints.versionChecker
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.interfaces.Config
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.plugins.R
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

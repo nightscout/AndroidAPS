@@ -16,8 +16,10 @@ apply from: "${project.rootDir}/core/jacoco_global.gradle"
 
 dependencies {
     implementation project(':graphview')
-    implementation project(':shared')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
     implementation project(':database')
+    implementation project(':interfaces')
 }
 
 android {

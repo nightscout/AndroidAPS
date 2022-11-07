@@ -14,7 +14,7 @@ import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.automation.R
 import java.util.Calendar
 

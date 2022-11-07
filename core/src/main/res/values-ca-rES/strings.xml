@@ -10,6 +10,18 @@
     <string name="pumpsuspended">Bomba aturada</string>
     <string name="notconfigured">No configurat</string>
     <string name="loopsuspended">Llaç aturat</string>
+    <string name="trend_arrow">Fletxa de tendència</string>
+    <string name="value_unavailable_short">n/d</string>
+    <string name="required">req</string>
+    <string name="average">Mitja</string>
+    <string name="tir">TIR (Temps en rang)</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="none"><![CDATA[<cap>]]></string>
+    <string name="remove_label">ELIMINA</string>
+    <string name="activate_profile">Activar perfil</string>
+    <string name="reset">restablir</string>
+    <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
+    <string name="profile">Perfil</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->

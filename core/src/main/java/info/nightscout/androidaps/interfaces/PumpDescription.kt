@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpCapability
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpTempBasalType
+import info.nightscout.interfaces.pump.PumpCapability
+import info.nightscout.interfaces.pump.PumpTempBasalType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 
 class PumpDescription() {
@@ -39,6 +39,7 @@ class PumpDescription() {
     var needsManualTDDLoad = false
     var hasCustomUnreachableAlertCheck = false
     var isPatchPump = false
+    var maxResorvoirReading = 50
     var useHardwareLink = false
 
     private fun resetSettings() {
@@ -107,6 +108,7 @@ class PumpDescription() {
         is30minBasalRatesCapable = pumpCapability.hasCapability(PumpCapability.BasalRate30min)
         hasCustomUnreachableAlertCheck = pumpType.hasCustomUnreachableAlertCheck
         isPatchPump = pumpType.isPatchPump
+        maxResorvoirReading = pumpType.maxReservoirReading
         useHardwareLink = pumpType.useHardwareLink
     }
 

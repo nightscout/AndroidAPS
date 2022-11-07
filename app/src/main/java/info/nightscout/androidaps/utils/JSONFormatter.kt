@@ -1,14 +1,15 @@
 package info.nightscout.androidaps.utils
 
 import android.text.Spanned
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
+import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
+import info.nightscout.rx.logging.AAPSLogger
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 

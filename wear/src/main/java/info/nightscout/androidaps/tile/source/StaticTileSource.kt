@@ -5,9 +5,9 @@ import android.content.res.Resources
 import androidx.annotation.DrawableRes
 import info.nightscout.androidaps.tile.Action
 import info.nightscout.androidaps.tile.TileSource
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
 
 abstract class StaticTileSource(val context: Context, val sp: SP, val aapsLogger: AAPSLogger) : TileSource {
 

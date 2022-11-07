@@ -7,7 +7,6 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.sync.tidepool.messages.AuthReplyMessage
 import info.nightscout.androidaps.plugins.sync.tidepool.messages.AuthRequestMessage
@@ -17,8 +16,9 @@ import info.nightscout.androidaps.plugins.sync.tidepool.messages.UploadReplyMess
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -206,7 +206,7 @@ class TidepoolUploader @Inject constructor(
             session.iterations++
             val chunk = uploadChunk.getNext(session)
             when {
-                chunk == null -> {
+                chunk == null     -> {
                     aapsLogger.error("Upload chunk is null, cannot proceed")
                     releaseWakeLock()
                 }
@@ -218,7 +218,7 @@ class TidepoolUploader @Inject constructor(
                     uploadNext()
                 }
 
-                else -> {
+                else              -> {
                     val body = chunk.toRequestBody("application/json".toMediaTypeOrNull())
 
                     rxBus.send(EventTidepoolStatus(("Uploading")))

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.os.SystemClock
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
@@ -18,7 +17,13 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistory
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryResult
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.*
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.CarelinkLongMessageBody
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.CarelinkShortMessageBody
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.GetHistoryPageCarelinkMessageBody
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.MessageBody
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.PacketType
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.PumpAckMessageBody
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.PumpMessage
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO
@@ -31,8 +36,11 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.createByteArray
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.getByteArrayFromUnsignedShort
+import info.nightscout.rx.logging.LTag
 import org.joda.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 

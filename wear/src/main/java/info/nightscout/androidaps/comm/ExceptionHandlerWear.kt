@@ -2,9 +2,9 @@ package info.nightscout.androidaps.comm
 
 import android.os.Build
 import android.util.Log
-import info.nightscout.androidaps.events.EventWearToMobile
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventWearToMobile
+import info.nightscout.rx.weardata.EventData
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream

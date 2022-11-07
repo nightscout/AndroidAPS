@@ -92,7 +92,9 @@ allprojects {
 
 
 dependencies {
-    implementation project(':shared')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
+    implementation project(':app-wear-shared:shared-impl')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

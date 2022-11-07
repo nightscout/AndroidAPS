@@ -8,7 +8,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.shared.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -44,6 +43,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ril
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnexpectedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
+import info.nightscout.rx.logging.LTag;
 
 /**
  * Created by andy on 6/29/18.

@@ -100,8 +100,56 @@
     <string name="insulin_peak">Piek</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Snel-werkende Oref</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">DIA van %1$f te kort - %2$f wordt inplaats gebruikt!</string>
-    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
-    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Toon informatie over de Loop op jouw xDrip+ wijzerplaat.</string>
+    <!-- Food-->
+    <string name="category">Categorie</string>
+    <string name="subcategory">Subcategorie</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Gebruik profiel(en) die je in AAPS aanmaakt en offline kunt gebruiken.</string>
+    <string name="a11y_add_new_to_list">nieuwe toevoegen aan lijst</string>
+    <string name="units_colon">Eenheden:</string>
+    <string name="missing_profile_name">Profielnaam ontbreekt</string>
+    <string name="error_in_ic_values">Fout in IC waarden</string>
+    <string name="error_in_basal_values">Fout in basaal waarden</string>
+    <string name="error_in_target_values">Fout in streefdoel</string>
+    <string name="error_in_isf_values">Fout in ISF waarden</string>
+    <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
+    <string name="view">Weergeven</string>
+    <string name="errors">Foutmeldingen</string>
+    <string name="select_profile">Kies profiel om te bewerken</string>
+    <string name="profile_name">Profielnaam:</string>
+    <string name="a11y_add_new_profile">nieuw profiel toevoegen</string>
+    <string name="a11y_clone_profile">huidig profiel dupliceren</string>
+    <string name="a11y_delete_current_profile">huidig profiel verwijderen</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">KH-ratio</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">DOEL</string>
+    <string name="clone_label">Dupliceren</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Herberekende data gebruikt</string>
+    <string name="bg_too_close">BG data interval to kort:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">opnieuw berekend</string>
+    <string name="a11y_bg_quality_doubles">dubbele items</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
+    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">oude versie</string>
+    <string name="very_old_version">zeer oude versie</string>
+    <string name="application_expired">Applicatie is verlopen</string>
+    <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Nog niet voltooid</string>
+    <string name="time_elapsed">Verstreken tijd</string>
+    <!-- Overview -->
 </resources>

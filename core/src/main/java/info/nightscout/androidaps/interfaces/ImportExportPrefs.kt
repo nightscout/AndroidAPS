@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.androidaps.plugins.general.maintenance.PrefsFile
+import info.nightscout.interfaces.data.maintenance.PrefsFile
 
 interface ImportExportPrefs {
 

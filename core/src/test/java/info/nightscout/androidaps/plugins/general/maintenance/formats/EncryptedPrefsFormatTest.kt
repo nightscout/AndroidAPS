@@ -3,6 +3,12 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.interfaces.data.maintenance.PrefFormatError
+import info.nightscout.interfaces.data.maintenance.PrefMetadata
+import info.nightscout.interfaces.data.maintenance.Prefs
+import info.nightscout.interfaces.data.maintenance.PrefsFormat
+import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
+import info.nightscout.interfaces.data.maintenance.PrefsStatus
 import info.nightscout.shared.sharedPreferences.SP
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
@@ -18,7 +24,6 @@ import java.io.File
 class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var sp: SP
     @Mock lateinit var file: MockedFile
 
     private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
@@ -63,7 +68,7 @@ class EncryptedPrefsFormatTest : TestBase() {
         Assert.assertEquals(prefs.values["keyB"], "2")
 
         Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
-        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, EncryptedPrefsFormat.FORMAT_KEY_ENC)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
         Assert.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.OK)
     }
 
@@ -77,7 +82,7 @@ class EncryptedPrefsFormatTest : TestBase() {
                 "keyB" to "2"
             ),
             mapOf(
-                PrefsMetadataKey.ENCRYPTION to PrefMetadata(EncryptedPrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
+                PrefsMetadataKey.ENCRYPTION to PrefMetadata(PrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
             )
         )
         encryptedFormat.savePreferences(getMockedFile(), prefs, "sikret")
@@ -94,7 +99,7 @@ class EncryptedPrefsFormatTest : TestBase() {
                 "testpref2" to "another"
             ),
             mapOf(
-                PrefsMetadataKey.ENCRYPTION to PrefMetadata(EncryptedPrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
+                PrefsMetadataKey.ENCRYPTION to PrefMetadata(PrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
             )
         )
         encryptedFormat.savePreferences(getMockedFile(), prefsIn, "tajemnica")
@@ -107,7 +112,7 @@ class EncryptedPrefsFormatTest : TestBase() {
         Assert.assertEquals(prefsOut.values["testpref2"], "another")
 
         Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
-        Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, EncryptedPrefsFormat.FORMAT_KEY_ENC)
+        Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
         Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.OK)
     }
 
@@ -132,7 +137,7 @@ class EncryptedPrefsFormatTest : TestBase() {
         Assert.assertEquals(prefs.values.size, 0)
 
         Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
-        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, EncryptedPrefsFormat.FORMAT_KEY_ENC)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
         Assert.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
     }
 

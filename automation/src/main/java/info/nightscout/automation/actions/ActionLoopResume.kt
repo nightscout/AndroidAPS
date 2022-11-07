@@ -2,20 +2,20 @@ package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.automation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -45,9 +45,9 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
                            })
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
             uel.log(UserEntry.Action.RESUME, Sources.Automation, title)
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended)).run()
+            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.notsuspended)).run()
         }
     }
 

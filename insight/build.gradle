@@ -28,7 +28,9 @@ android {
 dependencies {
 
     implementation project(':core')
-    implementation project(':shared')
+    implementation project(':interfaces')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
     implementation project(':pump:pump-common')
 
     api "androidx.room:room-ktx:$room_version"

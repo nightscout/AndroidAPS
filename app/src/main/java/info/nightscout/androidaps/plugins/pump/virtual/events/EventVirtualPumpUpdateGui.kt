@@ -1,5 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.virtual.events
 
-import info.nightscout.androidaps.events.EventUpdateGui
+import info.nightscout.rx.events.EventUpdateGui
 
 class EventVirtualPumpUpdateGui : EventUpdateGui()

@@ -15,14 +15,12 @@
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
     <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
     <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
     <string name="description_overview">Exibe o estado actual do loop e botões para acções mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
-    <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando o que é mais sensível). Os hidratos de carbono são descartados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o RNA.</string>
@@ -33,7 +31,6 @@
     <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
-    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Hidratos:</string>
     <string name="treatments_iob_label_string">IA:</string>
@@ -83,7 +80,6 @@
     <string name="constraints_violation">Violação das restrições</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_treatment_label">Tratamento</string>
-    <string name="calculator_label">Calculadora</string>
     <string name="changeyourinput">Altere o seu input!</string>
     <string name="configbuilder_bgsource">Fonte da Glicose</string>
     <string name="xdrip">xDrip+</string>
@@ -91,17 +87,12 @@
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
     <string name="lowglucosesuspend">Suspensão Glicose Baixa</string>
-    <string name="disabledloop">Loop Desactivado</string>
     <string name="openloop_newsuggestion">Disponível nova sugestão</string>
     <string name="carbssuggestion">Sugestão de Hidratos</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
-    <string name="careportal_newnstreatment_other">Outro</string>
-    <string name="careportal_newnstreatment_meter">Medidor</string>
-    <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="carb_time_label">Hora dos Hidratos</string>
     <string name="profile_label">Perfil</string>
-    <string name="careportal_newnstreatment_glucosetype">Tipo de Glicose</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus Prolongado</string>
     <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
@@ -158,7 +149,6 @@
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
     <string name="button3">Botão 3</string>
-    <string name="units_colon">Unidades:</string>
     <string name="units">Unidades</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
     <string name="prefs_range_summary">Marca Alto e Baixo para os gráficos em Sumário e Smartwatch</string>
@@ -170,7 +160,6 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
-    <string name="localprofile">Perfil</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
@@ -182,7 +171,6 @@
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">PL</string>
     <string name="overview_shortname">Início</string>
     <string name="virtualpump_shortname">BOMBAV</string>
     <string name="treatments_shortname">TRATA</string>
@@ -191,7 +179,6 @@
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Utilizar sempre delta médio curto em vez de delta simples</string>
     <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como xDrip+.</string>
-    <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido pela OpenAPS. O que faz é limitar a basal a 3x a basal máxima. Se necessário modificar este valor, por favor tenha em conta que os dados apontam para que os limites de segurança sejam \"3 x máx diário ; 4 x valor atual\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor Sensibilidade à Insulina (FSI) e baixar o valor alvo de glicose no sangue.</string>
@@ -223,8 +210,6 @@
     <string name="clearlog">Limpar Registo</string>
     <string name="nowritepermission">ClienteNS sem permissões para alterar dados. Tem a senha API correta?</string>
     <string name="wear_settings">Definições do Relógio</string>
-    <string name="wear_detailedIOB_title">Mostrar IA detalhada</string>
-    <string name="wear_detailedIOB_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="nosuccess">sem efeito - por favor verifique no telemóvel</string>
     <string name="patientage">Tipo de Paciente</string>
     <string name="child">Criança</string>
@@ -286,11 +271,6 @@
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="nav_about">Acerca</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="xdripstatus_settings">Estado xDrip+ (relógio)</string>
-    <string name="xdripstatus">Linha Estado xDrip+ (relógio)</string>
-    <string name="xdripstatus_shortname">xds</string>
-    <string name="wear_showbgi_title">Mostrar BGI</string>
-    <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
@@ -317,7 +297,6 @@
     <string name="absorption_maxtime_summary">Tempo em horas, espectável para que todos os hidratos de carbono da refeição sejam absorvidos</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
-    <string name="basal_short">BAS</string>
     <string name="keep_screen_on_title">Manter ecrã ligado</string>
     <string name="keep_screen_on_summary">Impedir Android de desligar o ecrã. Isto irá consumir muita bateria quando não ligado ao carregador.</string>
     <string name="sensitivity_warning">Ao activar a função Autosense lembre-se de introduzir todos os hidratos de carbono (HC) que comeu. Caso contrário os desvios de hidratos serão erroneamente identificados como uma variação da sensibilidade !!</string>
@@ -330,7 +309,6 @@
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Bólus em vez de basal temporária para uma ação mais rápida</string>
     <string name="enableuam_summary">Deteção de Refeições Não Anunciadas (RNA)</string>
-    <string name="activate_profile">Activar perfil</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentagem</string>
     <string name="careportal_newnstreatment_timeshift_label">Deslocamento temporal</string>
@@ -344,12 +322,6 @@
     <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
-    <string name="food">Alimentos</string>
-    <string name="none"><![CDATA[<nenhum>]]></string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Gor</string>
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas locais</string>
@@ -426,8 +398,6 @@
     <string name="g5appnotdetected">Por favor atualize as sua aplicação Dexcom para uma versão suportada</string>
     <string name="dexcom_app_not_installed">App Dexcom não está instalada.</string>
     <string name="do_not_bolus_record_only">Sem bólus, registar apenas</string>
-    <string name="category">Categoria</string>
-    <string name="subcategory">Subcategoria</string>
     <string name="bolusrecordedonly">Bólus será registado apenas (não administrado pela bomba)</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Actividade</string>
@@ -439,7 +409,6 @@
     <string name="overview_show_basals">Basais</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
-    <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
     <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
     <string name="autosensdisabledinpreferences">Autosens desabilitado nas preferências</string>
@@ -459,8 +428,6 @@
     <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
-    <string name="food_short">Alimentos</string>
-    <string name="reset">repor</string>
     <string name="openapssmb_maxiob_title">Máximo total de IA que a OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Máx IA em contexto da OpenAPS\n A OpenAPS não adicionará mais insulina se a IA atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
@@ -509,9 +476,6 @@
     <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
     <string name="nav_plugin_preferences">Preferências plugin</string>
-    <string name="completed_well_done">Terminado, parabéns!</string>
-    <string name="not_completed_yet">Não concluído ainda</string>
-    <string name="time_elapsed">Tempo decorrido</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
     <string name="glunovo">Glunovo</string>
@@ -566,15 +530,6 @@
     <string name="tidepool_upload_tbr">Enviar basais temporárias</string>
     <string name="tidepool_upload_profile">Enviar trocas de perfil, alvos temporários</string>
     <string name="tidepool_upload_bg">Enviar testes Glicose</string>
-    <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
-    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Loop Fechado desativado</string>
-    <string name="storage">restrição de armazenamento interno</string>
-    <string name="diskfull">Liberte pelo menos %1$d MB do armazenamento interno! Loop desativado!</string>
-    <string name="versionChecker">Verificador de Versão</string>
-    <string name="old_version">versão antiga</string>
-    <string name="very_old_version">versão muito antiga</string>
-    <string name="application_expired">A aplicação expirou</string>
-    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
@@ -584,42 +539,21 @@
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detetada: %2$d%% do tempo. Verifique o seu cálculo. HCA podem estar sobrestimados, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é administada. Útil com o algoritmo SMB.</string>
-    <string name="snooze">Silenciar</string>
     <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IHC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="profile_name">Nome do Perfil:</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
-    <string name="doyouwantswitchprofile">Deseja mudar de perfil e descartar as alterações feitas no perfil actual?</string>
     <string name="objectives_button_unfinish">Limpar terminado</string>
     <string name="objectives_button_unstart">Limpar iniciado</string>
     <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
     <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
-    <string name="dia_short">DIA</string>
-    <string name="ic_short">IHC</string>
-    <string name="isf_short">FSI</string>
-    <string name="target_short">ALV</string>
-    <string name="clone_label">Clone</string>
-    <string name="saveorresetchangesfirst">Guardar ou repor as alterações actuais primeiro</string>
-    <string name="deletecurrentprofile">Eliminar perfil actual?</string>
     <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
-    <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
-    <string name="id">ID:</string>
-    <string name="submit">Enviar</string>
-    <string name="mostcommonprofile">Perfil mais comum:</string>
-    <string name="invalidage">Entrada de idade inválida</string>
-    <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
-    <string name="average">Média</string>
-    <string name="tir">TIR</string>
-    <string name="activitymonitor">Monitor de actividade</string>
-    <string name="doyouwantresetstats">Quer reiniciar as estatísticas de actividade?</string>
-    <string name="statistics">Estatísticas</string>
     <string name="randombg">Glicose Aleatória</string>
     <string name="description_source_randombg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
     <string name="randombg_short">Glicose</string>
@@ -629,7 +563,6 @@
     <string name="clearqueueconfirm">Limpar fila? Todos os dados na fila serão perdidos!</string>
     <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
     <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
-    <string name="phonechecker">\"VerificadorTelefone\"</string>
     <string name="chartmenu">Menu do Gráfico</string>
     <string name="loop_smbrequest_time_label">Hora de solicitação SMB</string>
     <string name="loop_smbexecution_time_label">Hora de execução do SMB</string>
@@ -661,7 +594,6 @@
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
-    <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">Não é possível criar o perfil. O perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
@@ -700,24 +632,12 @@
     <string name="ns_receive_therapy_events_summary">Aceitar tratamentos (catéter, insulina, mudança de bateria etc) inseridos através do NS ou NSCliente</string>
     <string name="ns_receive_cgm">Receber/preencher dados do MCG</string>
     <string name="ns_receive_cgm_summary">Aceitar dados do MCG provenientes do NS</string>
-    <string name="calculation_in_progress">Cálculo em curso</string>
-    <string name="missing_profile_name">Nome do perfil ausente</string>
-    <string name="error_in_ic_values">Erro nos valores de IHC</string>
-    <string name="error_in_basal_values">Erro nos valores da basal</string>
-    <string name="error_in_target_values">Erros no valor alvo</string>
-    <string name="error_in_isf_values">Erro nos valores do FSI</string>
     <string name="run_question">Executar %s?</string>
-    <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceite do NS</string>
-    <string name="view">Ver</string>
-    <string name="errors">Erros</string>
     <string name="ns_sync_slow">Reduzir velocidade de transferência</string>
     <string name="data_status">Estado dos dados da Glicemia</string>
-    <string name="recalculated_data_used">Dados utilizados foram recalculados</string>
-    <string name="bg_too_close">Glicemia demasiado próxima:\n%1$s\n%2$s</string>
     <string name="identification">Identificação (e-mail, nick FB ou Discord, etc)</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
     <string name="not_available_full">Indisponível</string>
-    <!-- Theme switcher dark and light mode-->
     <!-- WEAR OS-->
     <string name="login">Login</string>
     <!-- Aidex Cgms -->

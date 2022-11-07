@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.events
 
-import info.nightscout.androidaps.events.Event
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.rx.events.Event
 
 class EventNewNotification(var notification: Notification) : Event()

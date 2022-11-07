@@ -178,9 +178,12 @@ dependencies {
     // https://github.com/nightscout/iconify.git
     implementation project(':graphview')
     implementation project(':libraries')
-    implementation project(':shared')
     implementation project(':ns-sdk')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
+    implementation project(':app-wear-shared:shared-impl')
     implementation project(':core')
+    implementation project(':interfaces')
     implementation project(':ui')
     implementation project(':plugins')
     implementation project(':implementation')

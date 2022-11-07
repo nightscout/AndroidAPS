@@ -3,19 +3,19 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
-import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
+import info.nightscout.rx.TestAapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.Assert
@@ -74,7 +74,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
             )
         ).thenAnswer { invocation: InvocationOnMock ->
             val pair = invocation.getArgument<TempBasalPair>(0)
-            val result = PumpEnactResult(injector)
+            val result = PumpEnactResultImpl(injector)
             result.absolute(pair.insulinRate)
             result.duration(pair.durationMinutes)
             result

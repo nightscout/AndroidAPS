@@ -2,9 +2,9 @@ package info.nightscout.androidaps.diaconn.packet
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 /**

@@ -12,9 +12,9 @@ import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputCarePortalMenu
@@ -22,7 +22,8 @@ import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

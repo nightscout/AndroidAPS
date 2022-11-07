@@ -13,8 +13,11 @@ android {
 }
 
 dependencies {
-    implementation project(':shared')
+    implementation project(':libraries')
+    implementation project(':graphview')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
     implementation project(':database')
     implementation project(':core')
-    implementation project(':graphview')
+    implementation project(':interfaces')
 }

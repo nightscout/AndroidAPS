@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.interfaces.data.PumpEnactResult
 
 /**
  * Functionality supported by Dana* pumps only

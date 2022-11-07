@@ -7,10 +7,10 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.UserEntryTransaction
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper
 import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -33,7 +33,7 @@ class UserEntryLogger @Inject constructor(
 
     fun log(action: Action, source: Sources, note: String? = "", listValues: List<ValueWithUnit?> = listOf()) {
         val filteredValues = listValues.toList().filterNotNull()
-        log(listOf( UserEntryTransaction.Entry(dateUtil.now(), action, source, note ?: "", filteredValues) ))
+        log(listOf(UserEntryTransaction.Entry(dateUtil.now(), action, source, note ?: "", filteredValues)))
     }
 
     fun log(entries: List<UserEntryTransaction.Entry>) {

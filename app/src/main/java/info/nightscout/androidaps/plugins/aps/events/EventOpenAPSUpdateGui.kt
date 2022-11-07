@@ -1,5 +1,5 @@
 package info.nightscout.androidaps.plugins.aps.events
 
-import info.nightscout.androidaps.events.EventUpdateGui
+import info.nightscout.rx.events.EventUpdateGui
 
 class EventOpenAPSUpdateGui : EventUpdateGui()

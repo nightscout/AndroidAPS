@@ -1,17 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetGlobalTime;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetGlobalTime;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.response.GlobalTimeResponse;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
-
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetGlobalTime;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetGlobalTime;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.GlobalTimeResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton

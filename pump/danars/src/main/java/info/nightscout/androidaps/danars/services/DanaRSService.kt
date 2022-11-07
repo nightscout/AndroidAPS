@@ -8,39 +8,80 @@ import android.os.IBinder
 import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
-import info.nightscout.androidaps.danars.comm.*
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.danars.comm.DanaRSPacket
+import info.nightscout.androidaps.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
+import info.nightscout.androidaps.danars.comm.DanaRSPacketAPSHistoryEvents
+import info.nightscout.androidaps.danars.comm.DanaRSPacketAPSSetEventHistory
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBasalGetBasalRate
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBasalGetProfileNumber
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBasalSetCancelTemporaryBasal
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBasalSetProfileBasalRate
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBasalSetProfileNumber
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBasalSetTemporaryBasal
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusGet24CIRCFArray
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusGetBolusOption
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusGetCIRCFArray
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusGetCalculationInformation
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusGetStepBolusInformation
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusSet24CIRCFArray
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusSetExtendedBolus
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusSetExtendedBolusCancel
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusSetStepBolusStart
+import info.nightscout.androidaps.danars.comm.DanaRSPacketBolusSetStepBolusStop
+import info.nightscout.androidaps.danars.comm.DanaRSPacketEtcKeepConnection
+import info.nightscout.androidaps.danars.comm.DanaRSPacketGeneralGetPumpCheck
+import info.nightscout.androidaps.danars.comm.DanaRSPacketGeneralGetShippingInformation
+import info.nightscout.androidaps.danars.comm.DanaRSPacketGeneralInitialScreenInformation
+import info.nightscout.androidaps.danars.comm.DanaRSPacketGeneralSetHistoryUploadMode
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistory
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryAlarm
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryBasal
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryBloodGlucose
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryBolus
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryCarbohydrate
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryDaily
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryPrime
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistoryRefill
+import info.nightscout.androidaps.danars.comm.DanaRSPacketHistorySuspend
+import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionGetPumpTime
+import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionGetPumpUTCAndTimeZone
+import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionGetUserOption
+import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpTime
+import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
+import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetUserOption
+import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -220,7 +261,7 @@ class DanaRSService : DaggerService() {
 
     fun loadEvents(): PumpEnactResult {
         if (!danaRSPlugin.isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
+            val result = PumpEnactResultImpl(injector).success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -242,13 +283,13 @@ class DanaRSService : DaggerService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
         sendMessage(DanaRSPacketGeneralInitialScreenInformation(injector))
         danaPump.lastConnection = System.currentTimeMillis()
-        return PumpEnactResult(injector).success(msg.success())
+        return PumpEnactResultImpl(injector).success(msg.success())
     }
 
     fun setUserSettings(): PumpEnactResult {
         val message = DanaRSPacketOptionSetUserOption(injector)
         sendMessage(message)
-        return PumpEnactResult(injector).success(message.success())
+        return PumpEnactResultImpl(injector).success(message.success())
     }
 
     fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
@@ -458,7 +499,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = PumpEnactResultImpl(injector)
         if (!isConnected) return result
         var msg: DanaRSPacketHistory? = null
         when (type) {

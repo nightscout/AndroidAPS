@@ -5,4 +5,5 @@
     <string name="request">Begäran</string>
     <string name="permission">Behörighet</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
+    <!--       Stats -->
 </resources>

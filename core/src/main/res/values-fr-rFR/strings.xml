@@ -126,7 +126,7 @@
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="value_unavailable_short">indisponible</string>
+    <string name="value_unavailable_short">n/d</string>
     <string name="required">requis</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
@@ -140,6 +140,15 @@
     <string name="a11y_high">haut</string>
     <string name="a11y_inrange">dans la cible</string>
     <string name="a11y_low">bas</string>
+    <string name="average">Moyenne</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">DTI Total</string>
+    <string name="none"><![CDATA[<aucun>]]></string>
+    <string name="remove_label">SUPPRIMER</string>
+    <string name="activate_profile">Activer le profil</string>
+    <string name="reset">réinitialiser</string>
+    <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -301,7 +310,6 @@
     <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">Vérificateur de signature</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
     <string name="version_expire">La version %1$s expire le %2$s</string>

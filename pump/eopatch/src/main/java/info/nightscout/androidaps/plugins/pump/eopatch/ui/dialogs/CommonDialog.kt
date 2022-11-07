@@ -4,10 +4,9 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
-import java.lang.IllegalStateException
+import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class CommonDialog : DaggerDialogFragment() {

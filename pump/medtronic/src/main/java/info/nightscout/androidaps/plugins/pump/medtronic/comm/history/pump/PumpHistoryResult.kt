@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
-import java.util.*
-import kotlin.collections.ArrayList
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import java.util.Collections
 
 /**
  * History page contains data, sorted from newest to oldest (0=newest..n=oldest)

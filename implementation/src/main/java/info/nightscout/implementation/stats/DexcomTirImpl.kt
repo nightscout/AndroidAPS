@@ -6,7 +6,7 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper

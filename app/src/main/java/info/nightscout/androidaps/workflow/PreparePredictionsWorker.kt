@@ -6,11 +6,9 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
@@ -20,6 +18,8 @@ import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStat
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.Config
+import info.nightscout.rx.bus.RxBus
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.ceil

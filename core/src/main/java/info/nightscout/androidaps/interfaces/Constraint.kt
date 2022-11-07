@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import java.util.*
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 
 class Constraint<T : Comparable<T>>(private var value: T) {
 

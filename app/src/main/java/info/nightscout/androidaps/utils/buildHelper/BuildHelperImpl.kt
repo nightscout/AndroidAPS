@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.utils.buildHelper
 
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import java.io.File
 

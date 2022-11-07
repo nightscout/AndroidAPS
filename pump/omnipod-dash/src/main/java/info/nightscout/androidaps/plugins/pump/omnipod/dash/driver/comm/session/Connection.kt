@@ -6,9 +6,9 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.os.SystemClock
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ServiceDiscoverer
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
@@ -21,9 +21,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataB
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import java.lang.IllegalArgumentException
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import java.util.concurrent.CountDownLatch
 
 sealed class ConnectionState
@@ -46,6 +45,7 @@ data class ConnectionWaitCondition(var timeoutMs: Long? = null, val stopConnecti
 class Connection(
     private val podDevice: BluetoothDevice,
     private val aapsLogger: AAPSLogger,
+    private val config: Config,
     private val context: Context,
     private val podState: OmnipodDashPodStateManager
 ) : DisconnectHandler {
@@ -171,17 +171,17 @@ class Connection(
     fun establishSession(ltk: ByteArray, msgSeq: Byte, ids: Ids, eapSqn: ByteArray): EapSqn? {
         val mIO = msgIO ?: throw ConnectException("Connection lost")
 
-        val eapAkaExchanger = SessionEstablisher(aapsLogger, mIO, ltk, eapSqn, ids, msgSeq)
+        val eapAkaExchanger = SessionEstablisher(aapsLogger, config, mIO, ltk, eapSqn, ids, msgSeq)
         return when (val keys = eapAkaExchanger.negotiateSessionKeys()) {
             is SessionNegotiationResynchronization -> {
-                if (BuildConfig.DEBUG) {
+                if (config.DEBUG) {
                     aapsLogger.info(LTag.PUMPCOMM, "EAP AKA resynchronization: ${keys.synchronizedEapSqn}")
                 }
                 keys.synchronizedEapSqn
             }
 
             is SessionKeys -> {
-                if (BuildConfig.DEBUG) {
+                if (config.DEBUG) {
                     aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
                     aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
                     aapsLogger.info(LTag.PUMPCOMM, "Nonce: ${keys.nonce}")

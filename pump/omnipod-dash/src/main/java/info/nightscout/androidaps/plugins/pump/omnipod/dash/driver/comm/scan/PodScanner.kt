@@ -6,9 +6,9 @@ import android.bluetooth.le.ScanSettings
 import android.os.ParcelUuid
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanFailFoundTooManyException
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import java.util.*
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import java.util.Arrays
 
 class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) {
 

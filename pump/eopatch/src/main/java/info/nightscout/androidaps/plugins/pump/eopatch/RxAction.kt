@@ -3,8 +3,8 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.TimeUnit

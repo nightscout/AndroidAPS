@@ -5,9 +5,9 @@ import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.rx.weardata.EventData
 import javax.inject.Inject
 import javax.inject.Singleton
 

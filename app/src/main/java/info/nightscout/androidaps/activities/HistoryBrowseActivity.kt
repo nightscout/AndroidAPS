@@ -12,16 +12,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.fragments.HistoryBrowserData
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.events.EventCustomCalculationFinished
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.events.EventScale
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
@@ -30,12 +25,17 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.workflow.CalculationWorkflow
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.events.EventCustomCalculationFinished
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventScale
+import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -280,7 +280,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding.zoom.text = rangeToDisplay.toString()
     }
 
-    @Suppress("UNUSED_PARAMETER")
     @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug(LTag.UI, "updateGui $from")

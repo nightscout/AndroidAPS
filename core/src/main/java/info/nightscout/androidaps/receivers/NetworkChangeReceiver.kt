@@ -10,11 +10,11 @@ import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.events.EventNetworkChange
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.StringUtils
+import info.nightscout.interfaces.utils.StringUtils
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class NetworkChangeReceiver : DaggerBroadcastReceiver() {

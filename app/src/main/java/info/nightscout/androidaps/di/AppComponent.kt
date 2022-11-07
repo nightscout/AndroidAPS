@@ -24,6 +24,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
 import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.di.PluginsModule
+import info.nightscout.rx.di.RxModule
+import info.nightscout.rx.di.SharedImplModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton
@@ -55,7 +57,9 @@ import javax.inject.Singleton
         DatabaseModule::class,
         ImplementationModule::class,
         PluginsModule::class,
+        RxModule::class,
         SharedModule::class,
+        SharedImplModule::class,
         OpenHumansModule::class,
         UIModule::class,
 

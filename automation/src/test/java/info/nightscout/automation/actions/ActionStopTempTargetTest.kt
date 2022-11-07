@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert

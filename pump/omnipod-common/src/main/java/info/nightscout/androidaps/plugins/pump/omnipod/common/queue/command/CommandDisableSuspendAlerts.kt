@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command
 
-import info.nightscout.androidaps.queue.commands.CustomCommand
+import info.nightscout.interfaces.queue.CustomCommand
 
 class CommandDisableSuspendAlerts: CustomCommand {
 

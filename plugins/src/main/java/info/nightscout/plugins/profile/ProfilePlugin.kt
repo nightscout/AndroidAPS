@@ -6,38 +6,38 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.plugins.R
-import info.nightscout.plugins.profile.events.EventLocalProfileChanged
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventLocalProfileChanged
+import info.nightscout.rx.events.EventProfileStoreChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -81,39 +81,13 @@ class ProfilePlugin @Inject constructor(
         loadSettings()
     }
 
-    class SingleProfile {
-
-        internal var name: String? = null
-        internal var mgdl: Boolean = false
-        var dia: Double = Constants.defaultDIA
-        var ic: JSONArray? = null
-        var isf: JSONArray? = null
-        var basal: JSONArray? = null
-        internal var targetLow: JSONArray? = null
-        internal var targetHigh: JSONArray? = null
-
-        fun deepClone(): SingleProfile {
-            val sp = SingleProfile()
-            sp.name = name
-            sp.mgdl = mgdl
-            sp.dia = dia
-            sp.ic = JSONArray(ic.toString())
-            sp.isf = JSONArray(isf.toString())
-            sp.basal = JSONArray(basal.toString())
-            sp.targetLow = JSONArray(targetLow.toString())
-            sp.targetHigh = JSONArray(targetHigh.toString())
-            return sp
-        }
-
-    }
-
     var isEdited: Boolean = false
-    var profiles: ArrayList<SingleProfile> = ArrayList()
+    var profiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
 
     val numOfProfiles get() = profiles.size
     var currentProfileIndex = 0
 
-    fun currentProfile(): SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
+    fun currentProfile(): ProfileSource.SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
     @Synchronized
     fun isValidEditState(activity: FragmentActivity?): Boolean {
@@ -238,7 +212,7 @@ class ProfilePlugin @Inject constructor(
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
         for (i in 0 until numOfProfiles) {
-            val p = SingleProfile()
+            val p = ProfileSource.SingleProfile()
             val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
 
             p.name = sp.getString(localProfileNumbered + "name", Constants.LOCAL_PROFILE + i)
@@ -263,7 +237,7 @@ class ProfilePlugin @Inject constructor(
     @Synchronized
     fun loadFromStore(store: ProfileStore) {
         try {
-            val newProfiles: ArrayList<SingleProfile> = ArrayList()
+            val newProfiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
             for (p in store.getProfileList()) {
                 val profile = store.getSpecificProfile(p.toString())
                 val validityCheck = profile?.let { ProfileSealed.Pure(profile).isValid("NS", activePlugin.activePump, config, rh, rxBus, hardLimits, false) } ?: Profile.ValidityCheck()
@@ -296,14 +270,14 @@ class ProfilePlugin @Inject constructor(
         }
     }
 
-    fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile {
+    override fun copyFrom(pureProfile: PureProfile, newName: String): ProfileSource.SingleProfile {
         var verifiedName = newName
         if (rawProfile?.getSpecificProfile(newName) != null) {
             verifiedName += " " + dateUtil.now().toString()
         }
         val profile = ProfileSealed.Pure(pureProfile)
         val pureJson = pureProfile.jsonObject
-        val sp = SingleProfile()
+        val sp = ProfileSource.SingleProfile()
         sp.name = verifiedName
         sp.mgdl = profile.units == GlucoseUnit.MGDL
         sp.dia = pureJson.getDouble("dia")
@@ -372,7 +346,7 @@ class ProfilePlugin @Inject constructor(
                 break
             }
         }
-        val p = SingleProfile()
+        val p = ProfileSource.SingleProfile()
         p.name = Constants.LOCAL_PROFILE + free
         p.mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL
         p.dia = Constants.defaultDIA
@@ -397,7 +371,7 @@ class ProfilePlugin @Inject constructor(
         isEdited = false
     }
 
-    fun addProfile(p: SingleProfile) {
+    override fun addProfile(p: ProfileSource.SingleProfile) {
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
         createAndStoreConvertedProfile()

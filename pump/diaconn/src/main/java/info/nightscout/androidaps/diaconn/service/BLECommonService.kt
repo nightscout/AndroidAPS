@@ -28,12 +28,12 @@ import info.nightscout.androidaps.diaconn.packet.InsulinLackReportPacket
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.notify
 import info.nightscout.androidaps.extensions.waitMillis
-import info.nightscout.androidaps.interfaces.ActivityNames
+import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import java.util.UUID
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject

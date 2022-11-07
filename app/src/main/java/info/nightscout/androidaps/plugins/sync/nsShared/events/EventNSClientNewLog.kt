@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.sync.nsShared.events
 
-import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.rx.events.Event
 import java.text.SimpleDateFormat
 import java.util.Locale
 

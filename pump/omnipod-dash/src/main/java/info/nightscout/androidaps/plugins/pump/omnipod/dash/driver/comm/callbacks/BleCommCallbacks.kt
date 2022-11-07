@@ -9,9 +9,9 @@ import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType.Companion.byValue
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.DisconnectHandler
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import java.util.*
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import java.util.UUID
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun foodFromJson(jsonObject: JSONObject): Food? {

@@ -2,14 +2,15 @@ package info.nightscout.androidaps
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.common.ManufacturerType
+import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.TimeChangeType
+import info.nightscout.interfaces.utils.TimeChangeType
 import org.json.JSONObject
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -43,26 +44,30 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
 
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun getPumpStatus(reason: String) {}
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector)
+    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResultImpl(injector)
     override fun isThisProfileSet(profile: Profile): Boolean = isProfileSet
     override fun lastDataTime(): Long = lastData
     override val baseBasalRate: Double = baseBasal
     override val reservoirLevel: Double = 0.0
     override val batteryLevel: Int = 0
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultImpl(injector).success(true)
     override fun stopBolusDelivering() {}
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult = PumpEnactResult(injector).success(true)
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult = PumpEnactResult(injector).success(true)
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult = PumpEnactResult(injector).success(true)
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = PumpEnactResult(injector).success(true)
-    override fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+        PumpEnactResultImpl(injector).success(true)
+
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
+        PumpEnactResultImpl(injector).success(true)
+
+    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult = PumpEnactResultImpl(injector).success(true)
+    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = PumpEnactResultImpl(injector).success(true)
+    override fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResultImpl(injector).success(true)
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject = JSONObject()
     override fun manufacturer(): ManufacturerType = ManufacturerType.AAPS
     override fun model(): PumpType = PumpType.GENERIC_AAPS
     override fun serialNumber(): String = "1"
     override fun shortStatus(veryShort: Boolean): String = ""
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun loadTDDs(): PumpEnactResult = PumpEnactResultImpl(injector).success(true)
     override fun canHandleDST(): Boolean = true
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 }

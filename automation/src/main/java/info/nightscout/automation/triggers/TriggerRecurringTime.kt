@@ -4,14 +4,15 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputTime
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import org.json.JSONObject
 import java.util.Calendar
 import java.util.Objects

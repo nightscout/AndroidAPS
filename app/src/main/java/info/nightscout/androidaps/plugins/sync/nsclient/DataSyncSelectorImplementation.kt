@@ -24,8 +24,8 @@ import info.nightscout.androidaps.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.toJson
 import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton

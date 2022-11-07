@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.activities.DialogAppCompatActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject

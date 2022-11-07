@@ -7,7 +7,8 @@ import android.support.wearable.complications.ComplicationData
 import android.support.wearable.complications.ComplicationText
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.data.RawDisplayData
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 
 /*
  * Created by dlvoy on 2019-11-12

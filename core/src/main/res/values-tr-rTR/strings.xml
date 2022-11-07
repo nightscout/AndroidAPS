@@ -140,6 +140,14 @@
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">GTD Toplam</string>
+    <string name="none"><![CDATA[<yok>]]></string>
+    <string name="remove_label">KALDIR</string>
+    <string name="activate_profile">Profil etkinleştir</string>
+    <string name="reset">sıfırla</string>
+    <string name="profileswitch_ismissing">Profil geçişi yok. Lütfen Profil Değiştirme ile bir profil geçişi yapın veya Yerel Profil\'de \"Profili Etkinleştir\" düğmesine basın.</string>
+    <string name="profile">Profil</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
     <string name="pumplimit">pompa sınırı</string>
@@ -301,7 +309,6 @@
     <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
     <!-- VersionChecker -->
-    <string name="signature_verifier">İmza doğrulayıcı</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>
