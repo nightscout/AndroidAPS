@@ -54,15 +54,19 @@ class StatusLightHandler @Inject constructor(
         }
 
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
-        if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
-            handlePatchReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit,
-                                  OmnipodConstants.MAX_RESERVOIR_READING)
-        } else if (pump.model() == PumpType.EOFLOW_EOPATCH2) {
-            handlePatchReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit,
-                                      AppConstant.MAX_RESERVOIR_READING)
-        } else {
+        if (pump.pumpDescription.isPatchPump)
+            handlePatchReservoirLevel(
+                careportal_reservoir_level,
+                R.string.key_statuslights_res_critical,
+                10.0,
+                R.string.key_statuslights_res_warning,
+                80.0,
+                pump.reservoirLevel,
+                insulinUnit,
+                pump.pumpDescription.maxResorvoirReading.toDouble()
+            )
+        else
             handleLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
-        }
 
         if (!config.NSCLIENT) {
             if (bgSource.sensorBatteryLevel != -1)

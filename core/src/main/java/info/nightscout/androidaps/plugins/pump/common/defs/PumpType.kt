@@ -213,6 +213,7 @@ enum class PumpType {
         pumpCapability = PumpCapability.OmnipodCapabilities,
         hasCustomUnreachableAlertCheck = true,
         isPatchPump = true,
+        maxReservoirReading = 50,
         useHardwareLink = true,
         supportBatteryLevel = false,
         source = Sources.OmnipodEros
@@ -232,6 +233,7 @@ enum class PumpType {
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
         isPatchPump = true,
+        maxReservoirReading = 50,
         pumpCapability = PumpCapability.OmnipodCapabilities,
         hasCustomUnreachableAlertCheck = false,
         supportBatteryLevel = false
@@ -392,6 +394,7 @@ enum class PumpType {
                     baseBasalSpecialSteps = null,
                     pumpCapability = PumpCapability.EopatchCapabilities,
                     isPatchPump = true,
+                    maxReservoirReading = 50,
                     source = Sources.EOPatch2);
 
     val description: String
@@ -434,6 +437,8 @@ enum class PumpType {
     var hasCustomUnreachableAlertCheck = false
         private set
     var isPatchPump = false
+        private set
+    var maxReservoirReading = 50
         private set
     var supportBatteryLevel = true
         private set
@@ -510,6 +515,7 @@ enum class PumpType {
         pumpCapability: PumpCapability,
         hasCustomUnreachableAlertCheck: Boolean = false,
         isPatchPump: Boolean = false,
+        maxReservoirReading: Int = 50,
         supportBatteryLevel: Boolean = true,
         useHardwareLink: Boolean = false,
         source: Sources = Sources.VirtualPump
@@ -530,6 +536,7 @@ enum class PumpType {
         this.pumpCapability = pumpCapability
         this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck
         this.isPatchPump = isPatchPump
+        this.maxReservoirReading = maxReservoirReading
         this.supportBatteryLevel = supportBatteryLevel
         this.useHardwareLink = useHardwareLink
         this.source = source
