@@ -198,5 +198,5 @@
     <string name="not_completed_yet">Pas encore terminé</string>
     <string name="time_elapsed">Temps écoulé</string>
     <!-- Overview -->
-    <string name="snooze">Mise en veille</string>
+    <string name="snooze">Masquer</string>
 </resources>
