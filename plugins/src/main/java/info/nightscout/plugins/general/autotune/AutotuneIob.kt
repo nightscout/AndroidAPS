@@ -243,14 +243,8 @@ open class AutotuneIob @Inject constructor(
         }
     }
 
-<<<<<<< HEAD:app/src/main/java/info/nightscout/androidaps/plugins/general/autotune/AutotuneIob.kt
     open fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal =
         getCalculationToTimeTreatments(time, localInsulin).round()
-=======
-    open fun getIOB(time: Long, localInsulin: LocalInsulin): IobTotal {
-        return getCalculationToTimeTreatments(time, localInsulin).round()
-    }
->>>>>>> ns/dev:plugins/src/main/java/info/nightscout/plugins/general/autotune/AutotuneIob.kt
 
     private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
@@ -274,10 +268,6 @@ open class AutotuneIob @Inject constructor(
         return total
     }
 
-<<<<<<< HEAD:app/src/main/java/info/nightscout/androidaps/plugins/general/autotune/AutotuneIob.kt
-=======
-
->>>>>>> ns/dev:plugins/src/main/java/info/nightscout/plugins/general/autotune/AutotuneIob.kt
     private fun convertToBoluses(eb: ExtendedBolus): MutableList<Bolus> {
         val result: MutableList<Bolus> = ArrayList()
         val aboutFiveMinIntervals = ceil(eb.duration / 5.0).toInt()

@@ -906,15 +906,9 @@ class DataSyncSelectorImplementation @Inject constructor(
         val lastChange = sp.getLong(R.string.key_local_profile_last_change, 0)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
-<<<<<<< HEAD:app/src/main/java/info/nightscout/androidaps/plugins/sync/nsclient/DataSyncSelectorImplementation.kt
-            if (localProfilePlugin.profile?.allProfilesValid != true) return
-            val profileJson = localProfilePlugin.profile?.data ?: return
-            activePlugin.activeNsClient?.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
-=======
             if (profilePlugin.profile?.allProfilesValid != true) return
             val profileJson = profilePlugin.profile?.data ?: return
-            nsClientPlugin.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
->>>>>>> ns/dev:app/src/main/java/info/nightscout/androidaps/plugins/general/nsclient/DataSyncSelectorImplementation.kt
+            activePlugin.activeNsClient?.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
         }
     }
 }
