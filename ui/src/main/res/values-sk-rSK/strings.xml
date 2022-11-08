@@ -36,4 +36,7 @@
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <string name="clone_label">Klonovať</string>
+    <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
+    <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
 </resources>
