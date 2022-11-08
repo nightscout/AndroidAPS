@@ -61,9 +61,7 @@
     <string name="lastconnection_label">прошлое соединение</string>
     <string name="lastbolus_label">предыдущий болюс</string>
     <string name="dailyunits">суточные единицы</string>
-    <string name="basebasalrate_label">базовая величина базала</string>
     <string name="tempbasal_label">врем базал</string>
-    <string name="virtualpump_extendedbolus_label">Пролонгированный болюс</string>
     <string name="reservoir_label">Резервуар</string>
     <string name="pumphistory">Журнал помпы</string>
     <string name="viewprofile">просмотр профиля</string>
@@ -514,6 +512,7 @@
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
     <plurals name="days">
