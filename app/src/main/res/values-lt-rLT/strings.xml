@@ -336,7 +336,6 @@
     <string name="overview_editquickwizard_usetemptarget">Laikino tikslo apskaičiavimas</string>
     <string name="loopenabled">Ciklas aktyvuotas</string>
     <string name="apsselected">DKS pasirinkta</string>
-    <string name="nsclienthaswritepermission">NSClient turi leidimą įrašyti</string>
     <string name="closedmodeenabled">Uždaras ciklas aktyvus</string>
     <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
     <string name="hasbgdata">KG šaltinis pasirinktas teisingai</string>
@@ -438,13 +437,11 @@
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukti į Patarėjo rezultatą:</string>
     <string name="wear_display_settings">Ekrano nustatymai</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
-    <string name="enable_nsclient">Įjungti NSClient</string>
     <string name="welcometosetupwizard">Sveiki atvykę į sąrankos vedlį. Jis lydės jus per visą nustatymų procesą\n</string>
     <string name="readstatus">Statuso nuskaitymas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient palaiko ryšį su Nightscout. Jūs galite praleisti šią dalį dabar, bet negalėsite baigti mokymosi programos, kol nenustatysite ryšio su NS.</string>
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
