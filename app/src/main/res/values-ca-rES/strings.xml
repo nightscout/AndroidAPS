@@ -46,6 +46,7 @@
     <string name="configbuilder_aps_description">Quin algoritme APS ha d\'anar fent ajustos de teràpia?</string>
     <string name="configbuilder_general">General</string>
     <string name="configbuilder_general_description">Plugins diversos que us poden ser útils.</string>
+    <string name="configbuilder_sync">Sincronització</string>
     <string name="configbuilder_constraints_description">Quines restriccions s\'estan aplicant?</string>
     <string name="constraints">Restriccions</string>
     <string name="configbuilder_loop">Llaços</string>
@@ -156,5 +157,8 @@
     <string name="overview_extendedbolus_cancel_button">Cancel·lar bolus estès</string>
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
+    <string name="ns_alarm_options">Configuració alarmes</string>
+    <string name="ns_alarm_stale_data_value_label">Umbral dades antigues [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Umbral urgent dades antigues [min]</string>
     <!-- WEAR OS-->
 </resources>
