@@ -147,6 +147,10 @@
     <string name="reset">reestablecer</string>
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="treatments_wizard_cob_label">COB</string>
+    <string name="paused">Pausado</string>
+    <string name="invalid">INVÁLIDO</string>
+    <string name="login">Inicio de sesión</string>
+    <string name="upload_now">Subir ahora</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -514,6 +518,9 @@
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
     <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
+    <string name="urgent_alarm">Alarma urgente</string>
+    <string name="info">INFORMACIÓN</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Faltan permisos de SMS</string>
     <plurals name="days">
