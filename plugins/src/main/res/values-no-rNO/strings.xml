@@ -115,11 +115,23 @@
     <string name="insulin_peak">Topp</string>
     <string name="free_peak_oref">Egendefinert topp Oref</string>
     <string name="rapid_acting_oref">Hurtigvirkende Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">DIA på %1$f er for kort - bruker %2$f i stedet!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- Statusline -->
+    <string name="xdrip_status">xDrip+ Statuslinje (klokke)</string>
+    <string name="xdrip_status_shortname">xds</string>
     <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
+    <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
+    <string name="disabled_loop">Loop er deaktivert</string>
+    <string name="xdrip_status_show_bgi_title">Vis BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Legg til BGI i statuslinje</string>
+    <string name="xdrip_status_settings">xDrip+ Status (klokke)</string>
     <!-- Food-->
+    <string name="food_short">Mat</string>
     <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
     <string name="filter">Filter</string>
     <string name="food">Mat</string>
@@ -129,21 +141,28 @@
     <string name="shortfat">Fett</string>
     <string name="category">Kategori</string>
     <string name="subcategory">Underkategori</string>
+    <string name="calculator_label">Kalkulator</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Velg mørk, lys eller bruk systemets fargetema</string>
     <string name="app_color_scheme">App fargetema</string>
     <string name="dark_theme">Mørkt tema</string>
     <string name="light_theme">Lyst tema</string>
     <string name="follow_system_theme">Bruk systemets fargetema</string>
     <!-- Profile -->
+    <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
     <string name="description_profile_local">Definer en profil som er tilgjengelig offline.</string>
     <string name="a11y_add_new_to_list">legg til ny i liste</string>
+    <string name="do_you_want_switch_profile">Ønsker du å bytte profil og forkaste endringer i gjeldende profil?</string>
+    <string name="save_or_reset_changes_first">Lagre eller nullstill gjeldende endringer først</string>
+    <string name="delete_current_profile">Slette gjeldende profil?</string>
     <string name="units_colon">Enheter:</string>
     <string name="missing_profile_name">Mangler profilnavn</string>
     <string name="error_in_ic_values">Feil i IK faktoren</string>
     <string name="error_in_basal_values">Feil i basalverdiene</string>
     <string name="error_in_target_values">Feil i BS mål verdiene</string>
     <string name="error_in_isf_values">Feil i IF verdien</string>
+    <string name="profile_name_contains_dot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
     <string name="view">Visning</string>
     <string name="errors">Feil</string>
@@ -166,6 +185,7 @@
     <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
     <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
     <!-- Signature verifier -->
     <!-- Version Checker -->
     <string name="old_version">gammel versjon</string>
@@ -174,7 +194,9 @@
     <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="completed_well_done">Fullført, bra jobba!</string>
     <string name="not_completed_yet">Enda Ikke fullført</string>
     <string name="time_elapsed">Tid brukt</string>
     <!-- Overview -->
+    <string name="snooze">Slumre</string>
 </resources>
