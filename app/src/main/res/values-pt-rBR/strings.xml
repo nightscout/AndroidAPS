@@ -319,7 +319,6 @@
     <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
     <string name="loopenabled">Loop activado</string>
     <string name="apsselected">APS seleccionado</string>
-    <string name="nsclienthaswritepermission">NSCLiente tem permissão de escrita</string>
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
@@ -414,12 +413,10 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Mostrar Configurações</string>
     <string name="wear_general_settings">Configurações gerais</string>
-    <string name="enable_nsclient">Ativar NSCliente</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="readstatus">Ler estado</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
-    <string name="nsclientinfotext">NSCliente gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objetivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
     <string name="startobjective">Iniciar primeiro objetivo</string>
