@@ -156,6 +156,7 @@
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="bolus_iob_label">IA Bolus</string>
     <string name="treatments_wizard_basaliob_label">IA Basal</string>
+    <string name="login">Connexion</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -523,6 +524,8 @@
     <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
     <!-- Alerts -->
+    <string name="urgent_alarm">Alarme d\'urgence</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <plurals name="days">
