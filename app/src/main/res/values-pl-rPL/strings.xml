@@ -46,6 +46,7 @@
     <string name="configbuilder_aps_description">Który algorytm APS powinien dokonywać korekcji terapii?</string>
     <string name="configbuilder_general">Ogólne</string>
     <string name="configbuilder_general_description">To są główne wtyczki, które mogą okazać się użyteczne.</string>
+    <string name="configbuilder_sync">Synchronizacja</string>
     <string name="configbuilder_constraints_description">Które ograniczenia są zastosowane?</string>
     <string name="constraints">Ograniczenia</string>
     <string name="configbuilder_loop">Pętla</string>
@@ -208,8 +209,11 @@
     <string name="careportal_pb_label">Bateria pompy</string>
     <string name="careportal_age_label">czas:</string>
     <string name="careportal_level_label">poziom:</string>
+    <string name="ns_alarm_options">Opcje alarmu</string>
     <string name="ns_alarms">Utwórz powiadomienia z alarmów NS</string>
     <string name="ns_announcements">Utwórz powiadomienia z komunikatów NS</string>
+    <string name="ns_alarm_stale_data_value_label">Próg nieaktualne dane [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Próg uwaga nieaktualne dane [min]</string>
     <string name="openapsama_autosens_period">Przedział czasowy dla autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Ilość minionych godzin brana pod uwagę do określenia wrażliwości \"sensitivity\" (wyklucza się czas wchłaniania węglowodanów)</string>
     <string name="openaps">OpenAPS</string>
