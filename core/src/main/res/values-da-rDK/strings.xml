@@ -57,9 +57,7 @@
     <string name="lastconnection_label">Seneste forbindelse</string>
     <string name="lastbolus_label">Seneste Bolus</string>
     <string name="dailyunits">Daglige enheder</string>
-    <string name="basebasalrate_label">Standard basal rate</string>
     <string name="tempbasal_label">Midlertidig basal</string>
-    <string name="virtualpump_extendedbolus_label">Forlænget bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Pumpe historik</string>
     <string name="viewprofile">Se profil</string>
@@ -498,6 +496,7 @@
     <string name="autotune_run_with_error">Fejl under sidste Autotune kørsel</string>
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
