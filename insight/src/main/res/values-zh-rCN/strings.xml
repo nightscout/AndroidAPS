@@ -11,7 +11,6 @@
     <string name="stop_pump">停止泵</string>
     <string name="started">已启动</string>
     <string name="stopped">已停止</string>
-    <string name="paused">已暂停</string>
     <string name="operating_mode">操作模式</string>
     <string name="description_pump_insight_local">集成Accu-Chek Insight泵</string>
     <string name="not_inserted">未插入</string>
