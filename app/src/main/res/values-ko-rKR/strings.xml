@@ -46,6 +46,7 @@
     <string name="configbuilder_aps_description">어떤 APS 알고리즘을 사용합니까?</string>
     <string name="configbuilder_general">일반</string>
     <string name="configbuilder_general_description">유용한 여러가지 플러그인</string>
+    <string name="configbuilder_sync">동기화</string>
     <string name="configbuilder_constraints_description">어떤 제약을 적용합니까?</string>
     <string name="constraints">제한</string>
     <string name="configbuilder_loop">Loop</string>
@@ -205,8 +206,11 @@
     <string name="careportal_pb_label">펌프 배터리</string>
     <string name="careportal_age_label">나이:</string>
     <string name="careportal_level_label">레벨:</string>
+    <string name="ns_alarm_options">알람 옵션</string>
     <string name="ns_alarms">NS 알람에서 알림 만들기</string>
     <string name="ns_announcements">NS 안내에서 알림 만들기</string>
+    <string name="ns_alarm_stale_data_value_label">누락 데이터 기준값 [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">위험 누락 데이터 기준값 [min]</string>
     <string name="openapsama_autosens_period">autosens 시간 [h]</string>
     <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
     <string name="openaps">OpenAPS</string>
