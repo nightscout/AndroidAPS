@@ -51,6 +51,8 @@
     <string name="configbuilder_aps_description">Jaký algoritmus má AndroidAPS používat?</string>
     <string name="configbuilder_general">Obecné</string>
     <string name="configbuilder_general_description">Obecné pluginy, které by se Vám mohly hodit.</string>
+    <string name="configbuilder_sync">Synchronizace</string>
+    <string name="configbuilder_sync_description">Moduly plug-in pro nahrávání a synchronizaci dat.</string>
     <string name="configbuilder_constraints_description">Jaká omezení byla použita?</string>
     <string name="constraints">Omezení</string>
     <string name="configbuilder_loop">Smyčka</string>
@@ -216,8 +218,11 @@
     <string name="careportal_pb_label">Baterie pumpy</string>
     <string name="careportal_age_label">stáří:</string>
     <string name="careportal_level_label">úroveň:</string>
+    <string name="ns_alarm_options">Nastavení alarmů</string>
     <string name="ns_alarms">Vytvořit oznámení z alarmů NS</string>
     <string name="ns_announcements">Vytvořit oznámení z NS upozornění </string>
+    <string name="ns_alarm_stale_data_value_label">Mezní hodnota pro zastaralá data [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="openapsama_autosens_period">Interval pro detekci senzitivity [h]</string>
     <string name="openapsama_autosens_period_summary">Počet hodin do minulosti pro detekci senzitivity</string>
     <string name="openaps">OpenAPS</string>
@@ -283,6 +288,7 @@
     <string name="overview_editquickwizard_usepercentage">Procentní výpočet</string>
     <string name="loopenabled">Smyčka povolena</string>
     <string name="apsselected">APS vybráno</string>
+    <string name="synchaswritepermission">Služba synchronizace má oprávnění k zápisu</string>
     <string name="closedmodeenabled">Uzavřená smyčka povolena</string>
     <string name="maxiobset">Maximální IOB nastaveno správně</string>
     <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
@@ -380,6 +386,7 @@
     <string name="setupwizard_loop_description">Stiskněte tlačítko níže, chcete-li AAPS povolit navrhovat nebo provádět změny bazálu</string>
     <string name="setupwizard_sensitivity_description">Plugin senzitivita slouží k detekci změn v senzitivitě a k počítání COB. Více informací zde:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud synchronizace nebude nastavena.</string>
     <string name="diawarning">Pozor: Nové inzulínové profily vyžadují DIA minimálně 5h. DIA 5–6 hodin odpovídá zhruba nastavení 3h na starších typech profilů nebo v pumpě.</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmů. Jsou setříděné od nejstaršího po nejnovější. Novější je obvykle lepší a agresivnější, ale vyžaduje přesnější nastavení. Proto pokud se smyčkou začínáte, měli byste nejdříve vybrat jen AMA a ne ten poslední. Nezapomeňte si přečíst dokumentaci k OpenAPS a provést nastavení, než ho začnete používat.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svůj RileyLink níže. Po výběru RileyLinku bude možné pokračovat v nastavení, jakmile stav RileyLinku je \"Připojeno\". Tato akce může chvilku trvat.\n</string>
