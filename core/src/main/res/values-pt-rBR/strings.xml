@@ -43,9 +43,7 @@
     <string name="lastconnection_label">Última ligação</string>
     <string name="lastbolus_label">Último Bolus</string>
     <string name="dailyunits">Unidades diárias</string>
-    <string name="basebasalrate_label">Taxa Basal de base</string>
     <string name="tempbasal_label">Basal temporaria</string>
-    <string name="virtualpump_extendedbolus_label">Bólus estendido</string>
     <string name="reservoir_label">Reservatório</string>
     <string name="pumphistory">Histórico da Bomba</string>
     <string name="viewprofile">Ver perfil</string>
@@ -230,6 +228,7 @@
     <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
     <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
     <string name="needconnectpermission">O aplicativo precisa de permissão bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
