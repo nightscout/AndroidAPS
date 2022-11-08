@@ -48,6 +48,7 @@
     <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
     <string name="configbuilder_general">Generelt</string>
     <string name="configbuilder_general_description">Disse er nogle generelle tilføjelser, som du måske kan finde nyttige.</string>
+    <string name="configbuilder_sync">Synkronisering</string>
     <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
     <string name="constraints">Begrænsninger</string>
     <string name="configbuilder_loop">Loop</string>
@@ -211,8 +212,11 @@
     <string name="careportal_pb_label">Pumpe batteri</string>
     <string name="careportal_age_label">alder:</string>
     <string name="careportal_level_label">niveau:</string>
+    <string name="ns_alarm_options">Indstillinger for alarm</string>
     <string name="ns_alarms">Opret notifikationer fra NS-alarmer</string>
     <string name="ns_announcements">Opret notifikationer fra NS-meddelelser</string>
+    <string name="ns_alarm_stale_data_value_label">Forældet data grænse [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Akut forældet data grænse [min]</string>
     <string name="openapsama_autosens_period">Interval for autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Antal af tidligere timer for sensitivitets opdagelse (Kulhydraters abosorberingstid er ekskluderet)</string>
     <string name="openaps">OpenAPS</string>
