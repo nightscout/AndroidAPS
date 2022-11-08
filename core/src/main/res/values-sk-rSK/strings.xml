@@ -156,6 +156,10 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
+    <string name="paused">Pozastavené</string>
+    <string name="invalid">NEPLATNÝ</string>
+    <string name="login">Prihlásenie</string>
+    <string name="upload_now">Nahrať teraz</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -523,6 +527,9 @@
     <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
     <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>
+    <string name="urgent_alarm">Urgentný alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <plurals name="days">
