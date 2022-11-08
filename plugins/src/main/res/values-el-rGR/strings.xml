@@ -49,10 +49,66 @@
     <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
     <string name="time_elapsed">Ο χρόνος που πέρασε</string>
     <!-- Overview -->
+    <string name="snooze">Αναβολή</string>
+    <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
+    <string name="statuslights_iage_warning">Όριο προειδοποίησης για την ηλικία της ινσουλίνης[h]</string>
+    <string name="statuslights_iage_critical">Κατώτατο όριο ηλικίας της ινσουλίνης[h]</string>
+    <string name="statuslights_sage_warning">Όριο προειδοποίησης για την ηλικία του αισθητήρα[h]</string>
+    <string name="statuslights_sage_critical">Κατώτατο όριο ηλικίας του αισθητήρα[h]</string>
+    <string name="statuslights_sbat_warning">Όριο προειδοποίησης μπαταρίας του αισθητήρα[%]</string>
+    <string name="statuslights_sbat_critical">Κατώτατο όριο επιπέδου της μπαταρίας[%]</string>
+    <string name="statuslights_bage_warning">Όριο προειδοποίησης ζωής της μπαταρίας της αντλίας[h]</string>
+    <string name="statuslights_bage_critical">Κατώτατο όριο της ηλικίας της μπαταρίας της αντλίας[h]</string>
+    <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
+    <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <!-- NSClient -->
+    <string name="restart">Επανεκκίνηση</string>
+    <string name="deliver_now">Έγχυση τώρα</string>
+    <string name="clear_queue">Διαγραφή σειράς</string>
+    <string name="show_queue">Δείξε σειρά</string>
+    <string name="queue">Σειρά:</string>
+    <string name="status">Κατάσταση:</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
+    <string name="title_tidepool_username">Όνομα Χρήστη</string>
+    <string name="summary_tidepool_password">Το συνθηματικό του Tidepool</string>
+    <string name="title_tidepool_password">Συνθηματικό εισόδου</string>
+    <string name="title_tidepool_test_login">Δοκιμή εισόδου Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Αν ενεργοποιήθηκε, τα δεδομένα θα ανέβουν στο https://int-app.tidepool.org αντί για το σύνηθες https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
+    <string name="tidepool_upload_cgm">Αποστολή δεδομένων CGM</string>
+    <string name="tidepool_upload_bolus">Αποστολή θεραπειών (ινσουλίνης, υδατανθράκων)</string>
+    <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
+    <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
+    <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
     <!-- VirtualPump -->
+    <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
+    <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
+    <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
     <!-- Source -->
+    <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
+    <string name="eversense">Eversense App (τροποποιημένη)</string>
+    <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
+    <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
+    <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
+    <string name="dexcomg5_xdripupload_title">Αποστολή δεδομένων BG στο xDrip+</string>
+    <string name="dexcomg5_xdripupload_summary">Στο xDrip+, επιλέξτε την πηγή δεδομένων 640g / Eversense</string>
+    <string name="dexcomg5_nsupload_title">Ανέβασμα δεδομένων BG στο NS</string>
+    <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_create_announcements_from_errors_title">Δημιουργήστε ειδοποιήσεις σφαλμάτων</string>
+    <string name="ns_create_announcements_from_errors_summary">Δημιουργήστε μια ειδοποίηση Ns για σφάλματα διαλόγων και τοπικούς συναγερμούς (που φαίνονται στο Careportal κάτω από τις Θεραπείες)</string>
+    <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
     <!-- Objectives -->
 </resources>
