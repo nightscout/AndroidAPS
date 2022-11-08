@@ -150,6 +150,9 @@
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
     <string name="overview_extendedbolus_cancel_button">Kanselleer Verlengde Bolus</string>
+    <string name="ns_alarm_options">Alarm Opsies</string>
+    <string name="ns_alarm_stale_data_value_label">Ou data drumpel [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Nood ou data drumpel [min]</string>
     <string name="openapsama_autosens_period">Interval vir autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Hoeveelheid ure in die verlede vir sensitiwiteit opsporing (karbohidrate opname tyd is uitgesluit)</string>
     <string name="openaps">OpenAPS</string>
