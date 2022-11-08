@@ -149,6 +149,15 @@
     <string name="reset">réinitialiser</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Sélectionner pour suppression</string>
+    <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
+    <string name="overview_treatment_label">Traitement</string>
+    <string name="copytolocalprofile">Créer un nouveau profil à partir de ce profil ?</string>
+    <string name="wear_wizard_settings">Paramètres assistant</string>
+    <string name="bg_trend_label">Delta 15 min</string>
+    <string name="treatments_wizard_cob_label">GA</string>
+    <string name="bolus_iob_label">IA Bolus</string>
+    <string name="treatments_wizard_basaliob_label">IA Basal</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
