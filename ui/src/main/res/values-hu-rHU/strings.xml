@@ -6,5 +6,6 @@
     <string name="calculation_in_progress">Számítás folyamatban</string>
     <!-- CareDialog -->
     <!-- WizardDialog -->
+    <string name="superbolus">Szuperbólus</string>
     <!-- Treatments -->
 </resources>
