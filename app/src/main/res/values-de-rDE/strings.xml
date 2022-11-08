@@ -48,6 +48,7 @@
     <string name="configbuilder_aps_description">Welcher APS-Algorithmus soll Therapieanpassungen vornehmen?</string>
     <string name="configbuilder_general">Allgemein</string>
     <string name="configbuilder_general_description">Dies sind einige generelle Plugins, die Du vielleicht hilfreich findest.</string>
+    <string name="configbuilder_sync">Synchronisierung</string>
     <string name="configbuilder_constraints_description">Welche Beschränkungen werden angewendet?</string>
     <string name="constraints">Beschränkungen</string>
     <string name="configbuilder_loop">Loop</string>
@@ -211,8 +212,11 @@
     <string name="careportal_pb_label">Pumpenbatterie</string>
     <string name="careportal_age_label">Alter:</string>
     <string name="careportal_level_label">Level:</string>
+    <string name="ns_alarm_options">Alarm-Optionen</string>
     <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
     <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
+    <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="openapsama_autosens_period">Intervall für Autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, wird nicht berücksichtigt)</string>
     <string name="openaps">OpenAPS</string>
