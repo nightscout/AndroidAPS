@@ -140,6 +140,7 @@
     <string name="a11y_high">yüksek</string>
     <string name="a11y_inrange">aralık içinde</string>
     <string name="a11y_low">düşük</string>
+    <string name="average">Ortalama</string>
     <string name="tir">TIR</string>
     <string name="tdd_total">GTD Toplam</string>
     <string name="none"><![CDATA[<yok>]]></string>
