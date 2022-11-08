@@ -47,6 +47,7 @@
     <string name="configbuilder_aps_description">哪个 APS 算法应该用于治疗调整？</string>
     <string name="configbuilder_general">一般</string>
     <string name="configbuilder_general_description">这些是一些一般的插件, 你可能会觉得有用。</string>
+    <string name="configbuilder_sync">同步</string>
     <string name="configbuilder_constraints_description">应用了哪些约束条件？</string>
     <string name="constraints">约束条件</string>
     <string name="configbuilder_loop">闭环</string>
@@ -210,8 +211,11 @@
     <string name="careportal_pb_label">泵电池</string>
     <string name="careportal_age_label">年龄：</string>
     <string name="careportal_level_label">剩余:</string>
+    <string name="ns_alarm_options">报警选项</string>
     <string name="ns_alarms">创建来自NS报警的通知</string>
     <string name="ns_announcements">创建来自NS公告的通知</string>
+    <string name="ns_alarm_stale_data_value_label">陈旧数据阈值 [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">紧急陈旧数据阈值 [min]</string>
     <string name="openapsama_autosens_period">Autosens间隔的 [h]</string>
     <string name="openapsama_autosens_period_summary">灵敏度检测过去的小时数 (排除碳水化合物吸收时间)</string>
     <string name="openaps">OpenAPS</string>
