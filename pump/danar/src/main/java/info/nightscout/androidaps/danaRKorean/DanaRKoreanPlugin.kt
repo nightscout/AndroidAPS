@@ -11,7 +11,6 @@ import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionServi
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -22,15 +21,15 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -70,14 +69,14 @@ class DanaRKoreanPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           if (isEnabled(PluginType.PUMP)) {
-                               val previousValue = useExtendedBoluses
-                               useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false)
-                               if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
-                                   sExecutionService.extendedBolusStop()
-                               }
-                           }
-                       }, fabricPrivacy::logException)
+                if (isEnabled()) {
+                    val previousValue = useExtendedBoluses
+                    useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false)
+                    if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
+                        sExecutionService.extendedBolusStop()
+                    }
+                }
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)

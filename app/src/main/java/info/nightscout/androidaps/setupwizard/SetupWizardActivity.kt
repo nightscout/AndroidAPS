@@ -11,19 +11,19 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
+import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.interfaces.locale.LocaleHelper.update
-import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -31,7 +31,6 @@ import kotlin.math.min
 class SetupWizardActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var swDefinition: SWDefinition
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -76,39 +75,33 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         swDefinition.activity = this
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventProfileStoreChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventSWUpdate::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ event: EventSWUpdate ->
-                if (event.redraw) generateLayout()
-                updateButtons()
-            }, fabricPrivacy::logException)
-        )
+                           if (event.redraw) generateLayout()
+                           updateButtons()
+                       }, fabricPrivacy::logException)
         updateButtons()
     }
 

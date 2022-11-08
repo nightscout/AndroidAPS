@@ -43,10 +43,10 @@ import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
-import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImplementation
-import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
+import info.nightscout.androidaps.plugins.sync.nsclient.DataSyncSelectorImplementation
+import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -115,11 +115,11 @@ open class AppModule {
         aapsLogger: AAPSLogger, sp: SP, rxBus: RxBus, rh:
         ResourceHelper, activePlugin:
         ActivePlugin, repository: AppRepository, dateUtil: DateUtil, config: Config, hardLimits: HardLimits,
-        aapsSchedulers: AapsSchedulers, fabricPrivacy: FabricPrivacy, deviceStatusData: DeviceStatusData
+        aapsSchedulers: AapsSchedulers, fabricPrivacy: FabricPrivacy, processedDeviceStatusData: ProcessedDeviceStatusData
     ): ProfileFunction =
         ProfileFunctionImpl(
             aapsLogger, sp, rxBus, rh, activePlugin, repository, dateUtil,
-            config, hardLimits, aapsSchedulers, fabricPrivacy, deviceStatusData
+            config, hardLimits, aapsSchedulers, fabricPrivacy, processedDeviceStatusData
         )
 
     @Provides

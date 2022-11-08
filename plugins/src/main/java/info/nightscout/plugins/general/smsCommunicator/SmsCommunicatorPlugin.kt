@@ -11,10 +11,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -29,32 +27,34 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.SmsCommunicator
+import info.nightscout.interfaces.data.smsCommunicator.Sms
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
@@ -246,7 +246,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     fun processSms(receivedSms: Sms) {
-        if (!isEnabled(PluginType.GENERAL)) {
+        if (!isEnabled()) {
             aapsLogger.debug(LTag.SMS, "Ignoring SMS. Plugin disabled.")
             return
         }

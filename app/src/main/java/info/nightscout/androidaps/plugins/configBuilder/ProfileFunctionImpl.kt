@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
@@ -8,19 +7,20 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwitch
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
+import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.fromConstant
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -45,7 +45,7 @@ class ProfileFunctionImpl @Inject constructor(
     private val hardLimits: HardLimits,
     aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
-    private val deviceStatusData: DeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) : ProfileFunction {
 
     private var cache = ConcurrentHashMap<Long, Profile?>()
@@ -117,7 +117,7 @@ class ProfileFunctionImpl @Inject constructor(
         // Try to get it from device status
         // Remove this code after switch to api v3
         if (config.NSCLIENT && ps is ValueWrapper.Absent) {
-            deviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
+            processedDeviceStatusData.pumpData?.activeProfileName?.let { activeProfile ->
                 activePlugin.activeProfileSource.profile?.getSpecificProfile(activeProfile)?.let { ap ->
                     val sealed = ProfileSealed.Pure(ap)
                     synchronized(cache) {
@@ -183,7 +183,7 @@ class ProfileFunctionImpl @Inject constructor(
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now()) ?: return false
         val validity = ProfileSealed.PS(ps).isValid(
-            rh.gs(info.nightscout.automation.R.string.careportal_profileswitch),
+            rh.gs(R.string.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,

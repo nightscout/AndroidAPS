@@ -1,22 +1,12 @@
 package info.nightscout.androidaps.plugins.constraints.objectives
 
-import androidx.fragment.app.FragmentActivity
-import com.google.common.base.Charsets
-import com.google.common.hash.Hashing
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective1
@@ -28,11 +18,11 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective6
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective7
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective9
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,19 +33,17 @@ class ObjectivesPlugin @Inject constructor(
     rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val sp: SP,
-    config: Config,
-    private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger
+    config: Config
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.CONSTRAINTS)
-    .fragmentClass(ObjectivesFragment::class.qualifiedName)
-    .alwaysEnabled(config.APS)
-    .showInList(config.APS)
-    .pluginIcon(R.drawable.ic_graduation)
-    .pluginName(R.string.objectives)
-    .shortName(R.string.objectives_shortname)
-    .description(R.string.description_objectives),
+        .mainType(PluginType.CONSTRAINTS)
+        .fragmentClass(ObjectivesFragment::class.qualifiedName)
+        .alwaysEnabled(config.APS)
+        .showInList(config.APS)
+        .pluginIcon(R.drawable.ic_graduation)
+        .pluginName(R.string.objectives)
+        .shortName(R.string.objectives_shortname)
+        .description(R.string.description_objectives),
     aapsLogger, rh, injector
 ), Constraints {
 
@@ -113,34 +101,6 @@ class ObjectivesPlugin @Inject constructor(
         sp.putBoolean(R.string.key_objectiveuseactions, false)
         sp.putBoolean(R.string.key_objectiveuseloop, false)
         sp.putBoolean(R.string.key_objectiveusescale, false)
-    }
-
-    fun completeObjectives(activity: FragmentActivity, request: String) {
-        val requestCode = sp.getString(R.string.key_objectives_request_code, "")
-        var url = sp.getString(R.string.key_nsclientinternal_url, "").lowercase(Locale.getDefault())
-        if (!url.endsWith("/")) url = "$url/"
-        @Suppress("DEPRECATION", "UnstableApiUsage") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
-        if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
-            sp.putLong("Objectives_" + "openloop" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "openloop" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "maxbasal" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "maxbasal" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "maxiobzero" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "maxiobzero" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "maxiob" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "maxiob" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "autosens" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "autosens" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "smb" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "smb" + "_accomplished", dateUtil.now())
-            sp.putLong("Objectives_" + "auto" + "_started", dateUtil.now())
-            sp.putLong("Objectives_" + "auto" + "_accomplished", dateUtil.now())
-            setupObjectives()
-            OKDialog.show(activity, rh.gs(R.string.objectives), rh.gs(R.string.codeaccepted))
-            uel.log(Action.OBJECTIVES_SKIPPED, Sources.Objectives)
-        } else {
-            OKDialog.show(activity, rh.gs(R.string.objectives), rh.gs(R.string.codeinvalid))
-        }
     }
 
     fun allPriorAccomplished(position: Int): Boolean {

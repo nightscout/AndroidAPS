@@ -172,7 +172,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".plugins.general.nsclient.services.NSClientService"
+            android:name=".plugins.sync.nsclient.services.NSClientService"
             android:enabled="true"
             android:exported="true" />
         <service

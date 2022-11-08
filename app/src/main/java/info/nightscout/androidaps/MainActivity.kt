@@ -51,7 +51,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
+import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog

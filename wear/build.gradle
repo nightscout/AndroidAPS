@@ -10,11 +10,14 @@ buildscript {
         classpath 'com.hiya:jacoco-android:0.2'
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'com.hiya.jacoco-android'
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
 
 apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/android_dependencies.gradle"

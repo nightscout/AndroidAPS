@@ -36,9 +36,6 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDyn
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
@@ -56,6 +53,10 @@ import info.nightscout.androidaps.plugins.source.GlunovoPlugin
 import info.nightscout.androidaps.plugins.source.IntelligoPlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.BIOMETRIC
@@ -97,6 +98,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
+    @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Inject lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
@@ -212,6 +214,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(nsClientV3Plugin, rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
@@ -328,13 +331,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         var visible = false
 
         if (p is PreferenceGroup) {
-            for (i in 0 until p.preferenceCount) {
+            for (i in 0 until p.preferenceCount)
                 visible = updateFilterVisibility(filter, p.getPreference(i)) || visible
-            }
-            if (visible && p is PreferenceCategory) {
-                p.initialExpandedChildrenCount = Int.MAX_VALUE
-            }
+            if (visible && p is PreferenceCategory) p.initialExpandedChildrenCount = Int.MAX_VALUE
         } else {
+            @Suppress("KotlinConstantConditions")
             visible = visible || p.key?.contains(filter, true) == true
             visible = visible || p.title?.contains(filter, true) == true
             visible = visible || p.summary?.contains(filter, true) == true

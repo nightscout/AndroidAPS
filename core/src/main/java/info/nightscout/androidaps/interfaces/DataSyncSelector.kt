@@ -29,22 +29,22 @@ interface DataSyncSelector {
     fun confirmLastBolusIdIfGreater(lastSynced: Long)
     fun changedBoluses() : List<Bolus>
     // Until NS v3
-    fun processChangedBolusesCompat(): Boolean
+    fun processChangedBolusesCompat()
 
     fun confirmLastCarbsIdIfGreater(lastSynced: Long)
     fun changedCarbs() : List<Carbs>
     // Until NS v3
-    fun processChangedCarbsCompat(): Boolean
+    fun processChangedCarbsCompat()
 
     fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long)
     fun changedBolusCalculatorResults() : List<BolusCalculatorResult>
     // Until NS v3
-    fun processChangedBolusCalculatorResultsCompat(): Boolean
+    fun processChangedBolusCalculatorResultsCompat()
 
     fun confirmLastTempTargetsIdIfGreater(lastSynced: Long)
     fun changedTempTargets() : List<TemporaryTarget>
     // Until NS v3
-    fun processChangedTempTargetsCompat(): Boolean
+    fun processChangedTempTargetsCompat()
 
     fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long)
     fun changedGlucoseValues() : List<GlucoseValue>
@@ -54,42 +54,42 @@ interface DataSyncSelector {
     fun confirmLastTherapyEventIdIfGreater(lastSynced: Long)
     fun changedTherapyEvents() : List<TherapyEvent>
     // Until NS v3
-    fun processChangedTherapyEventsCompat(): Boolean
+    fun processChangedTherapyEventsCompat()
 
     fun confirmLastFoodIdIfGreater(lastSynced: Long)
     fun changedFoods() : List<Food>
     // Until NS v3
-    fun processChangedFoodsCompat(): Boolean
+    fun processChangedFoodsCompat()
 
     fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long)
     fun changedDeviceStatuses() : List<DeviceStatus>
     // Until NS v3
-    fun processChangedDeviceStatusesCompat(): Boolean
+    fun processChangedDeviceStatusesCompat()
 
     fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long)
     fun changedTemporaryBasals() : List<TemporaryBasal>
     // Until NS v3
-    fun processChangedTemporaryBasalsCompat(): Boolean
+    fun processChangedTemporaryBasalsCompat()
 
     fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long)
     fun changedExtendedBoluses() : List<ExtendedBolus>
     // Until NS v3
-    fun processChangedExtendedBolusesCompat(): Boolean
+    fun processChangedExtendedBolusesCompat()
 
     fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long)
     fun changedProfileSwitch() : List<ProfileSwitch>
     // Until NS v3
-    fun processChangedProfileSwitchesCompat(): Boolean
+    fun processChangedProfileSwitchesCompat()
 
     fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long)
     fun changedEffectiveProfileSwitch() : List<EffectiveProfileSwitch>
     // Until NS v3
-    fun processChangedEffectiveProfileSwitchesCompat(): Boolean
+    fun processChangedEffectiveProfileSwitchesCompat()
 
     fun confirmLastOfflineEventIdIfGreater(lastSynced: Long)
     fun changedOfflineEvents() : List<OfflineEvent>
     // Until NS v3
-    fun processChangedOfflineEventsCompat(): Boolean
+    fun processChangedOfflineEventsCompat()
 
     fun confirmLastProfileStore(lastSynced: Long)
     fun processChangedProfileStore()

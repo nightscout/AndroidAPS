@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.PluginFragment
 import java.util.*
 
 class TabPageAdapter(private val activity: AppCompatActivity) : FragmentStateAdapter(activity) {
@@ -13,6 +14,7 @@ class TabPageAdapter(private val activity: AppCompatActivity) : FragmentStateAda
     override fun getItemCount(): Int = visibleFragmentList.size
     override fun createFragment(position: Int): Fragment =
         activity.supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), visibleFragmentList[position].pluginDescription.fragmentClass ?: Fragment::class.java.name)
+            .also { if (it is PluginFragment) it.plugin =  getPluginAt(position) }
 
     fun getPluginAt(position: Int): PluginBase = visibleFragmentList[position]
 

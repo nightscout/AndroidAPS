@@ -5,37 +5,39 @@ import info.nightscout.androidaps.database.entities.ProfileSwitch
 /**
  * Sync the ProfileSwitch from NS
  */
-class SyncNsProfileSwitchTransaction(private val profileSwitch: ProfileSwitch) : Transaction<SyncNsProfileSwitchTransaction.TransactionResult>() {
+class SyncNsProfileSwitchTransaction(private val profileSwitches: List<ProfileSwitch>) : Transaction<SyncNsProfileSwitchTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
 
-        val current: ProfileSwitch? =
-            profileSwitch.interfaceIDs.nightscoutId?.let {
-                database.profileSwitchDao.findByNSId(it)
+        for (profileSwitch in profileSwitches) {
+            val current: ProfileSwitch? =
+                profileSwitch.interfaceIDs.nightscoutId?.let {
+                    database.profileSwitchDao.findByNSId(it)
+                }
+
+            if (current != null) {
+                // nsId exists, allow only invalidation
+                if (current.isValid && !profileSwitch.isValid) {
+                    current.isValid = false
+                    database.profileSwitchDao.updateExistingEntry(current)
+                    result.invalidated.add(current)
+                }
+                continue
             }
 
-        if (current != null) {
-            // nsId exists, allow only invalidation
-            if (current.isValid && !profileSwitch.isValid) {
-                current.isValid = false
-                database.profileSwitchDao.updateExistingEntry(current)
-                result.invalidated.add(current)
+            // not known nsId
+            val existing = database.profileSwitchDao.findByTimestamp(profileSwitch.timestamp)
+            if (existing != null && existing.interfaceIDs.nightscoutId == null) {
+                // the same record, update nsId only
+                existing.interfaceIDs.nightscoutId = profileSwitch.interfaceIDs.nightscoutId
+                existing.isValid = profileSwitch.isValid
+                database.profileSwitchDao.updateExistingEntry(existing)
+                result.updatedNsId.add(existing)
+            } else {
+                database.profileSwitchDao.insertNewEntry(profileSwitch)
+                result.inserted.add(profileSwitch)
             }
-            return result
-        }
-
-        // not known nsId
-        val existing = database.profileSwitchDao.findByTimestamp(profileSwitch.timestamp)
-        if (existing != null && existing.interfaceIDs.nightscoutId == null) {
-            // the same record, update nsId only
-            existing.interfaceIDs.nightscoutId = profileSwitch.interfaceIDs.nightscoutId
-            existing.isValid = profileSwitch.isValid
-            database.profileSwitchDao.updateExistingEntry(existing)
-            result.updatedNsId.add(existing)
-        } else {
-            database.profileSwitchDao.insertNewEntry(profileSwitch)
-            result.inserted.add(profileSwitch)
         }
         return result
     }

@@ -1,10 +1,13 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.hiya.jacoco-android'
-apply plugin: 'com.google.firebase.crashlytics'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+    id 'kotlinx-serialization'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 apply from: "${project.rootDir}/core/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
@@ -105,7 +108,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-c"
+        version "3.1.0.3-dev-c-nscv3"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -178,6 +181,7 @@ dependencies {
     // https://github.com/nightscout/iconify.git
     implementation project(':graphview')
     implementation project(':libraries')
+    implementation project(':ns-sdk')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')

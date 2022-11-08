@@ -40,8 +40,3 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 }
-
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.androidaps.annotations.OpenForTesting'
-}

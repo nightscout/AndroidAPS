@@ -46,7 +46,7 @@ object Constants {
     const val MAX_TT_MMOL = 10.0
 
     //NSClientInternal
-    const val MAX_LOG_LINES = 30
+    const val MAX_LOG_LINES = 90
 
     //Screen: Threshold for width/height to go into small width/height layout
     const val SMALL_WIDTH = 320

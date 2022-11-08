@@ -10,28 +10,27 @@ import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.safeQueryBroadcastReceivers
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
-import info.nightscout.androidaps.plugins.general.nsclient.data.DeviceStatusData
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
-import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -52,14 +51,12 @@ class DataBroadcastPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
-    private val nsDeviceStatus: NSDeviceStatus,
-    private val deviceStatusData: DeviceStatusData,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val loop: Loop,
     private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider
-
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -143,7 +140,7 @@ class DataBroadcastPlugin @Inject constructor(
     private fun loopStatus(bundle: Bundle) {
         //batteries
         bundle.putInt("phoneBattery", receiverStatusStore.batteryLevel)
-        bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
+        bundle.putInt("rigBattery", processedDeviceStatusData.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
         if (config.APS && loop.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
             bundle.putLong("suggestedTimeStamp", loop.lastRun?.lastAPSRun ?: -1L)
@@ -156,7 +153,7 @@ class DataBroadcastPlugin @Inject constructor(
                 bundle.putString("enacted", loop.lastRun?.request?.json().toString())
             }
         } else { //NSClient or remote
-            val data = deviceStatusData.openAPSData
+            val data = processedDeviceStatusData.openAPSData
             if (data.clockSuggested != 0L && data.suggested != null) {
                 bundle.putLong("suggestedTimeStamp", data.clockSuggested)
                 bundle.putString("suggested", data.suggested.toString())

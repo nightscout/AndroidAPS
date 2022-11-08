@@ -7,13 +7,10 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 /**
  * Inserts data from a CGM source into the database
  */
-class CgmSourceTransaction(
+class CgmSourceTransaction constructor(
     private val glucoseValues: List<TransactionGlucoseValue>,
     private val calibrations: List<Calibration>,
-    private val sensorInsertionTime: Long?,
-    private val syncer: Boolean = false // caller is not native source ie. NS
-    // syncer is allowed create records
-    // update synchronization ID
+    private val sensorInsertionTime: Long?
 ) : Transaction<CgmSourceTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -26,7 +23,8 @@ class CgmSourceTransaction(
                 value = it.value,
                 noise = it.noise,
                 trendArrow = it.trendArrow,
-                sourceSensor = it.sourceSensor
+                sourceSensor = it.sourceSensor,
+                isValid = it.isValid
             ).also { gv ->
                 gv.interfaceIDs.nightscoutId = it.nightscoutId
             }
@@ -37,31 +35,31 @@ class CgmSourceTransaction(
             current?.let { existing -> glucoseValue.isValid = existing.isValid }
             when {
                 // new record, create new
-                current == null                                                                -> {
+                current == null                                                      -> {
                     database.glucoseValueDao.insertNewEntry(glucoseValue)
                     result.inserted.add(glucoseValue)
                 }
                 // different record, update
-                !current.contentEqualsTo(glucoseValue) && !syncer                              -> {
+                !current.contentEqualsTo(glucoseValue)                               -> {
                     glucoseValue.id = current.id
                     database.glucoseValueDao.updateExistingEntry(glucoseValue)
                     result.updated.add(glucoseValue)
                 }
                 // update NS id if didn't exist and now provided
-                current.interfaceIDs.nightscoutId == null && it.nightscoutId != null && syncer -> {
-                    glucoseValue.id = current.id
-                    database.glucoseValueDao.updateExistingEntry(glucoseValue)
-                    result.updated.add(glucoseValue)
+                current.interfaceIDs.nightscoutId == null && it.nightscoutId != null -> {
+                    current.interfaceIDs.nightscoutId = it.nightscoutId
+                    database.glucoseValueDao.updateExistingEntry(current)
+                    result.updatedNsId.add(glucoseValue)
                 }
             }
         }
         calibrations.forEach {
             if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.FINGER_STICK_BG_VALUE, it.timestamp) == null) {
                 val therapyEvent = TherapyEvent(
-                timestamp = it.timestamp,
-                type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
-                glucose = it.value,
-                glucoseUnit = it.glucoseUnit
+                    timestamp = it.timestamp,
+                    type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
+                    glucose = it.value,
+                    glucoseUnit = it.glucoseUnit
                 )
                 database.therapyEventDao.insertNewEntry(therapyEvent)
                 result.calibrationsInserted.add(therapyEvent)
@@ -88,7 +86,8 @@ class CgmSourceTransaction(
         val noise: Double?,
         val trendArrow: GlucoseValue.TrendArrow,
         val nightscoutId: String? = null,
-        val sourceSensor: GlucoseValue.SourceSensor
+        val sourceSensor: GlucoseValue.SourceSensor,
+        val isValid: Boolean = true
     )
 
     data class Calibration(
@@ -101,6 +100,7 @@ class CgmSourceTransaction(
 
         val inserted = mutableListOf<GlucoseValue>()
         val updated = mutableListOf<GlucoseValue>()
+        val updatedNsId = mutableListOf<GlucoseValue>()
 
         val calibrationsInserted = mutableListOf<TherapyEvent>()
         val sensorInsertionsInserted = mutableListOf<TherapyEvent>()

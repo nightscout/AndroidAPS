@@ -21,10 +21,8 @@ import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
@@ -48,6 +46,9 @@ import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
+import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
+import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin
@@ -315,6 +316,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(368)
     abstract fun bindTidepoolPlugin(plugin: TidepoolPlugin): PluginBase
+
+    @Binds
+    @Unfinished
+    @IntoMap
+    @IntKey(362)
+    abstract fun bindNSClientV3Plugin(plugin: NSClientV3Plugin): PluginBase
 
     @Binds
     @AllConfigs

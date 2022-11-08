@@ -7,9 +7,7 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.extensions.blockValueBySeconds
-import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.Profile
@@ -17,8 +15,10 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP

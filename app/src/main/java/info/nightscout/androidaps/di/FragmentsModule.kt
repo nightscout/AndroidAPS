@@ -20,13 +20,13 @@ import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragm
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
+import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
+import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolFragment
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.plugins.general.autotune.AutotuneFragment
 

@@ -7,6 +7,8 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
+import android.os.Handler
+import android.os.HandlerThread
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.interfaces.utils.StringUtils
 import info.nightscout.rx.bus.RxBus
@@ -20,13 +22,14 @@ class NetworkChangeReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
+    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        rxBus.send(grabNetworkStatus(context, aapsLogger))
+        handler.post { rxBus.send(grabNetworkStatus(context)) }
     }
 
     @Suppress("DEPRECATION")
-    private fun grabNetworkStatus(context: Context, aapsLogger: AAPSLogger): EventNetworkChange {
+    private fun grabNetworkStatus(context: Context): EventNetworkChange {
         val event = EventNetworkChange()
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networks: Array<Network> = cm.allNetworks

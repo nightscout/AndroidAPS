@@ -26,6 +26,7 @@ buildscript {
         work_version = '2.7.1'
         tink_version = '1.5.0'
         json_version = '20220320'
+        serialization_version = '1.4.1'
         joda_version = '2.12.1'
 
         junit_version = '4.13.2'
