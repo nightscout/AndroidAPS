@@ -57,9 +57,7 @@
     <string name="lastconnection_label">Letzte Verbindung</string>
     <string name="lastbolus_label">Letzter Bolus</string>
     <string name="dailyunits">Tägliche Einheiten</string>
-    <string name="basebasalrate_label">Basis-Basalrate</string>
     <string name="tempbasal_label">TBR</string>
-    <string name="virtualpump_extendedbolus_label">Verzögerter Bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Pumpen-Historie</string>
     <string name="viewprofile">Profil anzeigen</string>
@@ -498,6 +496,7 @@
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
