@@ -53,9 +53,7 @@
     <string name="lastconnection_label">Ultima conexiune</string>
     <string name="lastbolus_label">Ultimul bolus</string>
     <string name="dailyunits">Unități zilnic</string>
-    <string name="basebasalrate_label">Rată bazală implicită</string>
     <string name="tempbasal_label">Bazală temporară</string>
-    <string name="virtualpump_extendedbolus_label">Bolus extins</string>
     <string name="reservoir_label">Rezervor</string>
     <string name="pumphistory">Istoric pompă</string>
     <string name="viewprofile">Afișează profilul</string>
@@ -424,6 +422,7 @@
     <string name="sort_label">Sortează</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
