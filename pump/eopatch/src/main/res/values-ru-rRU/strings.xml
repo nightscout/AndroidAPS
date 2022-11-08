@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="bolusdelivered">Болюс %1$.2f ед. подан успешно</string>
+    <string name="cancel">Отменить</string>
+    <string name="confirm">Подтверждаю</string>
+    <string name="next">Далее</string>
+</resources>
