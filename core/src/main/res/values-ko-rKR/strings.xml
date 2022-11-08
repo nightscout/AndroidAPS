@@ -119,6 +119,14 @@
     <string name="reset">재설정</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="profile">프로파일</string>
+    <string name="overview_treatment_label">관리</string>
+    <string name="wear_wizard_settings">마법사 설정</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="paused">일시중지</string>
+    <string name="invalid">유효하지 않음</string>
+    <string name="login">로그인</string>
+    <string name="upload_now">지금 업로드하기</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
@@ -378,6 +386,9 @@
     <string name="basal">Basal</string>
     <!-- Autotune -->
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
+    <string name="urgent_alarm">긴급 알람</string>
+    <string name="info">정보</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
