@@ -254,7 +254,6 @@
     <string name="overview_editquickwizard_usetemptarget">Tydelike doelwit berekening</string>
     <string name="loopenabled">Lus geaktiveer</string>
     <string name="apsselected">APS gekies</string>
-    <string name="nsclienthaswritepermission">NSClient het skryfregte</string>
     <string name="closedmodeenabled">Geslote modus geaktiveer</string>
     <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
     <string name="hasbgdata">BG beskikbaar vanaf geselekteerde bron</string>
@@ -346,7 +345,6 @@
     <string name="wear_wizard_settings_summary">Berekeninge is ingesluit in die ghoeroe verslag:</string>
     <string name="wear_display_settings">Vertooninstellings</string>
     <string name="wear_general_settings">Algemene instellings</string>
-    <string name="enable_nsclient">Aktiveer NSClient</string>
     <string name="welcometosetupwizard">Welkom by opstelling-Ghoeroe. Dit sal jou lei deur die opstelling proses\n</string>
     <string name="readstatus">Lees status</string>
     <string name="exitwizard">Slaan opstelling-Ghoeroe oor</string>
