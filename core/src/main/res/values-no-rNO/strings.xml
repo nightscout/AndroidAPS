@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Siste tilkobling</string>
     <string name="lastbolus_label">Siste bolus</string>
     <string name="dailyunits">Daglige enheter</string>
-    <string name="basebasalrate_label">Basis basal dose</string>
     <string name="tempbasal_label">Temp basal</string>
-    <string name="virtualpump_extendedbolus_label">Forlenget bolus</string>
     <string name="reservoir_label">Reservoar</string>
     <string name="pumphistory">Pumpe historikk</string>
     <string name="viewprofile">Vis profil</string>
@@ -524,6 +522,7 @@
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <plurals name="days">
