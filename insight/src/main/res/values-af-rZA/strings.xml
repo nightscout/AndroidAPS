@@ -11,7 +11,6 @@
     <string name="stop_pump">Stop pomp</string>
     <string name="started">Begin</string>
     <string name="stopped">Gestaak</string>
-    <string name="paused">Onderbreek</string>
     <string name="operating_mode">Bedryf modus</string>
     <string name="description_pump_insight_local">Integrasie vir Accu-Chek Insight pompe</string>
     <string name="not_inserted">Nie ingesteek</string>
