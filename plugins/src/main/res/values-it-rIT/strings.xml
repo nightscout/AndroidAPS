@@ -26,63 +26,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_temptargetwithcode">Per impostare il Temp-Target %1$s rispondi con il codice %2$s</string>
-    <string name="smscommunicator_temptargetcancel">Per cancellare il Temp-Target rispondi col codice %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">Per disabilitare il servizio di controllo remoto tramite SMS rispondi col codice %1$s.\n\nRicorda che potrai riattivarlo solo in maniera diretta dallo smartphone master in cui è installato AAPS.</string>
-    <string name="smscommunicator_stoppedsms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
-    <string name="smscommunicator_calibrationreplywithcode">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
-    <string name="smscommunicator_bolusfailed">Bolo fallito</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Numero minimo di minuti che devono trascorrere tra un bolo remoto e il successivo</string>
-    <string name="smscommunicator_remotebolusmindistance">Quanti minuti devono trascorrere, almeno, tra un bolo e il successivo</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Per la tua sicurezza, per modificare questa preferenza hai bisogno di aggiungere almeno 2 numeri di telefono.</string>
-    <string name="smscommunicator_bolusdelivered">Bolo di %1$.2f U erogato con successo</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolo pasto di %1$.2f U erogato con successo</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s per %2$d minuti</string>
     <string name="smscommunicator_tt_set">Target %1$s per %2$d minuti impostato con successo</string>
     <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
-    <string name="smscommunicator_remotecommandsallowed">Consenti comandi remoti tramite SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Il loop è stato disabilitato</string>
-    <string name="smscommunicator_loophasbeenenabled">Il loop è stato abilitato</string>
-    <string name="smscommunicator_loopisenabled">Il loop è abilitato</string>
-    <string name="smscommunicator_pumpconnectwithcode">Per connettere il micro rispondi col codice %1$s</string>
-    <string name="smscommunicator_pumpconnectfail">Connessione al micro fallita</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Per disconnettere il micro per %1$d minuti rispondi col codice %2$s</string>
-    <string name="smscommunicator_pumpdisconnected">Micro disconnesso</string>
     <string name="smscommunicator_reconnect">Micro riconnesso</string>
-    <string name="smscommunicator_remotecommandnotallowed">Il comando da remoto non è permesso</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolo remoto non disponibile. Riprova più tardi.</string>
-    <string name="smscommunicator_basalreplywithcode">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">Per passare al profilo %1$s %2$d%% rispondi col codice %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Per avviare il bolo esteso %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">Per riprendere il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">Per abilitare il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Per disabilitare il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_tempbasalset">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
-    <string name="smscommunicator_extendedset">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
-    <string name="smscommunicator_carbsset">CHO %1$d g inseriti con successo</string>
-    <string name="smscommunicator_carbsfailed">Inserimento di %1$dg di CHO fallito</string>
-    <string name="smscommunicator_tempbasalset_percent">Basale temporanea %1$d%% per %2$d min avviata con successo</string>
-    <string name="smscommunicator_tempbasalfailed">Avvio basale temporanea fallito</string>
-    <string name="smscommunicator_extendedfailed">Avvio bolo esteso fallito</string>
-    <string name="smscommunicator_basalstopreplywithcode">Per stoppare la basale temporanea rispondi col codice %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Per stoppare il bolo esteso rispondi col codice %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Basale temporanea cancellata</string>
-    <string name="smscommunicator_extendedcanceled">Bolo esteso cancellato</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Basale temporanea: cancellazione fallita</string>
-    <string name="smscommunicator_extendedcancelfailed">Bolo esteso: cancellazione fallita</string>
-    <string name="smscommunicator_unknowncommand">Comando sconosciuto o risposta errata</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
-    <string name="smscommunicator_wrongduration">Durata errata</string>
-    <string name="smscommunicator_loopsuspended">Loop sospeso</string>
-    <string name="smscommunicator_loopresumed">Loop ripreso</string>
-    <string name="smscommunicator_invalidphonennumber">Numero di telefono SMS non valido</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ non sta ricevendo calibrazioni</string>
-    <string name="smscommunicator_messagebody">Corpo del messaggio non valido</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
-    <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolo:</string>
@@ -103,16 +50,12 @@
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
     <!-- Food-->
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
     <string name="filter">Filtro</string>
     <string name="food">Cibo</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">Enr</string>
-    <string name="shortprotein">Prt</string>
-    <string name="shortfat">Grs</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Sottocategoria</string>
     <!-- Theme switcher dark and light mode-->
@@ -163,4 +106,10 @@
     <string name="not_completed_yet">Non ancora completato</string>
     <string name="time_elapsed">Tempo trascorso</string>
     <!-- Overview -->
+    <!-- NSClient -->
+    <!-- Tidepool -->
+    <!-- VirtualPump -->
+    <!-- Source -->
+    <!-- NSClient -->
+    <!-- Objectives -->
 </resources>
