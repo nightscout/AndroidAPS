@@ -51,6 +51,7 @@
     <string name="configbuilder_aps_description">Aký APS algoritmus má byť použitý pre prispôsobenie liečby?</string>
     <string name="configbuilder_general">Všeobecné</string>
     <string name="configbuilder_general_description">Toto sú všeobecné moduly, ktoré môžu byť užitočné.</string>
+    <string name="configbuilder_sync">Synchronizácia</string>
     <string name="configbuilder_constraints_description">Aké obmedzenia sú použité?</string>
     <string name="constraints">Obmedzenia</string>
     <string name="configbuilder_loop">Uzavretý okruh</string>
@@ -216,8 +217,11 @@
     <string name="careportal_pb_label">Batéria do pumpy</string>
     <string name="careportal_age_label">vek:</string>
     <string name="careportal_level_label">úroveň:</string>
+    <string name="ns_alarm_options">Nastavenie alarmov</string>
     <string name="ns_alarms">Vytvoriť oznámenia z alarmov NS</string>
     <string name="ns_announcements">Vytvoriť oznámenia z upozornení NS</string>
+    <string name="ns_alarm_stale_data_value_label">Hraničná hodnota pre zastaralé dáta [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="openapsama_autosens_period">Interval pre automatickú detekciu citlivosti [h]</string>
     <string name="openapsama_autosens_period_summary">Počet uplynutých hodín použitých na automatickú detekciu citlivosti (čas vstrebávania sacharidov sa nezohľadňuje)</string>
     <string name="openaps">OpenAPS</string>
