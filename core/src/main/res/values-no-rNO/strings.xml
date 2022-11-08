@@ -156,6 +156,10 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="paused">Pauset</string>
+    <string name="invalid">UGYLDIG</string>
+    <string name="login">Logg inn</string>
+    <string name="upload_now">Last opp nå</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -523,6 +527,9 @@
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
+    <string name="urgent_alarm">Kritisk alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <plurals name="days">
