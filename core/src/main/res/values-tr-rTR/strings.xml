@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Son bağlantı</string>
     <string name="lastbolus_label">Son bolus</string>
     <string name="dailyunits">Günlük ünite</string>
-    <string name="basebasalrate_label">Temel bazal oranı</string>
     <string name="tempbasal_label">Geçici Bazal</string>
-    <string name="virtualpump_extendedbolus_label">Yayma Bolus</string>
     <string name="reservoir_label">Rezervuar</string>
     <string name="pumphistory">Pompa geçmişi</string>
     <string name="viewprofile">Profili görüntüle</string>
@@ -515,6 +513,7 @@
     <string name="autotune_run_with_error">Son OtoAyar çalışması sırasında hata oluştu</string>
     <string name="autotune_run_cancelled">Başka bir OtoAyar çalıştırması tespit edildi, çalıştırma iptal edildi</string>
     <string name="needconnectpermission">Uygulama bluetooth iznine ihtiyac duyuyor</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
     <plurals name="days">
