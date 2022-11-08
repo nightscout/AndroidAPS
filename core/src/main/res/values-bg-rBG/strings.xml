@@ -54,9 +54,7 @@
     <string name="lastconnection_label">Последна връзка</string>
     <string name="lastbolus_label">Последен болус:</string>
     <string name="dailyunits">Инсулин за деня</string>
-    <string name="basebasalrate_label">Базална стойност</string>
     <string name="tempbasal_label">Временен базал</string>
-    <string name="virtualpump_extendedbolus_label">Удължен болус</string>
     <string name="reservoir_label">Резервоар</string>
     <string name="pumphistory">История</string>
     <string name="viewprofile">Виж профил</string>
@@ -301,6 +299,7 @@
     <string name="autotune_missing">Липсва</string>
     <string name="autotune_compare_profile">Сравняване на профили</string>
     <string name="needconnectpermission">Апликацията изисква разрешение за bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <plurals name="days">
