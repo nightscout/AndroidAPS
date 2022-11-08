@@ -351,7 +351,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="overview_editquickwizard_usepercentage">Yüzde Hesaplaması</string>
     <string name="loopenabled">Döngü etkin</string>
     <string name="apsselected">APS Seçildi</string>
-    <string name="nsclienthaswritepermission">NSClient\'in yazma izni var</string>
     <string name="closedmodeenabled">Kapalı mod etkin</string>
     <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
@@ -458,14 +457,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_display_settings">Görüntü Ayarları</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
-    <string name="enable_nsclient">NSClient etkinleştir</string>
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="readstatus">Durum oku</string>
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient, Nightscout\'a bağlantıyı sağlar. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
     <string name="diawarning">Lütfen unutmayın: yeni insülin profilleri en az 5 saat DIA gerektirir. Yeni profildeki DIA 5–6 saat, eski insülin profillerinde DIA 3saat\'e eşittir.</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Bu nedenle, yeni bir kullanıcı iseniz, muhtemelen en sonuncusu ile değil, AMA ile başlayabilirsiniz. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
