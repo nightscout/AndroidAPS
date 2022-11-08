@@ -156,6 +156,10 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
+    <string name="paused">Gepauzeerd</string>
+    <string name="invalid">Ongeldig</string>
+    <string name="login">Aanmelden</string>
+    <string name="upload_now">Nu Uploaden</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -523,6 +527,9 @@
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
     <string name="needconnectpermission">Applicatie heeft bluetooth toestemming nodig</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
+    <string name="urgent_alarm">Dringend alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
     <plurals name="days">
