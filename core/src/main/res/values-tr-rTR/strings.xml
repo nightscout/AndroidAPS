@@ -14,7 +14,7 @@
     <string name="waitingforpump">Pompa bekleniyor</string>
     <string name="connectingfor">%1$d bağlanıyor</string>
     <string name="bolusdelivering">%1$.2f Ü gönderiliyor</string>
-    <string name="handshaking">El Sıkışma</string>
+    <string name="handshaking">Bağlandı</string>
     <string name="connecting">Bağlanıyor</string>
     <string name="connected">Bağlanıldı</string>
     <string name="disconnected">Bağlantı kesildi</string>
