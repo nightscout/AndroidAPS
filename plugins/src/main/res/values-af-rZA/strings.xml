@@ -46,10 +46,58 @@
     <string name="not_completed_yet">Nog nie voltooi nie</string>
     <string name="time_elapsed">Tydsverloop</string>
     <!-- Overview -->
+    <string name="snooze">Sluimer</string>
+    <string name="show_statuslights">Wys status vlae op tuisskerm</string>
+    <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
+    <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
     <!-- NSClient -->
+    <string name="restart">Herbegin</string>
+    <string name="deliver_now">Lewer nou</string>
+    <string name="clear_queue">Vee tou uit</string>
+    <string name="show_queue">Wys tou</string>
+    <string name="queue">Tou:</string>
+    <string name="status">Status:</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
+    <string name="title_tidepool_username">Login Gebruiker Naam</string>
+    <string name="summary_tidepool_password">Jou Tidepool login kode</string>
+    <string name="title_tidepool_password">Login wagwoord</string>
+    <string name="title_tidepool_test_login">Toets Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">As ge-aktiveer sal data oplaai na https://int-app.tidepool.org instede van die gewone https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Gebruik Integrasie (toets) bedieners</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laai data op na Tidepool</string>
+    <string name="tidepool_upload_cgm">Laai CGM data op</string>
+    <string name="tidepool_upload_bolus">Laai behandelings op (insulien, karbs)</string>
+    <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
+    <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
+    <string name="tidepool_upload_bg">Laai BG toetse op</string>
     <!-- VirtualPump -->
+    <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
+    <string name="virtualpump_settings">Virtuele pomp instellings</string>
+    <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
     <!-- Source -->
+    <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
+    <string name="eversense">Eversense App (bygewerk)</string>
+    <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
+    <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
+    <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
+    <string name="dexcomg5_xdripupload_title">Stuur BG data na xDrip+</string>
+    <string name="dexcomg5_xdripupload_summary">Xdrip+ kies 640g/Eversense data bron</string>
+    <string name="dexcomg5_nsupload_title">BG data oplaai na NS</string>
+    <string name="bgsource_upload">BG oplaai instellings</string>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_create_announcements_from_errors_title">Skep aankondigings vanaf foute</string>
+    <string name="ns_create_announcements_from_errors_summary">Skep Nightscout aankondiging vir foutdialoë en plaaslike waarskuwings (ook vertoonbaar in Careportal onder behandelings)</string>
+    <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
     <!-- Objectives -->
 </resources>
