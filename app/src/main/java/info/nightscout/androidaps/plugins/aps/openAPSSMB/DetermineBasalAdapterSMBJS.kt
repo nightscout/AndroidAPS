@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader

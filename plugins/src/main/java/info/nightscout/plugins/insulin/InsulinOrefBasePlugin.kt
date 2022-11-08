@@ -10,11 +10,11 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

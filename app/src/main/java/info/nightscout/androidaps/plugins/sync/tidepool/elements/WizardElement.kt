@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.sync.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import java.util.*
 
 class WizardElement(carbs: Carbs, dateUtil: DateUtil)

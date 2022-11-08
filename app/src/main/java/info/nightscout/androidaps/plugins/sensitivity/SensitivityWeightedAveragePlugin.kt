@@ -8,12 +8,12 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.isPSEvent5minBack
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.PluginDescription

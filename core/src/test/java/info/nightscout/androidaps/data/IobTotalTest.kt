@@ -2,7 +2,7 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -14,8 +14,8 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 

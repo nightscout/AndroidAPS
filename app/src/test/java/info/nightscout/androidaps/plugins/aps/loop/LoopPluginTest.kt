@@ -16,12 +16,12 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP

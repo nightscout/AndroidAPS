@@ -13,7 +13,7 @@ import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.rx.logging.AAPSLogger

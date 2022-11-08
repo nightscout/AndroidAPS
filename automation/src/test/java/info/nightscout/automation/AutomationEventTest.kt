@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionLoopEnable
 import info.nightscout.automation.actions.ActionStopProcessing

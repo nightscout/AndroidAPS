@@ -6,7 +6,7 @@ import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
 import info.nightscout.androidaps.testing.mocks.SharedPreferencesMock
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before

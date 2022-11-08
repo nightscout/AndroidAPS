@@ -15,7 +15,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.utils.JsonHelper

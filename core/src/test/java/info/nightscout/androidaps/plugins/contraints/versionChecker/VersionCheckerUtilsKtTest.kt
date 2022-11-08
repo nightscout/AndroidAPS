@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.contraints.versionChecker
 import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert.assertArrayEquals

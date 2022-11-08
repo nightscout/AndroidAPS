@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHStateDel
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHFragment
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHLoginActivity
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

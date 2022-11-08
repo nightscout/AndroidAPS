@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

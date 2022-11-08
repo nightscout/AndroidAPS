@@ -30,7 +30,7 @@ import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.interfaces.XDripBroadcast
@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.plugins.sync.nsclient.DataSyncSelectorImplementation
 import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl

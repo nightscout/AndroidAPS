@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 

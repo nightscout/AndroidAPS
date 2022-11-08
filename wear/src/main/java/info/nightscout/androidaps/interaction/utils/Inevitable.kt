@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interaction.utils
 
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.sync.nsclient
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState

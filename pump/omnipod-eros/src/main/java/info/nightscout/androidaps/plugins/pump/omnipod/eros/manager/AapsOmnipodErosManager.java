@@ -21,7 +21,7 @@ import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.interfaces.ActivityNames;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.rx.events.EventOverviewBolusProgress;
@@ -75,7 +75,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.androidaps.utils.T;
+import info.nightscout.shared.utils.T;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.Event;

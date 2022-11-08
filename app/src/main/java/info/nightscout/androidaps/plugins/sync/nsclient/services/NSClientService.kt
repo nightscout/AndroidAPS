@@ -21,7 +21,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -44,9 +44,9 @@ import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatusHandl
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T.Companion.mins
+import info.nightscout.shared.utils.T.Companion.mins
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification

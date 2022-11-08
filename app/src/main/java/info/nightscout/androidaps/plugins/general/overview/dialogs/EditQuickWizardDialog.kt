@@ -13,8 +13,8 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewEditquickwizardDialogBinding
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.extensions.selectedItemPosition
 import info.nightscout.androidaps.utils.extensions.setEnableForChildren
 import info.nightscout.androidaps.utils.extensions.setSelection

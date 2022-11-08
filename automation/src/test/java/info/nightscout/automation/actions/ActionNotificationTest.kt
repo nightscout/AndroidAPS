@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString

@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 import android.os.Build
 import info.nightscout.androidaps.core.R
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

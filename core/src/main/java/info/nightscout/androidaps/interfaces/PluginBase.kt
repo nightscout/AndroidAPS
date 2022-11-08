@@ -7,6 +7,7 @@ import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 
 /**
  * Created by mike on 09.06.2016.

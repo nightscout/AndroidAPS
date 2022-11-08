@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.sync.nsclient.data
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.Round

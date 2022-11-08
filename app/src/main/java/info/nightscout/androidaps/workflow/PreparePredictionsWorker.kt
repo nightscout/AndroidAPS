@@ -8,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus
 import java.util.Calendar

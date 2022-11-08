@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?, val fragment: Fragment?) {
 

@@ -10,8 +10,8 @@ import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientNewL
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import kotlinx.coroutines.runBlocking

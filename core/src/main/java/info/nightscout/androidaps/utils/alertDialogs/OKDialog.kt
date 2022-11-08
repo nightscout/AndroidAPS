@@ -8,7 +8,7 @@ import android.text.Spanned
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.extensions.runOnUiThread
+import info.nightscout.shared.extensions.runOnUiThread
 
 object OKDialog {
 

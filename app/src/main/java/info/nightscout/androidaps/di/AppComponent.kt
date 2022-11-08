@@ -25,7 +25,7 @@ import info.nightscout.automation.di.AutomationModule
 import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.rx.di.RxModule
-import info.nightscout.rx.di.SharedImplModule
+import info.nightcout.shared.impl.di.SharedImplModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton

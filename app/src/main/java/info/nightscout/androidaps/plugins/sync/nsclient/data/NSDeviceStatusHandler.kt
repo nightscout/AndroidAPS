@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.sync.nsclient.data
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper

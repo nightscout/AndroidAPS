@@ -3,7 +3,9 @@ package info.nightscout.androidaps.utils
 import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock

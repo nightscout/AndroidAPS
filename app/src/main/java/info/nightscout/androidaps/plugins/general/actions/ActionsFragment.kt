@@ -24,7 +24,7 @@ import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
 import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BuildHelper
@@ -33,13 +33,13 @@ import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.skins.SkinProvider
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck

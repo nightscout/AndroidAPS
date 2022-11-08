@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.general.overview.notifications
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

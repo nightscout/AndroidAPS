@@ -41,7 +41,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
@@ -51,10 +51,10 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Config

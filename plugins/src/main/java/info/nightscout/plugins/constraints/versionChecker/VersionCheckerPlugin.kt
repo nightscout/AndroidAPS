@@ -7,11 +7,11 @@ import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

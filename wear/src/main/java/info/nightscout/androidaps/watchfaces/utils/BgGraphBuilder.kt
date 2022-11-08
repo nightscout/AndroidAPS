@@ -2,7 +2,7 @@ package info.nightscout.androidaps.watchfaces.utils
 
 import android.graphics.DashPathEffect
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.EventData.SingleBg

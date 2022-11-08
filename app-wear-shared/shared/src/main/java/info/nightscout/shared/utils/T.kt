@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.shared.utils
 
 @Suppress("SpellCheckingInspection")
 class T(val time: Long = 0L) {

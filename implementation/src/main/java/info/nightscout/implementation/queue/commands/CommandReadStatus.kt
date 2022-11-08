@@ -6,7 +6,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
 import info.nightscout.rx.logging.LTag
 

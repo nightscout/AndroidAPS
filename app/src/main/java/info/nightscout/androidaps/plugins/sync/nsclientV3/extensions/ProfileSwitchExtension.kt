@@ -4,8 +4,8 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.extensions.fromConstant
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch

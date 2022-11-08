@@ -18,7 +18,7 @@ import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.automation.R
 import info.nightscout.automation.events.EventLocationChange
 import info.nightscout.rx.AapsSchedulers

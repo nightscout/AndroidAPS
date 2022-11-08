@@ -7,7 +7,7 @@ import android.os.SystemClock
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.extensions.runOnUiThread
+import info.nightscout.shared.extensions.runOnUiThread
 
 // if you need error dialog - duplicate to ErrorDialog and make it and use: AppThemeErrorDialog & R.drawable.ic_header_error instead
 

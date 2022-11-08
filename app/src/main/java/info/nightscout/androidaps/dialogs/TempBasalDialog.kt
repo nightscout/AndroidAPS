@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.HtmlHelper

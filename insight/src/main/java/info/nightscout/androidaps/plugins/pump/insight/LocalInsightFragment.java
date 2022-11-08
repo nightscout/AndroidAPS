@@ -32,10 +32,10 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.shared.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.rx.AapsSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 

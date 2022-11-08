@@ -12,14 +12,14 @@ import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType

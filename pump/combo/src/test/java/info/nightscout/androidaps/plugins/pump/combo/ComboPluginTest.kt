@@ -11,10 +11,10 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP

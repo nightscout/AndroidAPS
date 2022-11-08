@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.sync.tidepool.messages
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.plugins.sync.tidepool.comm.TidepoolUploader
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import java.util.*
 
 class OpenDatasetRequestMessage(serialNumber: String, dateUtil: DateUtil) : BaseMessage() {

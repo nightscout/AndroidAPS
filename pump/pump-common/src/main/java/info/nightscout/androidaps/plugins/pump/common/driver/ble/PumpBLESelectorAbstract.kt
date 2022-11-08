@@ -5,7 +5,7 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.widget.Toast
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.R
 import info.nightscout.androidaps.plugins.pump.common.driver.PumpBLESelector
 import info.nightscout.rx.bus.RxBus

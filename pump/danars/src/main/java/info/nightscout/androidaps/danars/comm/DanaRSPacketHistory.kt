@@ -6,7 +6,7 @@ import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.database.DanaHistoryRecord
 import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.logging.LTag

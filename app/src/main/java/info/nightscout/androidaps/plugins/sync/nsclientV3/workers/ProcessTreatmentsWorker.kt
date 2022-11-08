@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporary
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import info.nightscout.androidaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants

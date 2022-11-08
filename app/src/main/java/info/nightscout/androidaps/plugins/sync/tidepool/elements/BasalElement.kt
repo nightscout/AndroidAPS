@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import java.util.*
 
 class BasalElement(tbr: TemporaryBasal, private val profile: Profile, dateUtil: DateUtil)

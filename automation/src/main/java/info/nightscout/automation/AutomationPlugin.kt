@@ -14,11 +14,11 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionAlarm
 import info.nightscout.automation.actions.ActionCarePortalEvent

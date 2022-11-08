@@ -25,8 +25,8 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
@@ -35,8 +35,8 @@ import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.interfaces.utils.HtmlHelper

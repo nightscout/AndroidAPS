@@ -13,7 +13,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
@@ -22,11 +22,11 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Profiler
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event

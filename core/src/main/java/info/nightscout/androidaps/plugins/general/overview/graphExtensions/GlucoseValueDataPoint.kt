@@ -7,7 +7,7 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DefaultValueHelper
 
 class GlucoseValueDataPoint(

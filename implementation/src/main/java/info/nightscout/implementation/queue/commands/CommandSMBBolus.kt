@@ -7,8 +7,8 @@ import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
 import info.nightscout.rx.logging.LTag
 

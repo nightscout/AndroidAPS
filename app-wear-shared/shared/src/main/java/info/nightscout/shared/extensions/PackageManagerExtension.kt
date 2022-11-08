@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.shared.extensions
 
 import android.content.Intent
 import android.content.pm.PackageInfo

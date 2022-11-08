@@ -5,7 +5,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.bus.RxBus

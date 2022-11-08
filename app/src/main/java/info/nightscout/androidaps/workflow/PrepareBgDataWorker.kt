@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import java.util.ArrayList
 import javax.inject.Inject
 

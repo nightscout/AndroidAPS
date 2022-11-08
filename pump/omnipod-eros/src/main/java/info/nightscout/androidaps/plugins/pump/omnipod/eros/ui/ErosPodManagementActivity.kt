@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue

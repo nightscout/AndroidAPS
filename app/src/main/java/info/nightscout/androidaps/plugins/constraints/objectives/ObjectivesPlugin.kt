@@ -6,7 +6,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective1

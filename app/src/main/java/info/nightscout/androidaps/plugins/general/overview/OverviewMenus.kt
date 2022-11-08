@@ -15,7 +15,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview

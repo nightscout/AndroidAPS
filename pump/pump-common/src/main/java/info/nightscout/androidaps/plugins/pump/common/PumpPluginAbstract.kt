@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
@@ -30,7 +30,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy

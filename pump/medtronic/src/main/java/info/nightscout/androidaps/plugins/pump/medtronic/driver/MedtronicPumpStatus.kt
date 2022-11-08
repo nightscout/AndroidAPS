@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange

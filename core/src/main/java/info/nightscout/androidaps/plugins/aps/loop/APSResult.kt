@@ -13,8 +13,8 @@ import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.rx.logging.AAPSLogger

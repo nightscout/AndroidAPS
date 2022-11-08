@@ -9,9 +9,9 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject

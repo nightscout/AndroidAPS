@@ -4,10 +4,10 @@ import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.BGDatum

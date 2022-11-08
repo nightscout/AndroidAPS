@@ -4,7 +4,7 @@ import android.graphics.Typeface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.triggers.Trigger
 

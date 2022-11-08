@@ -23,14 +23,14 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
 import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SntpClient

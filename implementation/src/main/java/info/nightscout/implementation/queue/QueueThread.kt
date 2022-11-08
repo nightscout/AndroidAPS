@@ -13,10 +13,10 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

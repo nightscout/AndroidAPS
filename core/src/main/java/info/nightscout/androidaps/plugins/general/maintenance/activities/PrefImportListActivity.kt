@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.data.maintenance.PrefsStatus
 import info.nightscout.interfaces.locale.LocaleHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class PrefImportListActivity : DaggerAppCompatActivity() {

@@ -18,11 +18,11 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.databinding.OverviewQuickwizardlistActivityBinding
 import info.nightscout.androidaps.databinding.OverviewQuickwizardlistItemBinding
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter

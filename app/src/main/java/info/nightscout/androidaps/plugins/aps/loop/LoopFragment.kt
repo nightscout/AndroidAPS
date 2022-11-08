@@ -16,10 +16,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers

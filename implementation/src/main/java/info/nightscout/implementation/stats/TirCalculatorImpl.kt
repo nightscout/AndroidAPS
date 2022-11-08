@@ -12,12 +12,12 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.TIR
 import info.nightscout.androidaps.interfaces.stats.TirCalculator
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
 import javax.inject.Inject
 import javax.inject.Singleton

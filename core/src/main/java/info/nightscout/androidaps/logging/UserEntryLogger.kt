@@ -6,7 +6,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.UserEntryTransaction
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper
 import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
 import info.nightscout.rx.AapsSchedulers

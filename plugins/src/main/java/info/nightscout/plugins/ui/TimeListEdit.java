@@ -24,7 +24,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.shared.utils.DateUtil;
 import info.nightscout.androidaps.utils.ui.NumberPicker;
 import info.nightscout.plugins.R;
 import info.nightscout.rx.logging.AAPSLogger;

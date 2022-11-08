@@ -5,7 +5,7 @@ import android.content.Intent
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

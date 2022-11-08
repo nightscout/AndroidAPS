@@ -5,10 +5,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.SmsCommunicator
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult

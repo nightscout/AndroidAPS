@@ -15,8 +15,8 @@ import info.nightscout.androidaps.plugins.sync.tidepool.elements.SensorGlucoseEl
 import info.nightscout.androidaps.plugins.sync.tidepool.elements.WizardElement
 import info.nightscout.androidaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.sync.tidepool.utils.GsonInstance
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

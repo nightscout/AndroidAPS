@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.shared.interfaces
 
 import android.content.Context
 import android.content.res.AssetFileDescriptor

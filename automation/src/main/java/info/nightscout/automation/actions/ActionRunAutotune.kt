@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R

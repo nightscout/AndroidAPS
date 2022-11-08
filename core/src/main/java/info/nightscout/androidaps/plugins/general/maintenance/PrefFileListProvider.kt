@@ -7,7 +7,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.data.maintenance.PrefMetadata
 import info.nightscout.interfaces.data.maintenance.PrefMetadataMap

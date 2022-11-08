@@ -28,7 +28,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
@@ -40,7 +40,7 @@ import info.nightscout.androidaps.receivers.KeepAliveWorker
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.interfaces.locale.LocaleHelper
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin

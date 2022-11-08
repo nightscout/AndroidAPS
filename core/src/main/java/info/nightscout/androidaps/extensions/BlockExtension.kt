@@ -2,8 +2,8 @@ package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 

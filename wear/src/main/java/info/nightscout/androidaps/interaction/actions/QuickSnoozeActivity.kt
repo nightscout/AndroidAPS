@@ -8,7 +8,7 @@ import android.widget.Toast
 import dagger.android.DaggerActivity
 import info.nightscout.androidaps.R
 import info.nightscout.rx.events.EventWearToMobile
-import info.nightscout.androidaps.extensions.safeGetPackageInfo
+import info.nightscout.shared.extensions.safeGetPackageInfo
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.weardata.EventData
 import javax.inject.Inject

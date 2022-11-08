@@ -3,7 +3,7 @@ package info.nightscout.androidaps.diaconn.packet
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.rx.logging.LTag
 
 import info.nightscout.shared.sharedPreferences.SP

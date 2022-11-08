@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.sync.tidepool.events.EventTidepoolUpda
 import info.nightscout.androidaps.plugins.sync.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.PluginDescription

@@ -7,10 +7,10 @@ import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.targetBlockFromJsonArray
 import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import java.util.TimeZone
 

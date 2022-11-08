@@ -46,8 +46,8 @@ import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -59,7 +59,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
@@ -80,7 +80,7 @@ import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.skins.SkinProvider
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils

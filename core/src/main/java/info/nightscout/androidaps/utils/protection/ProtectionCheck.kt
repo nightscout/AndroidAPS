@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.protection
 
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

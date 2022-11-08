@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")

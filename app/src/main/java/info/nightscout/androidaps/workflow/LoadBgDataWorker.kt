@@ -8,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.setupwizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.elements.SWItem
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import java.util.*
 import javax.inject.Inject
 

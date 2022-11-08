@@ -20,12 +20,12 @@ import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnig
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
 import info.nightscout.androidaps.interfaces.Profile.ProfileValue
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.bus.RxBus
 import org.json.JSONArray
 import org.json.JSONObject

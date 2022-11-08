@@ -33,7 +33,7 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.interfaces.data.maintenance.PrefFileNotFoundError
@@ -43,9 +43,9 @@ import info.nightscout.interfaces.data.maintenance.Prefs
 import info.nightscout.interfaces.data.maintenance.PrefsFormat
 import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.data.maintenance.PrefsStatus
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog

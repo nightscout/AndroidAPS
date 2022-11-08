@@ -6,7 +6,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 import javax.inject.Singleton

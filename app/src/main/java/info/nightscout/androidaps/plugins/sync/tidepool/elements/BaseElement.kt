@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.sync.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 
 open class BaseElement(timestamp: Long, uuid: String, dateUtil: DateUtil) {
     @Expose

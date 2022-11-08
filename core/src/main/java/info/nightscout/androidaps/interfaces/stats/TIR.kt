@@ -2,8 +2,8 @@ package info.nightscout.androidaps.interfaces.stats
 
 import android.content.Context
 import android.widget.TableRow
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 
 interface TIR {
 

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils.ui
 
-import info.nightscout.androidaps.extensions.runOnUiThread
+import info.nightscout.shared.extensions.runOnUiThread
 
 class UIRunnable (val runnable: Runnable) : Runnable {
     override fun run() {

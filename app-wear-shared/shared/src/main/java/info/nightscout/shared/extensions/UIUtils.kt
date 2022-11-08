@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.shared.extensions
 
 import android.os.Handler
 import android.os.Looper

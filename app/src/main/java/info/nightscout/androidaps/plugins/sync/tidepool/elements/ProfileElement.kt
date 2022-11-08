@@ -5,7 +5,7 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.sync.tidepool.comm.TidepoolUploader
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import java.util.*
 
 class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil: DateUtil)

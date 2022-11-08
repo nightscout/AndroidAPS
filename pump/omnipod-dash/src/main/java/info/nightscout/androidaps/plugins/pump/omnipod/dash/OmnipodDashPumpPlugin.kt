@@ -21,7 +21,7 @@ import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
@@ -61,12 +61,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.AapsSchedulers

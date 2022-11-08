@@ -12,7 +12,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.BolusDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.CarbsDataPoint
@@ -25,7 +25,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.rx.bus.RxBus
 import javax.inject.Inject

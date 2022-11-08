@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util
 
 import com.google.gson.GsonBuilder
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification

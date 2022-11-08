@@ -17,7 +17,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment

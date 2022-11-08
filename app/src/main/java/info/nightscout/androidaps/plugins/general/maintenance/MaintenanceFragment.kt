@@ -16,13 +16,13 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewData

@@ -20,14 +20,14 @@ import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.interfaces.aps.SMBDefaults

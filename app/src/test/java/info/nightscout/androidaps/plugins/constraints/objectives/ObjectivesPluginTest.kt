@@ -7,10 +7,10 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before

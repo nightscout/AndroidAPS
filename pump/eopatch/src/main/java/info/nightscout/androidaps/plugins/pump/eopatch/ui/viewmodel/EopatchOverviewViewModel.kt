@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
@@ -18,8 +18,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -218,14 +218,14 @@ class EopatchOverviewViewModel @Inject constructor(
             .subscribe({ response ->
                 if (response.isSuccess) {
                     var result = pumpSync.syncTemporaryBasalWithPumpId(
-                                       timestamp = dateUtil.now(),
-                                       rate = 0.0,
-                                       duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
-                                       isAbsolute = true,
-                                       type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                                       pumpId = dateUtil.now(),
-                                       pumpType = PumpType.EOFLOW_EOPATCH2,
-                                       pumpSerial = patchManager.patchConfig.patchSerialNumber
+                        timestamp = dateUtil.now(),
+                        rate = 0.0,
+                        duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
+                        isAbsolute = true,
+                        type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        pumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = patchManager.patchConfig.patchSerialNumber
                                    )
                     aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
 

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogBolusprogressBinding
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

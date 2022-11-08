@@ -6,7 +6,7 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.Translator
 
 class TherapyEventDataPoint(

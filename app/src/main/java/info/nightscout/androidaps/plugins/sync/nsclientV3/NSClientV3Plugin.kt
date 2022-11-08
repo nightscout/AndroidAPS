@@ -16,7 +16,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sync
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsShared.NSClientFragment
@@ -30,9 +30,9 @@ import info.nightscout.androidaps.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.androidaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config

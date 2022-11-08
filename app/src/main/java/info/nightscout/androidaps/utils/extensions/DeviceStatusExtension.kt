@@ -8,7 +8,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =

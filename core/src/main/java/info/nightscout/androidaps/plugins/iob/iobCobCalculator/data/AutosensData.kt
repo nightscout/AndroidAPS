@@ -6,13 +6,13 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

@@ -21,8 +21,8 @@ import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEven
 import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.androidaps.databinding.DialogLoopBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -34,13 +34,13 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.SafeParse

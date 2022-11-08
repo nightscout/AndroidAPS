@@ -5,7 +5,7 @@ import android.os.Build
 import android.telephony.SmsManager
 import dagger.Module
 import dagger.Provides
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import javax.inject.Singleton

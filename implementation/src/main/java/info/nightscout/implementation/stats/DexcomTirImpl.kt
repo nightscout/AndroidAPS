@@ -9,7 +9,7 @@ import android.widget.TextView
 import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.DexcomTIR
 import info.nightscout.implementation.R
 import java.util.*

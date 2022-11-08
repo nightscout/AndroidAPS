@@ -28,7 +28,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst

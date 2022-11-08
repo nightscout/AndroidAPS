@@ -15,13 +15,13 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.plugins.profile.ProfilePlugin

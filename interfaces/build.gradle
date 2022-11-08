@@ -17,6 +17,12 @@ android {
 }
 
 dependencies {
+    // I don't like this low level dependency but it helps
+    // to move more code to interface module
+    // database module is compiled longer anyway
+    // (ResourceHelper interface)
+    implementation project(':app-wear-shared:shared')
+
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.preference:preference-ktx:$preferencektx_version"
 

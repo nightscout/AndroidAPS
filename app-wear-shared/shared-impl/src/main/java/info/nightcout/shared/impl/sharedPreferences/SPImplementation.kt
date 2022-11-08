@@ -1,10 +1,11 @@
-package info.nightscout.shared.sharedPreferences
+package info.nightcout.shared.impl.sharedPreferences
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 

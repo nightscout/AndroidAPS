@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.events
 
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class EventPumpStatusChanged : EventStatus {
 

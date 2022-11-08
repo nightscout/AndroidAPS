@@ -5,7 +5,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP

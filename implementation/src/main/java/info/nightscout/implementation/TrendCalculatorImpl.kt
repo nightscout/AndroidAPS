@@ -3,9 +3,9 @@ package info.nightscout.implementation
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.TrendCalculator
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 

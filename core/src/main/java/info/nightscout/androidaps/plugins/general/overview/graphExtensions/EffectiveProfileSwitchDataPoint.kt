@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 import android.content.Context
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.T
 
 class EffectiveProfileSwitchDataPoint(
     val data: EffectiveProfileSwitch,

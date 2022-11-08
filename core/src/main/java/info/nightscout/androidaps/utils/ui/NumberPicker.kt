@@ -23,7 +23,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.NumberPickerLayoutBinding
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.SafeParse
 import java.text.NumberFormat

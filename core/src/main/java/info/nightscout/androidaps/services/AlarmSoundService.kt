@@ -11,7 +11,7 @@ import android.os.Looper
 import dagger.android.DaggerService
 import info.nightscout.androidaps.core.R
 import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 

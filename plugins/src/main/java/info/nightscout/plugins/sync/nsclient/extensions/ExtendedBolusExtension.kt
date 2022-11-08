@@ -6,8 +6,8 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.plugins.sync.nsclient.extensions.toJson
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 

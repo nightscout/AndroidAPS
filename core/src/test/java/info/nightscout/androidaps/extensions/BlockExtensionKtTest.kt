@@ -3,7 +3,7 @@ package info.nightscout.androidaps.extensions
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.data.checkSanity
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import org.junit.Assert
 
 import org.junit.Test

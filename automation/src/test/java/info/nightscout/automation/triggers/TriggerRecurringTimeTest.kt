@@ -1,7 +1,7 @@
 package info.nightscout.automation.triggers
 
 import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

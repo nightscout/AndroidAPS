@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO

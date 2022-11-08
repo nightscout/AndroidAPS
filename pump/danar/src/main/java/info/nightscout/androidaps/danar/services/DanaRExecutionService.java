@@ -52,7 +52,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.rx.events.EventOverviewBolusProgress;
 import info.nightscout.interfaces.notifications.Notification;

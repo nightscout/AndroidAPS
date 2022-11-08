@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import dagger.Reusable
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject

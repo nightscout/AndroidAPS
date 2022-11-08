@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.rx.logging.AAPSLogger

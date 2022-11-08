@@ -3,7 +3,7 @@ package info.nightscout.plugins.sync.nsclient.extensions
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 

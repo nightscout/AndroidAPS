@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.shared.utils.DateUtil;
 
 /**
  * Created by geoff on 4/28/15.

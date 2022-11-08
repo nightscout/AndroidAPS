@@ -7,7 +7,7 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.InMemoryGlucoseValueDataPoint

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.utils.ToastUtils

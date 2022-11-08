@@ -22,7 +22,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.R
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.common.databinding.PumpBleConfigActivityBinding

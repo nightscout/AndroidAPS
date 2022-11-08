@@ -7,7 +7,7 @@ import android.content.Intent
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst

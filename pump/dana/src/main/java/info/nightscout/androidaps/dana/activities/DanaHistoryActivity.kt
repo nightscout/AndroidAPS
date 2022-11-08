@@ -23,10 +23,10 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.logging.LTag

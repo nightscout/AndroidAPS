@@ -21,7 +21,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginFragment
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin

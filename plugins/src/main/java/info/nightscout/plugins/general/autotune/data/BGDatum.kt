@@ -2,8 +2,8 @@ package info.nightscout.plugins.general.autotune.data
 
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone

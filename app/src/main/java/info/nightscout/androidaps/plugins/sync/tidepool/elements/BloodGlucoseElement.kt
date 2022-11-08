@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.plugins.sync.nsclient.extensions.toMainUnit
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import java.util.*
 
 class BloodGlucoseElement(therapyEvent: TherapyEvent, dateUtil: DateUtil)

@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;

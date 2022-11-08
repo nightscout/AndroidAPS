@@ -4,7 +4,7 @@ import android.content.Context
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.extensions.toStringTotal
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class ExtendedBolusDataPoint(
     val data: ExtendedBolus,

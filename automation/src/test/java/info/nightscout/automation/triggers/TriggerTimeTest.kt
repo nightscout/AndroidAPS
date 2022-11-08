@@ -1,7 +1,7 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert

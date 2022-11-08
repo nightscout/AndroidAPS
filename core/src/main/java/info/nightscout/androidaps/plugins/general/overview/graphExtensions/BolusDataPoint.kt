@@ -4,7 +4,7 @@ import android.content.Context
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 

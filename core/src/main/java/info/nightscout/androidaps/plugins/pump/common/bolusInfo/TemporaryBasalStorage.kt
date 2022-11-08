@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject

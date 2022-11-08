@@ -18,7 +18,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 

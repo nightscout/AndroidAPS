@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.pump.ManufacturerType
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
@@ -28,7 +28,7 @@ import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
+import info.nightscout.rx.events.EventRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
@@ -63,7 +63,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.isSame
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.interfaces.PluginType

@@ -10,10 +10,10 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.PluginDescription

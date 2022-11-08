@@ -19,13 +19,13 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
