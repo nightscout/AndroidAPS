@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Poslední spojení</string>
     <string name="lastbolus_label">Poslední bolus</string>
     <string name="dailyunits">Jednotek za den</string>
-    <string name="basebasalrate_label">Základní hodnota bazálu</string>
     <string name="tempbasal_label">Dočasný bazál</string>
-    <string name="virtualpump_extendedbolus_label">Prodloužený bolus</string>
     <string name="reservoir_label">Zásobník</string>
     <string name="pumphistory">Historie pumpy</string>
     <string name="viewprofile">Zobrazit profil</string>
@@ -515,6 +513,7 @@
     <string name="autotune_run_with_error">Chyba při posledním spuštění Autotune</string>
     <string name="autotune_run_cancelled">Byla zjištěna jiná běžící úloha Autotune, spuštění zrušeno</string>
     <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
     <plurals name="days">
