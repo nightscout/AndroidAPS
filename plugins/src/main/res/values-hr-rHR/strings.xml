@@ -25,8 +25,27 @@
     <!-- Overview -->
     <!-- NSClient -->
     <!-- Tidepool -->
+    <string name="remove_all">Ukloniti sve</string>
+    <string name="reset_start">Poništi početak</string>
     <!-- VirtualPump -->
+    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
     <!-- Source -->
+    <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
+    <string name="description_source_xdrip">Preuzima podatke o GUK-a s xDrip+.</string>
+    <string name="description_source_eversense">Primajte vrijednosti GUK-a iz zakrpane aplikacije Eversense.</string>
+    <string name="description_source_glimp">Primajte vrijednosti GUK-a od Glimpa.</string>
+    <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Primite vrijednosti GK od GlucoRx Aidex CGMS.</string>
     <!-- NSClient -->
+    <string name="ns_cellular">Koristite mobilnu vezu</string>
+    <string name="ns_wifi">Koristite WiFi vezu</string>
+    <string name="ns_charging">Tijekom punjenja</string>
+    <string name="ns_battery">Na bateriji</string>
+    <string name="description_ns_client">Sinkroniziraj svoje podatke sa Nightscout</string>
+    <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
+    <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
     <!-- Objectives -->
 </resources>
