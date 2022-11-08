@@ -57,9 +57,7 @@
     <string name="lastconnection_label">Senast ansluten</string>
     <string name="lastbolus_label">Senaste bolus</string>
     <string name="dailyunits">Enheter per dag</string>
-    <string name="basebasalrate_label">Profilens basaldos</string>
     <string name="tempbasal_label">Temp basal</string>
-    <string name="virtualpump_extendedbolus_label">Förlängd bolus</string>
     <string name="reservoir_label">Reservoar</string>
     <string name="pumphistory">Pumphistorik</string>
     <string name="viewprofile">Visa profil</string>
@@ -441,6 +439,7 @@
     <string name="basal">Basal</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
