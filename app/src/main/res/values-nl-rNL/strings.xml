@@ -17,6 +17,7 @@
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
     <string name="description_objectives">Leerprogramma</string>
     <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
+    <string name="description_ns_client_v3">Synchroniseert je data met Nightscout via de v3 API</string>
     <string name="description_ns_client">Synchroniseert je data met Nightscout</string>
     <string name="description_ama">Het algoritme uit 2017</string>
     <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
@@ -60,6 +61,8 @@
     <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
     <string name="configbuilder_general">Algemeen</string>
     <string name="configbuilder_general_description">Dit zijn enkele algemene plugins die handig kunnen zijn.</string>
+    <string name="configbuilder_sync">Synchronisatie</string>
+    <string name="configbuilder_sync_description">Data upload en synchronisatie plugins.</string>
     <string name="configbuilder_constraints_description">Welke beperkingen worden toegepast?</string>
     <string name="constraints">Beperkingen</string>
     <string name="configbuilder_loop">Loop</string>
@@ -182,6 +185,8 @@
     <string name="executing">Uitvoeren</string>
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
     <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
+    <string name="nsclientv3">NSClientV3</string>
+    <string name="nsclientv3_shortname">NSV3</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
@@ -193,6 +198,9 @@
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Geen NS API secret op (min 12 kar.)</string>
+    <string name="nsclient_token_title">NS toegangstoken</string>
+    <string name="nsclient_token_dialog_title">NS toegangstoken</string>
+    <string name="nsclient_token_dialog_message">Toegangstoken gegenereerd op de NS beheerderspagina (min. 17 tekens)</string>
     <string name="deliver_now">Toedienen</string>
     <string name="clear_queue">Ledig wachtrij</string>
     <string name="show_queue">Toon wachtrij</string>
@@ -350,7 +358,7 @@
     <string name="overview_editquickwizard_usepercentage">Percentage berekening</string>
     <string name="loopenabled">Loop Actief</string>
     <string name="apsselected">APS geslecteerd</string>
-    <string name="nsclienthaswritepermission">NSClient heeft schrijf rechten</string>
+    <string name="synchaswritepermission">Synchronisatieservice heeft schrijfrechten</string>
     <string name="closedmodeenabled">Closed modus actief</string>
     <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
@@ -457,14 +465,13 @@
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_display_settings">Scherm instellingen</string>
     <string name="wear_general_settings">Algemene instellingen</string>
-    <string name="enable_nsclient">NSClient inschakelen</string>
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
     <string name="readstatus">Lees status</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient zorgt voor verbinding met Nightscout. Je kunt dit deel nu overslaan, maar pas de Doelen afronden als je het hebt ingesteld.</string>
+    <string name="syncinfotext">Cloud data synchronisatie. Kan worden overgeslagen maar het wel nodig om de doelen te kunnen behalen.</string>
     <string name="diawarning">Onthoud: nieuwe insuline profielen vereisen een minimale DIA van 5 uur. DIA 5 – 6h op nieuw profiel is gelijk aan DIA 3h op oude insuline profielen.</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
