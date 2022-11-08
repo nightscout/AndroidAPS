@@ -336,7 +336,6 @@
     <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
     <string name="loopenabled">Loop activado</string>
     <string name="apsselected">APS seleccionado</string>
-    <string name="nsclienthaswritepermission">ClienteNS tem permissão de escrita</string>
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="maxiobset">IA máxima definida corretamente</string>
     <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
@@ -438,13 +437,11 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Definições Ecrã</string>
     <string name="wear_general_settings">Definições Gerais</string>
-    <string name="enable_nsclient">Activar ClienteNS</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="readstatus">Ler estado</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
