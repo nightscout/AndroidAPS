@@ -344,7 +344,6 @@
     <string name="overview_editquickwizard_usepercentage">Beregning i %</string>
     <string name="loopenabled">Loop aktiveret</string>
     <string name="apsselected">APS valgt</string>
-    <string name="nsclienthaswritepermission">NSClient har skrivetilladelse</string>
     <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
     <string name="maxiobset">Maksimal IOB sat korrekt</string>
     <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
@@ -451,13 +450,11 @@
     <string name="wear_wizard_settings_summary">Beregninger inkluderet i guide resultatet:</string>
     <string name="wear_display_settings">Visningsindstillinger</string>
     <string name="wear_general_settings">Generelle indstillinger</string>
-    <string name="enable_nsclient">Aktiver NSClient</string>
     <string name="welcometosetupwizard">Velkommen til opsætningsguiden. Den vil guide dig gennem opsætningsprocessen\n</string>
     <string name="readstatus">Læs status</string>
     <string name="exitwizard">Spring opsætningsguiden over</string>
     <string name="setupwizard_sensitivity_description">Følsomhedsplugin bruges til detektering af følsomhed og COB beregning. For mere info besøg:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient håndterer forbindelse til Nightscout. Du kan springe denne del over nu, men du vil ikke være i stand til at passere mål, før du har sat den op.</string>
     <string name="diawarning">Husk: nye insulinprofiler kræver DIA mindst 5 timer. DIA 5-6 timer på ny profil er lig med DIA 3 timer på gamle insulinprofiler.</string>
     <string name="setupwizard_aps_description">Vælg en fra tilgængelige algoritmer. De er sorteret fra ældste til nyeste. Nyere algoritme er normalt mere kraftfulde og mere aggressive. Så hvis du er ny looper bør du sandsynligvis starte med AMA og ikke med den nyeste. Glem ikke at læse OpenAPS dokumentationen og konfigurere den før brug.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurer venligst din RileyLink nedenfor. Når du har valgt en RileyLink, vil det være muligt at fortsætte opsætningen, når RileyLink-status er \"Tilsluttet\". Dette kan tage et minut.\n</string>
