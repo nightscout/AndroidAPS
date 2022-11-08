@@ -29,10 +29,21 @@
     <!-- Objectives -->
     <string name="time_elapsed">Eltelt idő</string>
     <!-- Overview -->
+    <string name="snooze">Szundi</string>
     <!-- NSClient -->
+    <string name="status">Állapot:</string>
+    <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
     <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
     <!-- VirtualPump -->
     <!-- Source -->
+    <string name="poctech">Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">FELT</string>
     <!-- Objectives -->
 </resources>
