@@ -47,6 +47,7 @@
     <string name="configbuilder_aps_description">Кои APS алгоритъм да се използва за корекции в лечението?</string>
     <string name="configbuilder_general">Общи</string>
     <string name="configbuilder_general_description">Това са някой общи функции, които може да са Ви от полза.</string>
+    <string name="configbuilder_sync">Синхронизация</string>
     <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
     <string name="constraints">Ограничения</string>
     <string name="configbuilder_loop">Режим на APS - Loop</string>
@@ -210,8 +211,11 @@
     <string name="careportal_pb_label">Батерия на помпата</string>
     <string name="careportal_age_label">възраст:</string>
     <string name="careportal_level_label">ниво:</string>
+    <string name="ns_alarm_options">Опции за аларми</string>
     <string name="ns_alarms">Известяване при NS аларми</string>
     <string name="ns_announcements">Създаване на известия от NS съобщения</string>
+    <string name="ns_alarm_stale_data_value_label">Когато няма данни повече от [мин]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
     <string name="openaps">OpenAPS</string>
