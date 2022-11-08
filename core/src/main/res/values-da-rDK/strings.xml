@@ -138,6 +138,19 @@
     <string name="reset">nulstil</string>
     <string name="profileswitch_ismissing">Profilskift mangler. Venligst lav et profilskift eller tryk \"Aktiver profil\" i LokalProfil.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Vælg for at fjerne</string>
+    <string name="confirm_remove_multiple_items">Er du sikker på, at du vil fjerne %1$d elementer?</string>
+    <string name="overview_treatment_label">Behandling</string>
+    <string name="copytolocalprofile">Opret ny profil fra denne profil?</string>
+    <string name="wear_wizard_settings">Guide indstillinger</string>
+    <string name="bg_trend_label">15 min tendens</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="paused">Pauset</string>
+    <string name="invalid">UGYLDIG</string>
+    <string name="login">Log ind</string>
+    <string name="upload_now">Upload nu</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
     <string name="pumplimit">pumpe grænse</string>
@@ -497,6 +510,9 @@
     <string name="autotune_run_cancelled">Autotune kører allerede, annulleret</string>
     <string name="needconnectpermission">Applikationen kræver tilladelse til bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>
+    <string name="urgent_alarm">Akut alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
