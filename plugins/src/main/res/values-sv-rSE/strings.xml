@@ -133,7 +133,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">Mål</string>
-    <string name="clone_label">Kopiera</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Omräknad data används</string>

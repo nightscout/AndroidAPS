@@ -129,7 +129,6 @@
     <string name="ic_short">IHC</string>
     <string name="isf_short">FSI</string>
     <string name="target_short">ALV</string>
-    <string name="clone_label">Clone</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Dados utilizados foram recalculados</string>

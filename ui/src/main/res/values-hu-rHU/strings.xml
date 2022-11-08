@@ -5,4 +5,6 @@
     <string name="statistics">Statisztikák</string>
     <string name="calculation_in_progress">Számítás folyamatban</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

@@ -28,18 +28,6 @@
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
     <string name="description_treatments">Σώζει όλες τις θεραπείες που έγιναν</string>
-    <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
-    <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Συνολική IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Συνολική δραστηριότητα IOB:</string>
-    <string name="tempbasals_realduration_label_string">Διάρκεια:</string>
-    <string name="tempbasals_netratio_label_string">Αναλογία:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Διόρθωση</string>
     <string name="openapsma_run">Έναρξη τώρα</string>
     <string name="vitualpump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
     <string name="openapsma_lastrun_label">Τελευταίος Υπολογισμός</string>
@@ -75,7 +63,6 @@
     <string name="openapsma_disabled">Προσθήκη απενεργοποιημένη</string>
     <string name="constraints_violation">Παραβίαση Περιορισμών</string>
     <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
-    <string name="overview_treatment_label">Θεραπεία</string>
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="apsmode_title">Λειτουργία APS</string>
@@ -83,7 +70,6 @@
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
     <string name="openloop_newsuggestion">Νέα πρόταση διαθέσιμη</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
@@ -108,7 +94,6 @@
     <string name="overview_editquickwizard_valid">Ισχύς:</string>
     <string name="overview_editquickwizardlistactivity_add">Προσθήκη</string>
     <string name="overview_quickwizard_item_edit_button">Διαμόρφωση</string>
-    <string name="mealbolus">Γεύμα</string>
     <string name="correctionbous">Διορθ</string>
     <string name="actions">Ενέργειες</string>
     <string name="pumpNotInitialized">Η αντλία δεν έχει ρυθμιστεί!</string>
@@ -132,7 +117,6 @@
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Εντοπισμός σφαλμάτων δέσμης ενεργειών</string>
     <string name="openapsama_useautosens">Χρήση του Autosens</string>
-    <string name="deletefuturetreatments">Διαγραφή συμβάντων στο μέλλον</string>
     <string name="actions_shortname">ΔΡΑΣΗ</string>
     <string name="configbuilder_shortname">Διαμόρφωση</string>
     <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
@@ -191,8 +175,6 @@
     <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
     <string name="resume">Επαναφορά</string>
     <string name="reconnect">Επανασύνδεση αντλίας</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Η εφαρμογή καταγραφής ξεκινά από το NS</string>
     <string name="restartingapp">Έξοδος από το application για την εφαρμογή των ρυθμίσεων</string>
     <string name="configbuilder_insulin_description">Ποιο τύπο ινσουλίνης χρησιμοποιείτε;</string>
@@ -361,7 +343,6 @@
     <string name="virtualpump_type">Τύπος εικονικής αντλίας</string>
     <string name="virtualpump_definition">Ορισμός Αντλίας</string>
     <string name="virtualpump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Ρυθμίσεις Γρήγορου Οδηγού</string>
     <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
     <string name="wear_display_settings">Ρυθμίσεις Εμφάνισης</string>
     <string name="wear_general_settings">Γενικές Ρυθμίσεις</string>
@@ -401,8 +382,6 @@
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <string name="nsmalfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
-    <string name="treatments_wizard_total_label">Σύνολο</string>
-    <string name="calculation_short">Υπολογ</string>
     <string name="sendlogfiles">Στείλτε τα αρχεία καταγραφής της ημέρας στους προγραμματιστές μαζί με αυτή τη φορά. Απροσδόκητη κατάσταση.</string>
     <string name="loop_openmode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
@@ -430,10 +409,6 @@
     <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
     <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
     <string name="increasingmaxbasal">Αυξείστε την μέγιστη βασική τιμή, επειδή η ρύθμιση είναι χαμηλότερη από τη μέγιστη βασική στο προφίλ σας</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <!-- WEAR OS-->
     <!-- Aidex Cgms -->
 </resources>

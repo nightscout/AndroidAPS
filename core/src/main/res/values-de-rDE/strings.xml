@@ -264,16 +264,6 @@
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Dateiformat</string>
-    <string name="metadata_label_created_at">Erstellt am</string>
-    <string name="metadata_label_aaps_version">AAPS-Version</string>
-    <string name="metadata_label_aaps_flavour">Build-Variante</string>
-    <string name="metadata_label_device_name">Patientenname des exportierenden Geräts</string>
-    <string name="metadata_label_device_model">Modell des exportierenden Geräts</string>
-    <string name="metadata_label_encryption">Dateiverschlüsselung</string>
-    <string name="metadata_format_new">Neues verschlüsseltes Format</string>
-    <string name="metadata_format_debug">Neues Debugformat (unverschlüsselt)</string>
-    <string name="metadata_format_other">Unbekanntes Export-Format</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">Vor %1$s Tagen exportiert</string>
     <string name="exported_at" comment="at placeholder we add export date">am %1$s exportiert</string>
     <string name="exported_less_than_hour_ago">vor weniger als einer Stunde exportiert</string>

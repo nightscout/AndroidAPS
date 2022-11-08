@@ -33,19 +33,7 @@
     <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
     <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
     <string name="description_treatments">Sla alle behandelingen op</string>
-    <string name="treatments_insulin_label_string">Insuline:</string>
-    <string name="treatments_carbs_label_string">Koolhydraten:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Totale IOB activiteit:</string>
-    <string name="tempbasals_realduration_label_string">Tijdsduur:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Correctie</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
     <string name="openapsma_run">Nu uitvoeren</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
     <string name="openapsma_lastrun_label">Laatste berekening</string>
@@ -65,7 +53,9 @@
     <string name="treatments">Behandelingen</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="configbuilder_pump">Pomp</string>
+    <string name="configbuilder_pump_description">Welke pomp wilt u gebruiken met AAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
+    <string name="configbuilder_profile_description">Welk profiel moet AAPS gebruiken?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Welk APS algoritme moet therapie aanpassingen maken?</string>
     <string name="configbuilder_general">Algemeen</string>
@@ -73,6 +63,7 @@
     <string name="configbuilder_constraints_description">Welke beperkingen worden toegepast?</string>
     <string name="constraints">Beperkingen</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Gebruik dit om AAPS loop integratie te activeren.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
     <string name="loop_tbrsetbypump_label">Tijdelijk basaal gezet door pomp</string>
@@ -81,9 +72,9 @@
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="setbasalquestion">Accepteer nieuw tijdelijk basaal:</string>
-    <string name="overview_treatment_label">Bolus</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
+    <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="closedloop">Closed loop</string>
@@ -92,7 +83,6 @@
     <string name="openloop_newsuggestion">Nieuw voorstel beschikbaar</string>
     <string name="carbssuggestion">Koolhydraten Voorstel</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="carb_time_label">KH tijdsduur</string>
     <string name="profile_label">Profiel</string>
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
@@ -139,7 +129,6 @@
     <string name="overview_editquickwizard_valid">Beschikbaarheid:</string>
     <string name="overview_editquickwizardlistactivity_add">Voeg toe</string>
     <string name="overview_quickwizard_item_edit_button">Wijzig</string>
-    <string name="mealbolus">Maaltijd bolus</string>
     <string name="correctionbous">Correctie</string>
     <string name="actions">Acties</string>
     <string name="ns_upload_only">(GEVAARLIJK OM UIT TE SCHAKELEN) alleen NS upload</string>
@@ -168,8 +157,6 @@
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Gebruik Autosens functie</string>
-    <string name="refresheventsfromnightscout">Vernieuwen vanaf NS</string>
-    <string name="deletefuturetreatments">Verwijder behandelingen in de toekomst</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -243,9 +230,6 @@
     <string name="duration10h">10 uur</string>
     <string name="resume">Hervatten</string>
     <string name="reconnect">Opnieuw verbinden met pomp</string>
-    <string name="bg_trend_label">15min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start naar NS</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
@@ -307,6 +291,7 @@
     <string name="sensitivityweightedaverage">Gemiddelde gevoeligheid</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="ns_localbroadcasts">Schakel lokaal data delen met andere apps (zoals xDrip+) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
@@ -469,7 +454,6 @@
     <string name="virtualpump_type">Virtuele pomp Type</string>
     <string name="virtualpump_definition">Pomp definitie</string>
     <string name="virtualpump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Wizard instellingen</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_display_settings">Scherm instellingen</string>
     <string name="wear_general_settings">Algemene instellingen</string>
@@ -477,6 +461,7 @@
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
     <string name="readstatus">Lees status</string>
     <string name="exitwizard">De installatiewizard overslaan</string>
+    <string name="setupwizard_loop_description">Druk op de knop hieronder om AAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="nsclientinfotext">NSClient zorgt voor verbinding met Nightscout. Je kunt dit deel nu overslaan, maar pas de Doelen afronden als je het hebt ingesteld.</string>
@@ -493,6 +478,8 @@
     <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Ontvang waardes van Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ontvang waarden van de Intelligo app</string>
     <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
     <string name="high_temptarget_raises_sensitivity_title">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhogen van de gevoeligheid voor temptargets > = 100]]></string>
@@ -502,11 +489,10 @@
     <string name="resistance_lowers_target_summary">Wanneer insulineresistentie wordt gedetecteerd, wordt het BG streefdoel verlaagd</string>
     <string name="sensitivity_raises_target_title">Gevoeligheid verhoogt het doel</string>
     <string name="sensitivity_raises_target_summary">Wanneer insulinegevoeligheid wordt gedetecteerd, wordt het BG streefdoel verhoogd</string>
-    <string name="show_invalidated">Toon ongeldig</string>
-    <string name="hide_invalidated">Verberg ongeldig</string>
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
     <string name="storedsettingsfound">Opgeslagen instellingen gevonden</string>
+    <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
     <string name="maintenance_email">E-mail</string>
@@ -525,13 +511,12 @@
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
-    <string name="treatments_wizard_total_label">Totaal</string>
-    <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>
     <string name="loop_openmode_min_change">Minimale verzoek voor aanpassing [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="dexcom_lognssensorchange_title">Noteer sensor wissel in NS</string>
+    <string name="dexcom_lognssensorchange_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
@@ -559,17 +544,12 @@
     <string name="partialboluswizard">Voer dit deel van het bolus wizard resultaat uit [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="increasingmaxbasal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg KH-ratio: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg KH-ratio: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Geselecteerd:</string>
     <string name="unitsnosemicolon">Eenheden</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
     <string name="objectives_button_unstart">Start wissen</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
-    <string name="copytolocalprofile">Nieuw profiel van dit profiel maken?</string>
     <string name="low_mark_comment">Laagste waarde in bereik (alleen weergave)</string>
     <string name="high_mark_comment">Hoogste waarde in bereik (alleen weergave)</string>
     <string name="invalidpct">Ongeldig % invoer</string>
@@ -619,12 +599,12 @@
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
     <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="enablebolusreminder">Bolus herinnering inschakelen</string>
+    <string name="enablebolusreminder_summary">Gebruik herinnering om later te bolussen met de wizard (\"post-bolus\")</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
     <string name="chart_menu">Grafiek menu</string>
     <string name="clear_filter">Verwijder filter</string>
     <string name="cannula">Canule</string>
-    <string name="userentry">Gebruikersinvoer</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
     <string name="summary_email_for_crash_report">Deze identificatie wordt gekoppeld aan crashrapporten, zodat we contact met je kunnen opnemen in urgente gevallen. Het is optioneel.</string>
     <string name="email_address">E-mailadres</string>
@@ -632,7 +612,6 @@
     <string name="privacy_summary">U kunt optioneel een e-mailadres opgeven als u op de hoogte wilt worden gebracht van applicatie crashes. Dit is geen geautomatiseerde service. De ontwikkelaars zullen contact met u opnemen bij gevaarlijke situaties.</string>
     <string name="full_sync">Volledige synchronisatie</string>
     <string name="full_sync_comment">Volledige synchronisatie? Dit kan een aantal uren duren. Je ziet dan geen nieuwe gegevens in Nightscout.</string>
-    <string name="prime">Vullen</string>
     <string name="ns_sync_options">Synchronisatie</string>
     <string name="ns_upload_summary">Profielen, bolussen, koolhydraten, tijdelijke basaal standen worden geupload naar NS</string>
     <string name="ns_upload">Upload data naar NS</string>
@@ -706,22 +685,9 @@
     <string name="wear_unknown_action_string">Onbekend actie commando:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Applicatie standaardwaarden</string>
-    <string name="show_invalidated_records">Toon ongeldig gemarkeerde / verwijderde records</string>
-    <string name="hide_invalidated_records">Verberg ongeldig gemarkeerde / verwijderde records</string>
-    <string name="refresh_from_nightscout">Vernieuw vanaf Nightscout</string>
     <string name="remove_selected_items">Geselecteerde items verwijderen</string>
-    <string name="select_for_removal">Selecteer om te verwijderen</string>
-    <string name="profile_changes">Profiel wijzigingen</string>
-    <string name="tempt_targets">Tijdelijke streefdoelen</string>
-    <string name="carbs_and_bolus">Koolhydraten en bolus</string>
-    <string name="confirm_remove_multiple_items">Weet je zeker dat je %1$d items wilt verwijderen</string>
-    <string name="no_records_available">Geen records beschikbaar</string>
-    <string name="hide_loop">Verberg loop</string>
-    <string name="show_loop">Toon loop</string>
     <string name="count_selected">%1$d geselecteerd</string>
     <string name="sort_label">Sorteren</string>
-    <string name="show_loop_records">Toon loop records</string>
-    <string name="show_hide_records">Verberg loop records</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="profile1">Profiel 1</string>
@@ -737,10 +703,16 @@
     <string name="a11y_only_on_watch">alleen op smartwatch</string>
     <string name="a11y_only_on_phone">alleen op telefoon</string>
     <string name="a11y_drag_and_drop_handle">sleepmodus</string>
+    <string name="search">Zoeken</string>
     <!-- Aidex Cgms -->
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Ontvang BG waarden van GlucoRx Aidex CGMS.</string>
     <string name="blocked_by_charging">Geblokkeerd door oplaad instellingen</string>
     <string name="blocked_by_connectivity">Geblokkeerd door verbindings instellingen</string>
+    <string name="no_watch_connected">(Geen horloge verbonden)</string>
+    <string name="dynisf_adjust_sensitivity">Wijzig gevoeligheid en BG</string>
+    <string name="database_cleanup">Database opschonen</string>
+    <string name="cleanup_db_confirm">Wilt u de database opschonen?\nHet zal bijgehouden wijzigingen en historische gegevens ouder dan 3 maanden verwijderen.</string>
+    <string name="cleared_entries">Invoergegevens gewist</string>
 </resources>

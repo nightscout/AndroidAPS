@@ -33,19 +33,6 @@
     <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
     <string name="description_source_xdrip">Modtag BG-værdier fra xDrip+.</string>
     <string name="description_treatments">Gemmer alle behandlinger, der er foretaget</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
-    <string name="treatments_carbs_label_string">Kulhydrater:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Total IOB aktivitet:</string>
-    <string name="tempbasals_realduration_label_string">Tid:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_tt_label">Midlertidig Mål</string>
-    <string name="treatments_wizard_correction_label">Korrektion</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Kør nu</string>
     <string name="vitualpump_label">VIRTUEL PUMPE</string>
     <string name="openapsma_lastrun_label">Sidst kørt</string>
@@ -81,7 +68,6 @@
     <string name="openapsma_disabled">Plugin deaktiveret</string>
     <string name="constraints_violation">Begrænsninger overtrådt</string>
     <string name="setbasalquestion">Acceptér ny midlertidig basal:</string>
-    <string name="overview_treatment_label">Behandling</string>
     <string name="changeyourinput">Skift dit input!</string>
     <string name="configbuilder_bgsource">BG kilde</string>
     <string name="xdrip">xDrip+</string>
@@ -92,7 +78,6 @@
     <string name="openloop_newsuggestion">Nyt forslag tilgængeligt</string>
     <string name="carbssuggestion">Kulhydrat Forslag</string>
     <string name="unsupportednsversion">Ikke understøttet version af Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="carb_time_label">Kulhydrat tid</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Midlertidig basal </string>
@@ -139,7 +124,6 @@
     <string name="overview_editquickwizard_valid">Gyldig:</string>
     <string name="overview_editquickwizardlistactivity_add">Tilføj</string>
     <string name="overview_quickwizard_item_edit_button">Rediger</string>
-    <string name="mealbolus">Måltid</string>
     <string name="correctionbous">Korrektion</string>
     <string name="actions">Handlinger</string>
     <string name="ns_upload_only">(FARLIG AT DEAKTIVERE) Kun NS upload</string>
@@ -168,8 +152,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script fejlfinding</string>
     <string name="openapsama_useautosens">Brug Autosens funktion</string>
-    <string name="refresheventsfromnightscout">Opdater fra NS</string>
-    <string name="deletefuturetreatments">Fjern behandlinger i fremtiden</string>
     <string name="actions_shortname">AKT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -243,9 +225,6 @@
     <string name="duration10h">10 timer</string>
     <string name="resume">Genoptag</string>
     <string name="reconnect">Genforbind Pumpe</string>
-    <string name="bg_trend_label">15 min tendens</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app-start til NS</string>
     <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruger du?</string>
@@ -469,7 +448,6 @@
     <string name="virtualpump_type">Virtuel pumpe type</string>
     <string name="virtualpump_definition">Pumpe Definition</string>
     <string name="virtualpump_pump_def">Bolus: Trin=%1$s\nForlænget Bolus: [Trin=%2$s, Varighed=%3$smin-%4$sh]\nBasal: Trin=%5$s\nTBR: %6$s (by %7$s), Varighed=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Guide indstillinger</string>
     <string name="wear_wizard_settings_summary">Beregninger inkluderet i guide resultatet:</string>
     <string name="wear_display_settings">Visningsindstillinger</string>
     <string name="wear_general_settings">Generelle indstillinger</string>
@@ -502,8 +480,6 @@
     <string name="resistance_lowers_target_summary">Når der påvises resistens, sænkes målglukosen</string>
     <string name="sensitivity_raises_target_title">Følsomhed hæver midlertidige mål</string>
     <string name="sensitivity_raises_target_summary">Når der påvises følsomhed, skal målglukosen hæves</string>
-    <string name="show_invalidated">Vis ugyldige</string>
-    <string name="hide_invalidated">Skjul ugyldige</string>
     <string name="remove_items">Fjern elementer</string>
     <string name="sort_items">Sortér elementer</string>
     <string name="storedsettingsfound">Gemte indstillinger fundet</string>
@@ -525,8 +501,6 @@
     <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <string name="nsmalfunction">NSClient funktionsfejl. Overvej NS og NSClient genstart.</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
-    <string name="treatments_wizard_total_label">I alt</string>
-    <string name="calculation_short">Beregn</string>
     <string name="sendlogfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
     <string name="loop_openmode_min_change">Minimal anmodningsændring [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
@@ -559,17 +533,12 @@
     <string name="partialboluswizard">Afgiv denne del af bolusguidens resultat [%]</string>
     <string name="deliverpartofboluswizard">Bolus guiden udfører beregning, men kun denne del af beregnet insulin leveres. Nyttig med SMB algoritme.</string>
     <string name="increasingmaxbasal">Stigende max basal værdi, fordi indstillingen er lavere end din max basal i profil</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheder</string>
     <string name="objectives_button_unfinish">Ryd færdigt</string>
     <string name="objectives_button_unstart">Ryd startet</string>
     <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
     <string name="setupwizard_units_prompt">Vælg enheder du vil vise værdier i</string>
-    <string name="copytolocalprofile">Opret ny profil fra denne profil?</string>
     <string name="low_mark_comment">Nedre værdi for målområde (kun visning)</string>
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
     <string name="invalidpct">Ugyldig angivelse af %</string>
@@ -624,7 +593,6 @@
     <string name="chart_menu">Diagrammenu</string>
     <string name="clear_filter">Nulstil filter</string>
     <string name="cannula">Kanyle</string>
-    <string name="userentry">Bruger indtastning</string>
     <string name="common_values">Brug værdien af den største mængde mad du plejer at indtage\n</string>
     <string name="summary_email_for_crash_report">Denne identifikation vil blive vedhæftet til nedbrudsrapporter, så vi kan kontakte dig i hastende tilfælde. Det er valgfrit.</string>
     <string name="email_address">E-mail adresse</string>
@@ -632,7 +600,6 @@
     <string name="privacy_summary">Du kan angive valgfri e-mail-adresse, hvis du ønsker at blive underrettet om app nedbrud. Dette er ikke en automatiseret tjeneste. Du vil blive kontaktet af udviklere i farlige situationer.</string>
     <string name="full_sync">Fuld synkronisering</string>
     <string name="full_sync_comment">Fuld synkronisering? Det kan tage mange timer, og indtil du er færdig, vil du ikke se nye data i NS.</string>
-    <string name="prime">Klargør</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, bolusser, kulhydrater, midlertidige basaler uploades til NS</string>
     <string name="ns_upload">Upload data til NS</string>
@@ -706,22 +673,9 @@
     <string name="wear_unknown_action_string">Ukendt kommando:</string>
     <string name="overview_editquickwizard_percentage">Procentdel</string>
     <string name="app_default">Program standard</string>
-    <string name="show_invalidated_records">Vis ugyldige / fjernede poster</string>
-    <string name="hide_invalidated_records">Skjul ugyldige / fjernede poster</string>
-    <string name="refresh_from_nightscout">Opdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
-    <string name="select_for_removal">Vælg for at fjerne</string>
-    <string name="profile_changes">Profil ændringer</string>
-    <string name="tempt_targets">Midlertidig mål </string>
-    <string name="carbs_and_bolus">Kulhydrater og bolus</string>
-    <string name="confirm_remove_multiple_items">Er du sikker på, at du vil fjerne %1$d elementer?</string>
-    <string name="no_records_available">Ingen poster tilgængelige</string>
-    <string name="hide_loop">Skjul loop</string>
-    <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sortér</string>
-    <string name="show_loop_records">Vis loop poster</string>
-    <string name="show_hide_records">Skjul loop poster</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graf skala</string>
     <string name="profile1">Profil 1</string>

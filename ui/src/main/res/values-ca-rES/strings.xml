@@ -13,4 +13,6 @@
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

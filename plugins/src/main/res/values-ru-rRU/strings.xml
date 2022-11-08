@@ -119,6 +119,7 @@
     <!-- xDrip status line -->
     <!-- Statusline -->
     <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
+    <string name="xdrip_status_detailed_iob_summary">Показать разбивку IOB на болюсный и базальный IOB на часах</string>
     <!-- Food-->
     <string name="filter">Фильтр</string>
     <string name="food">Еда</string>
@@ -155,7 +156,6 @@
     <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <string name="target_short">ЦЕЛЬ</string>
-    <string name="clone_label">Клонировать</string>
     <string name="basal_short">БАЗАЛ</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Используются пересчитанные данные</string>

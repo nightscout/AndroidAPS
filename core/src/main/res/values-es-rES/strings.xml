@@ -114,18 +114,41 @@
     <string name="addnew">Añadir nuevo</string>
     <string name="addnew_above">Añadir nuevo arriba</string>
     <string name="wrong_pump_data">Los datos proceden de una bomba diferente. Cambia el controlador de la bomba para resetear su estado.</string>
+    <string name="bg_label">BG</string>
+    <string name="calibration">Calibración</string>
     <string name="alarminxmin">Ejecutar alarma en %1$d min</string>
     <string name="treatmentdeliveryerror">El bolo reportó un error. Comprueba manualmente la cantidad real de insulina entregada</string>
+    <string name="bolus_reminder">Recordatorio de bolo</string>
+    <string name="duration_label">Duración</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Bomba parada</string>
     <string name="notconfigured">Sin configurar</string>
     <string name="loopsuspended">Lazo suspendido</string>
+    <string name="trend_arrow">Flecha de tendencia</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="required">req</string>
+    <string name="a11y_arrow_double_down">bajando rápido</string>
+    <string name="a11y_arrow_single_down">bajando</string>
+    <string name="a11y_arrow_forty_five_down">bajando despacio</string>
+    <string name="a11y_arrow_flat">estable</string>
+    <string name="a11y_arrow_forty_five_up">subiendo lentamente</string>
+    <string name="a11y_arrow_single_up">subiendo</string>
+    <string name="a11y_arrow_double_up">subiendo rápido</string>
+    <string name="a11y_arrow_none">ninguno</string>
+    <string name="a11y_arrow_unknown">desconocido</string>
+    <string name="a11y_high">alto</string>
+    <string name="a11y_inrange">en rango</string>
+    <string name="a11y_low">bajo</string>
+    <string name="average">Promedio</string>
+    <string name="tir">TIR</string>
+    <string name="tdd_total">Total TDD</string>
     <string name="none"><![CDATA[<ninguno>]]></string>
     <string name="remove_label">ELIMINAR</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
     <string name="reset">reestablecer</string>
-    <string name="profileswitch_ismissing">Falta Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en PerfilLocal.</string>
-    <string name="profile">Perfil</string>
+    <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
+    <string name="treatments_wizard_cob_label">COB</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando max basal rate a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -253,16 +276,6 @@
     <string name="format_hour_minute">%1$dhoras %2$dmin</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Formato del archivo</string>
-    <string name="metadata_label_created_at">Creado el</string>
-    <string name="metadata_label_aaps_version">Versión de AAPS</string>
-    <string name="metadata_label_aaps_flavour">Construir Variante</string>
-    <string name="metadata_label_device_name">Exportar el nombre del paciente del dispositivo</string>
-    <string name="metadata_label_device_model">Exportar modelo de dispositivo</string>
-    <string name="metadata_label_encryption">Encriptación de archivos</string>
-    <string name="metadata_format_new">Nuevo formato cifrado</string>
-    <string name="metadata_format_debug">Nuevo formato de depuración (sin cifrar)</string>
-    <string name="metadata_format_other">Formato de exportación desconocido</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado hace %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado en %1$s</string>
     <string name="exported_less_than_hour_ago">exportado hace menos de una hora</string>
@@ -503,6 +516,7 @@
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
     <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Faltan permisos de SMS</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

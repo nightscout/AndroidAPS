@@ -20,4 +20,6 @@
     <string name="age">Възраст</string>
     <string name="weight_label">Тегло</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

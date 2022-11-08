@@ -129,7 +129,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">OBJ</string>
-    <string name="clone_label">Duplicar</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Dades recalculades utilitzades</string>

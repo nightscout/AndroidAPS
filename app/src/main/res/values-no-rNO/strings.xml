@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
     <string name="description_treatments">Lagre data om alle behandlinger som er utført</string>
     <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
-    <string name="treatments_carbs_label_string">Karbo:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Total IOB aktivitet:</string>
-    <string name="tempbasals_realduration_label_string">Varighet:</string>
-    <string name="tempbasals_netratio_label_string">Ratio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Korr</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utfør nå</string>
     <string name="vitualpump_label">VIRTUELL PUMPE</string>
     <string name="openapsma_lastrun_label">Siste beregning</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="setbasalquestion">Aksepter ny temp basal:</string>
-    <string name="overview_treatment_label">Behandling</string>
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">Ny anbefaling tilgjengelig</string>
     <string name="carbssuggestion">Karbo forslag</string>
     <string name="unsupportednsversion">Versjonen av Nightscout støttes ikke</string>
-    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="carb_time_label">Karbo-tid</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Temp basal</string>
@@ -144,7 +129,6 @@
     <string name="overview_editquickwizard_valid">Gyldig:</string>
     <string name="overview_editquickwizardlistactivity_add">Legg til</string>
     <string name="overview_quickwizard_item_edit_button">Rediger</string>
-    <string name="mealbolus">Måltid</string>
     <string name="correctionbous">Korreksjon</string>
     <string name="actions">Handlinger</string>
     <string name="ns_upload_only">(FARLIG Å DEAKTIVERE) Kun NS opplasting</string>
@@ -173,8 +157,6 @@
     <string name="openapsma_autosensdata_label">Autosens-data</string>
     <string name="openapsma_scriptdebugdata_label">Script feilsøking</string>
     <string name="openapsama_useautosens">Bruk Autosens funksjon</string>
-    <string name="refresheventsfromnightscout">Gjenoppfrisk fra NS</string>
-    <string name="deletefuturetreatments">Slett fremtidige behandlinger</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -248,9 +230,6 @@
     <string name="duration10h">10 timer</string>
     <string name="resume">Gjenoppta</string>
     <string name="reconnect">Koble til pumpen</string>
-    <string name="bg_trend_label">15 min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Logg app-start til NS</string>
     <string name="restartingapp">Avslutter appen for å aktivere innstillinger.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruker du?</string>
@@ -475,7 +454,6 @@
     <string name="virtualpump_type">Virtuell pumpetype</string>
     <string name="virtualpump_definition">Pumpedefinisjon</string>
     <string name="virtualpump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Veiviser innstillinger</string>
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra veiviseren:</string>
     <string name="wear_display_settings">Visningsinnstillinger</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
@@ -511,9 +489,6 @@
     <string name="resistance_lowers_target_summary">Hvis resistens oppdages vil det redusere BS målverdi</string>
     <string name="sensitivity_raises_target_title">Sensitivitet øker BS målverdi</string>
     <string name="sensitivity_raises_target_summary">Når systemet oppdager økt insulinsensitivitet, vil BS målverdi økes</string>
-    <string name="careportal_removestartedevents">Fjern oppføringer startet av AAPS</string>
-    <string name="show_invalidated">Vis ugyldige oppføringer</string>
-    <string name="hide_invalidated">Skjul ugyldige oppføringer</string>
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
@@ -536,8 +511,6 @@
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="nsmalfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS modus</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Kalkyle</string>
     <string name="sendlogfiles">Send dagens loggfiler til utviklere og med dette tidspunktet. Uventet situasjon.</string>
     <string name="loop_openmode_min_change">Minste endrings forespørsel [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be om en endring hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
@@ -571,17 +544,12 @@
     <string name="partialboluswizard">Doser denne delen av bolus wizard resultat [%]</string>
     <string name="deliverpartofboluswizard">Bolus veiviser utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB algoritmen.</string>
     <string name="increasingmaxbasal">Øker maks basaldose fordi innstillingen er lavere enn din maks basal i profilen</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Valgt:</string>
     <string name="unitsnosemicolon">Enheter</string>
     <string name="objectives_button_unfinish">Sletting ferdig</string>
     <string name="objectives_button_unstart">Sletting startet</string>
     <string name="doyouwantresetstart">Ønsker du å omstarte læringsmålet? Du vil miste fullførte trinn.</string>
     <string name="setupwizard_units_prompt">Velg enheter som du vil vise verdier i</string>
-    <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
     <string name="low_mark_comment">Nedre verdi for målområdet (kun visning)</string>
     <string name="high_mark_comment">Øvre verdi for målområdet (kun visning)</string>
     <string name="invalidpct">Ugyldig % oppføring</string>
@@ -638,7 +606,6 @@
     <string name="chart_menu">Diagram meny</string>
     <string name="clear_filter">Nullstill filtre</string>
     <string name="cannula">Kanyle</string>
-    <string name="userentry">Bruker registrering</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
     <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="email_address">E-postadresse</string>
@@ -646,7 +613,6 @@
     <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="full_sync_comment">Full synkronisering? Dette kan ta mange timer og du ser ikke nye data i NS før dette er ferdig.</string>
-    <string name="prime">Prime</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
     <string name="ns_upload">Last opp data til NS</string>
@@ -720,22 +686,9 @@
     <string name="wear_unknown_action_string">Ukjent kommando:</string>
     <string name="overview_editquickwizard_percentage">Prosent</string>
     <string name="app_default">Standardverdi</string>
-    <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
-    <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
-    <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
-    <string name="select_for_removal">Velg hva som skal fjernes</string>
-    <string name="profile_changes">Profilendringer</string>
-    <string name="tempt_targets">Temp Target</string>
-    <string name="carbs_and_bolus">Karbohydrater og bolus</string>
-    <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
-    <string name="no_records_available">Ingen registreringer tilgjengelig</string>
-    <string name="hide_loop">Skjul loop</string>
-    <string name="show_loop">Vis loop</string>
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
-    <string name="show_loop_records">Vis loop registreringer</string>
-    <string name="show_hide_records">Skjul loop registreringer</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Diagram skala</string>
     <string name="profile1">Profil 1</string>

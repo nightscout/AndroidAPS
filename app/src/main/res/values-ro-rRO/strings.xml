@@ -31,19 +31,6 @@
     <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
     <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
     <string name="description_treatments">Salvează toate tratamentele făcute</string>
-    <string name="treatments_insulin_label_string">Insulină:</string>
-    <string name="treatments_carbs_label_string">Carbohidrați:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_iobactivitytotal_label_string">Activitate total IOB:</string>
-    <string name="tempbasals_realduration_label_string">Durată:</string>
-    <string name="tempbasals_netratio_label_string">Raport:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Corecție</string>
-    <string name="bolus_iob_label">IOB bolus</string>
     <string name="openapsma_run">Execută</string>
     <string name="vitualpump_label">POMPĂ VIRTUALĂ</string>
     <string name="openapsma_lastrun_label">Ultima execuție</string>
@@ -79,7 +66,6 @@
     <string name="openapsma_disabled">Modul inactiv</string>
     <string name="constraints_violation">Încălcare a unei limite</string>
     <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
-    <string name="overview_treatment_label">Tratament</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="xdrip">xDrip+</string>
@@ -90,7 +76,6 @@
     <string name="openloop_newsuggestion">O nouă sugestie este disponibilă</string>
     <string name="carbssuggestion">Sugestie carbohidrați</string>
     <string name="unsupportednsversion">Versiune incompatibilă de Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">IOB bazală</string>
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Bazală temporară</string>
@@ -137,7 +122,6 @@
     <string name="overview_editquickwizard_valid">Valabil:</string>
     <string name="overview_editquickwizardlistactivity_add">Adaugă</string>
     <string name="overview_quickwizard_item_edit_button">Editează</string>
-    <string name="mealbolus">Masă</string>
     <string name="correctionbous">Corecție</string>
     <string name="actions">Acțiuni</string>
     <string name="ns_upload_only">(E PERICULOS SĂ DEZACTIVEZI) Doar încărcare în NS</string>
@@ -165,8 +149,6 @@
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depanare script</string>
     <string name="openapsama_useautosens">Folosește opțiunea de autosensibilitate</string>
-    <string name="refresheventsfromnightscout">Actualizează din NS</string>
-    <string name="deletefuturetreatments">Ștergerea tratamentelor înregistrate în viitor</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BUCL</string>
@@ -239,9 +221,6 @@
     <string name="duration10h">10 ore</string>
     <string name="resume">Restabilește</string>
     <string name="reconnect">Reconectaţi pompa</string>
-    <string name="bg_trend_label">Tendință 15min</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Înregistrează pornirea aplicației în NS</string>
     <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
     <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
@@ -456,7 +435,6 @@
     <string name="virtualpump_type">Tipul pompei virtuale</string>
     <string name="virtualpump_definition">Definirea pompei</string>
     <string name="virtualpump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Asistent setări</string>
     <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
     <string name="wear_display_settings">Setări afișare</string>
     <string name="wear_general_settings">Setări generale</string>
@@ -506,8 +484,6 @@
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>
     <string name="loop_openmode_min_change">Cerere de schimbare minimală [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Bucla deschisă va afișa o nouă cerere de schimbare doar dacă nou valoare este mai mare cu %. Valoarea implicită este 20%</string>
@@ -540,17 +516,12 @@
     <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
     <string name="deliverpartofboluswizard">Wizard bolus face un calcul, dar numai o parte din insulina calculată este și livrată. Este mai eficient când se folosește cu algoritmul SMB.</string>
     <string name="increasingmaxbasal">Se mărește valoarea bazalei maxime deoarece setarea este mai joasă decât bazala maximă din profil</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Selectat:</string>
     <string name="unitsnosemicolon">Unități</string>
     <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>
     <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
     <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
     <string name="setupwizard_units_prompt">Selectați unitățile în care doriți să afișați valorile</string>
-    <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
     <string name="invalidpct">Intrare % invalidă</string>
@@ -604,7 +575,6 @@
     <string name="chart_menu">Meniu diagramă</string>
     <string name="clear_filter">Șterge filtru</string>
     <string name="cannula">Canula</string>
-    <string name="userentry">Înregistrare utilizator</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
     <string name="summary_email_for_crash_report">Această identificare va fi atașată rapoartelor de eroare pentru a vă putea contacta în cazuri urgente. Este opționala.</string>
     <string name="email_address">Adresă de e-mail</string>
@@ -612,7 +582,6 @@
     <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
     <string name="full_sync">Sincronizare completă</string>
     <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veţi vedea date noi în NS.</string>
-    <string name="prime">Amorsare</string>
     <string name="ns_sync_options">Sincronizare</string>
     <string name="ns_upload_summary">Profilurile, bolusurile, carbohidrații, bazalele temporare sunt încărcate în NS</string>
     <string name="ns_upload">Încarcă date în NS</string>
@@ -639,7 +608,6 @@
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
     <string name="not_available_full">Nu este disponibil</string>
     <!-- WEAR OS-->
-    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
     <string name="sort_label">Sortează</string>
     <string name="login">Autentificare</string>
     <!-- Aidex Cgms -->

@@ -130,7 +130,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">CEL</string>
-    <string name="clone_label">Sklonuj</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Użyto przeliczonych wartości</string>

@@ -275,16 +275,6 @@
     <string name="format_hour_minute">%1$dч %2$dмин</string>
     <string name="mute5min">Отключить уведомления на 5 минут</string>
     <!-- Maintenance -->
-    <string name="metadata_label_format">Формат файла</string>
-    <string name="metadata_label_created_at">Дата создания</string>
-    <string name="metadata_label_aaps_version">Версия AAPS</string>
-    <string name="metadata_label_aaps_flavour">Версия сборки</string>
-    <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
-    <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
-    <string name="metadata_label_encryption">Шифрование файла</string>
-    <string name="metadata_format_new">Новый зашифрованный формат</string>
-    <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
-    <string name="metadata_format_other">Неизвестный формат экспорта</string>
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
     <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
     <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>

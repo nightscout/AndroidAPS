@@ -31,19 +31,6 @@
     <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
     <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
     <string name="description_treatments">Desa tots els tractaments realitzats</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
-    <string name="treatments_carbs_label_string">Carbs:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_iobactivitytotal_label_string">Activitat total IOB:</string>
-    <string name="tempbasals_realduration_label_string">Durada:</string>
-    <string name="tempbasals_netratio_label_string">Ràtio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_wizard_tt_label">OT</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="bolus_iob_label">IOB Bolus</string>
     <string name="openapsma_run">Executar ara</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execució</string>
@@ -78,7 +65,6 @@
     <string name="openapsma_disabled">Plugin desactivat</string>
     <string name="constraints_violation">Violació de restriccions</string>
     <string name="setbasalquestion">Acceptar nova basal temporal:</string>
-    <string name="overview_treatment_label">Tractament</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
     <string name="configbuilder_bgsource">Origen glucèmia</string>
     <string name="xdrip">xDrip+</string>
@@ -89,7 +75,6 @@
     <string name="openloop_newsuggestion">Nova proposta disponible</string>
     <string name="carbssuggestion">Proposta de carbs</string>
     <string name="unsupportednsversion">Versió no compatible de Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bolus estès</string>
     <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
@@ -133,7 +118,6 @@
     <string name="overview_editquickwizard_valid">Vàlid:</string>
     <string name="overview_editquickwizardlistactivity_add">Afegir</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">Àpat</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Accions</string>
     <string name="ns_upload_only">(PERILLÓS DESACTIVAR) Només enviar a NS</string>
@@ -145,8 +129,6 @@
     <string name="openapsma_autosensdata_label">Dades autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
     <string name="openapsama_useautosens">Utilitzar funció Autosens</string>
-    <string name="refresheventsfromnightscout">Actualitzar des de NS</string>
-    <string name="deletefuturetreatments">Eliminar tractaments en el futur</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LLAÇ</string>
@@ -176,8 +158,6 @@
     <string name="duration10h">10 hores</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Reconnectar bomba</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Enregistrar l\'inici de l\'app a NS</string>
     <string name="restartingapp">Sortint de l\'app per aplicar configuració.</string>
     <string name="configbuilder_insulin_description">Quin tipus d\'insulina feu servir?</string>
