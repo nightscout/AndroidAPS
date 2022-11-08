@@ -34,9 +34,23 @@
     <!-- Objectives -->
     <!-- Overview -->
     <!-- NSClient -->
+    <string name="restart">Atosaigh</string>
+    <string name="deliver_now">Seachadadh anois</string>
+    <string name="status">Stádas:</string>
     <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
     <!-- VirtualPump -->
     <!-- Source -->
+    <string name="description_source_ns_client">Sonraí a íoslódáil ó Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Luachanna BG a fháil ó xDrip+.</string>
+    <string name="description_source_mm640g">Luachanna BG a fháil ón 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="openaps_short">OAPS</string>
     <!-- Objectives -->
 </resources>
