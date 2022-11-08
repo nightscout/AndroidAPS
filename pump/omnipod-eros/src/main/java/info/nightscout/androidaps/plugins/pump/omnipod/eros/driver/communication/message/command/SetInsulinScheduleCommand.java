@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
@@ -12,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.sc
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.DeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.TempBasalDeliverySchedule;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
 

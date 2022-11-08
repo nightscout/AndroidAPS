@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.common.utils;
+package info.nightscout.pump.core.utils;
 
 /**
  * Created by geoff on 5/27/16.

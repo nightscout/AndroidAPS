@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.common.utils;
+package info.nightscout.pump.core.utils;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

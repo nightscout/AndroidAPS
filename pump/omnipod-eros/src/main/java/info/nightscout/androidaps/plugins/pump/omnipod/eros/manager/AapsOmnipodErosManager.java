@@ -15,20 +15,14 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.interfaces.ActivityNames;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
@@ -75,14 +69,20 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.shared.utils.T;
+import info.nightscout.interfaces.ActivityNames;
+import info.nightscout.interfaces.data.PumpEnactResult;
+import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.Event;
+import info.nightscout.rx.events.EventOverviewBolusProgress;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.T;
 import io.reactivex.rxjava3.subjects.SingleSubject;
 
 @Singleton

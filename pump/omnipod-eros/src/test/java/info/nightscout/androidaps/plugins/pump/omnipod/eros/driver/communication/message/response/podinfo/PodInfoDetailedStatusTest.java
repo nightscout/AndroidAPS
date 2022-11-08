@@ -1,18 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
-import org.joda.time.Duration;
-import org.junit.Test;
-
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ErrorEventInfo;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import org.joda.time.Duration;
+import org.junit.Test;
+
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ErrorEventInfo;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 // From https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/PodInfoTests.swift
 public class PodInfoDetailedStatusTest {

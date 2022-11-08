@@ -1,5 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.joda.time.Duration;
 import org.junit.Test;
 
@@ -7,15 +12,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.RateEntry;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class BasalScheduleExtraCommandTest {
     @Test

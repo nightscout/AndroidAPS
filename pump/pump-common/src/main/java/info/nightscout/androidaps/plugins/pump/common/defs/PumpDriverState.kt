@@ -15,11 +15,9 @@ enum class PumpDriverState(var resourceId: Int) {
     Ready(R.string.pump_status_ready),
     Busy(R.string.pump_status_busy), //
     Suspended(R.string.pump_status_suspended), //
-    Sleeping(R.string.pump_status_sleeping),
     ExecutingCommand(R.string.pump_status_executing_command),
     Disconnecting(R.string.disconnecting),
-    Disconnected(R.string.disconnected),
-    ErrorCommunicatingWithPump(R.string.pump_status_error_comm);
+    Disconnected(R.string.disconnected);
 
     fun isConnected(): Boolean = this == Connected || this == Initialized || this == Busy || this == Suspended
     fun isInitialized(): Boolean = this == Initialized || this == Busy || this == Suspended

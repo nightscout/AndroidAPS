@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import java.util.Locale

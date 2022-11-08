@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Po
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.NotEnoughDataException;
+import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 

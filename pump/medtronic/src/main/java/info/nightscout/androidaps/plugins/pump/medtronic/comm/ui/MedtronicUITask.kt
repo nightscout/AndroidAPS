@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -12,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIRespons
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.defs.PumpDeviceState
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -155,10 +155,12 @@ class MedtronicUITask {
             postprocessor.postProcessData(this)
         }
         if (responseType === MedtronicUIResponseType.Invalid) {
-            rxBus.send(EventRileyLinkDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            rxBus.send(EventRileyLinkDeviceStatusChange(
+                PumpDeviceState.ErrorWhenCommunicating,
                 "Unsupported command in MedtronicUITask"))
         } else if (responseType === MedtronicUIResponseType.Error) {
-            rxBus.send(EventRileyLinkDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            rxBus.send(EventRileyLinkDeviceStatusChange(
+                PumpDeviceState.ErrorWhenCommunicating,
                 errorDescription))
         } else {
             rxBus.send(EventMedtronicPumpValuesChanged())

@@ -1,14 +1,11 @@
-package info.nightscout.androidaps.plugins.pump.common.utils;
+package info.nightscout.pump.core.utils;
 
 import org.joda.time.LocalDateTime;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import info.nightscout.shared.utils.DateUtil;
 
 /**
  * Created by geoff on 4/28/15.
@@ -16,7 +13,7 @@ import info.nightscout.shared.utils.DateUtil;
  */
 public class StringUtil {
 
-    public static DecimalFormat[] DecimalFormaters = {
+    public static DecimalFormat[] DecimalFormatters = {
             new DecimalFormat("#0"), new DecimalFormat("#0.0"), new DecimalFormat("#0.00"), new DecimalFormat("#0.000")};
 
 
@@ -44,7 +41,7 @@ public class StringUtil {
 
 
     public static String testJoin() {
-        ArrayList<String> ra = new ArrayList<String>();
+        ArrayList<String> ra = new ArrayList<>();
         ra.add("one");
         ra.add("two");
         ra.add("three");
@@ -69,8 +66,8 @@ public class StringUtil {
     }
 
 
-    public static String getFormatedValueUS(Number value, int decimals) {
-        return DecimalFormaters[decimals].format(value).replace(",", ".");
+    public static String getFormattedValueUS(Number value, int decimals) {
+        return DecimalFormatters[decimals].format(value).replace(",", ".");
     }
 
 
@@ -85,9 +82,8 @@ public class StringUtil {
     }
 
 
-    public static String toDateTimeString(DateUtil dateUtil, LocalDateTime localDateTime) {
-        return dateUtil.dateAndTimeAndSecondsString(localDateTime.toDateTime().getMillis());
-        //return localDateTime.toString("dd.MM.yyyy HH:mm:ss");
+    public static String toDateTimeString(LocalDateTime localDateTime) {
+        return localDateTime.toString("dd.MM.yyyy HH:mm:ss");
     }
 
 

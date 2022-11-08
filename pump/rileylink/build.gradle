@@ -20,5 +20,6 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':core')
     implementation project(':pump:pump-common')
+    implementation project(':pump:pump-core')
     implementation project(':interfaces')
 }

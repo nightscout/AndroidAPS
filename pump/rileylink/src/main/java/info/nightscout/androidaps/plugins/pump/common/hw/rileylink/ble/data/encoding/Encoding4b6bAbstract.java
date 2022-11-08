@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.logging.AAPSLogger;
 
 

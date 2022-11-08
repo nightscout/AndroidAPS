@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class VersionResponse extends MessageBlock {
     private static final int ASSIGN_ADDRESS_VERSION_RESPONSE_LENGTH = 0x15;

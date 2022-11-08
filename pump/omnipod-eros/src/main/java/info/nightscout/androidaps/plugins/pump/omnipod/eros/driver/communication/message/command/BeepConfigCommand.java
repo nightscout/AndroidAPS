@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class BeepConfigCommand extends MessageBlock {
     private final BeepConfigType beepType;

@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
+import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.core.utils.StringUtil
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes

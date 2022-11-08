@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Never contacted</string>
+    <string name="pump_status_sleeping">Sleeping</string>
+    <string name="pump_status_waking_up">Waking up</string>
+    <string name="pump_status_active">Active</string>
+    <string name="pump_status_error_comm">Error with communication</string>
+    <string name="pump_status_timeout_comm">Timeout on communication</string>
+    <string name="pump_status_pump_unreachable">Pump unreachable</string>
+    <string name="pump_status_invalid_config">Invalid configuration</string>
+
+</resources>

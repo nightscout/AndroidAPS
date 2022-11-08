@@ -1,9 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
 import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class AlertConfiguration {
     private final AlertType alertType;

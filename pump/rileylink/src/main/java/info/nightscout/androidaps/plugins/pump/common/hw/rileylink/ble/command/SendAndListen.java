@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class SendAndListen extends RileyLinkCommand {
 
