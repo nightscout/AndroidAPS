@@ -46,6 +46,7 @@
     <string name="configbuilder_aps_description">Qual é o algoritmo do APS que deve fazer ajustes na terapia?</string>
     <string name="configbuilder_general">Geral</string>
     <string name="configbuilder_general_description">Estes são alguns plugins gerais que pode achar úteis.</string>
+    <string name="configbuilder_sync">Sincronização</string>
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="constraints">Restrições</string>
     <string name="configbuilder_loop">Loop</string>
@@ -207,8 +208,11 @@
     <string name="careportal_pb_label">Bateria da Bomba</string>
     <string name="careportal_age_label">idade:</string>
     <string name="careportal_level_label">nível:</string>
+    <string name="ns_alarm_options">Opções Alarme</string>
     <string name="ns_alarms">Criar notificações dos alarmes NS</string>
     <string name="ns_announcements">Criar notificações a partir dos anúncios NS</string>
+    <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Quantidade de horas observadas para a deteção de sensibilidade (o tempo de absorção dos hidratos de carbono é excluído)</string>
     <string name="openaps">OpenAPS</string>
