@@ -11,7 +11,6 @@
     <string name="stop_pump">Pompayı durdur</string>
     <string name="started">Başlatıldı</string>
     <string name="stopped">Durduruldu</string>
-    <string name="paused">Duraklatıldı</string>
     <string name="operating_mode">Çalışma Modu</string>
     <string name="description_pump_insight_local">Accu-Chek Insight pompaları için pompa entegrasyonu</string>
     <string name="not_inserted">Takılmamış</string>
