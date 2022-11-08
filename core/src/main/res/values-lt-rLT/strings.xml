@@ -121,6 +121,17 @@
     <string name="reset">atstatyti</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
+    <string name="overview_treatment_label">Terapija</string>
+    <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
+    <string name="wear_wizard_settings">Išmaniojo laikrodžio nustatymai</string>
+    <string name="bg_trend_label">15 min tendencija</string>
+    <string name="treatments_wizard_cob_label">AAO</string>
+    <string name="bolus_iob_label">Bolusų AIO</string>
+    <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
+    <string name="paused">Pristabdyta</string>
+    <string name="invalid">KLAIDA</string>
+    <string name="login">Prisijungti</string>
+    <string name="upload_now">Įkelti dabar</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
     <string name="pumplimit">pompos limitas</string>
@@ -421,6 +432,9 @@
     <!-- Autotune -->
     <string name="needconnectpermission">Programai reikalinga Bluetooth prieigos teisė</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Naudoti sistemos perspėjimus aliarmams ir įspėjimams</string>
+    <string name="urgent_alarm">Kritiniai perspėjimai</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
