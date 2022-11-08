@@ -38,14 +38,12 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <!-- Treatments -->
     <string name="no_records_available">Geen records beschikbaar</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="invalid">Ongeldig</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Koolhydraten:</string>
     <string name="treatments_iobtotal_label_string">Totale IOB:</string>
