@@ -47,6 +47,7 @@
     <string name="configbuilder_aps_description">Vilken algoritm ska användas för behandlingar?</string>
     <string name="configbuilder_general">Generella inställningar</string>
     <string name="configbuilder_general_description">Dessa är några allmänna insticksprogram som kan vara användbara.</string>
+    <string name="configbuilder_sync">Synkronisering</string>
     <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
     <string name="constraints">Begränsningar</string>
     <string name="configbuilder_loop">Loop</string>
@@ -210,8 +211,11 @@
     <string name="careportal_pb_label">Pumpbatteri</string>
     <string name="careportal_age_label">ålder:</string>
     <string name="careportal_level_label">nivå:</string>
+    <string name="ns_alarm_options">Larminställningar</string>
     <string name="ns_alarms">Skapa aviseringar från NS-larm</string>
     <string name="ns_announcements">Skapa aviseringar från NS-meddelanden</string>
+    <string name="ns_alarm_stale_data_value_label">Första varning efter [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Akut varning efter [min]</string>
     <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
     <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (absorptionstid för KH är exkluderad)</string>
     <string name="openaps">OpenAPS</string>
