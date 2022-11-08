@@ -142,6 +142,19 @@
     <string name="reset">reset</string>
     <string name="profileswitch_ismissing">Nessun cambio profilo. Effettua un cambio profilo o premi \"Attiva profilo\" nella sezione Profilo locale.</string>
     <string name="profile">Profilo</string>
+    <string name="select_for_removal">Seleziona per la rimozione</string>
+    <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
+    <string name="overview_treatment_label">Trattamento</string>
+    <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
+    <string name="wear_wizard_settings">Impostazioni Calcolatore</string>
+    <string name="bg_trend_label">Trend di 15min</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB da bolo</string>
+    <string name="treatments_wizard_basaliob_label">IOB da basale</string>
+    <string name="paused">In pausa</string>
+    <string name="invalid">NON VALIDO</string>
+    <string name="login">Login</string>
+    <string name="upload_now">Carica adesso</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>
@@ -509,6 +522,9 @@
     <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
     <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
+    <string name="urgent_alarm">Allarme urgente</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
