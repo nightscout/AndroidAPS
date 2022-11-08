@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class PrepareBucketedDataWorker(
@@ -25,6 +26,7 @@ class PrepareBucketedDataWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -48,7 +50,7 @@ class PrepareBucketedDataWorker(
         val bucketedListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (inMemoryGlucoseValue in bucketedData) {
             if (inMemoryGlucoseValue.timestamp < data.overviewData.fromTime || inMemoryGlucoseValue.timestamp > data.overviewData.toTime) continue
-            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, rh))
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, rh, sp))
         }
         bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })

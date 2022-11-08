@@ -82,7 +82,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     private var hasBeenRun = false
 
     @Before fun prepareTests() {
-        val reading = GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
+        val reading = GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, smoothed = null, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue
+            .TrendArrow.FLAT)
         val bgList: MutableList<GlucoseValue> = ArrayList()
         bgList.add(reading)
 

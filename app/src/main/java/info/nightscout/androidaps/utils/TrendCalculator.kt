@@ -4,14 +4,17 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.GlucoseValue.TrendArrow.*
+import info.nightscout.androidaps.extensions.rawOrSmoothed
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TrendCalculator @Inject constructor(
     private val repository: AppRepository,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val sp: SP
 ) {
 
     fun getTrendArrow(glucoseValue: GlucoseValue?): GlucoseValue.TrendArrow =
@@ -47,7 +50,7 @@ class TrendCalculator @Inject constructor(
         // Avoid division by 0
         val slope =
             if (current.timestamp == previous.timestamp) 0.0
-            else (previous.value - current.value) / (previous.timestamp - current.timestamp)
+            else (previous.rawOrSmoothed(sp) - current.rawOrSmoothed(sp)) / (previous.timestamp - current.timestamp)
 
         val slopeByMinute = slope * 60000
 

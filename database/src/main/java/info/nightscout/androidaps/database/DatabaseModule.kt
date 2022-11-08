@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.database
 
 import android.content.Context
+import android.database.Cursor
+import android.database.sqlite.SQLiteException
 import androidx.room.Room
 import androidx.room.RoomDatabase.Callback
 import androidx.room.migration.Migration
@@ -27,6 +29,7 @@ open class DatabaseModule {
  //           .addMigrations(migration7to8)
  //           .addMigrations(migration11to12)
             .addMigrations(migration20to21)
+            .addMigrations(migration21to22)
             .addCallback(object : Callback() {
                 override fun onOpen(db: SupportSQLiteDatabase) {
                     super.onOpen(db)
@@ -66,6 +69,31 @@ open class DatabaseModule {
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_offlineEvents_timestamp` ON offlineEvents (`timestamp`)")
             // Custom indexes must be dropped on migration to pass room schema checking after upgrade
             dropCustomIndexes(database)
+        }
+    }
+
+    private val migration21to22 = object : Migration(21,22) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            addColumnIfNotExists(database,"glucoseValues", "smoothed", "REAL")
+            dropCustomIndexes(database)
+        }
+    }
+
+    private fun addColumnIfNotExists(db: SupportSQLiteDatabase, table: String, columnToCheck: String, columnTypeDefinition: String) {
+        if(!columnExistsInTable(db, table, columnToCheck)) {
+            db.execSQL("ALTER TABLE `$table` ADD COLUMN `$columnToCheck` $columnTypeDefinition")
+        }
+    }
+
+    private fun columnExistsInTable(db: SupportSQLiteDatabase?, table: String, columnToCheck: String?): Boolean {
+        var cursor: Cursor? = null
+        return try {
+            cursor = db?.query("SELECT * FROM $table LIMIT 0", null)
+            cursor?.getColumnIndex(columnToCheck) !== -1
+        } catch (Exp: SQLiteException) {
+            false
+        } finally {
+            cursor?.close()
         }
     }
 

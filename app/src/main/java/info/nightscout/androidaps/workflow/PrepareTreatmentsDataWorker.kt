@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.extensions.rawOrSmoothed
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class PrepareTreatmentsDataWorker(
@@ -37,6 +39,7 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var sp: SP
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -137,9 +140,9 @@ class PrepareTreatmentsDataWorker(
         overviewData.bgReadingsArray.let { bgReadingsArray ->
             for (reading in bgReadingsArray) {
                 if (reading.timestamp > date) continue
-                return Profile.fromMgdlToUnits(reading.value, profileFunction.getUnits())
+                return Profile.fromMgdlToUnits(reading.rawOrSmoothed(sp), profileFunction.getUnits())
             }
-            return if (bgReadingsArray.isNotEmpty()) Profile.fromMgdlToUnits(bgReadingsArray[0].value, profileFunction.getUnits())
+            return if (bgReadingsArray.isNotEmpty()) Profile.fromMgdlToUnits(bgReadingsArray[0].rawOrSmoothed(sp), profileFunction.getUnits())
             else Profile.fromMgdlToUnits(100.0, profileFunction.getUnits())
         }
     }

@@ -780,7 +780,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val lastBgDescription = overviewData.lastBgDescription
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
+            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units, sp)
                 ?: rh.gs(R.string.notavailable)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())

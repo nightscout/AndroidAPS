@@ -105,7 +105,7 @@ class Widget : AppWidgetProvider() {
 
     private fun updateBg(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        views.setTextViewText(R.id.bg, overviewData.lastBg?.valueToUnitsString(units) ?: rh.gs(R.string.notavailable))
+        views.setTextViewText(R.id.bg, overviewData.lastBg?.valueToUnitsString(units, sp) ?: rh.gs(R.string.notavailable))
         views.setTextColor(
             R.id.bg, when {
                 overviewData.isLow  -> rh.gc(R.color.widget_low)

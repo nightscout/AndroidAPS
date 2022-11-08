@@ -39,6 +39,7 @@ data class GlucoseValue(
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var raw: Double?,
     var value: Double,
+    var smoothed: Double?,
     var trendArrow: TrendArrow,
     var noise: Double?,
     var sourceSensor: SourceSensor

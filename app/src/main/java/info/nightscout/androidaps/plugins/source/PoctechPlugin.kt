@@ -72,6 +72,7 @@ class PoctechPlugin @Inject constructor(
                         timestamp = json.getLong("date"),
                         value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current") * Constants.MMOLL_TO_MGDL
                         else json.getDouble("current"),
+                        smoothed = null,
                         raw = json.getDouble("raw"),
                         noise = null,
                         trendArrow = GlucoseValue.TrendArrow.fromString(json.getString("direction")),

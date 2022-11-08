@@ -23,6 +23,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -34,6 +35,7 @@ class PersistentNotificationPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
+    private val sp: SP,
     private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
@@ -112,7 +114,7 @@ class PersistentNotificationPlugin @Inject constructor(
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
-                line1aa = lastBG.valueToUnitsString(units)
+                line1aa = lastBG.valueToUnitsString(units, sp)
                 line1 = line1aa
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
