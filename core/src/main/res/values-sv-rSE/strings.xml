@@ -138,6 +138,17 @@
     <string name="reset">Återställ</string>
     <string name="profileswitch_ismissing">Profilbyte saknas. Vänligen gör ett profilbyte eller tryck Aktivera profil under Lokal Profil.</string>
     <string name="profile">Profil</string>
+    <string name="overview_treatment_label">Behandling</string>
+    <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
+    <string name="wear_wizard_settings">Kalkylatorinställningar</string>
+    <string name="bg_trend_label">15 min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">IOB från basal</string>
+    <string name="paused">Pausad</string>
+    <string name="invalid">OGILTIG</string>
+    <string name="login">Logga in</string>
+    <string name="upload_now">Ladda upp nu</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
     <string name="pumplimit">pumpbegränsning</string>
@@ -440,6 +451,9 @@
     <!-- Autotune -->
     <string name="needconnectpermission">Applikationen behöver bluetooth-behörighet</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Systemaviseringar för larm &amp; info</string>
+    <string name="urgent_alarm">Akut larm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
