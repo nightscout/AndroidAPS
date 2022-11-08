@@ -11,7 +11,6 @@
     <string name="stop_pump">Zastavit pumpu</string>
     <string name="started">Spuštěno</string>
     <string name="stopped">Zastaveno</string>
-    <string name="paused">Pozastaveno</string>
     <string name="operating_mode">Provozní režim</string>
     <string name="description_pump_insight_local">Integrace pro pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Není vloženo</string>
