@@ -336,7 +336,6 @@
     <string name="overview_editquickwizard_usetemptarget">Calcul țintă temporară</string>
     <string name="loopenabled">Buclă activată</string>
     <string name="apsselected">APS selectat</string>
-    <string name="nsclienthaswritepermission">NSClient are drepturi de scriere</string>
     <string name="closedmodeenabled">Mod buclă închisă activat</string>
     <string name="maxiobset">IOB maxim configurat corect</string>
     <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
@@ -438,13 +437,11 @@
     <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
     <string name="wear_display_settings">Setări afișare</string>
     <string name="wear_general_settings">Setări generale</string>
-    <string name="enable_nsclient">Activează NSClient</string>
     <string name="welcometosetupwizard">Ați pornit asistentul pentru setări. Acesta vă va ajuta pentru configurarea setărilor\n</string>
     <string name="readstatus">Citire stare</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient se ocupă de conectarea la Nightscout. Puteți sări peste această parte, dar nu se vor îndeplini anumite obiective dacă faceți acest lucru.</string>
     <string name="diawarning">Reamintire: noile profiluri necesită o durată de acțiune a insulinei (DIA) de cel puțin 5 ore. DIA de 5-6 ore în profilurile noi sunt echivalente cu DIA 3 ore din profilele vechi.</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configuraţi RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuaţi setarea odată ce starea RieyLink este \"Connected\". Acest lucru ar putea dura un minut.\n</string>
