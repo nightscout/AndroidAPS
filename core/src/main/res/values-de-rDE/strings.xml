@@ -138,6 +138,19 @@
     <string name="reset">Zurücksetzen</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Zum Entfernen auswählen</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="overview_treatment_label">Bolus</string>
+    <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
+    <string name="wear_wizard_settings">Wizard-Einstellungen</string>
+    <string name="bg_trend_label">15 min Trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolus-IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
+    <string name="paused">Pausiert</string>
+    <string name="invalid">Ungültig</string>
+    <string name="login">Login</string>
+    <string name="upload_now">Jetzt hochladen</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -497,6 +510,9 @@
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
+    <string name="urgent_alarm">Wichtiger Alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
