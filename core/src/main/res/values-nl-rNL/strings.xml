@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Laatste verbinding</string>
     <string name="lastbolus_label">Laatste bolus</string>
     <string name="dailyunits">Dag totaal</string>
-    <string name="basebasalrate_label">Basis basale dosis</string>
     <string name="tempbasal_label">Tijdelijk basaal</string>
-    <string name="virtualpump_extendedbolus_label">Vertraagde bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Historiek</string>
     <string name="viewprofile">Profiel bekijken</string>
@@ -158,6 +156,10 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
+    <string name="paused">Gepauzeerd</string>
+    <string name="invalid">Ongeldig</string>
+    <string name="login">Aanmelden</string>
+    <string name="upload_now">Nu Uploaden</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -524,6 +526,10 @@
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
     <string name="needconnectpermission">Applicatie heeft bluetooth toestemming nodig</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
+    <string name="urgent_alarm">Dringend alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
     <plurals name="days">
