@@ -17,7 +17,6 @@
     <string name="key_low_mark" translatable="false">low_mark</string>
     <string name="key_high_mark" translatable="false">high_mark</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
-    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>
     <string name="key_pump_unreachable_threshold_minutes" translatable="false">pump_unreachable_threshold</string>
@@ -48,7 +47,7 @@
     <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
     <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
     <string name="key_danars_settings" translatable="false">danars_settings</string>
-    <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
+    <string name="key_ns_client_settings" translatable="false">nsclientinternal_settings</string>
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
     <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
     <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
@@ -154,9 +153,9 @@
     <string name="lastconnection_label">Last connection</string>
     <string name="lastbolus_label">Last bolus</string>
     <string name="dailyunits">Daily units</string>
-    <string name="basebasalrate_label">Base basal rate</string>
+    <string name="base_basal_rate_label">Base basal rate</string>
     <string name="tempbasal_label">Temp basal</string>
-    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
+    <string name="extended_bolus_label">Extended bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Pump history</string>
     <string name="viewprofile">View profile</string>
@@ -251,6 +250,11 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="format_percent" translatable="false">%1$d%%</string>
+    <string name="paused">Paused</string>
+    <string name="invalid">INVALID</string>
+    <string name="login">Login</string>
+    <string name="upload_now">Upload now</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -655,6 +659,12 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
     <string name="needconnectpermission">Application needs bluetooth permission</string>
+
+    <!-- Alerts -->
+    <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
+    <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
+    <string name="urgent_alarm">Urgent Alarm</string>
+    <string name="info">INFO</string>
 
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
