@@ -15,5 +15,24 @@
     <string name="submit">Trimiteți</string>
     <!-- CareDialog -->
     <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Total</string>
     <!-- Treatments -->
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulină:</string>
+    <string name="treatments_carbs_label_string">Carbohidrați:</string>
+    <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="tempbasals_realduration_label_string">Durată:</string>
+    <string name="tempbasals_netratio_label_string">Raport:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Corecție</string>
+    <string name="prime">Amorsare</string>
+    <string name="refresheventsfromnightscout">Actualizează din NS</string>
+    <string name="clone_label">Clonează</string>
 </resources>
