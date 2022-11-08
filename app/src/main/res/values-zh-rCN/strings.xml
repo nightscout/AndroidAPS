@@ -342,7 +342,6 @@
     <string name="overview_editquickwizard_usepercentage">百分比计算</string>
     <string name="loopenabled">闭环启用了</string>
     <string name="apsselected">APS已选择</string>
-    <string name="nsclienthaswritepermission">NSClient 具有写入权限</string>
     <string name="closedmodeenabled">闭环模式启用了</string>
     <string name="maxiobset">合理地设置最大 IOB</string>
     <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
@@ -444,13 +443,11 @@
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
     <string name="wear_display_settings">显示设置</string>
     <string name="wear_general_settings">常规设置</string>
-    <string name="enable_nsclient">启用 NSClient</string>
     <string name="welcometosetupwizard">欢迎使用设置向导。它将指导您完成设置过程 \n</string>
     <string name="readstatus">读取状态</string>
     <string name="exitwizard">跳过设置向导</string>
     <string name="setupwizard_sensitivity_description">灵敏度插件用于灵敏度检测和碳水化合物计算。有关详细信息, 请访问:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NS客户端可以处理与Nightscout的连接。您可以先跳过这一部分，但在设置NS参数前，你无法通过学习计划的目标。</string>
     <string name="diawarning">请记住：新的胰岛素分布需要DIA至少5小时。 对于新的配置文件，DIA 5-6小时相当于旧胰岛素配置文件中的DIA 3小时</string>
     <string name="setupwizard_aps_description">从可用算法中选择一个。 他们从最旧到最新排序。 较新的算法通常更强大，更冒险。 因此，如果你是新的闭环使用者，你可能会从AMA算法开始，而不是最新的。 不要忘记在使用之前阅读OpenAPS文档并对其进行配置。</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">在下面配置你的RileyLink 。选择RileLink后，一旦RileLink状态为“已连接”，就可以继续安装。这可能需要一分钟。\n</string>
