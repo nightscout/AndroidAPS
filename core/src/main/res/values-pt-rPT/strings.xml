@@ -52,9 +52,7 @@
     <string name="lastconnection_label">Última ligação</string>
     <string name="lastbolus_label">Último bólus</string>
     <string name="dailyunits">Unidades diárias</string>
-    <string name="basebasalrate_label">Taxa Basal do Perfil</string>
     <string name="tempbasal_label">Basal temp</string>
-    <string name="virtualpump_extendedbolus_label">Bólus Prolongado</string>
     <string name="reservoir_label">Reservatório</string>
     <string name="pumphistory">Histórico da Bomba</string>
     <string name="viewprofile">Ver perfil</string>
@@ -342,6 +340,7 @@
     <string name="basal">Basal</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicação precisa de permissão Bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
