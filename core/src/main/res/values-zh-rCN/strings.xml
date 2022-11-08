@@ -138,6 +138,19 @@
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
+    <string name="select_for_removal">选择要删除的</string>
+    <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
+    <string name="overview_treatment_label">治疗</string>
+    <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
+    <string name="wear_wizard_settings">向导设置</string>
+    <string name="bg_trend_label">15分钟 趋势</string>
+    <string name="treatments_wizard_cob_label">碳水</string>
+    <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
+    <string name="treatments_wizard_basaliob_label">基础 IOB</string>
+    <string name="paused">已暂停</string>
+    <string name="invalid">无效</string>
+    <string name="login">登录</string>
+    <string name="upload_now">现在上传</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
@@ -452,6 +465,9 @@
     <!-- Autotune -->
     <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
+    <string name="urgent_alarm">紧急报警</string>
+    <string name="info">信息</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
