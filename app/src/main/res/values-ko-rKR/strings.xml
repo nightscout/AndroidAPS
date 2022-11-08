@@ -333,7 +333,6 @@
     <string name="overview_editquickwizard_usetemptarget">임시목표 계산</string>
     <string name="loopenabled">Loop 활성화됨</string>
     <string name="apsselected">APS 선택됨</string>
-    <string name="nsclienthaswritepermission">NSClient가 쓰기권한이 있습니다</string>
     <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
     <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
     <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
@@ -433,12 +432,10 @@
     <string name="wear_wizard_settings_summary">마법사 결과에 사용 된 계산:</string>
     <string name="wear_display_settings">화면 설정</string>
     <string name="wear_general_settings">일반 설정</string>
-    <string name="enable_nsclient">NSClient 활성화하기</string>
     <string name="welcometosetupwizard">설정 마법사에 오신것을 환영합니다. 설정 마법사가 설정 과정을 안내하여 줄것입니다.</string>
     <string name="readstatus">상태 불러오기</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
-    <string name="nsclientinfotext">NSClient는 Nightscout와의 연결을 처리합니다. 이 부분을 건너뛸 수 있지만 설정하기 전엔 목적을 수행할 수 없습니다.</string>
     <string name="diawarning">새로운 인슐린 프로파일은 최소 5시간의 DIA가 요구됩니다. 새로운 프로파일의 DIA 5-6시간은 구식 인슐린 프로파일의 DIA 3시간과 동일합니다.</string>
     <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하세요. 과거부터 최신의 순으로 정렬이 되어 있습니다. 일반적으로 새로운 알고리즘은 보다 강력하고 공격적입니다. 따라서 당신이 신규 사용자라면 최신의 알고리즘보단 AMA로 시작하는것이 나을 수 있습니다. 사용 전에 OpenAPS 문서를 읽어보고 설정하는 것을 잊지마세요.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">하단의 RileyLink를 설정하십시오. RileyLink를 선택한 뒤, RileyLink 상태가 \"연결됨\"이 되고 나면 설정을 계속 할 수 있습니다. 이 작업은 금방 진행됩니다.\n</string>
