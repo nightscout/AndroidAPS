@@ -7,7 +7,7 @@
     <string name="dia">DIA</string>
     <string name="lyumjev">Lyumjev</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <!-- Food-->
     <string name="filter">Szűrő</string>
     <!-- Theme switcher dark and light mode-->
@@ -29,4 +29,10 @@
     <!-- Objectives -->
     <string name="time_elapsed">Eltelt idő</string>
     <!-- Overview -->
+    <!-- NSClient -->
+    <!-- Tidepool -->
+    <!-- VirtualPump -->
+    <!-- Source -->
+    <!-- NSClient -->
+    <!-- Objectives -->
 </resources>
