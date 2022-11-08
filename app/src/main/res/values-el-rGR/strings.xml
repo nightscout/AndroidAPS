@@ -254,7 +254,6 @@
     <string name="overview_editquickwizard_usetemptarget">Υπολογισμός προσωρινού στόχου</string>
     <string name="loopenabled">Κύκλωμα ενεργοποιημένο</string>
     <string name="apsselected">Επιλέχθηκε APS</string>
-    <string name="nsclienthaswritepermission">Το NSClient έχει άδεια εγγραφής</string>
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
     <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
     <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
@@ -346,12 +345,10 @@
     <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
     <string name="wear_display_settings">Ρυθμίσεις Εμφάνισης</string>
     <string name="wear_general_settings">Γενικές Ρυθμίσεις</string>
-    <string name="enable_nsclient">Ενεργοποίηση NSClient</string>
     <string name="welcometosetupwizard">Καλώς ήρθατε στον οδηγό εγκατάστασης. Θα σας καθοδηγήσει μέσα από το πρόγραμμα εγκατάστασης\n</string>
     <string name="readstatus">Κατάσταση ανάγνωσης</string>
     <string name="exitwizard">Παράλειψη του \"Οδηγού εγκατάστασης\"</string>
     <string name="setupwizard_sensitivity_description">Η προσθήκη Ευαισθησία χρησιμοποιείται για την ανίχνευση αλλαγών στην ευαισθησία και τον υπολογισμό του COB. Για περισσότερες πληροφορίες εδώ:</string>
-    <string name="nsclientinfotext">Το NSClient χειρίζεται τη σύνδεση με το Nightscout. Μπορείτε να παραλείψετε αυτό τώρα αλλά δεν θα μπορείτε να ολοκληρώσετε τους Στόχους μέχρι να κάνετε τις ρυθμίσεις του.</string>
     <string name="diawarning">Προσοχή: Τα νέα προφίλ ινσουλίνης απαιτούν DIA τουλάχιστον 5 ωρών. Η DIA 5-6 ώρες στα νέα προφίλ είναι ισοδύναμα με DIA των 3 ωρών στα παλιά προφίλ ινσουλινών.</string>
     <string name="setupwizard_aps_description">Επιλέξτε έναν από τους διαθέσιμους αλγόριθμους. Ταξινομούνται από το παλαιότερο στον νεότερο. Ένας νεότερος είναι συνήθως καλύτερος και πιο επιθετικός. Επομένως, αν είστε καινούριος στο κλειστό κύκλωμα, θα πρέπει πρώτα να επιλέξετε μόνο το AMA και όχι το τελευταίο. Μην ξεχάσετε να διαβάσετε το εγχειρίδιο του OpenAPS και να κάνετε τις ρυθμίσεις προτού αρχίσετε να το χρησιμοποιείτε.</string>
     <string name="startobjective">Ξεκινήστε τον πρώτο στόχο</string>
