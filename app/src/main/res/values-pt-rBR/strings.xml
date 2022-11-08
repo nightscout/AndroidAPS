@@ -47,6 +47,7 @@
     <string name="configbuilder_aps_description">Qual é o algoritmo do APS que deve fazer ajustes na terapia?</string>
     <string name="configbuilder_general">Geral</string>
     <string name="configbuilder_general_description">Estes são alguns plugins gerais que pode achar úteis.</string>
+    <string name="configbuilder_sync">Sincronização</string>
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="constraints">Restrições</string>
     <string name="configbuilder_loop">Loop</string>
@@ -198,6 +199,9 @@
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Estendido</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
+    <string name="ns_alarm_options">Opções Alarme</string>
+    <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Quantidade de horas observadas para a deteção de sensibilidade (o tempo de absorção dos hidratos de carbono é excluído)</string>
     <string name="openaps">OpenAPS</string>
