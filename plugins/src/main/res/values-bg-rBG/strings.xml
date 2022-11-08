@@ -28,64 +28,10 @@
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">За да доставите болус от %1$.2fЕ отговорете с код %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">За да стартирате болус от %1$.2fЕ отговорете с код %2$s</string>
-    <string name="smscommunicator_temptargetwithcode">Зa zадаване на временна цел %1$s отговорете с код %2$s</string>
-    <string name="smscommunicator_temptargetcancel">За да спрете временната цел отговорете с код %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">За да изключите услугата за отдалечен SMS контрол отговорете с код %1$s.\n\nИмайте предвид, че можете да го активирате само от AAPS смартфона.</string>
-    <string name="smscommunicator_stoppedsms">Отдалечен SMS контрол е изключен. Можете да го включите от AndroidAPS телефона.</string>
-    <string name="smscommunicator_calibrationreplywithcode">За да изпратите калибрация %1$.2f отговорете с код %2$s</string>
-    <string name="smscommunicator_bolusfailed">Болус отказан</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Минимално време в минути, което трябва да е изминало след отдалечен болус, преди да може да бъде доставен следващият</string>
-    <string name="smscommunicator_remotebolusmindistance">Колко най-малко минути трябва да минат между доставката на два болуса</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">За вашата сигурност, променете тази настройка, трябва да добавите най-малко 2 телефонни номера.</string>
-    <string name="smscommunicator_bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
-    <string name="smscommunicator_mealbolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Временна цел от %1$s за %2$d минути</string>
     <string name="smscommunicator_tt_set">Временна цел от %1$s за %2$d минути стартирана успешно</string>
     <string name="smscommunicator_tt_canceled">Временна цел успешно спряна</string>
-    <string name="smscommunicator_remotecommandsallowed">Позволи отдалечени команди чрез SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">APS е деактивиран</string>
-    <string name="smscommunicator_loophasbeenenabled">APS е активиран</string>
-    <string name="smscommunicator_loopisenabled">APS е включен</string>
-    <string name="smscommunicator_pumpconnectwithcode">За свързване с помпа отговорете с код %1$s</string>
-    <string name="smscommunicator_pumpconnectfail">Връзката с помпата е неуспешна</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">За да спрете помпата за %1$d минути отговорете с код %2$s</string>
-    <string name="smscommunicator_pumpdisconnected">Помпата е разкачена</string>
     <string name="smscommunicator_reconnect">Връзката с помпа е възстановена</string>
-    <string name="smscommunicator_remotecommandnotallowed">Отдалеченото управление е забранено</string>
-    <string name="smscommunicator_remotebolusnotallowed">Отдалечено стартиране на болус не е възможно. Опитайте отново по-късно.</string>
-    <string name="smscommunicator_basalreplywithcode">За да стартирате базал от %1$.2fЕ/ч за %2$d мин отговорете с код %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">За да превключите профила към %1$s %2$d%% отговорете с код %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">За да започнете удължен болус %1$.2fЕ за %2$d мин отговорете с код %3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">За да въведете %1$dг в %2$s отговорете с код %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">За да стартирате базал от %1$d%%Е/ч за %2$d мин отговорете с код %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">За да спрете APS за %1$d минути отговорете с код %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">За възстановяване на кръга отговорете с код %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">За активирнае на кръга отговорете с код %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">За изключване на кръга отговорете с код %1$s</string>
-    <string name="smscommunicator_tempbasalset">Временен базал от %1$.2fЕ/ч за %2$d мин стартиран успешно</string>
-    <string name="smscommunicator_extendedset">Удължен болус %1$.2fU за %2$d мин стартиран успешно</string>
-    <string name="smscommunicator_carbsset">Въглехидрати %1$dг въведени</string>
-    <string name="smscommunicator_carbsfailed">Въвеждане на%1$dг въглехидрати - НЕУСПЕШНО</string>
-    <string name="smscommunicator_tempbasalset_percent">Временен базал от %1$d%%Е/ч за %2$d мин стартиран успешно</string>
-    <string name="smscommunicator_tempbasalfailed">Неуспешно стартиране на временен базал</string>
-    <string name="smscommunicator_extendedfailed">Неуспешно стартиране на удължен болус</string>
-    <string name="smscommunicator_basalstopreplywithcode">За да спрете времен базал отговорете с код %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">За да спрете удължения болус отговорете с код %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Временният базал е отменен</string>
-    <string name="smscommunicator_extendedcanceled">Удължен болус спрян</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Спирането на временния базал е неуспешно</string>
-    <string name="smscommunicator_extendedcancelfailed">Неуспешно спиране на удължен болус</string>
-    <string name="smscommunicator_unknowncommand">Непозната команда или грешен отговор</string>
     <string name="smscommunicator_another_bolus_in_queue">В момента се обработва друг болус. Моля опитай по-късни.</string>
-    <string name="smscommunicator_wrongduration">Грешна продължителност</string>
-    <string name="smscommunicator_loopsuspended">APS забранен</string>
-    <string name="smscommunicator_loopresumed">APS възобновен</string>
-    <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
-    <string name="smscommunicator_calibrationsent">Калибрацията е изпратена. Получаването трябва да бъде разрешено в xDrip +.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ не получава калибрации</string>
-    <string name="smscommunicator_messagebody">Невалиден текст на съобщение</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
-    <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
     <string name="wrong_format">Грешен формат</string>
     <string name="sms_actual_bg">КЗ:</string>
     <string name="sms_last_bg">Последна КЗ:</string>
@@ -113,16 +59,12 @@
     <string name="rapid_acting_oref">Бързодействащ по Oref</string>
     <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
     <!-- Food-->
     <string name="description_food">Показва въведените в Nightscout храни</string>
     <string name="filter">Филтър</string>
     <string name="food">Храна</string>
-    <string name="shortkilojoul">килодж.</string>
-    <string name="shortenergy">Ен</string>
-    <string name="shortprotein">Бел.</string>
-    <string name="shortfat">Маз.</string>
     <string name="category">Категория</string>
     <string name="subcategory">Подкатегория</string>
     <!-- Theme switcher dark and light mode-->
@@ -163,4 +105,10 @@
     <string name="not_completed_yet">Все още не сме неприключили</string>
     <string name="time_elapsed">Изминало време</string>
     <!-- Overview -->
+    <!-- NSClient -->
+    <!-- Tidepool -->
+    <!-- VirtualPump -->
+    <!-- Source -->
+    <!-- NSClient -->
+    <!-- Objectives -->
 </resources>
