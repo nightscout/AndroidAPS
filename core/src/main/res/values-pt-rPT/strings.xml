@@ -119,6 +119,17 @@
     <string name="reset">repor</string>
     <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
     <string name="profile">Perfil</string>
+    <string name="overview_treatment_label">Tratamento</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
+    <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
+    <string name="bg_trend_label">Tendência 15 min</string>
+    <string name="treatments_wizard_cob_label">HCA</string>
+    <string name="bolus_iob_label">Bólus - IA</string>
+    <string name="treatments_wizard_basaliob_label">Basal IA</string>
+    <string name="paused">Em pausa</string>
+    <string name="invalid">INVÁLIDO</string>
+    <string name="login">Login</string>
+    <string name="upload_now">Fazer o upload agora</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite bomba</string>
@@ -341,6 +352,9 @@
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicação precisa de permissão Bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
+    <string name="urgent_alarm">Alarme Urgente</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
