@@ -17,6 +17,7 @@
     <string name="description_config_builder">Brukes for innstilling av aktive plugins</string>
     <string name="description_objectives">Opplæringsprogram</string>
     <string name="description_loop">Aktiver eller deaktiver hendelsen som trigger loop.</string>
+    <string name="description_ns_client_v3">Synkroniserer dataene dine med Nightscout med v3 API</string>
     <string name="description_ns_client">Synkroniserer dine data med Nightscout</string>
     <string name="description_ama">Slik algoritmen var definert i 2017</string>
     <string name="description_smb">Siste utgave av algoritmen for avanserte brukere</string>
@@ -60,6 +61,8 @@
     <string name="configbuilder_aps_description">Hvilken algoritme skal APS benytte for behandlinger?</string>
     <string name="configbuilder_general">Generelt</string>
     <string name="configbuilder_general_description">Det er noen generelle plugins som kan være nyttige.</string>
+    <string name="configbuilder_sync">Synkronisering</string>
+    <string name="configbuilder_sync_description">Tillegg for dataopplasting og synkronisering.</string>
     <string name="configbuilder_constraints_description">Hvilke begrensninger brukes?</string>
     <string name="constraints">Begrensninger</string>
     <string name="configbuilder_loop">Loop</string>
@@ -182,6 +185,8 @@
     <string name="executing">Utfører</string>
     <string name="virtualpump_settings">Innstillinger for virtuell pumpe</string>
     <string name="virtualpump_uploadstatus_title">Last opp status til Nightscout</string>
+    <string name="nsclientv3">NSClientV3</string>
+    <string name="nsclientv3_shortname">NSV3</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
@@ -193,6 +198,9 @@
     <string name="nsclientinternal_secret_title">Nightscout API-nøkkel</string>
     <string name="nsclientinternal_secret_dialogtitle">Nightscout API-nøkkel</string>
     <string name="nsclientinternal_secret_dialogmessage">Oppgi NS API-nøkkel (min 12 tegn)</string>
+    <string name="nsclient_token_title">NS tilgangstoken</string>
+    <string name="nsclient_token_dialog_title">NS tilgangstoken</string>
+    <string name="nsclient_token_dialog_message">Tilgangstoken laget på NS admin-side (min 17 tegn)</string>
     <string name="deliver_now">Lever nå</string>
     <string name="clear_queue">Tøm kø</string>
     <string name="show_queue">Vis kø</string>
@@ -350,6 +358,7 @@
     <string name="overview_editquickwizard_usepercentage">Prosentvis beregning</string>
     <string name="loopenabled">Loop er aktivert</string>
     <string name="apsselected">APS valgt</string>
+    <string name="synchaswritepermission">Synkroniseringstjeneste har skriverettigheter</string>
     <string name="closedmodeenabled">Lukket loop aktivert</string>
     <string name="maxiobset">Maks IOB er angitt riktig</string>
     <string name="hasbgdata">BS tilgjengelig fra valgt kilde</string>
@@ -462,6 +471,7 @@
     <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basal endringer</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="syncinfotext">Synkronisere data til skyen. Du kan hoppe over dette nå, men du vil ikke bestå opplæringsmålene før det er satt opp.</string>
     <string name="diawarning">Husk: nye insulinprofiler krever en DIA på minst 5t. DIA 5-6t på ny profil er lik DIA 3t på gamle insulinprofiler.</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vennligst konfigurer din RileyLink under. Etter å ha valgt en RileyLink, vil det være mulig å fortsette konfigureringen når RileyLink statusen er \"Tilkoblet\". Dette kan ta et minutt.\n</string>
