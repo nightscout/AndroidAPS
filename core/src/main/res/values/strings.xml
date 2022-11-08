@@ -602,6 +602,7 @@
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
     <string name="needconnectpermission">Application needs bluetooth permission</string>
+    <string name="key_use_data_smoothing" translatable="false">use_data_smoothing</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

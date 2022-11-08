@@ -7,15 +7,18 @@ import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 
 class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,
     private val profileFunction: ProfileFunction,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val sp: SP
 ) : DataPointWithLabelInterface {
 
     fun valueToUnits(units: GlucoseUnit): Double =
-        if (units == GlucoseUnit.MGDL) data.value else data.value * Constants.MGDL_TO_MMOLL
+        if (units == GlucoseUnit.MGDL) data.rawOrSmoothed(sp)
+        else data.rawOrSmoothed(sp) * Constants.MGDL_TO_MMOLL
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = valueToUnits(profileFunction.getUnits())

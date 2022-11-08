@@ -14,6 +14,12 @@
             android:summary="@string/keep_screen_on_summary"
             android:title="@string/keep_screen_on_title" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_use_data_smoothing"
+            android:summary="@string/use_data_smoothing_summary"
+            android:title="@string/use_data_smoothing_title" />
+
         <androidx.preference.PreferenceScreen
             android:key="@string/overview_buttons_selection"
             android:title="@string/overview_buttons_selection">

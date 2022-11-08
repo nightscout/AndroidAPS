@@ -1252,5 +1252,10 @@
     <string name="no_watch_connected">(No Watch Connected)</string>
     <string name="error_asking_for_permissions">Error asking for permissions</string>
 
-
+    <!-- Tsunami Data Smoothing -->
+    <string name="key_use_data_smoothing" translatable="false">use_data_smoothing</string>
+    <string name="use_data_smoothing_summary" translatable="false">Smooth and display incoming sensor data in the main chart. Recommended if your glucose source does not smooth sensor readings by itself and you would like to enable SMB always.</string>
+    <string name="use_data_smoothing_title" translatable="false">Smooth incoming glucose values</string>
+    <string name="internal_smoothing_enabled">Smoothing of incoming sensor readings is enabled.</string>
+    <!-- Tsunami Data Smoothing end-->
 </resources>

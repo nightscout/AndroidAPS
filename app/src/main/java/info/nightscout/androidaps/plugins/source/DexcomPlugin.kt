@@ -143,8 +143,9 @@ class DexcomPlugin @Inject constructor(
                         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                             timestamp = timestamp,
                             value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
-                            noise = null,
                             raw = null,
+                            smoothed = null,
+                            noise = null,
                             trendArrow = GlucoseValue.TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
                             sourceSensor = sourceSensor
                         )

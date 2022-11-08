@@ -34,6 +34,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit
@@ -51,6 +52,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(36).msecs()
@@ -139,7 +141,7 @@ class BGSourceFragment : DaggerFragment() {
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(glucoseValue.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeString(glucoseValue.timestamp)
-            holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
+            holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits(), sp)
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             if (position > 0) {
                 val previous = glucoseValues[position - 1]
@@ -180,7 +182,7 @@ class BGSourceFragment : DaggerFragment() {
     private fun getConfirmationText(selectedItems: SparseArray<GlucoseValue>): String {
         if (selectedItems.size() == 1) {
             val glucoseValue = selectedItems.valueAt(0)
-            return dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
+            return dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits(), sp)
         }
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }

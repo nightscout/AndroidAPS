@@ -31,7 +31,7 @@ class BGDatum {
     constructor(json: JSONObject, dateUtil: DateUtil) {
         this.dateUtil = dateUtil
         try {
-            //if (json.has("_id")) id = json.getLong("_id")
+            if (json.has("_id")) id = json.getLong("_id")
             if (json.has("date")) date = json.getLong("date")
             if (json.has("sgv")) value = json.getDouble("sgv")
             if (json.has("direction")) direction = TrendArrow.fromString(json.getString("direction"))

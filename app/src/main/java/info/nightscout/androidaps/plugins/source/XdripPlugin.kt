@@ -83,6 +83,7 @@ class XdripPlugin @Inject constructor(
                 timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
                 value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
                 raw = bundle.getDouble(Intents.EXTRA_RAW, 0.0),
+                smoothed = null,
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
                 sourceSensor = GlucoseValue.SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
