@@ -51,6 +51,7 @@
     <string name="configbuilder_aps_description">¿Qué algoritmo APS quieres usar para ajustar tu tratamiento?</string>
     <string name="configbuilder_general">Ajustes generales</string>
     <string name="configbuilder_general_description">Algunos ajustes generales que pueden ser de utilidad</string>
+    <string name="configbuilder_sync">Sincronización</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
     <string name="constraints">Restricciones</string>
     <string name="configbuilder_loop">Lazo</string>
@@ -216,8 +217,11 @@
     <string name="careportal_pb_label">Batería de la bomba</string>
     <string name="careportal_age_label">Edad:</string>
     <string name="careportal_level_label">Nivel:</string>
+    <string name="ns_alarm_options">Opciones de alarmas</string>
     <string name="ns_alarms">Crear notificaciones de alarmas desde Nightscout</string>
     <string name="ns_announcements">Crear notificaciones desde Nightscout</string>
+    <string name="ns_alarm_stale_data_value_label">Datos antiguos limite [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Datos antiguos urgentes limite [min]</string>
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Número de horas para detectar la sensibilidad (tiempo de absorción de carbohidratos excluido)</string>
     <string name="openaps">OpenAPS</string>
