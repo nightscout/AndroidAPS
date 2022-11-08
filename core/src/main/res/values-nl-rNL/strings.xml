@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Laatste verbinding</string>
     <string name="lastbolus_label">Laatste bolus</string>
     <string name="dailyunits">Dag totaal</string>
-    <string name="basebasalrate_label">Basis basale dosis</string>
     <string name="tempbasal_label">Tijdelijk basaal</string>
-    <string name="virtualpump_extendedbolus_label">Vertraagde bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Historiek</string>
     <string name="viewprofile">Profiel bekijken</string>
@@ -524,6 +522,7 @@
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
     <string name="needconnectpermission">Applicatie heeft bluetooth toestemming nodig</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
     <plurals name="days">
