@@ -46,6 +46,7 @@
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general">General</string>
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
+    <string name="configbuilder_sync">Sincronizare</string>
     <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
     <string name="constraints">Constrângeri</string>
     <string name="configbuilder_loop">Buclă</string>
@@ -207,8 +208,11 @@
     <string name="careportal_pb_label">Baterie pompă</string>
     <string name="careportal_age_label">vârstă:</string>
     <string name="careportal_level_label">nivel:</string>
+    <string name="ns_alarm_options">Opțiuni alarmare</string>
     <string name="ns_alarms">Creare notificări din alarmele NS</string>
     <string name="ns_announcements">Creare notificări din anunţurile NS</string>
+    <string name="ns_alarm_stale_data_value_label">Prag vechime date [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Prag date mult prea vechi [min]</string>
     <string name="openapsama_autosens_period">Interval pentru autosens [o]</string>
     <string name="openapsama_autosens_period_summary">Numărul de ore din trecut pentru detectarea sensibilității (se exclude timpul de absorbție al carbo)</string>
     <string name="openaps">OpenAPS</string>
