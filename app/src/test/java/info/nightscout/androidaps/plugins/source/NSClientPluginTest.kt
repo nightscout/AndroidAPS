@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.Config
+import info.nightscout.plugins.source.NSClientSourcePlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert

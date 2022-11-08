@@ -320,7 +320,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/basebasalrate_label"
+                    android:text="@string/base_basal_rate_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlHardcoded,RtlSymmetry" />
@@ -416,7 +416,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/virtualpump_extendedbolus_label"
+                    android:text="@string/extended_bolus_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />

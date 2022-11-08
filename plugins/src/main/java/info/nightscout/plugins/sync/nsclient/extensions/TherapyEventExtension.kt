@@ -3,11 +3,12 @@ package info.nightscout.plugins.sync.nsclient.extensions
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
@@ -26,10 +27,13 @@ fun TherapyEvent.GlucoseUnit.toMainUnit(): GlucoseUnit =
     if (this == TherapyEvent.GlucoseUnit.MGDL) GlucoseUnit.MGDL
     else GlucoseUnit.MMOL
 
-/*
-        create fake object with nsID and isValid == false
- */
-
+fun therapyEventFromNsMbg(mbg: NSMbg) =
+    TherapyEvent(
+        type = TherapyEvent.Type.FINGER_STICK_BG_VALUE, //convert Mbg to finger stick because is coming from "entries" collection
+        timestamp = mbg.date,
+        glucose = mbg.mbg,
+        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+    )
 fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL) == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null

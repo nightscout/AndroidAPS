@@ -12,12 +12,12 @@ import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.interfaces.locale.LocaleHelper.update
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged
 import info.nightscout.rx.events.EventProfileSwitchChanged

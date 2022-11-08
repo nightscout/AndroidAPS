@@ -21,7 +21,6 @@ import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DeviationDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
@@ -30,11 +29,12 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.shared.utils.T
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -170,10 +170,10 @@ class OverviewData @Inject constructor(
     fun temporaryBasalDialogText(iobCobCalculator: IobCobCalculator): String =
         profileFunction.getProfile()?.let { profile ->
             iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
-                "${rh.gs(R.string.basebasalrate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
+                "${rh.gs(R.string.base_basal_rate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
                     "\n" + rh.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
             }
-                ?: "${rh.gs(R.string.basebasalrate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}"
+                ?: "${rh.gs(R.string.base_basal_rate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}"
         } ?: rh.gs(R.string.value_unavailable_short)
 
     @DrawableRes fun temporaryBasalIcon(iobCobCalculator: IobCobCalculator): Int =

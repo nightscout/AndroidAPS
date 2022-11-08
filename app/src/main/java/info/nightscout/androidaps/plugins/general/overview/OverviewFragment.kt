@@ -46,8 +46,6 @@ import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.shared.extensions.runOnUiThread
-import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -59,7 +57,6 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
@@ -68,19 +65,14 @@ import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizar
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewIobCob
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewSensitivity
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.androidaps.skins.SkinProvider
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
@@ -95,6 +87,10 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
+import info.nightscout.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
@@ -106,7 +102,11 @@ import info.nightscout.rx.events.EventTempBasalChange
 import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -505,7 +505,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             R.id.temp_target         -> v.performClick()
             R.id.active_profile      -> activity?.let { activity ->
-                if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pumpdisconnected))
+                if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected))
                 else
                     protectionCheck.queryProtection(
                         activity,

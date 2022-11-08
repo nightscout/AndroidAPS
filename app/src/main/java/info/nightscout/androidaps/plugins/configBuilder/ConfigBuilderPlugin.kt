@@ -16,7 +16,6 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
@@ -29,6 +28,7 @@ import info.nightscout.rx.events.EventConfigBuilderChange
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -138,7 +138,7 @@ class ConfigBuilderPlugin @Inject constructor(
 
     // Ask when switching to physical pump plugin
     fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
-        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(R.string.virtualpump))
+        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(R.string.virtual_pump))
             confirmPumpPluginActivation(changedPlugin, newState, activity, type)
         else if (changedPlugin.getType() == PluginType.PUMP) {
             performPluginSwitch(changedPlugin, newState, type)

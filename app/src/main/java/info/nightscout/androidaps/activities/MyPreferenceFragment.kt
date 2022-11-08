@@ -23,11 +23,9 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -41,7 +39,6 @@ import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -53,10 +50,6 @@ import info.nightscout.androidaps.plugins.source.GlunovoPlugin
 import info.nightscout.androidaps.plugins.source.IntelligoPlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.BIOMETRIC
@@ -64,13 +57,20 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionTyp
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.interfaces.Config
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.plugins.sync.nsclient.NSClientPlugin
+import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 

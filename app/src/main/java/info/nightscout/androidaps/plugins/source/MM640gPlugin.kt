@@ -11,15 +11,16 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.interfaces.PluginDescription
+import info.nightscout.interfaces.PluginType
+import info.nightscout.plugins.source.BGSourceFragment
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -36,7 +37,7 @@ class MM640gPlugin @Inject constructor(
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon(R.drawable.ic_generic_cgm)
-    .pluginName(R.string.MM640g)
+    .pluginName(R.string.mm640g)
     .description(R.string.description_source_mm640g),
     aapsLogger, rh, injector
 ), BgSource {

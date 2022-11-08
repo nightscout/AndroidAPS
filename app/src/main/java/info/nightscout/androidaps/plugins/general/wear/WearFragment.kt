@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.databinding.WearFragmentBinding
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientUpdateGUI
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

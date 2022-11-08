@@ -31,7 +31,6 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -41,14 +40,10 @@ import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.plugins.source.GlunovoPlugin
 import info.nightscout.androidaps.plugins.source.IntelligoPlugin
 import info.nightscout.androidaps.plugins.source.MM640gPlugin
-import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
-import info.nightscout.androidaps.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.androidaps.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin
@@ -65,6 +60,11 @@ import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.plugins.source.NSClientSourcePlugin
+import info.nightscout.plugins.sync.nsclient.NSClientPlugin
+import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")

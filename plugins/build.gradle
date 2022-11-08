@@ -22,4 +22,5 @@ dependencies {
     implementation project(':graphview')
     implementation project(':core')
     implementation project(':interfaces')
+    implementation project(':ns-sdk')
 }

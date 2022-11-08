@@ -6,7 +6,6 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective1
@@ -22,6 +21,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -91,8 +91,8 @@ class ObjectivesPlugin @Inject constructor(
             objective.startedOn = 0
             objective.accomplishedOn = 0
         }
-        sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, false)
-        sp.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, false)
+        sp.putBoolean(R.string.key_objectives_bg_is_available_in_ns, false)
+        sp.putBoolean(R.string.key_objectives_pump_status_is_available_in_ns, false)
         sp.putInt(R.string.key_ObjectivesmanualEnacts, 0)
         sp.putBoolean(R.string.key_objectiveuseprofileswitch, false)
         sp.putBoolean(R.string.key_objectiveusedisconnect, false)

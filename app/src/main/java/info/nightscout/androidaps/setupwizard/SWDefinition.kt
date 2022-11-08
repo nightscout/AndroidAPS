@@ -16,14 +16,12 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.androidaps.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.androidaps.setupwizard.elements.SWBreak
 import info.nightscout.androidaps.setupwizard.elements.SWButton
 import info.nightscout.androidaps.setupwizard.elements.SWEditEncryptedPassword
@@ -47,7 +45,9 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.PluginType
 import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton

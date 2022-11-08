@@ -8,7 +8,10 @@ import dagger.Module
         FoodModule::class,
         SMSCommunicatorModule::class,
         AutotuneModule::class,
-        ProfileModule::class
+        ProfileModule::class,
+        SyncModule::class,
+        SourceModule::class,
+        VirtualPumpModule::class
     ]
 )
 

@@ -25,7 +25,6 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
@@ -34,13 +33,13 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.PluginType
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import java.util.*
 
 /**
  * Created by mike on 18.03.2018.

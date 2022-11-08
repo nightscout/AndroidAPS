@@ -190,11 +190,11 @@ class FoodFragment : DaggerFragment() {
             holder.binding.name.text = food.name
             holder.binding.portion.text = food.portion.toString() + food.unit
             holder.binding.carbs.text = food.carbs.toString() + rh.gs(R.string.shortgramm)
-            holder.binding.fat.text = rh.gs(R.string.shortfat) + ": " + food.fat + rh.gs(R.string.shortgramm)
+            holder.binding.fat.text = rh.gs(R.string.short_fat) + ": " + food.fat + rh.gs(R.string.shortgramm)
             holder.binding.fat.visibility = food.fat.isNotZero().toVisibility()
-            holder.binding.protein.text = rh.gs(R.string.shortprotein) + ": " + food.protein + rh.gs(R.string.shortgramm)
+            holder.binding.protein.text = rh.gs(R.string.short_protein) + ": " + food.protein + rh.gs(R.string.shortgramm)
             holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
-            holder.binding.energy.text = rh.gs(R.string.shortenergy) + ": " + food.energy + rh.gs(R.string.shortkilojoul)
+            holder.binding.energy.text = rh.gs(R.string.short_energy) + ": " + food.energy + rh.gs(R.string.short_kilo_joul)
             holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
             holder.binding.icRemove.tag = food
             holder.binding.icCalculator.tag = food
