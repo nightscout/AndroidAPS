@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Ultima connessione</string>
     <string name="lastbolus_label">Ultimo bolo</string>
     <string name="dailyunits">Unità giornaliere</string>
-    <string name="basebasalrate_label">Velocità basale originale</string>
     <string name="tempbasal_label">Basale temporanea</string>
-    <string name="virtualpump_extendedbolus_label">Bolo Esteso</string>
     <string name="reservoir_label">Serbatoio</string>
     <string name="pumphistory">Storico micro</string>
     <string name="viewprofile">Visualizza profilo</string>
@@ -510,6 +508,7 @@
     <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
     <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
     <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
