@@ -53,9 +53,7 @@
     <string name="lastconnection_label">Ostatnie połączenie</string>
     <string name="lastbolus_label">Ostatni bolus</string>
     <string name="dailyunits">Jednostki dzienne</string>
-    <string name="basebasalrate_label">Podstawowa dawka bazowa</string>
     <string name="tempbasal_label">Baza tymczasowa</string>
-    <string name="virtualpump_extendedbolus_label">Bolus Przedłużony</string>
     <string name="reservoir_label">Zbiornik</string>
     <string name="pumphistory">Historia pompy</string>
     <string name="viewprofile">Zobacz profil</string>
@@ -424,6 +422,7 @@
     <string name="sort_label">Sortuj</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplikacja wymaga uprawnienia Bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
