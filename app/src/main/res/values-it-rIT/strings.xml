@@ -350,7 +350,6 @@
     <string name="overview_editquickwizard_usepercentage">Calcolo percentuale</string>
     <string name="loopenabled">Loop abilitato</string>
     <string name="apsselected">APS selezionato</string>
-    <string name="nsclienthaswritepermission">NSClient ha l\'autorizzazione di scrittura</string>
     <string name="closedmodeenabled">Modalità chiusa abilitata</string>
     <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
@@ -457,14 +456,12 @@
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_display_settings">Impostazioni di visualizzazione</string>
     <string name="wear_general_settings">Impostazioni generali</string>
-    <string name="enable_nsclient">Abilita NSClient</string>
     <string name="welcometosetupwizard">Benvenuto nella configurazione guidata. Ti seguirò durante tutto il processo.\n</string>
     <string name="readstatus">Lettura stato</string>
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AAPS di proporre/fare modifiche alla basale</string>
     <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient gestisce la connessione a Nightscout. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non ne porterai a termine la configurazione.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5-6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
