@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Última conexión</string>
     <string name="lastbolus_label">Último bolo</string>
     <string name="dailyunits">Unidades diarias</string>
-    <string name="basebasalrate_label">Dosis Basal</string>
     <string name="tempbasal_label">Basal temporal</string>
-    <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
     <string name="reservoir_label">Reservorio</string>
     <string name="pumphistory">Historial de la bomba</string>
     <string name="viewprofile">Ver perfil</string>
@@ -515,6 +513,7 @@
     <string name="autotune_run_with_error">Error durante la última ejecución de Autotune</string>
     <string name="autotune_run_cancelled">Se ha detectado otra ejecución de Autotune, ejecución cancelada</string>
     <string name="needconnectpermission">La aplicación necesita permiso de bluetooth</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Faltan permisos de SMS</string>
     <plurals name="days">
