@@ -11,7 +11,6 @@
     <string name="stop_pump">Pumpe stoppen</string>
     <string name="started">Gestartet</string>
     <string name="stopped">Gestoppt</string>
-    <string name="paused">Pausiert</string>
     <string name="operating_mode">Betriebsmodus</string>
     <string name="description_pump_insight_local">Pumpen-Integration für Accu-Chek Insight Pumpen</string>
     <string name="not_inserted">Nicht eingesetzt</string>
