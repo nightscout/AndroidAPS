@@ -21,5 +21,26 @@
     <string name="weight_label">Тегло</string>
     <!-- CareDialog -->
     <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
+    <string name="superbolus">Суперболус</string>
+    <string name="treatments_wizard_total_label">Общо</string>
     <!-- Treatments -->
+    <string name="calculation_short">Калк</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Инсулин:</string>
+    <string name="treatments_carbs_label_string">Вълехидрати:</string>
+    <string name="treatments_iobtotal_label_string">Общо IOB:</string>
+    <string name="tempbasals_realduration_label_string">Прод.:</string>
+    <string name="tempbasals_netratio_label_string">Съотношение:</string>
+    <string name="tempbasals_netinsulin_label_string">Инс:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
+    <string name="treatments_wizard_tt_label">Вр.цел</string>
+    <string name="treatments_wizard_correction_label">Корекция</string>
+    <string name="prime">Пълнене</string>
+    <string name="refresheventsfromnightscout">Презареди от NS</string>
+    <string name="show_invalidated">Покажи невалидните</string>
+    <string name="hide_invalidated">Скрий невалидните</string>
+    <string name="clone_label">Клонирай</string>
 </resources>
