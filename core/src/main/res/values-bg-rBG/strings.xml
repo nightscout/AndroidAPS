@@ -126,6 +126,17 @@
     <string name="reset">нулиране</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
+    <string name="overview_treatment_label">Болус</string>
+    <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
+    <string name="wear_wizard_settings">Настройки на съветник</string>
+    <string name="bg_trend_label">Δ за 15мин</string>
+    <string name="treatments_wizard_cob_label">СОВ</string>
+    <string name="bolus_iob_label">IOB от болуси</string>
+    <string name="treatments_wizard_basaliob_label">Базален IOB</string>
+    <string name="paused">Пауза</string>
+    <string name="invalid">НЕВАЛИДНО</string>
+    <string name="login">Вход</string>
+    <string name="upload_now">Качи сега</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -300,6 +311,9 @@
     <string name="autotune_compare_profile">Сравняване на профили</string>
     <string name="needconnectpermission">Апликацията изисква разрешение за bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
+    <string name="urgent_alarm">Спешна аларма</string>
+    <string name="info">ИНФО</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <plurals name="days">
