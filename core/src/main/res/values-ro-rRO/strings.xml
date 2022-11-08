@@ -121,6 +121,18 @@
     <string name="reset">resetare</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="overview_treatment_label">Tratament</string>
+    <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
+    <string name="wear_wizard_settings">Asistent setări</string>
+    <string name="bg_trend_label">Tendință 15min</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB bolus</string>
+    <string name="treatments_wizard_basaliob_label">IOB bazală</string>
+    <string name="paused">Suspendat</string>
+    <string name="invalid">INVALID</string>
+    <string name="login">Autentificare</string>
+    <string name="upload_now">Încarcă acum</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -423,6 +435,9 @@
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
+    <string name="urgent_alarm">Alarmă urgentă</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
