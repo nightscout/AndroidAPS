@@ -16,23 +16,15 @@
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
     <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
-    <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
     <string name="description_ama">Estat de l\'algoritme el 2017</string>
     <string name="description_smb">Algoritme més nou per usuaris avançats</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
-    <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
     <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
     <string name="description_sensitivity_oref1">Sensibilitat calculada amb dades de 8 o 24 hores en el passat (s\'agafa el cas més \"sensible\"). Els carbohidrats (els no absorbits), es desestimen un cop passat el temps indicat a la configuració. El plugin també calcula les UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensibilitat calculada com una mitja ponderada a partir de les desviacions. Les noves desviacions tenen un pes més gran. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració. Aquest algoritme és el més ràpid en seguir els canvis de sensibilitat.</string>
-    <string name="description_source_eversense">Rebre valors de glucèmia de l\'app Eversense \"parxejada\".</string>
-    <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
-    <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
-    <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
-    <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
     <string name="description_treatments">Desa tots els tractaments realitzats</string>
     <string name="openapsma_run">Executar ara</string>
-    <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execució</string>
     <string name="openapsma_inputparameters_label">Paràmetres d\'entrada</string>
     <string name="openapsma_glucosestatus_label">Estat glucèmia</string>
@@ -48,7 +40,6 @@
     <string name="configbuilder">Configurador</string>
     <string name="overview">Inici</string>
     <string name="treatments">Tractaments</string>
-    <string name="virtualpump">Bomba virtual</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_profile">Perfil</string>
     <string name="configbuilder_aps">APS</string>
@@ -67,14 +58,12 @@
     <string name="setbasalquestion">Acceptar nova basal temporal:</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
     <string name="configbuilder_bgsource">Origen glucèmia</string>
-    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="closedloop">Llaç tancat</string>
     <string name="openloop">Llaç obert</string>
     <string name="lowglucosesuspend">Suspensió per glucèmia baixa (LGS)</string>
     <string name="openloop_newsuggestion">Nova proposta disponible</string>
     <string name="carbssuggestion">Proposta de carbs</string>
-    <string name="unsupportednsversion">Versió no compatible de Nightscout</string>
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bolus estès</string>
     <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
@@ -121,7 +110,6 @@
     <string name="correctionbous">Corr</string>
     <string name="actions">Accions</string>
     <string name="ns_upload_only">(PERILLÓS DESACTIVAR) Només enviar a NS</string>
-    <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Avís en curs</string>
     <string name="old_data">DADES ANTIGUES</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -134,7 +122,6 @@
     <string name="loop_shortname">LLAÇ</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="overview_shortname">INICI</string>
-    <string name="virtualpump_shortname">BOMBAV</string>
     <string name="treatments_shortname">TRACT</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
@@ -150,33 +137,13 @@
     <string name="openapsama_min_5m_carbimpact_summary">Valor per defecte: 3 (AMA) o 8.0 (SMB). Aquest paràmetre indica el valor per defecte d\'absorció de carbohidrats en 5 minuts, quan diem 3 volem dir 3mg/dl/5min. Afecta a com de ràpid decauen els COB i quina absorció de carbohidrats es considera al calcular la predicció de glucèmia futura, quan la glucèmia cau més ràpid de l\'esperat o no puja tant com era de preveure.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenció!\nNormalment no cal modificar els valors d\'aquí sota. Si us plau FEU CLIC AQUÍ, LLEGIU el text i assegureu-vos de COMPRENDRE\'L abans de modificar-ne qualsevol.</string>
     <string name="executing">Executant</string>
-    <string name="virtualpump_settings">Configuració bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estat a NS</string>
-    <string name="nsclientinternal">NSClient</string>
-    <string name="nsclientinternal_shortname">NSCI</string>
-    <string name="nsclientinternal_url">URL:</string>
     <string name="duration10h">10 hores</string>
     <string name="resume">Reprendre</string>
     <string name="reconnect">Reconnectar bomba</string>
-    <string name="ns_logappstartedevent">Enregistrar l\'inici de l\'app a NS</string>
     <string name="restartingapp">Sortint de l\'app per aplicar configuració.</string>
     <string name="configbuilder_insulin_description">Quin tipus d\'insulina feu servir?</string>
     <string name="enablesuperbolus">Activar superbolus a l\'assistent</string>
     <string name="enablesuperbolus_summary">Activar funcionalitat superbolus a l\'assistent. No ho activeu fins que no hagueu après què fa realment. POT CAUSAR SOBREDOSI D\'INSULINA SI NO VIGILEU!</string>
-    <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
-    <string name="statuslights_cage_warning">Llindar per avís d\'edat de la cànula [h]</string>
-    <string name="statuslights_cage_critical">Llindar per avís crític de l\'edat de la cànula [h]</string>
-    <string name="statuslights_iage_critical">Llindar avís crític per edat de l\'insulina [h]</string>
-    <string name="statuslights_sage_warning">Llindar per avís d\'edat del sensor [h]</string>
-    <string name="statuslights_sage_critical">Llindar avís crític per edat del sensor [h]</string>
-    <string name="statuslights_sbat_warning">Llindar per avís del nivell de bateria del sensor [%]</string>
-    <string name="statuslights_sbat_critical">Llindar avís crític pel nivell de bateria del sensor [%]</string>
-    <string name="statuslights_bage_warning">Llindar per avís d\'edat de la pila [h]</string>
-    <string name="statuslights_bage_critical">Llindar avís crític per edat de la pila [h]</string>
-    <string name="statuslights_res_warning">Llindar per avís del nivell del reservori [U]</string>
-    <string name="statuslights_res_critical">Llindar avís crític pel nivell del reservori [U]</string>
-    <string name="statuslights_bat_warning">Llindar per avís del nivell de bateria de la bomba [%]</string>
-    <string name="statuslights_bat_critical">Llindar avís crític pel nivell de bateria de la bomba [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DESV</string>
@@ -190,6 +157,4 @@
     <string name="doprofileswitch">Canviar de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
     <!-- WEAR OS-->
-    <string name="login">Iniciar sessió</string>
-    <!-- Aidex Cgms -->
 </resources>
