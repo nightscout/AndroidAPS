@@ -341,7 +341,6 @@
     <string name="overview_editquickwizard_usepercentage">Процентно изчисление</string>
     <string name="loopenabled">APS разрешен</string>
     <string name="apsselected">Избран APS</string>
-    <string name="nsclienthaswritepermission">NSClient има права за запис</string>
     <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
     <string name="maxiobset">Максимален IOB е зададен правилно</string>
     <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
@@ -443,13 +442,11 @@
     <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
     <string name="wear_display_settings">Настройки за визуализация</string>
     <string name="wear_general_settings">Основни настройки</string>
-    <string name="enable_nsclient">Разреши NSClient</string>
     <string name="welcometosetupwizard">Добре дошли в съветника за настройки. Той ще ви преведе през етапите на настройка.</string>
     <string name="readstatus">Получавам състоянието на помпата</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
     <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="nsclientinfotext">NSClient поддържа връзка с Nightscout. Можете да пропуснете тази настройка сега, но вие няма можете да преминете целите, докато не го настроите.</string>
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
