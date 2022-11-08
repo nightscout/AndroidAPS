@@ -23,64 +23,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
     <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
-    <string name="smscommunicator_temptargetwithcode">Pentru a seta tinta temporara %1$s raspundeti cu: %2$s</string>
-    <string name="smscommunicator_temptargetcancel">Pentru a anula tinta temporara raspundeți cu: %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">Pentru a dezactiva serviciul SMS la distanta raspundeti cu: %1$s.\n\nRetineti ca o sa il puteti reactiva doar direct de pe smartphone-ul master AAPS.</string>
-    <string name="smscommunicator_stoppedsms">Serviciul SMS la distanta s-a oprit. Pentru a il reactiva, utilizati AAPS de pe smartphone-ul master.</string>
-    <string name="smscommunicator_calibrationreplywithcode">Pentru a trimite calibrarea cu %1$.2f răspundeți cu codul %2$s</string>
-    <string name="smscommunicator_bolusfailed">Bolusare eșuată</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Numarul minim de minute care trebuie sa treaca intre un bolus la distanta si urmatorul</string>
-    <string name="smscommunicator_remotebolusmindistance">Cate minute trebuie sa treaca, cel puţin, intre un bolus si următorul</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Pentru siguranta dumneavoastra, pentru a edita aceasta preferinta trebuie sa adaugati cel putin 2 numere de telefon.</string>
-    <string name="smscommunicator_bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolusul de masa de %1$.2fU a fost livrat cu succes</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Țintă %1$s pentru %2$d minute</string>
     <string name="smscommunicator_tt_set">Tinta %1$s pentru %2$d minute este setata cu succes</string>
     <string name="smscommunicator_tt_canceled">Tinta temporara anulata cu succes</string>
-    <string name="smscommunicator_remotecommandsallowed">Permite comenzi de la distanță, prin SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Bucla a fost dezactivată</string>
-    <string name="smscommunicator_loophasbeenenabled">Bucla a fost activată</string>
-    <string name="smscommunicator_loopisenabled">Bucla este activată</string>
-    <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
-    <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1$d minute, răspundeți cu: %2$s</string>
-    <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
     <string name="smscommunicator_reconnect">Pompă reconectată</string>
-    <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolus de la distanță nu este disponibil. Încearcă din nou mai târziu.</string>
-    <string name="smscommunicator_basalreplywithcode">Pentru a iniția bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">Pentru a schimba profilul în %1$s %2$d%% trimiteți codul %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Pentru a iniția bolusul extins de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">Pentru a introduce %1$dg la %2$s, raspundeti cu: %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Pentru a iniția bazala de %1$d%% pentru %2$d min trimiteți codul %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">Pentru a reactiva bucla inchisa, raspundeti cu %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">Pentru a activa bucla inchisa, raspundeti cu %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Pentru a dezactiva bucla inchisa, raspundeti cu %1$s</string>
-    <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
-    <string name="smscommunicator_extendedset">Bolusul extins de %1$.2fU pentru %2$d min a fost inițiat</string>
-    <string name="smscommunicator_carbsset">%1$dg carbohidrați introduși cu succes</string>
-    <string name="smscommunicator_carbsfailed">Introducerea a %1$dg de carbohidrati a esuat</string>
-    <string name="smscommunicator_tempbasalset_percent">Bazala temporară %1$d%% pentru %2$d minute a fost stabilită cu succes</string>
-    <string name="smscommunicator_tempbasalfailed">Trimiterea bazalei temporare a eșuat</string>
-    <string name="smscommunicator_extendedfailed">Pornirea bolusului extins a eșuat</string>
-    <string name="smscommunicator_basalstopreplywithcode">Pentru oprirea bazalei temporare, răspundeți cu codul %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Pentru oprirea bolusului extins, răspundeți cu codul %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Bazala temporară a fost anulată</string>
-    <string name="smscommunicator_extendedcanceled">Bolus extins anulat</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Renunțarea la bazala temporară a eșuat</string>
-    <string name="smscommunicator_extendedcancelfailed">Anularea bolusului extins a eșuat</string>
-    <string name="smscommunicator_unknowncommand">Comandă necunoscută sau răspuns greșit</string>
     <string name="smscommunicator_another_bolus_in_queue">Există un alt bolus în coada de așteptare. Încercați din nou mai târziu.</string>
-    <string name="smscommunicator_wrongduration">Durată greșită</string>
-    <string name="smscommunicator_loopsuspended">Buclă suspendată</string>
-    <string name="smscommunicator_loopresumed">Buclă restabilită</string>
-    <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
-    <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip+.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ nu recepționează calibrări</string>
-    <string name="smscommunicator_messagebody">Conținutul mesajului nu este valid</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
-    <string name="smscommunicator_pump_ureachable">Raportează pompa inaccesibilă</string>
     <string name="sms_delta">Diferență:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
@@ -99,16 +45,12 @@
     <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
     <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
     <!-- Food-->
     <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
     <string name="filter">Filtru</string>
     <string name="food">Mâncare</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Grăsime</string>
     <string name="category">Categorie</string>
     <string name="subcategory">Subcategorie</string>
     <!-- Theme switcher dark and light mode-->
@@ -149,4 +91,10 @@
     <string name="not_completed_yet">Încă incomplet</string>
     <string name="time_elapsed">Timp scurs</string>
     <!-- Overview -->
+    <!-- NSClient -->
+    <!-- Tidepool -->
+    <!-- VirtualPump -->
+    <!-- Source -->
+    <!-- NSClient -->
+    <!-- Objectives -->
 </resources>
