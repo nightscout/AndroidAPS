@@ -28,5 +28,6 @@
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
 </resources>
