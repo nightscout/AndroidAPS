@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.constraints.versionChecker
+package info.nightscout.interfaces.constraints.versionChecker
 
 import org.joda.time.LocalDate
 import org.json.JSONArray

@@ -23,14 +23,14 @@ import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger

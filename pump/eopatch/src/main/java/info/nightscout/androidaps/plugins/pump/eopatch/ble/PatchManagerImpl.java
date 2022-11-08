@@ -35,7 +35,7 @@ import javax.inject.Singleton;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.interfaces.pump.PumpType;
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ActivateTask;

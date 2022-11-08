@@ -13,7 +13,7 @@ import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.extensions.shiftBlock
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.JsonHelper

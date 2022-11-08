@@ -3,7 +3,7 @@ package info.nightscout.automation
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.automation.actions.Action

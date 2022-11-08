@@ -14,7 +14,7 @@ import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync

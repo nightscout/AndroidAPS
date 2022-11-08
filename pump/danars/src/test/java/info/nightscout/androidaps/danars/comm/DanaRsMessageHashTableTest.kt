@@ -6,7 +6,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import org.junit.Assert
 import org.junit.Test

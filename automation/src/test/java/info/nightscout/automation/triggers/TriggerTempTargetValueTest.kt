@@ -3,7 +3,7 @@ package info.nightscout.automation.triggers
 import com.google.common.base.Optional
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import io.reactivex.rxjava3.core.Single

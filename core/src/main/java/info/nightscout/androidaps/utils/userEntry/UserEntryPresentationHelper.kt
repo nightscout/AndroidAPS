@@ -9,7 +9,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.utils.DateUtil
@@ -153,23 +153,23 @@ class UserEntryPresentationHelper @Inject constructor(
     }
 
     private fun getCsvHeader() = rh.gs(R.string.ue_csv_header,
-        csvString(R.string.ue_timestamp),
-        csvString(R.string.date),
-        csvString(R.string.ue_utc_offset),
-        csvString(R.string.ue_action),
-        csvString(R.string.eventtype),
-        csvString(R.string.ue_source),
-        csvString(R.string.careportal_note),
-        csvString(R.string.ue_string),
-        csvString(R.string.event_time_label),
-        csvString(if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
-        csvString(R.string.shortgram),
-        csvString(R.string.insulin_unit_shortname),
-        csvString(R.string.profile_ins_units_per_hour),
-        csvString(R.string.shortpercent),
-        csvString(R.string.shorthour),
-        csvString(R.string.shortminute),
-        csvString(R.string.ue_none)
+                                       csvString(R.string.ue_timestamp),
+                                       csvString(R.string.date),
+                                       csvString(R.string.ue_utc_offset),
+                                       csvString(R.string.ue_action),
+                                       csvString(R.string.eventtype),
+                                       csvString(R.string.ue_source),
+                                       csvString(R.string.careportal_note),
+                                       csvString(R.string.ue_string),
+                                       csvString(R.string.event_time_label),
+                                       csvString(if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
+                                       csvString(R.string.shortgram),
+                                       csvString(R.string.insulin_unit_shortname),
+                                       csvString(R.string.profile_ins_units_per_hour),
+                                       csvString(R.string.shortpercent),
+                                       csvString(R.string.shorthour),
+                                       csvString(R.string.shortminute),
+                                       csvString(R.string.ue_none)
     ) + "\n"
 
     private fun getCsvEntry(entry: UserEntry): String {

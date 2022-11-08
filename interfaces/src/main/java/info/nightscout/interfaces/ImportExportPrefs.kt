@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

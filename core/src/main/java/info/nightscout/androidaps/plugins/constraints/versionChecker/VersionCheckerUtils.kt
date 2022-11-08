@@ -7,6 +7,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.rx.bus.RxBus

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.interfaces.Constraint
 
 interface Loop {
 

@@ -5,7 +5,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.shared.utils.T
 import info.nightscout.rx.logging.LTag
 import java.util.GregorianCalendar

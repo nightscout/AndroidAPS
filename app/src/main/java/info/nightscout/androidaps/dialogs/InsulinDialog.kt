@@ -24,9 +24,9 @@ import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper

@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector.PairProfileSwitch
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryBasal
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryTarget
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTherapyEvent
-import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclient.acks.NSUpdateAck

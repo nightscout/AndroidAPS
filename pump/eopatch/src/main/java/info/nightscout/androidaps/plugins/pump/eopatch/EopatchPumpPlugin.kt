@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -20,7 +20,7 @@ import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager

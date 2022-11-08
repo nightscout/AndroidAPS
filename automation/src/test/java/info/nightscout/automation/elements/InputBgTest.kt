@@ -1,6 +1,6 @@
 package info.nightscout.automation.elements
 
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.automation.triggers.TriggerTestBase
 import org.junit.Assert
 import org.junit.Before

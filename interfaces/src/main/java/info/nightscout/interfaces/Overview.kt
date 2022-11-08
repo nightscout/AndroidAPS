@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 import androidx.annotation.StringRes
-import info.nightscout.interfaces.ConfigExportImport
 import info.nightscout.rx.bus.RxBus
 
 interface Overview : ConfigExportImport {

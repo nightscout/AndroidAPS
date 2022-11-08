@@ -15,7 +15,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHAppIDDelegate

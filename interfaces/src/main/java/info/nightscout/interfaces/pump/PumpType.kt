@@ -1,15 +1,8 @@
-package info.nightscout.androidaps.plugins.pump.common.defs
+package info.nightscout.interfaces.pump
 
-import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.interfaces.R
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.interfaces.pump.DoseSettings
-import info.nightscout.interfaces.pump.DoseStepSize
-import info.nightscout.interfaces.pump.ManufacturerType
-import info.nightscout.interfaces.pump.PumpCapability
-import info.nightscout.interfaces.pump.PumpTempBasalType
+import info.nightscout.shared.interfaces.ResourceHelper
 import kotlin.math.min
 
 @Suppress("unused")
@@ -61,7 +54,7 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.ComboBasal,
         pumpCapability = PumpCapability.ComboCapabilities,
-        source = Sources.Combo,
+        source = Source.Combo,
         supportBatteryLevel = false
     ),
     ACCU_CHEK_SPIRIT(
@@ -109,7 +102,7 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = DoseStepSize.InsightBasal,
         pumpCapability = PumpCapability.InsightCapabilities,
-        source = Sources.Insight
+        source = Source.Insight
     ),
     ACCU_CHEK_SOLO(
         description = "Accu-Chek Solo",
@@ -159,7 +152,7 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DanaCapabilities,
-        source = Sources.DanaR
+        source = Source.DanaR
     ),
     DANA_R_KOREAN(
         description = "DanaR Korean",
@@ -175,7 +168,7 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DanaCapabilities,
-        source = Sources.DanaRC
+        source = Source.DanaRC
     ),
     DANA_RS(
         description = "DanaRS",
@@ -191,11 +184,11 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DanaWithHistoryCapabilities,
-        source = Sources.DanaRS
+        source = Source.DanaRS
     ),
     DANA_RS_KOREAN(description = "DanaRSKorean", model = "DanaRSKorean", parent = DANA_RS),
-    DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS, source = Sources.DanaI),
-    DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS, source = Sources.DanaRv2),
+    DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS, source = Source.DanaI),
+    DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS, source = Source.DanaRv2),
     OMNIPOD_EROS(
         description = "Omnipod Eros",
         manufacturer = ManufacturerType.Insulet,
@@ -216,7 +209,7 @@ enum class PumpType {
         maxReservoirReading = 50,
         useHardwareLink = true,
         supportBatteryLevel = false,
-        source = Sources.OmnipodEros
+        source = Source.OmnipodEros
     ),
     OMNIPOD_DASH(
         description = "Omnipod Dash",
@@ -252,7 +245,7 @@ enum class PumpType {
         baseBasalStep = 0.05,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.MedtronicCapabilities,
-        source = Sources.Medtronic
+        source = Source.Medtronic
     ),
     MEDTRONIC_515_715(
         description = "Medtronic 515/715",
@@ -278,7 +271,7 @@ enum class PumpType {
         baseBasalStep = 0.025,
         baseBasalSpecialSteps = DoseStepSize.MedtronicVeoBasal,
         pumpCapability = PumpCapability.MedtronicCapabilities,
-        source = Sources.Medtronic
+        source = Source.Medtronic
     ),
     MEDTRONIC_554_754_VEO(description = "Medtronic 554/754 (Veo)", model = "554/754 (Veo)", parent = MEDTRONIC_523_723_REVEL),
     MEDTRONIC_640G(
@@ -350,7 +343,7 @@ enum class PumpType {
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
         pumpCapability = PumpCapability.MDI,
-        source = Sources.MDI
+        source = Source.MDI
     ),
 
     // Not real, cached value
@@ -376,26 +369,29 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DiaconnCapabilities,
-        source = Sources.DiaconnG8),
-		
+        source = Source.DiaconnG8
+    ),
+
     //EOPatch Pump
-    EOFLOW_EOPATCH2(description = "Eoflow Eopatch2",
-                    manufacturer = ManufacturerType.Eoflow,
-                    model = "Eopatch",
-                    bolusSize = 0.05,
-                    specialBolusSize = null,
-                    extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 25.0),
-                    pumpTempBasalType = PumpTempBasalType.Absolute,
-                    tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 15.0),
-                    specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
-                    baseBasalMinValue = 0.05,
-                    baseBasalMaxValue = 15.0,
-                    baseBasalStep = 0.05,
-                    baseBasalSpecialSteps = null,
-                    pumpCapability = PumpCapability.EopatchCapabilities,
-                    isPatchPump = true,
-                    maxReservoirReading = 50,
-                    source = Sources.EOPatch2);
+    EOFLOW_EOPATCH2(
+        description = "Eoflow Eopatch2",
+        manufacturer = ManufacturerType.Eoflow,
+        model = "Eopatch",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 25.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 15.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 15.0,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.EopatchCapabilities,
+        isPatchPump = true,
+        maxReservoirReading = 50,
+        source = Source.EOPatch2
+    );
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -445,52 +441,36 @@ enum class PumpType {
     var useHardwareLink = false
         private set
     private var parent: PumpType? = null
-    val source: Sources
+    val source: Source
+
+    enum class Source {
+        Dana,
+        DanaR,
+        DanaRC,
+        DanaRv2,
+        DanaRS,
+        DanaI,
+        DiaconnG8,
+        Insight,
+        Combo,
+        Medtronic,
+        Omnipod,
+        OmnipodEros,
+        OmnipodDash,
+        EOPatch2,
+        MDI,
+        VirtualPump,
+        Unknown
+    }
 
     companion object {
 
         fun getByDescription(desc: String): PumpType =
             values().firstOrNull { it.description == desc } ?: GENERIC_AAPS
 
-        fun fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
-            when (pt) {
-                InterfaceIDs.PumpType.GENERIC_AAPS                -> GENERIC_AAPS
-                InterfaceIDs.PumpType.CELLNOVO                    -> CELLNOVO
-                InterfaceIDs.PumpType.ACCU_CHEK_COMBO             -> ACCU_CHEK_COMBO
-                InterfaceIDs.PumpType.ACCU_CHEK_SPIRIT            -> ACCU_CHEK_SPIRIT
-                InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT           -> ACCU_CHEK_INSIGHT_VIRTUAL
-                InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH -> ACCU_CHEK_INSIGHT
-                InterfaceIDs.PumpType.ACCU_CHEK_SOLO              -> ACCU_CHEK_SOLO
-                InterfaceIDs.PumpType.ANIMAS_VIBE                 -> ANIMAS_VIBE
-                InterfaceIDs.PumpType.ANIMAS_PING                 -> ANIMAS_PING
-                InterfaceIDs.PumpType.DANA_R                      -> DANA_R
-                InterfaceIDs.PumpType.DANA_R_KOREAN               -> DANA_R_KOREAN
-                InterfaceIDs.PumpType.DANA_RS                     -> DANA_RS
-                InterfaceIDs.PumpType.DANA_RS_KOREAN              -> DANA_RS_KOREAN
-                InterfaceIDs.PumpType.DANA_RV2                    -> DANA_RV2
-                InterfaceIDs.PumpType.DANA_I                      -> DANA_I
-                InterfaceIDs.PumpType.OMNIPOD_EROS                -> OMNIPOD_EROS
-                InterfaceIDs.PumpType.OMNIPOD_DASH                -> OMNIPOD_DASH
-                InterfaceIDs.PumpType.MEDTRONIC_512_517           -> MEDTRONIC_512_712
-                InterfaceIDs.PumpType.MEDTRONIC_515_715           -> MEDTRONIC_515_715
-                InterfaceIDs.PumpType.MEDTRONIC_522_722           -> MEDTRONIC_522_722
-                InterfaceIDs.PumpType.MEDTRONIC_523_723_REVEL     -> MEDTRONIC_523_723_REVEL
-                InterfaceIDs.PumpType.MEDTRONIC_554_754_VEO       -> MEDTRONIC_554_754_VEO
-                InterfaceIDs.PumpType.MEDTRONIC_640G              -> MEDTRONIC_640G
-                InterfaceIDs.PumpType.TANDEM_T_SLIM               -> TANDEM_T_SLIM
-                InterfaceIDs.PumpType.TANDEM_T_SLIM_G4            -> TANDEM_T_SLIM_G4
-                InterfaceIDs.PumpType.TANDEM_T_FLEX               -> TANDEM_T_FLEX
-                InterfaceIDs.PumpType.TANDEM_T_SLIM_X2            -> TANDEM_T_SLIM_X2
-                InterfaceIDs.PumpType.YPSOPUMP                    -> YPSOPUMP
-                InterfaceIDs.PumpType.MDI                         -> MDI
-                InterfaceIDs.PumpType.USER                        -> USER
-                InterfaceIDs.PumpType.DIACONN_G8                  -> DIACONN_G8
-                InterfaceIDs.PumpType.EOPATCH2                    -> EOFLOW_EOPATCH2
-                InterfaceIDs.PumpType.CACHE                       -> CACHE
-            }
     }
 
-    constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Sources? = null) {
+    constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Source? = null) {
         this.description = description
         this.parent = parent
         this.source = source ?: parent.source
@@ -518,7 +498,7 @@ enum class PumpType {
         maxReservoirReading: Int = 50,
         supportBatteryLevel: Boolean = true,
         useHardwareLink: Boolean = false,
-        source: Sources = Sources.VirtualPump
+        source: Source = Source.VirtualPump
     ) {
         this.description = description
         this.manufacturer = manufacturer
@@ -585,41 +565,4 @@ enum class PumpType {
                 ?: baseBasalStep
         )
     }
-
-    fun toDbPumpType(): InterfaceIDs.PumpType =
-        when (this) {
-            GENERIC_AAPS              -> InterfaceIDs.PumpType.GENERIC_AAPS
-            CELLNOVO                  -> InterfaceIDs.PumpType.CELLNOVO
-            ACCU_CHEK_COMBO           -> InterfaceIDs.PumpType.ACCU_CHEK_COMBO
-            ACCU_CHEK_SPIRIT          -> InterfaceIDs.PumpType.ACCU_CHEK_SPIRIT
-            ACCU_CHEK_INSIGHT_VIRTUAL -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT
-            ACCU_CHEK_INSIGHT         -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH
-            ACCU_CHEK_SOLO            -> InterfaceIDs.PumpType.ACCU_CHEK_SOLO
-            ANIMAS_VIBE               -> InterfaceIDs.PumpType.ANIMAS_VIBE
-            ANIMAS_PING               -> InterfaceIDs.PumpType.ANIMAS_PING
-            DANA_R                    -> InterfaceIDs.PumpType.DANA_R
-            DANA_R_KOREAN             -> InterfaceIDs.PumpType.DANA_R_KOREAN
-            DANA_RS                   -> InterfaceIDs.PumpType.DANA_RS
-            DANA_RS_KOREAN            -> InterfaceIDs.PumpType.DANA_RS_KOREAN
-            DANA_RV2                  -> InterfaceIDs.PumpType.DANA_RV2
-            DANA_I                    -> InterfaceIDs.PumpType.DANA_I
-            OMNIPOD_EROS              -> InterfaceIDs.PumpType.OMNIPOD_EROS
-            OMNIPOD_DASH              -> InterfaceIDs.PumpType.OMNIPOD_DASH
-            MEDTRONIC_512_712         -> InterfaceIDs.PumpType.MEDTRONIC_512_517
-            MEDTRONIC_515_715         -> InterfaceIDs.PumpType.MEDTRONIC_515_715
-            MEDTRONIC_522_722         -> InterfaceIDs.PumpType.MEDTRONIC_522_722
-            MEDTRONIC_523_723_REVEL   -> InterfaceIDs.PumpType.MEDTRONIC_523_723_REVEL
-            MEDTRONIC_554_754_VEO     -> InterfaceIDs.PumpType.MEDTRONIC_554_754_VEO
-            MEDTRONIC_640G            -> InterfaceIDs.PumpType.MEDTRONIC_640G
-            TANDEM_T_SLIM             -> InterfaceIDs.PumpType.TANDEM_T_SLIM
-            TANDEM_T_SLIM_G4          -> InterfaceIDs.PumpType.TANDEM_T_SLIM_G4
-            TANDEM_T_FLEX             -> InterfaceIDs.PumpType.TANDEM_T_FLEX
-            TANDEM_T_SLIM_X2          -> InterfaceIDs.PumpType.TANDEM_T_SLIM_X2
-            YPSOPUMP                  -> InterfaceIDs.PumpType.YPSOPUMP
-            MDI                       -> InterfaceIDs.PumpType.MDI
-            USER                      -> InterfaceIDs.PumpType.USER
-            DIACONN_G8                -> InterfaceIDs.PumpType.DIACONN_G8
-            EOFLOW_EOPATCH2           -> InterfaceIDs.PumpType.EOPATCH2
-            CACHE                     -> InterfaceIDs.PumpType.CACHE
-        }
 }

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.sync
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 
 // data class PumpDbEntry constructor(var temporaryId: Long,
 //                                    var date: Long,
@@ -59,10 +59,10 @@ data class PumpDbEntryBolus(override var temporaryId: Long,
                             var bolusType: DetailedBolusInfo.BolusType) : PumpDbEntry {
 
         constructor(temporaryId: Long,
-                date: Long,
-                pumpType: PumpType,
-                serialNumber: String,
-                detailedBolusInfo: DetailedBolusInfo) : this(temporaryId, date, pumpType, serialNumber, null,
+                    date: Long,
+                    pumpType: PumpType,
+                    serialNumber: String,
+                    detailedBolusInfo: DetailedBolusInfo) : this(temporaryId, date, pumpType, serialNumber, null,
                                                              detailedBolusInfo.insulin,
                                                              detailedBolusInfo.carbs,
                                                              detailedBolusInfo.bolusType)

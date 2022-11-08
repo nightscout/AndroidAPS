@@ -23,7 +23,7 @@ import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginType
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
@@ -135,7 +135,8 @@ class ConfigBuilderFragment : DaggerFragment() {
 
     inner class PluginViewHolder internal constructor(private val fragment: ConfigBuilderFragment,
                                                       private val pluginType: PluginType,
-                                                      private val plugin: PluginBase) {
+                                                      private val plugin: PluginBase
+    ) {
 
         @Suppress("InflateParams")
         val baseView: LinearLayout = fragment.layoutInflater.inflate(R.layout.configbuilder_single_plugin, null) as LinearLayout

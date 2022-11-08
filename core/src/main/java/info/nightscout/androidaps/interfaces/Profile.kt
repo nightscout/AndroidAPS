@@ -8,6 +8,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter.to1Decimal
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.DateTime

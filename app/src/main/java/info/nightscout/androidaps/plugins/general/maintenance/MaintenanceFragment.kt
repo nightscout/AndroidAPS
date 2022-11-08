@@ -19,7 +19,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.ImportExportPrefs
+import info.nightscout.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.shared.interfaces.ResourceHelper

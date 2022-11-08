@@ -24,7 +24,7 @@ import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.shared.utils.T

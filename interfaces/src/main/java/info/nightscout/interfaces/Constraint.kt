@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

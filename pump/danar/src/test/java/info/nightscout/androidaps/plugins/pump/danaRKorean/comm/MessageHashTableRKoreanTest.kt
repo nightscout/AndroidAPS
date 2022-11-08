@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRKorean.comm
 
 import info.nightscout.androidaps.danaRKorean.comm.MessageHashTableRKorean
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import org.junit.Assert
 import org.junit.Test

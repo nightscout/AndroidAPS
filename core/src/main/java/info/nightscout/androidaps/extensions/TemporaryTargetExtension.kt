@@ -2,7 +2,7 @@ package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil

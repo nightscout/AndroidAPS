@@ -6,7 +6,7 @@ import android.os.Bundle
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.shared.extensions.safeQueryBroadcastReceivers
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast

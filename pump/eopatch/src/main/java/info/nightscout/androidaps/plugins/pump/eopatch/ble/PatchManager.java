@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.interfaces.pump.PumpType;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;

@@ -11,14 +11,14 @@ import info.nightscout.androidaps.extensions.storeString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.Safety
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin

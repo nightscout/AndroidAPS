@@ -5,13 +5,13 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.androidaps.interfaces.Overview
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.NsClient
+import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.Sensitivity
-import info.nightscout.androidaps.interfaces.Sync
+import info.nightscout.interfaces.Sync
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginType
 import info.nightscout.interfaces.Safety

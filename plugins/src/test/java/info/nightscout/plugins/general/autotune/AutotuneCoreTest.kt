@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.T

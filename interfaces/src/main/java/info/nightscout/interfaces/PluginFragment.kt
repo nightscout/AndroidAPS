@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 interface PluginFragment {
     var plugin: PluginBase?

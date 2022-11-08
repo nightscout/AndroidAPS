@@ -32,7 +32,10 @@ import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert

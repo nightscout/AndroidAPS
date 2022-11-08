@@ -2,7 +2,7 @@ package info.nightscout.ui.defaultProfile
 
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.Round

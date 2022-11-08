@@ -2,7 +2,7 @@ package info.nightscout.androidaps.data
 
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import org.json.JSONObject
 import java.util.*
 

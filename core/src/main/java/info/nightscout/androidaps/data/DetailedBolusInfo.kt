@@ -8,7 +8,7 @@ import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusTransaction
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateCarbsTransaction
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 
 class DetailedBolusInfo {
 

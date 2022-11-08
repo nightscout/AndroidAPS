@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.interfaces.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck

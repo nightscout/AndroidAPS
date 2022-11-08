@@ -1,6 +1,4 @@
-package info.nightscout.androidaps.interfaces
-
-import info.nightscout.interfaces.PluginType
+package info.nightscout.interfaces
 
 interface ConfigBuilder {
     fun initialize()

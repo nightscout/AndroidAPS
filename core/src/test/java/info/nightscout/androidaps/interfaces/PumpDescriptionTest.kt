@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.interfaces.pump.PumpCapability
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.interfaces.pump.PumpTempBasalType
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 import org.junit.Assert
 import org.junit.Test
 

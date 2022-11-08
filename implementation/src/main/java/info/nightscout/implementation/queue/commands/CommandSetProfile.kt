@@ -6,7 +6,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.interfaces.queue.Callback

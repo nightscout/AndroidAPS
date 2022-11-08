@@ -13,8 +13,8 @@ import info.nightscout.androidaps.extensions.putString
 import info.nightscout.androidaps.extensions.storeDouble
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
-import info.nightscout.androidaps.interfaces.Overview
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress

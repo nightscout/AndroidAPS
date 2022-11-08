@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Constraints

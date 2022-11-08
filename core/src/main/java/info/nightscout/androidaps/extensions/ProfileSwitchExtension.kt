@@ -6,7 +6,7 @@ import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.targetBlockFromJsonArray
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.interfaces.utils.JsonHelper

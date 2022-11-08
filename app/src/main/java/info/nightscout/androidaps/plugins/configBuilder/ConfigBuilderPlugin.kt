@@ -9,10 +9,10 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.APS
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.interfaces.NsClient
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpSync

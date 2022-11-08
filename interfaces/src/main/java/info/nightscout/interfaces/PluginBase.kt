@@ -1,10 +1,8 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces
 
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

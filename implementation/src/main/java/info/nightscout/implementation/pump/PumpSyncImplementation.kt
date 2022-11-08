@@ -29,12 +29,15 @@ import info.nightscout.androidaps.database.transactions.SyncPumpExtendedBolusTra
 import info.nightscout.androidaps.database.transactions.SyncPumpTemporaryBasalTransaction
 import info.nightscout.androidaps.database.transactions.SyncPumpTotalDailyDoseTransaction
 import info.nightscout.androidaps.database.transactions.SyncTemporaryBasalWithTempIdTransaction
+import info.nightscout.androidaps.extensions.fromDbPumpType
+import info.nightscout.androidaps.extensions.toDbPumpType
+import info.nightscout.androidaps.extensions.toDbSource
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.VirtualPump
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.bus.RxBus
@@ -271,7 +274,7 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        uel.log(UserEntry.Action.CAREPORTAL, pumpType.source, note, ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type.toDBbEventType()))
+        uel.log(UserEntry.Action.CAREPORTAL, pumpType.source.toDbSource(), note, ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type.toDBbEventType()))
         repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
             .doOnError {
                 aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it)

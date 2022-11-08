@@ -13,9 +13,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.NsClient
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.Sync
+import info.nightscout.interfaces.NsClient
+import info.nightscout.interfaces.PluginBase
+import info.nightscout.interfaces.Sync
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.interfaces.BuildHelper

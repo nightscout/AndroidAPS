@@ -1,8 +1,4 @@
-package info.nightscout.androidaps.interfaces
-
-import info.nightscout.interfaces.pump.PumpCapability
-import info.nightscout.interfaces.pump.PumpTempBasalType
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+package info.nightscout.interfaces.pump
 
 class PumpDescription() {
 

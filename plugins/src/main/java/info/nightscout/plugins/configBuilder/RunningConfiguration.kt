@@ -2,13 +2,13 @@ package info.nightscout.plugins.configBuilder
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginType
 import info.nightscout.interfaces.notifications.Notification

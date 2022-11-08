@@ -32,7 +32,7 @@ import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTra
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.UserEntryTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.NsClient
+import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.interfaces
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.logging.AAPSLogger

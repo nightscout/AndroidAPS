@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.database.entities.ProfileSwitch
+import info.nightscout.interfaces.GlucoseUnit
 
 interface ProfileFunction {
 

@@ -14,7 +14,7 @@ import info.nightscout.androidaps.extensions.shiftBlock
 import info.nightscout.androidaps.extensions.shiftTargetBlock
 import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight
 import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
