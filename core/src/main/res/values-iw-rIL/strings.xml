@@ -57,9 +57,7 @@
     <string name="lastconnection_label">התחברות אחרונה</string>
     <string name="lastbolus_label">בולוס אחרון</string>
     <string name="dailyunits">יחידות יומיות</string>
-    <string name="basebasalrate_label">מינון בזאלי בסיסי</string>
     <string name="tempbasal_label">בזאלי זמני</string>
-    <string name="virtualpump_extendedbolus_label">בולוס ממושך</string>
     <string name="reservoir_label">מכל</string>
     <string name="pumphistory">היסטוריית המשאבה</string>
     <string name="viewprofile">הצג פרופיל</string>
@@ -478,6 +476,7 @@
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
