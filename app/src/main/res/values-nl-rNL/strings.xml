@@ -218,8 +218,11 @@
     <string name="careportal_pb_label">Pomp batterij</string>
     <string name="careportal_age_label">leeftijd:</string>
     <string name="careportal_level_label">level:</string>
+    <string name="ns_alarm_options">Alarm opties</string>
     <string name="ns_alarms">Maak meldingen van NS alarmen</string>
     <string name="ns_announcements">Maak meldingen van NS aankondigingen</string>
+    <string name="ns_alarm_stale_data_value_label">Oude gegevens sinds [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Alarm oude gegevens sinds [min]</string>
     <string name="openapsama_autosens_period">Interval voor autosens [uur]</string>
     <string name="openapsama_autosens_period_summary">Aantal uren in het verleden voor gevoeligheids detectie (koolhy. absorbtie tijd niet meegerekend)</string>
     <string name="openaps">OpenAPS</string>
