@@ -40,6 +40,12 @@
     <string name="reset">herstel</string>
     <string name="profileswitch_ismissing">ProfileSwitch ontbreek. Doen \'n profiel skakelaar of druk \"Aktiveer profiel\" in die LokaleProfiel.</string>
     <string name="profile">Profiel</string>
+    <string name="overview_treatment_label">Behandeling</string>
+    <string name="wear_wizard_settings">Ghoeroe-instellings</string>
+    <string name="treatments_wizard_cob_label">KOB</string>
+    <string name="treatments_wizard_basaliob_label">Basale IAB</string>
+    <string name="paused">Onderbreek</string>
+    <string name="invalid">ONGELDIG</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -76,5 +82,8 @@
     <string name="basal">Basale</string>
     <!-- Autotune -->
     <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Gebruik stelsel kennisgewings vir waarskuwings en kennisgewings</string>
+    <string name="urgent_alarm">Dringende Alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
 </resources>
