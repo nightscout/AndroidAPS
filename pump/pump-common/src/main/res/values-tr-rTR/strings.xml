@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Pompa Seri Numarası</string>
     <string name="bolus_delivered">%1$.2f Ü / %2$.2f Ü gönderildi</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Hiç bağlantı yapılmadı</string>
-    <string name="pump_status_waking_up">Uyanıyor</string>
-    <string name="pump_status_error_comm">İletişim hatası</string>
-    <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
-    <string name="pump_status_pump_unreachable">Pompa ulaşılamıyor</string>
-    <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
-    <string name="pump_status_active">Aktif</string>
-    <string name="pump_status_sleeping">Uyuyor</string>
     <string name="pump_status_not_initialized">Başlatılmadı</string>
     <string name="pump_status_initialized">Başlatıldı</string>
     <string name="pump_status_encrypt">İletişim Şifreleniyor</string>
