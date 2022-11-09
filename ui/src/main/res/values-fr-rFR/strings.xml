@@ -38,14 +38,12 @@
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- Treatments -->
     <string name="no_records_available">Aucun enregistrement disponible</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA: </string>
-    <string name="invalid">INVALIDE</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Glucides:</string>
     <string name="treatments_iobtotal_label_string">IA Totale:</string>
