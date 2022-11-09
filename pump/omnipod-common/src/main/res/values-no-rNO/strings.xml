@@ -19,14 +19,14 @@
     <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Kunne ikke lagre basalprofil: mottok en tom profil. Kontroller at du har aktivert profilen.</string>
     <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ingen basalprofil er aktiv. Sørg for å aktivere din basalprofil.</string>
     <string name="omnipod_common_error_unsupported_custom_command">Ukjent kommando: %1$s</string>
-    <string name="omnipod_common_error_failed_to_refresh_status">Feilet i å oppdatere status</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Kunne ikke oppdatere status</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Kunne ikke oppdatere status ved oppstart</string>
     <string name="omnipod_common_error_failed_to_silence_alerts">Kunne ikke bekrefte varsler</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Kunne ikke stoppe insulinleveranser</string>
     <string name="omnipod_common_error_failed_to_set_time">Kunne ikke angi tid</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Kunne ikke gjenoppta leveransen</string>
-    <string name="omnipod_common_error_failed_to_initialize_pod">Feilet i å initialisere Pod</string>
-    <string name="omnipod_common_error_failed_to_insert_cannula">Feilet ved innsetting av kanyle</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Kunne ikke initialisere Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Kunne ikke sette inn kanyle</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Pod\'ens aktiveringstid er overskredet. Denne Pod kan ikke lenger aktiveres.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Klarte ikke å verifisere fremdrift i aktiveringen. Prøv på nytt.</string>
     <string name="omnipod_common_error_pod_suspended">Pod er pauset</string>
@@ -43,7 +43,7 @@
     <string name="omnipod_common_confirmation_delivery_resumed">Insulintilførselen er gjenopptatt.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Angi tid</string>
-    <string name="omnipod_common_overview_button_suspend_delivery">Pauset</string>
+    <string name="omnipod_common_overview_button_suspend_delivery">Pause</string>
     <string name="omnipod_common_overview_button_resume_delivery">Gjenoppta levering</string>
     <string name="omnipod_common_overview_button_pod_management">Pod-administrasjon</string>
     <string name="omnipod_common_overview_button_silence_alerts">Demp varsler</string>
@@ -82,14 +82,14 @@
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Klargjør infusjonsstedet. Fjern Pod\'ens kanylebeskyttelse og papirfolien, og fest Pod til infusjonsstedet.\n\nHvis du oppdager feil med kanylen, trykk <b>Avbryt</b> og forkast Pod.\n\nTrykk <b>Neste</b> for å sette inn kanyle og starte påfyllingsbolus.</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Når du trykker <b>OK</b>, vil kanylen settes inn. Pass på at du har festet Pod\'en på infusjonsstedet.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Sett inn kanyle</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Prøver å angi basalprogram og sette inn kanylen.\n\nNår kanylen er vellykket på plass kan du trykke på <b>Neste</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Prøver å angi basalprogram og setter inn kanylen.\n\nNår kanylen er på plass kan du trykke på <b>Neste</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod aktivert</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Den nye Pod\'en er nå aktiv.\n\nDin basalprofil har blitt lagret og kanylen er inne.\n\nVennligst kontroller at kanylen ble satt riktig inn og skift Pod hvis du tror det har oppstått feil med innsettingen.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Deaktiver Pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Trykk på <b>Neste</b> for å deaktivere Pod.\n\n<b>Merk:</b> Dette vil stanse all insulintilførsel og deaktivere Pod.</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Deaktiverer Pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktivering av Pod.\n\nNår deaktiveringen er vellykket utført, kan du trykke på <b>Neste</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Deaktivering av Pod.\n\nNår deaktiveringen er utført, kan du trykke på <b>Neste</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod deaktivert</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Din Pod er deaktivert.\n\nVennligst fjern Pod\'en fra kroppen din og lever den inn for gjenvinning.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod forkastet</string>
@@ -99,15 +99,15 @@
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_bolus_beeps_enabled">Bolus-lyd aktivert</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Basal-lyd aktivert</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">SMB lyd aktivert</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">SMB-lyd aktivert</string>
     <string name="omnipod_common_preferences_tbr_beeps_enabled">TBR-lyd aktivert</string>
-    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis Pause insulintilførsel knapp i Omnipod meny</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knapp for å Pause insulintilførsel i Omnipod-fanen</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Tidssone-deteksjon aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Antall enheter</string>
-    <string name="omnipod_common_preferences_automatically_silence_alerts">Automatisk demp Pod-varsler</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Demp Pod-varsler automatisk</string>
     <string name="omnipod_common_preferences_category_other">Annet</string>
     <string name="omnipod_common_preferences_category_alerts">Varsler</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">Bekreftelseslyd</string>
@@ -117,7 +117,7 @@
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Lydvarsel for ubekreftet bolus er aktivert</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv Pod</string>
-    <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod aktivering)</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod-aktivering)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Oppsett pågår (venter på innsetting av kanyle)</string>
     <string name="omnipod_common_pod_status_running">Kjører</string>
     <string name="omnipod_common_pod_status_suspended">Pauset</string>
@@ -129,11 +129,11 @@
     <string name="omnipod_common_cmd_deactivate_pod">Deaktiver Pod</string>
     <string name="omnipod_common_cmd_discard_pod">Forkast Pod</string>
     <string name="omnipod_common_cmd_set_bolus">Angi Bolus</string>
-    <string name="omnipod_common_cmd_cancel_bolus">Avbryt bolus</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Avbryt Bolus</string>
     <string name="omnipod_common_cmd_set_tbr">Angi Midlertidig Basal</string>
     <string name="omnipod_common_cmd_cancel_tbr_by_driver">Avbryt midlertidig basal (internt av driver)</string>
     <string name="omnipod_common_cmd_cancel_tbr">Avbryt midlertidig basal</string>
-    <string name="omnipod_common_cmd_set_basal_schedule">Angi basal program</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Angi basalprogram</string>
     <string name="omnipod_common_cmd_get_pod_status">Hent Pod-status</string>
     <string name="omnipod_common_cmd_get_pod_info">Hent Pod-info</string>
     <string name="omnipod_common_cmd_set_time">Angi tid</string>
