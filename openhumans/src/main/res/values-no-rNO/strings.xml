@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AndroidAPS laster opp til Open Humans. Dette kan ta en stund.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har blitt logget ut fra Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klikk her for å logge inn igjen hvis dette ikke var hensikten.</string>
-    <string name="upload_now">Last opp nå</string>
     <string name="next">Neste</string>
     <string name="welcome_to_open_humans">Velkommen til Open Humans</string>
     <string name="setup_data_upload">For å aktivere opplast av data, trykk på \'Neste\'.</string>
