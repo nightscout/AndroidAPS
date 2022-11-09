@@ -61,9 +61,7 @@
     <string name="lastconnection_label">Dernière connexion</string>
     <string name="lastbolus_label">Dernier bolus</string>
     <string name="dailyunits">Unités quotidiennes</string>
-    <string name="basebasalrate_label">Débit de Basal</string>
     <string name="tempbasal_label">Basal temporaire</string>
-    <string name="virtualpump_extendedbolus_label">Bolus étendu</string>
     <string name="reservoir_label">Réservoir</string>
     <string name="pumphistory">Historique pompe</string>
     <string name="viewprofile">Consulter le profil</string>
@@ -158,6 +156,7 @@
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="bolus_iob_label">IA Bolus</string>
     <string name="treatments_wizard_basaliob_label">IA Basal</string>
+    <string name="login">Connexion</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
@@ -191,8 +190,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Démarrer le profil %1$d%% pour %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
     <!--    APSResult-->
     <string name="canceltemp">Annuler Basal Temp</string>
     <string name="let_temp_basal_run">Laisser démarrer le Basal Temp</string>
@@ -524,6 +521,9 @@
     <string name="autotune_run_with_error">Erreur lors de la dernière exécution d\'Autotune</string>
     <string name="autotune_run_cancelled">Une autre exécution d\'Autotune est détectée, l\'exécution est annulée</string>
     <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
+    <!-- Alerts -->
+    <string name="urgent_alarm">Alarme d\'urgence</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <plurals name="days">
