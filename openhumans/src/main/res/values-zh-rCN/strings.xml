@@ -14,7 +14,6 @@
     <string name="open_humans_notifications">开源人类项目通知</string>
     <string name="you_have_been_signed_out_of_open_humans">你已经从开源人类项目中退出</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">如果不是故意的，请单击此处再次登录。</string>
-    <string name="upload_now">现在上传</string>
     <string name="next">下一个</string>
     <string name="welcome_to_open_humans">欢迎使用 Open Humans</string>
     <string name="setup_data_upload">要设置数据上传，请单击“下一步”</string>
