@@ -11,7 +11,6 @@
     <string name="stop_pump">Stoppa pumpen</string>
     <string name="started">Startade</string>
     <string name="stopped">Stoppade</string>
-    <string name="paused">Pausad</string>
     <string name="operating_mode">Driftläge</string>
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
