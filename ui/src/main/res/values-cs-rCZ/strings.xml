@@ -35,5 +35,42 @@
     <string name="bg_meter">Glukoměr</string>
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Celkem</string>
     <!-- Treatments -->
+    <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Inzulín:</string>
+    <string name="treatments_carbs_label_string">Sacharidy:</string>
+    <string name="treatments_iobtotal_label_string">Celkem IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Celková aktivita IOB:</string>
+    <string name="tempbasals_realduration_label_string">Trv:</string>
+    <string name="tempbasals_netratio_label_string">Poměr:</string>
+    <string name="tempbasals_netinsulin_label_string">Inz:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
+    <string name="treatments_wizard_tt_label">DC</string>
+    <string name="treatments_wizard_correction_label">Korekce</string>
+    <string name="meal_bolus">Jídlo</string>
+    <string name="prime">Doplňování</string>
+    <string name="profile_changes">Změny profilu</string>
+    <string name="tempt_targets">Dočasné cíle</string>
+    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
+    <string name="show_invalidated_records">Zobrazit zneplatněné / odstraněné záznamy</string>
+    <string name="hide_invalidated_records">Skrýt zneplatněné / odstraněné záznamy</string>
+    <string name="refresh_from_nightscout">Obnovit z Nightscoutu</string>
+    <string name="refresheventsfromnightscout">Obnovit z NS</string>
+    <string name="show_invalidated">Zobrazit zneplatněné</string>
+    <string name="hide_invalidated">Skrýt zneplatněné</string>
+    <string name="careportal_remove_started_events">Odebrat záznamy spuštěné AAPS</string>
+    <string name="hide_loop">Skrýt smyčku</string>
+    <string name="show_loop">Zobrazit smyčku</string>
+    <string name="user_entry">Uživatelská položka</string>
+    <string name="clone_label">Klonovat</string>
+    <string name="show_loop_records">Zobrazit záznamy smyčky</string>
+    <string name="show_hide_records">Skrýt záznamy smyčky</string>
 </resources>
