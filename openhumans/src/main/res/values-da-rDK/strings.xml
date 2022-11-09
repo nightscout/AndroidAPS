@@ -14,7 +14,6 @@
     <string name="open_humans_notifications">Open Humans Notifikationer</string>
     <string name="you_have_been_signed_out_of_open_humans">Du er blevet logget ud af Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik her for at logge ind igen, hvis dette ikke var meningen.</string>
-    <string name="upload_now">Upload nu</string>
     <string name="next">Næste</string>
     <string name="welcome_to_open_humans">Velkommen til Open Humans</string>
     <string name="setup_data_upload">Klik på \'Næste\' for at opsætte dataoverførsel.</string>
