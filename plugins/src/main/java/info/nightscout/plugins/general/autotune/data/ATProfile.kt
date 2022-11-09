@@ -1,7 +1,7 @@
 package info.nightscout.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile

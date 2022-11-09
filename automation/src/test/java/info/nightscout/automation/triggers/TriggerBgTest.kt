@@ -76,7 +76,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.androidaps.core.R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
     }
 
     private fun generateOneCurrentRecordBgData(): List<GlucoseValue> {

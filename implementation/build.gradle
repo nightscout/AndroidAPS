@@ -6,17 +6,17 @@ plugins {
     id 'com.hiya.jacoco-android'
 }
 
-apply from: "${project.rootDir}/core/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
-apply from: "${project.rootDir}/core/test_dependencies.gradle"
-apply from: "${project.rootDir}/core/allopen_dependencies.gradle"
-apply from: "${project.rootDir}/core/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 android {
     namespace 'info.nightscout.implementation'
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':core:core-main')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':database')

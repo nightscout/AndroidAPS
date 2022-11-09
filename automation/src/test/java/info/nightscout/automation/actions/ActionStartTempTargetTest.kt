@@ -38,7 +38,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.drawable.ic_temptarget_high, sut.icon())
+        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_temptarget_high, sut.icon())
     }
 
     @Test fun doActionTest() {

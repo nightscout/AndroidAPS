@@ -15,7 +15,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.rx.events.EventDanaRSyncStatus

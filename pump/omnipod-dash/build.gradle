@@ -8,11 +8,11 @@ plugins {
     id "org.jlleitschuh.gradle.ktlint" // TODO move to `subprojects` section in global build.gradle
 }
 
-apply from: "${project.rootDir}/core/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
-apply from: "${project.rootDir}/core/allopen_dependencies.gradle"
-apply from: "${project.rootDir}/core/test_dependencies.gradle"
-apply from: "${project.rootDir}/core/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 detekt { // TODO move to `subprojects` section in global build.gradle
     toolVersion = "1.15.0-RC2"
@@ -37,7 +37,7 @@ dependencies {
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':libraries')
-    implementation project(':core')
+    implementation project(':core:core-main')
     implementation project(':pump:pump-common')
     implementation project(':pump:omnipod-common')
     implementation project(':interfaces')

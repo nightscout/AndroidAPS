@@ -18,14 +18,14 @@ class ActionLoopResumeTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.resumeloop)).thenReturn("Resume loop")
+        `when`(rh.gs(info.nightscout.core.main.R.string.resumeloop)).thenReturn("Resume loop")
         `when`(rh.gs(R.string.notsuspended)).thenReturn("Not suspended")
 
         sut = ActionLoopResume(injector)
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.resumeloop, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.resumeloop, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

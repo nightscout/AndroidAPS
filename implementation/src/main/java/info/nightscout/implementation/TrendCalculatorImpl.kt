@@ -1,6 +1,6 @@
 package info.nightscout.implementation
 
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.shared.interfaces.ResourceHelper

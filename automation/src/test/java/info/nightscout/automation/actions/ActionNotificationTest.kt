@@ -43,8 +43,8 @@ class ActionNotificationTest : TestBase() {
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.notification)).thenReturn("Notification")
+        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(info.nightscout.core.main.R.string.notification)).thenReturn("Notification")
         `when`(
             rh.gs(
                 ArgumentMatchers.eq(R.string.notification_message),
@@ -58,7 +58,7 @@ class ActionNotificationTest : TestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.notification, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.notification, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

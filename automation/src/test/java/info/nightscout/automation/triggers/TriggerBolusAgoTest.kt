@@ -94,6 +94,6 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.androidaps.core.R.drawable.ic_bolus), TriggerBolusAgo(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_bolus), TriggerBolusAgo(injector).icon())
     }
 }

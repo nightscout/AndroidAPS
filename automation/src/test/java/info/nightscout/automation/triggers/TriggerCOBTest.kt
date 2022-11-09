@@ -61,7 +61,7 @@ class TriggerCOBTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.androidaps.core.R.drawable.ic_cp_bolus_carbs), TriggerCOB(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_cp_bolus_carbs), TriggerCOB(injector).icon())
     }
 
     fun generateCobInfo(): CobInfo {

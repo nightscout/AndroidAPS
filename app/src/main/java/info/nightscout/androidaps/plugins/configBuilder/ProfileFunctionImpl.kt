@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper

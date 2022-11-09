@@ -320,7 +320,7 @@ class EopatchPumpPlugin @Inject constructor(
             patchManager.addBolusToHistory(detailedBolusInfo)
 
             return PumpEnactResultImpl(injector).success(true).enacted(true).bolusDelivered(0.0)
-                .carbsDelivered(detailedBolusInfo.carbs).comment(rh.gs(info.nightscout.androidaps.core.R.string.ok))
+                .carbsDelivered(detailedBolusInfo.carbs).comment(rh.gs(info.nightscout.core.main.R.string.ok))
         }
     }
 
@@ -421,7 +421,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResultImpl(injector).success(true).enacted(true) }
             .onErrorReturnItem(
                 PumpEnactResultImpl(injector).success(false).enacted(false).bolusDelivered(0.0)
-                    .comment(rh.gs(info.nightscout.androidaps.core.R.string.error))
+                    .comment(rh.gs(info.nightscout.core.main.R.string.error))
             )
             .blockingGet()
     }
@@ -458,7 +458,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResultImpl(injector).success(true).enacted(true).isTempCancel(true) }
             .onErrorReturnItem(
                 PumpEnactResultImpl(injector).success(false).enacted(false)
-                    .comment(rh.gs(info.nightscout.androidaps.core.R.string.error))
+                    .comment(rh.gs(info.nightscout.core.main.R.string.error))
             )
             .blockingGet()
     }
@@ -479,7 +479,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .map { PumpEnactResultImpl(injector).success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
                     PumpEnactResultImpl(injector).success(false).enacted(false)
-                        .comment(rh.gs(info.nightscout.androidaps.core.R.string.error))
+                        .comment(rh.gs(info.nightscout.core.main.R.string.error))
                 )
                 .blockingGet()
         } else {

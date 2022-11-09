@@ -1,7 +1,7 @@
 include ':app'
 include ':wear'
 include ':database'
-include ':core'
+include ':core:core-main'
 include ':app-wear-shared:rx'
 include ':app-wear-shared:shared'
 include ':app-wear-shared:shared-impl'

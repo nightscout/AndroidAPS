@@ -7,9 +7,9 @@ plugins {
     id 'kotlinx-serialization'
 }
 
-apply from: "${project.rootDir}/core/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
-apply from: "${project.rootDir}/core/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 android {
 

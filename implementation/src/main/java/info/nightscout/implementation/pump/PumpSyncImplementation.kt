@@ -1,6 +1,6 @@
 package info.nightscout.implementation.pump
 
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper

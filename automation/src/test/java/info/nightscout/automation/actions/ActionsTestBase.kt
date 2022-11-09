@@ -180,7 +180,7 @@ ActionsTestBase : TestBaseWithProfile() {
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
 
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.error)).thenReturn("Error")
+        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(info.nightscout.core.main.R.string.error)).thenReturn("Error")
     }
 }

@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmProcess

@@ -48,7 +48,7 @@ class TriggerTimeTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.time, TriggerTime(injector).friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.time, TriggerTime(injector).friendlyName())
     }
 
     @Test fun friendlyDescriptionTest() {
@@ -56,6 +56,6 @@ class TriggerTimeTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.androidaps.core.R.drawable.ic_access_alarm_24dp), TriggerTime(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp), TriggerTime(injector).icon())
     }
 }

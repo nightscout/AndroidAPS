@@ -45,15 +45,15 @@ class ActionAlarmTest : TestBase() {
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.alarm)).thenReturn("Alarm")
+        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
 
         sut = ActionAlarm(injector)
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.alarm, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.alarm, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
@@ -62,7 +62,7 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.drawable.ic_access_alarm_24dp, sut.icon())
+        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
     }
 
     @Test fun doActionTest() {

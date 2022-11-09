@@ -9,8 +9,8 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
-apply from: "${project.rootDir}/core/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 repositories {
     mavenCentral()
@@ -185,7 +185,7 @@ dependencies {
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
-    implementation project(':core')
+    implementation project(':core:core-main')
     implementation project(':interfaces')
     implementation project(':ui')
     implementation project(':plugins')
@@ -227,7 +227,7 @@ dependencies {
 
 }
 
-apply from: "${project.rootDir}/core/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 
 
 /*

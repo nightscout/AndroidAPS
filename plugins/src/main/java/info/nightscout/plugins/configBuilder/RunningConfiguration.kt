@@ -1,6 +1,6 @@
 package info.nightscout.plugins.configBuilder
 
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.Insulin

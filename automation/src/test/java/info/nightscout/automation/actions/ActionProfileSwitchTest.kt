@@ -23,9 +23,9 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         `when`(rh.gs(R.string.profilename)).thenReturn("Change profile to")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.changengetoprofilename), ArgumentMatchers.anyString())).thenReturn("Change profile to %s")
         `when`(rh.gs(R.string.alreadyset)).thenReturn("Already set")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.notexists)).thenReturn("not exists")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
+        `when`(rh.gs(info.nightscout.core.main.R.string.notexists)).thenReturn("not exists")
+        `when`(rh.gs(info.nightscout.core.main.R.string.error_field_must_not_be_empty)).thenReturn("The field must not be empty")
+        `when`(rh.gs(info.nightscout.core.main.R.string.noprofile)).thenReturn("No profile loaded from NS yet")
 
         sut = ActionProfileSwitch(injector)
     }
@@ -107,6 +107,6 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.drawable.ic_actions_profileswitch, sut.icon())
+        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_actions_profileswitch, sut.icon())
     }
 }
