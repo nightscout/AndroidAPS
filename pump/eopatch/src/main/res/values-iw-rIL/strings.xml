@@ -1,2 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="bolusdelivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
+</resources>
