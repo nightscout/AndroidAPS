@@ -52,9 +52,7 @@
     <string name="lastconnection_label">마지막 접속</string>
     <string name="lastbolus_label">최근 Bolus:</string>
     <string name="dailyunits">일 인슐린 총량</string>
-    <string name="basebasalrate_label">기본 Basal양</string>
     <string name="tempbasal_label">임시Basal</string>
-    <string name="virtualpump_extendedbolus_label">확장Bolus</string>
     <string name="reservoir_label">인슐린 잔량</string>
     <string name="pumphistory">펌프 이력</string>
     <string name="viewprofile">프로파일 보기</string>
@@ -121,6 +119,14 @@
     <string name="reset">재설정</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="profile">프로파일</string>
+    <string name="overview_treatment_label">관리</string>
+    <string name="wear_wizard_settings">마법사 설정</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="paused">일시중지</string>
+    <string name="invalid">유효하지 않음</string>
+    <string name="login">로그인</string>
+    <string name="upload_now">지금 업로드하기</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
@@ -151,8 +157,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">프로파일 %1$d%%을 %2$d 분 동안 시작</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
     <!--    APSResult-->
     <string name="canceltemp">임시Basal 취소하기</string>
     <string name="let_temp_basal_run">임시Basal 허용</string>
@@ -379,6 +383,10 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Basal</string>
     <!-- Autotune -->
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
+    <string name="urgent_alarm">긴급 알람</string>
+    <string name="info">정보</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
