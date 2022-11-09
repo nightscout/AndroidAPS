@@ -3,6 +3,10 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="units">Jedinice</string>
+    <string name="basal_shortname">BAZAL</string>
+    <string name="careportal_sensor_label">Senzor</string>
+    <string name="invalid">GREŠKA</string>
+    <string name="unitsnosemicolon">Jedinice</string>
     <!-- WEAR OS-->
-    <!-- Aidex Cgms -->
 </resources>
