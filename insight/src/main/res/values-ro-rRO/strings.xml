@@ -11,7 +11,6 @@
     <string name="stop_pump">Opriți pompa</string>
     <string name="started">Pornit</string>
     <string name="stopped">Oprit</string>
-    <string name="paused">Suspendat</string>
     <string name="operating_mode">Modul de funcționare</string>
     <string name="description_pump_insight_local">Integrare pentru pompele Accu-Chek Insight</string>
     <string name="not_inserted">Nu este introdus</string>
