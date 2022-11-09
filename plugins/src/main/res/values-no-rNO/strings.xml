@@ -140,7 +140,7 @@
     <string name="not_completed_yet">Enda Ikke fullført</string>
     <string name="time_elapsed">Tid brukt</string>
     <!-- Overview -->
-    <string name="snooze">Slumre</string>
+    <string name="snooze">Bekreft</string>
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
     <string name="statuslights_iage_warning">Terskel for advarsel, alder på insulin [h]</string>
     <string name="statuslights_iage_critical">Terskel for kritisk alder på insulin [h]</string>
