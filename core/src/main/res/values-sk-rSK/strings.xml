@@ -61,9 +61,9 @@
     <string name="lastconnection_label">Posledné spojenie</string>
     <string name="lastbolus_label">Posledný bolus</string>
     <string name="dailyunits">Jednotiek za deň</string>
-    <string name="basebasalrate_label">Základná hodnota bazálu</string>
+    <string name="base_basal_rate_label">Základná hodnota bazálu</string>
     <string name="tempbasal_label">Dočasný bazál</string>
-    <string name="virtualpump_extendedbolus_label">Rozložený bolus</string>
+    <string name="extended_bolus_label">Predĺžený bolus</string>
     <string name="reservoir_label">Zásobník</string>
     <string name="pumphistory">História pumpy</string>
     <string name="viewprofile">Zobraziť profil</string>
@@ -158,6 +158,10 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
+    <string name="paused">Pozastavené</string>
+    <string name="invalid">NEPLATNÝ</string>
+    <string name="login">Prihlásenie</string>
+    <string name="upload_now">Nahrať teraz</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -191,8 +195,6 @@
     <string name="profile_carbs_per_unit">g/JI</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Spustiť profil %1$d%% na %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Iba diskrétne hodnoty a nie rozsahy sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
     <!--    APSResult-->
     <string name="canceltemp">Zrušiť dočasný bazál</string>
     <string name="let_temp_basal_run">Nechať bežať aktuálny dočasný bazál</string>
@@ -524,6 +526,10 @@
     <string name="autotune_run_with_error">Chyba pri poslednom spustení Autotune</string>
     <string name="autotune_run_cancelled">Bola zistená iná spustená úloha Autotune, spustenie zrušené</string>
     <string name="needconnectpermission">Aplikácia vyžaduje povolenie bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>
+    <string name="urgent_alarm">Urgentný alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <plurals name="days">
