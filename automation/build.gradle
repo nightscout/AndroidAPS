@@ -11,6 +11,7 @@ apply from: "${project.rootDir}/core/android_module_dependencies.gradle"
 apply from: "${project.rootDir}/core/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/jacoco_global.gradle"
+
 android {
     namespace 'info.nightscout.automation'
 }
@@ -22,4 +23,6 @@ dependencies {
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':interfaces')
+
+    api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
 }

@@ -2,7 +2,7 @@ package info.nightscout.automation.elements
 
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.utils.ui.WeekdayPicker
+import info.nightscout.automation.ui.WeekdayPicker
 import info.nightscout.automation.R
 import java.util.Calendar
 

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.ui
+package info.nightscout.automation.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.widget.Checkable
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import info.nightscout.androidaps.core.databinding.WeekdayPickerBinding
+import info.nightscout.automation.databinding.WeekdayPickerBinding
 import info.nightscout.shared.extensions.toVisibility
-import java.util.*
+import java.util.Calendar
 
 class WeekdayPicker constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
