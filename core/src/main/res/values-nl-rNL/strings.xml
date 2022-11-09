@@ -193,8 +193,6 @@
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
     <!--    APSResult-->
     <string name="canceltemp">Annuleer tijdelijk basaal</string>
     <string name="let_temp_basal_run">Laat tijdelijk basaal lopen</string>
