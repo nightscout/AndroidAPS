@@ -188,8 +188,6 @@
     <string name="profile_carbs_per_unit">g/Ü</string>
     <!--    ProfileFunction-->
     <string name="startprofile">%2$d dakika için %1$d%% profilini başlat</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Sanal pompada bazal/bolus ayrıntı düzeyi için yalnızca ayrık değerler desteklenir. Aralıklar değil.</string>
     <!--    APSResult-->
     <string name="canceltemp">Geçici bazali iptal et</string>
     <string name="let_temp_basal_run">Geçici bazala izin ver</string>
