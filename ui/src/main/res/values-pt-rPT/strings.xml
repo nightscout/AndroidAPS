@@ -15,5 +15,24 @@
     <string name="submit">Enviar</string>
     <!-- CareDialog -->
     <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IHC: %2$.1f</string>
+    <string name="superbolus">Superbólus</string>
+    <string name="treatments_wizard_total_label">Total</string>
     <!-- Treatments -->
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IA:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Hidratos:</string>
+    <string name="treatments_iobtotal_label_string">IA Total:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Rácio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IA:</string>
+    <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
+    <string name="treatments_wizard_tt_label">AT</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="prime">Purgar</string>
+    <string name="refresheventsfromnightscout">Atualizar a partir do NS</string>
+    <string name="clone_label">Clone</string>
 </resources>
