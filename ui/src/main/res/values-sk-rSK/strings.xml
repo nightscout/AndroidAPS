@@ -35,5 +35,42 @@
     <string name="bg_meter">Glukomer</string>
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Spolu</string>
     <!-- Treatments -->
+    <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Inzulín:</string>
+    <string name="treatments_carbs_label_string">Sacharidy:</string>
+    <string name="treatments_iobtotal_label_string">Celkový IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Celková aktivita IOB:</string>
+    <string name="tempbasals_realduration_label_string">Trv:</string>
+    <string name="tempbasals_netratio_label_string">Pomer:</string>
+    <string name="tempbasals_netinsulin_label_string">Inz:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
+    <string name="treatments_wizard_tt_label">DC</string>
+    <string name="treatments_wizard_correction_label">Korekcia</string>
+    <string name="meal_bolus">Jedlo</string>
+    <string name="prime">Plnenie</string>
+    <string name="profile_changes">Zmeny profilu</string>
+    <string name="tempt_targets">Dočasné ciele</string>
+    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
+    <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
+    <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
+    <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
+    <string name="refresheventsfromnightscout">Aktualizovať z NS</string>
+    <string name="show_invalidated">Zobraziť zneplatnené</string>
+    <string name="hide_invalidated">Skryť zneplatnené</string>
+    <string name="careportal_remove_started_events">Odstrániť všetky záznamy AAPS spustený</string>
+    <string name="hide_loop">Skryť uzavretý okruh</string>
+    <string name="show_loop">Zobraziť uzavretý okruh</string>
+    <string name="user_entry">Záznam užívateľa</string>
+    <string name="clone_label">Klonovať</string>
+    <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
+    <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
 </resources>
