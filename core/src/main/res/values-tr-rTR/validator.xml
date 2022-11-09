@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Yalnızca rakam girebilirsiniz.</string>
+    <string name="error_only_numeric_digits_range_allowed">%1$s - %2$s aralığında yalnızca rakamlar kullanılabilir.</string>
+    <string name="error_this_field_cannot_contain_special_character">Bu alan herhangi bir özel karakter içeremez</string>
+    <string name="error_only_standard_letters_are_allowed">Yalnızca standart harflere izin verilir</string>
+    <string name="error_field_must_not_be_empty">Alan boş olmamalı</string>
+    <string name="error_email_address_not_valid">E-posta adresi geçerli değil</string>
+    <string name="error_creditcard_number_not_valid">Kredi kartı numarası geçerli değil</string>
+    <string name="error_phone_not_valid">Telefon numarası geçerli değil</string>
+    <string name="error_domain_not_valid">Alan adı geçerli değil</string>
+    <string name="error_ip_not_valid">IP Adresi geçerli değil</string>
+    <string name="error_url_not_valid">Web adresi geçerli değil</string>
+    <string name="error_notvalid_personname">Geçerli bir ad veya soyadı değil.</string>
+    <string name="error_notvalid_personfullname">Geçerli bir isim değil.</string>
+    <string name="error_date_not_valid">Fromat geçerli değil</string>
+    <string name="error_mustbe4digitnumber">4 haneli sayı olmalı</string>
+    <string name="error_mustbe6digitnumber">6 haneli sayı olmalı</string>
+    <string name="error_mustbe12hexadidits">12 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>
+    <string name="error_mustbe8hexadidits">8 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>
+    <string name="error_mustbe4hexadidits">4 karakter olmalı ve ABCDEF0123456789 kullanılmalıdır</string>
+    <string name="error_not_a_minimum_length">Minimum uzunlukta değil</string>
+    <string name="error_pin_not_valid">Pin 3- 6 rakamdan oluşmalı, aynı veya sıralı rakamlar kullanılmamalıdır</string>
+</resources>
