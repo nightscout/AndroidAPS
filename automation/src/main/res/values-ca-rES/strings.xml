@@ -110,4 +110,5 @@
     <string name="automation_event">Esdeveniment d\'automatització</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Acció de l’usuari</string>
+    <!-- WeekdayPicker -->
 </resources>
