@@ -11,7 +11,6 @@
     <string name="stop_pump">Zatrzymaj pompę</string>
     <string name="started">Rozpoczęte</string>
     <string name="stopped">Zatrzymane</string>
-    <string name="paused">Wstrzymano</string>
     <string name="operating_mode">Tryb działania</string>
     <string name="description_pump_insight_local">Integracja pompy dla pomp Accu-Check Insight</string>
     <string name="not_inserted">Nie wprowadzono</string>
