@@ -17,14 +17,60 @@
     <string name="configure">Konfigurer gjennomsiktighet</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="activity_monitor">Aktivitetsmonitor</string>
+    <string name="do_you_want_reset_stats">Vil du tilbakestille aktivitetsstatistikken?</string>
     <string name="statistics">Statistikk</string>
     <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="invalid_age">Ugyldig alder</string>
+    <string name="invalid_weight">Ugyldig vekt</string>
     <string name="id">ID:</string>
     <string name="submit">Lagre</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vekt</string>
+    <string name="most_common_profile">Mest vanlig profil:</string>
     <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
     <!-- CareDialog -->
+    <string name="glucose_type">Glukosetype</string>
+    <string name="bg_other">Annet</string>
+    <string name="bg_meter">Måler</string>
+    <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Total</string>
     <!-- Treatments -->
+    <string name="no_records_available">Ingen registreringer tilgjengelig</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Karbo:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Total IOB aktivitet:</string>
+    <string name="tempbasals_realduration_label_string">Varighet:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Totalt IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Korr</string>
+    <string name="meal_bolus">Måltid</string>
+    <string name="prime">Prime</string>
+    <string name="profile_changes">Profilendringer</string>
+    <string name="tempt_targets">Temp Mål</string>
+    <string name="carbs_and_bolus">Karbohydrater og bolus</string>
+    <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
+    <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
+    <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
+    <string name="refresheventsfromnightscout">Oppdater fra NS</string>
+    <string name="show_invalidated">Vis ugyldige</string>
+    <string name="hide_invalidated">Skjul ugyldige</string>
+    <string name="careportal_remove_started_events">Fjern oppføringer startet av AAPS</string>
+    <string name="hide_loop">Skjul loop</string>
+    <string name="show_loop">Vis loop</string>
+    <string name="user_entry">Brukeroppføring</string>
+    <string name="clone_label">Dupliser</string>
+    <string name="show_loop_records">Vis loop-registreringer</string>
+    <string name="show_hide_records">Skjul loop-registreringer</string>
 </resources>
