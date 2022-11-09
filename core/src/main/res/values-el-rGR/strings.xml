@@ -40,6 +40,12 @@
     <string name="reset">επαναφορά</string>
     <string name="profileswitch_ismissing">Η αλλαγή προφίλ λείπει. Αλλάξτε το προφίλ ή πατήστε \"Ενεργοποίηση Προφίλ\" στο Τοπικό Προφίλ.</string>
     <string name="profile">Προφίλ</string>
+    <string name="overview_treatment_label">Θεραπεία</string>
+    <string name="wear_wizard_settings">Ρυθμίσεις Γρήγορου Οδηγού</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
+    <string name="paused">Παύση</string>
+    <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -47,7 +53,6 @@
     <!--    Profile-->
     <!--    ProfileFunction-->
     <string name="startprofile">Έναρξη προφίλ %1$d%% για %2$d λεπτά</string>
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -76,5 +81,9 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Βασικός Ρυθμός</string>
     <!-- Autotune -->
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>
+    <string name="urgent_alarm">Συναγερμός έκτακτης ανάγκης</string>
+    <string name="info">Πληροφορίες</string>
     <!-- SmsCommunicator -->
 </resources>
