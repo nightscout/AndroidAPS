@@ -61,9 +61,9 @@
     <string name="lastconnection_label">Siste tilkobling</string>
     <string name="lastbolus_label">Siste bolus</string>
     <string name="dailyunits">Daglige enheter</string>
-    <string name="basebasalrate_label">Basis basal dose</string>
+    <string name="base_basal_rate_label">Profilens basaldose</string>
     <string name="tempbasal_label">Temp basal</string>
-    <string name="virtualpump_extendedbolus_label">Forlenget bolus</string>
+    <string name="extended_bolus_label">Forlenget bolus</string>
     <string name="reservoir_label">Reservoar</string>
     <string name="pumphistory">Pumpe historikk</string>
     <string name="viewprofile">Vis profil</string>
@@ -149,6 +149,19 @@
     <string name="reset">tilbakestill</string>
     <string name="profileswitch_ismissing">Profilbytte mangler. Utfør et profilbytte og trykk på \"Aktiver profil\" i din lokale profil.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Velg hva som skal fjernes</string>
+    <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
+    <string name="overview_treatment_label">Behandling</string>
+    <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
+    <string name="wear_wizard_settings">Innstillinger for veiviser</string>
+    <string name="bg_trend_label">15 min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="paused">Pauset</string>
+    <string name="invalid">UGYLDIG</string>
+    <string name="login">Logg inn</string>
+    <string name="upload_now">Last opp nå</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -182,8 +195,6 @@
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
     <!--    APSResult-->
     <string name="canceltemp">Avbryt temp basal</string>
     <string name="let_temp_basal_run">Fortsett temp basal</string>
@@ -515,6 +526,10 @@
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
     <string name="needconnectpermission">Appen trenger bluetooth tillatelse</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
+    <string name="urgent_alarm">Kritisk alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <plurals name="days">
