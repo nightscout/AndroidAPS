@@ -11,7 +11,6 @@
     <string name="stop_pump">Спри помпа</string>
     <string name="started">Стартиран</string>
     <string name="stopped">Спрян</string>
-    <string name="paused">Пауза</string>
     <string name="operating_mode">Работен режим</string>
     <string name="description_pump_insight_local">Драйвер за Accu-Chek Insight помпи</string>
     <string name="not_inserted">Не е поставено</string>
