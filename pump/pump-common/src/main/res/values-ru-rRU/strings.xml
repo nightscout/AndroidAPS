@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Серийный номер помпы</string>
     <string name="bolus_delivered">Подано %1$.2fед / %2$.2fед</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Никогда не подключалась</string>
-    <string name="pump_status_waking_up">Пробуждение</string>
-    <string name="pump_status_error_comm">Ошибка связи</string>
-    <string name="pump_status_timeout_comm">Таймаут связи</string>
-    <string name="pump_status_pump_unreachable">Помпа недоступна</string>
-    <string name="pump_status_invalid_config">Недопустимая конфигурация</string>
-    <string name="pump_status_active">Работает</string>
-    <string name="pump_status_sleeping">Спящий режим</string>
     <string name="pump_status_not_initialized">Нет инициализации</string>
     <string name="pump_status_initialized">Инициализировано</string>
     <string name="pump_status_encrypt">Шифрование коммуникации</string>
