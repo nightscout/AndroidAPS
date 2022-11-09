@@ -19,5 +19,36 @@
     <string name="weight_label">משקל</string>
     <!-- CareDialog -->
     <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
+    <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
+    <string name="superbolus">סופר בולוס</string>
+    <string name="treatments_wizard_total_label">סה\"כ</string>
     <!-- Treatments -->
+    <string name="calculation_short">חישוב</string>
+    <string name="treatments_iob_label_string">אינסולין פעיל:</string>
+    <string name="treatments_insulin_label_string">אינסולין:</string>
+    <string name="treatments_carbs_label_string">פחמימות:</string>
+    <string name="treatments_iobtotal_label_string"> אינסולין פעיל כולל:</string>
+    <string name="tempbasals_realduration_label_string">משך:</string>
+    <string name="tempbasals_netratio_label_string">יחס:</string>
+    <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">תיקון</string>
+    <string name="prime">תיחול</string>
+    <string name="profile_changes">שינויים בפרופיל</string>
+    <string name="tempt_targets">ערכי מטרה זמניים</string>
+    <string name="carbs_and_bolus">פחמ\' ובולוס</string>
+    <string name="show_invalidated_records">הצג רשומות מבוטלות\\מחוקות</string>
+    <string name="hide_invalidated_records">הסתר רשומות מבוטלות\\מחוקות</string>
+    <string name="refresh_from_nightscout">רענן מנייטסקאוט</string>
+    <string name="refresheventsfromnightscout">רענון אירועים מנייטסקאוט</string>
+    <string name="show_invalidated">הצג פסולים</string>
+    <string name="hide_invalidated">הסתר פסולים</string>
+    <string name="hide_loop">החבא לולאה</string>
+    <string name="show_loop">הצג לולאה</string>
+    <string name="clone_label">שכפול</string>
+    <string name="show_loop_records">הצג רשומות לולאה</string>
+    <string name="show_hide_records">החבא רשומות לולאה</string>
 </resources>
