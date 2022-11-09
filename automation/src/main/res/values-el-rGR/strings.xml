@@ -86,4 +86,5 @@
     <string name="edit_short">Επεξεργασία</string>
     <string name="triggers">Ενεργοποιήσεις:</string>
     <string name="preconditions">Προϋποθέσεις:</string>
+    <!-- WeekdayPicker -->
 </resources>
