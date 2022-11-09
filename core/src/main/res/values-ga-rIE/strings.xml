@@ -7,13 +7,14 @@
     <string name="loopsuspended">Lúb ar fionraí</string>
     <string name="tdd_total">TDD Lomlán</string>
     <string name="profile">Próifíl</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_basaliob_label">Bunaidh IOB</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -31,5 +32,6 @@
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
 </resources>
