@@ -9,21 +9,20 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.DialogAppCompatActivity
-import info.nightscout.core.main.R
-import info.nightscout.core.main.databinding.DialogBolusprogressBinding
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.core.main.R
+import info.nightscout.core.main.databinding.DialogBolusprogressBinding
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -34,7 +33,6 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
 
@@ -122,30 +120,30 @@ class BolusProgressDialog : DaggerDialogFragment() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(rh) }, fabricPrivacy::logException)
+            .subscribe { binding.status.text = it.getStatus(rh) }
         disposable += rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           aapsLogger.debug(LTag.PUMP, "Running id $id. Close request id  ${it.id}")
-                           if (it.id == null || it.id == id)
-                               if (running) dismiss()
-                       }, fabricPrivacy::logException)
+            .subscribe {
+                aapsLogger.debug(LTag.PUMP, "Running id $id. Close request id  ${it.id}")
+                if (it.id == null || it.id == id)
+                    if (running) dismiss()
+            }
         disposable += rxBus
             .toObservable(EventOverviewBolusProgress::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           if (it.t?.id == id) {
-                               aapsLogger.debug(LTag.UI, "Status: ${it.status} Percent: ${it.percent}")
-                               binding.status.text = it.status
-                               binding.progressbar.progress = it.percent
-                               if (it.percent == 100) {
-                                   binding.stop.visibility = View.INVISIBLE
-                                   scheduleDismiss()
-                               }
-                               state = it.status
-                           }
-                       }, fabricPrivacy::logException)
+            .subscribe {
+                if (it.t?.id == id) {
+                    aapsLogger.debug(LTag.UI, "Status: ${it.status} Percent: ${it.percent}")
+                    binding.status.text = it.status
+                    binding.progressbar.progress = it.percent
+                    if (it.percent == 100) {
+                        binding.stop.visibility = View.INVISIBLE
+                        scheduleDismiss()
+                    }
+                    state = it.status
+                }
+            }
     }
 
     override fun dismiss() {

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.core.fabric
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -6,7 +6,6 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.main.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

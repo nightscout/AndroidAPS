@@ -20,14 +20,14 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.LocalAlertUtils
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged

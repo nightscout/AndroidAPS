@@ -24,12 +24,12 @@ import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.SourceFragmentBinding
 import info.nightscout.plugins.databinding.SourceItemBinding

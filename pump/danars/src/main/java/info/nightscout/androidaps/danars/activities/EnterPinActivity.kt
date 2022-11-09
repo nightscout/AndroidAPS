@@ -9,10 +9,10 @@ import info.nightscout.androidaps.danars.databinding.DanarsEnterPinActivityBindi
 import info.nightscout.androidaps.danars.services.BLEComm
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.hexStringToByteArray
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.textValidator.DefaultEditTextValidator
 import info.nightscout.androidaps.utils.textValidator.EditTextValidator
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable

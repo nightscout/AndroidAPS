@@ -15,11 +15,11 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.plugins.source.BGSourceFragment

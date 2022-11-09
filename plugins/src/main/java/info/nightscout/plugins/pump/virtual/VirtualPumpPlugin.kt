@@ -15,13 +15,10 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.interfaces.pump.PumpType
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.InstanceId
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
@@ -29,6 +26,8 @@ import info.nightscout.interfaces.VirtualPump
 import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.ManufacturerType
+import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.plugins.R
 import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
@@ -384,7 +383,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun model(): PumpType = pumpDescription.pumpType
 
-    override fun serialNumber(): String = InstanceId.instanceId
+    override fun serialNumber(): String = info.nightscout.core.fabric.InstanceId.instanceId
 
     override fun shortStatus(veryShort: Boolean): String = "Virtual Pump"
 

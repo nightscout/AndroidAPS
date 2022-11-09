@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.databinding.WearFragmentBinding
-import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

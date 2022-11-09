@@ -10,7 +10,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.VirtualPumpFragmentBinding
 import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui

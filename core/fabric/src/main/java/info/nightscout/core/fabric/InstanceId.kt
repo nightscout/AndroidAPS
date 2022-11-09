@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.core.fabric
 
 import com.google.firebase.installations.FirebaseInstallations
 

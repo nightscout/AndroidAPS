@@ -12,13 +12,13 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus

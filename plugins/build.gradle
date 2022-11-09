@@ -21,6 +21,7 @@ dependencies {
     implementation project(':database')
     implementation project(':graphview')
     implementation project(':core:core-main')
+    implementation project(':core:fabric')
     implementation project(':interfaces')
     implementation project(':ns-sdk')
 
@@ -34,7 +35,7 @@ dependencies {
     }
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-//    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    //api "com.squareup.retrofit2:retrofit:$retrofit2_version"
     api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 

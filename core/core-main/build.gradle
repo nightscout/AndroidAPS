@@ -63,16 +63,6 @@ dependencies {
     api "androidx.work:work-rxjava3:$work_version"
 
 
-    //Firebase
-    api platform('com.google.firebase:firebase-bom:30.5.0')
-    api "com.google.firebase:firebase-analytics-ktx"
-    api "com.google.firebase:firebase-crashlytics-ktx"
-    // StatsActivity not in use now
-    //    api "com.google.firebase:firebase-messaging-ktx"
-    //    api 'com.google.firebase:firebase-auth-ktx'
-    //    api 'com.google.firebase:firebase-database-ktx'
-
-
     //CryptoUtil
     api 'com.madgag.spongycastle:core:1.58.0.0'
     api "com.google.crypto.tink:tink-android:$tink_version"

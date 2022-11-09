@@ -7,7 +7,6 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.utils.DateUtil
@@ -31,7 +30,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         binding = ActivitySurveyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.id.text = InstanceId.instanceId
+        binding.id.text = info.nightscout.core.fabric.InstanceId.instanceId
 
         val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
@@ -70,7 +69,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         binding.submit.setOnClickListener {
             val r = FirebaseRecord()
-            r.id = InstanceId.instanceId
+            r.id = info.nightscout.core.fabric.InstanceId.instanceId
             r.age = SafeParse.stringToInt(binding.age.text.toString())
             r.weight = SafeParse.stringToInt(binding.weight.text.toString())
             if (r.age < 1 || r.age > 120) {

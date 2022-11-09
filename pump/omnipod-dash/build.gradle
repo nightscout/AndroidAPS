@@ -38,6 +38,7 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':libraries')
     implementation project(':core:core-main')
+    implementation project(':core:fabric')
     implementation project(':pump:pump-common')
     implementation project(':pump:omnipod-common')
     implementation project(':interfaces')

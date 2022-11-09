@@ -143,11 +143,6 @@
 
     <color name="transparent">#00000000</color>
 
-    <!-- Maintenance -->
-    <color name="metadataOk">#66BB6A</color>
-    <color name="metadataTextWarning">#FF8C00</color>
-    <color name="metadataTextError">#FF5555</color>
-
     <!-- Import/Export -->
     <color name="importListAdditionalInfo">#666666</color>
     <color name="importListFileName">#000000</color>

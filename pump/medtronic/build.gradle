@@ -24,4 +24,5 @@ dependencies {
     implementation project(':pump:pump-core')
     implementation project(':pump:rileylink')
     implementation project(':interfaces')
+    implementation project(path: ':core:fabric')
 }

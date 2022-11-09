@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <color name="metadataOk">#66BB6A</color>
+    <color name="metadataTextWarning">#FF8C00</color>
+    <color name="metadataTextError">#FF5555</color>
+
+</resources>

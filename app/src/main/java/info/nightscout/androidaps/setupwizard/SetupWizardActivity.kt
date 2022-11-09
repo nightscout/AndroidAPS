@@ -14,8 +14,8 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.locale.LocaleHelper.update
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.AapsSchedulers

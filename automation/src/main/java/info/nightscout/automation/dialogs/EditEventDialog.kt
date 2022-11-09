@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.automation.AutomationEvent
 import info.nightscout.automation.AutomationPlugin
@@ -24,8 +22,10 @@ import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateAction
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.events.EventAutomationUpdateTrigger
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.extensions.toVisibility
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

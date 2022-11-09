@@ -5,10 +5,6 @@ import android.os.Build
 import android.telephony.SmsManager
 import dagger.Module
 import dagger.Provides
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
-import javax.inject.Singleton
 
 @Module(
     includes = [
@@ -19,10 +15,6 @@ import javax.inject.Singleton
     ]
 )
 open class CoreModule {
-
-    @Provides
-    @Singleton
-    fun provideResources(context: Context, fabricPrivacy: FabricPrivacy): ResourceHelper = ResourceHelperImplementation(context, fabricPrivacy)
 
     @Suppress("DEPRECATION")
     @Provides

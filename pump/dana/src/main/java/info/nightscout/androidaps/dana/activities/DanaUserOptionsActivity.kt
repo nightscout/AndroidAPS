@@ -2,17 +2,17 @@ package info.nightscout.androidaps.dana.activities
 
 import android.content.Context
 import android.os.Bundle
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.ActivityNames
+import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.logging.LTag

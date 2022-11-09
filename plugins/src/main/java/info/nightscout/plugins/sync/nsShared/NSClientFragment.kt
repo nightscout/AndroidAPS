@@ -16,13 +16,13 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DataSyncSelector
+import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.NsClient
 import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginFragment
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.NsClientFragmentBinding
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI

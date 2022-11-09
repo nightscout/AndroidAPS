@@ -7,14 +7,14 @@ import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.Sync
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.Sync
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader

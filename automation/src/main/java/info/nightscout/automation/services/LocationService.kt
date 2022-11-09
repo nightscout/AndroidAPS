@@ -16,17 +16,17 @@ import android.os.IBinder
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
-import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.shared.utils.T
 import info.nightscout.automation.R
 import info.nightscout.automation.events.EventLocationChange
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 

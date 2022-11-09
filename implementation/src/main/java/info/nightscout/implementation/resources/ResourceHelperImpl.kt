@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.resources
+package info.nightscout.implementation.resources
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,20 +9,26 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
-import androidx.annotation.*
+import androidx.annotation.ArrayRes
+import androidx.annotation.BoolRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
+import info.nightscout.androidaps.utils.resources.getThemeColor
+import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 /**
  * Created by adrian on 2019-12-23.
  */
-class ResourceHelperImplementation @Inject constructor(var context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
+class ResourceHelperImpl @Inject constructor(var context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
 
     override fun updateContext(ctx: Context?) {
         ctx?.let { context = it }

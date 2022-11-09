@@ -19,6 +19,7 @@ android {
 dependencies {
     implementation project(':graphview')
     implementation project(':core:core-main')
+    implementation project(':core:fabric')
     implementation project(':database')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')

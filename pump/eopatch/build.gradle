@@ -26,6 +26,7 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':database')
     implementation project(':core:core-main')
+    implementation project(':core:fabric')
     implementation project(':interfaces')
 
     //RxAndroidBle
