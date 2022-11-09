@@ -10,7 +10,7 @@
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Pod Yönetimi menüsünde RileyLink İstatistikleri düğmesini göster</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Eylemler\'de pil değişikliği günlüğünü etkinleştir</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO bildirimleri için ses etkinleştirildi</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Belirsiz GBO bildirimleri için sesi etkinleştir</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Belirsiz SMB bildirimleri için ses etkinleştirildi</string>
     <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Belirsiz bolus bildirimleri için ses etkinleştirildi</string>
     <!-- Omnipod Eros - History -->
