@@ -57,9 +57,7 @@
     <string name="lastconnection_label">התחברות אחרונה</string>
     <string name="lastbolus_label">בולוס אחרון</string>
     <string name="dailyunits">יחידות יומיות</string>
-    <string name="basebasalrate_label">מינון בזאלי בסיסי</string>
     <string name="tempbasal_label">בזאלי זמני</string>
-    <string name="virtualpump_extendedbolus_label">בולוס ממושך</string>
     <string name="reservoir_label">מכל</string>
     <string name="pumphistory">היסטוריית המשאבה</string>
     <string name="viewprofile">הצג פרופיל</string>
@@ -120,6 +118,19 @@
     <string name="remove_label">הסר</string>
     <string name="activate_profile">הפעלת פרופיל</string>
     <string name="reset">איפוס</string>
+    <string name="select_for_removal">בחרו להסרה</string>
+    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים? </string>
+    <string name="overview_treatment_label">טיפול</string>
+    <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
+    <string name="wear_wizard_settings">הגדרות אשף</string>
+    <string name="bg_trend_label">מגמת 15 דקות</string>
+    <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
+    <string name="bolus_iob_label">בולוס פעיל</string>
+    <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
+    <string name="paused">מושהה</string>
+    <string name="invalid">לא חוקי</string>
+    <string name="login">התחברות</string>
+    <string name="upload_now">העלה עכשיו</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
@@ -152,8 +163,6 @@
     <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
     <!--    APSResult-->
     <string name="canceltemp">ביטול בזאלי זמני</string>
     <string name="let_temp_basal_run">אפשר לבזאלי זמני לרוץ</string>
@@ -478,6 +487,10 @@
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <string name="needconnectpermission">האפליקציה צריכה הרשאה לבלוטות\'</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
+    <string name="urgent_alarm">התראה דחופה</string>
+    <string name="info">מידע</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
