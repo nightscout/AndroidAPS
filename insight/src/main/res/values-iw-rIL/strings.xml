@@ -11,7 +11,6 @@
     <string name="stop_pump">עצור משאבה</string>
     <string name="started">החל</string>
     <string name="stopped">נעצר</string>
-    <string name="paused">מושהה</string>
     <string name="operating_mode">מצב פעולה</string>
     <string name="description_pump_insight_local">חיבור משאבת Accu-Chek Insight</string>
     <string name="not_inserted">לא הוכנס</string>
