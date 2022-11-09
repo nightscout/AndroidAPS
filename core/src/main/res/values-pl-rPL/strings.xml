@@ -53,9 +53,7 @@
     <string name="lastconnection_label">Ostatnie połączenie</string>
     <string name="lastbolus_label">Ostatni bolus</string>
     <string name="dailyunits">Jednostki dzienne</string>
-    <string name="basebasalrate_label">Podstawowa dawka bazowa</string>
     <string name="tempbasal_label">Baza tymczasowa</string>
-    <string name="virtualpump_extendedbolus_label">Bolus Przedłużony</string>
     <string name="reservoir_label">Zbiornik</string>
     <string name="pumphistory">Historia pompy</string>
     <string name="viewprofile">Zobacz profil</string>
@@ -123,6 +121,18 @@
     <string name="reset">ponowne uruchomienie</string>
     <string name="profileswitch_ismissing">Brakuje ZmianyProfilu. Proszę wykonać ZmianęProfilu lub nacisnąć \"Aktywuj Profil\" w ProfiluLokalnym</string>
     <string name="profile">Profil</string>
+    <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
+    <string name="overview_treatment_label">Terapia</string>
+    <string name="copytolocalprofile">Utworzyć nowy profil na bazie wybranego profilu?</string>
+    <string name="wear_wizard_settings">Ustawienia kreatora</string>
+    <string name="bg_trend_label">Trend 15 minutowy</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB z bolusów</string>
+    <string name="treatments_wizard_basaliob_label">IOB z bazy</string>
+    <string name="paused">Wstrzymano</string>
+    <string name="invalid">NIEPRAWIDŁOWY</string>
+    <string name="login">Zaloguj się</string>
+    <string name="upload_now">Prześlij teraz</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
     <string name="pumplimit">ograniczenie pompy</string>
@@ -153,8 +163,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Uruchom profil %1$d%% na %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">*Tylko wartości dyskretne, nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
     <!--    APSResult-->
     <string name="canceltemp">Wyłącz bazę tymczasową</string>
     <string name="let_temp_basal_run">Pozwól na działanie bazy tymczasowej</string>
@@ -424,6 +432,10 @@
     <string name="sort_label">Sortuj</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplikacja wymaga uprawnienia Bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
+    <string name="urgent_alarm">Pilny alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
