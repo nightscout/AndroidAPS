@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
+    <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
+    <string name="error_this_field_cannot_contain_special_character">이 영역은 특수 문자를 입력할 수 없습니다</string>
+    <string name="error_only_standard_letters_are_allowed">표준 문자만 입력 가능합니다.</string>
+    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
+    <string name="error_email_address_not_valid">유효하지 않은 이메일 주소</string>
+    <string name="error_creditcard_number_not_valid">신용 카드 번호가 유효하지 않습니다.</string>
+    <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
+    <string name="error_domain_not_valid">유효하지 않은 도메인 이름</string>
+    <string name="error_ip_not_valid">유효하지 않은 IP 주소</string>
+    <string name="error_url_not_valid">Web URL이 유효하지 않습니다.</string>
+    <string name="error_notvalid_personname">유효하지 않은 성 또는 이름</string>
+    <string name="error_notvalid_personfullname">유효하지 않은 이름</string>
+    <string name="error_date_not_valid">유효하지 않은 형식</string>
+    <string name="error_mustbe4digitnumber">4자리 숫자이어야 함</string>
+    <string name="error_mustbe6digitnumber">6자리 숫자이어야 함</string>
+    <string name="error_mustbe12hexadidits">ABCDEF0123456789로 구성된 12자리 문자이어야 함</string>
+    <string name="error_mustbe8hexadidits">ABCDEF083456789로 구성된 8자리 문자이어야 함</string>
+    <string name="error_mustbe4hexadidits">ABCDEF043456789로 구성된 4자리 문자이어야 함</string>
+    <string name="error_not_a_minimum_length">최소 길이가 안됨</string>
+    <string name="error_pin_not_valid">비밀번호는 똑같은 숫자나 연속된 숫자를 제외한 3~6자리 숫자이어야 함</string>
+</resources>
