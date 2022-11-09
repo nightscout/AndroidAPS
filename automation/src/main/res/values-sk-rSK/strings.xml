@@ -123,4 +123,11 @@
     <string name="remove_sort">Odstrániť/zoradiť</string>
     <string name="stop_processing">Zastaviť spracovanie</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Ut</string>
+    <string name="wednesday_short">St</string>
+    <string name="thursday_short">Št</string>
+    <string name="friday_short">Pi</string>
+    <string name="saturday_short">So</string>
+    <string name="sunday_short">Ne</string>
 </resources>
