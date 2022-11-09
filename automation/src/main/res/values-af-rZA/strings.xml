@@ -86,4 +86,5 @@
     <string name="edit_short">WYSIG</string>
     <string name="triggers">Snellers:</string>
     <string name="preconditions">Vereistes:</string>
+    <!-- WeekdayPicker -->
 </resources>
