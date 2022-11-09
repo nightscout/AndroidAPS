@@ -61,9 +61,9 @@
     <string name="lastconnection_label">Poslední spojení</string>
     <string name="lastbolus_label">Poslední bolus</string>
     <string name="dailyunits">Jednotek za den</string>
-    <string name="basebasalrate_label">Základní hodnota bazálu</string>
+    <string name="base_basal_rate_label">Základní hodnota bazálu</string>
     <string name="tempbasal_label">Dočasný bazál</string>
-    <string name="virtualpump_extendedbolus_label">Prodloužený bolus</string>
+    <string name="extended_bolus_label">Prodloužený bolus</string>
     <string name="reservoir_label">Zásobník</string>
     <string name="pumphistory">Historie pumpy</string>
     <string name="viewprofile">Zobrazit profil</string>
@@ -149,6 +149,19 @@
     <string name="reset">Resetovat</string>
     <string name="profileswitch_ismissing">Přepnutí profilu chybí. Proveďte přepnutí profilu nebo ho aktivujte na záložce lokálního profilu.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Vyberte pro odstranění</string>
+    <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
+    <string name="overview_treatment_label">Ošetření</string>
+    <string name="copytolocalprofile">Vytvořit z tohoto profilu nový profil?</string>
+    <string name="wear_wizard_settings">Průvodce nastavením</string>
+    <string name="bg_trend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolusové IOB</string>
+    <string name="treatments_wizard_basaliob_label">Bazální IOB</string>
+    <string name="paused">Pozastaveno</string>
+    <string name="invalid">NEPLATNÝ</string>
+    <string name="login">Přihlášení</string>
+    <string name="upload_now">Nahrát nyní</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
@@ -182,8 +195,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Spustit profil %1$d%% na %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
     <!--    APSResult-->
     <string name="canceltemp">Zrušit dočasný bazál</string>
     <string name="let_temp_basal_run">Nechat běžet aktuální dočasný bazál</string>
@@ -515,6 +526,10 @@
     <string name="autotune_run_with_error">Chyba při posledním spuštění Autotune</string>
     <string name="autotune_run_cancelled">Byla zjištěna jiná běžící úloha Autotune, spuštění zrušeno</string>
     <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Používat systémové notifikace pro výstrahy a oznámení</string>
+    <string name="urgent_alarm">Urgentní alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
     <plurals name="days">
