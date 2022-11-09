@@ -126,13 +126,4 @@
     <string name="remove_sort">Remove/sort</string>
     <string name="stop_processing">Stop processing</string>
 
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">W</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">S</string>
-
 </resources>
