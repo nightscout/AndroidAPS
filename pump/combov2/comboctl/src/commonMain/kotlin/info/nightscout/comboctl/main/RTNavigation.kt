@@ -9,14 +9,14 @@ import info.nightscout.comboctl.base.PumpIO
 import info.nightscout.comboctl.base.connectBidirectionally
 import info.nightscout.comboctl.base.connectDirectionally
 import info.nightscout.comboctl.base.findShortestPath
+import info.nightscout.comboctl.base.getElapsedTimeInMs
 import info.nightscout.comboctl.parser.ParsedScreen
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeout
 import kotlin.math.absoluteValue
 import kotlin.math.min
 import kotlin.reflect.KClassifier
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 private val logger = Logger.get("RTNavigation")
 
@@ -348,81 +348,91 @@ suspend fun longPressRTButtonUntil(
     button: RTNavigationButton,
     checkScreen: (parsedScreen: ParsedScreen) -> LongPressRTButtonsCommand
 ): ParsedScreen {
-    val channel = Channel<Boolean>(capacity = Channel.CONFLATED)
-
     lateinit var lastParsedScreen: ParsedScreen
 
-    logger(LogLevel.DEBUG) { "Long-pressing RT button $button until predicate indicates otherwise" }
+    logger(LogLevel.DEBUG) { "Long-pressing RT button $button" }
 
     rtNavigationContext.resetDuplicate()
 
-    coroutineScope {
-        launch {
-            while (true) {
-                val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true) ?: continue
-                val parsedScreen = parsedDisplayFrame.parsedScreen
-                val predicateResult = checkScreen(parsedScreen)
-                val releaseButton = (predicateResult == LongPressRTButtonsCommand.ReleaseButton)
-                logger(LogLevel.VERBOSE) {
-                    "Observed parsed screen $parsedScreen while long-pressing RT button; predicate result = $predicateResult"
-                }
-                channel.send(releaseButton)
-                if (releaseButton) {
-                    lastParsedScreen = parsedScreen
-                    break
-                }
+    var thrownDuringButtonPress: Throwable? = null
+
+    rtNavigationContext.startLongButtonPress(button) {
+        // Suspend the block until either we get a new parsed display frame
+        // or WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS milliseconds
+        // pass. In the latter case, we instruct startLongButtonPress()
+        // to just continue pressing the button. In the former case,
+        // we analyze the screen and act according to the result.
+        // We use withTimeout(), because sometimes, the Combo may not
+        // immediately return a frame just because we are pressing the
+        // button. If we just wait for the next frame, we can then end
+        // up waiting forever.
+
+        val timestampBeforeDisplayFrameRetrieval = getElapsedTimeInMs()
+
+        // Receive the parsedDisplayFrame, and if none is received or if
+        // the timeout expires (parsedDisplayFrame gets set to null in
+        // both cases), keep pressing the button.
+        val parsedDisplayFrame = try {
+            withTimeout(
+                timeMillis = WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS
+            ) {
+                rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true)
             }
+        } catch (e: TimeoutCancellationException) {
+            null
+        } ?: return@startLongButtonPress true
+
+        // It is possible that we got a parsed display frame very quickly.
+        // Wait a while in such a case to avoid overrunning the Combo
+        // with button press packets. In such a case, the Combo's ring
+        // buffer would overflow, and an error would occur. (This seems
+        // to be a phenomenon that is separate to the packet overflow
+        // that is documented in TransportLayer.IO.sendInternal().)
+        val elapsedTime = getElapsedTimeInMs() - timestampBeforeDisplayFrameRetrieval
+        if (elapsedTime < WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS) {
+            val waitingPeriodInMs =  WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
+            logger(LogLevel.VERBOSE) { "Waiting $waitingPeriodInMs milliseconds before continuing button long-press" }
+            delay(timeMillis = waitingPeriodInMs)
         }
 
-        launch {
-            logger(LogLevel.VERBOSE) { "Starting long press RT button coroutine" }
-
-            rtNavigationContext.startLongButtonPress(button) {
-                // This block is called by startLongButtonPress() every time
-                // before sending an RT button update to the Combo. This is
-                // important, because in RT screens that show a quantity that
-                // is to be in/decrement, said in/decrement will not happen
-                // until that update has been sent.
-                //
-                // We send this update regularly, independently of whether
-                // a new screen arrives. This risks overshooting a bit when
-                // in/decrementing (because we might send more than one
-                // RT button update before the quantity on screen visibly
-                // in/decrements), but is the robust alternative to updating
-                // after a screen update. The latter does not overshoot, but
-                // breaks if screen updates only arrive after an RT button
-                // update (this happens in the TDD screen for example).
-                //
-                // Also, when in/decrementing, the Combo's UX has a special
-                // case - when holding down a button, there is one screen
-                // update, followed by a period of inactivity, followed by
-                // more updates. The Combo does this because otherwise it
-                // would not be possible for the user to reliably specify
-                // whether a button press is a short or a long one. This
-                // inactivity period though breaks the second, less robust
-                // option mentioned above.
-                //
-                // Therefore, just send updates regularly, after the
-                // WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS period.
-                val receiveAttemptResult = channel.tryReceive()
-                val stop = if (!receiveAttemptResult.isSuccess)
-                    false
-                else
-                    receiveAttemptResult.getOrThrow()
-
-                if (!stop) {
-                    delay(WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS)
-                }
-
-                return@startLongButtonPress !stop
-            }
-
-            rtNavigationContext.waitForLongButtonPressToFinish()
-            logger(LogLevel.VERBOSE) { "Stopped long press RT button coroutine" }
+        // At this point, we got a non-null parsedDisplayFrame that we can
+        // analyze. The analysis is done by checkScreen. If an exception
+        // is thrown by that callback, catch and store it, stop pressing
+        // the button, and exit. The code further below re-throws the
+        // stored exception.
+        val parsedScreen = parsedDisplayFrame.parsedScreen
+        val predicateResult = try {
+            checkScreen(parsedScreen)
+        } catch (t: Throwable) {
+            thrownDuringButtonPress = t
+            return@startLongButtonPress false
         }
+
+        // Proceed according to the result of checkScreen.
+        val releaseButton = (predicateResult == LongPressRTButtonsCommand.ReleaseButton)
+        logger(LogLevel.VERBOSE) {
+            "Observed parsed screen $parsedScreen while long-pressing RT button; predicate result = $predicateResult"
+        }
+        if (releaseButton) {
+            // Record the screen we just saw so we can return it.
+            lastParsedScreen = parsedScreen
+            return@startLongButtonPress false
+        }
+        else
+            return@startLongButtonPress true
     }
 
-    logger(LogLevel.DEBUG) { "Long-pressing RT button $button stopped after predicate returned true" }
+    // The block that is passed to startLongButtonPress() runs in a
+    // background coroutine. We wait here for that coroutine to finish.
+    rtNavigationContext.waitForLongButtonPressToFinish()
+
+    // Rethrow previously caught exception (if there was any).
+    thrownDuringButtonPress?.let {
+        logger(LogLevel.INFO) { "Rethrowing Throwable caught during long RT button press: $it" }
+        throw it
+    }
+
+    logger(LogLevel.DEBUG) { "Long-pressing RT button $button stopped" }
 
     return lastParsedScreen
 }
