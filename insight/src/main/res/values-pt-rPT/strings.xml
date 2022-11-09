@@ -11,7 +11,6 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="started">Iniciado</string>
     <string name="stopped">Parado</string>
-    <string name="paused">Em pausa</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
