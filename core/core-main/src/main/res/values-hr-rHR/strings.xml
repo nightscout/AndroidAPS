@@ -2,7 +2,32 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="androidaps_start">AAPS je počeo</string>
     <string name="close">Zatvori</string>
+    <string name="bg_label">GUK</string>
+    <string name="calibration">Kalibracija</string>
+    <string name="alarminxmin">Uključi alarm za %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus je prijavio pogrešku. Ručno provjerite stvarni isporučeni iznos</string>
+    <string name="bolus_reminder">Podsjetnik za bolus</string>
+    <string name="duration_label">Trajanje</string>
+    <string name="shortgramm">g</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">UKLONITI</string>
+    <string name="activate_profile">Aktiviraj profil</string>
+    <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">ProfileSwitch nedostaje. Promijenite profil ili pritisnite \"Aktiviraj profil\" u lokalnom profilu.</string>
+    <string name="profile">Profil</string>
+    <string name="select_for_removal">Odaberite za uklanjanje</string>
+    <string name="confirm_remove_multiple_items">Jeste li sigurni da želite ukloniti %1$d stavke</string>
+    <string name="overview_treatment_label">Tretman</string>
+    <string name="copytolocalprofile">Napraviti novi profil iz ovog profila?</string>
+    <string name="wear_wizard_settings">Postavke čarobnjaka</string>
+    <string name="bg_trend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">Aktivni UGH</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Bazalni aktivni inzulin</string>
+    <string name="invalid">GREŠKA</string>
+    <string name="login">Login</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="cancel">Otkaži</string>
@@ -10,7 +35,6 @@
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -23,10 +47,25 @@
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
+    <string name="alert_dialog_storage_permission_text">Ponovno pokrenite telefon ili ponovno pokrenite AAPS iz postavki sustava \n u suprotnom Android APS neće imati zapisivanje (važno je pratiti i provjeriti rade li algoritmi ispravno)!</string>
     <!-- User Entry -->
+    <string name="uel_cleanup_databases">ČIŠĆENJE BAZA PODATAKA</string>
     <!-- HardLimits -->
+    <string name="nsclient_version_does_not_match">AAPSClient verzija ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="a11y_file">datoteka</string>
+    <string name="a11y_user">korisnik</string>
     <!-- Autotune -->
+    <string name="autotune_tune_insulin_curve_title">Podesite krivulju inzulina</string>
+    <string name="autotune_tune_insulin_curve_summary">Omogućite samo ako koristite besplatni vrh. Ova opcija će podesiti trajanje vršne vrijednosti i DIA</string>
+    <string name="autotune_default_tune_days_summary">Zadani broj dana podataka koje će obraditi Autotune (do 30)</string>
+    <string name="autotune_warning">Upozorenje:</string>
+    <string name="autotune_error">Pogreška u unosu podataka, pokušajte ponovno pokrenuti automatsko podešavanje ili smanjite broj dana</string>
+    <string name="autotune_run_without_autoswitch">Autotune je odradio bez promjene profila</string>
+    <string name="autotune_run_with_autoswitch">Autotune je pokrenut i profil se automatski promijenio</string>
+    <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
+    <string name="needconnectpermission">Aplikacija treba bluetooth dozvolu</string>
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
 </resources>
