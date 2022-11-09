@@ -105,4 +105,5 @@
     <string name="preconditions">전제 조건:</string>
     <string name="automation_event">자동화 이벤트</string>
     <string name="reorder_label">정렬</string>
+    <!-- WeekdayPicker -->
 </resources>
