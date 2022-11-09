@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AAPS передает данные в Open Humans. Это может занять некоторое время.</string>
     <string name="you_have_been_signed_out_of_open_humans">Вы вышли из Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Нажмите здесь, чтобы снова войти в систему, если выход произошел случайно.</string>
-    <string name="upload_now">Начать передачу данных</string>
     <string name="next">Далее</string>
     <string name="welcome_to_open_humans">Добро пожаловать в Open Humans</string>
     <string name="setup_data_upload">Для настройки загрузки данных нажмите \'Далее\'.</string>
