@@ -3,7 +3,6 @@
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_serial_number">Serijski broj pumpe</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_pump_unreachable">Pumpa nedostupna</string>
     <string name="pump_status_not_initialized">Nije inicijalizirano</string>
     <string name="pump_status_initialized">Inicijalizirano</string>
     <string name="pump_status_encrypt">Šifriranje komunikacije</string>
