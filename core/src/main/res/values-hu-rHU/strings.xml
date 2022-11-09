@@ -8,13 +8,15 @@
     <string name="average">Átlag</string>
     <string name="tir">TIR</string>
     <string name="remove_label">ELTÁVOLÍT</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_basaliob_label">Bázis IOB</string>
+    <string name="upload_now">Feltöltés most</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -33,5 +35,7 @@
     <!-- Command Queue + readStatus reasons -->
     <string name="basal">Bázis</string>
     <!-- Autotune -->
+    <!-- Alerts -->
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
 </resources>
