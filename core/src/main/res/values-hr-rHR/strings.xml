@@ -3,6 +3,8 @@
     <!--    Keys-->
     <!--    General-->
     <string name="close">Zatvori</string>
+    <string name="invalid">GREŠKA</string>
+    <string name="login">Login</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="cancel">Otkaži</string>
@@ -10,7 +12,6 @@
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -28,5 +29,6 @@
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
 </resources>
