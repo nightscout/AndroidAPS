@@ -80,8 +80,11 @@
     <string name="patch_basal_schedule">Activation du Patch terminée !</string>
     <string name="patch_basal_schedule_desc_1">Le programme \'%1$s\' a été activé.</string>
     <string name="patch_basal_schedule_desc_2">Avertir lorsque le Patch approche de son heure d\'expiration.\nChangez l\'heure de rappel si nécessaire.</string>
+    <string name="cancel">Annuler</string>
+    <string name="confirm">Confirmer</string>
     <string name="string_connecting">Connection en cours</string>
     <string name="string_changing">Changement en cours</string>
     <string name="string_in_progress">Traitement en cours</string>
     <string name="retry">Réessayer</string>
+    <string name="next">Suivant</string>
 </resources>
