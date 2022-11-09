@@ -53,9 +53,7 @@
     <string name="lastconnection_label">Ultima conexiune</string>
     <string name="lastbolus_label">Ultimul bolus</string>
     <string name="dailyunits">Unități zilnic</string>
-    <string name="basebasalrate_label">Rată bazală implicită</string>
     <string name="tempbasal_label">Bazală temporară</string>
-    <string name="virtualpump_extendedbolus_label">Bolus extins</string>
     <string name="reservoir_label">Rezervor</string>
     <string name="pumphistory">Istoric pompă</string>
     <string name="viewprofile">Afișează profilul</string>
@@ -123,6 +121,18 @@
     <string name="reset">resetare</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="overview_treatment_label">Tratament</string>
+    <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
+    <string name="wear_wizard_settings">Asistent setări</string>
+    <string name="bg_trend_label">Tendință 15min</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB bolus</string>
+    <string name="treatments_wizard_basaliob_label">IOB bazală</string>
+    <string name="paused">Suspendat</string>
+    <string name="invalid">INVALID</string>
+    <string name="login">Autentificare</string>
+    <string name="upload_now">Încarcă acum</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -153,9 +163,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Pompa virtuală acceptă doar valori specifice ca și incremente, nu și intervale de valori.
-* Doar valorile specifice, nu şi intervalele de valori sunt suportate ca şi incremente în pompa virtuală.</string>
     <!--    APSResult-->
     <string name="canceltemp">Anulează bazala temporară</string>
     <string name="let_temp_basal_run">Lasă să funcționeze bazala temporară</string>
@@ -424,6 +431,10 @@
     <string name="sort_label">Sortează</string>
     <!-- Autotune -->
     <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
+    <string name="urgent_alarm">Alarmă urgentă</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
