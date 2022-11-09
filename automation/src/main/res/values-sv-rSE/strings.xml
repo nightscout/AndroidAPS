@@ -111,4 +111,5 @@
     <string name="automation_event">Automationshändelse</string>
     <string name="reorder_label">Ändra ordning</string>
     <string name="user_action">Användaråtgärd</string>
+    <!-- WeekdayPicker -->
 </resources>
