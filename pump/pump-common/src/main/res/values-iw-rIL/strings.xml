@@ -7,14 +7,6 @@
     <string name="pump_serial_number">המספר הסידורי של המשאבה</string>
     <string name="bolus_delivered">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
-    <string name="pump_status_waking_up">מתעורר</string>
-    <string name="pump_status_error_comm">שגיאת תקשורת</string>
-    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
-    <string name="pump_status_pump_unreachable">המשאבה לא זמינה</string>
-    <string name="pump_status_invalid_config">תצורה לא חוקית</string>
-    <string name="pump_status_active">פעיל</string>
-    <string name="pump_status_sleeping">שינה</string>
     <string name="pump_status_not_initialized">לא מאותחל</string>
     <string name="pump_status_initialized">מאותחל</string>
     <string name="pump_status_encrypt">מצפין תקשורת</string>
