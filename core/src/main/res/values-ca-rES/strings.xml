@@ -22,6 +22,15 @@
     <string name="reset">restablir</string>
     <string name="profileswitch_ismissing">Falta canvi de perfil. Si us plau feu un canvi de perfil o cliqueu \"Activar perfil\" al perfil local.</string>
     <string name="profile">Perfil</string>
+    <string name="overview_treatment_label">Tractament</string>
+    <string name="copytolocalprofile">Crear nou perfil local a partir d\'aquest perfil?</string>
+    <string name="wear_wizard_settings">Configuració de l\'assistent</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB Bolus</string>
+    <string name="treatments_wizard_basaliob_label">IOB Basal</string>
+    <string name="paused">En pausa</string>
+    <string name="invalid">NO VÀLID</string>
+    <string name="login">Iniciar sessió</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -29,7 +38,6 @@
     <!--    Profile-->
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% durant %2$d min</string>
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -80,5 +88,9 @@
     <string name="basal">Basal</string>
     <!-- Autotune -->
     <string name="needconnectpermission">L\'aplicació necessita el permís del bluethoot</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Utilitzar avisos del sistema per alarmes i avisos</string>
+    <string name="urgent_alarm">Alarma urgent</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
 </resources>
