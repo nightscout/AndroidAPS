@@ -122,4 +122,5 @@
     <string name="add_automation">Regel hinzufügen</string>
     <string name="remove_sort">Entfernen/sortieren</string>
     <string name="stop_processing">Verarbeitung beenden</string>
+    <!-- WeekdayPicker -->
 </resources>
