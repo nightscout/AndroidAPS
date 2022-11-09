@@ -43,9 +43,7 @@
     <string name="lastconnection_label">Última ligação</string>
     <string name="lastbolus_label">Último Bolus</string>
     <string name="dailyunits">Unidades diárias</string>
-    <string name="basebasalrate_label">Taxa Basal de base</string>
     <string name="tempbasal_label">Basal temporaria</string>
-    <string name="virtualpump_extendedbolus_label">Bólus estendido</string>
     <string name="reservoir_label">Reservatório</string>
     <string name="pumphistory">Histórico da Bomba</string>
     <string name="viewprofile">Ver perfil</string>
@@ -96,6 +94,19 @@
     <string name="reset">repor</string>
     <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Ativar Perfil\" em PerfilLocal.</string>
     <string name="profile">Perfil</string>
+    <string name="select_for_removal">Selecione para remover</string>
+    <string name="confirm_remove_multiple_items">Tem certeza que deseja remover %1$d itens</string>
+    <string name="overview_treatment_label">Tratamento</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
+    <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
+    <string name="bg_trend_label">Tendência 15 min</string>
+    <string name="treatments_wizard_cob_label">CA</string>
+    <string name="bolus_iob_label">I.A de Bolus</string>
+    <string name="treatments_wizard_basaliob_label">IOB Basal</string>
+    <string name="paused">Pausado</string>
+    <string name="invalid">INVÁLIDO</string>
+    <string name="login">Login</string>
+    <string name="upload_now">Enviar agora</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
     <string name="pumplimit">limite da bomba</string>
@@ -124,8 +135,6 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
     <!--    APSResult-->
     <string name="canceltemp">Cancelar basal temporário</string>
     <string name="let_temp_basal_run">Deixa o basal temporário em andamento</string>
@@ -230,6 +239,10 @@
     <string name="autotune_default_tune_days_summary">Número padrão de dias de dados a serem processados por Autotune (até 30)</string>
     <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
     <string name="needconnectpermission">O aplicativo precisa de permissão bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Usar as notificações do sistema para alertas e notificações</string>
+    <string name="urgent_alarm">Alarme Urgente</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
