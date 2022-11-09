@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 
 fun NSBolusWizard.toBolusCalculatorResult(): BolusCalculatorResult? =

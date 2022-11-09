@@ -1,15 +1,14 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
+        .put("eventType", if (amount < 12) info.nightscout.database.entities.TherapyEvent.Type.CARBS_CORRECTION.text else info.nightscout.database.entities.TherapyEvent.Type.MEAL_BOLUS.text)
         .put("carbs", amount)
         .put("notes", notes)
         .put("created_at", dateUtil.toISOString(timestamp))

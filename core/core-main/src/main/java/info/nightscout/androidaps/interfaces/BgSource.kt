@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.database.entities.GlucoseValue
 
 interface BgSource {
 

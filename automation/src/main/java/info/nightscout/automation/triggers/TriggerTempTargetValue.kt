@@ -4,7 +4,7 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Constants
-import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.interfaces.utils.JsonHelper

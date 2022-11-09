@@ -7,29 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.interfaces.ActivityNames
+import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -137,13 +137,13 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 }
                 if (isPercentPump) {
                     uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
-                        ValueWithUnit.Percent(percent),
-                        ValueWithUnit.Minute(durationInMinutes))
+                            ValueWithUnit.Percent(percent),
+                            ValueWithUnit.Minute(durationInMinutes))
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 } else {
                     uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
-                        ValueWithUnit.Insulin(absolute),
-                        ValueWithUnit.Minute(durationInMinutes))
+                            ValueWithUnit.Insulin(absolute),
+                            ValueWithUnit.Minute(durationInMinutes))
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 }
             })

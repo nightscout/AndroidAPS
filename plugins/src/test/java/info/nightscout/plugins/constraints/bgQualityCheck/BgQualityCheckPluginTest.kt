@@ -3,10 +3,10 @@ package info.nightscout.plugins.constraints.bgQualityCheck
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constraint
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus

@@ -1,13 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
@@ -15,7 +14,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
-        .put("eventType", TherapyEvent.Type.NOTE.text) // move to separate collection when available in NS
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.NOTE.text) // move to separate collection when available in NS
         .put("profileJson", ProfileSealed.EPS(this).toPureNsJson(dateUtil).toString())
         .put("originalProfileName", originalProfileName)
         .put("originalCustomizedName", originalCustomizedName)

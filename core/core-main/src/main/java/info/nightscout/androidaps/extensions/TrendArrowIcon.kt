@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.database.entities.GlucoseValue
 
 fun GlucoseValue.TrendArrow.directionToIcon(): Int {
     return when {

@@ -1,23 +1,23 @@
 package info.nightscout.plugins.insulin
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.data.Iob
-import info.nightscout.androidaps.database.embedments.InsulinConfiguration
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.embedments.InsulinConfiguration
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.interfaces.data.Iob
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.shared.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.T
 import kotlin.math.exp
 import kotlin.math.pow
 

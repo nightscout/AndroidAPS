@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.OfflineEvent
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 
 fun NSOfflineEvent.toOfflineEvent(): OfflineEvent =

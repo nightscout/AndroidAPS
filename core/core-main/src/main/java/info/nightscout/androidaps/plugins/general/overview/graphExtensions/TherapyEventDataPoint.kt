@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.interfaces.Constants
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.Translator
+import info.nightscout.core.main.R
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.interfaces.Constants
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class TherapyEventDataPoint(
     val data: TherapyEvent,

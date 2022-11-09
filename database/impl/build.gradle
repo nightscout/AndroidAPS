@@ -11,7 +11,7 @@ apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradl
 
 android {
 
-    namespace 'info.nightscout.androidaps.database'
+    namespace 'info.nightscout.database.impl'
     defaultConfig {
         kapt {
             arguments {
@@ -23,6 +23,8 @@ android {
 }
 
 dependencies {
+    implementation project(':database:entities')
+
     api "androidx.core:core-ktx:$core_version"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 

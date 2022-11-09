@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.activities
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.OverviewData

@@ -1,13 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
@@ -50,7 +49,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
 
 fun TemporaryTarget.toJson(isAdd: Boolean, units: GlucoseUnit, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("isValid", isValid)

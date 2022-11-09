@@ -3,8 +3,8 @@ package info.nightscout.androidaps.utils
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

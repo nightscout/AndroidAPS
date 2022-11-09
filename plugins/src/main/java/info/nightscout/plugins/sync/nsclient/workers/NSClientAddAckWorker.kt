@@ -6,21 +6,20 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.DeviceStatus
-import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusCalculatorResultTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdCarbsTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdDeviceStatusTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdExtendedBolusTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdFoodTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryBasalTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.UpdateNsIdTherapyEventTransaction
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdBolusTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdCarbsTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdFoodTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdGlucoseValueTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdOfflineEventTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdTherapyEventTransaction
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolus
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolusCalculatorResult
@@ -35,8 +34,9 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector.PairProfileSwitch
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryBasal
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryTarget
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTherapyEvent
-import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.database.entities.DeviceStatus
+import info.nightscout.interfaces.NsClient
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
@@ -278,7 +278,7 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
             }
 
-            is DeviceStatus               -> {
+            is DeviceStatus -> {
                 val deviceStatus = ack.originalObject
                 deviceStatus.interfaceIDs.nightscoutId = ack.id
                 repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatus))

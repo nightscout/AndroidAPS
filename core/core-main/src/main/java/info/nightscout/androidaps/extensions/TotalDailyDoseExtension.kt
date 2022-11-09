@@ -6,9 +6,9 @@ import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.TotalDailyDose
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 
 val TotalDailyDose.total
     get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount

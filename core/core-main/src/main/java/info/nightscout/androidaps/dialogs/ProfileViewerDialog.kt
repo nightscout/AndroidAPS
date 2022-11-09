@@ -12,8 +12,8 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.main.R
 import info.nightscout.core.main.databinding.DialogProfileviewerBinding
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile

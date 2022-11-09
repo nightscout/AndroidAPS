@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.extensions.toStringTotal
+import info.nightscout.core.main.R
+import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class ExtendedBolusDataPoint(

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.database.data.Block
-import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.database.data.checkSanity
+import info.nightscout.database.entities.data.Block
+import info.nightscout.database.entities.data.TargetBlock
+import info.nightscout.database.entities.data.checkSanity
 import info.nightscout.shared.utils.T
 import org.junit.Assert
 

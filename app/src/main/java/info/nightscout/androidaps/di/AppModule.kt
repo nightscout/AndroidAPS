@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue

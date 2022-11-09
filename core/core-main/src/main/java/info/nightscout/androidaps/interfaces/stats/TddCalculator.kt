@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces.stats
 import android.content.Context
 import android.util.LongSparseArray
 import android.widget.TableLayout
-import info.nightscout.androidaps.database.entities.TotalDailyDose
+import info.nightscout.database.entities.TotalDailyDose
 
 interface TddCalculator {
 

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
 

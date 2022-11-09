@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TableLayout
-import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.DexcomTIR

@@ -2,25 +2,24 @@ package info.nightscout.androidaps.plugins.aps.loop
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.main.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.interfaces.pump.PumpDescription
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.core.main.R
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.pump.PumpDescription
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject

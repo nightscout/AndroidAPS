@@ -6,10 +6,9 @@ import android.util.AttributeSet
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.Insulin
+import info.nightscout.database.entities.Bolus
 import info.nightscout.shared.utils.T
-import java.util.*
 import kotlin.math.floor
 
 class ActivityGraph : GraphView {

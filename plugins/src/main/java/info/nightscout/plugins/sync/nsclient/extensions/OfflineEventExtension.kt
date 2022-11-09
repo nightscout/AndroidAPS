@@ -1,18 +1,17 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.OfflineEvent
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", TherapyEvent.Type.APS_OFFLINE.text)
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.APS_OFFLINE.text)
         .put("isValid", isValid)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)

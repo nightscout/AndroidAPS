@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
 import info.nightscout.interfaces.Constants
-import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper

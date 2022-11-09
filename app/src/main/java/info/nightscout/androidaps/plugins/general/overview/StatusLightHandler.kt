@@ -3,19 +3,19 @@ package info.nightscout.androidaps.plugins.general.overview
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.plugins.sync.nsclient.extensions.age
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.WarnColors
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.plugins.sync.nsclient.extensions.age
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -1,21 +1,20 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.database.entities.TemporaryBasal.Type.Companion.fromString
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryBasal.Type.Companion.fromString
+import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.TEMPORARY_BASAL.text)
         .put("isValid", isValid)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration) // rounded duration leads to different basal IOB

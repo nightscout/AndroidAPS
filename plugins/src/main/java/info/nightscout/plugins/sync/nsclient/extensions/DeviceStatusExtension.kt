@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.utils.extensions
 
 import android.os.Build
-import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject

@@ -1,14 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.plugins.sync.nsclient.extensions.toJson
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
 fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =
@@ -22,7 +20,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.COMBO_BOLUS.text)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("splitNow", 0)

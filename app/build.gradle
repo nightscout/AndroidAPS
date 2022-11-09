@@ -191,6 +191,8 @@ dependencies {
     implementation project(':ui')
     implementation project(':plugins')
     implementation project(':implementation')
+    implementation project(':database:entities')
+    implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':pump:combo')
     implementation project(':pump:dana')

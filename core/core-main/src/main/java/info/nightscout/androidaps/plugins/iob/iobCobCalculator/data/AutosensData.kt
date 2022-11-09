@@ -2,20 +2,20 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.core.main.R
+import info.nightscout.database.entities.Carbs
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.min

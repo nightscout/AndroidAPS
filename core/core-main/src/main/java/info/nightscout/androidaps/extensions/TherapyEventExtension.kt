@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.GlucoseUnit
 
 fun TherapyEvent.isOlderThan(hours: Double): Boolean {

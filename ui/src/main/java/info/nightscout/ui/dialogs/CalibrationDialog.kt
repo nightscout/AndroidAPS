@@ -6,23 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.ui.R
-import info.nightscout.ui.databinding.DialogCalibrationBinding
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogCalibrationBinding
 import java.text.DecimalFormat
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 
 class CalibrationDialog : DialogFragmentWithDate() {

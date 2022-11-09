@@ -4,15 +4,15 @@ import androidx.collection.LongSparseArray
 import androidx.collection.size
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.InMemoryGlucoseValue
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import kotlin.math.abs
 import kotlin.math.roundToLong
 

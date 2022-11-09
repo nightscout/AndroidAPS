@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.shared.utils.DateUtil
 import java.util.LinkedList
 import java.util.UUID

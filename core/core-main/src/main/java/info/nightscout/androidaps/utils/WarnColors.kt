@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.utils
 
 import android.widget.TextView
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.isOlderThan
+import info.nightscout.core.main.R
+import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton

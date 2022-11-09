@@ -15,8 +15,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TotalDailyDose
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
+import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.AapsSchedulers

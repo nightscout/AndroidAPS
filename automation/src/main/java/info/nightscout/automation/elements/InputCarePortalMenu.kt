@@ -8,9 +8,9 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.automation.R
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class InputCarePortalMenu(private val rh: ResourceHelper) : Element() {
 

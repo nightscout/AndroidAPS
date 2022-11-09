@@ -8,25 +8,24 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.TotalDailyDose
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.extensions.toTableRow
 import info.nightscout.androidaps.extensions.toTableRowHeader
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.shared.utils.T
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.TotalDailyDose
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 

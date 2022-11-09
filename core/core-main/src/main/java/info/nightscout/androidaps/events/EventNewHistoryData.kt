@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.events
 
-import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.rx.events.Event
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat

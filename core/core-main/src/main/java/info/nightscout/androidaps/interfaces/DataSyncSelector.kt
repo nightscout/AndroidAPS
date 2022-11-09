@@ -1,7 +1,18 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.database.entities.DeviceStatus
-import info.nightscout.androidaps.database.entities.*
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.DeviceStatus
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.Food
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TherapyEvent
 import org.json.JSONObject
 
 interface DataSyncSelector {

@@ -2,8 +2,8 @@ package info.nightscout.plugins.sync.tidepool.elements
 
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import info.nightscout.shared.utils.DateUtil
 import java.util.UUID

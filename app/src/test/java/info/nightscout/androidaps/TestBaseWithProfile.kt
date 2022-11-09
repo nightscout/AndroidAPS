@@ -4,14 +4,14 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.embedments.InsulinConfiguration
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

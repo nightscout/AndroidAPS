@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.utils.userEntry
 
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.ValueWithUnit
 
 sealed class ValueWithUnitMapper {          //I use a sealed class because of StringResource that contains a listOf as second parameter
 

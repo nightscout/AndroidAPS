@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 
 fun NSBolus.toBolus(): Bolus =

@@ -2,16 +2,15 @@ package info.nightscout.automation.actions
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.automation.R
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

@@ -2,12 +2,12 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import com.google.gson.Gson
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusTransaction
-import info.nightscout.androidaps.database.transactions.InsertOrUpdateCarbsTransaction
+import info.nightscout.database.impl.transactions.InsertOrUpdateBolusTransaction
+import info.nightscout.database.impl.transactions.InsertOrUpdateCarbsTransaction
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.pump.PumpType
 
 class DetailedBolusInfo {

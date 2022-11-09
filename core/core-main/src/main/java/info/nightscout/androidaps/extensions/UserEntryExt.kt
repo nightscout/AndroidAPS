@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.database.entities.UserEntry.ColorGroup
 
 fun ColorGroup.colorId(): Int {
     return when (this) {

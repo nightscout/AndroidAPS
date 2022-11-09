@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.tidepool.comm
 
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
-import info.nightscout.androidaps.database.entities.TemporaryBasal
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.tidepool.elements.BasalElement
 import info.nightscout.plugins.sync.tidepool.elements.BaseElement

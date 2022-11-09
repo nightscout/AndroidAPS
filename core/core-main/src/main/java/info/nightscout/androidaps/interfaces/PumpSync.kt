@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.pump.PumpType
 
 /**

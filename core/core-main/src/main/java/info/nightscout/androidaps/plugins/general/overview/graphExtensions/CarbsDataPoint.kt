@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.database.entities.Carbs
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class CarbsDataPoint(

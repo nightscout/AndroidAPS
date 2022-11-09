@@ -5,12 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.database.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventNewHistoryData
@@ -27,6 +23,10 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription

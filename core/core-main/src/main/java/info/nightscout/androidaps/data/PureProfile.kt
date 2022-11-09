@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.data
 
-import info.nightscout.androidaps.database.data.Block
-import info.nightscout.androidaps.database.data.TargetBlock
+import info.nightscout.database.entities.data.Block
+import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.interfaces.GlucoseUnit
 import org.json.JSONObject
-import java.util.*
+import java.util.TimeZone
 
 class PureProfile(
     var jsonObject: JSONObject, // source json data (must correspond to the rest of the profile)

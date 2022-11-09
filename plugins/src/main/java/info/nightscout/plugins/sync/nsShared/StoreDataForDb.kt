@@ -5,39 +5,39 @@ import android.os.SystemClock
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.entities.OfflineEvent
-import info.nightscout.androidaps.database.entities.ProfileSwitch
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsBolusCalculatorResultTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsEffectiveProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsExtendedBolusTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsProfileSwitchTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryBasalTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.database.transactions.UserEntryTransaction
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.impl.transactions.SyncNsBolusCalculatorResultTransaction
+import info.nightscout.database.impl.transactions.SyncNsBolusTransaction
+import info.nightscout.database.impl.transactions.SyncNsCarbsTransaction
+import info.nightscout.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
+import info.nightscout.database.impl.transactions.SyncNsExtendedBolusTransaction
+import info.nightscout.database.impl.transactions.SyncNsOfflineEventTransaction
+import info.nightscout.database.impl.transactions.SyncNsProfileSwitchTransaction
+import info.nightscout.database.impl.transactions.SyncNsTemporaryBasalTransaction
+import info.nightscout.database.impl.transactions.SyncNsTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.SyncNsTherapyEventTransaction
+import info.nightscout.database.impl.transactions.UserEntryTransaction
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.NsClient
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.plugins.R
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
@@ -521,9 +521,10 @@ class StoreDataForDb @Inject constructor(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 action, UserEntry.Sources.NSClient, therapyEvent.note ?: "",
-                                listOf(ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                       ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                       ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
+                                listOf(
+                                    ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                    ValueWithUnit.TherapyEventType(therapyEvent.type),
+                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
@@ -534,9 +535,10 @@ class StoreDataForDb @Inject constructor(
                             UserEntryTransaction.Entry(
                                 dateUtil.now(),
                                 UserEntry.Action.CAREPORTAL_REMOVED, UserEntry.Sources.NSClient, therapyEvent.note ?: "",
-                                listOf(ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                       ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                       ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
+                                listOf(
+                                    ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                    ValueWithUnit.TherapyEventType(therapyEvent.type),
+                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")

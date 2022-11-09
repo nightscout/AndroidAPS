@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils.userEntry
 
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.database.entities.UserEntry
 
 class UserEntryMapper {
     enum class Action (val db: UserEntry.Action) {

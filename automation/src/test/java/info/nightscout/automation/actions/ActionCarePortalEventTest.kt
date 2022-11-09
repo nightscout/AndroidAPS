@@ -1,7 +1,7 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.androidaps.database.transactions.Transaction
+import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.elements.InputCarePortalMenu

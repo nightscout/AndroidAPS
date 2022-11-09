@@ -1,16 +1,15 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.ProfileSwitch
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.extensions.fromConstant
 import info.nightscout.androidaps.utils.extensions.getCustomizedName
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
@@ -24,7 +23,7 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
-        .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.PROFILE_SWITCH.text)
         .also { // remove customization to store original profileJson in toPureNsJson call
             timeshift = 0
             percentage = 100

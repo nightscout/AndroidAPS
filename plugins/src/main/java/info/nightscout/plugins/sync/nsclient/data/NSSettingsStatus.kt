@@ -2,13 +2,13 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.utils.JsonHelper

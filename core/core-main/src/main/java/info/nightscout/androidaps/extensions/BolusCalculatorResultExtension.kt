@@ -2,17 +2,16 @@ package info.nightscout.androidaps.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil, profileFunction: ProfileFunction): JSONObject =
     JSONObject()
-        .put("eventType", TherapyEvent.Type.BOLUS_WIZARD.text)
+        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.BOLUS_WIZARD.text)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("isValid", isValid)
         .put("bolusCalculatorResult", Gson().toJson(this))

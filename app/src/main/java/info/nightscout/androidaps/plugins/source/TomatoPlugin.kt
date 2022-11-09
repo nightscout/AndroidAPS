@@ -6,12 +6,12 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.XDripBroadcast
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.plugins.source.BGSourceFragment

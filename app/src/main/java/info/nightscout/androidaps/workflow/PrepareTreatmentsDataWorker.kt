@@ -5,14 +5,10 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.BolusDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.CarbsDataPoint
@@ -24,10 +20,14 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Thera
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.Translator
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class PrepareTreatmentsDataWorker(

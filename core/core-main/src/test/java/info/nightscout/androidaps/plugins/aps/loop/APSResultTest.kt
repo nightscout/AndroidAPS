@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.aps.loop
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.pump.PumpType
 import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import org.junit.Assert

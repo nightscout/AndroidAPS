@@ -2,9 +2,9 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.TherapyEvent
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.junit.Assert
 import org.junit.Test

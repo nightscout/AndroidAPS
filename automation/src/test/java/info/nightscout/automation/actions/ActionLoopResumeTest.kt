@@ -1,10 +1,10 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.interfaces.queue.Callback
+import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.automation.R
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before

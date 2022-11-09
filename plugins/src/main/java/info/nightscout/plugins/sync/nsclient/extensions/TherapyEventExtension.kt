@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.shared.interfaces.ResourceHelper
