@@ -1,6 +1,6 @@
 include ':app'
 include ':wear'
-include ':database'
+include ':database:impl'
 include ':core:core-main'
 include ':core:fabric'
 include ':app-wear-shared:rx'

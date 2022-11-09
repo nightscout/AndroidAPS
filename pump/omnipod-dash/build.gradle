@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation project(':database')
+    implementation project(':database:impl')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':libraries')
