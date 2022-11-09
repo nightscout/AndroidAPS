@@ -54,9 +54,7 @@
     <string name="lastconnection_label">Последна връзка</string>
     <string name="lastbolus_label">Последен болус:</string>
     <string name="dailyunits">Инсулин за деня</string>
-    <string name="basebasalrate_label">Базална стойност</string>
     <string name="tempbasal_label">Временен базал</string>
-    <string name="virtualpump_extendedbolus_label">Удължен болус</string>
     <string name="reservoir_label">Резервоар</string>
     <string name="pumphistory">История</string>
     <string name="viewprofile">Виж профил</string>
@@ -128,6 +126,17 @@
     <string name="reset">нулиране</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
+    <string name="overview_treatment_label">Болус</string>
+    <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
+    <string name="wear_wizard_settings">Настройки на съветник</string>
+    <string name="bg_trend_label">Δ за 15мин</string>
+    <string name="treatments_wizard_cob_label">СОВ</string>
+    <string name="bolus_iob_label">IOB от болуси</string>
+    <string name="treatments_wizard_basaliob_label">Базален IOB</string>
+    <string name="paused">Пауза</string>
+    <string name="invalid">НЕВАЛИДНО</string>
+    <string name="login">Вход</string>
+    <string name="upload_now">Качи сега</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -158,8 +167,6 @@
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
     <!--    APSResult-->
     <string name="canceltemp">Откажи временен базал</string>
     <string name="let_temp_basal_run">Нека текущия временен базал продължи</string>
@@ -301,6 +308,10 @@
     <string name="autotune_missing">Липсва</string>
     <string name="autotune_compare_profile">Сравняване на профили</string>
     <string name="needconnectpermission">Апликацията изисква разрешение за bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
+    <string name="urgent_alarm">Спешна аларма</string>
+    <string name="info">ИНФО</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <plurals name="days">
