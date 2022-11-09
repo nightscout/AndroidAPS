@@ -21,6 +21,7 @@ import kotlin.reflect.KClassifier
 private val logger = Logger.get("RTNavigation")
 
 private const val WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 110L
+private const val MAX_NUM_SAME_QUANTITY_OBSERVATIONS = 10
 
 /**
  * RT navigation buttons.
@@ -242,6 +243,21 @@ class CouldNotRecognizeAnyRTScreenException : RTNavigationException("Could not r
  * (= the screen is [ParsedScreen.UnrecognizedScreen]).
  */
 class NoUsableRTScreenException : RTNavigationException("No usable RT screen available")
+
+/**
+ * Exception thrown when [adjustQuantityOnScreen] attempts to adjust the shown quantity but hits an unexpected limit.
+ *
+ * For example, if the quantity shall be set to 500, but after incrementing it, it
+ * suddenly stops incrementing at 200, this exception is thrown to alert the user
+ * about this unexpected behavior.
+ *
+ * @param targetQuantity Quantity that was supposed to be reached.
+ * @param hitLimitAt The quantity at which point adjustments stopped changing the quantity.
+ */
+class QuantityNotChangingException(
+    val targetQuantity: Int,
+    val hitLimitAt: Int
+) : RTNavigationException("Attempted to adjust quantity to target value $targetQuantity, but hit limit at $hitLimitAt")
 
 /**
  * Remote terminal (RT) navigation context.
@@ -638,6 +654,25 @@ suspend fun adjustQuantityOnScreen(
         "cyclicQuantityRange = $cyclicQuantityRange"
     }
 
+    var previouslySeenQuantity: Int? = null
+    var seenSameQuantityCount = 0
+
+    fun checkIfQuantityUnexpectedlyNotChanging(currentQuantity: Int): Boolean {
+        // If the quantity stops changing, and is not the target quantity,
+        // something is wrong. Keep observing until MAX_NUM_SAME_QUANTITY_OBSERVATIONS
+        // observations are made where the quantity remained unchanged, and then
+        // report the situation as bogus (= return false).
+        if ((previouslySeenQuantity == null) || (previouslySeenQuantity != currentQuantity)) {
+            previouslySeenQuantity = currentQuantity
+            seenSameQuantityCount = 0
+            return false
+        }
+
+        seenSameQuantityCount++
+
+        return (seenSameQuantityCount >= MAX_NUM_SAME_QUANTITY_OBSERVATIONS)
+    }
+
     val initialQuantity: Int
     rtNavigationContext.resetDuplicate()
 
@@ -682,6 +717,13 @@ suspend fun adjustQuantityOnScreen(
             if (currentQuantity == null) {
                 LongPressRTButtonsCommand.ContinuePressingButton
             } else {
+                if (currentQuantity != targetQuantity) {
+                    if (checkIfQuantityUnexpectedlyNotChanging(currentQuantity)) {
+                        logger(LogLevel.ERROR) { "Quantity unexpectedly not changing" }
+                        throw QuantityNotChangingException(targetQuantity = targetQuantity, hitLimitAt = currentQuantity)
+                    }
+                }
+
                 // If we are incrementing, and did not yet reach the
                 // quantity, then we expect checkIfNeedsToIncrement()
                 // to indicate that further incrementing is required.
