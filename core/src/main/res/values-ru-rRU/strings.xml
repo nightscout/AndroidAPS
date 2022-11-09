@@ -61,9 +61,7 @@
     <string name="lastconnection_label">прошлое соединение</string>
     <string name="lastbolus_label">предыдущий болюс</string>
     <string name="dailyunits">суточные единицы</string>
-    <string name="basebasalrate_label">базовая величина базала</string>
     <string name="tempbasal_label">врем базал</string>
-    <string name="virtualpump_extendedbolus_label">Пролонгированный болюс</string>
     <string name="reservoir_label">Резервуар</string>
     <string name="pumphistory">Журнал помпы</string>
     <string name="viewprofile">просмотр профиля</string>
@@ -148,6 +146,10 @@
     <string name="reset">сброс</string>
     <string name="profileswitch_ismissing">Профиль не переключен. Переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
     <string name="profile">Профиль</string>
+    <string name="paused">на паузе</string>
+    <string name="invalid">НЕВЕРНО</string>
+    <string name="login">Логин</string>
+    <string name="upload_now">Начать передачу данных</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -181,8 +183,6 @@
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
     <!--    APSResult-->
     <string name="canceltemp">отмена врем базала</string>
     <string name="let_temp_basal_run">Оставить временный базал работающим</string>
@@ -514,6 +514,10 @@
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
     <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
+    <string name="urgent_alarm">Сигнал тревоги</string>
+    <string name="info">ИНФОРМАЦИЯ</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
     <plurals name="days">
