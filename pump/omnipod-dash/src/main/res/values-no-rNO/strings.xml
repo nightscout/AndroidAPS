@@ -19,11 +19,11 @@
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Bluetooth tilkoblingskvalitet</string>
     <string name="omnipod_dash_overview_delivery_status">Leveringsstatus</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Fyll en ny Pod med nok insulin for 3 dager.\n\nLytt etter to lydsignaler fra Pod under fyllingen. De indikerer at minimumsvolum på 80E er fylt opp. Vær nøye med å tømme fyllingssprøyten helt, selv etter at du har hørt de to lydsignalene.\n\nEtter fylling av Pod, vennligst trykk <b>Neste</b>.\n\n<b>Merk:</b> vent med å fjerne kanylebeskyttelsen til Pod.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Prøver å parre med den nye Pod og prime den.\n\nNår oppstartsprosessen er ferdig, kan du trykke <b>Neste</b>.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Fyll en ny Pod med nok insulin for 3 dager.\n\nLytt etter to lydsignaler fra Pod under fyllingen. De indikerer at minimumsvolum på 80E er fylt opp. Vær nøye med å tømme fyllingssprøyten helt, selv etter at du har hørt de to lydsignalene.\n\nEtter fylling av Pod, vennligst trykk <b>Neste</b>.\n\n<b>Merk:</b> vent med å fjerne kanylebeskyttelsen fra Pod.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Prøver å koble til den nye Pod\'en og prime den.\n\nNår oppstartsprosessen er ferdig, kan du trykke <b>Neste</b>.</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Lydvarsel aktivert hvis insulinlevering blir stanset</string>
     <!-- Exceptions -->
-    <string name="omnipod_dash_failed_to_connect">Klarte ikke å koble seg til pod</string>
+    <string name="omnipod_dash_failed_to_connect">Klarte ikke å koble til pod</string>
     <string name="omnipod_dash_found_too_many_pods">Fant for mange podder for aktivering</string>
     <string name="omnipod_dash_scan_failed">Fant ingen pod tilgjengelig for aktivering</string>
     <string name="omnipod_dash_generic_error">Generell feil: %1$s</string>
