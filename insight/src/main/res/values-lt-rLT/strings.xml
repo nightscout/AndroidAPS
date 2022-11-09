@@ -11,7 +11,6 @@
     <string name="stop_pump">Sustabdyti pompą</string>
     <string name="started">Pradžia</string>
     <string name="stopped">Sustabdyta</string>
-    <string name="paused">Pristabdyta</string>
     <string name="operating_mode">Darbinis režimas</string>
     <string name="description_pump_insight_local">Accu-Chek Insight pompos integracija</string>
     <string name="not_inserted">Neįvestas</string>
