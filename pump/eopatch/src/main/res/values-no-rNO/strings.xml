@@ -1,2 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="eopatch">EOPatch2</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Pumpe-integrasjon for EOPatch2 / GlucoMen Day</string>
+    <string name="category_alerts">Varsler</string>
+    <string name="low_reservoir">Lavt reservoar varsler</string>
+    <string name="patch_expiration_reminders">Patch utløpspåminnelse</string>
+    <string name="patch_buzzer_reminders">Patch Buzzer påminnelser</string>
+    <string name="time_format_a_h_mm">h:mm a</string>
+    <string name="bolusdelivered">Bolus %1$.2f E er levert</string>
+    <string name="eopatch_ble_status">BLE Status</string>
+    <string name="eopatch_serial_number">Serienummer</string>
+    <string name="eopatch_lot_number">Lot nummer</string>
+    <string name="eopatch_wakeup_time">Oppvåkningsdato &amp; tid</string>
+    <string name="eopatch_expiration_time">Utløpstid</string>
+    <string name="eopatch_status">Status</string>
+    <string name="eopatch_base_basal_rate">Profilens basaldose</string>
+    <string name="eopatch_temp_basal_rate">Midlertidig basaldose</string>
+    <string name="eopatch_total_delivered">Totalt levert</string>
+    <string name="invalid_basal_rate">Basisprofilen er mindre enn 0,05 E/t. EOPatch har en minimum injeksjonsenhet på 0,05E. Prøv igjen etter å ha satt profilen til mer enn den minste injeksjonsenheten.</string>
+</resources>
