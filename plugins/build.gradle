@@ -23,4 +23,28 @@ dependencies {
     implementation project(':core')
     implementation project(':interfaces')
     implementation project(':ns-sdk')
+
+    // Actions
+    api 'androidx.gridlayout:gridlayout:1.0.0'
+
+    // NSClient, Tidepool
+    api("io.socket:socket.io-client:1.0.0") {
+        // excluding org.json which is provided by Android
+        exclude group: "org.json", module: "json"
+    }
+    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+//    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+
+
+    // Phone checker
+    // updating to 0.0.9 prevents AAPS from build
+    api 'com.scottyab:rootbeer-lib:0.0.8'
+
+    //SmsCommunicator
+    api 'com.eatthepath:java-otp:0.3.1'
+    api 'com.github.kenglxn.QRGen:android:2.6.0'
+
 }

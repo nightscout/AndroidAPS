@@ -22,4 +22,7 @@ dependencies {
     implementation project(':interfaces')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
+
+    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
 }

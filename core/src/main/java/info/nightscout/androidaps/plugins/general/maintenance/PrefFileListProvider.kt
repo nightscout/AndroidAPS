@@ -4,17 +4,17 @@ import android.content.Context
 import android.os.Environment
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.core.R
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.androidaps.plugins.general.maintenance.formats.*
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.storage.Storage
+import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.data.maintenance.PrefMetadata
 import info.nightscout.interfaces.data.maintenance.PrefMetadataMap
 import info.nightscout.interfaces.data.maintenance.PrefsFile
 import info.nightscout.interfaces.data.maintenance.PrefsImportDir
 import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.data.maintenance.PrefsStatus
+import info.nightscout.interfaces.storage.Storage
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -92,10 +92,6 @@ class PrefFileListProvider @Inject constructor(
             return mapOf()
         }
         return checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
-    }
-
-    @Suppress("unused") fun legacyFile(): File {
-        return File(path, rh.gs(R.string.app_name) + "Preferences")
     }
 
     fun ensureExportDirExists(): File {

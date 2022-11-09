@@ -23,7 +23,7 @@ fun String.hexStringToByteArray(): ByteArray {
     val result = ByteArray(length / 2)
 
     val lowerCased = this.lowercase(Locale.getDefault())
-    for (i in 0 until length step 2) {
+    for (i in indices step 2) {
         val firstIndex = HEX_CHARS.indexOf(lowerCased[i])
         val secondIndex = HEX_CHARS.indexOf(lowerCased[i + 1])
 

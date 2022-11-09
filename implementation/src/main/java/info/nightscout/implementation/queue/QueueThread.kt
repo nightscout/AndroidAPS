@@ -40,7 +40,7 @@ class QueueThread internal constructor(
     private var mWakeLock: PowerManager.WakeLock? = null
 
     init {
-        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":QueueThread")
+        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":QueueThread")
     }
 
     override fun run() {

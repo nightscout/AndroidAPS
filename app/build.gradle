@@ -213,12 +213,18 @@ dependencies {
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-
-    /* Dagger2 - default dependency */
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // MainApp
+    api "com.uber.rxdogtag2:rxdogtag:2.0.1"
+
+    // Overview
+    api 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // APS
+    api 'org.mozilla:rhino:1.7.14'
+
 }
 
 apply from: "${project.rootDir}/core/test_dependencies.gradle"
