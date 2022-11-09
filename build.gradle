@@ -5,7 +5,7 @@ buildscript {
         kotlin_version = '1.7.20'
         core_version = '1.9.0'
         rxjava_version = '3.1.5'
-        rxandroid_version = '3.0.0'
+        rxandroid_version = '3.0.1'
         rxkotlin_version = '3.0.1'
         room_version = '2.4.3'
         lifecycle_version = '2.5.1'
