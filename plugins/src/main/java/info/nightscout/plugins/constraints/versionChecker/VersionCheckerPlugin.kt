@@ -111,8 +111,9 @@ class VersionCheckerPlugin @Inject constructor(
     private fun shouldWarnAgain() =
         dateUtil.now() > sp.getLong(R.string.key_last_versionchecker_plugin_warning, 0) + WARN_EVERY
 
-    private fun isOldVersion(gracePeriod: Long): Boolean =
-        dateUtil.now() > sp.getLong(R.string.key_last_time_this_version_detected_as_ok, 0) + gracePeriod
+    // private fun isOldVersion(gracePeriod: Long): Boolean = dateUtil.now() > sp.getLong(R.string.key_last_time_this_version_detected_as_ok, 0) + gracePeriod
+    
+    private fun isOldVersion(gracePeriod: Long): Boolean = false
 
     private fun Long.daysToMillis() = TimeUnit.DAYS.toMillis(this)
 }
