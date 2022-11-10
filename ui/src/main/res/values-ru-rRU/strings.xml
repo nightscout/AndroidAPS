@@ -17,14 +17,49 @@
     <string name="configure">Настроить прозрачность</string>
     <string name="widget_description">Виджет AAPS</string>
     <!--     Activities-->
+    <string name="activity_monitor">Монитор активности</string>
+    <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
     <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="invalid_age">Некорректное значение возраст</string>
+    <string name="invalid_weight">Некорректное значение вес</string>
     <string name="id">Идентификатор:</string>
     <string name="submit">Отправить</string>
     <string name="age">Возраст</string>
     <string name="weight_label">Вес</string>
+    <string name="most_common_profile">Наиболее часто применяемый профиль:</string>
     <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
     <!-- CareDialog -->
+    <string name="glucose_type">Тип глюкозы</string>
+    <string name="bg_other">Другое</string>
+    <string name="bg_meter">Глюкометр</string>
+    <string name="bg_sensor">Сенсор</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fг IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fг IC: %2$.1f</string>
+    <string name="superbolus">Суперболюс</string>
+    <string name="treatments_wizard_total_label">Всего</string>
     <!-- Treatments -->
+    <string name="no_records_available">Нет доступных записей</string>
+    <string name="calculation_short">Кальк</string>
+    <string name="treatments_iob_label_string">IOB акт инс:</string>
+    <string name="treatments_insulin_label_string">Инсулин:</string>
+    <string name="treatments_carbs_label_string">Углеводы:</string>
+    <string name="treatments_iobtotal_label_string">Общий IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Общая активность IOB:</string>
+    <string name="tempbasals_realduration_label_string">Длит:</string>
+    <string name="tempbasals_netratio_label_string">Процент:</string>
+    <string name="tempbasals_netinsulin_label_string">Инсулин:</string>
+    <string name="tempbasals_iob_label_string">IOB акт инс:</string>
+    <string name="tempbasals_iobtotal_label_string">Общий IOB:</string>
+    <string name="treatments_wizard_tt_label">Врем цель (TT)</string>
+    <string name="treatments_wizard_correction_label">Коррекция</string>
+    <string name="meal_bolus">На еду</string>
+    <string name="prime">Заполн инфуз системы</string>
+    <string name="profile_changes">Изменения профиля</string>
+    <string name="tempt_targets">Врем цели</string>
+    <string name="carbs_and_bolus">Углеводы и болюс</string>
+    <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
+    <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
 </resources>
