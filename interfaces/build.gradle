@@ -26,7 +26,6 @@ dependencies {
     implementation project(':database:entities')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
-    api "androidx.preference:preference-ktx:$preferencektx_version"
 
     // Dagger
     api "com.google.dagger:dagger:$dagger_version"

@@ -42,8 +42,7 @@ dependencies {
 
 
     // Phone checker
-    // updating to 0.0.9 prevents AAPS from build
-    api 'com.scottyab:rootbeer-lib:0.0.8'
+    api 'com.scottyab:rootbeer-lib:0.1.0'
 
     //SmsCommunicator
     api 'com.eatthepath:java-otp:0.3.1'
