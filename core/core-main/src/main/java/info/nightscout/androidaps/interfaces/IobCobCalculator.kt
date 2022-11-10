@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.BasalData
@@ -8,6 +7,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
 import org.json.JSONArray
 

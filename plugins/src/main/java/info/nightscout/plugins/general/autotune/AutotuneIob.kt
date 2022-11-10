@@ -1,14 +1,13 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.LocalInsulin
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.core.iob.round
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.ExtendedBolus
@@ -16,7 +15,9 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile

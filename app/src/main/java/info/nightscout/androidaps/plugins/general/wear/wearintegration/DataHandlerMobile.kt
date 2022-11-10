@@ -31,6 +31,7 @@ import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.round
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal

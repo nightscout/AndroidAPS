@@ -5,7 +5,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -26,6 +25,7 @@ import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType

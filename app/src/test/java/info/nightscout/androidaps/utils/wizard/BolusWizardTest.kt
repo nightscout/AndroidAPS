@@ -4,7 +4,6 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
@@ -16,6 +15,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus

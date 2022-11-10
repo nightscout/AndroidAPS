@@ -34,6 +34,7 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.round
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants

@@ -20,6 +20,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.iob.round
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget

@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.interfaces.Constants
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.data.InMemoryGlucoseValue
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.core.main.R
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class InMemoryGlucoseValueDataPoint(

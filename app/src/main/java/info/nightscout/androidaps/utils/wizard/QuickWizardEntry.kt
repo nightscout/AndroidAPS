@@ -8,6 +8,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.round
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper

@@ -1,9 +1,9 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
+import info.nightscout.interfaces.iob.IobTotal
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

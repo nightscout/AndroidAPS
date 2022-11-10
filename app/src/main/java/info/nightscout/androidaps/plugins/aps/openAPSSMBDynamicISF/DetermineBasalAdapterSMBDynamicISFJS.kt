@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
@@ -20,6 +19,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.logging.AAPSLogger

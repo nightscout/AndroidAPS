@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 import androidx.collection.LongSparseArray
 import androidx.collection.size
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.InMemoryGlucoseValue
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

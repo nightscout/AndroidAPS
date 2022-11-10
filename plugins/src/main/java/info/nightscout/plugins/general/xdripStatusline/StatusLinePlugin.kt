@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.round
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType

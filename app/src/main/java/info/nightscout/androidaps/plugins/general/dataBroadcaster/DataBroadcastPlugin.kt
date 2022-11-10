@@ -18,6 +18,7 @@ import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.round
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
