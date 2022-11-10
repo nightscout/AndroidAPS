@@ -14,7 +14,6 @@ import android.os.PowerManager
 import androidx.core.app.ActivityCompat
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
-import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
@@ -122,11 +121,11 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         stateCallbacks.remove(stateCallback)
     }
 
-    @Synchronized fun registerExceptionCallback(exceptionCallback: InsightPairingActivity) {
+    @Synchronized fun registerExceptionCallback(exceptionCallback: ExceptionCallback) {
         exceptionCallbacks.add(exceptionCallback)
     }
 
-    @Synchronized fun unregisterExceptionCallback(exceptionCallback: InsightPairingActivity) {
+    @Synchronized fun unregisterExceptionCallback(exceptionCallback: ExceptionCallback) {
         exceptionCallbacks.remove(exceptionCallback)
     }
 
