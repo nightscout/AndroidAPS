@@ -2,6 +2,12 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
+import info.nightscout.core.iob.combine
+import info.nightscout.core.iob.copy
+import info.nightscout.core.iob.determineBasalJson
+import info.nightscout.core.iob.json
+import info.nightscout.core.iob.plus
+import info.nightscout.core.iob.round
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
@@ -14,8 +20,8 @@ class IobTotalTest : TestBase() {
 
     @Mock lateinit var context: Context
 
-    lateinit var dateUtil: DateUtil
-    var now = 0L
+    private lateinit var dateUtil: DateUtil
+    private var now = 0L
 
     @Before
     fun prepare() {

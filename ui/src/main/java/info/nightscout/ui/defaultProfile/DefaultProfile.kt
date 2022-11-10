@@ -1,14 +1,16 @@
 package info.nightscout.ui.defaultProfile
 
-import info.nightscout.androidaps.data.PureProfile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
+import java.util.TreeMap
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs

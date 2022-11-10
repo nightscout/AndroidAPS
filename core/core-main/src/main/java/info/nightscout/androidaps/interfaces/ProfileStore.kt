@@ -3,15 +3,15 @@ package info.nightscout.androidaps.interfaces
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject

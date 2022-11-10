@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data
+package info.nightscout.interfaces.profile
 
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock

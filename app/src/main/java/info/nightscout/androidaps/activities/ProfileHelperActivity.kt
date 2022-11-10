@@ -10,8 +10,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -21,6 +19,8 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventLocalProfileChanged

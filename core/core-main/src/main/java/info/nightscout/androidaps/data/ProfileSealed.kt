@@ -23,6 +23,7 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil

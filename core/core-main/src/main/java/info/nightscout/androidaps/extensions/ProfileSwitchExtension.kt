@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.utils.extensions
 
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.targetBlockFromJsonArray
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T

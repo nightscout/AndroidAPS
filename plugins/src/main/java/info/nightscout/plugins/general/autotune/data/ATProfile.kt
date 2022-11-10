@@ -2,10 +2,8 @@ package info.nightscout.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
@@ -14,6 +12,8 @@ import info.nightscout.core.main.R
 import info.nightscout.database.entities.data.Block
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.SafeParse

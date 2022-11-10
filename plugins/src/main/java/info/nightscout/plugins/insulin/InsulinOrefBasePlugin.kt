@@ -1,13 +1,13 @@
 package info.nightscout.plugins.insulin
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.iob.Iob
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase

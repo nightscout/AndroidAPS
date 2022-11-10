@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.configBuilder
 import info.nightscout.androidaps.interfaces.APS
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.Pump
@@ -11,6 +10,7 @@ import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.constraints.Safety
+import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.sync.NsClient

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.insulin
 
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InsulinConfiguration

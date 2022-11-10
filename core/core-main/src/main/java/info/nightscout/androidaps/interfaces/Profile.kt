@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.interfaces.Constants
-import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to1Decimal
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import org.joda.time.DateTime
 import org.json.JSONObject
 

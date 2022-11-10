@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.data.PureProfile
-import org.json.JSONObject
+import info.nightscout.interfaces.profile.PureProfile
 import org.junit.Assert
 import org.junit.Test
 

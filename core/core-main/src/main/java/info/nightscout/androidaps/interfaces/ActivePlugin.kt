@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.constraints.Safety
+import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.sync.NsClient
