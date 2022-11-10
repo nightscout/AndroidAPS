@@ -108,6 +108,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_reservoir_low_warning">Pump reservoir level is low</string>
     <string name="combov2_setting_tbr_succeeded">Setting TBR succeeded</string>
     <string name="combov2_setting_tbr_failed">Setting TBR failed</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Unexpected limit encountered while adjusting TBR: target percentage was %1$d%%, hit a limit at %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Cannot set absolute TBR if base basal rate is zero</string>
     <string name="combov2_pair_with_pump_summary">Pair AndroidAPS and Android with a currently unpaired Accu-Chek Combo pump</string>
     <string name="combov2_unpair_pump_summary">Unpair AndroidAPS and Android from the currently paired Accu-Chek Combo pump</string>

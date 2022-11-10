@@ -56,6 +56,7 @@ import info.nightscout.comboctl.main.Pump as ComboCtlPump
 import info.nightscout.comboctl.main.PumpManager as ComboCtlPumpManager
 import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.BasalProfile
+import info.nightscout.comboctl.main.QuantityNotChangingException
 import info.nightscout.comboctl.main.RTCommandProgressStage
 import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
@@ -988,6 +989,13 @@ class ComboV2Plugin @Inject constructor (
                     success = true
                     enacted = true
                     comment = rh.gs(R.string.combov2_setting_tbr_succeeded)
+                }
+            } catch (e: QuantityNotChangingException) {
+                aapsLogger.error(LTag.PUMP, "TBR percentage adjustment hit a limit: $e")
+                pumpEnactResult.apply {
+                    success = false
+                    enacted = false
+                    comment = rh.gs(R.string.combov2_hit_unexpected_tbr_limit, e.targetQuantity, e.hitLimitAt)
                 }
             } catch (e: ComboCtlPump.UnexpectedTbrStateException) {
                 aapsLogger.error(LTag.PUMP, "Setting TBR failed with exception: $e")
