@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertCategory
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertCategory.*
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertType.*
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton

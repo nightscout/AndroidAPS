@@ -7,23 +7,27 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import java.util.ArrayList
+import javax.inject.Inject
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.*
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.*
-import javax.inject.Inject
 
 class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
@@ -260,7 +264,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
     private fun getBaseBasalRateItem(statusItems: MutableList<View>) {
         val activeBasalRate = localInsightPlugin.activeBasalRate ?: return
-        statusItems.add(getStatusItem(rh.gs(R.string.basebasalrate_label),to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
+        statusItems.add(getStatusItem(rh.gs(R.string.base_basal_rate_label),to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
     }
 
     private fun getTBRItem(statusItems: MutableList<View>) {

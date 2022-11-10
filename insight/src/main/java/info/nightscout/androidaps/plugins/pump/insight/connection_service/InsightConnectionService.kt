@@ -14,6 +14,7 @@ import android.os.PowerManager
 import androidx.core.app.ActivityCompat
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
+import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.unwrap
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage.Companion.wrap
@@ -45,8 +46,8 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.generateRSAKey
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
@@ -121,11 +122,11 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
         stateCallbacks.remove(stateCallback)
     }
 
-    @Synchronized fun registerExceptionCallback(exceptionCallback: ExceptionCallback) {
+    @Synchronized fun registerExceptionCallback(exceptionCallback: InsightPairingActivity) {
         exceptionCallbacks.add(exceptionCallback)
     }
 
-    @Synchronized fun unregisterExceptionCallback(exceptionCallback: ExceptionCallback) {
+    @Synchronized fun unregisterExceptionCallback(exceptionCallback: InsightPairingActivity) {
         exceptionCallbacks.remove(exceptionCallback)
     }
 

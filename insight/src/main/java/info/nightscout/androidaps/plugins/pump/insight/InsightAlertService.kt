@@ -1,15 +1,26 @@
 package info.nightscout.androidaps.plugins.pump.insight
 
+import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.*
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.MutableLiveData
+import javax.inject.Inject
 import dagger.android.DaggerService
 import info.nightscout.androidaps.insight.R
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SnoozeAlertMessage
@@ -23,11 +34,9 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightExcepti
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import javax.inject.Inject
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class InsightAlertService : DaggerService(), InsightConnectionService.StateCallback {
 
@@ -237,6 +246,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         }).start()
     }
 
+    @SuppressLint("MissingPermission")
     private fun showNotification(alert: Alert) {
         val notificationBuilder = NotificationCompat.Builder(this, LocalInsightPlugin.ALERT_CHANNEL_ID)
         notificationBuilder.priority = NotificationCompat.PRIORITY_MAX

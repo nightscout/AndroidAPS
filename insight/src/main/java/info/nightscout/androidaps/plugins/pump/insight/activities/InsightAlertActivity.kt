@@ -8,15 +8,14 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
+import javax.inject.Inject
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.insight.databinding.ActivityInsightAlertBinding
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
-import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
-import javax.inject.Inject
+import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 
 class InsightAlertActivity : DaggerAppCompatActivity() {
 
@@ -28,7 +27,7 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             alertService = (binder as InsightAlertService.LocalBinder).service
-            alertService!!.alertLiveData.observe(this@InsightAlertActivity, Observer { alert: Alert? -> if (alert == null) finish() else update(alert) })
+            alertService!!.alertLiveData.observe(this@InsightAlertActivity, { alert: Alert? -> if (alert == null) finish() else update(alert) })
         }
 
         override fun onServiceDisconnected(name: ComponentName) {

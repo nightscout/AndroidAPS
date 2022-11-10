@@ -1,9 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.insight.activities
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -16,16 +22,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.ArrayList
+import javax.inject.Inject
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingBinding
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import javax.inject.Inject
+import info.nightscout.interfaces.pump.PumpSync
 
 class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
 
@@ -147,6 +154,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun startBLScan() {
         if (!scanning) {
             val bluetoothAdapter = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
@@ -162,6 +170,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun stopBLScan() {
         if (scanning) {
             unregisterReceiver(broadcastReceiver)
@@ -184,6 +193,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
     }
 
     private val broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("MissingPermission")
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             if (action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
@@ -214,6 +224,7 @@ class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionSer
             return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.bluetooth_device, parent, false))
         }
 
+        @SuppressLint("MissingPermission")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val bluetoothDevice = bluetoothDevices[position]
             holder.deviceName.text = if (bluetoothDevice.name == null) bluetoothDevice.address else bluetoothDevice.name
