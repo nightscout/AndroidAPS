@@ -19,7 +19,6 @@ import android.widget.TableRow
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -38,6 +37,7 @@ import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.AutotuneFragmentBinding
 import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.events.EventAutotuneUpdateGui
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.rx.AapsSchedulers

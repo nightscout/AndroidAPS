@@ -1,7 +1,6 @@
 package info.nightscout.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.blockValueBySeconds

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data
+package info.nightscout.plugins.general.autotune.data
 
 import info.nightscout.database.entities.Bolus
 import info.nightscout.interfaces.iob.Iob

@@ -1,6 +1,5 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue
@@ -11,6 +10,7 @@ import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.BGDatum
 import info.nightscout.plugins.general.autotune.data.CRDatum
 import info.nightscout.plugins.general.autotune.data.DiaDeviation
+import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PeakDeviation
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.sharedPreferences.SP
