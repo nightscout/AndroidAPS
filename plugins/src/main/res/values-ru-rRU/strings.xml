@@ -143,6 +143,7 @@
     <string name="restart">перезапуск</string>
     <string name="nsclient_token_title">Атрибут защиты доступа в NS</string>
     <string name="nsclient_token_dialog_title">Атрибут защиты доступа в NS</string>
+    <string name="nsclient_token_dialog_message">Атрибут защиты доступа в NS, созданный на странице администратора NS (минимум 17 символов)</string>
     <string name="deliver_now">Подать сейчас</string>
     <string name="clear_queue">очистка очереди</string>
     <string name="show_queue">показать очередь</string>
@@ -234,6 +235,7 @@
     <string name="ns_create_announcements_from_errors_summary">Создать оповещение NS с диалогом об ошибке и оповещения на месте (также видимые в портале назначений в разделе лечение)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Создавать оповещения Nightscout из напоминаний о необходимых углеводах</string>
     <string name="description_ns_client">Синхронизирует данные с Nightscout</string>
+    <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="openaps_short">OAPS</string>
