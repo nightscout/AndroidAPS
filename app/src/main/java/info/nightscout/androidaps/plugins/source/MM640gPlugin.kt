@@ -111,5 +111,9 @@ class MM640gPlugin @Inject constructor(
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+    
+    override fun advancedFilteringSupported(): Boolean {
+        return true
+    }
 
 }
