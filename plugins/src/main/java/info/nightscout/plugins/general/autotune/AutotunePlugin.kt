@@ -13,11 +13,11 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.Autotune
 import info.nightscout.interfaces.BuildHelper
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.autotune.Autotune
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.plugins.R

@@ -6,7 +6,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import org.junit.Assert

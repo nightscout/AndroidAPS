@@ -20,8 +20,6 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.valueToUnits
@@ -36,9 +34,11 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers

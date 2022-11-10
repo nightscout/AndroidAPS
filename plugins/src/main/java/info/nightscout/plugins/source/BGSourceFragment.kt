@@ -14,8 +14,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
@@ -29,7 +27,9 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.PluginBase
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
+import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.SourceFragmentBinding
 import info.nightscout.plugins.databinding.SourceItemBinding

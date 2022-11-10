@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclient.data
 
-import info.nightscout.interfaces.NsClient
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R

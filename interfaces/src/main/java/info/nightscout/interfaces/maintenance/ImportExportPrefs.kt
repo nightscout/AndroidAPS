@@ -1,8 +1,7 @@
-package info.nightscout.interfaces
+package info.nightscout.interfaces.maintenance
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.interfaces.data.maintenance.PrefsFile
 
 interface ImportExportPrefs {
 

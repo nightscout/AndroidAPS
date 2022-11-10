@@ -2,16 +2,16 @@ package info.nightscout.plugins.general.smsCommunicator
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.data.smsCommunicator.Sms
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.SmsCommunicator
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.smsCommunicator.Sms
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.plugins.R
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

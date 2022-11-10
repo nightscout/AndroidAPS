@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.interfaces.ConfigExportImport
-import info.nightscout.interfaces.data.Iob
+import info.nightscout.interfaces.iob.Iob
 
 interface Insulin : ConfigExportImport {
 

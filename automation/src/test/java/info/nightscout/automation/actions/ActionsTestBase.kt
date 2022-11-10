@@ -14,11 +14,11 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.SmsCommunicator
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

@@ -26,8 +26,8 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PR
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRebuildTabs

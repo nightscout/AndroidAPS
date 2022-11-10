@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.data.maintenance
+package info.nightscout.interfaces.maintenance
 
 import android.content.Context
 import android.os.Parcelable
@@ -40,7 +40,7 @@ enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @String
             FILE_FORMAT -> when (value) {
                 PrefsFormat.FORMAT_KEY_ENC   -> context.getString(R.string.metadata_format_new)
                 PrefsFormat.FORMAT_KEY_NOENC -> context.getString(R.string.metadata_format_debug)
-                else                                  -> context.getString(R.string.metadata_format_other)
+                else                         -> context.getString(R.string.metadata_format_other)
             }
             CREATED_AT  -> value.replace("T", " ").replace("Z", " (UTC)")
             else        -> value

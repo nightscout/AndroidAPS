@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.data
 
-import info.nightscout.interfaces.data.MealData
+import info.nightscout.interfaces.iob.MealData
 import org.junit.Assert
 import org.junit.Test
 

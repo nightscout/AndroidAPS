@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.resources
 
 import info.nightscout.androidaps.R
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.IconsProvider
+import info.nightscout.interfaces.ui.IconsProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 

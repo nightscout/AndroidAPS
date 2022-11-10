@@ -21,7 +21,6 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.combo.R;
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.CommandQueue;
@@ -47,11 +46,12 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpH
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
 import info.nightscout.core.fabric.InstanceId;
-import info.nightscout.interfaces.Constraint;
-import info.nightscout.interfaces.PluginDescription;
-import info.nightscout.interfaces.PluginType;
-import info.nightscout.interfaces.data.PumpEnactResult;
+import info.nightscout.interfaces.constraints.Constraint;
 import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.PluginDescription;
+import info.nightscout.interfaces.plugin.PluginType;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.defs.ManufacturerType;
 import info.nightscout.interfaces.pump.defs.PumpDescription;
 import info.nightscout.interfaces.pump.defs.PumpType;

@@ -41,10 +41,10 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged

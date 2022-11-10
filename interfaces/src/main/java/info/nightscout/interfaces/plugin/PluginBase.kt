@@ -1,4 +1,4 @@
-package info.nightscout.interfaces
+package info.nightscout.interfaces.plugin
 
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat

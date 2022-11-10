@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsShared.events
 
-import info.nightscout.interfaces.NsClient
+import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.rx.events.Event
 import java.text.SimpleDateFormat
 import java.util.Locale

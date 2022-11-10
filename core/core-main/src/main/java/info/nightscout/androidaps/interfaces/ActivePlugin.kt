@@ -1,12 +1,11 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.interfaces.NsClient
 import info.nightscout.interfaces.Overview
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.Safety
-import info.nightscout.interfaces.Sync
-import java.util.*
+import info.nightscout.interfaces.constraints.Safety
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.interfaces.sync.Sync
 
 interface ActivePlugin {
 

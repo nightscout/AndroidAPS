@@ -1,4 +1,4 @@
-package info.nightscout.interfaces
+package info.nightscout.interfaces.sync
 
 import android.text.Spanned
 import org.json.JSONObject

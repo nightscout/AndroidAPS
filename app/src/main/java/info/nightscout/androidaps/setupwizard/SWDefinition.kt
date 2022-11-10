@@ -13,8 +13,6 @@ import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
@@ -41,8 +39,10 @@ import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.maintenance.ImportExportPrefs
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus

@@ -68,11 +68,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.core.pumpExtensions.DetailedBolusInfoExtensionKt;
-import info.nightscout.interfaces.ActivityNames;
-import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.interfaces.ui.ActivityNames;
 import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;

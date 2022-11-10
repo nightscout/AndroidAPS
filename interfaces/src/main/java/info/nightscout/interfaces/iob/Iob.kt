@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.data
+package info.nightscout.interfaces.iob
 
 class Iob {
 

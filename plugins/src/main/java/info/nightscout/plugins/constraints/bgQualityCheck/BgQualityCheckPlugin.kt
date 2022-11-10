@@ -5,10 +5,10 @@ import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constraint
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

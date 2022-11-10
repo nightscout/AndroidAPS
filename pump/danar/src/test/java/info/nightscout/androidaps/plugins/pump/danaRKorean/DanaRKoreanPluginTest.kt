@@ -2,16 +2,16 @@ package info.nightscout.androidaps.plugins.pump.danaRKorean
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.Constraint
-import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before

@@ -11,15 +11,15 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
+import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.core.main.R
 import info.nightscout.core.main.databinding.MaintenanceImportListActivityBinding
 import info.nightscout.core.main.databinding.MaintenanceImportListItemBinding
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
-import info.nightscout.interfaces.data.maintenance.PrefsFile
-import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
-import info.nightscout.interfaces.data.maintenance.PrefsMetadataKey
-import info.nightscout.interfaces.data.maintenance.PrefsStatus
 import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.maintenance.PrefsFile
+import info.nightscout.interfaces.maintenance.PrefsMetadataKey
+import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 

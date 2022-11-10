@@ -5,7 +5,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolus
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairBolusCalculatorResult
@@ -19,8 +18,9 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector.PairProfileSwitch
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryBasal
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTemporaryTarget
 import info.nightscout.androidaps.interfaces.DataSyncSelector.PairTherapyEvent
-import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.rx.AapsSchedulers

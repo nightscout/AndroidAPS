@@ -13,7 +13,6 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
-import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
@@ -31,12 +30,13 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constraint
-import info.nightscout.interfaces.Dana
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.Dana
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType

@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
 

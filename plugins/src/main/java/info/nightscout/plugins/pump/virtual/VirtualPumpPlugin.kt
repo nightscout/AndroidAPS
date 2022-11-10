@@ -4,7 +4,6 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -20,11 +19,12 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.VirtualPump
-import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType

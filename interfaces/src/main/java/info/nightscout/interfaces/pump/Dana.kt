@@ -1,6 +1,4 @@
-package info.nightscout.interfaces
-
-import info.nightscout.interfaces.data.PumpEnactResult
+package info.nightscout.interfaces.pump
 
 /**
  * Functionality supported by Dana* pumps only

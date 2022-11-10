@@ -2,12 +2,12 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.interfaces.PluginBase
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import javax.inject.Inject
 

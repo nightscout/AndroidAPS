@@ -7,9 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogFillBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -25,9 +22,12 @@ import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.ActivityNames
-import info.nightscout.interfaces.Constraint
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse

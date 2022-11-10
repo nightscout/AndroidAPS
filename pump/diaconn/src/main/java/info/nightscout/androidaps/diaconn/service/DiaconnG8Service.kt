@@ -57,12 +57,12 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit

@@ -4,9 +4,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
 

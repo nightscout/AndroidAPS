@@ -9,10 +9,10 @@ import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBindi
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.logging.LTag

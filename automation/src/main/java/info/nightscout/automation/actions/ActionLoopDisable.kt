@@ -10,8 +10,8 @@ import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview

@@ -2,13 +2,12 @@ package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Dana
-import info.nightscout.interfaces.Diaconn
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.pump.Dana
+import info.nightscout.interfaces.pump.Diaconn
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 class CommandSetUserSettings(

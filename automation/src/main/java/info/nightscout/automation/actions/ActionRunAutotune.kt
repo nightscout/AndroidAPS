@@ -5,18 +5,17 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Autotune
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.interfaces.autotune.Autotune
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject

@@ -2,18 +2,18 @@ package info.nightscout.plugins.general.smsCommunicator
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.data.smsCommunicator.Sms
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.SmsCommunicator
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.smsCommunicator.Sms
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class AuthRequest internal constructor(

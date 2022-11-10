@@ -19,7 +19,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.SmsCommunicator
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.SmscommunicatorActivityOtpBinding
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword

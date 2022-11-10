@@ -5,8 +5,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin

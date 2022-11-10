@@ -28,9 +28,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivati
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.shared.extensions.toVisibility

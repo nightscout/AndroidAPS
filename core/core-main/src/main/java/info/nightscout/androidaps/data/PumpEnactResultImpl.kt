@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.data
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.main.R
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.core.main.R
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 

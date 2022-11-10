@@ -20,9 +20,9 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BO
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.ActivityNames
-import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse

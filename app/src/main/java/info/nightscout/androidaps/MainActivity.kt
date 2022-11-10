@@ -56,10 +56,10 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.IconsProvider
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.rx.AapsSchedulers

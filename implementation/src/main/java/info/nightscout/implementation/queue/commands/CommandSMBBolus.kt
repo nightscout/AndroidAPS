@@ -1,17 +1,16 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.implementation.R
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.implementation.R
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 class CommandSMBBolus(

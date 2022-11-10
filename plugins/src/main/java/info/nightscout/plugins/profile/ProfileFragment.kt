@@ -22,9 +22,9 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ProfileFragmentBinding
 import info.nightscout.plugins.ui.TimeListEdit

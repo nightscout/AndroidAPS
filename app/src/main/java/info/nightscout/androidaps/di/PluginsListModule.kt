@@ -9,7 +9,6 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -45,6 +44,7 @@ import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin

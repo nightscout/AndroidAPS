@@ -1,4 +1,4 @@
-package info.nightscout.interfaces
+package info.nightscout.interfaces.ui
 
 interface IconsProvider {
     fun getIcon(): Int

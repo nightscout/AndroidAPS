@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

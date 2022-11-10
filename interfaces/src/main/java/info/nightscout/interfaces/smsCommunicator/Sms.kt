@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.data.smsCommunicator
+package info.nightscout.interfaces.smsCommunicator
 
 import android.telephony.SmsMessage
 

@@ -16,8 +16,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.shared.extensions.toVisibility

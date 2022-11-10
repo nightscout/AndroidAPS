@@ -18,10 +18,10 @@ import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.NsClient
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventConfigBuilderChange

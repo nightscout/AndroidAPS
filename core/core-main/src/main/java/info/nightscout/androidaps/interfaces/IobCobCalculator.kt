@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.interfaces.data.MealData
+import info.nightscout.interfaces.iob.MealData
 import org.json.JSONArray
 
 interface IobCobCalculator {

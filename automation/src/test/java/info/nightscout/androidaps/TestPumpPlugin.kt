@@ -1,20 +1,20 @@
 package info.nightscout.androidaps
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 
 @Suppress("MemberVisibilityCanBePrivate")

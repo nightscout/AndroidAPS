@@ -1,8 +1,8 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

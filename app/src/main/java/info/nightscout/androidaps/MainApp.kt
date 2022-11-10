@@ -15,9 +15,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.database.impl.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.di.DaggerAppComponent
 import info.nightscout.androidaps.di.StaticInjector
@@ -33,13 +30,16 @@ import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.database.impl.transactions.VersionChangeTransaction
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.locale.LocaleHelper
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.rx.logging.AAPSLogger

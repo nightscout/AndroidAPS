@@ -1,9 +1,9 @@
 package info.nightscout.implementation.constraints
 
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.interfaces.constraints.Constraint
 import javax.inject.Inject
 import javax.inject.Singleton
 

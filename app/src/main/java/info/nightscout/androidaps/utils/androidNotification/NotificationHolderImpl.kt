@@ -10,8 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.core.main.R
-import info.nightscout.interfaces.IconsProvider
 import info.nightscout.interfaces.NotificationHolder
+import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton

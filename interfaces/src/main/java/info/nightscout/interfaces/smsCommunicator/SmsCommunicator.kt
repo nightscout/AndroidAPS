@@ -1,6 +1,4 @@
-package info.nightscout.interfaces
-
-import info.nightscout.interfaces.data.smsCommunicator.Sms
+package info.nightscout.interfaces.smsCommunicator
 
 interface SmsCommunicator {
 

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

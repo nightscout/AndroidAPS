@@ -3,9 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective1
@@ -18,8 +16,10 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective7
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective9
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

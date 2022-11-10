@@ -26,11 +26,11 @@ import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.entities.interfaces.end
-import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.VariableSensitivityResult
+import info.nightscout.interfaces.aps.VariableSensitivityResult
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility

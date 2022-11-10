@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data
 
 import info.nightscout.database.entities.Bolus
-import info.nightscout.interfaces.data.Iob
+import info.nightscout.interfaces.iob.Iob
 import kotlin.math.exp
 import kotlin.math.pow
 

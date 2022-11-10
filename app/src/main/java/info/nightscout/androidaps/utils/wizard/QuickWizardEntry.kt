@@ -2,8 +2,6 @@ package info.nightscout.androidaps.utils.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
@@ -11,7 +9,9 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.PluginBase
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.AAPSLogger

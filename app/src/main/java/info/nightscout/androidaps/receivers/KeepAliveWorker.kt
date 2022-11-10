@@ -15,7 +15,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.IobCobCalculator
@@ -25,9 +24,10 @@ import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.interfaces.PluginBase
+import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged

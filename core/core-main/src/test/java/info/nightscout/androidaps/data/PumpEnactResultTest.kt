@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.main.R
-import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpEnactResult
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

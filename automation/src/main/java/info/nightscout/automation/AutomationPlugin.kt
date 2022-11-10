@@ -45,9 +45,9 @@ import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

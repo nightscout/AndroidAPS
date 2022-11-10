@@ -1,4 +1,4 @@
-package info.nightscout.interfaces
+package info.nightscout.interfaces.constraints
 
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

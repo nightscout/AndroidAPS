@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.sensitivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
@@ -11,9 +10,10 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.extensions.isPSEvent5minBack
 import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
 import info.nightscout.plugins.utils.Percentile
 import info.nightscout.rx.logging.AAPSLogger

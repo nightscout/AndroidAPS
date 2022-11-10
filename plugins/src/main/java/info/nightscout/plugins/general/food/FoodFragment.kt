@@ -12,8 +12,6 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -22,7 +20,9 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.ActivityNames
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InvalidateFoodTransaction
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.FoodFragmentBinding
 import info.nightscout.plugins.databinding.FoodItemBinding

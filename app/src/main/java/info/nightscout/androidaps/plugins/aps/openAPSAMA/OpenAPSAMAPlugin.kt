@@ -4,8 +4,6 @@ import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.interfaces.APS
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -23,10 +21,12 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constraint
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

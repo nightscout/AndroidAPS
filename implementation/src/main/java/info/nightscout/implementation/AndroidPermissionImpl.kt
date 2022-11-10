@@ -19,9 +19,9 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton

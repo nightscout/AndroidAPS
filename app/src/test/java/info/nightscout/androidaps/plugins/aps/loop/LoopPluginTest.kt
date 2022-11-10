@@ -6,7 +6,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
@@ -15,10 +14,11 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.ActivityNames
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.PluginType
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus

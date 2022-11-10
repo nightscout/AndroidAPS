@@ -3,10 +3,10 @@ package info.nightscout.plugins.constraints.storage
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.Constraint
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

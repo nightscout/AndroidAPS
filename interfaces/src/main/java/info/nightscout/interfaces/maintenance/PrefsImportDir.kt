@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.data.maintenance
+package info.nightscout.interfaces.maintenance
 
 enum class PrefsImportDir {
     ROOT_DIR,

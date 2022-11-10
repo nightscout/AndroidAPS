@@ -5,8 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventNewHistoryData
@@ -27,11 +25,13 @@ import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.data.MealData
+import info.nightscout.interfaces.iob.MealData
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

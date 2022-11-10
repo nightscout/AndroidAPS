@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.data.maintenance
+package info.nightscout.interfaces.maintenance
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

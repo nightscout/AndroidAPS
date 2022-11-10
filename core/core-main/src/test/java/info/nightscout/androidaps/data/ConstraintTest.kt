@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.Constraint
+import info.nightscout.interfaces.constraints.Constraint
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
