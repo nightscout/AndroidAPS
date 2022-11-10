@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import dagger.android.AndroidInjector
+import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.extensions.pureProfileFromJson
@@ -13,7 +14,6 @@ import info.nightscout.core.profile.toMmol
 import info.nightscout.core.profile.toTargetRangeString
 import info.nightscout.core.profile.toUnits
 import info.nightscout.core.profile.toUnitsString
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
@@ -43,9 +43,8 @@ class ProfileTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var config: Config
     @Mock lateinit var sp: SP
-    @Mock lateinit var repository: AppRepository
-    @Mock lateinit var hardLimits: HardLimits
 
+    private lateinit var hardLimits: HardLimits
     private lateinit var rxBus: RxBus
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
@@ -70,6 +69,7 @@ class ProfileTest : TestBase() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
         rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
+        hardLimits = HardLimitsMock(sp, rh)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(rh.gs(R.string.profile_per_unit)).thenReturn("/U")
         `when`(rh.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U")

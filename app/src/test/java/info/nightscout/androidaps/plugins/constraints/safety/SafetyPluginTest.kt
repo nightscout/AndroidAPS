@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -38,8 +39,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var repository: AppRepository
-    @Mock lateinit var hardLimits: HardLimits
 
+    private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
@@ -70,6 +71,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(config.APS).thenReturn(true)
+        hardLimits = HardLimitsMock(sp, rh)
         safetyPlugin = SafetyPlugin(
             injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, openAPSSMBDynamicISFPlugin, sensitivityOref1Plugin, activePlugin,
             hardLimits, buildHelper,

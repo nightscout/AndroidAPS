@@ -21,7 +21,7 @@ import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import org.junit.Before
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
 @Suppress("SpellCheckingInspection")
 open class TestBaseWithProfile : TestBase() {
@@ -35,8 +35,8 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
     @Mock lateinit var repository: AppRepository
-    @Mock lateinit var hardLimits: HardLimits
 
+    private lateinit var hardLimits: HardLimits
     lateinit var testPumpPlugin: TestPumpPlugin
 
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
@@ -70,7 +70,8 @@ open class TestBaseWithProfile : TestBase() {
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         testPumpPlugin = TestPumpPlugin(profileInjector)
-        Mockito.`when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
+        `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
+        hardLimits = HardLimitsMock(sp, rh)
     }
 
     fun getValidProfileStore(): ProfileStore {

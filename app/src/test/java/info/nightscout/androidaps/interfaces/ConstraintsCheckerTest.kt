@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
@@ -64,8 +65,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
     @Mock lateinit var buildHelper: BuildHelper
-    @Mock lateinit var hardLimits: HardLimits
 
+    private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
     private lateinit var insightDbHelper: InsightDbHelper
     private lateinit var constraintChecker: ConstraintsImpl
@@ -130,6 +131,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
 
+        hardLimits = HardLimitsMock(sp, rh)
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
