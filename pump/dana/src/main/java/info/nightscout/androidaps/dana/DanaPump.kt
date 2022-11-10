@@ -6,7 +6,7 @@ import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.shared.utils.T

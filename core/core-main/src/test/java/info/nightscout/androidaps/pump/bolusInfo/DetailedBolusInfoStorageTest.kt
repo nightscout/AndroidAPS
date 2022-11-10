@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.pump.bolusInfo
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull

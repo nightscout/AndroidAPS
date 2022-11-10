@@ -10,7 +10,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.data.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager

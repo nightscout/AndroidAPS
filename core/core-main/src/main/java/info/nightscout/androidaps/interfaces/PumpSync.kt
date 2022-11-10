@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 
 /**
  * This interface allows pump drivers to push data changes (creation and update of treatments, temporary basals and extended boluses) back to AAPS-core.

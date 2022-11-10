@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogFillBinding

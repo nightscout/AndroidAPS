@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventInitializationChanged

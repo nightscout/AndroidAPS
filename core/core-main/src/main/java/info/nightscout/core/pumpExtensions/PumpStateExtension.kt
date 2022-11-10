@@ -2,9 +2,8 @@ package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlin.math.ceil
 import kotlin.math.max
@@ -56,7 +55,7 @@ fun PumpSync.PumpState.ExtendedBolus.getPassedDurationToTimeInMinutes(time: Long
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 
 fun PumpSync.PumpState.ExtendedBolus.toStringFull(dateUtil: DateUtil): String =
-    "E " + to2Decimal(rate) + "U/h @" +
+    "E " + DecimalFormatter.to2Decimal(rate) + "U/h @" +
         dateUtil.timeString(timestamp) +
         " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 

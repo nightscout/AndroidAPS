@@ -14,14 +14,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.interfaces.pump.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
@@ -69,9 +67,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
+import info.nightscout.core.pumpExtensions.DetailedBolusInfoExtensionKt;
 import info.nightscout.interfaces.ActivityNames;
 import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
@@ -426,7 +427,7 @@ public class AapsOmnipodErosManager {
         //
         // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
         try {
-            sp.putString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, detailedBolusInfo.toJsonString());
+            sp.putString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, DetailedBolusInfoExtensionKt.toJsonString(detailedBolusInfo));
             aapsLogger.debug(LTag.PUMP, "Stored active bolus to SP for recovery");
         } catch (Exception ex) {
             aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);

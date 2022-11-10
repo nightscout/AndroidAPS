@@ -84,7 +84,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.general.overview.notifications.NotificationStore

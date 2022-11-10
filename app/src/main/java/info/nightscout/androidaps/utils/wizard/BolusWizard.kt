@@ -5,7 +5,7 @@ import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.extensions.formatColor
@@ -35,7 +35,7 @@ import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.PluginBase
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round

@@ -61,7 +61,7 @@ import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

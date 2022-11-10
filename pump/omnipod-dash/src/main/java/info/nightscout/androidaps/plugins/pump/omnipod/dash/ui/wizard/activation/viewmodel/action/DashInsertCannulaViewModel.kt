@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBas
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

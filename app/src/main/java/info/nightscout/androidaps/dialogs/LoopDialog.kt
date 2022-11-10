@@ -38,7 +38,7 @@ import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview

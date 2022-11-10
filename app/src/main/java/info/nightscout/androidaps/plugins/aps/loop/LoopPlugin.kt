@@ -16,7 +16,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
@@ -56,7 +56,7 @@ import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin

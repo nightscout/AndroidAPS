@@ -23,7 +23,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventDanaRSyncStatus

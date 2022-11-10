@@ -13,7 +13,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constraint
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

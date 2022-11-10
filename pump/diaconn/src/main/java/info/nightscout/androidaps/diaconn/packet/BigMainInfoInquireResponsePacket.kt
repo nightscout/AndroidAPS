@@ -4,9 +4,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.DateTime

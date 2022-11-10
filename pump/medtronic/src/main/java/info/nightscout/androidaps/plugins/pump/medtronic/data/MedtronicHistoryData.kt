@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.pump.medtronic.data
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntry
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryTBR

@@ -8,14 +8,14 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.interfaces.pump.PumpType;
+import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;

@@ -18,7 +18,7 @@ import info.nightscout.interfaces.PluginBase
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.Safety
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin

@@ -8,7 +8,7 @@ import info.nightscout.interfaces.NsClient
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginType
 import info.nightscout.interfaces.notifications.Notification

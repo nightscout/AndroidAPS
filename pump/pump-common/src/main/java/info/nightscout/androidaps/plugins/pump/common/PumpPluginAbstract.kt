@@ -6,7 +6,7 @@ import android.content.ServiceConnection
 import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
@@ -28,9 +28,9 @@ import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.data.PumpEnactResult
-import info.nightscout.interfaces.pump.ManufacturerType
-import info.nightscout.interfaces.pump.PumpDescription
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit

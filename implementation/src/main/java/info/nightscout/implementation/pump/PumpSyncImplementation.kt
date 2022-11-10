@@ -1,6 +1,6 @@
 package info.nightscout.implementation.pump
 
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.database.impl.transactions.InsertBolusWithTempIdTransaction
@@ -39,7 +39,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.VirtualPump
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

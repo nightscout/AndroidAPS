@@ -12,7 +12,7 @@ import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Constraint
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.queue.commands.Command

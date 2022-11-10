@@ -2,7 +2,7 @@ package info.nightscout.androidaps.extensions
 
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 
 fun PumpType.Companion.fromDbSource(s: UserEntry.Sources): PumpType.Source =
     when (s) {

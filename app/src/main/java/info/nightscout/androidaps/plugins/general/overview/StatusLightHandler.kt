@@ -11,7 +11,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.plugins.sync.nsclient.extensions.age
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

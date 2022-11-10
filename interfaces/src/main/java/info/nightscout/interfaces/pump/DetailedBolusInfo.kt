@@ -1,14 +1,11 @@
-package info.nightscout.androidaps.data
+package info.nightscout.interfaces.pump
 
 import android.content.Context
-import com.google.gson.Gson
-import info.nightscout.database.impl.transactions.InsertOrUpdateBolusTransaction
-import info.nightscout.database.impl.transactions.InsertOrUpdateCarbsTransaction
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 
 class DetailedBolusInfo {
 
@@ -120,19 +117,6 @@ class DetailedBolusInfo {
             )
         else null
 
-    fun insertCarbsTransaction(): InsertOrUpdateCarbsTransaction {
-        if (carbs == 0.0) throw IllegalStateException("carbs == 0.0")
-        return InsertOrUpdateCarbsTransaction(createCarbs()!!)
-    }
-
-    fun insertBolusTransaction(): InsertOrUpdateBolusTransaction {
-        if (insulin == 0.0) throw IllegalStateException("insulin == 0.0")
-        return InsertOrUpdateBolusTransaction(createBolus()!!)
-    }
-
-    fun toJsonString(): String =
-        Gson().toJson(this)
-
     fun copy(): DetailedBolusInfo {
         val n = DetailedBolusInfo()
         n.insulin = insulin
@@ -159,11 +143,6 @@ class DetailedBolusInfo {
         return n
     }
 
-    override fun toString(): String = toJsonString()
-
     companion object {
-
-        fun fromJsonString(json: String): DetailedBolusInfo =
-            Gson().fromJson(json, DetailedBolusInfo::class.java)
     }
 }

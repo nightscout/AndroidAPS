@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.pump
+package info.nightscout.interfaces.pump.defs
 
 enum class ManufacturerType(val description: String) {
     AAPS("AAPS"),

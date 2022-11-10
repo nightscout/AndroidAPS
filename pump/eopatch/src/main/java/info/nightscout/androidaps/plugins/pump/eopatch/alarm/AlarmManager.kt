@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.task
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.ManufacturerType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency

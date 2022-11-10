@@ -34,7 +34,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.core.pumpExtensions.DetailedBolusInfoExtensionKt;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
@@ -94,9 +95,9 @@ import info.nightscout.interfaces.PluginDescription;
 import info.nightscout.interfaces.PluginType;
 import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.pump.ManufacturerType;
-import info.nightscout.interfaces.pump.PumpDescription;
-import info.nightscout.interfaces.pump.PumpType;
+import info.nightscout.interfaces.pump.defs.ManufacturerType;
+import info.nightscout.interfaces.pump.defs.PumpDescription;
+import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.pump.actions.CustomActionType;
 import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.CustomCommand;
@@ -366,7 +367,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                         String activeBolusString = sp.getString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, "");
                         aapsLogger.warn(LTag.PUMP, "Found active bolus in SP: {}. Adding Treatment.", activeBolusString);
                         try {
-                            aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo.Companion.fromJsonString(activeBolusString));
+                            aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfoExtensionKt.fromJsonString(new DetailedBolusInfo(), activeBolusString));
                         } catch (Exception ex) {
                             aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex);
                         }

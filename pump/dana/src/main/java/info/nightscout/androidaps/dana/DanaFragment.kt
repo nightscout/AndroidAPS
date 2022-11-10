@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Dana
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange

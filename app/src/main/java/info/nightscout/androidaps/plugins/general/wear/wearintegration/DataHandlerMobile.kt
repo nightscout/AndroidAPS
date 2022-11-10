@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction

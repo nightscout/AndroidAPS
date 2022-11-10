@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.core.pumpExtensions.toJsonString
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.shared.utils.T
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -19,7 +20,7 @@ class DetailedBolusInfoStorage @Inject constructor(
 
     @Synchronized
     fun add(detailedBolusInfo: DetailedBolusInfo) {
-        aapsLogger.debug("Stored bolus info: $detailedBolusInfo")
+        aapsLogger.debug("Stored bolus info: ${detailedBolusInfo.toJsonString()}")
         store.add(detailedBolusInfo)
     }
 

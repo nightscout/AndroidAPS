@@ -7,7 +7,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -59,8 +59,8 @@ import info.nightscout.interfaces.PluginDescription
 import info.nightscout.interfaces.PluginType
 import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.ManufacturerType
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.interfaces.utils.TimeChangeType

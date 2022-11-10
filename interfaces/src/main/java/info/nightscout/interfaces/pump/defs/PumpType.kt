@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.pump
+package info.nightscout.interfaces.pump.defs
 
 import info.nightscout.interfaces.R
 import info.nightscout.interfaces.utils.Round

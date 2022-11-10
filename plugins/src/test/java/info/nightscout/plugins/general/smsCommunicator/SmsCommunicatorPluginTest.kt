@@ -28,8 +28,8 @@ import info.nightscout.interfaces.Constraint
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.PluginType
 import info.nightscout.interfaces.data.smsCommunicator.Sms
-import info.nightscout.interfaces.pump.PumpDescription
-import info.nightscout.interfaces.pump.PumpType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword

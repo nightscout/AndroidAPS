@@ -18,7 +18,7 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.ActivityNames
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.PluginType
-import info.nightscout.interfaces.pump.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus

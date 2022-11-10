@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.pump
+package info.nightscout.interfaces.pump.defs
 
 import java.util.Locale
 
@@ -7,24 +7,29 @@ enum class DoseStepSize(private val entries: Array<DoseStepSizeEntry>) {
     ComboBasal(arrayOf(
         DoseStepSizeEntry(0.0, 1.0, 0.01),
         DoseStepSizeEntry(1.0, 10.0, 0.05),
-        DoseStepSizeEntry(10.0, Double.MAX_VALUE, 0.1))),
+        DoseStepSizeEntry(10.0, Double.MAX_VALUE, 0.1)
+    )),
     InsightBolus(arrayOf(
         DoseStepSizeEntry(0.0, 2.0, 0.05),
         DoseStepSizeEntry(2.0, 5.0, 0.1),
         DoseStepSizeEntry(5.0, 10.0, 0.2),
-        DoseStepSizeEntry(10.0, Double.MAX_VALUE, 0.5))),
+        DoseStepSizeEntry(10.0, Double.MAX_VALUE, 0.5)
+    )),
     InsightBasal(arrayOf(
         DoseStepSizeEntry(0.0, 5.0, 0.01),
-        DoseStepSizeEntry(5.0, Double.MAX_VALUE, 0.1))),
+        DoseStepSizeEntry(5.0, Double.MAX_VALUE, 0.1)
+    )),
     MedtronicVeoBasal(arrayOf(
         DoseStepSizeEntry(0.0, 1.0, 0.025),
         DoseStepSizeEntry(1.0, 10.0, 0.05),
-        DoseStepSizeEntry(10.0, Double.MAX_VALUE, 0.1))),
+        DoseStepSizeEntry(10.0, Double.MAX_VALUE, 0.1)
+    )),
     YpsopumpBasal(arrayOf(
         DoseStepSizeEntry(0.0, 1.0, 0.01),
         DoseStepSizeEntry(1.0, 2.0, 0.02),
         DoseStepSizeEntry(2.0, 15.0, 0.1),
-        DoseStepSizeEntry(15.0, 40.0, 0.5))
+        DoseStepSizeEntry(15.0, 40.0, 0.5)
+    )
     );
 
     fun getStepSizeForAmount(amount: Double): Double {

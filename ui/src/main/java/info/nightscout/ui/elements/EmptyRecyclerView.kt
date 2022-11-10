@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.ui.elements
 
 import android.content.Context
 import android.util.AttributeSet
