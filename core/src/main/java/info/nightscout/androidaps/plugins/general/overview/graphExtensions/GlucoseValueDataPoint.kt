@@ -5,6 +5,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.extensions.rawOrSmoothed
+import info.nightscout.androidaps.extensions.useDataSmoothing
 import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -17,25 +18,54 @@ class GlucoseValueDataPoint(
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val rh: ResourceHelper,
-    private val sp: SP
 ) : DataPointWithLabelInterface {
 
+    private var useSmoothed : Boolean = false
+    private var isAdditional : Boolean = false
+
+    constructor(data: GlucoseValue,
+                defaultValueHelper: DefaultValueHelper,
+                profileFunction: ProfileFunction,
+                rh: ResourceHelper,
+                useSmoothed: Boolean,
+                isAdditional: Boolean = false) : this(
+        data,
+        defaultValueHelper,
+        profileFunction,
+        rh) {
+        this.useSmoothed = useSmoothed
+        this.isAdditional = isAdditional
+    }
+
+    constructor(data: GlucoseValue,
+                defaultValueHelper: DefaultValueHelper,
+                profileFunction: ProfileFunction,
+                rh: ResourceHelper,
+                sp: SP) : this(
+        data,
+        defaultValueHelper,
+        profileFunction,
+        rh) {
+        useSmoothed = useDataSmoothing(sp)
+    }
+
     fun valueToUnits(units: GlucoseUnit): Double =
-        if (units == GlucoseUnit.MGDL) data.rawOrSmoothed(sp) else data.rawOrSmoothed(sp) * Constants.MGDL_TO_MMOLL
+        if (units == GlucoseUnit.MGDL) data.rawOrSmoothed(useSmoothed) else data.rawOrSmoothed(useSmoothed) * Constants.MGDL_TO_MMOLL
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = valueToUnits(profileFunction.getUnits())
 
     override fun setY(y: Double) {}
-    override val label: String = Profile.toCurrentUnitsString(profileFunction, data.rawOrSmoothed(sp))
+    override val label: String = Profile.toCurrentUnitsString(profileFunction, data.rawOrSmoothed(useSmoothed))
     override val duration = 0L
     override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
-    override val size = 1f
+    override val size get() = if (isAdditional) 0.5f else 1f
     override fun color(context: Context?): Int {
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
         return when {
+            isAdditional                   -> rh.gac(context, R.attr.defaultTextColor)
             isPrediction                   -> predictionColor(context)
             valueToUnits(units) < lowLine  -> rh.gac(context, R.attr.bgLow)
             valueToUnits(units) > highLine -> rh.gac(context, R.attr.highColor)

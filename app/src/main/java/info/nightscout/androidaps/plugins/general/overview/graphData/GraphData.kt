@@ -57,6 +57,7 @@ class GraphData(
             if (units == GlucoseUnit.MGDL) 180.0 else 10.0
         } else overviewData.maxBgValue
         minY = 0.0
+        if (!overviewData.bgReadingRawGraphSeries.isEmpty) addSeries(overviewData.bgReadingRawGraphSeries)
         addSeries(overviewData.bgReadingGraphSeries)
         if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
         overviewData.bgReadingGraphSeries.setOnDataPointTapListener { _, dataPoint ->
@@ -97,7 +98,7 @@ class GraphData(
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
         addSeries(overviewData.treatmentsSeries)
         overviewData.treatmentsSeries.setOnDataPointTapListener { _, dataPoint ->
-            if (dataPoint is BolusDataPoint) ToastUtils.infoToast(context, dataPoint.label)
+            if (dataPoint is BolusDataPoint) ToastUtils.graphicalToast(context, dataPoint.label, R.drawable.ic_bolus)
         }
     }
 

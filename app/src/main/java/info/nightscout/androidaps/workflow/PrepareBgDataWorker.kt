@@ -54,13 +54,16 @@ class PrepareBgDataWorker(
         data.overviewData.maxBgValue = Double.MIN_VALUE
         data.overviewData.bgReadingsArray = repository.compatGetBgReadingsDataFromTime(data.overviewData.fromTime, data.overviewData.toTime, false).blockingGet()
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
+        val bgListRawArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (bg in data.overviewData.bgReadingsArray) {
             if (bg.timestamp < data.overviewData.fromTime || bg.timestamp > data.overviewData.toTime) continue
             if (bg.rawOrSmoothed(useSmoothed) > data.overviewData.maxBgValue) data.overviewData.maxBgValue = bg.rawOrSmoothed(useSmoothed)
-            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh, sp))
+            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh, useSmoothed))
+            if (useSmoothed) bgListRawArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh, false, isAdditional = true))
         }
         bgListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
+        data.overviewData.bgReadingRawGraphSeries = PointsWithLabelGraphSeries(Array(bgListRawArray.size) { i -> bgListRawArray[i] })
         data.overviewData.maxBgValue = Profile.fromMgdlToUnits(data.overviewData.maxBgValue, profileFunction.getUnits())
         if (defaultValueHelper.determineHighLine() > data.overviewData.maxBgValue) data.overviewData.maxBgValue = defaultValueHelper.determineHighLine()
         data.overviewData.maxBgValue = addUpperChartMargin(data.overviewData.maxBgValue)
