@@ -5,13 +5,14 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.interfaces.pump.PumpSync
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 
 class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 

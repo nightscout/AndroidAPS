@@ -6,17 +6,18 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -27,13 +28,14 @@ import org.mockito.Mockito
 
 class QueueThreadTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
+    @Mock lateinit var activityNames: ActivityNames
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -58,7 +60,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
+            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
         )
 
         val pumpDescription = PumpDescription()

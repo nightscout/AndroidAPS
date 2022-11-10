@@ -79,4 +79,5 @@
     </plurals>
     <string name="orange_use_scanning_level">Folosește Scanarea</string>
     <string name="orange_use_scanning_level_summary">Scanează înainte de conectarea la OrangeLink, ar trebui să îmbunătăţească conexiunile (poate fi utilizat, de asemenea, cu alte clone RileyLink, dacă este necesar)</string>
+    <string name="rileylink_configuration">Configurare RileyLink</string>
 </resources>

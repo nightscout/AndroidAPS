@@ -67,14 +67,14 @@
     <string name="danar_history_prime">Prime</string>
     <string name="danar_useroptions">Bruker valg</string>
     <string name="danar_timedisplay">Format for visning av tid</string>
-    <string name="danar_buttonscroll">Knapprulling</string>
-    <string name="danar_beep">Pip ved knapptrykking</string>
+    <string name="danar_buttonscroll">Knapperulling</string>
+    <string name="danar_beep">Pip ved knappetrykking</string>
     <string name="danar_pumpalarm">Alarm</string>
     <string name="danar_pumpalarm_sound">Lyd</string>
     <string name="danar_pumpalarm_vibrate">Vibrer</string>
     <string name="danar_pumpalarm_both">Begge</string>
-    <string name="danar_screentimeout">LCD i tid [seconds]</string>
-    <string name="danar_backlight">Bakgrunnsbelysning i tid [seconds]</string>
+    <string name="danar_screentimeout">LCD påslått [seconds]</string>
+    <string name="danar_backlight">Bakgrunnsbelysning påslått [seconds]</string>
     <string name="danar_glucoseunits">Glukoseenheter</string>
     <string name="danar_shutdown">Stopp [hours]</string>
     <string name="danar_lowreservoir">Lavt reservoar [Units]</string>
@@ -92,7 +92,7 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">Deaktiver EasyUI modus i pumpe</string>
     <string name="profile_set_failed">Innstilling av basalprofil mislyktes</string>
-    <string name="danar_bluetooth_status">Status for Bluetooth</string>
+    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pumpens IOB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Innstillinger for Dana pumpe</string>

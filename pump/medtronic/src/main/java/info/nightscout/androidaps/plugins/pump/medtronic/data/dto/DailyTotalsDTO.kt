@@ -2,12 +2,12 @@ package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 //import info.nightscout.androidaps.db.TDD
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
+import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.core.utils.StringUtil
 import org.apache.commons.lang3.builder.ToStringBuilder
-import java.util.*
+import java.util.Locale
 
 /**
  * Created by andy on 11/3/18.
@@ -56,16 +56,16 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
     private var bolusCountCorr: Int? = null
     private fun setDisplayable() {
         if (insulinBasal == 0.0) {
-            entry.displayableValue = "Total Insulin: " + StringUtil.getFormatedValueUS(insulinTotal, 2)
+            entry.displayableValue = "Total Insulin: " + StringUtil.getFormattedValueUS(insulinTotal, 2)
         } else {
-            entry.displayableValue = ("Basal Insulin: " + StringUtil.getFormatedValueUS(insulinBasal, 2)
-                + ", Total Insulin: " + StringUtil.getFormatedValueUS(insulinTotal, 2))
+            entry.displayableValue = ("Basal Insulin: " + StringUtil.getFormattedValueUS(insulinBasal, 2)
+                + ", Total Insulin: " + StringUtil.getFormattedValueUS(insulinTotal, 2))
         }
     }
 
     private fun decodeEndResultsTotals(entry: PumpHistoryEntry) {
         val totals = ByteUtil.toInt(entry.head[0].toInt(), entry.head[1].toInt(), entry.head[2].toInt(),
-            entry.head[3].toInt(), ByteUtil.BitConversion.BIG_ENDIAN) * 0.025
+                                    entry.head[3].toInt(), ByteUtil.BitConversion.BIG_ENDIAN) * 0.025
         insulinTotal = totals
         entry.addDecodedData("Totals", totals)
     }
@@ -80,8 +80,8 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
             val j1 = ByteUtil.toInt(data[i + 1], data[i])
             val k1: Int = ByteUtil.toInt(data[i + 2], data[i + 1], data[i])
             println(String.format(Locale.ENGLISH,
-                "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0, j / 10.0,
-                data[i], ByteUtil.shortHexString(data[i])))
+                                  "index: %d, number=%d, del/40=%.3f, del/10=%.3f, singular=%d, sing_hex=%s", i, j, j / 40.0, j / 10.0,
+                                  data[i], ByteUtil.shortHexString(data[i])))
             println(String.format(Locale.ENGLISH, "     number[k,j1,k1]=%d / %d /%d, del/40=%.3f, del/40=%.3f, del/40=%.3f",
                 k, j1, k1, k / 40.0, j1 / 40.0, k1 / 40.0))
         }

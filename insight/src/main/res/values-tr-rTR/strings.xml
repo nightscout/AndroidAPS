@@ -17,7 +17,6 @@
     <string name="not_inserted">Takılmamış</string>
     <string name="tdd_bolus">GTD Bolus</string>
     <string name="tdd_basal">GTD Bazal</string>
-    <string name="tdd_total">GTD Toplam</string>
     <string name="tbr_formatter">%2$d / %3$d dk için %%1$d%</string>
     <string name="multiwave_bolus">Çoklu yayma Bolus</string>
     <string name="eb_formatter">%3$d dk. %1$.2f / %2$.2f Ü</string>

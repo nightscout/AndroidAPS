@@ -6,45 +6,27 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.BolusProgressHelperActivity
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
-import info.nightscout.androidaps.database.entities.ProfileSwitch
-import info.nightscout.androidaps.database.interfaces.end
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventMobileToWear
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.queue.commands.Command.CommandType
-import info.nightscout.androidaps.queue.commands.CustomCommand
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.pumpExtensions.insertCarbsTransaction
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
@@ -63,10 +45,28 @@ import info.nightscout.implementation.queue.commands.CommandStartPump
 import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CustomCommand
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -83,7 +83,7 @@ class CommandQueueImplementation @Inject constructor(
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val rh: ResourceHelper,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val context: Context,
@@ -93,7 +93,8 @@ class CommandQueueImplementation @Inject constructor(
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
     private val config: Config,
-    private val androidPermission: AndroidPermission
+    private val androidPermission: AndroidPermission,
+    private val activityNames: ActivityNames
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
@@ -117,7 +118,7 @@ class CommandQueueImplementation @Inject constructor(
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
-                                           ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
+                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
                                        } else {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
@@ -146,7 +147,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(R.string.executing_right_now)
+        PumpEnactResultImpl(injector).success(false).enacted(false).comment(R.string.executing_right_now)
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -229,7 +230,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission
+            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -269,12 +270,12 @@ class CommandQueueImplementation @Inject constructor(
                     .subscribeBy(
                         onSuccess = { result ->
                             result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
+                            callback?.result(PumpEnactResultImpl(injector).enacted(false).success(true))?.run()
 
                         },
                         onError = {
                             aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                            callback?.result(PumpEnactResultImpl(injector).enacted(false).success(false))?.run()
                         }
                     )
             }
@@ -291,13 +292,13 @@ class CommandQueueImplementation @Inject constructor(
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
-                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                callback?.result(PumpEnactResultImpl(injector).enacted(false).success(false))?.run()
                 return false
             }
             val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
-                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                callback?.result(PumpEnactResultImpl(injector).enacted(false).success(false))?.run()
                 return false
             }
             removeAll(CommandType.SMB_BOLUS)
@@ -325,7 +326,7 @@ class CommandQueueImplementation @Inject constructor(
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo)
                 // Notify Wear about upcoming bolus
-                rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(R.string.goingtodeliver, detailedBolusInfo.insulin))))
+                rxBus.send(EventMobileToWear(info.nightscout.rx.weardata.EventData.BolusProgress(percent = 0, status = rh.gs(R.string.goingtodeliver, detailedBolusInfo.insulin))))
             }
         }
         notifyAboutNewCommand()
@@ -348,9 +349,9 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     @Synchronized
-    override fun cancelAllBoluses(id: Long) {
+    override fun cancelAllBoluses(id: Long?) {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResultImpl(injector).success(true).enacted(false), id))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -434,12 +435,12 @@ class CommandQueueImplementation @Inject constructor(
     override fun setProfile(profile: Profile, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).success(true).enacted(false))?.run()
             return false
         }
         if (isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).success(true).enacted(false))?.run()
             return false
         }
         // Compare with pump limits
@@ -448,7 +449,7 @@ class CommandQueueImplementation @Inject constructor(
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, rh.gs(R.string.basal_value_below_minimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
+                callback?.result(PumpEnactResultImpl(injector).success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
                 return false
             }
         }
@@ -631,7 +632,7 @@ class CommandQueueImplementation @Inject constructor(
             val i = Intent()
             i.putExtra("insulin", detailedBolusInfo.insulin)
             i.putExtra("id", detailedBolusInfo.id)
-            i.setClass(context, BolusProgressHelperActivity::class.java)
+            i.setClass(context, activityNames.bolusProgressHelperActivity)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(i)
         }

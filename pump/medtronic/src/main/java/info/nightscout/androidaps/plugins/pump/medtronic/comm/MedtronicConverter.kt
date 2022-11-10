@@ -1,19 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpConfigurationGroup
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDateTime
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -119,8 +119,9 @@ class MedtronicConverter @Inject constructor(
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map)
         addSettingToMap(
             "PCFG_MAX_BASAL", ""
-            + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
-            rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
+            + decodeBasalInsulin(
+                ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
+                                                                                              rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
         addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
             PumpConfigurationGroup.General, map)
         addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10].toInt()), PumpConfigurationGroup.Basal, map)
@@ -152,14 +153,15 @@ class MedtronicConverter @Inject constructor(
         addSettingToMap("PCFG_AUDIO_BOLUS_ENABLED", parseResultEnable(rd[2].toInt()), PumpConfigurationGroup.Bolus, map)
         if (rd[2].toInt() == 1) {
             addSettingToMap("PCFG_AUDIO_BOLUS_STEP_SIZE", "" + decodeBolusInsulin(ByteUtil.asUINT8(rd[3])),
-                PumpConfigurationGroup.Bolus, map)
+                            PumpConfigurationGroup.Bolus, map)
         }
         addSettingToMap("PCFG_VARIABLE_BOLUS_ENABLED", parseResultEnable(rd[4].toInt()), PumpConfigurationGroup.Bolus, map)
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map)
         addSettingToMap(
             "PCFG_MAX_BASAL", ""
-            + decodeBasalInsulin(ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
-            rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
+            + decodeBasalInsulin(
+                ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
+                                                                                              rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
         addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
             PumpConfigurationGroup.General, map)
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
@@ -201,7 +203,7 @@ class MedtronicConverter @Inject constructor(
         val map = decodeSettings512(rd)
         addSettingToMap("PCFG_MM_RESERVOIR_WARNING_TYPE_TIME", if (rd[18].toInt() != 0) "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME" else "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS", PumpConfigurationGroup.Other, map)
         addSettingToMap("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]),
-            PumpConfigurationGroup.Other, map)
+                        PumpConfigurationGroup.Other, map)
         addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20].toInt()), PumpConfigurationGroup.Other, map)
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus, map)

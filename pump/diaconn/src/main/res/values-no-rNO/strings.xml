@@ -147,7 +147,7 @@
     <string name="diaconn_g8_logtubechange_title">Logg bytte av slangesett</string>
     <string name="diaconn_g8_logtubechange_summary">Legg til \"Slangesettbytte\" i Careportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logtempstart">Temp Basal startet</string>
-    <string name="diaconn_g8_errorcode_32">Vel Lav Glukose Stopp er injeksjoner begrenset</string>
+    <string name="diaconn_g8_errorcode_32">Vel Lav Glukose Stopp (LGS) er injeksjoner begrenset</string>
     <string name="diaconn_g8_errorcode_33">LGS status er PÅ. PÅ kommando er nektet.</string>
     <string name="diaconn_g8_errorcode_34">LGS status er AV. AV kommandoen er avslått.</string>
     <string name="diaconn_g8_errorcode_35">Temp basal avslått siden det allerede kjøres en temp basal</string>

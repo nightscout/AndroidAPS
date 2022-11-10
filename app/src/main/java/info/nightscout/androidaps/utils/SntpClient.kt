@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.utils
 
 import android.os.SystemClock
-import javax.inject.Singleton
-import javax.inject.Inject
-import info.nightscout.shared.logging.AAPSLogger
-import java.lang.Exception
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.utils.DateUtil
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /*
  * Copyright (C) 2008 The Android Open Source Project

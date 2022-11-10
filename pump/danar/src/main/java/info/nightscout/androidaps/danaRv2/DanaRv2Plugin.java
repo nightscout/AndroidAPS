@@ -16,29 +16,30 @@ import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.interfaces.constraints.Constraint;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.interfaces.utils.Round;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventAppExit;
+import info.nightscout.rx.events.EventOverviewBolusProgress;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
+import info.nightscout.shared.utils.T;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
@@ -48,7 +49,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final AAPSLogger aapsLogger;
     private final Context context;
     private final ResourceHelper rh;
-    private final ConstraintChecker constraintChecker;
+    private final Constraints constraintChecker;
     private final DetailedBolusInfoStorage detailedBolusInfoStorage;
     private final TemporaryBasalStorage temporaryBasalStorage;
     private final FabricPrivacy fabricPrivacy;
@@ -63,7 +64,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             RxBus rxBus,
             Context context,
             ResourceHelper rh,
-            ConstraintChecker constraintChecker,
+            Constraints constraintChecker,
             ActivePlugin activePlugin,
             SP sp,
             CommandQueue commandQueue,
@@ -189,7 +190,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, carbTimeStamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = new PumpEnactResultImpl(getInjector());
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.getInsulin())
                     .carbsDelivered(detailedBolusInfo.carbs);
@@ -202,7 +203,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             // remove carbs because it's get from history separately
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = new PumpEnactResultImpl(getInjector());
             result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
@@ -222,7 +223,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
@@ -289,7 +290,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         DanaPump pump = danaPump;
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
@@ -323,7 +324,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     private PumpEnactResult setHighTempBasalPercent(Integer percent, int durationInMinutes) {
         DanaPump pump = danaPump;
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         boolean connectionOK = sExecutionService.highTempBasal(percent, durationInMinutes);
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
             result.enacted(true).success(true).comment(R.string.ok).isTempCancel(false).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
@@ -337,7 +338,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
             result.enacted(true).isTempCancel(true);
@@ -356,7 +357,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < pumpDescription.getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
@@ -389,7 +390,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             result.enacted(true).success(!danaPump.isExtendedInProgress()).isTempCancel(true);

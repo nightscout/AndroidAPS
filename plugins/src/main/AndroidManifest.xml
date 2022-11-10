@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SEND_MMS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
         <activity
             android:name="info.nightscout.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
@@ -17,6 +19,10 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".sync.nsclient.services.NSClientService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -3,11 +3,11 @@ package info.nightscout.androidaps.danaRKorean.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.rx.events.EventRebuildTabs
+import info.nightscout.rx.logging.LTag
 
 class MsgInitConnStatusTime_k(
     injector: HasAndroidInjector

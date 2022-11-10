@@ -1,13 +1,27 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommand
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandAbort
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandCTS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandFail
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandNack
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandRTS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleConfirmError
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleConfirmIncorrectData
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleConfirmSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleSendErrorConfirming
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleSendErrorSending
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleSendResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleSendSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CmdBleIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataBleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 
 sealed class MessageSendResult
 object MessageSendSuccess : MessageSendResult()

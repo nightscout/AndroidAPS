@@ -3,33 +3,40 @@ package info.nightscout.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.plugins.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.data.Sms
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
-import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.XDripBroadcast
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.Transaction
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.smsCommunicator.Sms
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
@@ -39,15 +46,15 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
 
 @Suppress("SpellCheckingInspection")
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop
@@ -63,7 +70,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is PumpEnactResult) {
+            if (it is PumpEnactResultImpl) {
                 it.rh = rh
             }
             if (it is AuthRequest) {
@@ -97,50 +104,54 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }))
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
-                                                      loop, iobCobCalculator, xDripBroadcast,
-                                                      otp, config, dateUtilMocked, uel,
-                                                      glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(
+            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
+            loop, iobCobCalculator, xDripBroadcast,
+            otp, config, dateUtilMocked, uel,
+            glucoseStatusProvider, repository
+        )
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResult(injector).success(true)
+            callback.result = PumpEnactResultImpl(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).cancelTempBasal(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(0)
-            callback.result = PumpEnactResult(injector).success(true)
+            callback.result = PumpEnactResultImpl(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).cancelExtended(ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResult(injector).success(true)
+            callback.result = PumpEnactResultImpl(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).readStatus(ArgumentMatchers.anyString(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResult(injector).success(true).bolusDelivered(1.0)
+            callback.result = PumpEnactResultImpl(injector).success(true).bolusDelivered(1.0)
             callback.run()
             null
         }.`when`(commandQueue).bolus(anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(5)
-            callback.result = PumpEnactResult(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue)
+            .tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(5)
-            callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue)
+            .tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
-            callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
@@ -162,79 +173,81 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(otp.name()).thenReturn("User")
         `when`(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
 
-        `when`(rh.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed")
+        `when`(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
         `when`(rh.gs(R.string.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
         `when`(rh.gs(R.string.sms_iob)).thenReturn("IOB:")
         `when`(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
         `when`(rh.gs(R.string.sms_min_ago)).thenReturn("%1\$dmin ago")
-        `when`(rh.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed")
-        `when`(rh.gs(R.string.smscommunicator_stopsmswithcode)).thenReturn("To disable the SMS Remote Service reply with code %1\$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.")
+        `when`(rh.gs(R.string.smscommunicator_remote_command_not_allowed)).thenReturn("Remote command is not allowed")
+        `when`(rh.gs(R.string.smscommunicator_stops_ns_with_code)).thenReturn("To disable the SMS Remote Service reply with code %1\$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.")
         `when`(rh.gs(R.string.smscommunicator_meal_bolus_reply_with_code)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2\$s.")
-        `when`(rh.gs(R.string.smscommunicator_temptargetwithcode)).thenReturn("To set the Temp Target %1\$s reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_temptargetcancel)).thenReturn("To cancel Temp Target reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
+        `when`(rh.gs(R.string.smscommunicator_temptarget_with_code)).thenReturn("To set the Temp Target %1\$s reply with code %2\$s")
+        `when`(rh.gs(R.string.smscommunicator_temptarget_cancel)).thenReturn("To cancel Temp Target reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
         `when`(rh.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1\$s for %2\$d minutes set successfully")
         `when`(rh.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
         `when`(rh.gs(R.string.sms_loop_suspended_for)).thenReturn("Suspended (%1\$d m)")
         `when`(rh.gs(R.string.loopisdisabled)).thenReturn("Loop is disabled")
-        `when`(rh.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
+        `when`(rh.gs(R.string.smscommunicator_loop_is_enabled)).thenReturn("Loop is enabled")
         `when`(rh.gs(R.string.wrong_format)).thenReturn("Wrong format")
-        `when`(rh.gs(eq(R.string.sms_wrong_tbr_duration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock -> "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than " +
-            "0." }
-        `when`(rh.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled")
-        `when`(rh.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled")
-        `when`(rh.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
-        `when`(rh.gs(R.string.smscommunicator_loopresumed)).thenReturn("Loop resumed")
-        `when`(rh.gs(R.string.smscommunicator_wrongduration)).thenReturn("Wrong duration")
-        `when`(rh.gs(R.string.smscommunicator_suspendreplywithcode)).thenReturn("To suspend loop for %1\$d minutes reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_loopsuspended)).thenReturn("Loop suspended")
-        `when`(rh.gs(R.string.smscommunicator_unknowncommand)).thenReturn("Unknown command or wrong reply")
+        `when`(rh.gs(eq(R.string.sms_wrong_tbr_duration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock ->
+            "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than " +
+                "0."
+        }
+        `when`(rh.gs(R.string.smscommunicator_loop_has_been_disabled)).thenReturn("Loop has been disabled")
+        `when`(rh.gs(R.string.smscommunicator_loop_has_been_enabled)).thenReturn("Loop has been enabled")
+        `when`(rh.gs(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
+        `when`(rh.gs(R.string.smscommunicator_loop_resumed)).thenReturn("Loop resumed")
+        `when`(rh.gs(R.string.smscommunicator_wrong_duration)).thenReturn("Wrong duration")
+        `when`(rh.gs(R.string.smscommunicator_suspend_reply_with_code)).thenReturn("To suspend loop for %1\$d minutes reply with code %2\$s")
+        `when`(rh.gs(R.string.smscommunicator_loop_suspended)).thenReturn("Loop suspended")
+        `when`(rh.gs(R.string.smscommunicator_unknown_command)).thenReturn("Unknown command or wrong reply")
         `when`(rh.gs(R.string.notconfigured)).thenReturn("Not configured")
-        `when`(rh.gs(R.string.smscommunicator_profilereplywithcode)).thenReturn("To switch profile to %1\$s %2\$d%% reply with code %3\$s")
+        `when`(rh.gs(R.string.smscommunicator_profile_reply_with_code)).thenReturn("To switch profile to %1\$s %2\$d%% reply with code %3\$s")
         `when`(rh.gs(R.string.sms_profile_switch_created)).thenReturn("Profile switch created")
-        `when`(rh.gs(R.string.smscommunicator_basalstopreplywithcode)).thenReturn("To stop temp basal reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_basalpctreplywithcode)).thenReturn("To start basal %1\$d%% for %2\$d min reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_tempbasalset_percent)).thenReturn("Temp basal %1\$d%% for %2\$d min started successfully")
-        `when`(rh.gs(R.string.smscommunicator_basalreplywithcode)).thenReturn("To start basal %1$.2fU/h for %2\$d min reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_tempbasalset)).thenReturn("Temp basal %1$.2fU/h for %2\$d min started successfully")
-        `when`(rh.gs(R.string.smscommunicator_extendedstopreplywithcode)).thenReturn("To stop extended bolus reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_extendedcanceled)).thenReturn("Extended bolus canceled")
-        `when`(rh.gs(R.string.smscommunicator_extendedreplywithcode)).thenReturn("To start extended bolus %1$.2fU for %2\$d min reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_extendedset)).thenReturn("Extended bolus %1$.2fU for %2\$d min started successfully")
+        `when`(rh.gs(R.string.smscommunicator_basal_stop_reply_with_code)).thenReturn("To stop temp basal reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_basal_pct_reply_with_code)).thenReturn("To start basal %1\$d%% for %2\$d min reply with code %3\$s")
+        `when`(rh.gs(R.string.smscommunicator_tempbasal_set_percent)).thenReturn("Temp basal %1\$d%% for %2\$d min started successfully")
+        `when`(rh.gs(R.string.smscommunicator_basal_reply_with_code)).thenReturn("To start basal %1$.2fU/h for %2\$d min reply with code %3\$s")
+        `when`(rh.gs(R.string.smscommunicator_tempbasal_set)).thenReturn("Temp basal %1$.2fU/h for %2\$d min started successfully")
+        `when`(rh.gs(R.string.smscommunicator_extended_stop_reply_with_code)).thenReturn("To stop extended bolus reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_extended_canceled)).thenReturn("Extended bolus canceled")
+        `when`(rh.gs(R.string.smscommunicator_extended_reply_with_code)).thenReturn("To start extended bolus %1$.2fU for %2\$d min reply with code %3\$s")
+        `when`(rh.gs(R.string.smscommunicator_extended_set)).thenReturn("Extended bolus %1$.2fU for %2\$d min started successfully")
         `when`(rh.gs(R.string.smscommunicator_bolus_reply_with_code)).thenReturn("To deliver bolus %1$.2fU reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_bolusdelivered)).thenReturn("Bolus %1$.2fU delivered successfully")
-        `when`(rh.gs(R.string.smscommunicator_remotebolusnotallowed)).thenReturn("Remote bolus not available. Try again later.")
-        `when`(rh.gs(R.string.smscommunicator_calibrationreplywithcode)).thenReturn("To send calibration %1$.2f reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.")
-        `when`(rh.gs(R.string.smscommunicator_carbsreplywithcode)).thenReturn("To enter %1\$dg at %2\$s reply with code %3\$s")
-        `when`(rh.gs(R.string.smscommunicator_carbsset)).thenReturn("Carbs %1\$dg entered successfully")
+        `when`(rh.gs(R.string.smscommunicator_bolus_delivered)).thenReturn("Bolus %1$.2fU delivered successfully")
+        `when`(rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)).thenReturn("Remote bolus not available. Try again later.")
+        `when`(rh.gs(R.string.smscommunicator_calibration_reply_with_code)).thenReturn("To send calibration %1$.2f reply with code %2\$s")
+        `when`(rh.gs(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip.")
+        `when`(rh.gs(R.string.smscommunicator_carbs_reply_with_code)).thenReturn("To enter %1\$dg at %2\$s reply with code %3\$s")
+        `when`(rh.gs(R.string.smscommunicator_carbs_set)).thenReturn("Carbs %1\$dg entered successfully")
         `when`(rh.gs(R.string.noprofile)).thenReturn("No profile loaded from NS yet")
         `when`(rh.gs(R.string.pumpsuspended)).thenReturn("Pump suspended")
         `when`(rh.gs(R.string.sms_delta)).thenReturn("Delta:")
         `when`(rh.gs(R.string.sms_bolus)).thenReturn("Bolus:")
         `when`(rh.gs(R.string.sms_basal)).thenReturn("Basal:")
         `when`(rh.gs(R.string.cob)).thenReturn("COB")
-        `when`(rh.gs(R.string.smscommunicator_mealbolusdelivered)).thenReturn("Meal Bolus %1\$.2fU delivered successfully")
-        `when`(rh.gs(R.string.smscommunicator_mealbolusdelivered_tt)).thenReturn("Target %1\$s for %2\$d minutes")
+        `when`(rh.gs(R.string.smscommunicator_meal_bolus_delivered)).thenReturn("Meal Bolus %1\$.2fU delivered successfully")
+        `when`(rh.gs(R.string.smscommunicator_meal_bolus_delivered_tt)).thenReturn("Target %1\$s for %2\$d minutes")
         `when`(rh.gs(R.string.sms_actual_bg)).thenReturn("BG:")
         `when`(rh.gs(R.string.sms_last_bg)).thenReturn("Last BG:")
-        `when`(rh.gs(R.string.smscommunicator_loopdisablereplywithcode)).thenReturn("To disable loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_loopenablereplywithcode)).thenReturn("To enable loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_loopresumereplywithcode)).thenReturn("To resume loop reply with code %1\$s")
-        `when`(rh.gs(R.string.smscommunicator_pumpdisconnectwithcode)).thenReturn("To disconnect pump for %1d minutes reply with code %2\$s")
-        `when`(rh.gs(R.string.smscommunicator_pumpconnectwithcode)).thenReturn("To connect pump reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_loop_disable_reply_with_code)).thenReturn("To disable loop reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_loop_enable_reply_with_code)).thenReturn("To enable loop reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_loop_resume_reply_with_code)).thenReturn("To resume loop reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_pump_disconnect_with_code)).thenReturn("To disconnect pump for %1d minutes reply with code %2\$s")
+        `when`(rh.gs(R.string.smscommunicator_pump_connect_with_code)).thenReturn("To connect pump reply with code %1\$s")
         `when`(rh.gs(R.string.smscommunicator_reconnect)).thenReturn("Pump reconnected")
-        `when`(rh.gs(R.string.smscommunicator_pumpconnectfail)).thenReturn("Connection to pump failed")
-        `when`(rh.gs(R.string.smscommunicator_pumpdisconnected)).thenReturn("Pump disconnected")
+        `when`(rh.gs(R.string.smscommunicator_pump_connect_fail)).thenReturn("Connection to pump failed")
+        `when`(rh.gs(R.string.smscommunicator_pump_disconnected)).thenReturn("Pump disconnected")
         `when`(rh.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
         `when`(rh.gs(R.string.patient_name_default)).thenReturn("User")
         `when`(rh.gs(R.string.invalidprofile)).thenReturn("Invalid profile !!!")
         `when`(rh.gs(R.string.sms)).thenReturn("SMS")
         `when`(rh.gsNotLocalised(R.string.loopsuspended)).thenReturn("Loop suspended")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
+        `when`(rh.gsNotLocalised(R.string.smscommunicator_stopped_sms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
         `when`(rh.gsNotLocalised(R.string.sms_profile_switch_created)).thenReturn("Profile switch created")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
-        `when`(rh.gsNotLocalised(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
+        `when`(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
+        `when`(rh.gsNotLocalised(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
         `when`(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
 
     }

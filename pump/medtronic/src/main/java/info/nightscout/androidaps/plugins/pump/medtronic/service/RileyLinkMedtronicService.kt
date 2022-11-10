@@ -4,13 +4,11 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Binder
 import android.os.IBinder
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
@@ -19,7 +17,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.shared.logging.LTag
+import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
 

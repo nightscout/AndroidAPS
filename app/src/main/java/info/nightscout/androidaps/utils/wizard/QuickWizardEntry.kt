@@ -2,24 +2,27 @@ package info.nightscout.androidaps.utils.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.core.iob.round
+import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjector) {
@@ -32,6 +35,14 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+
+    // for mock
+    @OpenForTesting
+    class Time {
+        fun secondsFromMidnight(): Int = Profile.secondsFromMidnight()
+
+    }
+    var time = Time()
 
     lateinit var storage: JSONObject
     var position: Int = -1
@@ -95,7 +106,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         return this
     }
 
-    fun isActive(): Boolean = profileFunction.secondsFromMidnight() >= validFrom() && profileFunction.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
+    fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()

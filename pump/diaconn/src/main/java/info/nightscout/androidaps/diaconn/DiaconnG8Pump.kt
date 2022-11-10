@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.diaconn
 
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max

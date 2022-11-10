@@ -11,13 +11,12 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import java.util.ArrayList
+import info.nightscout.rx.bus.RxBus
 import javax.inject.Inject
 
 class PrepareBasalDataWorker(

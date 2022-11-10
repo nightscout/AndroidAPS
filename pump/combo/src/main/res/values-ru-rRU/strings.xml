@@ -3,7 +3,7 @@
     <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия утилиты Ruffy</string>
     <string name="combo_programming_bolus">Помпа программируется для болюса</string>
     <string name="combo_pump_state_label">Состояние</string>
-    <string name="combo_pump_activity_label">Нагрузка</string>
+    <string name="combo_pump_activity_label">Активность</string>
     <string name="combo_no_pump_connection">Нет связи в течение %1$d мин</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d мин осталось)</string>
     <string name="combo_pump_state_initializing">Инициализация</string>
@@ -28,10 +28,10 @@
     <string name="combo_reservoir_empty">Пусто</string>
     <string name="combo_reservoir_normal">Нормальный</string>
     <string name="combo_notification_check_time_date">Необходимо обновить часы помпы</string>
-    <string name="combo_pump_tbr_cancelled_warrning">Предупреждение об отмене скорости временного базала было подтверждено</string>
+    <string name="combo_pump_tbr_cancelled_warrning">Предупреждение об отмене скорости временного базала подтверждено</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Не удалось подключиться к помпе. Болюс не подан</string>
     <string name="combo_error_no_bolus_delivered">Подача болюса не состоялась. Чтобы удостовериться, проверьте помпу во избежание двойного болюса и повторите подачу. Для защиты от ложных срабатываний болюсы не повторяются автоматически.</string>
-    <string name="combo_error_partial_bolus_delivered">Только %1$.2f ед. из запрошенного болюса %2$.2f ед. было подано из-за ошибки. Пожалуйста, проверьте помпу, чтобы удостовериться в этом и принять соответствующие меры.</string>
+    <string name="combo_error_partial_bolus_delivered">Подано только %1$.2f ед. из запрошенного болюса %2$.2f ед. из-за ошибки. Пожалуйста, проверьте помпу, чтобы удостовериться в этом и принять соответствующие меры.</string>
     <string name="combo_error_bolus_verification_failed">Подача болюса и проверка истории помпы не состоялись, пожалуйста проверьте помпу. Если болюс был подан, он будет добавлен в назначения во время следующего соединения с помпой.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">В резервуаре недостаточно инсулина для болюса</string>
     <string name="combo_invalid_setup">Недопустимые установки помпы, проверьте документацию и убедитесь, что меню Quick Info называется QUICK INFO, используя приложение 360 для конфигурации помпы.</string>
@@ -52,7 +52,7 @@
     <string name="bolusstopped">Болюс остановлен</string>
     <string name="bolusstopping">Остановка болюса</string>
     <string name="pump_commerror_label">Ошибок связи</string>
-    <string name="show_comm_error_count_title">Показать количество ошибок связи</string>
+    <string name="show_comm_error_count_title">Показать отсчет ошибок связи</string>
     <string name="show_comm_error_count_summary">Показывает количество ошибок связи с Ruffy. В большинстве случаев число выше 0 означает проблемы коммуникации с Ruffy (может потребоваться перезапуск).</string>
     <string name="combo_error_display_never">Никогда</string>
     <string name="combo_error_display_error">При ошибке</string>

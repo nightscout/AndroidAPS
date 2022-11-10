@@ -2,16 +2,16 @@ package info.nightscout.androidaps.plugins.pump.danaR
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -21,7 +21,7 @@ import org.mockito.Mockito.`when`
 
 class DanaRPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync

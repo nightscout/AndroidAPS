@@ -18,11 +18,11 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
-import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
 import info.nightscout.androidaps.utils.ToastUtils
-import java.util.*
+import info.nightscout.interfaces.maintenance.Prefs
+import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.shared.extensions.runOnUiThread
+import java.util.LinkedList
 
 object PrefImportSummaryDialog {
 

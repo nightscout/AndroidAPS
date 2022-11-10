@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.IRawRepresentable;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class TempBasalDeliverySchedule extends DeliverySchedule implements IRawRepresentable {
 

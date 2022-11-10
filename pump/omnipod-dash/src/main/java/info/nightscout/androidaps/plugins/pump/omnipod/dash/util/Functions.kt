@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import java.util.*
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.defs.PumpType
 import kotlin.math.roundToInt
 
 fun mapProfileToBasalProgram(profile: Profile): BasalProgram {

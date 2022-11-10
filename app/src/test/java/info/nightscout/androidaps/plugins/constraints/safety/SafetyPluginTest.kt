@@ -2,22 +2,23 @@ package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -28,7 +29,7 @@ import org.mockito.Mockito.`when`
 class SafetyPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
@@ -69,11 +70,13 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
         `when`(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, openAPSSMBDynamicISFPlugin, sensitivityOref1Plugin, activePlugin,
-                                    hardLimits, buildHelper,
-                                    iobCobCalculator, config, dateUtil)
+        hardLimits = HardLimitsMock(sp, rh)
+        safetyPlugin = SafetyPlugin(
+            injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, openAPSSMBDynamicISFPlugin, sensitivityOref1Plugin, activePlugin,
+            hardLimits, buildHelper,
+            iobCobCalculator, config, dateUtil
+        )
     }
 
     @Test fun pumpDescriptionShouldLimitLoopInvocation() {
@@ -103,7 +106,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test fun notEnabledSMBInPreferencesDisablesSMB() {
         `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
-        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
+        `when`(constraintChecker.isClosedLoopAllowed(anyObject())).thenReturn(Constraint(true))
         var c = Constraint(true)
         c = safetyPlugin.isSMBModeEnabled(c)
         Assert.assertTrue(c.getReasons(aapsLogger).contains("SMB disabled in preferences"))
@@ -112,7 +115,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test fun openLoopPreventsSMB() {
         `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(true)
-        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(false))
+        `when`(constraintChecker.isClosedLoopAllowed(anyObject())).thenReturn(Constraint(false))
         var c = Constraint(true)
         c = safetyPlugin.isSMBModeEnabled(c)
         Assert.assertTrue(c.getReasons(aapsLogger).contains("SMB not allowed in open loop mode"))
@@ -135,12 +138,14 @@ class SafetyPluginTest : TestBaseWithProfile() {
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         safetyPlugin.applyBasalConstraints(c, validProfile)
         Assert.assertEquals(1.0, c.value(), 0.01)
-        Assert.assertEquals("""
+        Assert.assertEquals(
+            """
     Safety: Limiting max basal rate to 1.00 U/h because of max value in preferences
     Safety: Limiting max basal rate to 4.00 U/h because of max basal multiplier
     Safety: Limiting max basal rate to 3.00 U/h because of max daily basal multiplier
     Safety: Limiting max basal rate to 2.00 U/h because of hard limit
-    """.trimIndent(), c.getReasons(aapsLogger))
+    """.trimIndent(), c.getReasons(aapsLogger)
+        )
         Assert.assertEquals("Safety: Limiting max basal rate to 1.00 U/h because of max value in preferences", c.getMostLimitedReasons(aapsLogger))
     }
 
@@ -149,10 +154,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
         val d = Constraint(-0.5)
         safetyPlugin.applyBasalConstraints(d, validProfile)
         Assert.assertEquals(0.0, d.value(), 0.01)
-        Assert.assertEquals("""
+        Assert.assertEquals(
+            """
     Safety: Limiting max basal rate to 0.00 U/h because of it must be positive value
     Safety: Increasing max basal value because setting is lower than your max basal in profile
-    """.trimIndent(), d.getReasons(aapsLogger))
+    """.trimIndent(), d.getReasons(aapsLogger)
+        )
     }
 
     @Test fun percentBasalRateShouldBeLimited() {
@@ -164,7 +171,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         val i = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
         Assert.assertEquals(100, i.value())
-        Assert.assertEquals("""
+        Assert.assertEquals(
+            """
     Safety: Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h
     Safety: Limiting max basal rate to 1.00 U/h because of max value in preferences
     Safety: Limiting max basal rate to 4.00 U/h because of max basal multiplier
@@ -172,7 +180,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
     Safety: Limiting max basal rate to 2.00 U/h because of hard limit
     Safety: Limiting max percent rate to 100% because of pump limit
     Safety: Limiting max basal rate to 500.00 U/h because of pump limit
-    """.trimIndent(), i.getReasons(aapsLogger))
+    """.trimIndent(), i.getReasons(aapsLogger)
+        )
         Assert.assertEquals("Safety: Limiting max percent rate to 100% because of pump limit", i.getMostLimitedReasons(aapsLogger))
     }
 
@@ -181,12 +190,14 @@ class SafetyPluginTest : TestBaseWithProfile() {
         val i = Constraint(-22)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
         Assert.assertEquals(0, i.value())
-        Assert.assertEquals("""
+        Assert.assertEquals(
+            """
     Safety: Percent rate -22% recalculated to -0.22 U/h with current basal 1.00 U/h
     Safety: Limiting max basal rate to 0.00 U/h because of it must be positive value
     Safety: Increasing max basal value because setting is lower than your max basal in profile
     Safety: Limiting max percent rate to 0% because of pump limit
-    """.trimIndent(), i.getReasons(aapsLogger))
+    """.trimIndent(), i.getReasons(aapsLogger)
+        )
         Assert.assertEquals("Safety: Limiting max percent rate to 0% because of pump limit", i.getMostLimitedReasons(aapsLogger))
     }
 
@@ -196,10 +207,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
         var d = Constraint(Constants.REALLYHIGHBOLUS)
         d = safetyPlugin.applyBolusConstraints(d)
         Assert.assertEquals(3.0, d.value(), 0.01)
-        Assert.assertEquals("""
+        Assert.assertEquals(
+            """
     Safety: Limiting bolus to 3.0 U because of max value in preferences
     Safety: Limiting bolus to 5.0 U because of hard limit
-    """.trimIndent(), d.getReasons(aapsLogger))
+    """.trimIndent(), d.getReasons(aapsLogger)
+        )
         Assert.assertEquals("Safety: Limiting bolus to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 

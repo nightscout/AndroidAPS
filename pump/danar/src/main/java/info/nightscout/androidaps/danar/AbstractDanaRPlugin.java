@@ -10,36 +10,36 @@ import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventConfigBuilderChange;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.Constraints;
-import info.nightscout.androidaps.interfaces.Dana;
-import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.interfaces.constraints.Constraint;
+import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.PluginDescription;
+import info.nightscout.interfaces.plugin.PluginType;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.pump.Dana;
+import info.nightscout.interfaces.pump.Pump;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.defs.ManufacturerType;
+import info.nightscout.interfaces.pump.defs.PumpDescription;
+import info.nightscout.interfaces.utils.Round;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventConfigBuilderChange;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -55,7 +55,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     protected PumpDescription pumpDescription = new PumpDescription();
     protected DanaPump danaPump;
-    protected ConstraintChecker constraintChecker;
+    protected Constraints constraintChecker;
     protected RxBus rxBus;
     protected ActivePlugin activePlugin;
     protected SP sp;
@@ -67,7 +67,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             HasAndroidInjector injector,
             DanaPump danaPump,
             ResourceHelper rh,
-            ConstraintChecker constraintChecker,
+            Constraints constraintChecker,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             CommandQueue commandQueue,
@@ -136,7 +136,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     // Pump interface
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
 
         if (sExecutionService == null) {
             getAapsLogger().error("setNewBasalProfile sExecutionService is null");
@@ -216,7 +216,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
@@ -269,7 +269,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
@@ -320,7 +320,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             if (!danaPump.isExtendedInProgress()) {

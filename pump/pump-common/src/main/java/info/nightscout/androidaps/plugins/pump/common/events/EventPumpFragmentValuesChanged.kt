@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.events
 
-import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpUpdateFragmentType
+import info.nightscout.rx.events.Event
 
 class EventPumpFragmentValuesChanged : Event {
 

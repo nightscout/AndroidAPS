@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-
-import static org.junit.Assert.assertEquals;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class PodInfoRecentPulseLogTest {
     @Test

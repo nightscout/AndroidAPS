@@ -1,27 +1,39 @@
 package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.extensions.*
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.extensions.putDouble
+import info.nightscout.androidaps.extensions.putInt
+import info.nightscout.androidaps.extensions.putString
+import info.nightscout.androidaps.extensions.storeDouble
+import info.nightscout.androidaps.extensions.storeInt
+import info.nightscout.androidaps.extensions.storeString
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Safety
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.interfaces.utils.Round
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +46,7 @@ class SafetyPlugin @Inject constructor(
     rh: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val openAPSAMAPlugin: OpenAPSAMAPlugin,
     private val openAPSSMBPlugin: OpenAPSSMBPlugin,
     private val openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin,
@@ -45,7 +57,8 @@ class SafetyPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val config: Config,
     private val dateUtil: DateUtil
-) : PluginBase(PluginDescription()
+) : PluginBase(
+    PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)

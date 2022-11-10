@@ -8,41 +8,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogTreatmentBinding
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.core.pumpExtensions.insertBolusTransaction
+import info.nightscout.core.pumpExtensions.insertCarbsTransaction
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
 
 class TreatmentDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
@@ -51,6 +53,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -155,10 +158,10 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.context = context
                     if (recordOnlyChecked) {
                         uel.log(action, Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) rh.gs(R.string.record) else "",
-                            ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
-                            ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
-                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
-                            ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                                ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
+                                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
+                                ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                         if (detailedBolusInfo.insulin > 0)
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe(
@@ -174,12 +177,12 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
                             uel.log(action, Sources.TreatmentDialog,
-                                ValueWithUnit.Insulin(insulinAfterConstraints),
-                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                                    ValueWithUnit.Insulin(insulinAfterConstraints),
+                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                        activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     }
                                 }
                             })
@@ -211,7 +214,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 val cancelFail = {
                     queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }

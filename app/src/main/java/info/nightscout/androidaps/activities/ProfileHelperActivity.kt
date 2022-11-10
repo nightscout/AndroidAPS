@@ -10,25 +10,25 @@ import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfile
-import info.nightscout.androidaps.utils.defaultProfile.DefaultProfileDPV
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.stats.TddCalculator
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventLocalProfileChanged
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
+import info.nightscout.ui.defaultProfile.DefaultProfile
+import info.nightscout.ui.defaultProfile.DefaultProfileDPV
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -41,7 +41,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var defaultProfileDPV: DefaultProfileDPV
-    @Inject lateinit var localProfilePlugin: LocalProfilePlugin
+    @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
@@ -135,8 +135,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, rh.gs(R.string.careportal_profileswitch), rh.gs(R.string.copytolocalprofile), Runnable {
-                    localProfilePlugin.addProfile(
-                        localProfilePlugin.copyFrom(
+                    profilePlugin.addProfile(
+                        profilePlugin.copyFrom(
                             it, "DefaultProfile " +
                                 dateUtil.dateAndTimeAndSecondsString(dateUtil.now())
                                     .replace(".", "/")
@@ -183,25 +183,25 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             for (i in 0..1) {
                 if (typeSelected[i] == ProfileType.MOTOL_DEFAULT) {
                     if (ageUsed[i] < 1 || ageUsed[i] > 18) {
-                        ToastUtils.warnToast(this, R.string.invalidage)
+                        ToastUtils.warnToast(this, R.string.invalid_age)
                         return@setOnClickListener
                     }
                     if ((weightUsed[i] < 5 || weightUsed[i] > 150) && tddUsed[i] == 0.0) {
-                        ToastUtils.warnToast(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalid_weight)
                         return@setOnClickListener
                     }
                     if ((tddUsed[i] < 5 || tddUsed[i] > 150) && weightUsed[i] == 0.0) {
-                        ToastUtils.warnToast(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalid_weight)
                         return@setOnClickListener
                     }
                 }
                 if (typeSelected[i] == ProfileType.DPV_DEFAULT) {
                     if (ageUsed[i] < 1 || ageUsed[i] > 18) {
-                        ToastUtils.warnToast(this, R.string.invalidage)
+                        ToastUtils.warnToast(this, R.string.invalid_age)
                         return@setOnClickListener
                     }
                     if (tddUsed[i] < 5 || tddUsed[i] > 150) {
-                        ToastUtils.warnToast(this, R.string.invalidweight)
+                        ToastUtils.warnToast(this, R.string.invalid_weight)
                         return@setOnClickListener
                     }
                     if ((pctUsed[i] < 32 || pctUsed[i] > 37)) {

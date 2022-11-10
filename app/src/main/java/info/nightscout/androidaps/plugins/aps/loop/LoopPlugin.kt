@@ -13,65 +13,65 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.OfflineEvent
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
-import info.nightscout.androidaps.events.EventMobileToWear
-import info.nightscout.androidaps.events.EventTempTargetChange
-import info.nightscout.androidaps.extensions.buildDeviceStatus
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.Loop.LastRun
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
+import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.configBuilder.RunningConfiguration
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAcceptOpenLoopChange
+import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventTempTargetChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -87,7 +87,7 @@ class LoopPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val sp: SP,
     config: Config,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
@@ -100,7 +100,8 @@ class LoopPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
     private val repository: AppRepository,
-    private val runningConfiguration: RunningConfiguration
+    private val runningConfiguration: RunningConfiguration,
+    private val activityNames: ActivityNames
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
@@ -381,7 +382,7 @@ class LoopPlugin @Inject constructor(
                     if (resultAfterConstraints.isChangeRequested
                         && !commandQueue.bolusInQueue()
                     ) {
-                        val waiting = PumpEnactResult(injector)
+                        val waiting = PumpEnactResultImpl(injector)
                         waiting.queued = true
                         if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
                         if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
@@ -532,18 +533,18 @@ class LoopPlugin @Inject constructor(
      */
     private fun applyTBRRequest(request: APSResult, profile: Profile, callback: Callback?) {
         if (!request.tempBasalRequested) {
-            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
+            callback?.result(PumpEnactResultImpl(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
             return
         }
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
@@ -557,7 +558,7 @@ class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                 callback?.result(
-                    PumpEnactResult(injector).absolute(request.rate).duration(0)
+                    PumpEnactResultImpl(injector).absolute(request.rate).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly)
                 )?.run()
             }
@@ -570,7 +571,7 @@ class LoopPlugin @Inject constructor(
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(
-                        PumpEnactResult(injector).percent(request.percent).duration(0)
+                        PumpEnactResultImpl(injector).percent(request.percent).duration(0)
                             .enacted(false).success(true).comment(R.string.basal_set_correctly)
                     )?.run()
                 }
@@ -581,7 +582,7 @@ class LoopPlugin @Inject constructor(
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(
-                    PumpEnactResult(injector).percent(request.percent)
+                    PumpEnactResultImpl(injector).percent(request.percent)
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                         .comment(R.string.let_temp_basal_run)
                 )?.run()
@@ -604,7 +605,7 @@ class LoopPlugin @Inject constructor(
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(
-                    PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
+                    PumpEnactResultImpl(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                         .comment(R.string.let_temp_basal_run)
                 )?.run()
@@ -630,7 +631,7 @@ class LoopPlugin @Inject constructor(
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(
-                PumpEnactResult(injector)
+                PumpEnactResultImpl(injector)
                     .comment(R.string.smb_frequency_exceeded)
                     .enacted(false).success(false)
             )?.run()
@@ -638,12 +639,12 @@ class LoopPlugin @Inject constructor(
         }
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")
@@ -678,7 +679,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -686,7 +687,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -695,7 +696,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -713,7 +714,7 @@ class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                 }
             }
         })

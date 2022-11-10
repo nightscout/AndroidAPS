@@ -4,9 +4,9 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.events.EventBTChange
 import info.nightscout.androidaps.extensions.safeGetParcelableExtra
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventBTChange
 import javax.inject.Inject
 
 class BTReceiver : DaggerBroadcastReceiver() {

@@ -1,23 +1,21 @@
 package info.nightscout.androidaps.diaconn.activities
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
@@ -31,6 +29,7 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var sp: SP
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
 
@@ -152,7 +151,7 @@ class DiaconnG8UserOptionsActivity : NoSplashAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    ErrorHelperActivity.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
+                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

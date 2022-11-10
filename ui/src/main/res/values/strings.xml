@@ -19,4 +19,65 @@
     <string name="configure">Configure opacity</string>
     <string name="widget_description">AAPS widget</string>
 
+    <!--     Activities-->
+    <string name="activity_monitor">Activity monitor</string>
+    <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
+    <string name="statistics">Statistics</string>
+    <string name="calculation_in_progress">Calculation in progress</string>
+    <string name="invalid_age">Invalid age entry</string>
+    <string name="invalid_weight">Invalid weight entry</string>
+    <string name="id">ID:</string>
+    <string name="submit">Submit</string>
+    <string name="age">Age</string>
+    <string name="weight_label">Weight</string>
+    <string name="most_common_profile">Most common profile:</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+
+    <!-- CareDialog -->
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Other</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Total</string>
+
+    <!-- Treatments -->
+    <string name="no_records_available">No records available</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Total IOB activity:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Meal</string>
+    <string name="prime">Prime</string>
+    <string name="profile_changes">Profile changes</string>
+    <string name="tempt_targets">Temp Targets</string>
+    <string name="carbs_and_bolus">Carbs and bolus</string>
+    <string name="show_invalidated_records">Show invalidated / removed records</string>
+    <string name="hide_invalidated_records">Hide invalidated / removed records</string>
+    <string name="refresh_from_nightscout">Refresh from Nightscout</string>
+    <string name="refresheventsfromnightscout">Refresh from NS</string>
+    <string name="show_invalidated">Show invalidated</string>
+    <string name="hide_invalidated">Hide invalidated</string>
+    <string name="careportal_remove_started_events">Remove AAPS started entries</string>
+    <string name="hide_loop">Hide loop</string>
+    <string name="show_loop">Show loop</string>
+    <string name="user_entry">User entry</string>
+    <string name="clone_label">Clone</string>
+    <string name="show_loop_records">Show loop records</string>
+    <string name="show_hide_records">Hide loop records</string>
+
 </resources>

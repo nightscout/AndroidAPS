@@ -17,7 +17,6 @@
     <string name="not_inserted">Não inserido</string>
     <string name="tdd_bolus">DDT de Bolus</string>
     <string name="tdd_basal">DDT Basal</string>
-    <string name="tdd_total">DDT Total</string>
     <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>

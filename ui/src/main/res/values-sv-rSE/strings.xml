@@ -8,4 +8,15 @@
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Påminn om bolus senare</string>
     <string name="a11y_carb_reminder">ställ in påminnelse</string>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">Statistik</string>
+    <string name="calculation_in_progress">Beräkning pågår</string>
+    <string name="id">ID:</string>
+    <string name="submit">Spara</string>
+    <string name="age">Ålder</string>
+    <string name="weight_label">Vikt</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

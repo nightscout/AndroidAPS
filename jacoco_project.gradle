@@ -41,7 +41,8 @@ project.afterEvaluate {
                 '**/R2$*.class',
                 '**/*Directions$*',
                 '**/*Directions.*',
-                '**/*Binding.*'
+                '**/*Binding.*',
+                '**/BR.class'
         ]
 
         def jClasses = subprojects.collect { proj ->

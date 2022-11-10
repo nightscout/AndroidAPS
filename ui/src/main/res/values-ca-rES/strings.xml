@@ -6,4 +6,13 @@
     <string name="start_hypo_tt">Iniciar OT: Hipo</string>
     <string name="time_offset">Decalatge horari</string>
     <string name="unit_minute_short">min</string>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">Estadístiques</string>
+    <string name="calculation_in_progress">Càlculs en procés</string>
+    <string name="id">ID:</string>
+    <string name="submit">Enviar</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

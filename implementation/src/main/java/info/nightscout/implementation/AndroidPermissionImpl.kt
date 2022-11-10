@@ -13,26 +13,24 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.SmsCommunicator
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AndroidPermissionImpl @Inject constructor(
-    val rh: ResourceHelper,
-    val rxBus: RxBus,
-    val injector: HasAndroidInjector,
-    val activePlugin: ActivePlugin
+    private val rh: ResourceHelper,
+    private val activePlugin: ActivePlugin,
+    private val config: Config
 ) : AndroidPermission {
 
     private var permissionBatteryOptimizationFailed = false
@@ -129,7 +127,7 @@ class AndroidPermissionImpl @Inject constructor(
         if (permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS))
             activePlugin.activeOverview.addNotification(
                 id = Notification.PERMISSION_BATTERY,
-                text = rh.gs(R.string.need_whitelisting, rh.gs(R.string.app_name)),
+                text = rh.gs(R.string.need_whitelisting, rh.gs(config.appName)),
                 level = Notification.URGENT,
                 actionButtonId = R.string.request
             ) { askForPermission(activity, arrayOf(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)) }

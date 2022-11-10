@@ -8,7 +8,8 @@ import android.widget.TextView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivityLogsettingBinding
-import info.nightscout.shared.logging.L
+import info.nightscout.rx.interfaces.L
+import info.nightscout.rx.interfaces.LogElement
 import javax.inject.Inject
 
 class LogSettingActivity : NoSplashAppCompatActivity() {
@@ -40,7 +41,7 @@ class LogSettingActivity : NoSplashAppCompatActivity() {
 
     }
 
-    internal inner class LogViewHolder(element: L.LogElement) {
+    internal inner class LogViewHolder(element: LogElement) {
 
         @Suppress("InflateParams")
         var baseView = layoutInflater.inflate(R.layout.logsettings_item, null) as LinearLayout

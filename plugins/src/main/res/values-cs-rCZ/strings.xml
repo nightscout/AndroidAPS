@@ -102,4 +102,101 @@
     <string name="sms_profile_switch_created">Přepnutí profilu vytvořeno</string>
     <string name="sms_wrong_tbr_duration">Trvání dočasného bazálu musí být násobkem %1$d minut a musí být větší než 0.</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Předvolba pro Novorapid</string>
+    <string name="description_insulin_ultra_rapid">Předvolba pro Fiasp</string>
+    <string name="description_insulin_lyumjev">Předvolba pro Lyumjev</string>
+    <string name="description_insulin_free_peak">Možnost definice vrcholu účinnosti inzulínu pro pokročilé uživatele</string>
+    <string name="insulin_shortname">INZ</string>
+    <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
+    <string name="insulin_peak_time">Vrchol křivky [min]</string>
+    <string name="insulin_peak">Vrchol</string>
+    <string name="free_peak_oref">Volitelný vrchol - Oref</string>
+    <string name="rapid_acting_oref">Rychle působící - Oref</string>
+    <string name="ultra_rapid_oref">Ultra rychlý - Oref</string>
+    <string name="dia_too_short">DIA %1$f je příliš krátké - použito %2$f !</string>
+    <string name="fast_acting_insulin_comment">Novorapid</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="xdrip_status">Stavová řádka xDrip+ (hodinky)</string>
+    <string name="xdrip_status_shortname">XDS</string>
+    <string name="description_xdrip_status_line">Zobrazování informací o smyčce na xDrip+ watchface.</string>
+    <string name="xdrip_status_detailed_iob_title">Zobrazit detailní IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Rozepsat IOB do bolusového a bazálního na hodinkách</string>
+    <string name="disabled_loop">Smyčka zakázána</string>
+    <string name="xdrip_status_show_bgi_title">Zobrazovat BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Přidat BGI do stavové řádky</string>
+    <string name="xdrip_status_settings">Status z xDripu+ (hodinky)</string>
+    <!-- Food-->
+    <string name="food_short">Jídlo</string>
+    <string name="description_food">Zobrazení jídel definovaných v NS</string>
+    <string name="filter">Filtr</string>
+    <string name="food">Jídlo</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Tuk</string>
+    <string name="category">Kategorie</string>
+    <string name="subcategory">Podkategorie</string>
+    <string name="calculator_label">Kalkulačka</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Vyberte téma tmavé, světlé nebo podle systémového motivu</string>
+    <string name="app_color_scheme">Barevné schéma</string>
+    <string name="dark_theme">Tmavé téma</string>
+    <string name="light_theme">Světlé téma</string>
+    <string name="follow_system_theme">Použít téma zařízení</string>
+    <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="localprofile_shortname">MPRF</string>
+    <string name="description_profile_local">Definujte profil, který je dostupný offline.</string>
+    <string name="a11y_add_new_to_list">přidat nový do seznamu</string>
+    <string name="do_you_want_switch_profile">Chcete přepnout profil a zahodit změny provedené v aktuálním profilu?</string>
+    <string name="save_or_reset_changes_first">Nejprve uložte nebo resetujte aktuální změny</string>
+    <string name="delete_current_profile">Odstranit aktuální profil?</string>
+    <string name="units_colon">Jednotky:</string>
+    <string name="missing_profile_name">Chybí název profilu</string>
+    <string name="error_in_ic_values">Chyba v hodnotách sach. poměru</string>
+    <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
+    <string name="error_in_target_values">Chyba v hodnotách cílové gl.</string>
+    <string name="error_in_isf_values">Chyba v hodnotách inz. citlivosti</string>
+    <string name="profile_name_contains_dot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
+    <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebyl přijat z NS</string>
+    <string name="view">Zobrazit</string>
+    <string name="errors">Chyby</string>
+    <string name="select_profile">Vyberte profil pro úpravu</string>
+    <string name="profile_name">Jméno profilu:</string>
+    <string name="a11y_add_new_profile">přidat nový profil</string>
+    <string name="a11y_clone_profile">klonovat aktuální profil</string>
+    <string name="a11y_delete_current_profile">odstranit aktuální profil</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">I:C</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">CÍL</string>
+    <string name="basal_short">BAZ</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Použita přepočítaná data</string>
+    <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">přepočítáno</string>
+    <string name="a11y_bg_quality_doubles">dvojité položky</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Změna letního času za méně než 24 hodin</string>
+    <string name="dst_loop_disabled_warning">Změna letního času za méně než 3 hodiny – Uzavřená smyčka zastavena</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Uvolněte alespoň %1$d MB z vnitřního úložiště! Smyčka zakázána!</string>
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">stará verze</string>
+    <string name="very_old_version">velmi stará verze</string>
+    <string name="application_expired">Platnost aplikace vypršela</string>
+    <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po %2$d dnech, vypnutí smyčky po %3$d dnech</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Hotovo, gratulujeme!</string>
+    <string name="not_completed_yet">Nedokončeno</string>
+    <string name="time_elapsed">Čas</string>
+    <!-- Overview -->
+    <string name="snooze">Odložit</string>
 </resources>

@@ -5,20 +5,27 @@ import android.os.HandlerThread
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.PI
@@ -89,8 +96,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
-//        return true
+        return isRunningTest() || buildHelper.isUnfinishedMode() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
     }
 
     private fun handleNewData() {

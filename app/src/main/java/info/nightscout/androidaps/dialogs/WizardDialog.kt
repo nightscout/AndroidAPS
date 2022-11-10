@@ -18,30 +18,43 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnits
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.BolusWizard
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.round
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.profile.toUnitsString
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.interfaces.utils.Round
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -53,7 +66,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
@@ -105,7 +118,7 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.name}")
+        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.simpleName}")
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -189,7 +202,7 @@ class WizardDialog : DaggerDialogFragment() {
                 context?.let { context ->
                     wizard?.confirmAndExecute(context)
                 }
-                aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.name}")
+                aapsLogger.debug(LTag.APS, "Dialog ok pressed: ${this.javaClass.simpleName}")
             }
             dismiss()
         }
@@ -200,7 +213,7 @@ class WizardDialog : DaggerDialogFragment() {
         binding.iobCheckboxIcon.setOnClickListener { binding.iobCheckbox.isChecked = !binding.iobCheckbox.isChecked; processIobCheckBox(); }
         // cancel button
         binding.okcancel.cancel.setOnClickListener {
-            aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.name}")
+            aapsLogger.debug(LTag.APS, "Dialog canceled: ${this.javaClass.simpleName}")
             dismiss()
         }
         // checkboxes
@@ -512,7 +525,7 @@ class WizardDialog : DaggerDialogFragment() {
             activity?.let { activity ->
                 val cancelFail = {
                     queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }

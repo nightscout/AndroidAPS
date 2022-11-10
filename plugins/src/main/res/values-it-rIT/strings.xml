@@ -88,4 +88,79 @@
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_basal">Basale:</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
+    <string name="insulin_peak_time">Tempo del picco [min]</string>
+    <string name="insulin_peak">Picco</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
+    <!-- Food-->
+    <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
+    <string name="filter">Filtro</string>
+    <string name="food">Cibo</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">Enr</string>
+    <string name="shortprotein">Prt</string>
+    <string name="shortfat">Grs</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Sottocategoria</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Schema colori app</string>
+    <string name="dark_theme">Tema scuro</string>
+    <string name="light_theme">Tema chiaro</string>
+    <string name="follow_system_theme">Usa tema dispositivo</string>
+    <!-- Profile -->
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
+    <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
+    <string name="units_colon">Unità:</string>
+    <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="error_in_ic_values">Errore nei valori IC</string>
+    <string name="error_in_basal_values">Errore nei valori della basale</string>
+    <string name="error_in_target_values">Errore nei valori del target</string>
+    <string name="error_in_isf_values">Errore nei valori ISF</string>
+    <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errori</string>
+    <string name="select_profile">Seleziona profilo da modificare</string>
+    <string name="profile_name">Nome profilo:</string>
+    <string name="a11y_add_new_profile">aggiungi nuovo profilo</string>
+    <string name="a11y_clone_profile">clona profilo corrente</string>
+    <string name="a11y_delete_current_profile">elimina profilo corrente</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">TARG</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Dati ricalcolati usati</string>
+    <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">ricalcolato</string>
+    <string name="a11y_bg_quality_doubles">doppi caricamenti</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Cambio all\'ora legale/solare in 24h o meno</string>
+    <string name="dst_loop_disabled_warning">Cambio all\'ora legale/solare avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">versione datata</string>
+    <string name="very_old_version">versione molto datata</string>
+    <string name="application_expired">Applicazione scaduta</string>
+    <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Non ancora completato</string>
+    <string name="time_elapsed">Tempo trascorso</string>
+    <!-- Overview -->
 </resources>

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.skins
 import android.util.DisplayMetrics
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import javax.inject.Inject
 import javax.inject.Singleton
 

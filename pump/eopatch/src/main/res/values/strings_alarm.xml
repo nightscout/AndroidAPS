@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Empty reservoir\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a003">Patch expired\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a004">Occlusion\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a005">Power on self test failure\nPatch has been deactivated. Change Patch now.</string>
+    <string name="string_a007">Inappropriate temperature\nInsulin delivery or \'Activate Patch\' process stopped. Avoid extreme temperature now.</string>
+    <string name="string_a016">Needle insertion Error\nCheck knob position and tap \'Retry\'.</string>
+    <string name="string_a018">Patch battery Error\nPatch has been deactivated and\ninsulin delivery stopped. Change Patch now.</string>
+    <string name="string_a019">Patch battery Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a020">Patch activation Error\n\'Activate Patch\' process has expired. Tap \'Confirm\' to deactivate current Patch. Change Patch now.</string>
+    <string name="string_a022">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a023">Patch Error\nPatch has been deactivated and\ninsulin delivery stopped. Change Patch now.</string>
+    <string name="string_a034">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a041">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a042">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a043">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a044">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a106">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a107">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a108">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a116">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a117">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_a118">Patch Error\nPatch has been deactivated and insulin delivery stopped. Change Patch now.</string>
+    <string name="string_b000">Patch operating life will expire %s. Be ready to change Patch.</string>
+    <string name="string_b001">End of insulin suspend\nTap \'Resume\' to restart the insulin delivery.</string>
+    <string name="string_b003">Low reservoir\nReplace Patch soon.</string>
+    <string name="string_b005">Patch operating life expired\nChange Patch now.</string>
+    <string name="string_b006">Patch will expire soon\nChange Patch now.</string>
+    <string name="string_b012">Incomplete Patch activation\nComplete \'Activate Patch\' process.</string>
+    <string name="string_b018">Patch battery low\nBe ready to change Patch.</string>
+</resources>

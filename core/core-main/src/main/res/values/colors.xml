@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Default theme color -->
+    <!-- This section describes the main theme colors -->
+    <color name="colorPrimary">#3378C5</color>
+    <color name="colorPrimaryDark">#676767</color>
+    <color name="colorAccent">#40bbaa</color>
+    <color name="mdtp_line_dark">#808080</color>
+    <color name="colorLightGray">#d8d8d8</color>
+    <color name="cardColorBackground">#CBCBCB</color>
+    <color name="gray">#BBBBBB</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryColorDefault">#222222</color>
+    <color name="primaryLightColorDefault">#bbb9bb</color>
+    <color name="primaryDarkColorDefault">#222222</color>
+    <color name="secondaryColorDefault">#03dac6</color>
+    <color name="secondaryLightColorDefault">#e3e3e3</color>
+    <color name="secondaryDarkColorDefault">#848484</color>
+    <color name="primaryTextColorDefault">#ffffff</color>
+    <color name="secondaryTextColorDefault">#000000</color>
+    <color name="overviewPillColorDefault">#1c171c</color>
+    <color name="colorOnPrimaryDefault">#FFFFFF</color>
+
+    <color name="defaultBackground">#FFFFFF</color>
+    <color name="defaultTextColor">#000000</color>
+
+    <!---Android Dark ans Light Theme Base colors-->
+    <color name="background_dark">#262626</color>
+    <color name="background_light">#FFFFFF</color>
+
+    <!--    Tabs-->
+    <color name="tabText">@color/black_alpha_90</color>
+    <color name="tabSelectedText">@color/black_alpha_90</color>
+
+    <!--    Buttons-->
+    <color name="buttonBackground">#BABABA</color>
+    <color name="buttonText">#000000</color>
+    <color name="okButtonText">@color/colorAccent</color>
+    <color name="okButtonSelected">#33969696</color>
+
+    <color name="ic_actions_refill">#E93057</color>
+    <color name="ic_local_activate">#67DFE8</color>
+    <color name="ic_local_reset">#E93057</color>
+    <color name="ic_local_save">#67E86A</color>
+
+    <!--    Fragments-->
+    <color name="pumpStatusBackground">#CCCCCC</color>
+
+    <!--    Dialogs-->
+    <color name="dialog_title_background">#CCCCCC</color>
+    <color name="activity_title_background">#121212</color>
+    <color name="dialog_title_color">#FFFFFF</color>
+    <color name="dialog_title_icon_tint">#FFFFFF</color>
+    <color name="warningAlertBackground">#FFFB8C00</color>
+    <color name="warningAlertHeaderText">#FF000000</color>
+    <color name="warningAccentText">#FFFB8C00</color>
+    <color name="errorAlertBackground">#FFFF5555</color>
+    <color name="errorAlertHeaderText">#FF000000</color>
+    <color name="helperProfile">#C803A9F4</color>
+    <color name="examinedProfile">#FFFF5555</color>
+    <color name="defaultText">#666666</color>
+
+    <!--    Datepicker-->
+    <color name="dateTimePickerBackground">@color/white</color>
+
+    <!--    Treatment-->
+    <color name="tempbasal">#C803A9F4</color>
+    <color name="list_delimiter">#505050</color>
+    <color name="basal">#00ffff</color>
+
+    <!--    Loop     -->
+    <color name="loopDisconnected">#939393</color>
+    <color name="loopClosed">#00C03E</color>
+    <color name="loopSuspended">#F6CE22</color>
+    <color name="loopOpened">#4983D7</color>
+    <color name="loopDisabled">#FF1313</color>
+
+    <!--    BgReading-->
+    <color name="inRange">#00FF00</color>
+    <color name="low">#FF0000</color>
+    <color name="high">#FFFB8C00</color>
+    <color name="iob">#1e88e5</color>
+    <color name="extendedBolus">#1e88e5</color>
+    <color name="iobPredAS">#1ea3e5</color>
+    <color name="cob">#FFFB8C00</color>
+    <color name="carbs">#FFFB8C00</color>
+    <color name="uam">#c9bd60</color>
+    <color name="zt">#00d2d2</color>
+    <color name="calibration">#E83258</color>
+    <color name="bolusDataPointColor">#00FFFF</color>
+    <color name="profileSwitch">#000000</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#0000FF</color>
+    <color name="sens">#008585</color>
+
+    <color name="ribbonDefault">#8C8C8C</color>
+    <color name="daySelected">#D000FF00</color>
+    <color name="weekdayOutline">#1ea3e5</color>
+    <color name="weekendOutline">#1e88e5</color>
+
+    <!-- Notification-->
+    <color name="notificationAnnouncement">#FF8C00</color>
+    <color name="notificationUrgent">#ff0400</color>
+    <color name="notificationNormal">#ff5e55</color>
+    <color name="notificationLow">#ff827c</color>
+
+    <!-- Green Colors -->
+    <color name="notificationInfo">#009705</color>
+
+    <!-- Black and White transparent - glass effect-->
+    <color name="black_alpha_10">#1A000000</color>
+    <color name="black_alpha_20">#33000000</color>
+    <color name="black_alpha_30">#4D000000</color>
+    <color name="black_alpha_40">#66000000</color>
+    <color name="black_alpha_50">#80000000</color>
+    <color name="black_alpha_60">#99000000</color>
+    <color name="black_alpha_65">#A6000000</color>
+    <color name="black_alpha_70">#B3000000</color>
+    <color name="black_alpha_80">#CC000000</color>
+    <color name="black_alpha_90">#E6000000</color>
+
+    <color name="white_alpha_08">#10FFFFFF</color>
+    <color name="white_alpha_10">#1AFFFFFF</color>
+    <color name="white_alpha_20">#33FFFFFF</color>
+    <color name="white_alpha_30">#4DFFFFFF</color>
+    <color name="white_alpha_40">#66FFFFFF</color>
+    <color name="white_alpha_50">#80FFFFFF</color>
+    <color name="white_alpha_60">#99FFFFFF</color>
+    <color name="white_alpha_65">#A6FFFFFF</color>
+    <color name="white_alpha_70">#B3FFFFFF</color>
+    <color name="white_alpha_80">#CCFFFFFF</color>
+    <color name="white_alpha_90">#E6FFFFFF</color>
+
+    <color name="transparent">#00000000</color>
+
+    <!-- Import/Export -->
+    <color name="importListAdditionalInfo">#666666</color>
+    <color name="importListFileName">#000000</color>
+
+    <color name="ribbonWarning">#f4d700</color>
+    <color name="ribbonCritical">#ff0400</color>
+    <color name="ribbonTextDefault">#FFFFFF</color>
+    <color name="ribbonTextWarning">#303030</color>
+    <color name="tempTargetConfirmation">#6BD16B</color>
+
+    <color name="prediction">#ff00ff</color>
+    <color name="iobPred">#00d2d2</color>
+    <color name="bolus">#1ea3e5</color>
+    <color name="ratio">#000000</color>
+    <color name="activity">#d3f166</color>
+    <color name="bgi">#00EEEE</color>
+    <color name="devSlopePos">#FFFFFF00</color>
+    <color name="devSlopeNeg">#FFFF00FF</color>
+    <color name="actionsConfirm">#F6CE22</color>
+    <color name="deviations">#FF0000</color>
+    <color name="cobAlert">#7484E2</color>
+    <color name="inRangeBackground">#2800FF00</color>
+    <color name="baseBasal">#C83F51B5</color>
+    <color name="graphGrid">#757575</color>
+    <color name="warning">#ff1a1a</color>
+    <color name="info">#77dd77</color>
+    <color name="error_background">#66FC0000</color>
+    <color name="ok_background">@color/white</color>
+    <color name="dummy_background">#7DFF0000</color>
+
+    <color name="tempTargetBackground">#77dd77</color>
+    <color name="exercise">#42A5F5</color>
+
+    <color name="action">#ffffbb33</color>
+    <color name="alarm">#ffff4444</color>
+
+    <color name="colorAcceptTempButton">#E19701</color>
+    <color name="colorTreatmentButton">#006493</color>
+    <color name="colorInsulinButton">#67dfe8</color>
+    <color name="colorCarbsButton">#E19701</color>
+    <color name="colorCalibrationButton">#e93057</color>
+    <color name="colorCalculatorButton">#66BB6A</color>
+    <color name="colorQuickWizardButton">#E19701</color>
+    <color name="colorSetTempButton">#FF478EFF</color>
+    <color name="colorSetExtendedButton">#FFDD7792</color>
+    <color name="colorProfileSwitchButton">#ca77dd</color>
+
+    <color name="cardObjectiveText">#779ECB</color>
+    <color name="colorObjectivesDisabledText">#FF5722</color>
+    <color name="isAccomplished">#25912e</color>
+    <color name="isCompleted">#4CAF50</color>
+    <color name="isNotCompleted">#FF9800</color>
+
+    <color name="colorScheduled">#de7550</color>
+    <color name="colorActive">#25912e</color>
+
+    <color name="deviationGrey">#c8666666</color>
+    <color name="deviationGreen">#7200FF00</color>
+    <color name="deviationRed">#72FF0000</color>
+    <color name="deviationBlack">#72000000</color>
+
+    <color name="splashBackground">#FFFFFF</color>
+
+    <color name="extBolusStop">#FEAF05</color>
+    <color name="actionBasal">#CF8BFE</color>
+    <color name="pumpCannula">#42A5F5</color>
+    <color name="cgmInsert">#42A5F5</color>
+    <color name="pumpBattery">#66BB6A</color>
+    <color name="note">#FEAF05</color>
+    <color name="announcement">#CF8BFE</color>
+    <color name="question">#FEAF05</color>
+    <color name="pumpHistory">#42A5F5</color>
+    <color name="userOption">#66BB6A</color>
+    <color name="stats">#FEAF05</color>
+
+    <!-- Gray colors -->
+    <color name="darkGray">#323232</color>
+    <color name="darkGrayVariant">#424242</color>
+    <color name="objectivesBackground">#8C8C8C</color>
+    <color name="plastic_grey">#666666</color>
+    <color name="byodaGray">#777777</color>
+    <color name="sphere_plastic_grey">#8c8c8c</color>
+    <color name="lightSandGray">#72000000</color>
+    <color name="sandGray">#c8666666</color>
+    <color name="midGray">#B2B2B2</color>
+    <color name="midlightgray">#D6D7D7</color>
+    <color name="lightGray">#4dB1B1B1</color>
+    <color name="mdtp_button_selected">#33969696</color>
+    <color name="plastic">#EBEBEA</color>
+
+    <color name="textAppearanceMediumLight">#000000</color>
+    <color name="textAppearanceMediumDark">#B3FFFFFF</color>
+
+    <!-- dash and eros colors -->
+    <color name="omni_yellow">#FFFF00</color>
+    <color name="omni_cyan">#00FFFF</color>
+    <color name="omni_green">#00FF00</color>
+
+    <!-- Button icons - general -->
+    <color name="pod_icon_outline">#9E9E9E</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true" >#9E9E9E</color>
+
+    <!-- Omnipod Wizard -->
+    <color name="omnipod_wizard_progress_bar">#0099CC</color>
+    <color name="omnipod_wizard_finish_button">#ff669900</color>
+    <color name="icon_omnipod_wizard_success">#77DD77</color>
+
+    <!-- Omnipod tab - Button icons -->
+    <color name="ic_omnipod_overview_acknowledge_alerts">#FF4444</color>
+    <color name="ic_omnipod_overview_acknowledge_alerts_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_pod_management">#4CAF50</color>
+    <color name="ic_omnipod_overview_pod_management_graph">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_pod_management_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_refresh_pod_status">#42A5F5</color>
+    <color name="ic_omnipod_overview_refresh_pod_status_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_resume_delivery">#67E86A</color>
+    <color name="ic_omnipod_overview_resume_delivery_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_set_time">#B39DDB</color>
+    <color name="ic_omnipod_overview_set_time_outline">@color/pod_icon_outline</color>
+    <color name="ic_omnipod_overview_suspend_delivery">#ffbf00</color>
+    <color name="ic_omnipod_overview_suspend_delivery_outline">@color/pod_icon_outline</color>
+
+    <!-- Pod Management - Button icons -->
+    <color name="ic_pod_management_activate_pod">#67E86A</color>
+    <color name="ic_pod_management_activate_pod_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_deactivate_pod">#FF4444</color>
+    <color name="ic_pod_management_deactivate_pod_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_discard_pod">#85F803</color>
+    <color name="ic_pod_management_discard_pod_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_play_test_beep">#ffbf00</color>
+    <color name="ic_pod_management_play_test_beep_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_pulse_log">#4DD0E1</color>
+    <color name="ic_pod_management_pulse_log_outline">@color/pod_icon_outline</color>
+    <color name="ic_pod_management_pod_history">#FB8C00</color>
+    <color name="ic_pod_management_pod_history_outline">@color/pod_icon_outline</color>
+
+    <!-- Button icons - general -->
+    <color name="rl_icon_outline">#b9d2d2</color>
+    <color name="rl_board_shape">#66BB6A</color>
+    <color name="rl_antenna_shape">#FF7043</color>
+
+    <!-- Actions tab - Button icons -->
+    <color name="ic_pod_activity_reset_rileylink_config">@color/rl_board_shape</color>
+    <color name="ic_pod_activity_reset_rileylink_config_outline">@color/rl_icon_outline</color>
+
+    <!-- Pod Management - Button icons -->
+    <color name="ic_pod_management_rl_stats">@color/rl_board_shape</color>
+    <color name="ic_pod_management_rl_stats_outline">@color/rl_icon_outline</color>
+
+    <!---Example light theme colors for testing
+         build with material 3 theme builder
+         colors can be used also if we change to material 3
+         !!! In the moment only tested in light theme !!! -->
+    <color name="aaps_theme_light_primary">#006493</color>
+    <color name="aaps_theme_light_onPrimary">#FFFFFF</color>
+    <color name="aaps_theme_light_primaryContainer">#C7E6FF</color>
+    <color name="aaps_theme_light_onPrimaryContainer">#001E30</color>
+    <color name="aaps_theme_light_secondary">#006A5F</color>
+    <color name="aaps_theme_light_onSecondary">#FFFFFF</color>
+    <color name="aaps_theme_light_secondaryContainer">#4FFBE6</color>
+    <color name="aaps_theme_light_onSecondaryContainer">#00201C</color>
+    <color name="aaps_theme_light_tertiary">#7D5260</color>
+    <color name="aaps_theme_light_onTertiary">#FFFFFF</color>
+    <color name="aaps_theme_light_tertiaryContainer">#FFD8E4</color>
+    <color name="aaps_theme_light_onTertiaryContainer">#31111D</color>
+    <color name="aaps_theme_light_error">#B3261E</color>
+    <color name="aaps_theme_light_errorContainer">#F9DEDC</color>
+    <color name="aaps_theme_light_onError">#FFFFFF</color>
+    <color name="aaps_theme_light_onErrorContainer">#410E0B</color>
+    <color name="aaps_theme_light_background">#FFFBFC</color>
+    <color name="aaps_theme_light_onBackground">#1D1B1E</color>
+    <color name="aaps_theme_light_surface">#FFFBFC</color>
+    <color name="aaps_theme_light_onSurface">#1D1B1E</color>
+    <color name="aaps_theme_light_surfaceVariant">#E7E0EC</color>
+    <color name="aaps_theme_light_onSurfaceVariant">#49454F</color>
+    <color name="aaps_theme_light_outline">#79747E</color>
+    <color name="aaps_theme_light_inverseOnSurface">#F5EFF3</color>
+    <color name="aaps_theme_light_inverseSurface">#322F33</color>
+    <color name="aaps_theme_light_inversePrimary">#88CEFF</color>
+    <color name="aaps_theme_light_shadow">#000000</color>
+    <color name="aaps_theme_light_primaryInverse">#88CEFF</color>
+    <color name="aaps_theme_dark_primary">#88CEFF</color>
+    <color name="aaps_theme_dark_onPrimary">#00344F</color>
+    <color name="aaps_theme_dark_primaryContainer">#004B6F</color>
+    <color name="aaps_theme_dark_onPrimaryContainer">#C7E6FF</color>
+    <color name="aaps_theme_dark_secondary">#17DECA</color>
+    <color name="aaps_theme_dark_onSecondary">#003730</color>
+    <color name="aaps_theme_dark_secondaryContainer">#005047</color>
+    <color name="aaps_theme_dark_onSecondaryContainer">#4FFBE6</color>
+    <color name="aaps_theme_dark_tertiary">#EFB8C8</color>
+    <color name="aaps_theme_dark_onTertiary">#492532</color>
+    <color name="aaps_theme_dark_tertiaryContainer">#633B48</color>
+    <color name="aaps_theme_dark_onTertiaryContainer">#FFD8E4</color>
+    <color name="aaps_theme_dark_error">#F2B8B5</color>
+    <color name="aaps_theme_dark_errorContainer">#8C1D18</color>
+    <color name="aaps_theme_dark_onError">#601410</color>
+    <color name="aaps_theme_dark_onErrorContainer">#F9DEDC</color>
+    <color name="aaps_theme_dark_background">#1D1B1E</color>
+    <color name="aaps_theme_dark_onBackground">#E7E1E5</color>
+    <color name="aaps_theme_dark_surface">#0F0F0F</color>
+    <color name="aaps_theme_dark_onSurface">#E7E1E5</color>
+    <color name="aaps_theme_dark_surfaceVariant">#49454F</color>
+    <color name="aaps_theme_dark_onSurfaceVariant">#CAC4D0</color>
+    <color name="aaps_theme_dark_outline">#938F99</color>
+    <color name="aaps_theme_dark_inverseOnSurface">#1D1B1E</color>
+    <color name="aaps_theme_dark_inverseSurface">#E7E1E5</color>
+    <color name="aaps_theme_dark_inversePrimary">#006493</color>
+    <color name="aaps_theme_dark_shadow">#000000</color>
+    <color name="aaps_theme_dark_primaryInverse">#006493</color>
+
+    <!-- widget theme color -->
+    <!-- This section describes the widget theme colors
+     Because the implementation of google has no idea of a light/dark mode until now
+     we generate extra colornames only used for the widget
+     Colors for the widget are always taken from the default color.xml-->
+    <color name="widget_inrange">#00FF00</color>
+    <color name="widget_low">#FF0000</color>
+    <color name="widget_high">#FFFF00</color>
+    <color name="widget_ribbonWarning">#f4d700</color>
+    <color name="widget_ribbonTextDefault">#FFFFFF</color>
+    <color name="widget_ribbonCritical">#ff0400</color>
+    <color name="widget_basal">#00ffff</color>
+
+</resources>

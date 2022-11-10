@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import info.nightscout.androidaps.extensions.toHex
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
@@ -8,13 +9,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import java.security.SecureRandom
-import java.util.*
+import java.util.Random
 
 class SessionEstablisher(
     private val aapsLogger: AAPSLogger,
+    private val config: Config,
     private val msgIO: MessageIO,
     private val ltk: ByteArray,
     private val eapSqn: ByteArray,
@@ -25,7 +27,7 @@ class SessionEstablisher(
     private val controllerIV = ByteArray(IV_SIZE)
     private var nodeIV = ByteArray(IV_SIZE)
     private val identifier = Random().nextInt().toByte()
-    private val milenage = Milenage(aapsLogger, ltk, eapSqn)
+    private val milenage = Milenage(aapsLogger, config, ltk, eapSqn)
 
     init {
         require(eapSqn.size == 6) { "EAP-SQN has to be 6 bytes long" }
@@ -38,7 +40,7 @@ class SessionEstablisher(
 
     fun negotiateSessionKeys(): SessionNegotiationResponse {
         msgSeq++
-        var challenge = eapAkaChallenge()
+        val challenge = eapAkaChallenge()
         val sendResult = msgIO.sendMessage(challenge)
         if (sendResult !is MessageSendSuccess) {
             throw SessionEstablishmentException("Could not send the EAP AKA challenge: $sendResult")
@@ -55,7 +57,7 @@ class SessionEstablisher(
         }
 
         msgSeq++
-        var success = eapSuccess()
+        val success = eapSuccess()
         msgIO.sendMessage(success)
 
         return SessionKeys(
@@ -154,6 +156,7 @@ class SessionEstablisher(
         val auts = eapMsg.attributes[0] as EapAkaAttributeAuts
         val autsMilenage = Milenage(
             aapsLogger = aapsLogger,
+            config = config,
             k = ltk,
             sqn = eapSqn,
             randParam = milenage.rand,
@@ -162,6 +165,7 @@ class SessionEstablisher(
 
         val newSqnMilenage = Milenage(
             aapsLogger = aapsLogger,
+            config = config,
             k = ltk,
             sqn = autsMilenage.synchronizationSqn,
             randParam = milenage.rand,
@@ -183,7 +187,7 @@ class SessionEstablisher(
         val eapMsg = EapMessage(
             code = EapCode.SUCCESS,
             attributes = arrayOf(),
-            identifier = identifier.toByte()
+            identifier = identifier
         )
 
         return MessagePacket(

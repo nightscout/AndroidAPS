@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import org.joda.time.LocalTime
-import java.util.*
+import java.util.Locale
 
 /**
  * Created by geoff on 6/1/15.

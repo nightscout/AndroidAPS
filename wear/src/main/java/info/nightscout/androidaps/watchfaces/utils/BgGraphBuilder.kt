@@ -2,11 +2,11 @@ package info.nightscout.androidaps.watchfaces.utils
 
 import android.graphics.DashPathEffect
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
-import info.nightscout.shared.weardata.EventData.SingleBg
-import info.nightscout.shared.weardata.EventData.TreatmentData.Basal
+import info.nightscout.rx.weardata.EventData
+import info.nightscout.rx.weardata.EventData.SingleBg
+import info.nightscout.rx.weardata.EventData.TreatmentData.Basal
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line

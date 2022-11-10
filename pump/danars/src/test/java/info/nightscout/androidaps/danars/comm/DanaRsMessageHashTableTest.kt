@@ -6,8 +6,8 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.interfaces.constraints.Constraint
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
@@ -16,7 +16,7 @@ import org.mockito.Mockito.`when`
 class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

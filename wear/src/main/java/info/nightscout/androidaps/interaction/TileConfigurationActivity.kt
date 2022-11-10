@@ -6,8 +6,9 @@ import androidx.wear.tiles.TileService
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.tile.ActionsTileService
 import info.nightscout.androidaps.tile.TempTargetTileService
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import preference.WearPreferenceActivity
 import javax.inject.Inject
 

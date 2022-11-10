@@ -14,8 +14,8 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 
 public class SetBasalProfileCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;

@@ -17,7 +17,7 @@
     <string name="combo_pump_unsupported_operation">Požadovaná operace není pumpou podporována</string>
     <string name="combo_low_suspend_forced_notification">Nebezpečné použití: extended nebo multiwave bolus je aktivní. Pumpa byla vypnuta jen na 6 hodin. Povolené jsou pouze normální bolusy.</string>
     <string name="combo_force_disabled_notification">Nebezpečné použití: pumpa má nastavený jiný bazální profil než první. Smyčka byla zakázána. Nastavte první profil a znovu načtěte.</string>
-    <string name="bolus_frequency_exceeded">Bolus stejné velikosti už byl během poslední minuty požadován. Jako preventivní ochrana před zdvojeným bolusem byla operace zakázána.</string>
+    <string name="bolus_frequency_exceeded">Během posledních dvou minut již byl požadován bolus o stejné velikosti. Jako preventivní ochrana před zdvojeným bolusem a chybám byla operace zakázána.</string>
     <string name="combo_pump_connected_now">Teď</string>
     <string name="combo_activity_reading_pump_history">Načítání historie pumpy</string>
     <string name="combo_activity_setting_basal_profile">Nastavení bazálního profilu</string>

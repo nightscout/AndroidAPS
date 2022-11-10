@@ -7,11 +7,11 @@ import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -22,7 +22,7 @@ import org.mockito.Mockito.`when`
 class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var context: Context
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage

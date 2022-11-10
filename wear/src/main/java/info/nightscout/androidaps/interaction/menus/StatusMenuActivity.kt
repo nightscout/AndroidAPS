@@ -2,11 +2,11 @@ package info.nightscout.androidaps.interaction.menus
 
 import android.os.Bundle
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.MenuListActivity
-import info.nightscout.shared.weardata.EventData.ActionLoopStatus
-import info.nightscout.shared.weardata.EventData.ActionPumpStatus
-import info.nightscout.shared.weardata.EventData.ActionTddStatus
+import info.nightscout.rx.weardata.EventData.ActionLoopStatus
+import info.nightscout.rx.weardata.EventData.ActionPumpStatus
+import info.nightscout.rx.weardata.EventData.ActionTddStatus
 
 class StatusMenuActivity : MenuListActivity() {
 

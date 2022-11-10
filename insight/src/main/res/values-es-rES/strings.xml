@@ -17,7 +17,6 @@
     <string name="not_inserted">No insertado</string>
     <string name="tdd_bolus">Bolo TDD</string>
     <string name="tdd_basal">Basal TDD</string>
-    <string name="tdd_total">Total TDD</string>
     <string name="tbr_formatter">%1$d%% durante %2$d / %3$d minutos</string>
     <string name="multiwave_bolus">Bolo multionda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U durante %3$d min</string>

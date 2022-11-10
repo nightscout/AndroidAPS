@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.Config
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom
 import javax.crypto.Cipher
@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec
 
 class Milenage(
     private val aapsLogger: AAPSLogger,
+    private val config: Config,
     private val k: ByteArray,
     val sqn: ByteArray,
     randParam: ByteArray? = null,
@@ -103,7 +104,7 @@ class Milenage(
     val receivedMacS = auts.copyOfRange(6, 14)
 
     init {
-        if (BuildConfig.DEBUG) {
+        if (config.DEBUG) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage K: ${k.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RAND: ${rand.toHex()}")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage SQN: ${sqn.toHex()}")

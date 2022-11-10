@@ -4,9 +4,9 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.IRawRepresentable;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class BolusDeliverySchedule extends DeliverySchedule implements IRawRepresentable {
 

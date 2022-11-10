@@ -73,4 +73,5 @@
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
+    <string name="rileylink_configuration">Configuração RileyLink</string>
 </resources>

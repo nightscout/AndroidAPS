@@ -1,19 +1,19 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.SmsCommunicator
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 
 class CommandSetProfile constructor(
@@ -32,7 +32,7 @@ class CommandSetProfile constructor(
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResultImpl(injector).success(true).enacted(false))?.run()
             return
         }
         val r = activePlugin.activePump.setNewBasalProfile(profile)

@@ -8,9 +8,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
@@ -18,34 +16,64 @@ import info.nightscout.androidaps.diaconn.api.DiaconnApiService
 import info.nightscout.androidaps.diaconn.api.DiaconnLogUploader
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
-import info.nightscout.androidaps.diaconn.packet.*
+import info.nightscout.androidaps.diaconn.packet.AppConfirmSettingPacket
+import info.nightscout.androidaps.diaconn.packet.BasalLimitInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BasalSettingPacket
+import info.nightscout.androidaps.diaconn.packet.BigAPSMainInfoInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BigLogInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BigMainInfoInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BolusSpeedInquirePacket
+import info.nightscout.androidaps.diaconn.packet.BolusSpeedSettingPacket
+import info.nightscout.androidaps.diaconn.packet.DiaconnG8Packet
+import info.nightscout.androidaps.diaconn.packet.DisplayTimeInquirePacket
+import info.nightscout.androidaps.diaconn.packet.DisplayTimeoutSettingPacket
+import info.nightscout.androidaps.diaconn.packet.IncarnationInquirePacket
+import info.nightscout.androidaps.diaconn.packet.InjectionBasalSettingPacket
+import info.nightscout.androidaps.diaconn.packet.InjectionCancelSettingPacket
+import info.nightscout.androidaps.diaconn.packet.InjectionExtendedBolusSettingPacket
+import info.nightscout.androidaps.diaconn.packet.InjectionSnackInquirePacket
+import info.nightscout.androidaps.diaconn.packet.InjectionSnackSettingPacket
+import info.nightscout.androidaps.diaconn.packet.LanguageInquirePacket
+import info.nightscout.androidaps.diaconn.packet.LanguageSettingPacket
+import info.nightscout.androidaps.diaconn.packet.LogStatusInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SerialNumInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SneckLimitInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SoundInquirePacket
+import info.nightscout.androidaps.diaconn.packet.SoundSettingPacket
+import info.nightscout.androidaps.diaconn.packet.TempBasalInquirePacket
+import info.nightscout.androidaps.diaconn.packet.TempBasalSettingPacket
+import info.nightscout.androidaps.diaconn.packet.TimeInquirePacket
+import info.nightscout.androidaps.diaconn.packet.TimeSettingPacket
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -68,9 +96,8 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var context: Context
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    @Inject lateinit var diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleCommonService: BLECommonService
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -79,6 +106,7 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
@@ -190,7 +218,7 @@ class DiaconnG8Service : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    ErrorHelperActivity.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
+                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
 
                     //de-initialize pump
                     diaconnG8Pump.reset()
@@ -241,7 +269,7 @@ class DiaconnG8Service : DaggerService() {
 
     fun loadHistory(): PumpEnactResult {
         if (!diaconnG8Plugin.isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
+            val result = PumpEnactResultImpl(injector).success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -251,14 +279,14 @@ class DiaconnG8Service : DaggerService() {
             sendMessage(IncarnationInquirePacket(injector))
         }
 
-        val result = PumpEnactResult(injector)
+        val result = PumpEnactResultImpl(injector)
         var apsLastLogNum = 9999
         var apsWrappingCount = -1
         // get saved last loginfo
         val diaconnHistoryRecord = diaconnHistoryRecordDao.getLastRecord(diaconnG8Pump.pumpUid)
         aapsLogger.debug(LTag.PUMPCOMM, "diaconnHistoryRecord :: $diaconnHistoryRecord")
 
-        if(diaconnHistoryRecord != null) {
+        if (diaconnHistoryRecord != null) {
             apsLastLogNum = diaconnHistoryRecord.lognum
             apsWrappingCount = diaconnHistoryRecord.wrappingCount
         }
@@ -270,25 +298,24 @@ class DiaconnG8Service : DaggerService() {
         // aps last log num
         val pumpSerialNo = sp.getInt(rh.gs(R.string.pumpserialno), 0)
 
-
         // if first install app
-        if (apsWrappingCount == -1 && apsLastLogNum == 9999 ) {
+        if (apsWrappingCount == -1 && apsLastLogNum == 9999) {
             apsWrappingCount = pumpWrappingCount
-            apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum -2
+            apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum - 2
         }
         // if another pump
         if (pumpSerialNo != diaconnG8Pump.serialNo) {
             apsWrappingCount = pumpWrappingCount
-            apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum -2
+            apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum - 2
             sp.putInt(rh.gs(R.string.pumpserialno), diaconnG8Pump.serialNo)
         }
         // if pump reset
         if (apsIncarnationNum != diaconnG8Pump.pumpIncarnationNum) {
             apsWrappingCount = pumpWrappingCount
-            apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum -2
+            apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum - 2
             sp.putInt(R.string.apsIncarnationNo, apsIncarnationNum)
         }
-            aapsLogger.debug(LTag.PUMPCOMM, "apsWrappingCount : $apsWrappingCount, apsLastLogNum : $apsLastLogNum")
+        aapsLogger.debug(LTag.PUMPCOMM, "apsWrappingCount : $apsWrappingCount, apsLastLogNum : $apsLastLogNum")
 
         // pump log loop size
         val pumpLogPageSize = 11
@@ -313,7 +340,7 @@ class DiaconnG8Service : DaggerService() {
                 val retrofit = diaconnLogUploader.getRetrofitInstance()
                 val api = retrofit?.create(DiaconnApiService::class.java)
                 val response = api?.getPumpLastNo(diaconnG8Pump.pumpUid, diaconnG8Pump.pumpVersion, diaconnG8Pump.pumpIncarnationNum)?.execute()
-                if(response?.body()?.ok == true) {
+                if (response?.body()?.ok == true) {
                     aapsLogger.debug(LTag.PUMPCOMM, "pumplog_no = ${response.body()?.info?.pumplog_no}")
                     val platformLastNo = response.body()?.info?.pumplog_no!!
                     val platformWrappingCount: Int = floor(platformLastNo / 10000.0).toInt()
@@ -326,10 +353,10 @@ class DiaconnG8Service : DaggerService() {
 
                     // 페이지 사이즈로 처리할 때 루핑 횟수 계산
                     val (platformStart, platformEnd, platformLoopSize) = getCloudLogLoopCount(platformLastNo.toInt(), platformLogNo, platformWrappingCount, pumpLastNum, pumpWrappingCount)
-                    if(platformLoopSize > 0) {
+                    if (platformLoopSize > 0) {
                         diaconnG8Pump.isPlatformUploadStarted = true
                         for (i in 0 until platformLoopSize) {
-                            if(diaconnG8Pump.isPumpLogUploadFailed) {
+                            if (diaconnG8Pump.isPumpLogUploadFailed) {
                                 break
                             }
                             rxBus.send(EventPumpStatusChanged("클라우드동기화 진행 중 : $i / $platformLoopSize"))
@@ -343,7 +370,7 @@ class DiaconnG8Service : DaggerService() {
                         diaconnG8Pump.isPumpLogUploadFailed = false
                     }
                 }
-            } catch (e:Exception) {
+            } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
             }
         }
@@ -367,18 +394,21 @@ class DiaconnG8Service : DaggerService() {
         return Triple(start, end, size)
     }
 
-    private fun getCloudLogLoopCount(platformLastNo:Int, platformPumpLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
+    private fun getCloudLogLoopCount(platformLastNo: Int, platformPumpLogNum: Int, wrappingCount: Int, pumpLastNum: Int, pumpWrappingCount: Int): Triple<Int, Int, Int> {
         val start: Int// log sync start number
         val end: Int // log sync end number1311
-        aapsLogger.debug(LTag.PUMPCOMM, "platformLastNo: $platformLastNo, PlatformPumpLogNum : $platformPumpLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount :$pumpWrappingCount")
+        aapsLogger.debug(
+            LTag.PUMPCOMM,
+            "platformLastNo: $platformLastNo, PlatformPumpLogNum : $platformPumpLogNum, wrappingCount : $wrappingCount , pumpLastNum: $pumpLastNum, pumpWrappingCount :$pumpWrappingCount"
+        )
 
-        if ((pumpWrappingCount * 10000 + pumpLastNum - platformLastNo > 10000 )) {
+        if ((pumpWrappingCount * 10000 + pumpLastNum - platformLastNo > 10000)) {
             start = pumpLastNum
             end = 10000
         } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum < 9999) {
             start = (platformPumpLogNum + 1)
             end = 10000
-        } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum >= 9999 ) {
+        } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum >= 9999) {
             start = 0 // 처음부터 시작
             end = pumpLastNum
         } else {
@@ -391,7 +421,7 @@ class DiaconnG8Service : DaggerService() {
     }
 
     fun setUserSettings(): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = PumpEnactResultImpl(injector)
 
         val msg: DiaconnG8Packet = when (diaconnG8Pump.setUserOptionType) {
             DiaconnG8Pump.ALARM -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntesity)
@@ -474,7 +504,7 @@ class DiaconnG8Service : DaggerService() {
         val bolusDurationInMSec = (insulin * speed * 1000).toLong()
         val expectedEnd = bolusStart + bolusDurationInMSec + 3500L
         val totalwaitTime = (expectedEnd - System.currentTimeMillis()) / 1000
-        if(diaconnG8Pump.isReadyToBolus) {
+        if (diaconnG8Pump.isReadyToBolus) {
             while (!diaconnG8Pump.bolusDone) {
                 val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000
                 bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), if (waitTime < 0) 0 else waitTime)
@@ -712,7 +742,7 @@ class DiaconnG8Service : DaggerService() {
         // pump confirm
         var loopCnt = 0
         // waiting 2 seconds for otp
-        while(loopCnt < 20) {
+        while (loopCnt < 20) {
             if (diaconnG8Pump.otpNumber == 0) {
                 SystemClock.sleep(100)
                 aapsLogger.error(LTag.PUMPCOMM, "OTP waiting 100ms $loopCnt / 20")

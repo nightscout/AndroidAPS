@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
@@ -12,9 +10,12 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 import javax.inject.Singleton
 

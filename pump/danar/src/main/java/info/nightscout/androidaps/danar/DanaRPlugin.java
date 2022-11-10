@@ -14,28 +14,28 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.services.DanaRExecutionService;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.androidaps.interfaces.Constraints;
+import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.interfaces.constraints.Constraint;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.interfaces.utils.Round;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventAppExit;
+import info.nightscout.rx.events.EventOverviewBolusProgress;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
@@ -45,7 +45,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     private final AAPSLogger aapsLogger;
     private final Context context;
     private final ResourceHelper rh;
-    private final ConstraintChecker constraintChecker;
+    private final Constraints constraints;
     private final FabricPrivacy fabricPrivacy;
 
     @Inject
@@ -56,7 +56,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             RxBus rxBus,
             Context context,
             ResourceHelper rh,
-            ConstraintChecker constraintChecker,
+            Constraints constraints,
             ActivePlugin activePlugin,
             SP sp,
             CommandQueue commandQueue,
@@ -65,11 +65,11 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             FabricPrivacy fabricPrivacy,
             PumpSync pumpSync
     ) {
-        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
+        super(injector, danaPump, rh, constraints, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;
-        this.constraintChecker = constraintChecker;
+        this.constraints = constraints;
         this.fabricPrivacy = fabricPrivacy;
 
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
@@ -84,7 +84,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (isEnabled(PluginType.PUMP)) {
+                    if (isEnabled()) {
                         boolean previousValue = useExtendedBoluses;
                         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
 
@@ -159,13 +159,13 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.insulin = constraints.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = new PumpEnactResultImpl(getInjector());
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.getInsulin())
                     .carbsDelivered(detailedBolusInfo.carbs);
@@ -193,7 +193,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         serialNumber());
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = new PumpEnactResultImpl(getInjector());
             result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
@@ -205,9 +205,9 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
 
-        absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
+        absoluteRate = constraints.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
@@ -217,8 +217,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10d) percentRate = 0;
-        if (percentRate < 100) percentRate = (int) Round.INSTANCE.ceilTo((double) percentRate, 10d);
-        else percentRate = (int) Round.INSTANCE.floorTo((double) percentRate, 10d);
+        if (percentRate < 100) percentRate = (int) Round.INSTANCE.ceilTo(percentRate, 10d);
+        else percentRate = (int) Round.INSTANCE.floorTo(percentRate, 10d);
         if (percentRate > getPumpDescription().getMaxTempPercent()) {
             percentRate = getPumpDescription().getMaxTempPercent();
         }
@@ -286,7 +286,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
             double extendedRateToSet = absoluteRate - getBaseBasalRate();
-            extendedRateToSet = constraintChecker.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
+            extendedRateToSet = constraints.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
             extendedRateToSet = Round.INSTANCE.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
 
@@ -327,7 +327,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         if (danaPump.isExtendedInProgress() && useExtendedBoluses) {
             return cancelExtendedBolus();
         }
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         result.success(true).enacted(false).comment(R.string.ok).isTempCancel(true);
         return result;
     }
@@ -338,7 +338,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     private PumpEnactResult cancelRealTempBasal() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
             if (!danaPump.isTempBasalInProgress()) {
@@ -360,7 +360,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult loadEvents() {
-        return new PumpEnactResult(getInjector()); // no history, not needed
+        return new PumpEnactResultImpl(getInjector()); // no history, not needed
     }
 
     @NonNull @Override

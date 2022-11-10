@@ -2,14 +2,14 @@ package info.nightscout.plugins.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -56,13 +56,13 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(rh.gs(eq(R.string.ultrafastactinginsulincomment))).thenReturn("Fiasp")
+        `when`(rh.gs(eq(R.string.ultra_fast_acting_insulin_comment))).thenReturn("Fiasp")
         assertEquals("Fiasp", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(rh.gs(eq(R.string.ultrarapid_oref))).thenReturn("Ultra-Rapid Oref")
+        `when`(rh.gs(eq(R.string.ultra_rapid_oref))).thenReturn("Ultra-Rapid Oref")
         assertEquals("Ultra-Rapid Oref", sut.friendlyName)
     }
 

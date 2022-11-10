@@ -86,4 +86,79 @@
     <string name="sms_bolus">בולוס:</string>
     <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
+    <!-- Insulin -->
+    <string name="dia">משך פעילות אינסולין</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">הגדרת אינסולין ל-Humalog ו- NovoRapid / Novolog</string>
+    <string name="description_insulin_ultra_rapid">הגדרת אינסולין מסוג Fiasp</string>
+    <string name="description_insulin_lyumjev">הגדרת אינסולין מסוג Lyumjev</string>
+    <string name="description_insulin_free_peak">מאפשר להגדיר את שיא פעילות האינסולין, לשימוש על ידי משתמשים מתקדמים בלבד</string>
+    <string name="insulin_shortname">אינסולין</string>
+    <string name="insulin_oref_peak">שעת שיא של עקומת IOB</string>
+    <string name="insulin_peak_time">זמן שיא [min]</string>
+    <string name="insulin_peak">שיא</string>
+    <string name="free_peak_oref">Oref שיא חופשי</string>
+    <string name="rapid_acting_oref">Oref אינסולין מהיר</string>
+    <string name="dia_too_short">DIA במשך %1$f הוא קצר מדי - משתמש ב-%2$f במקום!</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
+    <!-- Food-->
+    <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
+    <string name="filter">סינון</string>
+    <string name="food">מזון</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">אנרגיה</string>
+    <string name="shortprotein">חלבון</string>
+    <string name="shortfat">שומן</string>
+    <string name="category">קטגוריה</string>
+    <string name="subcategory">תת קטגוריה</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">סכמת צבעים</string>
+    <string name="dark_theme">ערכת נושא כהה</string>
+    <string name="light_theme">ערכת נושא בהירה</string>
+    <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
+    <string name="a11y_add_new_to_list">הוסף לרשימה</string>
+    <string name="units_colon">יחידות:</string>
+    <string name="missing_profile_name">חסר שם לפרופיל</string>
+    <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
+    <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
+    <string name="error_in_target_values">שגיאה בערכי המטרה</string>
+    <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
+    <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
+    <string name="view">תצוגה</string>
+    <string name="errors">שגיאות</string>
+    <string name="select_profile">בחרו פרופיל לעריכה</string>
+    <string name="profile_name">שם הפרופיל:</string>
+    <string name="a11y_add_new_profile">הוסף פרופיל חדש</string>
+    <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
+    <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">ע\' מטרה</string>
+    <string name="basal_short">בזאלי</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
+    <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">חושב מחדש</string>
+    <string name="a11y_bg_quality_doubles">רישומים כפולים</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">שינוי לשעון קיץ ב-24 השעות הקרובות</string>
+    <string name="dst_loop_disabled_warning">חל מעבר לשעון קיץ לפני פחות מ-3 שעות - לולאה סגורה מושבתת</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">גרסה ישנה</string>
+    <string name="very_old_version">גרסה ישנה מאוד</string>
+    <string name="application_expired">תוקף האפליקציה פג</string>
+    <string name="new_version_warning">גרסה חדשה זמינה כבר %1$d ימים! הגבלה להשהיה עקב סוכר נמוך תחל אחרי %2$d ימים, הלולאה תושבת אחרי %3$d ימים</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">עוד לא הושלם</string>
+    <string name="time_elapsed">זמן שחלף</string>
+    <!-- Overview -->
 </resources>

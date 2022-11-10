@@ -3,10 +3,10 @@ package info.nightscout.plugins.general.smsCommunicator.otp
 import android.util.Base64
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.plugins.R
 import info.nightscout.shared.sharedPreferences.SP
 import java.net.URLEncoder

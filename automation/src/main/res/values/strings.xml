@@ -109,7 +109,6 @@
     <string name="please_choose_a_trigger_type">Choose a trigger type</string>
     <string name="please_choose_a_operation_type">Choose a operation type</string>
     <string name="triggers">Triggers:</string>
-    <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
     <string name="automation_event">Automation event</string>
     <string name="reorder_label">Reorder</string>
@@ -126,5 +125,14 @@
     <string name="add_automation">Add rule</string>
     <string name="remove_sort">Remove/sort</string>
     <string name="stop_processing">Stop processing</string>
+
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">S</string>
 
 </resources>

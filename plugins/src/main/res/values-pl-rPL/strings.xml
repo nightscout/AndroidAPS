@@ -85,4 +85,68 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Baza:</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Profil insulinowy dla Humalog i Novorapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Profil insulinowy dla Fiasp</string>
+    <string name="description_insulin_lyumjev">Profil insulinowy dla Lyumjev</string>
+    <string name="description_insulin_free_peak">Pozwala na określenie czasu wartości szczytowej działania insuliny i powinno być używane tylko przez zaawansowanych użytkowników</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IOB Czas piku krzywej działania insuliny</string>
+    <string name="insulin_peak_time">Czas piku [min]</string>
+    <string name="insulin_peak">Szczyt</string>
+    <string name="free_peak_oref">Swobodny-Pik Oref</string>
+    <string name="rapid_acting_oref">Szybko-Działający Oref</string>
+    <string name="dia_too_short">DIA %1$f zbyt krótki - przyjmuję %2$f w zamian!</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Pokaż informacje o swojej pętli na watchface xDrip+.</string>
+    <!-- Food-->
+    <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
+    <string name="filter">Filtr</string>
+    <string name="food">Posiłek</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Bi</string>
+    <string name="shortfat">Tł</string>
+    <string name="category">Kategoria</string>
+    <string name="subcategory">Podkategoria</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Zdefiniuj profil, który jest dostępny offline.</string>
+    <string name="units_colon">Jednostki:</string>
+    <string name="missing_profile_name">Brak nazwy profilu</string>
+    <string name="error_in_ic_values">Błąd w przelicznikach IC</string>
+    <string name="error_in_basal_values">Błąd w wartościach bazy</string>
+    <string name="error_in_target_values">Błąd w wartościach docelowych</string>
+    <string name="error_in_isf_values">Błąd w wartościach ISF</string>
+    <string name="invalid_profile_not_accepted">Błędny profil %1$s nie został zaakceptowany z NS</string>
+    <string name="view">Podgląd</string>
+    <string name="errors">Błędy</string>
+    <string name="profile_name">Nazwa profilu:</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">CEL</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
+    <string name="bg_too_close">Zbyt bliskie pomiary glikemii:\n%1$s\n%2$s</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Zmiana czasu w 24h lub mniej</string>
+    <string name="dst_loop_disabled_warning">Zmiana czasu nastąpiła mniej niż 3 godziny temu - Zamknięta pętla wyłączona</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">stara wersja</string>
+    <string name="very_old_version">bardzo stara wersja</string>
+    <string name="application_expired">Aplikacja wygasła</string>
+    <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po %2$d dniach, pętla zostanie wyłączona po %3$d dniach</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Nie ukończono</string>
+    <string name="time_elapsed">Czas jaki upłynął</string>
+    <!-- Overview -->
 </resources>

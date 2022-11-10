@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.common.utils
 
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.Profile.ProfileValue
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import java.util.*
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.Profile.ProfileValue
+import info.nightscout.interfaces.pump.defs.PumpType
+import java.util.Locale
 
 object ProfileUtil {
 

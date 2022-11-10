@@ -2,10 +2,10 @@ package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Insight
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.pump.Insight
+import info.nightscout.interfaces.queue.Callback
 import javax.inject.Inject
 
 class CommandInsightSetTBROverNotification constructor(

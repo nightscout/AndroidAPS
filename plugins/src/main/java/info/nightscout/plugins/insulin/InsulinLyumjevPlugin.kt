@@ -1,14 +1,14 @@
 package info.nightscout.plugins.insulin
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

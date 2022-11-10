@@ -12,36 +12,44 @@ import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.OfflineEvent
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.androidaps.databinding.DialogLoopBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
+import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -57,7 +65,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loop: Loop
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var uel: UserEntryLogger
@@ -65,6 +73,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var objectivePlugin: ObjectivesPlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     private var queryingProtection = false
     private var showOkCancel: Boolean = true
@@ -182,7 +191,7 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
 
-            !(loop as PluginBase).isEnabled()                                -> {
+            !(loop as PluginBase).isEnabled() -> {
                 binding.overviewLoop.visibility = View.VISIBLE
                 binding.overviewEnable.visibility = View.VISIBLE
                 binding.overviewDisable.visibility = View.GONE
@@ -345,7 +354,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ErrorHelperActivity.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
@@ -448,7 +457,7 @@ class LoopDialog : DaggerDialogFragment() {
             activity?.let { activity ->
                 val cancelFail = {
                     queryingProtection = false
-                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.name}")
+                    aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }

@@ -5,22 +5,22 @@ import android.content.Context
 import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
-import info.nightscout.androidaps.Constants
+import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.safeDisable
 import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.AndroidPermission
+import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.interfaces.Config
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
-import info.nightscout.androidaps.queue.events.EventQueueChanged
-import info.nightscout.androidaps.utils.T
+import info.nightscout.rx.events.EventQueueChanged
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 
 class QueueThread internal constructor(
@@ -40,7 +40,7 @@ class QueueThread internal constructor(
     private var mWakeLock: PowerManager.WakeLock? = null
 
     init {
-        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":QueueThread")
+        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":QueueThread")
     }
 
     override fun run() {

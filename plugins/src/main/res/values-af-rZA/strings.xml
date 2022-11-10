@@ -37,4 +37,45 @@
     <string name="sms_iob">IAB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basale:</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="description_insulin_rapid">Insulien voorkeure vir Humalog en NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Insulien voorkeure vir Fiasp</string>
+    <string name="description_insulin_free_peak">Laat jou toe om die piek van die insulien aktiwiteit definieer en behoort slegs gebruik te word deur gevorderde gebruikers</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IAB kurwe piek tyd</string>
+    <string name="insulin_peak_time">Piek tyd [min]</string>
+    <string name="free_peak_oref">Vry-piek Oref</string>
+    <string name="rapid_acting_oref">Snelaksie Oref</string>
+    <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
+    <!-- Food-->
+    <string name="description_food">Vertoon kos-voorafinstellings soos omskryf in Nightscout</string>
+    <string name="food">Kos</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">Pr</string>
+    <string name="shortfat">Vet</string>
+    <string name="category">Kategorie</string>
+    <string name="subcategory">Subkategorie</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definieer\'n profiel wat beskikbaar is aflyn.</string>
+    <string name="units_colon">Eenhede:</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">ou weergawe</string>
+    <string name="very_old_version">baie ou weergawe</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Nog nie voltooi nie</string>
+    <string name="time_elapsed">Tydsverloop</string>
+    <!-- Overview -->
 </resources>

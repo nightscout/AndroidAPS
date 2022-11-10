@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.skins
 
 import android.util.DisplayMetrics
-import android.view.View
-import android.widget.LinearLayout
-import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 import javax.inject.Inject

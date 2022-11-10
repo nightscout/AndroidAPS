@@ -5,31 +5,34 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.ErrorHelperActivity.Companion.runAlarm
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
+import info.nightscout.androidaps.interfaces.CommandQueue
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmed
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -42,18 +45,38 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.queue.commands.CustomCommand
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.TimeChangeType
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.actions.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomActionType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CustomCommand
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.Round
+import info.nightscout.interfaces.utils.TimeChangeType
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventTempBasalChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -61,7 +84,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
 import java.time.Duration
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Date
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +104,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-
+    private val activityNames: ActivityNames,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -372,7 +395,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
-            return PumpEnactResult(injector).success(true).enacted(true)
+            return PumpEnactResultImpl(injector).success(true).enacted(true)
         }
         aapsLogger.debug(LTag.PUMP, "setNewBasalProfile profile=$profile")
         return setNewBasalProfile(profile, OmnipodCommandType.SET_BASAL_PROFILE)
@@ -398,7 +421,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             command = omnipodManager.setBasalProgram(basalProgram, hasBasalBeepEnabled()).ignoreElements(),
             post = failWhenUnconfirmed(deliverySuspended),
             // mark as failed even if it worked OK and try again vs. mark ok and deny later
-        ).toPumpEnactResult()
+        ).toPumpEnactResultImpl()
     }
 
     private fun failWhenUnconfirmed(deliverySuspended: Boolean): Completable = Completable.defer {
@@ -544,7 +567,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 detailedBolusInfo.insulin == 0.0
             ) {
                 // Accept only valid insulin requests
-                return PumpEnactResult(injector)
+                return PumpEnactResultImpl(injector)
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
@@ -552,7 +575,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val requestedBolusAmount = detailedBolusInfo.insulin
             if (requestedBolusAmount > reservoirLevel) {
-                return PumpEnactResult(injector)
+                return PumpEnactResultImpl(injector)
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
@@ -561,7 +584,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_BASAL_ACTIVE ||
                 podStateManager.deliveryStatus == DeliveryStatus.BOLUS_AND_TEMP_BASAL_ACTIVE
             ) {
-                return PumpEnactResult(injector)
+                return PumpEnactResultImpl(injector)
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
@@ -630,10 +653,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                 }
             }.toSingle {
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
+                PumpEnactResultImpl(injector).success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
             }.onErrorReturnItem(
                 // success if canceled
-                PumpEnactResult(injector).success(bolusCanceled).enacted(false)
+                PumpEnactResultImpl(injector).success(bolusCanceled).enacted(false)
             )
                 .blockingGet()
             aapsLogger.info(
@@ -842,7 +865,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     "it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.",
                 R.raw.boluserror,
             )
-        }.toPumpEnactResult()
+        }.toPumpEnactResultImpl()
 
         if (ret.success && ret.enacted) {
             ret.isPercent(false).absolute(absoluteRate).duration(durationInMinutes)
@@ -917,13 +940,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return PumpEnactResultImpl(injector).success(false).enacted(false)
             .comment("Omnipod Dash driver does not support percentage temp basals")
     }
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return PumpEnactResultImpl(injector).success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
@@ -940,7 +963,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             pumpSync.expectedPumpState().temporaryBasal == null
         ) {
             // nothing to cancel
-            return PumpEnactResult(injector).success(true).enacted(false)
+            return PumpEnactResultImpl(injector).success(true).enacted(false)
         }
 
         return executeProgrammingCommand(
@@ -952,7 +975,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 "Cancel temp basal result is uncertain", // TODO: i8n,
                 R.raw.boluserror, // TODO: add setting for this
             )
-        }.toPumpEnactResult()
+        }.toPumpEnactResultImpl()
     }
 
     private fun notifyOnUnconfirmed(notificationId: Int, msg: String, sound: Int?) {
@@ -962,18 +985,18 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
     }
 
-    private fun Completable.toPumpEnactResult(): PumpEnactResult {
-        return this.toSingleDefault(PumpEnactResult(injector).success(true).enacted(true))
+    private fun Completable.toPumpEnactResultImpl(): PumpEnactResult {
+        return this.toSingleDefault(PumpEnactResultImpl(injector).success(true).enacted(true))
             .doOnError { throwable ->
                 aapsLogger.error(LTag.PUMP, "toPumpEnactResult, error executing command: $throwable")
             }
-            .onErrorReturnItem(PumpEnactResult(injector).success(false).enacted(false))
+            .onErrorReturnItem(PumpEnactResultImpl(injector).success(false).enacted(false))
             .blockingGet()
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return PumpEnactResultImpl(injector).success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
@@ -1074,7 +1097,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun loadTDDs(): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return PumpEnactResultImpl(injector).success(false).enacted(false)
             .comment("Omnipod Dash driver does not support TDD")
     }
 
@@ -1109,7 +1132,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
             else                               -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
-                PumpEnactResult(injector).success(false).enacted(false).comment(
+                PumpEnactResultImpl(injector).success(false).enacted(false).comment(
                     rh.gs(
                         R.string.omnipod_common_error_unsupported_custom_command,
                         customCommand.javaClass.name
@@ -1125,8 +1148,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
             executeProgrammingCommand(
                 historyEntry = history.createRecord(commandType = OmnipodCommandType.ACKNOWLEDGE_ALERTS),
                 command = omnipodManager.silenceAlerts(it).ignoreElements(),
-            ).toPumpEnactResult()
-        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No active alerts") // TODO i18n
+            ).toPumpEnactResultImpl()
+        } ?: PumpEnactResultImpl(injector).success(false).enacted(false).comment("No active alerts") // TODO i18n
     }
 
     private fun disableSuspendAlerts(): PumpEnactResult {
@@ -1146,7 +1169,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         val ret = executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.CONFIGURE_ALERTS),
             command = omnipodManager.programAlerts(alerts).ignoreElements(),
-        ).toPumpEnactResult()
+        ).toPumpEnactResultImpl()
         if (ret.success && ret.enacted) {
             podStateManager.suspendAlertsEnabled = false
         }
@@ -1173,8 +1196,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     "Unconfirmed resumeDelivery command. Please refresh pod status",
                     R.raw.boluserror
                 )
-            }.toPumpEnactResult()
-        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
+            }.toPumpEnactResultImpl()
+        } ?: PumpEnactResultImpl(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
     }
 
     private fun deactivatePod(): PumpEnactResult {
@@ -1190,7 +1213,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 podStateManager.reset()
                 rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_FAULT))
             }
-        }.toPumpEnactResult()
+        }.toPumpEnactResultImpl()
         if (!success) {
             ret.success(false)
         }
@@ -1200,7 +1223,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun handleTimeChange(): PumpEnactResult {
         return profileFunction.getProfile()?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
-        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active")
+        } ?: PumpEnactResultImpl(injector).success(false).enacted(false).comment("No profile active")
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {
@@ -1218,12 +1241,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 lowReservoirAlertUnits
             )                             -> {
                 aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because the settings did not change")
-                return PumpEnactResult(injector).success(true).enacted(false)
+                return PumpEnactResultImpl(injector).success(true).enacted(false)
             }
 
             !podStateManager.isPodRunning -> {
                 aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because there is no active pod")
-                return PumpEnactResult(injector).success(true).enacted(false)
+                return PumpEnactResultImpl(injector).success(true).enacted(false)
             }
         }
 
@@ -1235,7 +1258,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 "updateAlertConfiguration negative " +
                     "expiryAlertDuration=$expiryAlertDelay"
             )
-            PumpEnactResult(injector).success(false).enacted(false)
+            PumpEnactResultImpl(injector).success(false).enacted(false)
         }
         val alerts = listOf(
             AlertConfiguration(
@@ -1271,14 +1294,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     lowReservoirAlertUnits
                 )
             )
-        ).toPumpEnactResult()
+        ).toPumpEnactResultImpl()
     }
 
     private fun playTestBeep(): PumpEnactResult {
         return executeProgrammingCommand(
             historyEntry = history.createRecord(OmnipodCommandType.PLAY_TEST_BEEP),
             command = omnipodManager.playBeep(BeepType.LONG_SINGLE_BEEP).ignoreElements()
-        ).toPumpEnactResult()
+        ).toPumpEnactResultImpl()
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
@@ -1478,7 +1501,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        runAlarm(context, message, rh.gs(R.string.error), sound)
+        activityNames.runAlarm(context, message, rh.gs(R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {

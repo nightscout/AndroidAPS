@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -12,23 +13,24 @@ import info.nightscout.androidaps.extensions.putString
 import info.nightscout.androidaps.extensions.storeDouble
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Overview
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -66,6 +68,25 @@ class OverviewPlugin @Inject constructor(
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
+
+    @FunctionalInterface
+    interface RunnableWithContext : Runnable {
+
+        var context: Context?
+    }
+
+    override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String) {
+        rxBus.send(
+            EventNewNotification(
+                NotificationWithAction(injector, id, text, level)
+                    .also { n ->
+                        n.action(actionButtonId) {
+                            n.contextForAction?.let { OKDialog.show(it, title, message, null) }
+                        }
+                    })
+        )
+    }
+
     override fun addNotification(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, action: Runnable) {
         rxBus.send(
             EventNewNotification(

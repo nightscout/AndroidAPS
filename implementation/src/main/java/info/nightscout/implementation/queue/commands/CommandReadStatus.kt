@@ -1,14 +1,15 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.LocalAlertUtils
-import info.nightscout.androidaps.queue.Callback
+import info.nightscout.interfaces.LocalAlertUtils
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 
 class CommandReadStatus(
@@ -25,7 +26,7 @@ class CommandReadStatus(
         localAlertUtils.notifyPumpStatusRead()
         aapsLogger.debug(LTag.PUMPQUEUE, "CommandReadStatus executed. Reason: $reason")
         val pump = activePlugin.activePump
-        val result = PumpEnactResult(injector).success(false)
+        val result = PumpEnactResultImpl(injector).success(false)
         val lastConnection = pump.lastDataTime()
         if (lastConnection > System.currentTimeMillis() - T.mins(1).msecs()) result.success(true)
         callback?.result(result)?.run()

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data
 
 import info.nightscout.androidaps.interaction.utils.Persistence
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.rx.weardata.EventData
 
 /**
  * Holds bunch of data model variables and lists that arrive from phone app and are due to be

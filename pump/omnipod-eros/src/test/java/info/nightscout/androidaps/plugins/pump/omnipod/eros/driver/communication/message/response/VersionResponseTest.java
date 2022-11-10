@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response;
 
-import org.junit.Test;
-
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class VersionResponseTest {
     @Test

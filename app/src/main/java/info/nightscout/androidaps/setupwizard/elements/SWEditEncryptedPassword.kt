@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.setupwizard.SWTextValidator
 import info.nightscout.androidaps.utils.CryptoUtil
 

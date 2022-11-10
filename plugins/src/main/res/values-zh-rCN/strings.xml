@@ -86,4 +86,78 @@
     <string name="sms_bolus">大剂量:</string>
     <string name="sms_basal">基础率:</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
+    <!-- Insulin -->
+    <string name="dia">DIA</string>
+    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
+    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
+    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
+    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
+    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
+    <string name="insulin_peak_time">峰值时间 [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">速效 Oref</string>
+    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
+    <!-- xDrip status line -->
+    <!-- Statusline -->
+    <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
+    <!-- Food-->
+    <string name="description_food">显示 Nightscout 中定义的食物预设</string>
+    <string name="filter">筛选</string>
+    <string name="food">食物</string>
+    <string name="shortkilojoul">kJ</string>
+    <string name="shortenergy">En</string>
+    <string name="shortprotein">蛋白质</string>
+    <string name="shortfat">脂肪</string>
+    <string name="category">类别</string>
+    <string name="subcategory">子类别</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">App颜色主题</string>
+    <string name="dark_theme">暗色主题</string>
+    <string name="light_theme">亮色主题</string>
+    <string name="follow_system_theme">跟随系统主题</string>
+    <!-- Profile -->
+    <string name="localprofile_shortname">本地配置文件</string>
+    <string name="description_profile_local">定义一个离线可使用的配置文件。</string>
+    <string name="a11y_add_new_to_list">新增条目到列表</string>
+    <string name="units_colon">单位:</string>
+    <string name="missing_profile_name">缺少配置文件名称</string>
+    <string name="error_in_ic_values">IC数值错误</string>
+    <string name="error_in_basal_values">基础率数值错误</string>
+    <string name="error_in_target_values">目标数值错误</string>
+    <string name="error_in_isf_values">ISF数值错误</string>
+    <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
+    <string name="view">查看</string>
+    <string name="errors">错误</string>
+    <string name="select_profile">选择要编辑的配置文件</string>
+    <string name="profile_name">个人配置名称：</string>
+    <string name="a11y_add_new_profile">添加新配置文件</string>
+    <string name="a11y_clone_profile">克隆当前配置文件</string>
+    <string name="a11y_delete_current_profile">删除当前配置文件</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">TARG</string>
+    <string name="basal_short">基础率</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">重新计算的数据</string>
+    <string name="bg_too_close">血糖间隔太近:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">重新计算</string>
+    <string name="a11y_bg_quality_doubles">双重条目</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">在24小时或更少时间内变更\"夏令时\"</string>
+    <string name="dst_loop_disabled_warning">夏令时变更在三小时内-已禁用闭环</string>
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">旧版本</string>
+    <string name="very_old_version">非常旧版本</string>
+    <string name="application_expired">应用版本已过期。</string>
+    <string name="new_version_warning">新版本已发布至少%1$d天！将在%2$d天后回退到LGS (低血糖维持模式)，闭环功能将在%3$d天后禁用。</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">尚未完成</string>
+    <string name="time_elapsed">已用时间</string>
+    <!-- Overview -->
 </resources>

@@ -12,20 +12,19 @@ import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewEditquickwizardDialogBinding
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.shared.SafeParse
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.androidaps.utils.extensions.selectedItemPosition
 import info.nightscout.androidaps.utils.extensions.setEnableForChildren
 import info.nightscout.androidaps.utils.extensions.setSelection
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
-import java.util.*
 import javax.inject.Inject
 
 class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {

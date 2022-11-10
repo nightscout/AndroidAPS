@@ -21,8 +21,8 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgress
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 
 public class BolusCommand extends BaseCommand {
     

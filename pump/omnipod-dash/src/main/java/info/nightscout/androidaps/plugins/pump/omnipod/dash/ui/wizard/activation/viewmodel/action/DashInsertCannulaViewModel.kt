@@ -2,15 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -23,10 +17,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.Resolve
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -90,7 +91,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                 .subscribeBy(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-                        source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, rh)))
+                        source.onSuccess(PumpEnactResultImpl(injector).success(false).comment(I8n.textFromException(throwable, rh)))
                     },
                     onComplete = {
                         logger.debug("Pod activation part 2 completed")
@@ -120,7 +121,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                         )
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                         fabricPrivacy.logCustom("OmnipodDashPodActivated")
-                        source.onSuccess(PumpEnactResult(injector).success(true))
+                        source.onSuccess(PumpEnactResultImpl(injector).success(true))
                     }
                 )
         }

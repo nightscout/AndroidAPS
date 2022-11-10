@@ -169,7 +169,7 @@ adb shell settings put global animator_duration_scale 0 &
         Assert.assertEquals(1.1, p.getBasalTimeFromMidnight(0), 0.0001)
         Assert.assertEquals(6.0 * Constants.MMOLL_TO_MGDL, p.targetLowMgdl, 0.0001)
         Assert.assertTrue(VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP))
-        Assert.assertTrue(OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
+        Assert.assertTrue(OpenAPSSMBPlugin.getPlugin().isEnabled())
         Assert.assertTrue(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
         Assert.assertTrue(SensitivityOref1Plugin.getPlugin().isEnabled(PluginType.SENSITIVITY))
         Assert.assertTrue(ObjectivesPlugin.objectives[0].isStarted)

@@ -6,4 +6,13 @@
     <string name="start_hypo_tt">저혈당 임시목표 시작</string>
     <string name="time_offset">시간 이동</string>
     <string name="unit_minute_short">분</string>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">통계</string>
+    <string name="calculation_in_progress">계산 진행 중</string>
+    <string name="id">ID:</string>
+    <string name="submit">확인</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

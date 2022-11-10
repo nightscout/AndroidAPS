@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MsgBolusStop
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito.`when`

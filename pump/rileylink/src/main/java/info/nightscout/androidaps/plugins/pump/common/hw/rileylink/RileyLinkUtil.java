@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.enco
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.rx.logging.AAPSLogger;
 
 /**
  * Created by andy on 17/05/2018.

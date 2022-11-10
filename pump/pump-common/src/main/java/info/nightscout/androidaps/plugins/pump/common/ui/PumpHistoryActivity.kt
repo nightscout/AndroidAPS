@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.R
 import info.nightscout.androidaps.plugins.pump.common.databinding.PumpHistoryActivityBinding
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
@@ -20,9 +21,8 @@ import info.nightscout.androidaps.plugins.pump.common.driver.PumpDriverConfigura
 import info.nightscout.androidaps.plugins.pump.common.driver.history.PumpHistoryDataProvider
 import info.nightscout.androidaps.plugins.pump.common.driver.history.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.common.driver.history.PumpHistoryText
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class PumpHistoryActivity : DaggerAppCompatActivity() {

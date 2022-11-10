@@ -12,21 +12,21 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Before
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyBoolean
 import org.mockito.Mockito.doNothing
+import org.mockito.Mockito.`when`
 
 open class DanaRTestBase : TestBase() {
 
@@ -41,7 +41,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
 
