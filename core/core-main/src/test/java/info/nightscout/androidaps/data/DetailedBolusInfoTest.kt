@@ -19,7 +19,7 @@ class DetailedBolusInfoTest : TestBase() {
 
     @Test fun toStringShouldBeOverloaded() {
         val detailedBolusInfo = DetailedBolusInfo()
-        Assert.assertEquals(true, detailedBolusInfo.toString().contains("insulin"))
+        Assert.assertEquals(true, detailedBolusInfo.toJsonString().contains("insulin"))
     }
 
     @Test fun copyShouldCopyAllProperties() {
@@ -36,7 +36,7 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.context = context
         detailedBolusInfo.eventType = DetailedBolusInfo.EventType.BOLUS_WIZARD
         val serialized = detailedBolusInfo.toJsonString()
-        val deserialized = DetailedBolusInfo.fromJsonString(serialized)
+        val deserialized = DetailedBolusInfo().fromJsonString(serialized)
         Assert.assertEquals(1L, deserialized.bolusCalculatorResult?.timestamp)
         Assert.assertEquals(DetailedBolusInfo.EventType.BOLUS_WIZARD, deserialized.eventType)
         // Context should be excluded

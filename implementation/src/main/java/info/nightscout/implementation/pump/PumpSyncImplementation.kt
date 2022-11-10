@@ -19,9 +19,9 @@ import info.nightscout.database.impl.transactions.SyncPumpExtendedBolusTransacti
 import info.nightscout.database.impl.transactions.SyncPumpTemporaryBasalTransaction
 import info.nightscout.database.impl.transactions.SyncPumpTotalDailyDoseTransaction
 import info.nightscout.database.impl.transactions.SyncTemporaryBasalWithTempIdTransaction
-import info.nightscout.androidaps.extensions.fromDbPumpType
-import info.nightscout.androidaps.extensions.toDbPumpType
-import info.nightscout.androidaps.extensions.toDbSource
+import info.nightscout.core.pumpExtensions.fromDbPumpType
+import info.nightscout.core.pumpExtensions.toDbPumpType
+import info.nightscout.core.pumpExtensions.toDbSource
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync

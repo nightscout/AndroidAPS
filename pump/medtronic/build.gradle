@@ -25,4 +25,5 @@ dependencies {
     implementation project(':pump:rileylink')
     implementation project(':interfaces')
     implementation project(path: ':core:fabric')
+    testImplementation project(path: ':database:impl')
 }

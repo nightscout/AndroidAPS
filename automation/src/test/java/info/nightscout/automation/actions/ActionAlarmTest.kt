@@ -11,6 +11,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus
 import org.junit.Assert
 import org.junit.Before
@@ -26,6 +27,7 @@ class ActionAlarmTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var timerUtil: TimerUtil
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var config: Config
 
     private lateinit var sut: ActionAlarm
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -36,6 +38,7 @@ class ActionAlarmTest : TestBase() {
                 it.context = context
                 it.timerUtil = timerUtil
                 it.dateUtil = dateUtil
+                it.config = config
             }
             if (it is PumpEnactResultImpl) {
                 it.rh = rh

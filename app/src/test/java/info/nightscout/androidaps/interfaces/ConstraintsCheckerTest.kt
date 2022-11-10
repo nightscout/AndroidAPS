@@ -8,10 +8,8 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
@@ -30,6 +28,7 @@ import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Constraint
@@ -58,7 +57,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var profiler: Profiler
-    @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var pumpSync: PumpSync
@@ -80,7 +78,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
     private lateinit var hardLimits: HardLimits
 
-    val injector = HasAndroidInjector {
+    private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is Objective) {
                 it.sp = sp
@@ -135,7 +133,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil, ruffyScripter)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
         danaRSPlugin =
             DanaRSPlugin(

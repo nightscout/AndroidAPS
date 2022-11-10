@@ -109,14 +109,6 @@
     <!-- Green Colors -->
     <color name="notificationInfo">#009705</color>
 
-    <!--    Toasts-->
-    <color name="toastBorder">#666666</color>
-    <color name="toastBase">#000000</color>
-    <color name="toastOk">#77dd77</color>
-    <color name="toastError">#ff0400</color>
-    <color name="toastWarn">#FF8C00</color>
-    <color name="toastInfo">#03A9F4</color>
-
     <!-- Black and White transparent - glass effect-->
     <color name="black_alpha_10">#1A000000</color>
     <color name="black_alpha_20">#33000000</color>

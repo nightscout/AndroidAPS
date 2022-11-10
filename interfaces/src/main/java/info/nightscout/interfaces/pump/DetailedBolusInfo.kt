@@ -76,14 +76,14 @@ class DetailedBolusInfo {
 
         fun toDBbEventType(): TherapyEvent.Type =
             when (this) {
-                MEAL_BOLUS       -> TherapyEvent.Type.MEAL_BOLUS
-                BOLUS_WIZARD     -> TherapyEvent.Type.BOLUS_WIZARD
-                CORRECTION_BOLUS -> TherapyEvent.Type.CORRECTION_BOLUS
-                CARBS_CORRECTION -> TherapyEvent.Type.CARBS_CORRECTION
-                CANNULA_CHANGE   -> TherapyEvent.Type.CANNULA_CHANGE
-                INSULIN_CHANGE   -> TherapyEvent.Type.INSULIN_CHANGE
+                MEAL_BOLUS          -> TherapyEvent.Type.MEAL_BOLUS
+                BOLUS_WIZARD        -> TherapyEvent.Type.BOLUS_WIZARD
+                CORRECTION_BOLUS    -> TherapyEvent.Type.CORRECTION_BOLUS
+                CARBS_CORRECTION    -> TherapyEvent.Type.CARBS_CORRECTION
+                CANNULA_CHANGE      -> TherapyEvent.Type.CANNULA_CHANGE
+                INSULIN_CHANGE      -> TherapyEvent.Type.INSULIN_CHANGE
                 PUMP_BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
-                NOTE -> TherapyEvent.Type.NOTE
+                NOTE                -> TherapyEvent.Type.NOTE
             }
     }
 
@@ -141,8 +141,5 @@ class DetailedBolusInfo {
         n.carbsPumpId = carbsPumpId
         n.carbsTimestamp = carbsTimestamp
         return n
-    }
-
-    companion object {
     }
 }

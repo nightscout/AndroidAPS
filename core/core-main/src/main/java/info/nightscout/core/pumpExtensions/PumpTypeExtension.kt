@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.core.pumpExtensions
 
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.embedments.InterfaceIDs
