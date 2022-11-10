@@ -1,2 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="eopatch">EOPatch2</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Интеграция помпы для EOPatch2 / GlucoMen Day</string>
+    <string name="category_alerts">Оповещения</string>
+    <string name="low_reservoir">Оповещения о низком уровне инсулина в резервуаре</string>
+    <string name="patch_expiration_reminders">Напоминание об истечении срока патча</string>
+    <string name="patch_buzzer_reminders">Напоминания зуммера патча</string>
+    <string name="time_format_a_h_mm">ч:мм a</string>
+    <string name="bolusdelivered">Болюс %1$.2f ед. подан успешно</string>
+    <string name="eopatch_ble_status">Статус BLE</string>
+    <string name="eopatch_serial_number">Серийный номер</string>
+    <string name="eopatch_lot_number">Номер партии</string>
+    <string name="eopatch_wakeup_time">Дата запуска &amp; время</string>
+    <string name="eopatch_expiration_time">Окончание срока действия</string>
+    <string name="eopatch_status">Состояние</string>
+    <string name="eopatch_base_basal_rate">Базовая скорость базала</string>
+    <string name="eopatch_temp_basal_rate">Временная базальная скорость</string>
+    <string name="eopatch_total_delivered">Всего доставлено</string>
+    <string name="invalid_basal_rate">Базальная скорость профиля меньше 0,05 ед/ч. EOPatch имеет минимальный шаг подачи 0.05 ед/ч. Повторите еще раз после приведения профиля в соответствие с этим параметром.</string>
+    <string name="no_profile_selected">Профиль не выбран. Выберите профиль и повторите попытку.</string>
+    <string name="symbol_day">день</string>
+    <string name="symbol_plus">+</string>
+    <string name="symbol_minus">-</string>
+    <string name="time_30min">30 мин.</string>
+    <string name="time_1hr">1 ч.</string>
+    <string name="time_1hr_30min">1 час 30 мин</string>
+    <string name="time_2hr">2 часа</string>
+    <string name="cancel">Отменить</string>
+    <string name="confirm">Подтверждаю</string>
+    <string name="string_resume_insulin_delivery_title">Возобновить подачу инсулина</string>
+    <string name="string_resume_insulin_delivery_message">Окончание приостановки подачи инсулина.\n Нажмите \'Подтвердить\', чтобы возобновить подачу.\n\n[Caution]\n Подача не возобновится, если не нажать \'Подтвердить\'.\n Если не нажать \'Подтвердить\', может развиться гипергликемия.</string>
+    <string name="string_suspended_insulin_delivery_message">Введение инсулина приостановлено.</string>
+    <string name="string_resumed_insulin_delivery_message">Подача инсулина возобновлена.</string>
+    <string name="finish">Завершить</string>
+    <string name="string_temp_basal_remained_hhmm">оставшееся время: %1$s:%2$s</string>
+    <string name="next">Далее</string>
+    <string name="patch_connection_fail">Повторите попытку после проверки связи с Патчем.</string>
+    <string name="string_pause_failed">Сбой приостановки.</string>
+    <string name="string_resume_failed">Возобновление не состоялось.</string>
+    <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, гггг чч:мм a</string>
+</resources>
