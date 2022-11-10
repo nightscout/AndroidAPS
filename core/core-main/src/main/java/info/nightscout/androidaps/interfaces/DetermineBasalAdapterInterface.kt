@@ -4,6 +4,7 @@ import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
+import info.nightscout.interfaces.profile.Profile
 
 interface DetermineBasalAdapterInterface {
 

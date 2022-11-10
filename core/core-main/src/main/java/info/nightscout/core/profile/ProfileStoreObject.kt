@@ -3,12 +3,12 @@ package info.nightscout.core.profile
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

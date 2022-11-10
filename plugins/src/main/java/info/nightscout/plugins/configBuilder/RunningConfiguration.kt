@@ -1,7 +1,6 @@
 package info.nightscout.plugins.configBuilder
 
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.main.R
@@ -10,6 +9,7 @@ import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog

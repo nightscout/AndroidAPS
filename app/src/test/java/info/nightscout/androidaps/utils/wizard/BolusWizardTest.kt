@@ -9,13 +9,13 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlin.math.ceil

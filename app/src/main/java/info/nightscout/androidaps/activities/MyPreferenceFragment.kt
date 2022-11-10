@@ -23,7 +23,6 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -56,8 +55,10 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionTyp
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.core.profile.toCurrentUnits
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.insight.activities;
 
-import info.nightscout.androidaps.extensions.BluetoothAdapterExtensionKt;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -34,13 +33,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import info.nightscout.androidaps.extensions.BluetoothAdapterExtensionKt;
 import info.nightscout.androidaps.extensions.IntentExtensionKt;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
+import info.nightscout.interfaces.pump.PumpSync;
 
 public class InsightPairingActivity extends NoSplashAppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
 

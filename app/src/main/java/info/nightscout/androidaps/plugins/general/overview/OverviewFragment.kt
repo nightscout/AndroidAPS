@@ -48,7 +48,6 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -74,6 +73,9 @@ import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.profile.toSignedUnitsString
+import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.profile.toUnits
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.interfaces.end
@@ -84,6 +86,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin

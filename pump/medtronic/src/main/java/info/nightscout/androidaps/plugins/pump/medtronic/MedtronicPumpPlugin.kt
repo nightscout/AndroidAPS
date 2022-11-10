@@ -10,10 +10,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
@@ -56,8 +52,12 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.interfaces.pump.defs.ManufacturerType

@@ -1,9 +1,11 @@
 package info.nightscout.ui.defaultProfile
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.fromMmolToUnits
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray

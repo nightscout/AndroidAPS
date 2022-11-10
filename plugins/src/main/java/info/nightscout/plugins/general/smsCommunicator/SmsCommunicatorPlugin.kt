@@ -19,9 +19,7 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -31,6 +29,9 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.round
+import info.nightscout.core.profile.toCurrentUnits
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.profile.toUnitsString
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
@@ -49,7 +50,9 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.smsCommunicator.Sms
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator

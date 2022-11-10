@@ -26,7 +26,6 @@ import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.ToastUtils
@@ -35,11 +34,14 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BO
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.round
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.profile.toUnitsString
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers

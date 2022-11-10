@@ -6,14 +6,10 @@ import info.nightscout.androidaps.extensions.lowTargetBlockValueBySeconds
 import info.nightscout.androidaps.extensions.shiftBlock
 import info.nightscout.androidaps.extensions.shiftTargetBlock
 import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight
-import info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl
-import info.nightscout.androidaps.interfaces.Profile.ProfileValue
-import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.core.main.R
+import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.data.Block
@@ -23,7 +19,11 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.Profile.ProfileValue
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
@@ -161,14 +161,14 @@ sealed class ProfileSealed(
                 break
             }
         for (isf in isfBlocks)
-            if (!hardLimits.isInRange(toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
+            if (!hardLimits.isInRange(Profile.toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_sensitivity_value), isf.amount * 100.0 / percentage))
                 break
             }
         for (target in targetBlocks) {
             if (!hardLimits.isInRange(
-                    toMgdl(target.lowTarget, units),
+                    Profile.toMgdl(target.lowTarget, units),
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
                 )
@@ -178,7 +178,7 @@ sealed class ProfileSealed(
                 break
             }
             if (!hardLimits.isInRange(
-                    toMgdl(target.highTarget, units),
+                    Profile.toMgdl(target.highTarget, units),
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
                 )
@@ -214,11 +214,11 @@ sealed class ProfileSealed(
     override fun isEqual(profile: Profile): Boolean {
         for (hour in 0..23) {
             val seconds = T.hours(hour.toLong()).secs().toInt()
-            if (getBasalTimeFromMidnight(seconds) !=  profile.getBasalTimeFromMidnight(seconds)) return false
-            if (getIsfMgdlTimeFromMidnight(seconds) !=  profile.getIsfMgdlTimeFromMidnight(seconds)) return false
-            if (getIcTimeFromMidnight(seconds) !=  profile.getIcTimeFromMidnight(seconds)) return false
-            if (getTargetLowMgdlTimeFromMidnight(seconds) !=  profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
-            if (getTargetHighMgdlTimeFromMidnight(seconds) !=  profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
+            if (getBasalTimeFromMidnight(seconds) != profile.getBasalTimeFromMidnight(seconds)) return false
+            if (getIsfMgdlTimeFromMidnight(seconds) != profile.getIsfMgdlTimeFromMidnight(seconds)) return false
+            if (getIcTimeFromMidnight(seconds) != profile.getIcTimeFromMidnight(seconds)) return false
+            if (getTargetLowMgdlTimeFromMidnight(seconds) != profile.getTargetLowMgdlTimeFromMidnight(seconds)) return false
+            if (getTargetHighMgdlTimeFromMidnight(seconds) != profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
         }
         if (dia != profile.dia) return false
         if ((profile is EPS) && profileName != profile.value.originalProfileName) return false // handle profile name change too
@@ -228,29 +228,33 @@ sealed class ProfileSealed(
     override val percentage: Int
         get() = pct
 
-    override fun getBasal(): Double = basalBlocks.blockValueBySeconds(secondsFromMidnight(), percentage / 100.0, timeshift)
-    override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
-    override fun getIc(): Double = icBlocks.blockValueBySeconds(secondsFromMidnight(), 100.0 / percentage, timeshift)
-    override fun getIc(timestamp: Long): Double = icBlocks.blockValueBySeconds(secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
-    override fun getIsfMgdl(): Double = toMgdl(isfBlocks.blockValueBySeconds(secondsFromMidnight(), 100.0 / percentage, timeshift), units)
-    override fun getIsfMgdl(timestamp: Long): Double = toMgdl(isfBlocks.blockValueBySeconds(secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
-    override fun getTargetMgdl(): Double = toMgdl(targetBlocks.targetBlockValueBySeconds(secondsFromMidnight(), timeshift), units)
-    override fun getTargetLowMgdl(): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(secondsFromMidnight(), timeshift), units)
-    override fun getTargetLowMgdl(timestamp: Long): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(secondsFromMidnight(timestamp), timeshift), units)
-    override fun getTargetHighMgdl(): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(secondsFromMidnight(), timeshift), units)
-    override fun getTargetHighMgdl(timestamp: Long): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(secondsFromMidnight(timestamp), timeshift), units)
+    override fun getBasal(): Double = basalBlocks.blockValueBySeconds(Profile.secondsFromMidnight(), percentage / 100.0, timeshift)
+    override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(Profile.secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
+    override fun getIc(): Double = icBlocks.blockValueBySeconds(Profile.secondsFromMidnight(), 100.0 / percentage, timeshift)
+    override fun getIc(timestamp: Long): Double = icBlocks.blockValueBySeconds(Profile.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
+    override fun getIsfMgdl(): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(Profile.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+    override fun getIsfMgdl(timestamp: Long): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(Profile.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
+    override fun getTargetMgdl(): Double = Profile.toMgdl(targetBlocks.targetBlockValueBySeconds(Profile.secondsFromMidnight(), timeshift), units)
+    override fun getTargetLowMgdl(): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(Profile.secondsFromMidnight(), timeshift), units)
+    override fun getTargetLowMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(Profile.secondsFromMidnight(timestamp), timeshift), units)
+    override fun getTargetHighMgdl(): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(Profile.secondsFromMidnight(), timeshift), units)
+    override fun getTargetHighMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(Profile.secondsFromMidnight(timestamp), timeshift), units)
     override fun getBasalTimeFromMidnight(timeAsSeconds: Int): Double = basalBlocks.blockValueBySeconds(timeAsSeconds, percentage / 100.0, timeshift)
     override fun getIcTimeFromMidnight(timeAsSeconds: Int): Double = icBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift)
     fun getIsfTimeFromMidnight(timeAsSeconds: Int): Double = isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift)
-    override fun getIsfMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift), units)
-    override fun getTargetLowMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
+    override fun getIsfMgdlTimeFromMidnight(timeAsSeconds: Int): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift), units)
+    override fun getTargetLowMgdlTimeFromMidnight(timeAsSeconds: Int): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
     private fun getTargetLowTimeFromMidnight(timeAsSeconds: Int): Double = targetBlocks.lowTargetBlockValueBySeconds(timeAsSeconds, timeshift)
     private fun getTargetHighTimeFromMidnight(timeAsSeconds: Int): Double = targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift)
-    override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
+    override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
     override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(R.string.profile_carbs_per_unit), dateUtil)
-    override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(R.string.profile_per_unit), dateUtil)
-    override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
+    override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
+        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(R.string.profile_per_unit), dateUtil)
+
+    override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String =
+        getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(R.string.profile_ins_units_per_hour), dateUtil)
+
     override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.asText, dateUtil)
 
     override fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile =
@@ -278,10 +282,11 @@ sealed class ProfileSealed(
         val sens = JSONArray()
         var elapsedHours = 0L
         isfBlocks.forEach {
-            sens.put(JSONObject()
-                .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
-                .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                .put("value", getIsfTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
+            sens.put(
+                JSONObject()
+                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                    .put("value", getIsfTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
             elapsedHours += T.msecs(it.duration).hours()
         }
@@ -289,10 +294,11 @@ sealed class ProfileSealed(
         val carbratio = JSONArray()
         elapsedHours = 0L
         icBlocks.forEach {
-            carbratio.put(JSONObject()
-                .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
-                .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                .put("value", getIcTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
+            carbratio.put(
+                JSONObject()
+                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                    .put("value", getIcTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
             elapsedHours += T.msecs(it.duration).hours()
         }
@@ -300,10 +306,11 @@ sealed class ProfileSealed(
         val basal = JSONArray()
         elapsedHours = 0L
         basalBlocks.forEach {
-            basal.put(JSONObject()
-                .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
-                .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                .put("value", getBasalTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
+            basal.put(
+                JSONObject()
+                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                    .put("value", getBasalTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
             elapsedHours += T.msecs(it.duration).hours()
         }
@@ -312,15 +319,17 @@ sealed class ProfileSealed(
         val targetHigh = JSONArray()
         elapsedHours = 0L
         targetBlocks.forEach {
-            targetLow.put(JSONObject()
-                .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
-                .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                .put("value", getTargetLowTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
+            targetLow.put(
+                JSONObject()
+                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                    .put("value", getTargetLowTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
-            targetHigh.put(JSONObject()
-                .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
-                .put("timeAsSeconds", T.hours(elapsedHours).secs())
-                .put("value", getTargetHighTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
+            targetHigh.put(
+                JSONObject()
+                    .put("time", DecimalFormat("00").format(elapsedHours) + ":00")
+                    .put("timeAsSeconds", T.hours(elapsedHours).secs())
+                    .put("value", getTargetHighTimeFromMidnight(T.hours(elapsedHours).secs().toInt()))
             )
             elapsedHours += T.msecs(it.duration).hours()
         }
@@ -351,7 +360,7 @@ sealed class ProfileSealed(
         val ret = Array(shifted.size) { ProfileValue(0, 0.0) }
         var elapsed = 0
         for (index in shifted.indices) {
-            ret[index] = ProfileValue(elapsed, toMgdl(shifted[index].amount, units))
+            ret[index] = ProfileValue(elapsed, Profile.toMgdl(shifted[index].amount, units))
             elapsed += T.msecs(shifted[index].duration).secs().toInt()
         }
         return ret

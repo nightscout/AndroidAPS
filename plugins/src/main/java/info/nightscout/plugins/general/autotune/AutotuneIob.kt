@@ -3,9 +3,9 @@ package info.nightscout.plugins.general.autotune
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.core.iob.round
+import info.nightscout.core.profile.milliSecFromMidnight
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.ExtendedBolus
@@ -17,6 +17,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.iob.Iob
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
@@ -248,7 +249,7 @@ open class AutotuneIob @Inject constructor(
         getCalculationToTimeTreatments(time, localInsulin).round()
 
     // Add specific calculation for Autotune (reference localInsulin for Peak/dia)
-    fun Bolus.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
+    private fun Bolus.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
         if (!isValid  || type == Bolus.Type.PRIMING ) return Iob()
         return localInsulin.iobCalcForTreatment(this, time)
     }

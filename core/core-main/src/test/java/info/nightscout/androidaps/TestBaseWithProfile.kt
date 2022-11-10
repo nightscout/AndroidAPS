@@ -4,16 +4,16 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -35,6 +35,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var hardLimits: HardLimits
 
     lateinit var testPumpPlugin: TestPumpPlugin
 
@@ -48,7 +49,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.config = config
                 it.rh = rh
                 it.rxBus = rxBus
-                it.hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
+                it.hardLimits = hardLimits
             }
         }
     }

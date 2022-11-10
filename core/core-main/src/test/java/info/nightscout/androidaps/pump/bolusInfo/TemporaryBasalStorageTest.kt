@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.pump.bolusInfo
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.interfaces.pump.PumpSync
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before

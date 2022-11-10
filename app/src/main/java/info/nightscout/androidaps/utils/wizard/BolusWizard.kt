@@ -13,14 +13,14 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.iob.round
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
@@ -34,7 +34,9 @@ import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.ui.ActivityNames

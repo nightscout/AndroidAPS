@@ -1,13 +1,15 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.implementation
 
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.main.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -18,14 +20,14 @@ import kotlin.math.min
 
 @OpenForTesting
 @Singleton
-class HardLimits @Inject constructor(
+class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val sp: SP,
     private val rh: ResourceHelper,
     private val context: Context,
     private val repository: AppRepository
-) {
+) : HardLimits {
 
     private val disposable = CompositeDisposable()
 
@@ -70,26 +72,26 @@ class HardLimits @Inject constructor(
         rh.gs(R.string.key_adult)          -> ADULT
         rh.gs(R.string.key_resistantadult) -> RESISTANT_ADULT
         rh.gs(R.string.key_pregnant)       -> PREGNANT
-        else                                           -> ADULT
+        else                               -> ADULT
     }
 
-    fun maxBolus(): Double = MAX_BOLUS[loadAge()]
-    fun maxIobAMA(): Double = MAX_IOB_AMA[loadAge()]
-    fun maxIobSMB(): Double = MAX_IOB_SMB[loadAge()]
-    fun maxBasal(): Double = MAX_BASAL[loadAge()]
-    fun minDia(): Double = MIN_DIA[loadAge()]
-    fun maxDia(): Double = MAX_DIA[loadAge()]
-    fun minIC(): Double = MIN_IC[loadAge()]
-    fun maxIC(): Double = MAX_IC[loadAge()]
+    override fun maxBolus(): Double = MAX_BOLUS[loadAge()]
+    override fun maxIobAMA(): Double = MAX_IOB_AMA[loadAge()]
+    override fun maxIobSMB(): Double = MAX_IOB_SMB[loadAge()]
+    override fun maxBasal(): Double = MAX_BASAL[loadAge()]
+    override fun minDia(): Double = MIN_DIA[loadAge()]
+    override fun maxDia(): Double = MAX_DIA[loadAge()]
+    override fun minIC(): Double = MIN_IC[loadAge()]
+    override fun maxIC(): Double = MAX_IC[loadAge()]
 
     // safety checks
-    fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
-         value == verifyHardLimits(value, valueName, lowLimit, highLimit)
+    override fun checkHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean =
+        value == verifyHardLimits(value, valueName, lowLimit, highLimit)
 
-    fun isInRange(value: Double, lowLimit: Double, highLimit: Double): Boolean =
+    override fun isInRange(value: Double, lowLimit: Double, highLimit: Double): Boolean =
         value in lowLimit..highLimit
 
-    fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
+    override fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
         var newValue = value
         if (newValue < lowLimit || newValue > highLimit) {
             newValue = max(newValue, lowLimit)

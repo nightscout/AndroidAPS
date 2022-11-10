@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.interfaces.Pump
+import info.nightscout.interfaces.pump.Pump
 import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 

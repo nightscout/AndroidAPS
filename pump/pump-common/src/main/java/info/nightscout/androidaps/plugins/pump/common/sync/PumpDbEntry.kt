@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.sync
 
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 
 // data class PumpDbEntry constructor(var temporaryId: Long,

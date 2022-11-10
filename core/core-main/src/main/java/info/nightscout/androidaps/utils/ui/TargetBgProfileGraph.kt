@@ -4,11 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
-import info.nightscout.core.main.R
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
+import info.nightscout.core.main.R
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.Round
 import java.text.NumberFormat
 import kotlin.math.max

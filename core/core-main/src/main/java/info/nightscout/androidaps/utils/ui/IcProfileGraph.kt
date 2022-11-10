@@ -7,7 +7,7 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.Round
 import java.text.NumberFormat
 import kotlin.math.max

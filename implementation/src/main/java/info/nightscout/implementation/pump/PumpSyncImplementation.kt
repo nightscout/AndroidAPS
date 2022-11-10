@@ -2,7 +2,6 @@ package info.nightscout.implementation.pump
 
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.main.R
@@ -38,6 +37,7 @@ import info.nightscout.database.impl.transactions.SyncPumpTotalDailyDoseTransact
 import info.nightscout.database.impl.transactions.SyncTemporaryBasalWithTempIdTransaction
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.bus.RxBus

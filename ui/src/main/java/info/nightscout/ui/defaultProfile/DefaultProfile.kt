@@ -1,8 +1,10 @@
 package info.nightscout.ui.defaultProfile
 
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.fromMmolToUnits
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.shared.utils.DateUtil
@@ -157,13 +159,13 @@ class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
 
     private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: GlucoseUnit): JSONArray {
         val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0],units)).put("timeAsSeconds", 0 * 3600))
-        array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1],units)).put("timeAsSeconds", 6 * 3600))
-        array.put(JSONObject().put("time", "09:00").put("value", Profile.fromMmolToUnits(value + sample[2],units)).put("timeAsSeconds", 9 * 3600))
-        array.put(JSONObject().put("time", "11:00").put("value", Profile.fromMmolToUnits(value + sample[3],units)).put("timeAsSeconds", 11 * 3600))
-        array.put(JSONObject().put("time", "14:00").put("value", Profile.fromMmolToUnits(value + sample[4],units)).put("timeAsSeconds", 14 * 3600))
-        array.put(JSONObject().put("time", "16:00").put("value", Profile.fromMmolToUnits(value + sample[5],units)).put("timeAsSeconds", 16 * 3600))
-        array.put(JSONObject().put("time", "19:00").put("value", Profile.fromMmolToUnits(value + sample[6],units)).put("timeAsSeconds", 19 * 3600))
+        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0], units)).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1], units)).put("timeAsSeconds", 6 * 3600))
+        array.put(JSONObject().put("time", "09:00").put("value", Profile.fromMmolToUnits(value + sample[2], units)).put("timeAsSeconds", 9 * 3600))
+        array.put(JSONObject().put("time", "11:00").put("value", Profile.fromMmolToUnits(value + sample[3], units)).put("timeAsSeconds", 11 * 3600))
+        array.put(JSONObject().put("time", "14:00").put("value", Profile.fromMmolToUnits(value + sample[4], units)).put("timeAsSeconds", 14 * 3600))
+        array.put(JSONObject().put("time", "16:00").put("value", Profile.fromMmolToUnits(value + sample[5], units)).put("timeAsSeconds", 16 * 3600))
+        array.put(JSONObject().put("time", "19:00").put("value", Profile.fromMmolToUnits(value + sample[6], units)).put("timeAsSeconds", 19 * 3600))
         return array
     }
 }

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.extensions
 
+
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants

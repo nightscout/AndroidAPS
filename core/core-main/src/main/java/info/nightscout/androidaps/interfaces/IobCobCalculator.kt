@@ -9,6 +9,7 @@ import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
+import info.nightscout.interfaces.profile.Profile
 import org.json.JSONArray
 
 interface IobCobCalculator {

@@ -11,14 +11,12 @@ import info.nightscout.androidaps.extensions.storeString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
@@ -27,7 +25,9 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

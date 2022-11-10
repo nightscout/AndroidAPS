@@ -4,10 +4,10 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.interfaces.Config

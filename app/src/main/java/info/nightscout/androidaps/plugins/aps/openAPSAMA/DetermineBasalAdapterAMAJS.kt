@@ -8,7 +8,6 @@ import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.DetermineBasalAdapterInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
@@ -18,6 +17,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

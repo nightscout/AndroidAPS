@@ -15,13 +15,13 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers

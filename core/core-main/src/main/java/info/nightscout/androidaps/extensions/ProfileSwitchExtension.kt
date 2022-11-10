@@ -1,9 +1,7 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.extensions.blockFromJsonArray
-import info.nightscout.androidaps.extensions.targetBlockFromJsonArray
-import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
+import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -29,7 +27,7 @@ fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {
 fun ProfileSwitch.getCustomizedName(): String {
     var name: String = profileName
     if (Constants.LOCAL_PROFILE == name) {
-        name = to2Decimal(ProfileSealed.PS(this).percentageBasalSum()) + "U "
+        name = DecimalFormatter.to2Decimal(ProfileSealed.PS(this).percentageBasalSum()) + "U "
     }
     if (timeshift != 0L || percentage != 100) {
         name += "($percentage%"

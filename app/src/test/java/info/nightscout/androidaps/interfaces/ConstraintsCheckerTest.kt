@@ -25,7 +25,6 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalSt
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.database.impl.AppRepository
@@ -34,7 +33,9 @@ import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
@@ -63,6 +64,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
     @Mock lateinit var buildHelper: BuildHelper
+    @Mock lateinit var hardLimits: HardLimits
 
     private lateinit var danaPump: DanaPump
     private lateinit var insightDbHelper: InsightDbHelper
@@ -76,7 +78,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
-    private lateinit var hardLimits: HardLimits
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -131,7 +132,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)

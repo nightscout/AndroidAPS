@@ -4,9 +4,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

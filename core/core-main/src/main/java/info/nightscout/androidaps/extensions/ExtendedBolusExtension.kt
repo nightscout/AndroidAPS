@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
+import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlin.math.ceil
@@ -24,13 +24,13 @@ val ExtendedBolus.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
 fun ExtendedBolus.toStringFull(dateUtil: DateUtil): String =
-    "E " + to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
+    "E " + DecimalFormatter.to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
         " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 
 fun ExtendedBolus.toStringMedium(dateUtil: DateUtil): String =
-    to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
+    DecimalFormatter.to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
 
-fun ExtendedBolus.toStringTotal(): String = "${to2Decimal(amount)}U ( ${to2Decimal(rate)} U/h )"
+fun ExtendedBolus.toStringTotal(): String = "${DecimalFormatter.to2Decimal(amount)}U ( ${DecimalFormatter.to2Decimal(rate)} U/h )"
 
 fun ExtendedBolus.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()

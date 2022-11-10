@@ -15,7 +15,6 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
@@ -28,7 +27,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
@@ -58,11 +56,13 @@ import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.interfaces.storage.FileStorage
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.ui.IconsProvider
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.sync.nsclient.DataSyncSelectorImplementation

@@ -1,9 +1,11 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.interfaces.Profile
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T

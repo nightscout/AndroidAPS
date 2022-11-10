@@ -10,7 +10,6 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.DetermineBasalAdapterInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -18,15 +17,17 @@ import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.profile.secondsFromMidnight
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

@@ -35,7 +35,6 @@ import info.nightscout.androidaps.setupwizard.elements.SWPreference
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
@@ -43,6 +42,7 @@ import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus

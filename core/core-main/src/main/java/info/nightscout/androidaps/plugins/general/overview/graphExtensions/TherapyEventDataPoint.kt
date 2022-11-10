@@ -1,12 +1,14 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.core.main.R
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toUnits
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class TherapyEventDataPoint(

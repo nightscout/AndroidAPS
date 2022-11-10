@@ -4,19 +4,25 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.core.main.R
-import info.nightscout.database.impl.AppRepository
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.core.main.R
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.profile.toMmol
+import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.profile.toUnits
+import info.nightscout.core.profile.toUnitsString
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
@@ -38,11 +44,11 @@ class ProfileTest : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var sp: SP
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var hardLimits: HardLimits
 
     private lateinit var rxBus: RxBus
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
-    private lateinit var hardLimits: HardLimits
 
     private var okProfile = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}]," +
         "\"sens\":[{\"time\":\"00:00\",\"value\":\"6\"},{\"time\":\"2:00\",\"value\":\"6.2\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
@@ -64,7 +70,6 @@ class ProfileTest : TestBase() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
         dateUtil = DateUtil(context)
         rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(rh.gs(R.string.profile_per_unit)).thenReturn("/U")
         `when`(rh.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U")

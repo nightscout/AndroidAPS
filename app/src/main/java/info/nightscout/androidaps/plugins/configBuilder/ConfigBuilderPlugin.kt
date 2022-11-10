@@ -6,8 +6,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.APS
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
@@ -21,6 +19,8 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppInitialized

@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.androidaps.extensions.getCustomizedName
+import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.utils.extensions.fromConstant
-import info.nightscout.androidaps.utils.extensions.getCustomizedName
-import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.utils.JsonHelper

@@ -8,7 +8,6 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
@@ -16,6 +15,7 @@ import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.shared.sharedPreferences.SP

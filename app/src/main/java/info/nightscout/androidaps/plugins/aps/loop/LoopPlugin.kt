@@ -26,9 +26,7 @@ import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.Loop.LastRun
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
@@ -36,7 +34,6 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.OfflineEvent
@@ -54,10 +51,13 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.AapsSchedulers

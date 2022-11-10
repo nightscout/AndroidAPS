@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.pump
 
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.interfaces.pump.defs.ManufacturerType
@@ -13,7 +12,7 @@ import org.json.JSONObject
 
 /**
  * This interface defines the communication from AAPS-core to pump drivers.
- * Pump drivers communicate data changes back to AAPS-core using [info.nightscout.androidaps.interfaces.PumpSync].
+ * Pump drivers communicate data changes back to AAPS-core using [info.nightscout.interfaces.pump.PumpSync].
  *
  * Created by mike on 04.06.2016.
  */
@@ -202,7 +201,7 @@ interface Pump {
     /**
      * Pump model
      *
-     * If new model is covered by driver, model and it's capabilities must be added to [info.nightscout.androidaps.plugins.pump.common.defs.PumpType]
+     * If new model is covered by driver, model and it's capabilities must be added to [info.nightscout.interfaces.pump.defs.PumpType]
      *
      * @return PumpType
      */
@@ -258,7 +257,7 @@ interface Pump {
 
     /**
      * Executes a custom queued command
-     * See [CommandQueue.customCommand] for queuing a custom command.
+     * See [info.nightscout.interfaces.queue.CustomCommand] for queuing a custom command.
      *
      * @param customCommand the custom command to be executed
      * @return PumpEnactResult that represents the command execution result

@@ -2,13 +2,13 @@ package info.nightscout.androidaps
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType

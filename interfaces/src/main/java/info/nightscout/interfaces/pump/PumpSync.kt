@@ -1,7 +1,7 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.pump
 
-import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpType
 
 /**
@@ -268,7 +268,7 @@ interface PumpSync {
      * if db record already has endPumpId assigned by [syncStopTemporaryBasalWithPumpId] other updates
      *      are ignored
      *
-     * see [info.nightscout.androidaps.database.transactions.SyncPumpTemporaryBasalTransaction]
+     * see [info.nightscout.database.impl.transactions.SyncPumpTemporaryBasalTransaction]
      *
      * @param timestamp     timestamp of event from pump history
      * @param rate          TBR rate in U/h or % (value of 100% is equal to no TBR)
@@ -298,7 +298,7 @@ interface PumpSync {
      *      endPumpId is stored to running record
      * If db record doesn't exist data is ignored and false returned
      *
-     * see [info.nightscout.androidaps.database.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction]
+     * see [info.nightscout.database.impl.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction]
      *
      * @param timestamp     timestamp of event from pump history
      * @param endPumpId     pump id of ending event from history
@@ -332,7 +332,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      *
-     * see [info.nightscout.androidaps.database.transactions.InsertTemporaryBasalWithTempIdTransaction]
+     * see [info.nightscout.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction]
      **/
 
     fun addTemporaryBasalWithTempId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, tempId: Long, type: TemporaryBasalType, pumpType: PumpType, pumpSerial: String): Boolean
@@ -424,7 +424,7 @@ interface PumpSync {
      * If db record doesn't exist, new record is created.
      * isValid field is preserved
      *
-     * see [info.nightscout.androidaps.database.transactions.SyncPumpExtendedBolusTransaction]
+     * see [info.nightscout.database.impl.transactions.SyncPumpExtendedBolusTransaction]
      *
      * @param timestamp     timestamp of event from pump history
      * @param amount        EB total amount in U
@@ -452,7 +452,7 @@ interface PumpSync {
      *      endPumpId is stored to running record
      * If db record doesn't exist data is ignored and false returned
      *
-     * see [info.nightscout.androidaps.database.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction]
+     * see [info.nightscout.database.impl.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction]
      *
      * @param timestamp     timestamp of event from pump history
      * @param endPumpId     pump id of ending event from history
@@ -477,7 +477,7 @@ interface PumpSync {
      *      isValid field is preserved
      * If db record doesn't exist, new record is created.
      *
-     * see [info.nightscout.androidaps.database.transactions.SyncPumpTotalDailyDoseTransaction]
+     * see [info.nightscout.database.impl.transactions.SyncPumpTotalDailyDoseTransaction]
      *
      * @param timestamp     timestamp of event from pump history
      * @param bolusAmount   bolus part

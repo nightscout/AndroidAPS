@@ -7,10 +7,37 @@ import android.text.TextWatcher
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.textValidator.validators.*
+import info.nightscout.androidaps.utils.textValidator.validators.AlphaNumericValidator
+import info.nightscout.androidaps.utils.textValidator.validators.AlphaValidator
+import info.nightscout.androidaps.utils.textValidator.validators.AndValidator
+import info.nightscout.androidaps.utils.textValidator.validators.BgRangeValidator
+import info.nightscout.androidaps.utils.textValidator.validators.CreditCardValidator
+import info.nightscout.androidaps.utils.textValidator.validators.DateValidator
+import info.nightscout.androidaps.utils.textValidator.validators.DomainValidator
+import info.nightscout.androidaps.utils.textValidator.validators.DummyValidator
+import info.nightscout.androidaps.utils.textValidator.validators.EmailValidator
+import info.nightscout.androidaps.utils.textValidator.validators.EmptyValidator
+import info.nightscout.androidaps.utils.textValidator.validators.FloatNumericRangeValidator
+import info.nightscout.androidaps.utils.textValidator.validators.HttpsUrlValidator
+import info.nightscout.androidaps.utils.textValidator.validators.IpAddressValidator
+import info.nightscout.androidaps.utils.textValidator.validators.MinDigitLengthValidator
+import info.nightscout.androidaps.utils.textValidator.validators.MultiPhoneValidator
+import info.nightscout.androidaps.utils.textValidator.validators.MultiValidator
+import info.nightscout.androidaps.utils.textValidator.validators.NotValidator
+import info.nightscout.androidaps.utils.textValidator.validators.NumericRangeValidator
+import info.nightscout.androidaps.utils.textValidator.validators.NumericValidator
+import info.nightscout.androidaps.utils.textValidator.validators.OrValidator
+import info.nightscout.androidaps.utils.textValidator.validators.PersonFullNameValidator
+import info.nightscout.androidaps.utils.textValidator.validators.PersonNameValidator
+import info.nightscout.androidaps.utils.textValidator.validators.PhoneValidator
+import info.nightscout.androidaps.utils.textValidator.validators.PinStrengthValidator
+import info.nightscout.androidaps.utils.textValidator.validators.RegexpValidator
+import info.nightscout.androidaps.utils.textValidator.validators.Validator
+import info.nightscout.androidaps.utils.textValidator.validators.WebUrlValidator
+import info.nightscout.core.main.R
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.interfaces.profile.Profile
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
@@ -110,7 +137,7 @@ class DefaultEditTextValidator : EditTextValidator {
         defaultEmptyErrorString = context.getString(R.string.error_field_must_not_be_empty)
         setEmptyErrorString(emptyErrorStringDef)
         mValidator = AndValidator()
-        val toAdd: Validator = 
+        val toAdd: Validator =
         when (testType) {
             EditTextValidator.TEST_NOCHECK             -> DummyValidator()
             EditTextValidator.TEST_ALPHA               -> AlphaValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_standard_letters_are_allowed) else testErrorString)

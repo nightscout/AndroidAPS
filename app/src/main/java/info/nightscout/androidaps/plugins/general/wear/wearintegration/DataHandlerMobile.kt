@@ -15,7 +15,6 @@ import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -25,13 +24,15 @@ import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.round
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.profile.toTargetRangeString
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
@@ -49,8 +50,10 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

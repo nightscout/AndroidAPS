@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryBasal.Type.Companion.fromString
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T

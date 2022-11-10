@@ -5,9 +5,11 @@ import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.core.main.R
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.shared.SafeParse
 import javax.inject.Inject
 
