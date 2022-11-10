@@ -1,11 +1,13 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.core.profile
 
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.bus.RxBus
@@ -16,7 +18,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 
-class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val dateUtil: DateUtil) {
+class ProfileStoreObject(val injector: HasAndroidInjector, override val data: JSONObject, val dateUtil: DateUtil) : ProfileStore {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
@@ -42,7 +44,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return null
     }
 
-    fun getStartDate(): Long {
+    override fun getStartDate(): Long {
         val iso = JsonHelper.safeGetString(data, "startDate") ?: return 0
         return try {
             dateUtil.fromISODateString(iso)
@@ -51,15 +53,15 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         }
     }
 
-    fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
-    fun getDefaultProfileJson(): JSONObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
+    override fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
+    override fun getDefaultProfileJson(): JSONObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
 
-    fun getDefaultProfileName(): String? {
+    override fun getDefaultProfileName(): String? {
         val defaultProfileName = data.optString("defaultProfile")
         return if (defaultProfileName.isNotEmpty()) getStore()?.has(defaultProfileName)?.let { defaultProfileName } else null
     }
 
-    fun getProfileList(): ArrayList<CharSequence> {
+    override fun getProfileList(): ArrayList<CharSequence> {
         val ret = ArrayList<CharSequence>()
         getStore()?.keys()?.let { keys ->
             while (keys.hasNext()) {
@@ -71,7 +73,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
     }
 
     @Synchronized
-    fun getSpecificProfile(profileName: String): PureProfile? {
+    override fun getSpecificProfile(profileName: String): PureProfile? {
         var profile: PureProfile? = null
         val units = JsonHelper.safeGetStringAllowNull(data, "units", storeUnits())
         getStore()?.let { store ->
@@ -96,7 +98,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject, val d
         return null
     }
 
-    val allProfilesValid: Boolean
+    override val allProfilesValid: Boolean
         get() = getProfileList()
             .asSequence()
             .map { profileName -> getSpecificProfile(profileName.toString()) }

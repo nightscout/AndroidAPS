@@ -6,13 +6,14 @@ import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
+import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.entities.data.Block
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
@@ -177,7 +178,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("defaultProfile", profilename)
             json.put("store", store)
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
-            profileStore = ProfileStore(injector, json, dateUtil)
+            profileStore = ProfileStoreObject(injector, json, dateUtil)
         } catch (e: JSONException) {
         }
         return profileStore

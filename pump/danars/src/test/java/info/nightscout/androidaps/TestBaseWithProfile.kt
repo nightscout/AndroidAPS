@@ -6,11 +6,12 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
@@ -54,6 +55,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStore(profileInjector, json, dateUtil)
+        return ProfileStoreObject(profileInjector, json, dateUtil)
     }
 }

@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.profile
 
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.profile.PureProfile
 import org.json.JSONArray
 
 interface ProfileSource {

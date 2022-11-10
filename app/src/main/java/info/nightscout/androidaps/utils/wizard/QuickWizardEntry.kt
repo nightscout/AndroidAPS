@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
@@ -33,6 +34,14 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+
+    // for mock
+    @OpenForTesting
+    class Time {
+        fun secondsFromMidnight(): Int = Profile.secondsFromMidnight()
+
+    }
+    var time = Time()
 
     lateinit var storage: JSONObject
     var position: Int = -1
@@ -96,7 +105,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         return this
     }
 
-    fun isActive(): Boolean = profileFunction.secondsFromMidnight() >= validFrom() && profileFunction.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
+    fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()

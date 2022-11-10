@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.ProfileStore
 
 interface ProfileFunction {
 
@@ -89,11 +90,4 @@ interface ProfileFunction {
      * @return true if profile switch is created
      */
     fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int): Boolean
-
-    /*
-     * Midnight time conversion
-     * (here as well for easy mock)
-     */
-    fun secondsFromMidnight(): Int = Profile.secondsFromMidnight()
-    fun secondsFromMidnight(date: Long): Int = Profile.secondsFromMidnight(date)
 }

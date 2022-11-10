@@ -7,12 +7,13 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -41,7 +42,7 @@ open class TestBaseWithProfile : TestBase() {
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ProfileStore) {
+            if (it is ProfileStoreObject) {
                 it.aapsLogger = aapsLogger
                 it.activePlugin = activePluginProvider
                 it.config = config
@@ -77,7 +78,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStore(profileInjector, json, dateUtil)
+        return ProfileStoreObject(profileInjector, json, dateUtil)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -86,7 +87,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStore(profileInjector, json, dateUtil)
+        return ProfileStoreObject(profileInjector, json, dateUtil)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -96,6 +97,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStore(profileInjector, json, dateUtil)
+        return ProfileStoreObject(profileInjector, json, dateUtil)
     }
 }

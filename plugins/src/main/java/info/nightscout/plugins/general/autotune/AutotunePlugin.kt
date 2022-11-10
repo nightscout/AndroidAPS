@@ -6,9 +6,9 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.extensions.pureProfileFromJson
+import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.BuildHelper
@@ -325,7 +325,7 @@ class AutotunePlugin @Inject constructor(
     fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
         val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
-        val profileStore = activePlugin.activeProfileSource.profile ?: ProfileStore(injector, JSONObject(), dateUtil)
+        val profileStore = activePlugin.activeProfileSource.profile ?: ProfileStoreObject(injector, JSONObject(), dateUtil)
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)

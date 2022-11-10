@@ -9,7 +9,6 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.database.entities.OfflineEvent
@@ -18,6 +17,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
