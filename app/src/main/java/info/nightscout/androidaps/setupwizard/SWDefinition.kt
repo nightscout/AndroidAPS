@@ -11,11 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
-import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -32,7 +28,6 @@ import info.nightscout.androidaps.setupwizard.elements.SWInfoText
 import info.nightscout.androidaps.setupwizard.elements.SWPlugin
 import info.nightscout.androidaps.setupwizard.elements.SWPreference
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton
-import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.interfaces.AndroidPermission
@@ -42,11 +37,16 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
+import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.dialogs.ProfileSwitchDialog

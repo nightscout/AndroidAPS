@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces.stats
 import android.content.Context
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 
 interface DexcomTIR {

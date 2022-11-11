@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.toCurrentUnits
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton

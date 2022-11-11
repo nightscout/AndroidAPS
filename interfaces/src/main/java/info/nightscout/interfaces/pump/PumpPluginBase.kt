@@ -1,11 +1,12 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.pump
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.main.R
+import info.nightscout.interfaces.R
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 

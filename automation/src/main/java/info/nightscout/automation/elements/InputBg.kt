@@ -2,10 +2,10 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import info.nightscout.automation.R
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.ProfileFunction
 import java.text.DecimalFormat
 
 class InputBg(profileFunction: ProfileFunction) : Element() {

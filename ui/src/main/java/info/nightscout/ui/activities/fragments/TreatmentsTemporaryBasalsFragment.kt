@@ -19,7 +19,6 @@ import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.ToastUtils
@@ -36,6 +35,7 @@ import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.database.impl.transactions.InvalidateExtendedBolusTransaction
 import info.nightscout.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventTempBasalChange

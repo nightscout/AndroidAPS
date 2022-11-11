@@ -9,8 +9,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.fromConstant
-import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.core.profile.unit
@@ -23,10 +21,12 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.source.BgSource
 import info.nightscout.plugins.R
 import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.rx.logging.AAPSLogger

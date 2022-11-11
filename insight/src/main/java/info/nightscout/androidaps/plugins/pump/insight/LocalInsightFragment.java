@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightU
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.core.fabric.FabricPrivacy;
 import info.nightscout.interfaces.queue.Callback;
+import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.shared.interfaces.ResourceHelper;

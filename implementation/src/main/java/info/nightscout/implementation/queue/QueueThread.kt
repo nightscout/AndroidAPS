@@ -5,23 +5,23 @@ import android.content.Context
 import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.safeDisable
 import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.Config
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.T
 
 class QueueThread internal constructor(
     private val queue: CommandQueue,

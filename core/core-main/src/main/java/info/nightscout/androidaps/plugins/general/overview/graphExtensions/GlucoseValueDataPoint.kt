@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.toCurrentUnitsString
@@ -9,6 +8,7 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class GlucoseValueDataPoint(

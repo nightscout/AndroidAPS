@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
@@ -11,6 +10,7 @@ import info.nightscout.core.main.R
 import info.nightscout.database.entities.Carbs
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

@@ -1,11 +1,7 @@
 package info.nightscout.plugins.sync.nsclient
 
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.extensions.toJson
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
@@ -20,6 +16,10 @@ import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.plugins.R
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.nsclient.extensions.toJson

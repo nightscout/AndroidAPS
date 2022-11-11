@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TableLayout
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.DexcomTIR
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 import android.content.Context
 import android.content.Intent
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.eopatch.EONotification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
@@ -24,6 +23,7 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

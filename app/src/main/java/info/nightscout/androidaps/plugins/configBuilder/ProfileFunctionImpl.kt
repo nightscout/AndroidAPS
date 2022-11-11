@@ -4,7 +4,6 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.ProfileSwitch
@@ -15,6 +14,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData

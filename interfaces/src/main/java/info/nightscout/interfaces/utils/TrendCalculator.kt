@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.utils
 
 import info.nightscout.database.entities.GlucoseValue
 

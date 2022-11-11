@@ -2,9 +2,9 @@ package info.nightscout.plugins.constraints.objectives
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE

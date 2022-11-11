@@ -1,7 +1,6 @@
 package info.nightscout.implementation
 
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -16,6 +15,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

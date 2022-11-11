@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.constraints
 
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.profile.Profile
 
 /**

@@ -17,15 +17,15 @@ import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
 import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.toUnitsString
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.logging.LTag

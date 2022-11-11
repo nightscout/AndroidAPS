@@ -1,12 +1,9 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.queue
 
 import android.text.Spanned
-import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CustomCommand
 
 interface CommandQueue {
 

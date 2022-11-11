@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.queue.commands
+package info.nightscout.interfaces.queue
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
