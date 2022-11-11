@@ -144,7 +144,6 @@
     <string name="paused">Pausado</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
-    <string name="upload_now">Enviar agora</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
@@ -333,7 +332,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">MantenhaVivo. Status desatualizado.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">MantenhaVivo. Basal desatualizado.</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicado no conectar à bomba</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba alterado.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Alteração driver da bomba.</string>
     <string name="device_changed" comment="26 characters max for translation">Troca de dispositivo</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Atualização em andamento</string>
