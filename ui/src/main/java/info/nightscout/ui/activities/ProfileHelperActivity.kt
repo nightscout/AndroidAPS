@@ -89,20 +89,20 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         })
 
         val profileTypeList = Lists.newArrayList(
-            rh.gs(R.string.motoldefaultprofile),
-            rh.gs(R.string.dpvdefaultprofile),
-            rh.gs(R.string.currentprofile),
-            rh.gs(R.string.availableprofile),
+            rh.gs(R.string.motol_default_profile),
+            rh.gs(R.string.dpv_default_profile),
+            rh.gs(R.string.current_profile),
+            rh.gs(R.string.available_profile),
             rh.gs(R.string.careportal_profileswitch)
         )
         binding.profileType.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, profileTypeList))
 
         binding.profileType.setOnItemClickListener { _, _, _, _ ->
             when (binding.profileType.text.toString()) {
-                rh.gs(R.string.motoldefaultprofile)      -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
-                rh.gs(R.string.dpvdefaultprofile)        -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
-                rh.gs(R.string.currentprofile)           -> switchTab(tabSelected, ProfileType.CURRENT)
-                rh.gs(R.string.availableprofile)         -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
+                rh.gs(R.string.motol_default_profile) -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
+                rh.gs(R.string.dpv_default_profile)   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                rh.gs(R.string.current_profile)       -> switchTab(tabSelected, ProfileType.CURRENT)
+                rh.gs(R.string.available_profile)        -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
                 rh.gs(R.string.careportal_profileswitch) -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
             }
         }
@@ -205,7 +205,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                         return@setOnClickListener
                     }
                     if ((pctUsed[i] < 32 || pctUsed[i] > 37)) {
-                        ToastUtils.warnToast(this, R.string.invalidpct)
+                        ToastUtils.warnToast(this, R.string.invalid_pct)
                         return@setOnClickListener
                     }
                 }
@@ -259,8 +259,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {
-            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.formatwithtdd, age, tdd) else rh.gs(R.string.formatwithweight, age, weight)
-            ProfileType.DPV_DEFAULT       -> rh.gs(R.string.formatwittddandpct, age, tdd, (basalSumPct * 100).toInt())
+            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight)
+            ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalSumPct * 100).toInt())
             ProfileType.CURRENT           -> profileFunction.getProfileName()
             ProfileType.AVAILABLE_PROFILE -> profileList[profileUsed[tab]].toString()
             ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].originalCustomizedName
@@ -283,10 +283,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         // Show new content
         binding.profileType.setText(
             when (typeSelected[tabSelected]) {
-                ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motoldefaultprofile)
-                ProfileType.DPV_DEFAULT       -> rh.gs(R.string.dpvdefaultprofile)
-                ProfileType.CURRENT           -> rh.gs(R.string.currentprofile)
-                ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.availableprofile)
+                ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motol_default_profile)
+                ProfileType.DPV_DEFAULT       -> rh.gs(R.string.dpv_default_profile)
+                ProfileType.CURRENT           -> rh.gs(R.string.current_profile)
+                ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.available_profile)
                 ProfileType.PROFILE_SWITCH    -> rh.gs(R.string.careportal_profileswitch)
             },
             false

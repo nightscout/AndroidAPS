@@ -8,7 +8,6 @@ import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
-import info.nightscout.androidaps.dialogs.TreatmentDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
@@ -44,7 +43,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
     @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
     @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
-    @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck

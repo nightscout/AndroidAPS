@@ -35,7 +35,7 @@
 
 
     <!-- Dialogs -->
-    <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
+    <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
 
     <string name="glucose_type">Glucose type</string>
     <string name="bg_other">Other</string>
@@ -50,8 +50,8 @@
     <string name="treatments_wizard_total_label">Total</string>
 
     <!-- FillDialog -->
-    <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
-    <string name="fillbolus_title">Fill/Prime standard insulin amounts</string>
+    <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
+    <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
@@ -63,7 +63,7 @@
     <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
     <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
-    <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
+    <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
 
 
     <!-- Treatments -->
@@ -103,18 +103,18 @@
     <!-- ProfileHelperActivity -->
     <string name="profile1">Profile 1</string>
     <string name="profile2">Profile 2</string>
-    <string name="profiletype">Profile type</string>
-    <string name="basalpctfromtdd_label">% of basal</string>
+    <string name="profile_type">Profile type</string>
+    <string name="basal_pct_from_tdd_label">% of basal</string>
     <string name="selected_profile">Selected:</string>
-    <string name="comapareprofile">Compare profiles</string>
-    <string name="nav_profilehelper">Profile helper</string>
-    <string name="motoldefaultprofile">Default profile</string>
-    <string name="currentprofile">Current profile</string>
-    <string name="availableprofile">Available profile</string>
-    <string name="formatwithtdd">Age: %1$.0f TDD: %2$.0f U</string>
-    <string name="formatwittddandpct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
-    <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
-    <string name="dpvdefaultprofile">DPV Default profile</string>
-    <string name="invalidpct">Invalid % entry</string>
+    <string name="compare_profile">Compare profiles</string>
+    <string name="nav_profile_helper">Profile helper</string>
+    <string name="motol_default_profile">Default profile</string>
+    <string name="current_profile">Current profile</string>
+    <string name="available_profile">Available profile</string>
+    <string name="format_with_tdd">Age: %1$.0f TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Age: %1$.0f Weight: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Default profile</string>
+    <string name="invalid_pct">Invalid % entry</string>
 
 </resources>

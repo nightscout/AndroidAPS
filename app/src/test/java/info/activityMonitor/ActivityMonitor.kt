@@ -1,4 +1,4 @@
-package info.nightscout.ui.activityMonitor
+package info.activityMonitor
 
 import android.app.Activity
 import android.app.Application
@@ -10,14 +10,13 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
-import info.nightscout.shared.SafeParse
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import javax.inject.Inject
 import javax.inject.Singleton

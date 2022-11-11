@@ -203,8 +203,8 @@
         </androidx.preference.PreferenceScreen>
 
         <androidx.preference.PreferenceScreen
-            android:key="@string/fillbolus_title"
-            android:title="@string/fillbolus_title">
+            android:key="@string/fill_bolus_title"
+            android:title="@string/fill_bolus_title">
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="0.3"

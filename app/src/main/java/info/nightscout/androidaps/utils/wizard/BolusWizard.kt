@@ -348,9 +348,9 @@ class BolusWizard @Inject constructor(
                 actions.add(rh.gs(R.string.slowabsorptiondetected, rh.gac(context, R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(rh.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
+            actions.add(rh.gs(R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
+            actions.add(rh.gs(R.string.bolus_recorded_only).formatColor(context, rh, R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
             actions.add(rh.gs(R.string.alarminxmin, carbTime).formatColor(context, rh, R.attr.infoColor))
         if (advisor)

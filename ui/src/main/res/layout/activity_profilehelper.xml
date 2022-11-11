@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="@string/profiletype"
+            android:hint="@string/profile_type"
             android:paddingHorizontal="5dp">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
@@ -140,14 +140,14 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text="@string/basalpctfromtdd_label"
+                        android:text="@string/basal_pct_from_tdd_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
                         android:id="@+id/basal_pct_from_tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
-                        app:customContentDescription="@string/basalpctfromtdd_label" />
+                        app:customContentDescription="@string/basal_pct_from_tdd_label" />
 
                 </TableRow>
 
@@ -240,7 +240,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_compare_profiles"
-            android:text="@string/comapareprofile" />
+            android:text="@string/compare_profile" />
 
     </LinearLayout>
 

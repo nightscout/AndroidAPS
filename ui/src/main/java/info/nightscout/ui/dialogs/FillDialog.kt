@@ -118,11 +118,11 @@ class FillDialog : DialogFragmentWithDate() {
 
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.fillwarning))
+            actions.add(rh.gs(R.string.fill_warning))
             actions.add("")
             actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.insulinButtonColor))
             if (abs(insulinAfterConstraints - insulin) > 0.01)
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)

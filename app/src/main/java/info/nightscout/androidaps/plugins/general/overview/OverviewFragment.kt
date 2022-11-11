@@ -30,11 +30,9 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.ui.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
-import info.nightscout.androidaps.dialogs.TreatmentDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
@@ -60,8 +58,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOve
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.plugins.source.DexcomPlugin
-import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
@@ -92,6 +88,8 @@ import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.plugins.source.DexcomPlugin
+import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
@@ -112,6 +110,8 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.InsulinDialog
+import info.nightscout.ui.dialogs.TreatmentDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.content.Context
 import android.os.Bundle
@@ -8,8 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.DialogTreatmentBinding
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -19,11 +18,9 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.core.pumpExtensions.insertBolusTransaction
 import info.nightscout.core.pumpExtensions.insertCarbsTransaction
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -35,6 +32,8 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogTreatmentBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -89,8 +88,10 @@ class TreatmentDialog : DialogFragmentWithDate() {
         savedInstanceState.putDouble("insulin", binding.insulin.value)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         onCreateViewGeneral()
         _binding = DialogTreatmentBinding.inflate(inflater, container, false)
         return binding.root
@@ -106,10 +107,14 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val pumpDescription = activePlugin.activePump.pumpDescription
-        binding.carbs.setParams(savedInstanceState?.getDouble("carbs")
-            ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
-        binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
-            ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
+        binding.carbs.setParams(
+            savedInstanceState?.getDouble("carbs")
+                ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        )
+        binding.insulin.setParams(
+            savedInstanceState?.getDouble("insulin")
+                ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher
+        )
         binding.recordOnlyLayout.visibility = View.GONE
         binding.insulinLabel.labelFor = binding.insulin.editTextId
         binding.carbsLabel.labelFor = binding.carbs.editTextId
@@ -133,9 +138,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.bolusColor))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.bolus_recorded_only).formatColor(context, rh, R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         if (carbsAfterConstraints > 0) {
             actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, R.attr.carbsColor))
@@ -146,9 +151,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     val action = when {
-                        insulinAfterConstraints.equals(0.0) -> Action.CARBS
-                        carbsAfterConstraints == 0          -> Action.BOLUS
-                        else                                -> Action.TREATMENT
+                        insulinAfterConstraints.equals(0.0) -> UserEntry.Action.CARBS
+                        carbsAfterConstraints == 0          -> UserEntry.Action.BOLUS
+                        else                                -> UserEntry.Action.TREATMENT
                     }
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CARBS_CORRECTION
@@ -157,7 +162,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
                     if (recordOnlyChecked) {
-                        uel.log(action, Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) rh.gs(R.string.record) else "",
+                        uel.log(action, UserEntry.Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) rh.gs(R.string.record) else "",
                                 ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
                                 ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
@@ -176,7 +181,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 )
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
-                            uel.log(action, Sources.TreatmentDialog,
+                            uel.log(action, UserEntry.Sources.TreatmentDialog,
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
                                     ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
@@ -187,7 +192,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 }
                             })
                         } else {
-                            uel.log(action, Sources.TreatmentDialog,
+                            uel.log(action, UserEntry.Sources.TreatmentDialog,
                                     ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                             if (detailedBolusInfo.carbs > 0) {
                                 disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
@@ -209,7 +214,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
     override fun onResume() {
         super.onResume()
-        if(!queryingProtection) {
+        if (!queryingProtection) {
             queryingProtection = true
             activity?.let { activity ->
                 val cancelFail = {
@@ -218,7 +223,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
-                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
         }
     }

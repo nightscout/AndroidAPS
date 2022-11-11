@@ -199,9 +199,9 @@ class InsulinDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.bolusColor))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolusrecordedonly).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.bolus_recorded_only).formatColor(context, rh, R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
         }
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
