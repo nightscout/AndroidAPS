@@ -2,12 +2,6 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_shortname">SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Is lúb díchumasaithe</string>
-    <string name="smscommunicator_loophasbeenenabled">Is lúb cumasaithe</string>
-    <string name="smscommunicator_loopisenabled">Is lúb cumasaithe</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Cealú TBR teip</string>
-    <string name="smscommunicator_loopsuspended">Lúb ar fionraí</string>
-    <string name="smscommunicator_loopresumed">Lúb atógáil</string>
     <string name="sms_delta">Deilte:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bólas:</string>
@@ -19,11 +13,9 @@
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <!-- Food-->
     <string name="food">Bia</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortfat">Saill</string>
     <string name="category">Catagóir</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
@@ -40,5 +32,27 @@
     <!-- Version Checker -->
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <!-- Actions -->
+    <!-- Safety -->
     <!-- Overview -->
+    <!-- NSClient -->
+    <string name="restart">Atosaigh</string>
+    <string name="deliver_now">Seachadadh anois</string>
+    <string name="status">Stádas:</string>
+    <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <!-- VirtualPump -->
+    <!-- Source -->
+    <string name="description_source_ns_client">Sonraí a íoslódáil ó Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Luachanna BG a fháil ó xDrip+.</string>
+    <string name="description_source_mm640g">Luachanna BG a fháil ón 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="openaps_short">OAPS</string>
+    <!-- Skins -->
 </resources>
