@@ -5,6 +5,7 @@ import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.Config
@@ -28,6 +29,7 @@ class CommandSetProfile constructor(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
+    @Inject lateinit var repository: AppRepository
 
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
@@ -49,4 +51,8 @@ class CommandSetProfile constructor(
     override fun status(): String = rh.gs(R.string.set_profile)
 
     override fun log(): String = "SET PROFILE"
+    override fun cancel() {
+        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
+        callback?.result(PumpEnactResultObject(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+    }
 }

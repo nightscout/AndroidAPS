@@ -4,6 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -21,6 +22,7 @@ class CommandSMBBolus(
 
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var repository: AppRepository
 
     override fun execute() {
         val r: PumpEnactResult
@@ -42,4 +44,8 @@ class CommandSMBBolus(
     override fun status(): String = rh.gs(R.string.smb_bolus_u, detailedBolusInfo.insulin)
 
     override fun log(): String = "SMB BOLUS ${rh.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin)}"
+    override fun cancel() {
+        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
+        callback?.result(PumpEnactResultObject(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+    }
 }

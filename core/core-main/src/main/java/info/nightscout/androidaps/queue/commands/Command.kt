@@ -1,13 +1,9 @@
 package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 abstract class Command(
@@ -18,7 +14,6 @@ abstract class Command(
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var repository: AppRepository
 
     enum class CommandType {
         BOLUS,
@@ -46,12 +41,5 @@ abstract class Command(
     abstract fun execute()
     abstract fun status(): String
     abstract fun log(): String
-
-    fun cancel() {
-        val result = PumpEnactResultObject(injector)
-        result.success = false
-        result.comment = rh.gs(R.string.connectiontimedout)
-        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(result)?.run()
-    }
+    abstract fun cancel()
 }

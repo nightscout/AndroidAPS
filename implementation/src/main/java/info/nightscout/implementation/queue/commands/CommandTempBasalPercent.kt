@@ -1,6 +1,7 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.implementation.R
@@ -35,4 +36,8 @@ class CommandTempBasalPercent(
     override fun status(): String = rh.gs(R.string.temp_basal_percent, percent, durationInMinutes)
 
     override fun log(): String = "TEMP BASAL $percent% $durationInMinutes min"
+    override fun cancel() {
+        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
+        callback?.result(PumpEnactResultObject(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+    }
 }

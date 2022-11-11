@@ -190,6 +190,7 @@ class CommandQueueImplementation @Inject constructor(
         synchronized(queue) {
             for (i in queue.indices) {
                 queue[i].cancel()
+
             }
             queue.clear()
         }

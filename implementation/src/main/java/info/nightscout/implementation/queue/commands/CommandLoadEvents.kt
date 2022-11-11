@@ -1,6 +1,7 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.implementation.R
@@ -37,4 +38,8 @@ class CommandLoadEvents(
     override fun status(): String = rh.gs(R.string.load_events)
 
     override fun log(): String = "LOAD EVENTS"
+    override fun cancel() {
+        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
+        callback?.result(PumpEnactResultObject(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+    }
 }
