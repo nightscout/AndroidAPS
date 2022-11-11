@@ -51,4 +51,5 @@
     <string name="urgent_alarm">Сигнал тревоги</string>
     <string name="info">ИНФОРМАЦИЯ</string>
     <!-- SmsCommunicator -->
+    <!-- BolusWizard -->
 </resources>
