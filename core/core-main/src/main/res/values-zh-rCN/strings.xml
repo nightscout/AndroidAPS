@@ -109,7 +109,6 @@
     <string name="paused">已暂停</string>
     <string name="invalid">无效</string>
     <string name="login">登录</string>
-    <string name="upload_now">现在上传</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
