@@ -31,7 +31,6 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.UserEntry.Action
@@ -43,6 +42,7 @@ import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineE
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
@@ -60,6 +60,7 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
@@ -384,8 +385,9 @@ class LoopPlugin @Inject constructor(
                     ) {
                         val waiting = PumpEnactResultObject(injector)
                         waiting.queued = true
-                        if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
-                        if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
+                        if (resultAfterConstraints.isTempBasalRequested) lastRun.tbrSetByPump = waiting
+                        if (resultAfterConstraints.isBolusRequested) lastRun.smbSetByPump =
+                            waiting
                         rxBus.send(EventLoopUpdateGui())
                         fabricPrivacy.logCustom("APSRequest")
                         // TBR request must be applied first to prevent situation where
@@ -532,7 +534,7 @@ class LoopPlugin @Inject constructor(
      * TODO: update pump drivers to support APS request in %
      */
     private fun applyTBRRequest(request: APSResult, profile: Profile, callback: Callback?) {
-        if (!request.tempBasalRequested) {
+        if (!request.isTempBasalRequested) {
             callback?.result(PumpEnactResultObject(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
             return
         }
@@ -622,7 +624,7 @@ class LoopPlugin @Inject constructor(
     }
 
     private fun applySMBRequest(request: APSResult, callback: Callback?) {
-        if (!request.bolusRequested()) {
+        if (!request.isBolusRequested) {
             aapsLogger.debug(LTag.APS, "No SMB requested")
             return
         }

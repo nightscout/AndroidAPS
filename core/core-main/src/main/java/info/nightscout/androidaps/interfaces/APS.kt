@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
+import info.nightscout.interfaces.aps.APSResult
 
 interface APS {
 

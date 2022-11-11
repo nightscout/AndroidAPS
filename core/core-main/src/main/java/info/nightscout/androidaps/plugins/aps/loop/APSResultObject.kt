@@ -9,6 +9,7 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobTotal
@@ -30,7 +31,7 @@ import kotlin.math.max
  * Created by mike on 09.06.2016.
  */
 @Suppress("LeakingThis")
-open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
+open class APSResultObject @Inject constructor(val injector: HasAndroidInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: Constraints
@@ -42,60 +43,30 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     @Inject lateinit var dateUtil: DateUtil
 
     var date: Long = 0
-    var reason: String = ""
-    var rate = 0.0
-    var percent = 0
-    var usePercent = false
-    var duration = 0
-    var tempBasalRequested = false
-    var iob: IobTotal? = null
-    var json: JSONObject? = JSONObject()
-    var hasPredictions = false
-    var smb = 0.0 // super micro bolus in units
-    var deliverAt: Long = 0
-    var targetBG = 0.0
-    var carbsReq = 0
-    var carbsReqWithin = 0
-    var inputConstraints: Constraint<Double>? = null
-    var rateConstraint: Constraint<Double>? = null
-    var percentConstraint: Constraint<Int>? = null
-    var smbConstraint: Constraint<Double>? = null
+    override var reason: String = ""
+    override var rate = 0.0
+    override var percent = 0
+    override var usePercent = false
+    override var duration = 0
+    override var isTempBasalRequested = false
+    override var iob: IobTotal? = null
+    override var json: JSONObject? = JSONObject()
+    override var hasPredictions = false
+    override var smb = 0.0 // super micro bolus in units
+    override var deliverAt: Long = 0
+    override var targetBG = 0.0
+    override var carbsReq = 0
+    override var carbsReqWithin = 0
+    override var inputConstraints: Constraint<Double>? = null
+    override var rateConstraint: Constraint<Double>? = null
+    override var percentConstraint: Constraint<Int>? = null
+    override var smbConstraint: Constraint<Double>? = null
 
     init {
         injector.androidInjector().inject(this)
     }
 
-    fun rate(rate: Double): APSResult {
-        this.rate = rate
-        return this
-    }
-
-    fun duration(duration: Int): APSResult {
-        this.duration = duration
-        return this
-    }
-
-    fun percent(percent: Int): APSResult {
-        this.percent = percent
-        return this
-    }
-
-    fun tempBasalRequested(tempBasalRequested: Boolean): APSResult {
-        this.tempBasalRequested = tempBasalRequested
-        return this
-    }
-
-    fun usePercent(usePercent: Boolean): APSResult {
-        this.usePercent = usePercent
-        return this
-    }
-
-    fun json(json: JSONObject?): APSResult {
-        this.json = json
-        return this
-    }
-
-    val carbsRequiredText: String
+    override val carbsRequiredText: String
         get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
 
     override fun toString(): String {
@@ -123,15 +94,20 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         } else rh.gs(R.string.nochangerequested)
     }
 
-    fun toSpanned(): Spanned {
+    override fun toSpanned(): Spanned {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(percent.toDouble()) + "% " +
-                "(" + DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
-                "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                "(" + DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +
-                "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
+            var ret: String =
+                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(
+                    percent.toDouble()
+                ) + "% " +
+                    "(" + DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
+                    "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(
+                    rate
+                ) + " U/h " +
+                    "(" + DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +
+                    "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
 
             // smb
             if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump, rh) + "<br>"
@@ -148,18 +124,18 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         } else fromHtml(rh.gs(R.string.nochangerequested))
     }
 
-    open fun newAndClone(injector: HasAndroidInjector): APSResult {
-        val newResult = APSResult(injector)
+    override fun newAndClone(injector: HasAndroidInjector): APSResult {
+        val newResult = APSResultObject(injector)
         doClone(newResult)
         return newResult
     }
 
-    protected fun doClone(newResult: APSResult) {
+    protected fun doClone(newResult: APSResultObject) {
         newResult.date = date
         newResult.reason = reason
         newResult.rate = rate
         newResult.duration = duration
-        newResult.tempBasalRequested = tempBasalRequested
+        newResult.isTempBasalRequested = isTempBasalRequested
         newResult.iob = iob
         newResult.json = JSONObject(json.toString())
         newResult.hasPredictions = hasPredictions
@@ -174,7 +150,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         newResult.targetBG = targetBG
     }
 
-    open fun json(): JSONObject? {
+    override fun json(): JSONObject? {
         val json = JSONObject()
         if (isChangeRequested) {
             json.put("rate", rate)
@@ -184,7 +160,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         return json
     }
 
-    val predictions: MutableList<GlucoseValue>
+    override val predictions: MutableList<GlucoseValue>
         get() {
             val array: MutableList<GlucoseValue> = ArrayList()
             val startTime = date
@@ -265,7 +241,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
             }
             return array
         }
-    val latestPredictionsTime: Long
+    override val latestPredictionsTime: Long
         get() {
             var latest: Long = 0
             try {
@@ -298,20 +274,17 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
             }
             return latest
         }
-    val isCarbsRequired: Boolean
-        get() = carbsReq > 0
-
-    val isChangeRequested: Boolean
+    override val isChangeRequested: Boolean
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             // closed loop mode: handle change at driver level
             if (closedLoopEnabled.value()) {
                 aapsLogger.debug(LTag.APS, "DEFAULT: Closed mode")
-                return tempBasalRequested || bolusRequested()
+                return isTempBasalRequested || isBolusRequested
             }
 
             // open loop mode: try to limit request
-            if (!tempBasalRequested && !bolusRequested()) {
+            if (!isTempBasalRequested && !isBolusRequested) {
                 aapsLogger.debug(LTag.APS, "FALSE: No request")
                 return false
             }
@@ -397,6 +370,4 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 }
             }
         }
-
-    fun bolusRequested(): Boolean = smb > 0.0
 }

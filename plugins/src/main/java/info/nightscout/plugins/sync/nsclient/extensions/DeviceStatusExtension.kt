@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.plugins.sync.nsclient.extensions
 
 import android.os.Build
 import info.nightscout.androidaps.interfaces.IobCobCalculator

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
@@ -33,5 +33,5 @@ interface DetermineBasalAdapterInterface {
                 isSaveCgmSource: Boolean = false
     )
 
-    operator fun invoke(): APSResult?
+    operator fun invoke(): APSResultObject?
 }
