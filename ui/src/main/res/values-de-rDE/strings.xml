@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
+    <string name="constraint_applied">Beschränkung angewendet!</string>
+    <string name="bolus_constraint_applied">Bolus-Beschränkung angewendet</string>
+    <string name="carbs_constraint_applied">Kohlenhydrat-Beschränkung erreicht</string>
+    <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Dialog abgebrochen</string>
     <string name="start_activity_tt">Starte Aktivitäts-TT</string>
     <string name="start_eating_soon_tt">Starte Essens-TT</string>
@@ -17,7 +20,44 @@
     <string name="submit">Senden</string>
     <string name="age">Alter</string>
     <string name="weight_label">Gewicht</string>
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Gesamt</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <string name="calculation_short">Berech.</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Kohlenhydrate:</string>
+    <string name="treatments_iobtotal_label_string">Gesamt IOB:</string>
+    <string name="tempbasals_realduration_label_string">Dauer:</string>
+    <string name="tempbasals_netratio_label_string">Verhältnis:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Korr</string>
+    <string name="prime">Füllen</string>
+    <string name="profile_changes">Profilwechsel</string>
+    <string name="tempt_targets">Temporäre Ziele</string>
+    <string name="carbs_and_bolus">Kohlenhydrate &amp; Bolus</string>
+    <string name="show_invalidated_records">Zeige ungültige / gelöschte Einträge</string>
+    <string name="hide_invalidated_records">Verberge ungültige / gelöschte Einträge</string>
+    <string name="refresh_from_nightscout">Aktualisiere von Nightscout</string>
+    <string name="refresheventsfromnightscout">Mit NIghtscout-Daten aktualisieren</string>
+    <string name="show_invalidated">Zeige Ungültige</string>
+    <string name="hide_invalidated">Verstecke Ungültige</string>
+    <string name="hide_loop">Verberge Loop</string>
+    <string name="show_loop">Zeige Loop an</string>
+    <string name="clone_label">Klonen</string>
+    <string name="show_loop_records">Zeige Loop Datensätze</string>
+    <string name="show_hide_records">Verberge Loop Datensätze</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>
