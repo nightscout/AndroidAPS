@@ -3,19 +3,19 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputBg
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
-
 import org.json.JSONObject
 
 class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {

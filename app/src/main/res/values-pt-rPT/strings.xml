@@ -31,19 +31,6 @@
     <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
-    <string name="treatments_carbs_label_string">Hidratos:</string>
-    <string name="treatments_iob_label_string">IA:</string>
-    <string name="treatments_iobtotal_label_string">IA Total:</string>
-    <string name="treatments_iobactivitytotal_label_string">Atividade Total da IA:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Rácio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IA:</string>
-    <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
-    <string name="treatments_wizard_tt_label">AT</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="bolus_iob_label">Bólus - IA</string>
     <string name="openapsma_run">Executar agora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execução</string>
@@ -79,7 +66,6 @@
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
-    <string name="overview_treatment_label">Tratamento</string>
     <string name="changeyourinput">Altere o seu input!</string>
     <string name="configbuilder_bgsource">Fonte da Glicose</string>
     <string name="xdrip">xDrip+</string>
@@ -90,7 +76,6 @@
     <string name="openloop_newsuggestion">Disponível nova sugestão</string>
     <string name="carbssuggestion">Sugestão de Hidratos</string>
     <string name="unsupportednsversion">Versão sem suporte do Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">Basal IA</string>
     <string name="carb_time_label">Hora dos Hidratos</string>
     <string name="profile_label">Perfil</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
@@ -137,7 +122,6 @@
     <string name="overview_editquickwizard_valid">Válido:</string>
     <string name="overview_editquickwizardlistactivity_add">Adicionar</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">Refeição</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Acções</string>
     <string name="ns_upload_only">(PERIGOSO DESACTIVAR) Envio NS apenas</string>
@@ -165,8 +149,6 @@
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Utilizar função Autosens</string>
-    <string name="refresheventsfromnightscout">Atualizar a partir do NS</string>
-    <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
     <string name="actions_shortname">ACÇ</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -239,9 +221,6 @@
     <string name="duration10h">10 horas</string>
     <string name="resume">Retomar</string>
     <string name="reconnect">Re-ligar a Bomba</string>
-    <string name="bg_trend_label">Tendência 15 min</string>
-    <string name="treatments_wizard_cob_label">HCA</string>
-    <string name="superbolus">Superbólus</string>
     <string name="ns_logappstartedevent">Registar inicio da app no NS</string>
     <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
     <string name="configbuilder_insulin_description">Qual o tipo de insulina que está a utilizar?</string>
@@ -456,7 +435,6 @@
     <string name="virtualpump_type">Tipo da Bomba Virtual</string>
     <string name="virtualpump_definition">Definição da Bomba</string>
     <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Prolongado: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nDBT: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Definições Ecrã</string>
     <string name="wear_general_settings">Definições Gerais</string>
@@ -506,8 +484,6 @@
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do ClienteNS. Pondere reiniciar o NS e ClienteNS.</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança para uma nova basal temporária for superior a este valor em %. O valor padrão é 20%</string>
@@ -540,17 +516,12 @@
     <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é administada. Útil com o algoritmo SMB.</string>
     <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
-    <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IHC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
     <string name="objectives_button_unfinish">Limpar terminado</string>
     <string name="objectives_button_unstart">Limpar iniciado</string>
     <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
     <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
-    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -604,7 +575,6 @@
     <string name="chart_menu">Menu do Gráfico</string>
     <string name="clear_filter">Limpar filtros</string>
     <string name="cannula">Cânula</string>
-    <string name="userentry">Entrada de Utilizador</string>
     <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>
     <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para que possamos contatá-lo em casos urgentes. É opcional.</string>
     <string name="email_address">Endereço de email</string>
@@ -612,7 +582,6 @@
     <string name="privacy_summary">Opcionalmente pode fornecer um endereço de e-mail se quiser ser notificado sobre os erros da app. Este não é um serviço automatizado. Será contactado por desenvolvedores em situações perigosas.</string>
     <string name="full_sync">Sincronização completa</string>
     <string name="full_sync_comment">Sincronização completa? Pode levar muitas horas até terminar e não irá ver dados novos no NS.</string>
-    <string name="prime">Purgar</string>
     <string name="ns_sync_options">Sincronização</string>
     <string name="ns_upload_summary">Perfil, bolus, hidratos de carbono e basais temporárias são enviados para o NS</string>
     <string name="ns_upload">Enviar dados para o NS</string>

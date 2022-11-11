@@ -4,13 +4,13 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
+import info.nightcout.shared.impl.di.SharedImplModule
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.combo.di.ComboModule
 import info.nightscout.androidaps.dana.di.DanaHistoryModule
 import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
-import info.nightscout.androidaps.database.DatabaseModule
 import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
@@ -22,10 +22,10 @@ import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
+import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.rx.di.RxModule
-import info.nightscout.rx.di.SharedImplModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton

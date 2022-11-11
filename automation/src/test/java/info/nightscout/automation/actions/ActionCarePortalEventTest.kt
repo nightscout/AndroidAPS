@@ -1,8 +1,8 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.database.impl.transactions.Transaction
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.elements.InputCarePortalMenu
 import info.nightscout.automation.elements.InputDuration
@@ -23,7 +23,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
         `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
         `when`(
             rh.gs(
-                ArgumentMatchers.eq(info.nightscout.androidaps.core.R.string.careportal_note_message),
+                ArgumentMatchers.eq(info.nightscout.core.main.R.string.careportal_note_message),
                 ArgumentMatchers.anyString()
             )
         ).thenReturn("Note : %s")
@@ -40,7 +40,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.careportal, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.careportal, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
@@ -48,7 +48,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.drawable.ic_cp_note, sut.icon())
+        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_cp_note, sut.icon())
     }
 
     @Test fun doActionTest() {

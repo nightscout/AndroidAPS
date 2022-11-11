@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import org.joda.time.Duration;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;
@@ -14,8 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Be
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.TimerAlertTrigger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.UnitsRemainingAlertTrigger;
-
-import static org.junit.Assert.assertArrayEquals;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class ConfigureAlertsCommandTest {
     @Test

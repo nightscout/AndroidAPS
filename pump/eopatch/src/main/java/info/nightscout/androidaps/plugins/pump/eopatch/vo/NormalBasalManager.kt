@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BasalStatus
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject

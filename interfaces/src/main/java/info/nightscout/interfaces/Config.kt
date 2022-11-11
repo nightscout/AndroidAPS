@@ -11,4 +11,5 @@ interface Config {
     val VERSION_NAME: String
     val DEBUG: Boolean
     val currentDeviceModelString : String
+    val appName: Int
 }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
@@ -13,6 +12,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import java.util.Locale
@@ -426,15 +426,15 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         val data = entry.head
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus = BolusDTO(atechDateTime = entry.atechDateTime,
-                requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
-                deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0,
-                duration = data.get(6) * 30)
+                             requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
+                             deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0,
+                             duration = data.get(6) * 30)
             bolus.insulinOnBoard = ByteUtil.toInt(data.get(4), data.get(5)) / 40.0
         } else {
             bolus = BolusDTO(atechDateTime = entry.atechDateTime,
-                requestedAmount = ByteUtil.asUINT8(data.get(0)) / 10.0,
-                deliveredAmount = ByteUtil.asUINT8(data.get(1)) / 10.0,
-                duration = ByteUtil.asUINT8(data.get(2)) * 30)
+                             requestedAmount = ByteUtil.asUINT8(data.get(0)) / 10.0,
+                             deliveredAmount = ByteUtil.asUINT8(data.get(1)) / 10.0,
+                             duration = ByteUtil.asUINT8(data.get(2)) * 30)
         }
         bolus.bolusType = if (bolus.duration > 0) PumpBolusType.Extended else PumpBolusType.Normal
         entry.addDecodedData("Object", bolus)

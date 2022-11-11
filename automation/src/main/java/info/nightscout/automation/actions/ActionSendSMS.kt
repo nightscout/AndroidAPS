@@ -3,13 +3,13 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.interfaces.SmsCommunicator
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import javax.inject.Inject
 

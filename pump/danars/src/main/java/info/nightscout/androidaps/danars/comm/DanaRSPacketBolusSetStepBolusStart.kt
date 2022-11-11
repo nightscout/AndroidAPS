@@ -3,8 +3,8 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 

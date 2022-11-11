@@ -5,22 +5,22 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.database.entities.OfflineEvent
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ConfigBuilder
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileSource
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.interfaces.SmsCommunicator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
@@ -180,7 +180,7 @@ ActionsTestBase : TestBaseWithProfile() {
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
 
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.error)).thenReturn("Error")
+        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(info.nightscout.core.main.R.string.error)).thenReturn("Error")
     }
 }

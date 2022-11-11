@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType.Companion.getByCode
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import okhttp3.internal.and
 import org.joda.time.LocalDateTime
 import java.util.Arrays
 
@@ -190,10 +189,9 @@ class MedtronicCGMSHistoryDecoder constructor(
     }
 
     private fun decodeCalBGForGH(entry: CGMSHistoryEntry) {
-        val amount: Int = entry.getRawDataByIndex(3) and 32 shl 3 or entry.getRawDataByIndexInt(5)
+        val amount: Int = entry.getRawDataByIndex(3).toInt() and 32 shl 3 or entry.getRawDataByIndexInt(5)
         //
-        val originType: String
-        originType = when (entry.getRawDataByIndexInt(3) shr 5 and 3) {
+        val originType: String = when (entry.getRawDataByIndexInt(3) shr 5 and 3) {
             0x00 -> "rf"
             else -> "unknown"
         }

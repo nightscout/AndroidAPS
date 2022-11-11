@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">Prijímať hodnoty glykémií z xDrip+.</string>
     <string name="description_treatments">Ukladá všetky ošetrenia do databázy</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
-    <string name="treatments_insulin_label_string">Inzulín:</string>
-    <string name="treatments_carbs_label_string">Sacharidy:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">Celkový IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Celková aktivita IOB:</string>
-    <string name="tempbasals_realduration_label_string">Trv:</string>
-    <string name="tempbasals_netratio_label_string">Pomer:</string>
-    <string name="tempbasals_netinsulin_label_string">Inz:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Korekcia</string>
-    <string name="bolus_iob_label">Bolusový IOB</string>
     <string name="openapsma_run">Spustiť teraz</string>
     <string name="vitualpump_label">Virtuálna pumpa</string>
     <string name="openapsma_lastrun_label">Posledné spustenie</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">Modul je deaktivovaný</string>
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
-    <string name="overview_treatment_label">Bolus</string>
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">Dostupné nové doporučenie</string>
     <string name="carbssuggestion">Návrh sacharidov</string>
     <string name="unsupportednsversion">Nepodporovaná verzia Nighscoutu</string>
-    <string name="treatments_wizard_basaliob_label">Bazálny IOB</string>
     <string name="carb_time_label">Čas jedla</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
@@ -144,7 +129,6 @@
     <string name="overview_editquickwizard_valid">Platnosť:</string>
     <string name="overview_editquickwizardlistactivity_add">Pridať</string>
     <string name="overview_quickwizard_item_edit_button">Upraviť</string>
-    <string name="mealbolus">Bolus</string>
     <string name="correctionbous">Korekcia</string>
     <string name="actions">Akcie</string>
     <string name="ns_upload_only">(DEAKTIVOVANIE NEBEZPEČNÉ) Iba odosielanie do NS</string>
@@ -173,8 +157,6 @@
     <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
     <string name="openapsma_scriptdebugdata_label">Ladenie skriptu</string>
     <string name="openapsama_useautosens">Použi automatickú detekciu citlivosti</string>
-    <string name="refresheventsfromnightscout">Aktualizovať z NS</string>
-    <string name="deletefuturetreatments">Zmazať ošetrenia v budúcnosti</string>
     <string name="actions_shortname">AKCIA</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">OKRUH</string>
@@ -248,9 +230,6 @@
     <string name="duration10h">10 hodiny</string>
     <string name="resume">Pokračovať</string>
     <string name="reconnect">Znovu pripojiť pumpu</string>
-    <string name="bg_trend_label">15min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Zaznamenávať spustenie aplikácie do NS</string>
     <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
     <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
@@ -475,7 +454,6 @@
     <string name="virtualpump_type">Typ virtuálnej pumpy</string>
     <string name="virtualpump_definition">Definícia pumpy</string>
     <string name="virtualpump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Nastavenie wizardu</string>
     <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>
     <string name="wear_display_settings">Nastavenie zobrazenia</string>
     <string name="wear_general_settings">Všeobecné nastavenia</string>
@@ -511,9 +489,6 @@
     <string name="resistance_lowers_target_summary">Ak je zistená rezistancia, znížiť cieľovú hladinu glykémie</string>
     <string name="sensitivity_raises_target_title">Citlivosť zvyšuje cieľ</string>
     <string name="sensitivity_raises_target_summary">Ak je zistená vyššia citlivosť, zvýši cieľovú hladinu glykémie</string>
-    <string name="careportal_removestartedevents">Odstrániť všetky záznamy AAPS spustený</string>
-    <string name="show_invalidated">Zobraziť neplatné</string>
-    <string name="hide_invalidated">Skryť zneplatnené</string>
     <string name="remove_items">Odstrániť položky</string>
     <string name="sort_items">Zoradiť položky</string>
     <string name="storedsettingsfound">Nájdené uložené nastavenia</string>
@@ -536,8 +511,6 @@
     <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
-    <string name="treatments_wizard_total_label">Spolu</string>
-    <string name="calculation_short">Kalk</string>
     <string name="sendlogfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
     <string name="loop_openmode_min_change">Minimálna požiadavka na zmenu [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
@@ -571,17 +544,12 @@
     <string name="partialboluswizard">Podaj túto časť z výsledku kalkulácie [%]</string>
     <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
     <string name="increasingmaxbasal">Zvýšenie maximálnej hodnoty bazálu, pretože nastavenie je nižšie, než je vaša maximálna hodnota bazálu v profile</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Vybrané:</string>
     <string name="unitsnosemicolon">Jednotky</string>
     <string name="objectives_button_unfinish">Vymazanie dokončené</string>
     <string name="objectives_button_unstart">Vymazanie začaté</string>
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, v ktorých chcete zobraziť hodnoty</string>
-    <string name="copytolocalprofile">Vytvoriť z tohoto profilu nový lokálny profil?</string>
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="invalidpct">Neplatný vstup %</string>
@@ -638,7 +606,6 @@
     <string name="chart_menu">Grafové menu</string>
     <string name="clear_filter">Vyčistiť filter</string>
     <string name="cannula">Kanyla</string>
-    <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
     <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
     <string name="email_address">Emailová adresa</string>
@@ -646,7 +613,6 @@
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
     <string name="full_sync">Úplná synchronizácia</string>
     <string name="full_sync_comment">Úplná synchronizácia? Môže to trvať niekoľko hodín a kým skončí, neuvidíte nové dáta v NS.</string>
-    <string name="prime">Plnenie</string>
     <string name="ns_sync_options">Synchronizácia</string>
     <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály sú nahrávané do NS</string>
     <string name="ns_upload">Nahrávať dáta do NS</string>
@@ -720,22 +686,9 @@
     <string name="wear_unknown_action_string">Neznámy príkaz k akcii:</string>
     <string name="overview_editquickwizard_percentage">Percentuálny podiel</string>
     <string name="app_default">Predvolené aplikáciou</string>
-    <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
-    <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
-    <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
-    <string name="select_for_removal">Vyberte pre odstránenie</string>
-    <string name="profile_changes">Zmeny profilu</string>
-    <string name="tempt_targets">Dočasné ciele</string>
-    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
-    <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položku(y)</string>
-    <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
-    <string name="hide_loop">Skryť uzavretý okruh</string>
-    <string name="show_loop">Zobraziť uzavretý okruh</string>
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
-    <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
-    <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <string name="loop_status">Stav uzavretého okruhu</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="profile1">Profil 1</string>

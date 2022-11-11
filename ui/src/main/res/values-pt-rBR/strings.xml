@@ -19,4 +19,6 @@
     <string name="weight_label">Peso</string>
     <string name="survey_comment">Nota: Apenas os dados visíveis nesta tela serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Você pode enviar dados novamente se o perfil principal for alterado, mas deixe-o rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

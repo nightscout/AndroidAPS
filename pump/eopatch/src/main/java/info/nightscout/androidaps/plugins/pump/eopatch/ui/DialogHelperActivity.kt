@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.os.Bundle
 import info.nightscout.androidaps.activities.DialogAppCompatActivity
-import info.nightscout.androidaps.core.R
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
 
 class DialogHelperActivity : DialogAppCompatActivity() {

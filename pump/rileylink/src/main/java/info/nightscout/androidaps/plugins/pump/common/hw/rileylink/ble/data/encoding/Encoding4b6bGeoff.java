@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.logging.AAPSLogger;
 
 /**

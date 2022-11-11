@@ -12,19 +12,17 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.Food
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InvalidateFoodTransaction
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.FoodFragmentBinding
 import info.nightscout.plugins.databinding.FoodItemBinding
@@ -33,6 +31,8 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventFoodDatabaseChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -190,11 +190,11 @@ class FoodFragment : DaggerFragment() {
             holder.binding.name.text = food.name
             holder.binding.portion.text = food.portion.toString() + food.unit
             holder.binding.carbs.text = food.carbs.toString() + rh.gs(R.string.shortgramm)
-            holder.binding.fat.text = rh.gs(R.string.shortfat) + ": " + food.fat + rh.gs(R.string.shortgramm)
+            holder.binding.fat.text = rh.gs(R.string.short_fat) + ": " + food.fat + rh.gs(R.string.shortgramm)
             holder.binding.fat.visibility = food.fat.isNotZero().toVisibility()
-            holder.binding.protein.text = rh.gs(R.string.shortprotein) + ": " + food.protein + rh.gs(R.string.shortgramm)
+            holder.binding.protein.text = rh.gs(R.string.short_protein) + ": " + food.protein + rh.gs(R.string.shortgramm)
             holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
-            holder.binding.energy.text = rh.gs(R.string.shortenergy) + ": " + food.energy + rh.gs(R.string.shortkilojoul)
+            holder.binding.energy.text = rh.gs(R.string.short_energy) + ": " + food.energy + rh.gs(R.string.short_kilo_joul)
             holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
             holder.binding.icRemove.tag = food
             holder.binding.icCalculator.tag = food

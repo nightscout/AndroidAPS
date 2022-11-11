@@ -130,7 +130,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
-    <string name="clone_label">Clonează</string>
     <string name="basal_short">BZL</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Date recalculate utilizate</string>

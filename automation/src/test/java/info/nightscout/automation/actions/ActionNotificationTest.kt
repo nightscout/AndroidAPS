@@ -4,10 +4,10 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.database.impl.transactions.Transaction
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
@@ -43,8 +43,8 @@ class ActionNotificationTest : TestBase() {
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.notification)).thenReturn("Notification")
+        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(info.nightscout.core.main.R.string.notification)).thenReturn("Notification")
         `when`(
             rh.gs(
                 ArgumentMatchers.eq(R.string.notification_message),
@@ -58,7 +58,7 @@ class ActionNotificationTest : TestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.notification, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.notification, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

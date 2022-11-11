@@ -32,19 +32,6 @@
     <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
     <string name="description_treatments">Salva todos os tratamentos que foram feitos</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
-    <string name="treatments_carbs_label_string">Carboidratos:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_iobactivitytotal_label_string">Atividade Total IOB:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Rácio:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="bolus_iob_label">I.A de Bolus</string>
     <string name="openapsma_run">Executar agora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
     <string name="openapsma_lastrun_label">Última execução</string>
@@ -80,7 +67,6 @@
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="constraints_violation">Violação das restrições</string>
     <string name="setbasalquestion">Aceitar nova basal temporária:</string>
-    <string name="overview_treatment_label">Tratamento</string>
     <string name="changeyourinput">Altere sua entrada!</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
     <string name="xdrip">xDrip+</string>
@@ -91,7 +77,6 @@
     <string name="openloop_newsuggestion">Nova sugestão disponível</string>
     <string name="carbssuggestion">Sugestão de Carbs</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="carb_time_label">Hora do carboidrato</string>
     <string name="profile_label">Perfil</string>
     <string name="overview_tempbasal_button">Basal Temporária</string>
@@ -138,7 +123,6 @@
     <string name="overview_editquickwizard_valid">Válido:</string>
     <string name="overview_editquickwizardlistactivity_add">Adicionar</string>
     <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="mealbolus">Refeição</string>
     <string name="correctionbous">Correção</string>
     <string name="actions">Ações</string>
     <string name="ns_upload_only">(PERIGOSO PARA DESATIVAR) somente upload para NS</string>
@@ -166,8 +150,6 @@
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usar função Autosens</string>
-    <string name="refresheventsfromnightscout">Atualizar de NS</string>
-    <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -241,9 +223,6 @@
     <string name="duration10h">10 horas</string>
     <string name="resume">Continuar</string>
     <string name="reconnect">Reconectar Bomba</string>
-    <string name="bg_trend_label">Tendência 15 min</string>
-    <string name="treatments_wizard_cob_label">CA</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Registrar início do app no NS</string>
     <string name="restartingapp">Saindo do app para aplicar as configurações.</string>
     <string name="configbuilder_insulin_description">Que tipo de insulina está usando?</string>
@@ -432,7 +411,6 @@
     <string name="virtualpump_type">Tipo da Bomba Virtual</string>
     <string name="virtualpump_definition">Definição da Bomba</string>
     <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Estendido: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nTBR: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Mostrar Configurações</string>
     <string name="wear_general_settings">Configurações gerais</string>
@@ -478,8 +456,6 @@
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
@@ -512,16 +488,12 @@
     <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
     <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
-    <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
     <string name="objectives_button_unfinish">Limpeza terminado</string>
     <string name="objectives_button_unstart">Limpeza iniciado</string>
     <string name="doyouwantresetstart">Deseja reiniciar o objetivo? Pode perder seu progresso.</string>
     <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
-    <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="low_mark_comment">Valor mais baixo da área de intervalo (apenas exibição)</string>
     <string name="high_mark_comment">Valor mais alto da área de intervalo (apenas exibição)</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -571,7 +543,6 @@
     <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
     <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="enablebolusreminder">Ativar lembrete de bolus</string>
-    <string name="prime">Purgar/Preencher</string>
     <string name="ns_upload_summary">Perfis, bolus, carboidratos, basais temporários são enviados para NS</string>
     <string name="ns_receive_tbr_eb">Receber taxa basal temporária (TBT) e bolus estendido (e-bolus ou BE)</string>
     <string name="ns_receive_tbr_eb_summary">Aceitar taxa basal temporária (TBT) e bolus estendido (BE) informados por outra instância</string>
@@ -610,14 +581,7 @@
     <string name="wizard_no_cob">CA desconhecido! Leitura de Glicemia faltando ou reinício recente do app?</string>
     <string name="wizard_explain_cob">CA: %1$.0fg %2$.2fU</string>
     <string name="wizard_explain_trend">Tendência 15min: %1$.2fU</string>
-    <string name="show_invalidated_records">Exibir registros invalidados / removidos</string>
-    <string name="hide_invalidated_records">Ocultar registros invalidados / removidos</string>
-    <string name="refresh_from_nightscout">Atualizar do NS (Nightscout)</string>
-    <string name="no_records_available">Nenhum registro disponível</string>
-    <string name="show_loop">Exibir loop</string>
     <string name="sort_label">Ordenar</string>
-    <string name="show_loop_records">Exibir registros do loop</string>
-    <string name="show_hide_records">Ocultar registros do loop</string>
     <string name="loop_status">Status do loop</string>
     <string name="a11y_open_settings">abrir configurações</string>
     <string name="a11y_set_carb_timer">definir alarme temporizador de carboidrato</string>

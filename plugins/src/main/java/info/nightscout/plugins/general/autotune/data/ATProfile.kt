@@ -1,27 +1,29 @@
 package info.nightscout.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Insulin
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.core.main.R
+import info.nightscout.core.profile.ProfileStoreObject
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.database.entities.data.Block
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.utils.T
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -178,7 +180,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("defaultProfile", profilename)
             json.put("store", store)
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
-            profileStore = ProfileStore(injector, json, dateUtil)
+            profileStore = ProfileStoreObject(injector, json, dateUtil)
         } catch (e: JSONException) {
         }
         return profileStore

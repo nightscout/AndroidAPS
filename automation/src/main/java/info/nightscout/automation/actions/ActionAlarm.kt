@@ -6,13 +6,14 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus
 import org.json.JSONObject
 import javax.inject.Inject
@@ -23,6 +24,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var context: Context
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var timerUtil: TimerUtil
+    @Inject lateinit var config: Config
 
     var text = InputString()
 
@@ -38,7 +40,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
-            ?: rh.gs(R.string.app_name))
+            ?: rh.gs(config.appName))
         callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
     }
 

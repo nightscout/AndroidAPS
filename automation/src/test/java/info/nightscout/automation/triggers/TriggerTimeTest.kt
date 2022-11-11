@@ -1,7 +1,7 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
@@ -48,7 +48,7 @@ class TriggerTimeTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.time, TriggerTime(injector).friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.time, TriggerTime(injector).friendlyName())
     }
 
     @Test fun friendlyDescriptionTest() {
@@ -56,6 +56,6 @@ class TriggerTimeTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.androidaps.core.R.drawable.ic_access_alarm_24dp), TriggerTime(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp), TriggerTime(injector).icon())
     }
 }

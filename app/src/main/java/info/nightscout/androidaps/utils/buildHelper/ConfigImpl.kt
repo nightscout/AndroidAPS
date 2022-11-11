@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils.buildHelper
 
 import android.os.Build
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.R
 import info.nightscout.interfaces.Config
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,4 +21,5 @@ class ConfigImpl @Inject constructor() : Config {
 
     override val currentDeviceModelString =
         Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
+    override val appName: Int = R.string.app_name
 }

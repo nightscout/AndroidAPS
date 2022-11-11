@@ -139,7 +139,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
-    <string name="clone_label">克隆</string>
     <string name="basal_short">基础率</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">重新计算的数据</string>

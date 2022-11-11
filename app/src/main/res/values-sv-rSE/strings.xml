@@ -33,19 +33,6 @@ Eversense-appen.</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
     <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
     <string name="description_treatments">Spara alla behandlingar som gjorts</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
-    <string name="treatments_carbs_label_string">KH:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">IOB fr bolus:</string>
-    <string name="treatments_iobactivitytotal_label_string">Insulinaktivitet (5m):</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Tot:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Korrektion</string>
-    <string name="bolus_iob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>
     <string name="vitualpump_label">Virtuell pump</string>
     <string name="openapsma_lastrun_label">Senaste beräkning</string>
@@ -81,7 +68,6 @@ Eversense-appen.</string>
     <string name="openapsma_disabled">Insticksprogram inaktiverat</string>
     <string name="constraints_violation">Begränsning nådd</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
-    <string name="overview_treatment_label">Behandling</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="xdrip">xDrip+</string>
@@ -92,7 +78,6 @@ Eversense-appen.</string>
     <string name="openloop_newsuggestion">Ny rekommendation tillgänglig</string>
     <string name="carbssuggestion">KH-förslag</string>
     <string name="unsupportednsversion">Versionen av Nightscout stöds inte</string>
-    <string name="treatments_wizard_basaliob_label">IOB från basal</string>
     <string name="carb_time_label">KH-tid</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Temp basal</string>
@@ -139,7 +124,6 @@ Eversense-appen.</string>
     <string name="overview_editquickwizard_valid">Giltig:</string>
     <string name="overview_editquickwizardlistactivity_add">Lägg till</string>
     <string name="overview_quickwizard_item_edit_button">Ändra</string>
-    <string name="mealbolus">Måltid</string>
     <string name="correctionbous">Korrektion</string>
     <string name="actions">Åtgärder</string>
     <string name="ns_upload_only">(INAKTIVERAD KAN MEDFÖRA FARA) NS-Endast uppladdning</string>
@@ -168,8 +152,6 @@ Eversense-appen.</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
     <string name="openapsma_scriptdebugdata_label">Debug</string>
     <string name="openapsama_useautosens">Använd autosens</string>
-    <string name="refresheventsfromnightscout">Uppdatera från NS</string>
-    <string name="deletefuturetreatments">Ta bort behandlingar från framtiden</string>
     <string name="actions_shortname">Act</string>
     <string name="configbuilder_shortname">Konf</string>
     <string name="loop_shortname">Loop</string>
@@ -243,9 +225,6 @@ Eversense-appen.</string>
     <string name="duration10h">10 tim</string>
     <string name="resume">Återuppta</string>
     <string name="reconnect">Återanslut Pump</string>
-    <string name="bg_trend_label">15 min trend</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Rapportera appstart till Nightscout</string>
     <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
     <string name="configbuilder_insulin_description">Vilken typ av insulin använder du?</string>
@@ -461,7 +440,6 @@ Eversense-appen.</string>
     <string name="virtualpump_type">Typ av virtuell pump</string>
     <string name="virtualpump_definition">Pumpdefinition</string>
     <string name="virtualpump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Kalkylatorinställningar</string>
     <string name="wear_wizard_settings_summary">Kalkyler inkluderade i resultatet</string>
     <string name="wear_display_settings">Visningsinställningar</string>
     <string name="wear_general_settings">Generella inställningar</string>
@@ -511,8 +489,6 @@ Eversense-appen.</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
     <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
-    <string name="treatments_wizard_total_label">Total</string>
-    <string name="calculation_short">Kalkyl</string>
     <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
     <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
@@ -545,17 +521,12 @@ Eversense-appen.</string>
     <string name="partialboluswizard">Direkt bolus [%]</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
     <string name="increasingmaxbasal">Ökar maximalt basaldos eftersom inställningen är lägre än din maximala basal i profilen</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Valt:</string>
     <string name="unitsnosemicolon">Enheter</string>
     <string name="objectives_button_unfinish">Rensa avslutade</string>
     <string name="objectives_button_unstart">Rensa påbörjade</string>
     <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
     <string name="setupwizard_units_prompt">Välj enheter du vill visa värden i</string>
-    <string name="copytolocalprofile">Skapa kopia av denna profil?</string>
     <string name="low_mark_comment">Nedre värdet för målområde (endast visning)</string>
     <string name="high_mark_comment">Övre värdet för målområde (endast visning)</string>
     <string name="invalidpct">Ogiltig %-inmatning</string>
@@ -609,7 +580,6 @@ Eversense-appen.</string>
     <string name="chart_menu">Diagrammeny</string>
     <string name="clear_filter">Rensa filter</string>
     <string name="cannula">Kanyl</string>
-    <string name="userentry">Angivet av användare</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
     <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="email_address">E-postadress</string>
@@ -617,7 +587,6 @@ Eversense-appen.</string>
     <string name="privacy_summary">Du kan ange valfri e-postadress om du vill få meddelanden om appkrascher. Det här är ingen automatiserad tjänst. Du kommer att kontaktas av utvecklare i farliga situationer.</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
-    <string name="prime">Förfyllning</string>
     <string name="ns_sync_options">Synkronisering</string>
     <string name="ns_upload_summary">Profiler, bolus, kolhydrater och temp basaler laddas upp till NS</string>
     <string name="ns_upload">Ladda upp data till NS</string>

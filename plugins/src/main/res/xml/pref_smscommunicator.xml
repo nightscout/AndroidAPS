@@ -17,13 +17,13 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_smscommunicator_remote_commands_allowed"
-            android:title="@string/smscommunicator_remotecommandsallowed" />
+            android:title="@string/smscommunicator_remote_commands_allowed" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="15"
             android:key="@string/key_smscommunicator_remote_bolus_min_distance"
-            android:summary="@string/smscommunicator_remotebolusmindistance_summary"
-            android:title="@string/smscommunicator_remotebolusmindistance"
+            android:summary="@string/smscommunicator_remote_bolus_min_distance_summary"
+            android:title="@string/smscommunicator_remote_bolus_min_distance"
             validate:maxNumber="60"
             validate:minNumber="3"
             validate:testType="numericRange" />
@@ -45,8 +45,8 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_smscommunicator_report_pump_unreachable"
-            android:summary="@string/smscommunicator_report_pump_ureachable_summary"
-            android:title="@string/smscommunicator_pump_ureachable" />
+            android:summary="@string/smscommunicator_report_pump_unreachable_summary"
+            android:title="@string/smscommunicator_pump_unreachable" />
 
     </PreferenceCategory>
 

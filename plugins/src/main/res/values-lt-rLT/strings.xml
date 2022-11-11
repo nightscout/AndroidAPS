@@ -133,7 +133,6 @@
     <string name="ic_short">IA</string>
     <string name="isf_short">JIF</string>
     <string name="target_short">TIKSLAS</string>
-    <string name="clone_label">Klonuoti</string>
     <string name="basal_short">VB</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>

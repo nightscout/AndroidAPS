@@ -1,18 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response;
 
-import org.joda.time.Duration;
-import org.junit.Test;
-
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import org.joda.time.Duration;
+import org.junit.Test;
+
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class StatusResponseTest {
     // TODO add /extend tests

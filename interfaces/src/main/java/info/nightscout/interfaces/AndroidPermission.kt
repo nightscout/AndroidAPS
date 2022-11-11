@@ -2,6 +2,7 @@ package info.nightscout.interfaces
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 
 interface AndroidPermission {
 

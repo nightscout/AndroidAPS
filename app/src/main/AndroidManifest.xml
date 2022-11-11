@@ -172,15 +172,11 @@
             </intent-filter>
         </service>
         <service
-            android:name=".plugins.general.nsclient.services.NSClientService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".plugins.general.overview.notifications.DismissNotificationService"
+            android:name="info.nightscout.plugins.general.overview.notifications.DismissNotificationService"
             android:exported="false" />
 
         <service android:name=".plugins.general.persistentNotification.DummyService" />

@@ -33,19 +33,6 @@
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
     <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
     <string name="description_treatments">שמירת כלל הטיפולים שנעשו</string>
-    <string name="treatments_insulin_label_string">אינסולין:</string>
-    <string name="treatments_carbs_label_string">פחמימות:</string>
-    <string name="treatments_iob_label_string">אינסולין פעיל:</string>
-    <string name="treatments_iobtotal_label_string"> אינסולין פעיל כולל:</string>
-    <string name="treatments_iobactivitytotal_label_string">פעילות אינסולין פעיל כוללת:</string>
-    <string name="tempbasals_realduration_label_string">משך:</string>
-    <string name="tempbasals_netratio_label_string">יחס:</string>
-    <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">תיקון</string>
-    <string name="bolus_iob_label">בולוס פעיל</string>
     <string name="openapsma_run">בצע</string>
     <string name="vitualpump_label">משאבה וירטואלית</string>
     <string name="openapsma_lastrun_label">ההפעלה האחרונה</string>
@@ -81,7 +68,6 @@
     <string name="openapsma_disabled">התוסף אינו זמין</string>
     <string name="constraints_violation">הפרת מגבלות</string>
     <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
-    <string name="overview_treatment_label">טיפול</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="xdrip">xDrip+</string>
@@ -92,7 +78,6 @@
     <string name="openloop_newsuggestion">הצעה חדשה זמינה</string>
     <string name="carbssuggestion">המלצת פחמימות</string>
     <string name="unsupportednsversion">גרסה לא נתמכת של Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
     <string name="carb_time_label">זמן פחמימות</string>
     <string name="profile_label">פרופיל</string>
     <string name="overview_tempbasal_button">בזאלי זמני</string>
@@ -139,7 +124,6 @@
     <string name="overview_editquickwizard_valid">תקף:</string>
     <string name="overview_editquickwizardlistactivity_add">הוספה</string>
     <string name="overview_quickwizard_item_edit_button">עריכה</string>
-    <string name="mealbolus">ארוחה</string>
     <string name="correctionbous">תיקון</string>
     <string name="actions">פעולות</string>
     <string name="ns_upload_only">(מסוכן להשבית) העלאה בלבד לנייטסקאוט</string>
@@ -168,8 +152,6 @@
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_scriptdebugdata_label">תיקון באגים בסקריפט</string>
     <string name="openapsama_useautosens">אפשר חישוב רגישות אוטומטי (Autosens)</string>
-    <string name="refresheventsfromnightscout">רענון אירועים מנייטסקאוט</string>
-    <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">לולאה</string>
@@ -243,9 +225,6 @@
     <string name="duration10h">10 שעות</string>
     <string name="resume">חידוש</string>
     <string name="reconnect">חיבור משאבה מחדש</string>
-    <string name="bg_trend_label">מגמת 15 דקות</string>
-    <string name="treatments_wizard_cob_label">פחמ\' פעילות</string>
-    <string name="superbolus">סופר בולוס</string>
     <string name="ns_logappstartedevent">רשום הפעלת AAPS ב-Nightscout</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
@@ -469,7 +448,6 @@
     <string name="virtualpump_type">סוג משאבה וירטואלית</string>
     <string name="virtualpump_definition">הגדרת משאבה</string>
     <string name="virtualpump_pump_def">בולוס: צעד=%1$s\nבולוס ממושך: [צעד=%2$s, משך=%3$s מינ\'-%4$sש\']\nבזאלי: צעד=%5$s\nבזאלי זמני: %6$s (עם %7$s), משך=%8$s מינ\'-%9$sש\'\n%10$s</string>
-    <string name="wear_wizard_settings">הגדרות אשף</string>
     <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
     <string name="wear_display_settings">הגדרות תצוגה</string>
     <string name="wear_general_settings">הגדרות כלליות</string>
@@ -504,8 +482,6 @@
     <string name="resistance_lowers_target_summary">כשמזוהה תנגודת, הורד את ערך המטרה של הגלוקוז</string>
     <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
     <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
-    <string name="show_invalidated">הצג פסולים</string>
-    <string name="hide_invalidated">הסתר פסולים</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
@@ -527,8 +503,6 @@
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
-    <string name="treatments_wizard_total_label">סה\"כ</string>
-    <string name="calculation_short">חישוב</string>
     <string name="sendlogfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>
     <string name="loop_openmode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
@@ -561,17 +535,12 @@
     <string name="partialboluswizard">ספק את חלק זה מתוצאת אשף הבולוס [%]</string>
     <string name="deliverpartofboluswizard">אשף הבולוס מבצע חישוב אך רק חלק זה של האינסולין המחושב מוזרק. שימושי בשימוש עם אלגוריתם SMB.</string>
     <string name="increasingmaxbasal">מגדיל את ערך מקסימום הבזאלי מפני שהוא נמוך מערכו המרבי בפרופיל</string>
-    <string name="format_bg_isf">%1$s פקטור הרגישות: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
-    <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">נבחר:</string>
     <string name="unitsnosemicolon">יחידות</string>
     <string name="objectives_button_unfinish">ביטול השלמה</string>
     <string name="objectives_button_unstart">ביטול התחלה</string>
     <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
     <string name="setupwizard_units_prompt">בחרו את היחידות שבהן ברצונכם להציג ערכים</string>
-    <string name="copytolocalprofile">ליצור פרופיל מקומי חדש מפרופיל זה?</string>
     <string name="low_mark_comment">ערך נמוך יותר באזור הטווח (הצגה בלבד)</string>
     <string name="high_mark_comment">ערך גבוה יותר באזור הטווח (הצגה בלבד)</string>
     <string name="invalidpct">רשומת אחוזים לא חוקית</string>
@@ -626,7 +595,6 @@
     <string name="chart_menu">תפריט הגרף</string>
     <string name="clear_filter">נקה סינון</string>
     <string name="cannula">צינורית</string>
-    <string name="userentry">קלט המשתמש</string>
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
     <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="email_address">כתובת דוא\"ל</string>
@@ -634,7 +602,6 @@
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
     <string name="full_sync">סינכרון מלא</string>
     <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
-    <string name="prime">תיחול</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
     <string name="ns_upload">טוען נתוני סוכר לנייטסקאוט</string>
@@ -706,22 +673,9 @@
     <string name="wear_unknown_action_string">פקודה לא ידועה:</string>
     <string name="overview_editquickwizard_percentage">אחוזים</string>
     <string name="app_default">ברירת המחדל של היישום</string>
-    <string name="show_invalidated_records">הצג רשומות מבוטלות\\מחוקות</string>
-    <string name="hide_invalidated_records">הסתר רשומות מבוטלות\\מחוקות</string>
-    <string name="refresh_from_nightscout">רענן מנייטסקאוט</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
-    <string name="select_for_removal">בחרו להסרה</string>
-    <string name="profile_changes">שינויים בפרופיל</string>
-    <string name="tempt_targets">ערכי מטרה זמניים</string>
-    <string name="carbs_and_bolus">פחמ\' ובולוס</string>
-    <string name="confirm_remove_multiple_items">האם אתם בטוחים שברצונכם להסיר %1$d פריטים?</string>
-    <string name="no_records_available">אין רישומים זמינים</string>
-    <string name="hide_loop">החבא לולאה</string>
-    <string name="show_loop">הצג לולאה</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
-    <string name="show_loop_records">הצג רשומות לולאה</string>
-    <string name="show_hide_records">החבא רשומות לולאה</string>
     <string name="loop_status">סטטוס הלולאה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="profile1">פרופיל 1</string>

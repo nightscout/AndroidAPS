@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.ui.VerticalTextView
 import info.nightscout.automation.R

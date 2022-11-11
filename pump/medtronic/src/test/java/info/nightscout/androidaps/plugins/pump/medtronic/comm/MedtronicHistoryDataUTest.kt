@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.util.Log
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
@@ -12,7 +11,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.utils.serialisation.SealedClassHelper.gson
+import info.nightscout.database.impl.serialisation.SealedClassHelper
+import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import org.junit.Before
@@ -139,7 +139,7 @@ class MedtronicHistoryDataUTest : TestBase() {
 
         println("PumpHistoryEntries: getFilteredItems: " + tbrs.size)
 
-        println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + gson.toJson(rewindRecords))
+        println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + SealedClassHelper.gson.toJson(rewindRecords))
 
         val processList: MutableList<TempBasalProcessDTO> = medtronicHistoryData.createTBRProcessList(tbrs)
 

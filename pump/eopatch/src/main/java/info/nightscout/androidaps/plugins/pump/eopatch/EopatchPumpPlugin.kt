@@ -2,25 +2,11 @@ package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.interfaces.data.PumpEnactResult
 import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpPluginBase
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.interfaces.pump.ManufacturerType
-import info.nightscout.interfaces.pump.actions.CustomAction
-import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -28,17 +14,31 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.actions.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomActionType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
 import info.nightscout.interfaces.utils.TimeChangeType
-import info.nightscout.interfaces.PluginType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppInitialized
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -320,7 +320,7 @@ class EopatchPumpPlugin @Inject constructor(
             patchManager.addBolusToHistory(detailedBolusInfo)
 
             return PumpEnactResultImpl(injector).success(true).enacted(true).bolusDelivered(0.0)
-                .carbsDelivered(detailedBolusInfo.carbs).comment(rh.gs(info.nightscout.androidaps.core.R.string.ok))
+                .carbsDelivered(detailedBolusInfo.carbs).comment(rh.gs(info.nightscout.core.main.R.string.ok))
         }
     }
 
@@ -421,7 +421,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResultImpl(injector).success(true).enacted(true) }
             .onErrorReturnItem(
                 PumpEnactResultImpl(injector).success(false).enacted(false).bolusDelivered(0.0)
-                    .comment(rh.gs(info.nightscout.androidaps.core.R.string.error))
+                    .comment(rh.gs(info.nightscout.core.main.R.string.error))
             )
             .blockingGet()
     }
@@ -458,7 +458,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResultImpl(injector).success(true).enacted(true).isTempCancel(true) }
             .onErrorReturnItem(
                 PumpEnactResultImpl(injector).success(false).enacted(false)
-                    .comment(rh.gs(info.nightscout.androidaps.core.R.string.error))
+                    .comment(rh.gs(info.nightscout.core.main.R.string.error))
             )
             .blockingGet()
     }
@@ -479,7 +479,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .map { PumpEnactResultImpl(injector).success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
                     PumpEnactResultImpl(injector).success(false).enacted(false)
-                        .comment(rh.gs(info.nightscout.androidaps.core.R.string.error))
+                        .comment(rh.gs(info.nightscout.core.main.R.string.error))
                 )
                 .blockingGet()
         } else {

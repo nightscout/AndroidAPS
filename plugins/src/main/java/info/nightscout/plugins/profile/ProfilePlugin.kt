@@ -6,39 +6,41 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ProfileSource
-import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.XDripBroadcast
-import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.profile.ProfileStoreObject
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.rx.events.EventProfileStoreChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -72,7 +74,7 @@ class ProfilePlugin @Inject constructor(
     aapsLogger, rh, injector
 ), ProfileSource {
 
-    private var rawProfile: ProfileStore? = null
+    private var rawProfile: ProfileStoreObject? = null
 
     private val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
 
@@ -388,7 +390,7 @@ class ProfilePlugin @Inject constructor(
         isEdited = false
     }
 
-    fun createProfileStore(): ProfileStore {
+    fun createProfileStore(): ProfileStoreObject {
         val json = JSONObject()
         val store = JSONObject()
 
@@ -417,7 +419,7 @@ class ProfilePlugin @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
 
-        return ProfileStore(injector, json, dateUtil)
+        return ProfileStoreObject(injector, json, dateUtil)
     }
 
     override val profile: ProfileStore?
@@ -453,7 +455,7 @@ class ProfilePlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
-                val store = ProfileStore(injector, profileJson, dateUtil)
+                val store = ProfileStoreObject(injector, profileJson, dateUtil)
                 val createdAt = store.getStartDate()
                 val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")

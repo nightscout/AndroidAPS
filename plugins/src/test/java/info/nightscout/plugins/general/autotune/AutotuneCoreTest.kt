@@ -2,19 +2,19 @@ package info.nightscout.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PureProfile
-import info.nightscout.androidaps.database.data.Block
-import info.nightscout.androidaps.database.data.TargetBlock
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.database.entities.data.Block
+import info.nightscout.database.entities.data.TargetBlock
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.androidaps.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert

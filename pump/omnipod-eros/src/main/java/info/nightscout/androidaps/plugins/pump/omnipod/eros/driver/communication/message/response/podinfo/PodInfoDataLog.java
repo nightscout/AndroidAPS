@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class PodInfoDataLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 8;

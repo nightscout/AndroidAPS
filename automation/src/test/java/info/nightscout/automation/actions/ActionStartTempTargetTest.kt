@@ -1,13 +1,13 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.Transaction
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.interfaces.queue.Callback
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputTempTarget
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
@@ -38,7 +38,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.drawable.ic_temptarget_high, sut.icon())
+        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_temptarget_high, sut.icon())
     }
 
     @Test fun doActionTest() {

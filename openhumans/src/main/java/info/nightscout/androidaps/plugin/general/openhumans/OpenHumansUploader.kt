@@ -9,22 +9,31 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.work.*
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.ForegroundInfo
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.data.Block
-import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.interfaces.PluginDescription
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHAppIDDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHCounterDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHStateDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHFragment
 import info.nightscout.androidaps.plugin.general.openhumans.ui.OHLoginActivity
+import info.nightscout.database.entities.data.Block
+import info.nightscout.database.entities.interfaces.TraceableDBEntry
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -36,7 +45,9 @@ import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -58,7 +69,7 @@ class OpenHumansUploader @Inject internal constructor(
     private val rxBus: RxBus
 ) : PluginBase(
     PluginDescription()
-        .mainType(info.nightscout.interfaces.PluginType.GENERAL)
+        .mainType(PluginType.GENERAL)
         .pluginIcon(R.drawable.open_humans_white)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)

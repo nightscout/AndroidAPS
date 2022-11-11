@@ -1,13 +1,16 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.hiya.jacoco-android'
-apply plugin: 'com.google.firebase.crashlytics'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+    id 'kotlinx-serialization'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
-apply from: "${project.rootDir}/core/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 repositories {
     mavenCentral()
@@ -105,7 +108,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-c"
+        version "3.1.0.3-dev-c-nscv3"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -178,15 +181,19 @@ dependencies {
     // https://github.com/nightscout/iconify.git
     implementation project(':graphview')
     implementation project(':libraries')
+    implementation project(':ns-sdk')
     implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
-    implementation project(':core')
+    implementation project(':core:core-main')
+    implementation project(':core:fabric')
     implementation project(':interfaces')
     implementation project(':ui')
     implementation project(':plugins')
     implementation project(':implementation')
-    implementation project(':database')
+    implementation project(':database:entities')
+    implementation project(':database:entities')
+    implementation project(':database:impl')
     implementation project(':pump:combo')
     implementation project(':pump:dana')
     implementation project(':pump:danars')
@@ -196,6 +203,7 @@ dependencies {
     implementation project(':insight')
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
+    implementation project(':pump:pump-core')
     implementation project(':pump:rileylink')
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
@@ -208,15 +216,21 @@ dependencies {
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-
-    /* Dagger2 - default dependency */
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // MainApp
+    api "com.uber.rxdogtag2:rxdogtag:2.0.1"
+
+    // Overview
+    api 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // APS
+    api 'org.mozilla:rhino:1.7.14'
+
 }
 
-apply from: "${project.rootDir}/core/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 
 
 /*

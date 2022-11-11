@@ -4,14 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.interfaces.stats.TirCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityStatsBinding

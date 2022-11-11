@@ -1,6 +1,6 @@
 package info.nightscout.interfaces.queue
 
-import info.nightscout.interfaces.data.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpEnactResult
 
 abstract class Callback : Runnable {
 

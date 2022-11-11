@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
     <string name="description_treatments">Сохраняет все выполненные назначения</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
-    <string name="treatments_insulin_label_string">инсулин:</string>
-    <string name="treatments_carbs_label_string">углеводы:</string>
-    <string name="treatments_iob_label_string">IOB:   активн инс</string>
-    <string name="treatments_iobtotal_label_string">Общий IOB:</string>
-    <string name="treatments_iobactivitytotal_label_string">Общая активность IOB:</string>
-    <string name="tempbasals_realduration_label_string">длит:</string>
-    <string name="tempbasals_netratio_label_string">соотношение:</string>
-    <string name="tempbasals_netinsulin_label_string">инсулин:</string>
-    <string name="tempbasals_iob_label_string">IOB: активный инсулин</string>
-    <string name="tempbasals_iobtotal_label_string">общий IOB</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">коррекция</string>
-    <string name="bolus_iob_label">болюс IOB</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="vitualpump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
     <string name="openapsma_lastrun_label">последнее выполненное</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">модуль не активен</string>
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
-    <string name="overview_treatment_label">болюс</string>
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="carbssuggestion">Предложены углеводы</string>
     <string name="unsupportednsversion">Неподдерживаемая версия Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">базал IOB</string>
     <string name="carb_time_label">Подождать до еды</string>
     <string name="profile_label">профиль</string>
     <string name="overview_tempbasal_button">ВремБазал</string>
@@ -144,7 +129,6 @@
     <string name="overview_editquickwizard_valid">использовать до:</string>
     <string name="overview_editquickwizardlistactivity_add">добавить</string>
     <string name="overview_quickwizard_item_edit_button">редактировать</string>
-    <string name="mealbolus">болюс на еду</string>
     <string name="correctionbous">коррекция</string>
     <string name="actions">действия</string>
     <string name="ns_upload_only">(ОТКЛЮЧЕНИЕ ОПАСНО) Только загрузка в NS</string>
@@ -173,8 +157,6 @@
     <string name="openapsma_autosensdata_label">данные autosens</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
     <string name="openapsama_useautosens">Пользоваться функцией Autosens</string>
-    <string name="refresheventsfromnightscout">Обновить из NS</string>
-    <string name="deletefuturetreatments">Удалить назначения из будущего</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
     <string name="loop_shortname">ЗЦ</string>
@@ -248,9 +230,6 @@
     <string name="duration10h">10 часов</string>
     <string name="resume">возобновить</string>
     <string name="reconnect">Возобновить соединение с помпой</string>
-    <string name="bg_trend_label">15 мин тренд</string>
-    <string name="treatments_wizard_cob_label">активн углеводы</string>
-    <string name="superbolus">суперболюс</string>
     <string name="ns_logappstartedevent">Передать в NS запись о начале работы приложения</string>
     <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
@@ -475,7 +454,6 @@
     <string name="virtualpump_type">Тип виртуальной помпы</string>
     <string name="virtualpump_definition">Определение помпы</string>
     <string name="virtualpump_pump_def">Болюс: Шаг =%1$s\n Пролонгированный Болюс: [Шаг =%2$s, Продолжительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\n ВБС: %6$s (на %7$s), Продолжительность =%8$sмин -%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Параметры мастера настройки смарт-часов wear</string>
     <string name="wear_wizard_settings_summary">Расчеты, включены в результат мастера настройки смарт-часов wear:</string>
     <string name="wear_display_settings">Параметры экрана</string>
     <string name="wear_general_settings">Общие настройки wear</string>
@@ -511,9 +489,6 @@
     <string name="resistance_lowers_target_summary">При обнаружении сопротивляемости целевой уровень гликемии понижается</string>
     <string name="sensitivity_raises_target_title">Чувствительность поднимает цель</string>
     <string name="sensitivity_raises_target_summary">При обнаружении чувствительности целевой уровень глюкозы повышается</string>
-    <string name="careportal_removestartedevents">Удалить начатые записи AAPS</string>
-    <string name="show_invalidated">Показать недействительные</string>
-    <string name="hide_invalidated">Скрыть недействительные</string>
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
@@ -536,8 +511,6 @@
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
     <string name="nsmalfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
-    <string name="treatments_wizard_total_label">Итого</string>
-    <string name="calculation_short">Кальк</string>
     <string name="sendlogfiles">Отправьте файлы сегодняшнего лога разработчикам наряду с этим. Непредвиденная ситуация.</string>
     <string name="loop_openmode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
@@ -571,17 +544,12 @@
     <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
     <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подана только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
     <string name="increasingmaxbasal">Повышаю максимальное значение базы т. к. оно меньше, чем максимальное значение в профиле</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Выбрано:</string>
     <string name="unitsnosemicolon">Единицы</string>
     <string name="objectives_button_unfinish">Очистить завершенные</string>
     <string name="objectives_button_unstart">Очистить начатые</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
     <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
-    <string name="copytolocalprofile">Создать новый локальный профиль из этого?</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
     <string name="invalidpct">Некорректный ввод %</string>
@@ -637,7 +605,6 @@
     <string name="chart_menu">Меню графика</string>
     <string name="clear_filter">Очистить фильтр</string>
     <string name="cannula">Катетер помпы</string>
-    <string name="userentry">Запись пользователя</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
     <string name="summary_email_for_crash_report">Эта идентификация будет прикреплена к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
     <string name="email_address">Адрес электронной почты</string>
@@ -645,7 +612,6 @@
     <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
     <string name="full_sync">Полная синхронизация</string>
     <string name="full_sync_comment">Полная синхронизация? Это может занять много часов и до завершения вы не увидите новые данные в NS.</string>
-    <string name="prime">Заполнение инфузионной системы</string>
     <string name="ns_sync_options">Синхронизация</string>
     <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
     <string name="ns_upload">Передать данные в NS</string>
@@ -719,22 +685,9 @@
     <string name="wear_unknown_action_string">Неизвестная команда:</string>
     <string name="overview_editquickwizard_percentage">Процент</string>
     <string name="app_default">По умолчанию приложения</string>
-    <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
-    <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
-    <string name="refresh_from_nightscout">Обновить из Nightscout</string>
     <string name="remove_selected_items">Удалить выбранные элементы</string>
-    <string name="select_for_removal">Выберите для удаления</string>
-    <string name="profile_changes">Изменение профиля</string>
-    <string name="tempt_targets">Временные цели</string>
-    <string name="carbs_and_bolus">Углеводы и болюс</string>
-    <string name="confirm_remove_multiple_items">Вы уверены, что хотите удалить %1$d элементов</string>
-    <string name="no_records_available">Нет доступных записей</string>
-    <string name="hide_loop">Скрыть цикл</string>
-    <string name="show_loop">Показать цикл</string>
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
-    <string name="show_loop_records">Показать записи цикла</string>
-    <string name="show_hide_records">Скрыть записи цикла</string>
     <string name="loop_status">Статус цикла</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="profile1">Профиль 1</string>

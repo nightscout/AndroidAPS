@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType
+import info.nightscout.pump.core.utils.StringUtil
 
 /**
  * Application: GGC - GNU Gluco Control
@@ -73,7 +73,7 @@ class BolusDTO constructor(atechDateTime: Long,
         }
 
     override fun getFormattedDecimal(value: Double): String {
-        return StringUtil.getFormatedValueUS(value, 2)
+        return StringUtil.getFormattedValueUS(value, 2)
     }
 
     val bolusKey: String

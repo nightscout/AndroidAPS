@@ -1,9 +1,9 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.automation.elements.Comparator
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.GlucoseUnit
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
@@ -76,7 +76,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.androidaps.core.R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
     }
 
     private fun generateOneCurrentRecordBgData(): List<GlucoseValue> {

@@ -20,4 +20,6 @@
     <string name="weight_label">Vægt</string>
     <string name="survey_comment">Bemærk: Kun data synlige på denne skærm vil blive uploadet anonymt. ID tildeles til denne installation af AAPS. Du kan indsende data igen, hvis din hovedprofil bliver ændret, men lad det køre mindst en uge for at gøre resultatet synligt i tidsinterval. Din hjælp er værdsat.</string>
     <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

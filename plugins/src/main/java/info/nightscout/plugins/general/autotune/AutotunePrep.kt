@@ -1,21 +1,21 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.data.LocalInsulin
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.utils.T
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.BGDatum
 import info.nightscout.plugins.general.autotune.data.CRDatum
 import info.nightscout.plugins.general.autotune.data.DiaDeviation
+import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PeakDeviation
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs

@@ -5,10 +5,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
@@ -16,9 +13,12 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Gluco
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import java.util.ArrayList
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class PrepareBgDataWorker(

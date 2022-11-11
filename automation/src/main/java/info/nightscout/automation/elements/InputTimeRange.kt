@@ -12,11 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.automation.R
+import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import java.util.Calendar
 
 class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateUtil) : Element() {

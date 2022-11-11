@@ -25,13 +25,13 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.events.EventWearPreferenceChange
 import info.nightscout.rx.events.EventWearToMobile
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

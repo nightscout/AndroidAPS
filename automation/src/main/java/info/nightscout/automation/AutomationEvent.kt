@@ -1,8 +1,8 @@
 package info.nightscout.automation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionDummy
 import info.nightscout.automation.actions.ActionStopProcessing

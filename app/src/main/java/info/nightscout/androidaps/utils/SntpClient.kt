@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils
 
 import android.os.SystemClock
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.utils.DateUtil
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress

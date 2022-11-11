@@ -156,7 +156,6 @@
     <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
     <string name="target_short">HDF</string>
-    <string name="clone_label">Klon</string>
     <string name="basal_short">BAZ</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>

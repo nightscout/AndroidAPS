@@ -13,10 +13,10 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.implementation.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -40,7 +40,7 @@ class QueueThread internal constructor(
     private var mWakeLock: PowerManager.WakeLock? = null
 
     init {
-        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(R.string.app_name) + ":QueueThread")
+        mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, rh.gs(config.appName) + ":QueueThread")
     }
 
     override fun run() {

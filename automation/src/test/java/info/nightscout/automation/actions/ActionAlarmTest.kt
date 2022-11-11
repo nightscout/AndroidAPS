@@ -5,12 +5,13 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus
 import org.junit.Assert
 import org.junit.Before
@@ -26,6 +27,7 @@ class ActionAlarmTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var timerUtil: TimerUtil
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var config: Config
 
     private lateinit var sut: ActionAlarm
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -36,6 +38,7 @@ class ActionAlarmTest : TestBase() {
                 it.context = context
                 it.timerUtil = timerUtil
                 it.dateUtil = dateUtil
+                it.config = config
             }
             if (it is PumpEnactResultImpl) {
                 it.rh = rh
@@ -45,15 +48,15 @@ class ActionAlarmTest : TestBase() {
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.androidaps.core.R.string.alarm)).thenReturn("Alarm")
+        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(rh.gs(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
 
         sut = ActionAlarm(injector)
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.string.alarm, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.main.R.string.alarm, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
@@ -62,7 +65,7 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.androidaps.core.R.drawable.ic_access_alarm_24dp, sut.icon())
+        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
     }
 
     @Test fun doActionTest() {

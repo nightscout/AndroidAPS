@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble;
 
 
-import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.ScanList;

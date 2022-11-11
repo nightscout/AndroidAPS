@@ -2,19 +2,14 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.shared.SafeParse
-import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivitySurveyBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
@@ -35,7 +30,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         binding = ActivitySurveyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.id.text = InstanceId.instanceId
+        binding.id.text = info.nightscout.core.fabric.InstanceId.instanceId
 
         val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
@@ -74,7 +69,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         binding.submit.setOnClickListener {
             val r = FirebaseRecord()
-            r.id = InstanceId.instanceId
+            r.id = info.nightscout.core.fabric.InstanceId.instanceId
             r.age = SafeParse.stringToInt(binding.age.text.toString())
             r.weight = SafeParse.stringToInt(binding.weight.text.toString())
             if (r.age < 1 || r.age > 120) {
@@ -92,7 +87,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             val specificProfile = profileStore.getSpecificProfile(profileName)
 
             r.profileJson = specificProfile.toString()
-
+/*
             val auth = FirebaseAuth.getInstance()
             auth.signInAnonymously()
                 .addOnCompleteListener(this) { task ->
@@ -110,6 +105,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
                     // ...
                 }
+  */
             finish()
         }
     }

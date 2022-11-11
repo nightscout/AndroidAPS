@@ -4,7 +4,7 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.androidaps.utils.T
+import info.nightscout.shared.utils.T
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDateTime
 import info.nightscout.automation.elements.LayoutBuilder

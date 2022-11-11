@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.autotune.data
 
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject

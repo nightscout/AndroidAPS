@@ -34,4 +34,6 @@
     <string name="bg_other">Iné</string>
     <string name="bg_meter">Glukomer</string>
     <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

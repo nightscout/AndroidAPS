@@ -175,7 +175,6 @@
     <string name="ic_short">G/I</string>
     <string name="isf_short">SI</string>
     <string name="target_short">CIBLE</string>
-    <string name="clone_label">Dupliquer</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Données recalculées utilisées</string>
@@ -199,5 +198,5 @@
     <string name="not_completed_yet">Pas encore terminé</string>
     <string name="time_elapsed">Temps écoulé</string>
     <!-- Overview -->
-    <string name="snooze">Mise en veille</string>
+    <string name="snooze">Masquer</string>
 </resources>

@@ -175,7 +175,6 @@
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">CIEĽ</string>
-    <string name="clone_label">Klonovať</string>
     <string name="basal_short">BAZ</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Použité prepočítané dáta</string>

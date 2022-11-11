@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
     <string name="description_treatments">Salva tutti i trattamenti che sono stati fatti</string>
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
-    <string name="treatments_insulin_label_string">Insulina:</string>
-    <string name="treatments_carbs_label_string">CHO:</string>
-    <string name="treatments_iob_label_string">IOB:</string>
-    <string name="treatments_iobtotal_label_string">IOB totale:</string>
-    <string name="treatments_iobactivitytotal_label_string">Attività IOB totale:</string>
-    <string name="tempbasals_realduration_label_string">Dur:</string>
-    <string name="tempbasals_netratio_label_string">Rapporto:</string>
-    <string name="tempbasals_netinsulin_label_string">Ins:</string>
-    <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
-    <string name="treatments_wizard_correction_label">Corr</string>
-    <string name="bolus_iob_label">IOB da bolo</string>
     <string name="openapsma_run">Esegui ora</string>
     <string name="vitualpump_label">MICRO VIRTUALE</string>
     <string name="openapsma_lastrun_label">Ultima esecuzione</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">Il plugin è disabilitato</string>
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="setbasalquestion">Accetta nuova basale temporanea:</string>
-    <string name="overview_treatment_label">Trattamento</string>
     <string name="changeyourinput">Cambia il tuo input!</string>
     <string name="configbuilder_bgsource">Origine BG</string>
     <string name="configbuilder_bgsource_description">Da dove AAPS dovrebbe ottenere i suoi dati?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">Nuovo suggerimento disponibile</string>
     <string name="carbssuggestion">Suggerimento CHO</string>
     <string name="unsupportednsversion">Versione non supportata di Nightscout</string>
-    <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="carb_time_label">Offset CHO</string>
     <string name="profile_label">Profilo</string>
     <string name="overview_tempbasal_button">Basale temporanea</string>
@@ -144,7 +129,6 @@
     <string name="overview_editquickwizard_valid">Valido:</string>
     <string name="overview_editquickwizardlistactivity_add">Aggiungi</string>
     <string name="overview_quickwizard_item_edit_button">Modifica</string>
-    <string name="mealbolus">Pasto</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
     <string name="ns_upload_only">Solo upload su NS (PERICOLOSO DISABILITARE)</string>
@@ -173,8 +157,6 @@
     <string name="openapsma_autosensdata_label">Dati autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usa la funzione Autosens</string>
-    <string name="refresheventsfromnightscout">Aggiornamento da NS</string>
-    <string name="deletefuturetreatments">Elimina trattamenti nel futuro</string>
     <string name="actions_shortname">AZN</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -248,9 +230,6 @@
     <string name="duration10h">10 ore</string>
     <string name="resume">Riprendi</string>
     <string name="reconnect">Riconnetti micro</string>
-    <string name="bg_trend_label">Trend di 15min</string>
-    <string name="treatments_wizard_cob_label">COB</string>
-    <string name="superbolus">Superbolo</string>
     <string name="ns_logappstartedevent">Registra l\'avvio dell\'app in NS</string>
     <string name="restartingapp">Uscita dall\'applicazione per applicare le impostazioni.</string>
     <string name="configbuilder_insulin_description">Quale tipo di insulina stai usando?</string>
@@ -475,7 +454,6 @@
     <string name="virtualpump_type">Tipo micro virtuale</string>
     <string name="virtualpump_definition">Definizione micro</string>
     <string name="virtualpump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
-    <string name="wear_wizard_settings">Impostazioni Calcolatore</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_display_settings">Impostazioni di visualizzazione</string>
     <string name="wear_general_settings">Impostazioni generali</string>
@@ -511,9 +489,6 @@
     <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
     <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
     <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
-    <string name="careportal_removestartedevents">Rimuovi le voci \"AAPS avviato\"</string>
-    <string name="show_invalidated">Mostra invalidato</string>
-    <string name="hide_invalidated">Nascondi invalidato</string>
     <string name="remove_items">Rimuovi elementi</string>
     <string name="sort_items">Ordina elementi</string>
     <string name="storedsettingsfound">Trovate impostazioni memorizzate</string>
@@ -536,8 +511,6 @@
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
     <string name="setupwizard_preferred_aps_mode">Modalità APS preferita</string>
-    <string name="treatments_wizard_total_label">Totale</string>
-    <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>
     <string name="loop_openmode_min_change">Richiesta minima di modifica [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
@@ -571,17 +544,12 @@
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
     <string name="deliverpartofboluswizard">Il calcolatore esegue il calcolo, ma solo questa parte dell\'insulina calcolata è erogata. Utile con algoritmo SMB.</string>
     <string name="increasingmaxbasal">Aumento del valore max basale perché l\'impostazione è inferiore alla tua basale massima nel profilo</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Selezionato:</string>
     <string name="unitsnosemicolon">Unità</string>
     <string name="objectives_button_unfinish">Cancella completamento</string>
     <string name="objectives_button_unstart">Cancella avvio</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
     <string name="setupwizard_units_prompt">Seleziona le unità in cui vuoi visualizzare i valori</string>
-    <string name="copytolocalprofile">Creare un nuovo profilo da questo profilo?</string>
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="invalidpct">Inserimento % non valido</string>
@@ -636,7 +604,6 @@
     <string name="chart_menu">Menu grafico</string>
     <string name="clear_filter">Cancella filtro</string>
     <string name="cannula">Cannula</string>
-    <string name="userentry">Inserimento utente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
     <string name="summary_email_for_crash_report">Questa identificazione verrà allegata ai rapporti sugli arresti anomali in modo che possiamo contattarti in casi urgenti. È facoltativo.</string>
     <string name="email_address">Indirizzo email</string>
@@ -644,7 +611,6 @@
     <string name="privacy_summary">Puoi fornire un indirizzo e-mail opzionale se desideri essere avvisato in caso di arresti anomali dell\'app. Questo non è un servizio automatizzato. Sarai contattato dagli sviluppatori in situazioni pericolose.</string>
     <string name="full_sync">Sincronizzazione completa</string>
     <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
-    <string name="prime">Caricamento</string>
     <string name="ns_sync_options">Sincronizzazione</string>
     <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
     <string name="ns_upload">Carica dati su NS</string>
@@ -718,22 +684,9 @@
     <string name="wear_unknown_action_string">Comando sconosciuto:</string>
     <string name="overview_editquickwizard_percentage">Percentuale</string>
     <string name="app_default">Predefinito applicazione</string>
-    <string name="show_invalidated_records">Mostra record non validi/rimossi</string>
-    <string name="hide_invalidated_records">Nascondi record non validi/rimossi</string>
-    <string name="refresh_from_nightscout">Aggiorna da Nightscout</string>
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
-    <string name="select_for_removal">Seleziona per la rimozione</string>
-    <string name="profile_changes">Modifiche al profilo</string>
-    <string name="tempt_targets">Target Temporanei</string>
-    <string name="carbs_and_bolus">CHO e boli</string>
-    <string name="confirm_remove_multiple_items">Sicuro di voler rimuovere %1$d elementi</string>
-    <string name="no_records_available">Nessun record disponibile</string>
-    <string name="hide_loop">Nascondi loop</string>
-    <string name="show_loop">Mostra loop</string>
     <string name="count_selected">%1$d selezionati</string>
     <string name="sort_label">Ordina</string>
-    <string name="show_loop_records">Mostra record di loop</string>
-    <string name="show_hide_records">Nascondi record di loop</string>
     <string name="loop_status">Stato loop</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="profile1">Profilo 1</string>

@@ -34,19 +34,6 @@
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="description_treatments">Yapılan tüm tedavileri kaydeder</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
-    <string name="treatments_insulin_label_string">İnsülin:</string>
-    <string name="treatments_carbs_label_string">Karbonhidrat:</string>
-    <string name="treatments_iob_label_string">AİNS:</string>
-    <string name="treatments_iobtotal_label_string">Toplam AİNS:</string>
-    <string name="treatments_iobactivitytotal_label_string">Toplam AİNS etkinliği:</string>
-    <string name="tempbasals_realduration_label_string">Süre:</string>
-    <string name="tempbasals_netratio_label_string">Oran:</string>
-    <string name="tempbasals_netinsulin_label_string">İns:</string>
-    <string name="tempbasals_iob_label_string">AİNS:</string>
-    <string name="tempbasals_iobtotal_label_string">Toplam AİNS:</string>
-    <string name="treatments_wizard_tt_label">GH</string>
-    <string name="treatments_wizard_correction_label">Düzeltme</string>
-    <string name="bolus_iob_label">Bolus AİNS</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="vitualpump_label">SANAL POMPA</string>
     <string name="openapsma_lastrun_label">Son Çalıştırma</string>
@@ -85,7 +72,6 @@
     <string name="openapsma_disabled">Eklenti devre dışı</string>
     <string name="constraints_violation">Kısıtlamalar ihlali</string>
     <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
-    <string name="overview_treatment_label">Tedavi</string>
     <string name="changeyourinput">Girişinizi değiştirin!</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
@@ -97,7 +83,6 @@
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
     <string name="carbssuggestion">Karbonhidrat Önerisi</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
-    <string name="treatments_wizard_basaliob_label">Bazal AİNS</string>
     <string name="carb_time_label">Karb. zamanı</string>
     <string name="profile_label">Profil</string>
     <string name="overview_tempbasal_button">Geçici Bazal</string>
@@ -144,7 +129,6 @@
     <string name="overview_editquickwizard_valid">Geçerli:</string>
     <string name="overview_editquickwizardlistactivity_add">Ekle</string>
     <string name="overview_quickwizard_item_edit_button">Düzenle</string>
-    <string name="mealbolus">Ögün</string>
     <string name="correctionbous">Düzeltme</string>
     <string name="actions">Eylemler</string>
     <string name="ns_upload_only">(DEVRE DIŞI BIRAKILMASI TEHLİKELİ) Yalnızca NS yüklemelerinde</string>
@@ -173,8 +157,6 @@
     <string name="openapsma_autosensdata_label">Otoduyarlılık verileri</string>
     <string name="openapsma_scriptdebugdata_label">Skriptte hata ayıkla</string>
     <string name="openapsama_useautosens">Otoduyarlılık özelliğini kullan</string>
-    <string name="refresheventsfromnightscout">NS\'tan yenile</string>
-    <string name="deletefuturetreatments">İleri tarihli tedavileri sil</string>
     <string name="actions_shortname">EYLEM</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">DÖNGÜ</string>
@@ -249,9 +231,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="duration10h">10 Saat</string>
     <string name="resume">Devam et</string>
     <string name="reconnect">Pompayı tekrar bağla</string>
-    <string name="bg_trend_label">15 dk eğilim</string>
-    <string name="treatments_wizard_cob_label">AKRB</string>
-    <string name="superbolus">Süperbolus</string>
     <string name="ns_logappstartedevent">NS\'a uygulama başlangıcını kaydet</string>
     <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
@@ -476,7 +455,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="virtualpump_type">Sanal pompa tipi</string>
     <string name="virtualpump_definition">Pompa tanımı</string>
     <string name="virtualpump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nTBR: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
-    <string name="wear_wizard_settings">Kurulum Sihirbazı Ayarları</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_display_settings">Görüntü Ayarları</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
@@ -512,9 +490,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resistance_lowers_target_summary">Direnç tespit edildiğinde KŞ hedefini düşürün</string>
     <string name="sensitivity_raises_target_title">Duyarlılık hedefi yükseltir</string>
     <string name="sensitivity_raises_target_summary">Hassasiyet tespit edildiğinde, KŞ hedefini yükseltin</string>
-    <string name="careportal_removestartedevents">AAPS tarafından başlatılmış girdileri kaldırın</string>
-    <string name="show_invalidated">Geçersiz olanları göster</string>
-    <string name="hide_invalidated">Geçersiz olanları gizle</string>
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri sırala</string>
     <string name="storedsettingsfound">Saklanan ayarlar bulundu</string>
@@ -537,8 +512,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
-    <string name="treatments_wizard_total_label">Toplam</string>
-    <string name="calculation_short">Hesap</string>
     <string name="sendlogfiles">Bu günün kayıt dosyalarını geliştiricilere gönderin. Beklenmedik bir durum.</string>
     <string name="loop_openmode_min_change">Minimum istek değişikliği [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
@@ -572,17 +545,12 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="partialboluswizard">Bolus sihirbazı sonucunun bu kadarını ilet [%]</string>
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
     <string name="increasingmaxbasal">Profilinizdeki maksimum bazal değeriniz düşük olduğu için maksimum bazal değeri artırma</string>
-    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="selected_profile">Seçildi:</string>
     <string name="unitsnosemicolon">Birim</string>
     <string name="objectives_button_unfinish">Komple tamamlandı</string>
     <string name="objectives_button_unstart">Yeniden Başla</string>
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="setupwizard_units_prompt">Değerleri görüntülemek istediğiniz birimleri seçin</string>
-    <string name="copytolocalprofile">Bu profilden yeni profil oluşturulsun mu?</string>
     <string name="low_mark_comment">Aralıktan daha düşük değer (sadece görüntüle)</string>
     <string name="high_mark_comment">Aralıktan daha yüksek değer (Sadece görüntüle)</string>
     <string name="invalidpct">Geçersiz % giriş</string>
@@ -639,7 +607,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="chart_menu">Grafik menüsü</string>
     <string name="clear_filter">Filtreyi temizle</string>
     <string name="cannula">Kanül</string>
-    <string name="userentry">Kullanıcı girişi</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
     <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
     <string name="email_address">E-posta adresi</string>
@@ -647,7 +614,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="privacy_summary">Uygulama çökmeleri hakkında bilgilendirilmek istiyorsanız isteğe bağlı e-posta adresi sağlayabilirsiniz. Bu otomatik bir hizmet değildir. Tehlikeli durumlarda geliştiriciler sizinle iletişime geçecektir.</string>
     <string name="full_sync">Tam senkronizasyon</string>
     <string name="full_sync_comment">Tam senkronizasyon? Birkaç saat sürebilir ve bitene kadar NS\'ta yeni veriler göremeyeceksiniz.</string>
-    <string name="prime">Doldur</string>
     <string name="ns_sync_options">Senkronizasyon</string>
     <string name="ns_upload_summary">Profiller, boluslar, karbonhidratlar, geçici bazallar NS\'a yüklenir</string>
     <string name="ns_upload">Verileri NS\'a yükleyin</string>
@@ -721,22 +687,9 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="wear_unknown_action_string">Bilinmeyen eylem komutu:</string>
     <string name="overview_editquickwizard_percentage">Yüzde</string>
     <string name="app_default">Uygulama varsayılanı</string>
-    <string name="show_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları göster</string>
-    <string name="hide_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları gizle</string>
-    <string name="refresh_from_nightscout">Nightscout\'tan Yenile</string>
     <string name="remove_selected_items">Seçili nesneleri kaldır</string>
-    <string name="select_for_removal">Silmek için seçin</string>
-    <string name="profile_changes">Profil değişiklikleri</string>
-    <string name="tempt_targets">Geçici Hedefler</string>
-    <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
-    <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
-    <string name="no_records_available">Kayıt mevcut değil</string>
-    <string name="hide_loop">Döngüyü gizle</string>
-    <string name="show_loop">Döngüyü göster</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
-    <string name="show_loop_records">Döngü kayıtlarını göster</string>
-    <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <string name="loop_status">Döngü durumu</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="profile1">Profil 1</string>

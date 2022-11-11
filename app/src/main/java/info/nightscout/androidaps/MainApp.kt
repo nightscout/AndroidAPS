@@ -15,38 +15,38 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.di.DaggerAppComponent
 import info.nightscout.androidaps.di.StaticInjector
-import info.nightscout.interfaces.BuildHelper
-import info.nightscout.interfaces.Config
-import info.nightscout.androidaps.interfaces.ConfigBuilder
-import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.ProcessLifecycleListener
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.database.impl.transactions.VersionChangeTransaction
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.utils.ActivityMonitor
 import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -124,13 +124,13 @@ class MainApp : DaggerApplication() {
                 // log version
                 disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
                 // log app start
-                if (sp.getBoolean(R.string.key_ns_logappstartedevent, config.APS))
+                if (sp.getBoolean(R.string.key_ns_log_app_started_event, config.APS))
                     disposable += repository
                         .runTransaction(
                             InsertIfNewByTimestampTherapyEventTransaction(
                                 timestamp = dateUtil.now(),
                                 type = TherapyEvent.Type.NOTE,
-                                note = rh.get().gs(info.nightscout.androidaps.core.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                note = rh.get().gs(info.nightscout.core.main.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
                                 glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                             )
                         )
@@ -214,6 +214,8 @@ class MainApp : DaggerApplication() {
             }
             sp.remove("ns_charginonly")
         }
+        if (!sp.contains(R.string.key_ns_log_app_started_event))
+            sp.putBoolean(R.string.key_ns_log_app_started_event, config.APS)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

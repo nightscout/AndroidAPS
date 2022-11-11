@@ -34,4 +34,6 @@
     <string name="bg_other">Jiné</string>
     <string name="bg_meter">Glukoměr</string>
     <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <!-- Treatments -->
 </resources>

@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.common.events
 
 import info.nightscout.androidaps.events.EventStatus
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.shared.interfaces.ResourceHelper
 
 open class EventRileyLinkDeviceStatusChange : EventStatus {
 

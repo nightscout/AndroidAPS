@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.combo;
 
-import android.content.Context;
 import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
@@ -22,26 +21,14 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.combo.R;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.interfaces.data.PumpEnactResult;
 import info.nightscout.androidaps.data.PumpEnactResultImpl;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.Constraints;
-import info.nightscout.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.Pump;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.interfaces.pump.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter;
@@ -55,17 +42,29 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.InstanceId;
-import info.nightscout.androidaps.utils.T;
-import info.nightscout.interfaces.PluginType;
+import info.nightscout.core.fabric.InstanceId;
+import info.nightscout.interfaces.constraints.Constraint;
+import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.PluginDescription;
+import info.nightscout.interfaces.plugin.PluginType;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.Pump;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.defs.ManufacturerType;
+import info.nightscout.interfaces.pump.defs.PumpDescription;
+import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventInitializationChanged;
+import info.nightscout.rx.events.EventOverviewBolusProgress;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
+import info.nightscout.shared.utils.T;
 
 /**
  * Driver for the Roche Accu-Chek Combo pump, using the ruffy app for BT communication.
@@ -96,7 +95,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     private final SP sp;
     private RxBus rxBus;
     private final CommandQueue commandQueue;
-    private final Context context;
     private final PumpSync pumpSync;
     private final DateUtil dateUtil;
     private final RuffyCommands ruffyScripter;
@@ -152,7 +150,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             ProfileFunction profileFunction,
             SP sp,
             CommandQueue commandQueue,
-            Context context,
             PumpSync pumpSync,
             DateUtil dateUtil,
             RuffyScripter ruffyScripter
@@ -171,7 +168,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         this.profileFunction = profileFunction;
         this.sp = sp;
         this.commandQueue = commandQueue;
-        this.context = context;
         this.pumpSync = pumpSync;
         this.dateUtil = dateUtil;
         this.ruffyScripter = ruffyScripter;

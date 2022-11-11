@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.rx.logging.LTag
 
 

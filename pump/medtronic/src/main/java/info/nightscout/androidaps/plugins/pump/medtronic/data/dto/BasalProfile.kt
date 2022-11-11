@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import org.joda.time.Instant

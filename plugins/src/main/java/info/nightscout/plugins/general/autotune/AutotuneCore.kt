@@ -1,13 +1,13 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.data.LocalInsulin
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
+import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.plugins.utils.Percentile
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
