@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
     <string name="dialog_canceled">Janela cancelada</string>
     <string name="start_activity_tt">Iniciar atividade TT</string>
     <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
@@ -18,7 +17,44 @@
     <string name="age">Idade</string>
     <string name="weight_label">Peso</string>
     <string name="survey_comment">Nota: Apenas os dados visíveis nesta tela serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Você pode enviar dados novamente se o perfil principal for alterado, mas deixe-o rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg I:C: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Carboidratos:</string>
+    <string name="treatments_iobtotal_label_string">IOB Total:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Rácio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="prime">Purgar/Preencher</string>
+    <string name="profile_changes">Alterações de perfil</string>
+    <string name="tempt_targets">Alvos Temporários</string>
+    <string name="carbs_and_bolus">Carboidratos e bolus</string>
+    <string name="show_invalidated_records">Exibir registros invalidados / removidos</string>
+    <string name="hide_invalidated_records">Ocultar registros invalidados / removidos</string>
+    <string name="refresh_from_nightscout">Atualizar do NS (Nightscout)</string>
+    <string name="refresheventsfromnightscout">Atualizar de NS</string>
+    <string name="show_invalidated">Mostrar invalidados</string>
+    <string name="hide_invalidated">Ocultar invalidados</string>
+    <string name="hide_loop">Ocultar loop</string>
+    <string name="show_loop">Exibir loop</string>
+    <string name="clone_label">Clonar</string>
+    <string name="show_loop_records">Exibir registros do loop</string>
+    <string name="show_hide_records">Ocultar registros do loop</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>
