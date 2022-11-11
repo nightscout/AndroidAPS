@@ -159,7 +159,6 @@
     <string name="paused">Gepauzeerd</string>
     <string name="invalid">Ongeldig</string>
     <string name="login">Aanmelden</string>
-    <string name="upload_now">Nu Uploaden</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -438,7 +437,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basaal verouderd.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbinden met pomp geklikt</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pomp stuurprogramma wijzigen.</string>
     <string name="device_changed" comment="26 characters max for translation">Apparaat gewijzigd</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Vernieuwen geklikt</string>
