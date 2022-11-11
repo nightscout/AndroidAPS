@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.androidaps.plugins.constraints.objectives.dialogs
 
 import android.os.Bundle
 import android.os.SystemClock

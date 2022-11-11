@@ -3,7 +3,7 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.dialogs.NtpProgressDialog
+import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
