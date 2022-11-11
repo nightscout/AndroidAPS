@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context="info.nightscout.androidaps.dialogs.ProfileViewerDialog">
+    tools:context=".dialogs.ProfileViewerDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 app:srcCompat="@drawable/ic_home_profile" />
 
             <TextView
-                android:id="@+id/activeprofile"
+                android:id="@+id/active_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -49,29 +49,29 @@
             android:padding="5dp" />
 
         <TextView
-            android:id="@+id/invalidprofile"
+            android:id="@+id/invalid_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/invalidprofile"
+            android:text="@string/invalid_profile"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="?attr/alarmColor"
             android:textStyle="bold"
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/noprofile"
+            android:id="@+id/no_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/noprofileset"
+            android:text="@string/no_profile_set"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="?attr/alarmColor"
             android:textStyle="bold"
             android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/datelayout"
+            android:id="@+id/date_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -378,7 +378,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/basaltotal"
+                android:id="@+id/basal_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="17dp"

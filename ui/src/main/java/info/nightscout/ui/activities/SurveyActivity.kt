@@ -3,11 +3,10 @@ package info.nightscout.ui.activities
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
@@ -18,10 +17,10 @@ import javax.inject.Inject
 class SurveyActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var activityNames: ActivityNames
 
     private lateinit var binding: ActivitySurveyBinding
 
@@ -54,15 +53,14 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             }
             profileFunction.getProfile()?.let { runningProfile ->
                 defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())?.let { profile ->
-                    ProfileViewerDialog().also { pvd ->
-                        pvd.arguments = Bundle().also {
-                            it.putLong("time", dateUtil.now())
-                            it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                            it.putString("customProfile", runningProfile.toPureNsJson(dateUtil).toString())
-                            it.putString("customProfile2", profile.jsonObject.toString())
-                            it.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
-                        }
-                    }.show(supportFragmentManager, "ProfileViewDialog")
+                    activityNames.runProfileViewerDialog(
+                        fragmentManager = supportFragmentManager,
+                        time = dateUtil.now(),
+                        mode = ActivityNames.Mode.PROFILE_COMPARE,
+                        customProfile = runningProfile.toPureNsJson(dateUtil).toString(),
+                        customProfileName = "Age: $age TDD: $tdd Weight: $weight",
+                        customProfile2 = profile.jsonObject.toString()
+                    )
                 }
             }
         }

@@ -20,7 +20,6 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -34,6 +33,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
@@ -72,6 +72,7 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var activityNames: ActivityNames
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -200,15 +201,13 @@ class AutotuneFragment : DaggerFragment() {
                     }
             }
             pumpProfile?.let {
-                ProfileViewerDialog().also { pvd ->
-                    pvd.arguments = Bundle().also {
-                        it.putLong("time", dateUtil.now())
-                        it.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-                        it.putString("customProfile", pumpProfile.profile.toPureNsJson(dateUtil).toString())
-                        it.putString("customProfileUnits", profileFunction.getUnits().asText)
-                        it.putString("customProfileName", pumpProfile.profilename)
-                    }
-                }.show(childFragmentManager, "ProfileViewDialog")
+                activityNames.runProfileViewerDialog(
+                    fragmentManager = childFragmentManager,
+                    time = dateUtil.now(),
+                    mode = ActivityNames.Mode.CUSTOM_PROFILE,
+                    customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
+                    customProfileName = pumpProfile.profilename
+                )
             }
         }
 
@@ -216,16 +215,14 @@ class AutotuneFragment : DaggerFragment() {
             val pumpProfile = autotunePlugin.pumpProfile
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             val tunedProfile = if (circadian) autotunePlugin.tunedProfile?.circadianProfile else autotunePlugin.tunedProfile?.profile
-            ProfileViewerDialog().also { pvd ->
-                pvd.arguments = Bundle().also {
-                    it.putLong("time", dateUtil.now())
-                    it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                    it.putString("customProfile", pumpProfile.profile.toPureNsJson(dateUtil).toString())
-                    it.putString("customProfile2", tunedProfile?.toPureNsJson(dateUtil).toString())
-                    it.putString("customProfileUnits", profileFunction.getUnits().asText)
-                    it.putString("customProfileName", pumpProfile.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name))
-                }
-            }.show(childFragmentManager, "ProfileViewDialog")
+            activityNames.runProfileViewerDialog(
+                fragmentManager = childFragmentManager,
+                time = dateUtil.now(),
+                mode = ActivityNames.Mode.PROFILE_COMPARE,
+                customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
+                customProfileName = pumpProfile.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name),
+                customProfile2 = tunedProfile?.toPureNsJson(dateUtil).toString()
+            )
         }
 
         binding.autotuneProfileswitch.setOnClickListener {

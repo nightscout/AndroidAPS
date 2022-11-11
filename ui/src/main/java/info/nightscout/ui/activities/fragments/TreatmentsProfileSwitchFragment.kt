@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.getCustomizedName
@@ -33,6 +32,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateProfileSwitchTransaction
 import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
@@ -49,6 +49,7 @@ import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import info.nightscout.ui.databinding.TreatmentsProfileswitchFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsProfileswitchItemBinding
+import info.nightscout.ui.dialogs.ProfileViewerDialog
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -261,7 +262,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                            args.putInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }
@@ -270,7 +271,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                            args.putInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }

@@ -33,7 +33,6 @@ import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
 import info.nightscout.androidaps.dialogs.TreatmentDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
@@ -88,6 +87,7 @@ import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
@@ -157,6 +157,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var bgQualityCheckPlugin: BgQualityCheckPlugin
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
 
@@ -403,12 +404,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
 
                 R.id.active_profile      -> {
-                    ProfileViewerDialog().also { pvd ->
-                        pvd.arguments = Bundle().also {
-                            it.putLong("time", dateUtil.now())
-                            it.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
-                        }
-                    }.show(childFragmentManager, "ProfileViewDialog")
+                    activityNames.runProfileViewerDialog(
+                        childFragmentManager,
+                        dateUtil.now(),
+                        ActivityNames.Mode.RUNNING_PROFILE
+                    )
                 }
 
                 R.id.cgm_button          -> {

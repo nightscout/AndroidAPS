@@ -131,8 +131,8 @@
     <string name="stoppressed">STOP PRESSED</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
-    <string name="invalidprofile">Invalid profile!</string>
-    <string name="noprofileset">NO PROFILE SET</string>
+    <string name="invalid_profile">Invalid profile!</string>
+    <string name="no_profile_set">NO PROFILE SET</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>

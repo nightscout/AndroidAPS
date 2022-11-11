@@ -10,7 +10,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
@@ -20,6 +19,7 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.shared.extensions.toVisibility
@@ -29,6 +29,7 @@ import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityProfilehelperBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
 import info.nightscout.ui.defaultProfile.DefaultProfileDPV
+import info.nightscout.ui.dialogs.ProfileViewerDialog
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -215,7 +216,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
                             it.putLong("time", dateUtil.now())
-                            it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
+                            it.putInt("mode", ActivityNames.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", profile0.jsonObject.toString())
                             it.putString("customProfile2", profile1.jsonObject.toString())
                             it.putString(

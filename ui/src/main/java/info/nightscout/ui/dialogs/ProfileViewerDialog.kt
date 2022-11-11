@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.os.Bundle
 import android.text.Spanned
@@ -15,7 +15,6 @@ import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.core.main.R
-import info.nightscout.core.main.databinding.DialogProfileviewerBinding
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toUnitsString
 import info.nightscout.database.impl.AppRepository
@@ -23,12 +22,14 @@ import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.ui.databinding.DialogProfileviewerBinding
 import org.json.JSONObject
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -47,14 +48,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
 
     private var time: Long = 0
 
-    enum class Mode(val i: Int) {
-        RUNNING_PROFILE(1),
-        CUSTOM_PROFILE(2),
-        DB_PROFILE(3),
-        PROFILE_COMPARE(4)
-    }
-
-    private var mode: Mode = Mode.RUNNING_PROFILE
+    private var mode: ActivityNames.Mode = ActivityNames.Mode.RUNNING_PROFILE
     private var customProfileJson: String = ""
     private var customProfileJson2: String = ""
     private var customProfileName: String = ""
@@ -72,10 +66,10 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             time = bundle.getLong("time", 0)
-            mode = Mode.values()[bundle.getInt("mode", Mode.RUNNING_PROFILE.ordinal)]
+            mode = ActivityNames.Mode.values()[bundle.getInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)]
             customProfileJson = bundle.getString("customProfile", "")
             customProfileName = bundle.getString("customProfileName", "")
-            if (mode == Mode.PROFILE_COMPARE)
+            if (mode == ActivityNames.Mode.PROFILE_COMPARE)
                 customProfileJson2 = bundle.getString("customProfile2", "")
         }
 
@@ -98,7 +92,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         val profileName: String?
         val date: String?
         when (mode) {
-            Mode.RUNNING_PROFILE -> {
+            ActivityNames.Mode.RUNNING_PROFILE -> {
                 val eps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
                 if (eps !is ValueWrapper.Existing) {
                     dismiss()
@@ -108,45 +102,45 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profile2 = null
                 profileName = eps.value.originalCustomizedName
                 date = dateUtil.dateAndTimeString(eps.value.timestamp)
-                binding.datelayout.visibility = View.VISIBLE
+                binding.dateLayout.visibility = View.VISIBLE
             }
 
-            Mode.CUSTOM_PROFILE  -> {
+            ActivityNames.Mode.CUSTOM_PROFILE  -> {
                 profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
                 profile2 = null
                 profileName = customProfileName
                 date = ""
-                binding.datelayout.visibility = View.GONE
+                binding.dateLayout.visibility = View.GONE
             }
 
-            Mode.PROFILE_COMPARE -> {
+            ActivityNames.Mode.PROFILE_COMPARE -> {
                 profile = pureProfileFromJson(JSONObject(customProfileJson), dateUtil)?.let { ProfileSealed.Pure(it) }
                 profile2 = pureProfileFromJson(JSONObject(customProfileJson2), dateUtil)?.let { ProfileSealed.Pure(it) }
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
-                binding.datelayout.visibility = View.GONE
+                binding.dateLayout.visibility = View.GONE
             }
 
-            Mode.DB_PROFILE      -> {
+            ActivityNames.Mode.DB_PROFILE      -> {
                 //val profileList = databaseHelper.getProfileSwitchData(time, true)
                 val profileList = repository.getAllProfileSwitches().blockingGet()
                 profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0]) else null
                 profile2 = null
                 profileName = if (profileList.isNotEmpty()) profileList[0].getCustomizedName() else null
                 date = if (profileList.isNotEmpty()) dateUtil.dateAndTimeString(profileList[0].timestamp) else null
-                binding.datelayout.visibility = View.VISIBLE
+                binding.dateLayout.visibility = View.VISIBLE
             }
         }
-        binding.noprofile.visibility = View.VISIBLE
+        binding.noProfile.visibility = View.VISIBLE
 
-        if (mode == Mode.PROFILE_COMPARE)
+        if (mode == ActivityNames.Mode.PROFILE_COMPARE)
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
                     binding.units.text = profileFunction.getUnits().asText
                     binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), rh.gs(R.string.shorthour)))
                     val profileNames = profileName!!.split("\n").toTypedArray()
-                    binding.activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
+                    binding.activeProfile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
                     binding.date.text = date
                     binding.ic.text = ics(profile1, profile2)
                     binding.isf.text = isfs(profile1, profile2)
@@ -158,16 +152,16 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                     binding.targetGraph.show(profile1, profile2)
                 }
 
-                binding.noprofile.visibility = View.GONE
+                binding.noProfile.visibility = View.GONE
                 val validity = profile1.isValid("ProfileViewDialog", activePlugin.activePump, config, rh, rxBus, hardLimits, false)
-                binding.invalidprofile.text = rh.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
-                binding.invalidprofile.visibility = validity.isValid.not().toVisibility()
+                binding.invalidProfile.text = rh.gs(R.string.invalid_profile) + "\n" + validity.reasons.joinToString(separator = "\n")
+                binding.invalidProfile.visibility = validity.isValid.not().toVisibility()
             }
         else
             profile?.let {
                 binding.units.text = it.units.asText
                 binding.dia.text = rh.gs(R.string.format_hours, it.dia)
-                binding.activeprofile.text = profileName
+                binding.activeProfile.text = profileName
                 binding.date.text = date
                 binding.ic.text = it.getIcList(rh, dateUtil)
                 binding.isf.text = it.getIsfList(rh, dateUtil)
@@ -178,10 +172,10 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.icGraph.show(it)
                 binding.targetGraph.show(it)
 
-                binding.noprofile.visibility = View.GONE
+                binding.noProfile.visibility = View.GONE
                 val validity = it.isValid("ProfileViewDialog", activePlugin.activePump, config, rh, rxBus, hardLimits, false)
-                binding.invalidprofile.text = rh.gs(R.string.invalidprofile) + "\n" + validity.reasons.joinToString(separator = "\n")
-                binding.invalidprofile.visibility = validity.isValid.not().toVisibility()
+                binding.invalidProfile.text = rh.gs(R.string.invalid_profile) + "\n" + validity.reasons.joinToString(separator = "\n")
+                binding.invalidProfile.visibility = validity.isValid.not().toVisibility()
             }
     }
 
@@ -196,7 +190,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         bundle.putInt("mode", mode.ordinal)
         bundle.putString("customProfile", customProfileJson)
         bundle.putString("customProfileName", customProfileName)
-        if (mode == Mode.PROFILE_COMPARE)
+        if (mode == ActivityNames.Mode.PROFILE_COMPARE)
             bundle.putString("customProfile2", customProfileJson2)
     }
 

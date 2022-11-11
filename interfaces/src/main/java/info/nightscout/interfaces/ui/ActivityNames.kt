@@ -26,4 +26,12 @@ interface ActivityNames {
     fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int = 0)
     fun runWizard(fragmentManager: FragmentManager, carbs: Int, name: String)
     fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?)
+
+    enum class Mode(val i: Int) {
+        RUNNING_PROFILE(1),
+        CUSTOM_PROFILE(2),
+        DB_PROFILE(3),
+        PROFILE_COMPARE(4)
+    }
+    fun runProfileViewerDialog(fragmentManager: FragmentManager, time: Long, mode: Mode, customProfile: String?= null, customProfileName: String? = null, customProfile2: String? = null)
 }

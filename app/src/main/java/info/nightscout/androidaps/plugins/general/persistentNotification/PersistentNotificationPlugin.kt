@@ -194,7 +194,7 @@ class PersistentNotificationPlugin @Inject constructor(
             unreadConversationBuilder.addMessage(line3aa)
             /// End Android Auto
         } else {
-            line1 = rh.gs(R.string.noprofileset)
+            line1 = rh.gs(R.string.no_profile_set)
         }
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)

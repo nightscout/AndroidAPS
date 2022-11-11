@@ -14,6 +14,7 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.TDDStatsActivity
+import info.nightscout.ui.dialogs.ProfileViewerDialog
 import javax.inject.Inject
 
 class ActivityNamesImpl @Inject constructor() : ActivityNames {
@@ -23,7 +24,6 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
     override val errorHelperActivity: Class<*> = ErrorHelperActivity::class.java
     override val bolusProgressHelperActivity: Class<*> = BolusProgressHelperActivity::class.java
     override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
-
 
     override fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(ctx, errorHelperActivity)
@@ -47,6 +47,20 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
     override fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?) {
         ProfileSwitchDialog()
             .also { it.arguments = Bundle().also { bundle -> bundle.putString("profileName", profileName) } }
+            .show(fragmentManager, "ProfileSwitchDialog")
+    }
+
+    override fun runProfileViewerDialog(fragmentManager: FragmentManager, time: Long, mode: ActivityNames.Mode, customProfile: String?, customProfilename: String?, customProfile2: String?) {
+        ProfileViewerDialog()
+            .also {
+                it.arguments = Bundle().also { bundle ->
+                    bundle.putLong("time", time)
+                    bundle.putInt("mode", mode.ordinal)
+                    bundle.putString("customProfile", customProfile)
+                    bundle.putString("customProfileName", customProfilename)
+                    bundle.putString("customProfile2", customProfile2)
+                }
+            }
             .show(fragmentManager, "ProfileSwitchDialog")
     }
 }

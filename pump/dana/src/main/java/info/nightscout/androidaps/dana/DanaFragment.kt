@@ -14,7 +14,6 @@ import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
 import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -98,15 +97,13 @@ class DanaFragment : DaggerFragment() {
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
-            ProfileViewerDialog().also { pvd ->
-                pvd.arguments = Bundle().also { args ->
-                    args.putLong("time", dateUtil.now())
-                    args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-                    args.putString("customProfile", profile.toString())
-                    args.putString("customProfileName", profileName)
-                }
-
-            }.show(childFragmentManager, "ProfileViewDialog")
+            activityNames.runProfileViewerDialog(
+                fragmentManager = childFragmentManager,
+                time = dateUtil.now(),
+                mode = ActivityNames.Mode.CUSTOM_PROFILE,
+                customProfile = profile.toString(),
+                customProfileName = profileName
+            )
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
@@ -160,8 +157,10 @@ class DanaFragment : DaggerFragment() {
                            pumpStatusIcon = when (it.status) {
                                EventPumpStatusChanged.Status.CONNECTING   ->
                                    "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+
                                EventPumpStatusChanged.Status.CONNECTED    ->
                                    "{fa-bluetooth}"
+
                                EventPumpStatusChanged.Status.DISCONNECTED ->
                                    "{fa-bluetooth-b}"
 

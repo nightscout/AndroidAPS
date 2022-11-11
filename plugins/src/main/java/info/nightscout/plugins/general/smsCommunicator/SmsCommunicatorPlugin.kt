@@ -620,7 +620,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided[1].uppercase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, profileName))
         } else if (divided[1].uppercase(Locale.getDefault()) == "LIST") {
-            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalidprofile)))
+            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalid_profile)))
             else {
                 var reply = ""
                 for (i in list.indices) {
@@ -655,7 +655,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))
                                 )
                             } else {
-                                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalidprofile)))
+                                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalid_profile)))
                             }
                         }
                     })
