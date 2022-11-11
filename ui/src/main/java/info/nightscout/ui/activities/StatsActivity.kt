@@ -15,7 +15,7 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityStatsBinding
-import info.nightscout.ui.utils.ActivityMonitor
+import info.nightscout.ui.activityMonitor.ActivityMonitor
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

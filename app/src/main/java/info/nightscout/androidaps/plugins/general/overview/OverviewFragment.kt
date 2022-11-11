@@ -30,7 +30,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.androidaps.dialogs.InsulinDialog
+import info.nightscout.ui.dialogs.InsulinDialog
 import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog

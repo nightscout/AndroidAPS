@@ -361,9 +361,6 @@
     <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
     <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
-    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
-    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
-    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
@@ -381,8 +378,6 @@
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
-    <string name="do_not_bolus_record_only">Do not bolus, record only</string>
-    <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>

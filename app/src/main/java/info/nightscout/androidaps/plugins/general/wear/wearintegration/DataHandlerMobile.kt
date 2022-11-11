@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.dialogs.InsulinDialog
+import info.nightscout.ui.dialogs.InsulinDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.total

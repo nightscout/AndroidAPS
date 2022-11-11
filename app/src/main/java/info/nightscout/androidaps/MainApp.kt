@@ -47,7 +47,7 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.ui.utils.ActivityMonitor
+import info.nightscout.ui.activityMonitor.ActivityMonitor
 import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException

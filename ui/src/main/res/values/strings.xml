@@ -58,6 +58,13 @@
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
 
+    <!-- InsulinDialog -->
+    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
+    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
+    <string name="do_not_bolus_record_only">Do not bolus, record only</string>
+    <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
+
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
