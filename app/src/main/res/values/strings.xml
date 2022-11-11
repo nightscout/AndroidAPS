@@ -158,12 +158,6 @@
     <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
     <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
-    <string name="primefill">Prime/Fill</string>
-    <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
-    <string name="fillbolus_title">Fill/Prime standard insulin amounts</string>
-    <string name="button1">Button 1</string>
-    <string name="button2">Button 2</string>
-    <string name="button3">Button 3</string>
     <string name="units">Units</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
@@ -358,7 +352,6 @@
     <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
     <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise, above 100 mg/dl or 5.5 mmol/l)</string>
-    <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Buttons</string>
     <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
     <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
@@ -422,8 +415,6 @@
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
-    <string name="record_pump_site_change">Record pump site change</string>
-    <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
@@ -524,7 +515,6 @@
     <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
     <string name="twohours">2h</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>

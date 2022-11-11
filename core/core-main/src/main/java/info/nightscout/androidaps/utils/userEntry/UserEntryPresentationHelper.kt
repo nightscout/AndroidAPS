@@ -53,7 +53,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
         Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
         Sources.CalibrationDialog   -> R.drawable.ic_calibration
-        Sources.FillDialog          -> R.drawable.ic_cp_pump_canula
+        Sources.FillDialog          -> R.drawable.ic_cp_pump_cannula
         Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
         Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
         Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery

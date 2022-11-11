@@ -33,7 +33,10 @@
     <string name="most_common_profile">Most common profile:</string>
     <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
 
-    <!-- CareDialog -->
+
+    <!-- Dialogs -->
+    <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
+
     <string name="glucose_type">Glucose type</string>
     <string name="bg_other">Other</string>
     <string name="bg_meter">Meter</string>
@@ -45,6 +48,16 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
+
+    <!-- FillDialog -->
+    <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
+    <string name="fillbolus_title">Fill/Prime standard insulin amounts</string>
+    <string name="button1">Button 1</string>
+    <string name="button2">Button 2</string>
+    <string name="button3">Button 3</string>
+    <string name="record_pump_site_change">Record pump site change</string>
+    <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
+
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>

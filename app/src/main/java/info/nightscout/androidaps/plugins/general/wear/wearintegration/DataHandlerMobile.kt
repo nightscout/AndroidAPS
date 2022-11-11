@@ -540,7 +540,7 @@ class DataHandlerMobile @Inject constructor(
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-        var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
+        var message = rh.gs(R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
@@ -554,7 +554,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
-        var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
+        var message = rh.gs(R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(

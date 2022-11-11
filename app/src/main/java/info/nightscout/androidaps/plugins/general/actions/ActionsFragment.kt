@@ -13,8 +13,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.databinding.ActionsFragmentBinding
-import info.nightscout.ui.dialogs.ExtendedBolusDialog
-import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
@@ -56,6 +54,8 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.activities.TDDStatsActivity
 import info.nightscout.ui.dialogs.CareDialog
+import info.nightscout.ui.dialogs.ExtendedBolusDialog
+import info.nightscout.ui.dialogs.FillDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
