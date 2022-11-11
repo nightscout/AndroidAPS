@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Отправить SMS на все номера</string>
     <string name="sendsmsactiontext">Отправить SMS с текстом</string>
     <string name="starttemptarget">Начать врем цель</string>
-    <string name="stoptemptarget">Остановить врем цель</string>
     <string name="islesser">меньше чем</string>
     <string name="isequalorlesser">равно или меньше чем</string>
     <string name="isequal">равно</string>
