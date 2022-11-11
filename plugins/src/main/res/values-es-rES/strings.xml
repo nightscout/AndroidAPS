@@ -156,6 +156,7 @@
     <string name="tidepool_upload_bg">Subir pruebas de glucosa</string>
     <string name="remove_all">Eliminar todos</string>
     <string name="reset_start">Restablecer inicio</string>
+    <string name="upload_now">Subir ahora</string>
     <!-- VirtualPump -->
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
     <string name="virtualpump_settings">Ajustes de bomba virtual</string>
