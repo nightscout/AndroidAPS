@@ -22,6 +22,8 @@
     <!-- Version Checker -->
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <!-- Actions -->
+    <!-- Safety -->
     <!-- Overview -->
     <!-- NSClient -->
     <!-- Tidepool -->
@@ -47,5 +49,5 @@
     <string name="description_ns_client">Sinkroniziraj svoje podatke sa Nightscout</string>
     <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
     <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
-    <!-- Objectives -->
+    <!-- Skins -->
 </resources>
