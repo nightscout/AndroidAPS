@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">שליחת מסרונים לכל המספרים</string>
     <string name="sendsmsactiontext">שליחת מסרון עם טקסט</string>
     <string name="starttemptarget">הפעלת ערך מטרה זמני</string>
-    <string name="stoptemptarget">הפסקת ערך מטרה זמני</string>
     <string name="islesser">פחות מ-</string>
     <string name="isequalorlesser">שווה או פחות מ-</string>
     <string name="isequal">שווה ל-</string>
@@ -122,4 +121,5 @@
     <string name="add_automation">הוספת כלל</string>
     <string name="remove_sort">הסרה\\סידור</string>
     <string name="stop_processing">עצור עיבוד</string>
+    <!-- WeekdayPicker -->
 </resources>
