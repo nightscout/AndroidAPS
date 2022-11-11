@@ -32,7 +32,6 @@
     <string name="paused">Em pausa</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
-    <string name="upload_now">Fazer o upload agora</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
