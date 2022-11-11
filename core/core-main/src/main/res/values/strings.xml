@@ -93,6 +93,9 @@
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
     <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
     <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
+    <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
+    <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
+    <string name="key_aps_mode" translatable="false">aps_mode</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -259,6 +262,10 @@
     <string name="prime_fill">Prime/Fill</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Stop temp target</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Low Glucose Suspend</string>
+    <string name="confirm">Confirm</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

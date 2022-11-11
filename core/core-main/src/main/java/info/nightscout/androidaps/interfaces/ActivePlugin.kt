@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.constraints.Safety
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -65,6 +66,11 @@ interface ActivePlugin {
      *  Always IobCobCalculatorPlugin
      */
     val activeIobCobCalculator: IobCobCalculator
+
+    /**
+     *  Objectives plugin
+     */
+    val activeObjectives: Objectives?
 
     /**
      *  Currently selected NsClient plugin

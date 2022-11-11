@@ -8,7 +8,6 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
-import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 
 @Module
@@ -20,7 +19,6 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributeMainActivity(): MainActivity
     @ContributesAndroidInjector abstract fun contributesPreferencesActivity(): PreferencesActivity
     @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
-    @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
     @ContributesAndroidInjector abstract fun contributesSetupWizardActivity(): SetupWizardActivity
     @ContributesAndroidInjector abstract fun contributesSingleFragmentActivity(): SingleFragmentActivity
 

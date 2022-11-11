@@ -30,9 +30,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.androidaps.dialogs.LoopDialog
-import info.nightscout.ui.dialogs.ProfileSwitchDialog
-import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
@@ -111,6 +108,9 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.ui.dialogs.InsulinDialog
+import info.nightscout.ui.dialogs.LoopDialog
+import info.nightscout.ui.dialogs.ProfileSwitchDialog
+import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

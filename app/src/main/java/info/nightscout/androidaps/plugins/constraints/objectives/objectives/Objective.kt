@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.objectives.objectives
 
 import android.content.Context
-import android.graphics.Color
 import android.text.util.Linkify
 import android.widget.CheckBox
 import android.widget.TextView
@@ -9,11 +8,10 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import kotlin.math.floor
 

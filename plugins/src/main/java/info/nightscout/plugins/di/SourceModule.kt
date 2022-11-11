@@ -13,6 +13,7 @@ import info.nightscout.plugins.source.NSClientSourcePlugin
 import info.nightscout.plugins.source.PoctechPlugin
 import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.source.XdripPlugin
+import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 
 @Module
 @Suppress("unused")
@@ -30,4 +31,6 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesTomatoWorker(): TomatoPlugin.TomatoWorker
     @ContributesAndroidInjector abstract fun contributesEversenseWorker(): EversensePlugin.EversenseWorker
     @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
+
+    @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
 }

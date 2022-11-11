@@ -17,6 +17,13 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective9
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Objectives
+import info.nightscout.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
+import info.nightscout.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE
+import info.nightscout.interfaces.constraints.Objectives.Companion.FIRST_OBJECTIVE
+import info.nightscout.interfaces.constraints.Objectives.Companion.MAXBASAL_OBJECTIVE
+import info.nightscout.interfaces.constraints.Objectives.Companion.MAXIOB_ZERO_CL_OBJECTIVE
+import info.nightscout.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -45,23 +52,9 @@ class ObjectivesPlugin @Inject constructor(
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives),
     aapsLogger, rh, injector
-), Constraints {
+), Constraints, Objectives {
 
     var objectives: MutableList<Objective> = ArrayList()
-
-    companion object {
-
-        const val FIRST_OBJECTIVE = 0
-        @Suppress("unused") const val USAGE_OBJECTIVE = 1
-        @Suppress("unused") const val EXAM_OBJECTIVE = 2
-        @Suppress("unused") const val OPENLOOP_OBJECTIVE = 3
-        @Suppress("unused") const val MAXBASAL_OBJECTIVE = 4
-        const val MAXIOB_ZERO_CL_OBJECTIVE = 5
-        @Suppress("unused") const val MAXIOB_OBJECTIVE = 6
-        const val AUTOSENS_OBJECTIVE = 7
-        const val SMB_OBJECTIVE = 8
-        const val AUTO_OBJECTIVE = 9
-    }
 
     public override fun onStart() {
         super.onStart()
@@ -155,4 +148,6 @@ class ObjectivesPlugin @Inject constructor(
             value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, AUTO_OBJECTIVE + 1), this)
         return value
     }
+
+    override fun isAccomplished(index: Int) = objectives[Objectives.MAXIOB_OBJECTIVE].isAccomplished
 }

@@ -190,9 +190,6 @@
         <activity
             android:name=".plugins.general.maintenance.activities.LogSettingActivity"
             android:exported="false" />
-        <activity
-            android:name="info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity"
-            android:exported="false" />
 
         <uses-library
             android:name="org.apache.http.legacy"

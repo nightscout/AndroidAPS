@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
-    <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
     <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
     <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>

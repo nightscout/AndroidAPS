@@ -3,7 +3,6 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
@@ -35,7 +34,6 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 
-    @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
     @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog

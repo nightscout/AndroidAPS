@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -40,6 +39,7 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.utils.HardLimits
@@ -49,6 +49,7 @@ import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -439,8 +440,8 @@ class SWDefinition @Inject constructor(
             SWFragment(injector, this)
                 .add(ObjectivesFragment())
         )
-        .validator { objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted }
-        .visibility { !objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted && config.APS }
+        .validator { objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].isStarted }
+        .visibility { !objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].isStarted && config.APS }
 
     private fun swDefinitionFull() { // List all the screens here
         add(screenSetupWizard)

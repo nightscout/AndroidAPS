@@ -59,15 +59,26 @@
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
 
     <!-- InsulinDialog -->
-    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
-    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
-    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
 
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
+
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Suspend loop for 1h</string>
+    <string name="suspendloopfor2h">Suspend loop for 2h</string>
+    <string name="suspendloopfor3h">Suspend loop for 3h</string>
+    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
+    <string name="disconnectpump">Disconnect pump</string>
+    <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
+    <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
+    <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
+    <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
+    <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
+    <string name="resume">Resume</string>
+    <string name="reconnect">Reconnect Pump</string>
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
