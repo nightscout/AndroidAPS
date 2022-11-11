@@ -33,7 +33,6 @@
     <string name="paused">Pozastaveno</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Přihlášení</string>
-    <string name="upload_now">Nahrát nyní</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
