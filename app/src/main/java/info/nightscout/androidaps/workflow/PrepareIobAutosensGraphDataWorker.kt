@@ -10,7 +10,6 @@ import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
@@ -18,6 +17,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Devia
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -27,6 +27,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
@@ -146,7 +147,7 @@ class PrepareIobAutosensGraphDataWorker(
             val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
             val baseBasalIob = data.iobCobCalculator.calculateAbsoluteIobFromBaseBasals(time)
             val absIob = IobTotal.combine(iob, baseBasalIob)
-            val autosensData = adsData.getAutosensDataAtTime(time)
+            val autosensData = adsData.getAutosensDataAtTime(time) as AutosensDataObject?
             if (abs(lastIob - iob.iob) > 0.02) {
                 if (abs(lastIob - iob.iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, data.overviewData.iobScale))
                 iobArray.add(ScaledDataPoint(time, iob.iob, data.overviewData.iobScale))

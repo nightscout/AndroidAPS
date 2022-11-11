@@ -10,10 +10,7 @@ import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.fabric.FabricPrivacy
@@ -29,11 +26,15 @@ import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensData
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.BasalData
 import info.nightscout.interfaces.iob.CobInfo
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -93,7 +94,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
 
-    override var ads: AutosensDataStore = AutosensDataStore()
+    override var ads: AutosensDataStore = AutosensDataStoreObject()
 
     private val dataLock = Any()
     private var thread: Thread? = null

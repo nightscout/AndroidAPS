@@ -35,7 +35,6 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -54,6 +53,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator

@@ -8,10 +8,10 @@ import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType

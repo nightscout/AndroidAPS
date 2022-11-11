@@ -1,8 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.aps
 
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.interfaces.ConfigExportImport
-import info.nightscout.interfaces.aps.AutosensResult
 
 interface Sensitivity : ConfigExportImport {
 

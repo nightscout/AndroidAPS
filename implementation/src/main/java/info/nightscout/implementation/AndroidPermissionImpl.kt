@@ -14,12 +14,12 @@ import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.shared.interfaces.ResourceHelper

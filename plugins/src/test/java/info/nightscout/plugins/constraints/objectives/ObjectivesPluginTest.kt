@@ -3,10 +3,10 @@ package info.nightscout.plugins.constraints.objectives
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Objectives
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.R
 import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.shared.interfaces.ResourceHelper

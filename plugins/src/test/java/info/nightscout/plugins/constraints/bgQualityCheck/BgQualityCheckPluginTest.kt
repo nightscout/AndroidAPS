@@ -3,11 +3,11 @@ package info.nightscout.plugins.constraints.bgQualityCheck
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -29,7 +29,7 @@ class BgQualityCheckPluginTest : TestBase() {
     private lateinit var plugin: BgQualityCheckPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
-    private val autosensDataStore = AutosensDataStore()
+    private val autosensDataStore = AutosensDataStoreObject()
 
     @Before
     fun mock() {

@@ -12,7 +12,6 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toUnitsString
@@ -20,6 +19,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.ActivityNames

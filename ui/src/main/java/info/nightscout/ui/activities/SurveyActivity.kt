@@ -3,8 +3,8 @@ package info.nightscout.ui.activities
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.shared.SafeParse

@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.isInProgress
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.ToastUtils
@@ -30,6 +29,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateExtendedBolusTransaction
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

@@ -15,13 +15,13 @@ import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action
 import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Dana
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.defs.PumpType

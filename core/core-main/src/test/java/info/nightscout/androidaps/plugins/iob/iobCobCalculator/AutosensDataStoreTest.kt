@@ -16,7 +16,7 @@ class AutosensDataStoreTest : TestBase() {
 
     lateinit var dateUtil: DateUtil
 
-    private val autosensDataStore = AutosensDataStore()
+    private val autosensDataStore = AutosensDataStoreObject()
 
     @Before
     fun mock() {

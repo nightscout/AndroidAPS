@@ -4,12 +4,12 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore

@@ -14,9 +14,9 @@ import info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivit
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8FragmentBinding
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames

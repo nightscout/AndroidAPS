@@ -13,7 +13,6 @@ import info.nightscout.androidaps.dana.database.DanaHistoryDatabase
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabase
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
@@ -26,6 +25,7 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.DataSyncSelector

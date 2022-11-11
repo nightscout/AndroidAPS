@@ -12,12 +12,12 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.core.main.R
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
+import info.nightscout.core.main.R
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.shared.sharedPreferences.SP
 import java.io.File
 import javax.inject.Inject

@@ -9,8 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseTriggerDialog
@@ -19,6 +17,8 @@ import info.nightscout.automation.events.EventTriggerClone
 import info.nightscout.automation.events.EventTriggerRemove
 import info.nightscout.automation.services.LastLocationDataContainer
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

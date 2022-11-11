@@ -10,8 +10,6 @@ import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.extensions.toTableRow
 import info.nightscout.androidaps.extensions.toTableRowHeader
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TotalDailyDose
@@ -19,6 +17,8 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.logging.AAPSLogger

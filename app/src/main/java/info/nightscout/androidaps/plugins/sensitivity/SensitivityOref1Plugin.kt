@@ -4,14 +4,14 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.isPSEvent5minBack
-import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.core.profile.secondsFromMidnight
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.aps.Sensitivity.SensitivityType
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.PluginDescription

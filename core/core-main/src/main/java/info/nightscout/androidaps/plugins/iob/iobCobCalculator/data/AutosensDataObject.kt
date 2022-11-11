@@ -6,10 +6,9 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataP
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.core.main.R
-import info.nightscout.database.entities.Carbs
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.AutosensResult
-import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -20,7 +19,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.min
 
-class AutosensData(injector: HasAndroidInjector) : DataPointWithLabelInterface {
+class AutosensDataObject(injector: HasAndroidInjector) : DataPointWithLabelInterface, AutosensData {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -28,70 +27,41 @@ class AutosensData(injector: HasAndroidInjector) : DataPointWithLabelInterface {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
-    inner class CarbsInPast {
-
-        var time: Long
-        var carbs: Double
-        var min5minCarbImpact = 0.0
-        var remaining: Double
-
-        constructor(t: Carbs, isAAPSOrWeighted: Boolean) {
-            time = t.timestamp
-            carbs = t.amount
-            remaining = t.amount
-            val profile = profileFunction.getProfile(t.timestamp)
-            if (isAAPSOrWeighted && profile != null) {
-                val maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-                val sens = profile.getIsfMgdl(t.timestamp)
-                val ic = profile.getIc(t.timestamp)
-                min5minCarbImpact = t.amount / (maxAbsorptionHours * 60 / 5) * sens / ic
-                aapsLogger.debug(
-                    LTag.AUTOSENS,
-                    """Min 5m carbs impact for ${carbs}g @${dateUtil.dateAndTimeString(t.timestamp)} for ${maxAbsorptionHours}h calculated to $min5minCarbImpact ISF: $sens IC: $ic"""
-                )
-            } else {
-                min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
-            }
-        }
-
-        internal constructor(other: CarbsInPast) {
-            time = other.time
-            carbs = other.carbs
-            min5minCarbImpact = other.min5minCarbImpact
-            remaining = other.remaining
-        }
-
-        override fun toString(): String =
-            String.format(Locale.ENGLISH, "CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", dateUtil.dateAndTimeString(time), carbs, min5minCarbImpact, remaining)
-    }
-
-    var time = 0L
-    var bg = 0.0 // mgdl
+    override var time = 0L
+    override var bg = 0.0 // mgdl
     var chartTime: Long = 0
-    var pastSensitivity = ""
-    var deviation = 0.0
-    var validDeviation = false
-    var activeCarbsList: MutableList<CarbsInPast> = ArrayList()
+    override var pastSensitivity = ""
+    override var deviation = 0.0
+    override var validDeviation = false
+    var activeCarbsList: MutableList<AutosensData.CarbsInPast> = ArrayList()
     var absorbed = 0.0
-    var carbsFromBolus = 0.0
-    var cob = 0.0
+    override var carbsFromBolus = 0.0
+    override var cob = 0.0
     var bgi = 0.0
     var delta = 0.0
     var avgDelta = 0.0
-    var avgDeviation = 0.0
-    var autosensResult = AutosensResult()
-    var slopeFromMaxDeviation = 0.0
-    var slopeFromMinDeviation = 999.0
-    var usedMinCarbsImpact = 0.0
-    var failOverToMinAbsorptionRate = false
+    override var avgDeviation = 0.0
+    override var autosensResult = AutosensResult()
+    override var slopeFromMaxDeviation = 0.0
+    override var slopeFromMinDeviation = 999.0
+    override var usedMinCarbsImpact = 0.0
+    override var failOverToMinAbsorptionRate = false
 
     // Oref1
-    var absorbing = false
-    var mealCarbs = 0.0
-    var mealStartCounter = 999
-    var type = ""
-    var uam = false
-    var extraDeviation: MutableList<Double> = ArrayList()
+    override var absorbing = false
+    override var mealCarbs = 0.0
+    override var mealStartCounter = 999
+    override var type = ""
+    override var uam = false
+    override var extraDeviation: MutableList<Double> = ArrayList()
+    private fun fromCarbsInPast(other: AutosensData.CarbsInPast): AutosensData.CarbsInPast =
+        AutosensData.CarbsInPast(
+            time = other.time,
+            carbs = other.carbs,
+            min5minCarbImpact = other.min5minCarbImpact,
+            remaining = other.remaining
+        )
+
     override fun toString(): String {
         return String.format(
             Locale.ENGLISH,
@@ -113,10 +83,10 @@ class AutosensData(injector: HasAndroidInjector) : DataPointWithLabelInterface {
         )
     }
 
-    fun cloneCarbsList(): MutableList<CarbsInPast> {
-        val newActiveCarbsList: MutableList<CarbsInPast> = ArrayList()
+    override fun cloneCarbsList(): MutableList<AutosensData.CarbsInPast> {
+        val newActiveCarbsList: MutableList<AutosensData.CarbsInPast> = ArrayList()
         for (c in activeCarbsList) {
-            newActiveCarbsList.add(CarbsInPast(c))
+            newActiveCarbsList.add(fromCarbsInPast(c))
         }
         return newActiveCarbsList
     }

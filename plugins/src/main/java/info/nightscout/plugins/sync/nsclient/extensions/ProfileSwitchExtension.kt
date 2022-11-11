@@ -4,9 +4,9 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T

@@ -3,12 +3,10 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 import androidx.collection.LongSparseArray
 import androidx.collection.size
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.aps.AutosensData
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
@@ -17,44 +15,44 @@ import kotlin.math.abs
 import kotlin.math.roundToLong
 
 @OpenForTesting
-class AutosensDataStore {
+class AutosensDataStoreObject : AutosensDataStore {
 
-    private val dataLock = Any()
-    var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
+    override val dataLock = Any()
+    override var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
     var referenceTime: Long = -1
 
-    var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
+    override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
         @Synchronized set
         @Synchronized get
 
-    var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
+    override var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
         @Synchronized set
         @Synchronized get
 
-    var bucketedData: MutableList<InMemoryGlucoseValue>? = null
+    override var bucketedData: MutableList<InMemoryGlucoseValue>? = null
         @Synchronized set
         @Synchronized get
 
-    fun clone(): AutosensDataStore =
-        AutosensDataStore().also {
+    override fun clone(): AutosensDataStore =
+        AutosensDataStoreObject().also {
             synchronized(dataLock) {
                 it.bgReadings = this.bgReadings.toMutableList()
-                it.autosensDataTable = LongSparseArray<AutosensData>(this.autosensDataTable.size).apply { putAll(this@AutosensDataStore.autosensDataTable) }
+                it.autosensDataTable = LongSparseArray<AutosensData>(this.autosensDataTable.size).apply { putAll(this@AutosensDataStoreObject.autosensDataTable) }
                 it.bucketedData = this.bucketedData?.toMutableList()
             }
         }
 
-    fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>? = synchronized(dataLock) { bucketedData?.toMutableList() }
-    fun getBgReadingsDataTableCopy(): List<GlucoseValue> = synchronized(dataLock) { bgReadings.toMutableList() }
+    override fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>? = synchronized(dataLock) { bucketedData?.toMutableList() }
+    override fun getBgReadingsDataTableCopy(): List<GlucoseValue> = synchronized(dataLock) { bgReadings.toMutableList() }
 
-    fun reset() {
+    override fun reset() {
         synchronized(autosensDataTable) { autosensDataTable = LongSparseArray() }
     }
 
-    fun newHistoryData(time: Long, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
+    override fun newHistoryData(time: Long, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
         synchronized(autosensDataTable) {
             for (index in autosensDataTable.size() - 1 downTo 0) {
                 if (autosensDataTable.keyAt(index) > time) {
@@ -68,7 +66,7 @@ class AutosensDataStore {
     }
 
     // roundup to whole minute
-    fun roundUpTime(time: Long): Long {
+    override fun roundUpTime(time: Long): Long {
         return if (time % 60000 == 0L) time else (time / 60000 + 1) * 60000
     }
 
@@ -77,7 +75,7 @@ class AutosensDataStore {
      *
      * @return GlucoseValue or null
      */
-    fun lastBg(): GlucoseValue? =
+    override fun lastBg(): GlucoseValue? =
         synchronized(dataLock) {
             if (bgReadings.isNotEmpty()) bgReadings[0]
             else null
@@ -88,12 +86,12 @@ class AutosensDataStore {
      *
      * @return GlucoseValue or null
      */
-    fun actualBg(): GlucoseValue? {
+    override fun actualBg(): GlucoseValue? {
         val lastBg = lastBg() ?: return null
         return if (lastBg.timestamp > System.currentTimeMillis() - T.mins(9).msecs()) lastBg else null
     }
 
-    fun lastDataTime(dateUtil: DateUtil): String =
+    override fun lastDataTime(dateUtil: DateUtil): String =
         synchronized(dataLock) {
             if (autosensDataTable.size() > 0) dateUtil.dateAndTimeAndSecondsString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time)
             else "autosensDataTable empty"
@@ -107,7 +105,7 @@ class AutosensDataStore {
         return null
     }
 
-    fun getAutosensDataAtTime(fromTime: Long): AutosensData? {
+    override fun getAutosensDataAtTime(fromTime: Long): AutosensData? {
         synchronized(dataLock) {
             val now = System.currentTimeMillis()
             if (fromTime > now) return null
@@ -116,7 +114,7 @@ class AutosensDataStore {
         }
     }
 
-    fun getLastAutosensData(reason: String, aapsLogger: AAPSLogger, dateUtil: DateUtil): AutosensData? {
+    override fun getLastAutosensData(reason: String, aapsLogger: AAPSLogger, dateUtil: DateUtil): AutosensData? {
         synchronized(dataLock) {
             if (autosensDataTable.size() < 1) {
                 aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: autosensDataTable empty ($reason)")
@@ -156,21 +154,6 @@ class AutosensDataStore {
         return someTime + diff
     }
 
-    fun loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil, rxBus: RxBus) {
-        synchronized(dataLock) {
-            val start = to - T.hours((24 + 10 /* max dia */).toLong()).msecs()
-            // there can be some readings with time in close future (caused by wrong time setting on sensor)
-            // so add 2 minutes
-            bgReadings = repository
-                .compatGetBgReadingsDataFromTime(start, to + T.mins(2).msecs(), false)
-                .blockingGet()
-                .filter { it.value >= 39 }
-            aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
-            createBucketedData(aapsLogger, dateUtil)
-            rxBus.send(EventBucketedDataCreated())
-        }
-    }
-
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {
         synchronized(dataLock) {
             if (bgReadings.size < 3) return true
@@ -196,7 +179,7 @@ class AutosensDataStore {
         }
     }
 
-    fun createBucketedData(aapsLogger: AAPSLogger, dateUtil: DateUtil) {
+    override fun createBucketedData(aapsLogger: AAPSLogger, dateUtil: DateUtil) {
         val fiveMinData = isAbout5minData(aapsLogger)
         if (lastUsed5minCalculation != null && lastUsed5minCalculation != fiveMinData) {
             // changing mode => clear cache
@@ -340,7 +323,7 @@ class AutosensDataStore {
         bucketedData = bData
     }
 
-    fun slowAbsorptionPercentage(timeInMinutes: Int): Double {
+    override fun slowAbsorptionPercentage(timeInMinutes: Int): Double {
         var sum = 0.0
         var count = 0
         val valuesToProcess = timeInMinutes / 5

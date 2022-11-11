@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 

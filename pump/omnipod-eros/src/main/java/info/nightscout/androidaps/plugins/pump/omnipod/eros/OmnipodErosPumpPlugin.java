@@ -35,7 +35,6 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.PumpEnactResultObject;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
@@ -83,6 +82,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.core.fabric.FabricPrivacy;
 import info.nightscout.core.pumpExtensions.DetailedBolusInfoExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
 import info.nightscout.interfaces.profile.Profile;

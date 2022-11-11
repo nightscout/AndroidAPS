@@ -2,9 +2,9 @@ package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback

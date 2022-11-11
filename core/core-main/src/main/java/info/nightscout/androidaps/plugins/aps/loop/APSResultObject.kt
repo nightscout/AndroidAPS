@@ -4,15 +4,15 @@ import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml

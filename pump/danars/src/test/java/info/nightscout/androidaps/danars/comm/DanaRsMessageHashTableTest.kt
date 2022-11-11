@@ -5,9 +5,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.ActivePlugin
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock

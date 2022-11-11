@@ -17,11 +17,11 @@ import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.total
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback

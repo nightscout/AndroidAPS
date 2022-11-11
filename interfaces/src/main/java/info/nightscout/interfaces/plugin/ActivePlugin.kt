@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.plugin
 
 import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.aps.APS
+import info.nightscout.interfaces.aps.Sensitivity
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.constraints.Safety
 import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.source.BgSource

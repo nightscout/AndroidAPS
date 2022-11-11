@@ -8,12 +8,12 @@ import android.os.SystemClock
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.safeDisable
 import info.nightscout.androidaps.extensions.safeEnable
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged

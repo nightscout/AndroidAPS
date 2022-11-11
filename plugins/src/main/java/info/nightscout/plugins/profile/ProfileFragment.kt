@@ -11,7 +11,6 @@ import android.widget.ArrayAdapter
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -22,6 +21,7 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.ActivityNames

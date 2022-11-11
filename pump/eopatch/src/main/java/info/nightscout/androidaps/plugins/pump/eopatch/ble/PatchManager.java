@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
@@ -39,6 +38,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.ProfileFunction;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.interfaces.pump.PumpSync;

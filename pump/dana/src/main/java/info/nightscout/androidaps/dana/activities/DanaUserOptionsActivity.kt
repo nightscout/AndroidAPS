@@ -6,9 +6,9 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue

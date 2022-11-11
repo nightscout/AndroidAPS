@@ -2,8 +2,8 @@ package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.implementation.R
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.rx.logging.LTag

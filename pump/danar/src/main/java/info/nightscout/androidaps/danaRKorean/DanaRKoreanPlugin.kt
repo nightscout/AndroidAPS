@@ -11,10 +11,10 @@ import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionServi
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult

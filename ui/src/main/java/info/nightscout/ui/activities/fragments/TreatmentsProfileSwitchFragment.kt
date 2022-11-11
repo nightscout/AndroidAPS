@@ -20,7 +20,6 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.getCustomizedName
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.ToastUtils
@@ -32,6 +31,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateProfileSwitchTransaction
 import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

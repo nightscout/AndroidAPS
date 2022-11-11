@@ -1,7 +1,6 @@
 package info.nightscout.plugins.constraints.objectives
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -12,6 +11,7 @@ import info.nightscout.interfaces.constraints.Objectives.Companion.FIRST_OBJECTI
 import info.nightscout.interfaces.constraints.Objectives.Companion.MAXBASAL_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.MAXIOB_ZERO_CL_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.SMB_OBJECTIVE
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType

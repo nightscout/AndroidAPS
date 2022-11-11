@@ -12,10 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewNotificationItemBinding

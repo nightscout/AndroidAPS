@@ -6,9 +6,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
@@ -24,6 +23,7 @@ import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.CobInfo
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.defs.PumpDescription
@@ -65,7 +65,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var dateUtilMocked: DateUtil
-    @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var autosensDataStore: AutosensDataStoreObject
     @Mock lateinit var smsManager: SmsManager
 
     var injector: HasAndroidInjector = HasAndroidInjector {
