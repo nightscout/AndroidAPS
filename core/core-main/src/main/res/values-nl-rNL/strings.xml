@@ -40,8 +40,6 @@
     <string name="stoppressed">STOP INGEDRUKT</string>
     <string name="stop">Stop</string>
     <string name="carbs">Koolhydraten</string>
-    <string name="invalidprofile">Ongeldig profiel!</string>
-    <string name="noprofileset">Geen profiel ingesteld</string>
     <string name="active"><![CDATA[<Huidig>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Eenheden</string>
@@ -61,9 +59,9 @@
     <string name="lastconnection_label">Laatste verbinding</string>
     <string name="lastbolus_label">Laatste bolus</string>
     <string name="dailyunits">Dag totaal</string>
-    <string name="basebasalrate_label">Basis basale dosis</string>
+    <string name="base_basal_rate_label">Basis basaalstand</string>
     <string name="tempbasal_label">Tijdelijk basaal</string>
-    <string name="virtualpump_extendedbolus_label">Vertraagde bolus</string>
+    <string name="extended_bolus_label">Verlengde bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Historiek</string>
     <string name="viewprofile">Profiel bekijken</string>
@@ -158,6 +156,10 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
+    <string name="paused">Gepauzeerd</string>
+    <string name="invalid">Ongeldig</string>
+    <string name="login">Aanmelden</string>
+    <string name="upload_now">Nu Uploaden</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -191,10 +193,7 @@
     <string name="profile_carbs_per_unit">g/E</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Start profiel %1$d%% voor %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
     <!--    APSResult-->
-    <string name="canceltemp">Annuleer tijdelijk basaal</string>
     <string name="let_temp_basal_run">Laat tijdelijk basaal lopen</string>
     <string name="rate">Dosis</string>
     <string name="duration">Gedurende</string>
@@ -216,12 +215,9 @@
     <string name="careportal_note_message">Notitie : %1$s</string>
     <string name="careportal_question_message">Vraag : %1$s</string>
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
-    <string name="careportal_pumpsitechange">Infuus wissel</string>
-    <string name="careportal_cgmsensorinsert">CGM Sens. ingebracht</string>
     <string name="careportal_cgmsensorstart">CGM Sens. Start</string>
-    <string name="careportal_cgm_sensor_stop">CGM Sensor Stoppen</string>
+    <string name="careportal_cgm_sensor_stop">CGM Sensor stoppen</string>
     <string name="careportal_dad_alert">Hulphond waarschuwing</string>
-    <string name="careportal_insulincartridgechange">Insulinereservoir wissel</string>
     <string name="careportal_profileswitch">Profiel wissel</string>
     <string name="careportal_snackbolus">Snack bolus</string>
     <string name="careportal_mealbolus">Maaltijd bolus</string>
@@ -231,8 +227,6 @@
     <string name="careportal_tempbasalend">Einde tijd. basaal</string>
     <string name="careportal_carbscorrection">Koolhydraten correctie</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-    <string name="careportal_pumpbatterychange">Pomp bat. wissel</string>
-    <string name="careportal_temporarytarget">Tijdelijk streefdoel</string>
     <string name="careportal_temporarytargetvalue">Tijdelijk streefdoel</string>
     <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
     <string name="boluswizard">Bolus wizard</string>
@@ -276,7 +270,7 @@
     <string name="ratio">Ratio</string>
     <string name="amount_days"># Dagen</string>
     <string name="weight">Gewicht</string>
-    <string name="warning_Message">Mogelijks inaccuraat bij gebruik van bolussen om infusieset te vullen!</string>
+    <string name="warning_Message">Mogelijk inaccuraat bij gebruik van bolussen om infusieset te vullen!</string>
     <string name="olddata_Message">Data verouderd, druk op \"Vernieuwen\"</string>
     <string name="tbb">Totaal basaal</string>
     <string name="tbb2">TBB * 2</string>
@@ -314,14 +308,6 @@
     <string name="version_expire">Versie %1$s verloopt op %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen a. u. b. \nanders zal AndroidAPS geen log mogelijkheid hebben (Dit is belangrijk om te controleren of de algoritmes correct werken)!</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">W</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">S</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_calculator">BOLUS CALCULATOR</string>
@@ -346,7 +332,7 @@
     <string name="uel_disconnect">VERBINDING VERBREKEN</string>
     <string name="uel_resume">HERVATTEN</string>
     <string name="uel_suspend">ONDERBREKEN</string>
-    <string name="uel_hw_pump_allowed">HW PUMP TOEGESTAAN</string>
+    <string name="uel_hw_pump_allowed">HW POMP TOEGESTAAN</string>
     <string name="uel_clear_pairing_keys">VERWIJDER VERBINDINGSSLEUTEL</string>
     <string name="uel_accepts_temp_basal">ACCEPTEERT TIJDELIJK BASAAL</string>
     <string name="uel_cancel_temp_basal">ANNULEER TIJDELIJK BASAAL</string>
@@ -354,7 +340,7 @@
     <string name="uel_cancel_extended_bolus">ANNULEER VERLENGDE BOLUS</string>
     <string name="uel_cancel_tt">STOP TIJDELIJK DOEL</string>
     <string name="uel_careportal">CAREPORTAL</string>
-    <string name="uel_site_change">INFUSIEPLEK WIJZIGING</string>
+    <string name="uel_site_change">INFUUSPLEK WIJZIGING</string>
     <string name="uel_reservoir_change">RESERVOIRWISSEL</string>
     <string name="uel_calibration">KALIBREREN</string>
     <string name="uel_prime_bolus">VUL BOLUS</string>
@@ -484,11 +470,11 @@
     <string name="autotune_auto_summary">Indien ingeschakeld, wordt Autotune automatisch bijgewerkt en overschakelen naar invoerprofiel na de berekening van een automatiseringsregel.</string>
     <string name="autotune_categorize_uam_as_basal_title">UAM als basaal categoriseren</string>
     <string name="autotune_categorize_uam_as_basal_summary">Alleen inschakelen als u betrouwbaar alle koolhydraten ingevoerd en hebt opgegeten, met deze optie zullen plotselinge stijgingen van Autotune worden gebruikt om wijzigingen in de basaalstand aan te bevelen.</string>
-    <string name="autotune_tune_insulin_curve_title">Insuline curve afstemmen</string>
-    <string name="autotune_tune_insulin_curve_summary">Alleen inschakelen als je vrije piek gebruikt. Deze optie zal piek en DIA duur afstemmen</string>
+    <string name="autotune_tune_insulin_curve_title">Insuline curve afstellen</string>
+    <string name="autotune_tune_insulin_curve_summary">Alleen inschakelen als je free peak gebruikt. Deze optie zal piek en DIA afstemmen</string>
     <string name="autotune_default_tune_days_title">Aantal dagen data</string>
     <string name="autotune_circadian_ic_isf_title">Gemiddelde resultaat toepassen in circadiaan IC/ISF</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune zal de circadiaanse variaties niet afstemmen, deze optie past alleen de gemiddelde tuning van IC en ISF toe op uw circadiaanse invoerprofiel</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune zal de circadian (bioritme) variaties niet afstemmen, deze optie past alleen de gemiddelde tuning van IC en ISF toe op uw circadian invoerprofiel</string>
     <string name="autotune_additional_log_title">Meer log-informatie voor foutopsporing toevoegen</string>
     <string name="autotune_additional_log_summary">Schakel alleen in op verzoek van een onwikkelaar om meer log-informatie te sturen om Autotune plugin te helpen debuggen</string>
     <string name="autotune_default_tune_days_summary">Standaard aantal dagen aan gegevens dat Autotune moet verwerken (tot 30)</string>
@@ -524,8 +510,13 @@
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
     <string name="needconnectpermission">Applicatie heeft bluetooth toestemming nodig</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
+    <string name="urgent_alarm">Dringend alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
+    <!-- BolusWizard -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
