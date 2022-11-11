@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Invia SMS a tutti i numeri</string>
     <string name="sendsmsactiontext">Invia SMS con testo</string>
     <string name="starttemptarget">Avvia temp-target</string>
-    <string name="stoptemptarget">Stoppa temp-target</string>
     <string name="islesser">è inferiore a</string>
     <string name="isequalorlesser">è uguale o inferiore a</string>
     <string name="isequal">è uguale a</string>
@@ -122,4 +121,5 @@
     <string name="add_automation">Aggiungi regola</string>
     <string name="remove_sort">Rimuovi/ordina</string>
     <string name="stop_processing">Interrompere l\'elaborazione</string>
+    <!-- WeekdayPicker -->
 </resources>
