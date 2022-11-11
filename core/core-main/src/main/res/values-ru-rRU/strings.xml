@@ -18,7 +18,6 @@
     <string name="paused">на паузе</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="login">Логин</string>
-    <string name="upload_now">Начать передачу данных</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
