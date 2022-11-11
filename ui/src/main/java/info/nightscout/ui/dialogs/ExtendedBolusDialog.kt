@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.content.Context
 import android.os.Bundle
@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.DialogExtendedbolusBinding
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -16,9 +15,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.queue.Callback
@@ -27,6 +24,8 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogExtendedbolusBinding
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -105,7 +104,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 uel.log(
-                    Action.EXTENDED_BOLUS, Sources.ExtendedBolusDialog,
+                    UserEntry.Action.EXTENDED_BOLUS, UserEntry.Sources.ExtendedBolusDialog,
                     ValueWithUnit.Insulin(insulinAfterConstraint),
                     ValueWithUnit.Minute(durationInMinutes)
                 )
@@ -132,7 +131,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
-                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
         }
     }

@@ -13,7 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.databinding.ActionsFragmentBinding
-import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
+import info.nightscout.ui.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempBasalDialog

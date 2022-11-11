@@ -19,6 +19,7 @@ import info.nightscout.ui.activities.fragments.TreatmentsUserEntryFragment
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.ui.dialogs.CareDialog
+import info.nightscout.ui.dialogs.ExtendedBolusDialog
 import info.nightscout.ui.dialogs.ProfileViewerDialog
 import info.nightscout.ui.dialogs.WizardInfoDialog
 
@@ -31,6 +32,7 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
     @ContributesAndroidInjector abstract fun contributesProfileViewerDialog(): ProfileViewerDialog
+    @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
 
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
