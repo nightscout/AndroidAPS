@@ -260,7 +260,6 @@
     <string name="paused">Paused</string>
     <string name="invalid">INVALID</string>
     <string name="login">Login</string>
-    <string name="upload_now">Upload now</string>
     <string name="prime_fill">Prime/Fill</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Stop temp target</string>
@@ -580,7 +579,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal outdated.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicked connect to pump</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pump driver changed.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pump driver change.</string>
     <string name="device_changed" comment="26 characters max for translation">Device changed</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Clicked refresh</string>
