@@ -34,7 +34,6 @@
     <string name="paused">Suspendat</string>
     <string name="invalid">INVALID</string>
     <string name="login">Autentificare</string>
-    <string name="upload_now">Încarcă acum</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
