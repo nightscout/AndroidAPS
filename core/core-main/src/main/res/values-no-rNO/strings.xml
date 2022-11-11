@@ -159,7 +159,6 @@
     <string name="paused">Pauset</string>
     <string name="invalid">UGYLDIG</string>
     <string name="login">Logg inn</string>
-    <string name="upload_now">Last opp nå</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -438,7 +437,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
     <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Trykket på oppdater</string>
