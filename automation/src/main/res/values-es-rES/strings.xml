@@ -122,4 +122,11 @@
     <string name="remove_sort">Eliminar/ordenar</string>
     <string name="stop_processing">Parar procesamiento</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">L</string>
+    <string name="tuesday_short">M</string>
+    <string name="wednesday_short">X</string>
+    <string name="thursday_short">J</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">D</string>
 </resources>
