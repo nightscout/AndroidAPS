@@ -25,16 +25,4 @@ android {
 dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-
-    // This is necessary to prevent Gradle build errors like:
-    //
-    //  Duplicate class androidx.lifecycle.ViewModelLazy found in modules jetified-lifecycle-viewmodel-ktx-2.3.1-runtime (androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1) and lifecycle-viewmodel-2.5.0-runtime (androidx.lifecycle:lifecycle-viewmodel:2.5.0)
-    //
-    // By explicitly adding these dependencies, the jetifier
-    // is forced to use the correct lifecycle version instead
-    // of automatically picking 2.3.1.
-    //
-    // See: https://stackoverflow.com/a/69832319/560774
-    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 }
