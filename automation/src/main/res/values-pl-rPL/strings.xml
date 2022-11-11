@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Wyślij SMS do wszystkich numerów</string>
     <string name="sendsmsactiontext">Wyślij SMS z tekstem</string>
     <string name="starttemptarget">Rozpocznij cel tymczasowy</string>
-    <string name="stoptemptarget">Zatrzymaj cel tymczasowy</string>
     <string name="islesser">jest mniejsze niż</string>
     <string name="isequalorlesser">jest mniejsze lub równe</string>
     <string name="isequal">jest równe</string>
@@ -111,4 +110,5 @@
     <string name="automation_event">Zdarzenie automatyzacji</string>
     <string name="reorder_label">Zmień kolejność</string>
     <string name="user_action">Akcja użytkownika</string>
+    <!-- WeekdayPicker -->
 </resources>
