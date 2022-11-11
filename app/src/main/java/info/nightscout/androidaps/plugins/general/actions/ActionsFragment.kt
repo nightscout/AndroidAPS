@@ -14,8 +14,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.databinding.ActionsFragmentBinding
 import info.nightscout.ui.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.dialogs.TempBasalDialog
-import info.nightscout.androidaps.dialogs.TempTargetDialog
+import info.nightscout.ui.dialogs.TempBasalDialog
+import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.ActivePlugin

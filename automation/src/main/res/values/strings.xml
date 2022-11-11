@@ -30,7 +30,6 @@
     <string name="sendsmsactiondescription">Send SMS to all numbers</string>
     <string name="sendsmsactiontext">Send SMS with text</string>
     <string name="starttemptarget">Start temp target</string>
-    <string name="stoptemptarget">Stop temp target</string>
     <string name="islesser">is lesser than</string>
     <string name="isequalorlesser">is equal or lesser than</string>
     <string name="isequal">is equal to</string>

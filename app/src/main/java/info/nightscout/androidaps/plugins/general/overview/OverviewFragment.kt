@@ -32,7 +32,7 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 import info.nightscout.androidaps.dialogs.LoopDialog
 import info.nightscout.ui.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.dialogs.TempTargetDialog
+import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG

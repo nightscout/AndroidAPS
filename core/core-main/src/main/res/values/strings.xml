@@ -92,6 +92,7 @@
     <string name="key_ns_receive_offline_event" translatable="false">ns_receive_offline_event</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
     <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
+    <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -257,6 +258,7 @@
     <string name="upload_now">Upload now</string>
     <string name="prime_fill">Prime/Fill</string>
     <string name="overview_insulin_label">Insulin</string>
+    <string name="stoptemptarget">Stop temp target</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

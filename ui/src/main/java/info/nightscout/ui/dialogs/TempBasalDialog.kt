@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.content.Context
 import android.os.Bundle
@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.DialogTempbasalBinding
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
@@ -17,9 +16,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.pump.PumpSync
@@ -30,6 +27,8 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogTempbasalBinding
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -76,16 +75,22 @@ class TempBasalDialog : DialogFragmentWithDate() {
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
 
-        binding.basalPercentInput.setParams(savedInstanceState?.getDouble("basalPercentInput")
-            ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, binding.okcancel.ok)
+        binding.basalPercentInput.setParams(
+            savedInstanceState?.getDouble("basalPercentInput")
+                ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, binding.okcancel.ok
+        )
 
-        binding.basalAbsoluteInput.setParams(savedInstanceState?.getDouble("basalAbsoluteInput")
-            ?: profile.getBasal(), 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok)
+        binding.basalAbsoluteInput.setParams(
+            savedInstanceState?.getDouble("basalAbsoluteInput")
+                ?: profile.getBasal(), 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok
+        )
 
         val tempDurationStep = pumpDescription.tempDurationStep.toDouble()
         val tempMaxDuration = pumpDescription.tempMaxDuration.toDouble()
-        binding.duration.setParams(savedInstanceState?.getDouble("duration")
-            ?: tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, DecimalFormat("0"), false, binding.okcancel.ok)
+        binding.duration.setParams(
+            savedInstanceState?.getDouble("duration")
+                ?: tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, DecimalFormat("0"), false, binding.okcancel.ok
+        )
 
         isPercentPump = pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
         if (isPercentPump) {
@@ -136,14 +141,18 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
-                            ValueWithUnit.Percent(percent),
-                            ValueWithUnit.Minute(durationInMinutes))
+                    uel.log(
+                        UserEntry.Action.TEMP_BASAL, UserEntry.Sources.TempBasalDialog,
+                        ValueWithUnit.Percent(percent),
+                        ValueWithUnit.Minute(durationInMinutes)
+                    )
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 } else {
-                    uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
-                            ValueWithUnit.Insulin(absolute),
-                            ValueWithUnit.Minute(durationInMinutes))
+                    uel.log(
+                        UserEntry.Action.TEMP_BASAL, UserEntry.Sources.TempBasalDialog,
+                        ValueWithUnit.Insulin(absolute),
+                        ValueWithUnit.Minute(durationInMinutes)
+                    )
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 }
             })
@@ -153,7 +162,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
 
     override fun onResume() {
         super.onResume()
-        if(!queryingProtection) {
+        if (!queryingProtection) {
             queryingProtection = true
             activity?.let { activity ->
                 val cancelFail = {
@@ -162,7 +171,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
-                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
         }
     }
