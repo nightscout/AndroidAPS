@@ -44,7 +44,6 @@
     <string name="paused">Duraklatıldı</string>
     <string name="invalid">GEÇERSİZ</string>
     <string name="login">Giriş</string>
-    <string name="upload_now">Şimdi yükle</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
