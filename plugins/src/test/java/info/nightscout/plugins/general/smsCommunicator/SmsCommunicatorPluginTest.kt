@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Constraints
@@ -70,7 +70,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is PumpEnactResultImpl) {
+            if (it is PumpEnactResultObject) {
                 it.rh = rh
             }
             if (it is AuthRequest) {
@@ -113,45 +113,45 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResultImpl(injector).success(true)
+            callback.result = PumpEnactResultObject(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).cancelTempBasal(ArgumentMatchers.anyBoolean(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(0)
-            callback.result = PumpEnactResultImpl(injector).success(true)
+            callback.result = PumpEnactResultObject(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).cancelExtended(ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResultImpl(injector).success(true)
+            callback.result = PumpEnactResultObject(injector).success(true)
             callback.run()
             null
         }.`when`(commandQueue).readStatus(ArgumentMatchers.anyString(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
-            callback.result = PumpEnactResultImpl(injector).success(true).bolusDelivered(1.0)
+            callback.result = PumpEnactResultObject(injector).success(true).bolusDelivered(1.0)
             callback.run()
             null
         }.`when`(commandQueue).bolus(anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(5)
-            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultObject(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
         }.`when`(commandQueue)
             .tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(5)
-            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultObject(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
         }.`when`(commandQueue)
             .tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
-            callback.result = PumpEnactResultImpl(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
+            callback.result = PumpEnactResultObject(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))

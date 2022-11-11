@@ -39,7 +39,7 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.androidaps.data.PumpEnactResultImpl;
+import info.nightscout.androidaps.data.PumpEnactResultObject;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -242,7 +242,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public PumpEnactResult loadHistory(byte type) {
-        PumpEnactResult result = new PumpEnactResultImpl(injector);
+        PumpEnactResult result = new PumpEnactResultObject(injector);
         if (!isConnected()) return result;
         MessageBase msg = null;
         switch (type) {

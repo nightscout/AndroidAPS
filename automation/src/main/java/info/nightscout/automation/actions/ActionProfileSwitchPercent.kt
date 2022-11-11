@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
@@ -50,10 +50,10 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
-            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultObject(injector).success(false).comment(R.string.ok)).run()
         }
     }
 

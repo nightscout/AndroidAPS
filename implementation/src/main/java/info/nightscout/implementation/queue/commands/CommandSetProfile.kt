@@ -1,7 +1,7 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.queue.commands.Command
@@ -32,7 +32,7 @@ class CommandSetProfile constructor(
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
-            callback?.result(PumpEnactResultImpl(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResultObject(injector).success(true).enacted(false))?.run()
             return
         }
         val r = activePlugin.activePump.setNewBasalProfile(profile)

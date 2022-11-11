@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.database.impl.transactions.Transaction
@@ -35,7 +35,7 @@ class ActionNotificationTest : TestBase() {
                 it.rxBus = rxBus
                 it.repository = repository
             }
-            if (it is PumpEnactResultImpl) {
+            if (it is PumpEnactResultObject) {
                 it.rh = rh
             }
         }

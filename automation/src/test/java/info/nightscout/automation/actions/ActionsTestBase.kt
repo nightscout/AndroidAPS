@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.Loop
@@ -157,7 +157,7 @@ ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionStopProcessing) {
                 it.rh = rh
             }
-            if (it is PumpEnactResultImpl) {
+            if (it is PumpEnactResultObject) {
                 it.rh = rh
             }
             if (it is Trigger) {

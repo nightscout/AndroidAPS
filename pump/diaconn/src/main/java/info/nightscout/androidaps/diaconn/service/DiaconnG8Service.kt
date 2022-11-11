@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
@@ -269,7 +269,7 @@ class DiaconnG8Service : DaggerService() {
 
     fun loadHistory(): PumpEnactResult {
         if (!diaconnG8Plugin.isInitialized()) {
-            val result = PumpEnactResultImpl(injector).success(false)
+            val result = PumpEnactResultObject(injector).success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -279,7 +279,7 @@ class DiaconnG8Service : DaggerService() {
             sendMessage(IncarnationInquirePacket(injector))
         }
 
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
         var apsLastLogNum = 9999
         var apsWrappingCount = -1
         // get saved last loginfo
@@ -421,7 +421,7 @@ class DiaconnG8Service : DaggerService() {
     }
 
     fun setUserSettings(): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
 
         val msg: DiaconnG8Packet = when (diaconnG8Pump.setUserOptionType) {
             DiaconnG8Pump.ALARM -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntesity)

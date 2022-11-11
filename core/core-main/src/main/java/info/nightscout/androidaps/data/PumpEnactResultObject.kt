@@ -9,7 +9,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
 
-class PumpEnactResultImpl(injector: HasAndroidInjector) : PumpEnactResult {
+class PumpEnactResultObject(injector: HasAndroidInjector) : PumpEnactResult {
 
     @Inject lateinit var rh: ResourceHelper
 
@@ -33,18 +33,18 @@ class PumpEnactResultImpl(injector: HasAndroidInjector) : PumpEnactResult {
     override var carbsDelivered = 0.0 // real value of delivered carbs
     override var queued = false
 
-    override fun success(success: Boolean): PumpEnactResultImpl = this.also { this.success = success }
-    override fun enacted(enacted: Boolean): PumpEnactResultImpl = this.also { it.enacted = enacted }
-    override fun comment(comment: String): PumpEnactResultImpl = this.also { it.comment = comment }
-    override fun comment(comment: Int): PumpEnactResultImpl = this.also { it.comment = rh.gs(comment) }
-    override fun duration(duration: Int): PumpEnactResultImpl = this.also { it.duration = duration }
-    override fun absolute(absolute: Double): PumpEnactResultImpl = this.also { it.absolute = absolute }
-    override fun percent(percent: Int): PumpEnactResultImpl = this.also { it.percent = percent }
-    override fun isPercent(isPercent: Boolean): PumpEnactResultImpl = this.also { it.isPercent = isPercent }
-    override fun isTempCancel(isTempCancel: Boolean): PumpEnactResultImpl = this.also { it.isTempCancel = isTempCancel }
-    override fun bolusDelivered(bolusDelivered: Double): PumpEnactResultImpl = this.also { it.bolusDelivered = bolusDelivered }
-    override fun carbsDelivered(carbsDelivered: Double): PumpEnactResultImpl = this.also { it.carbsDelivered = carbsDelivered }
-    override fun queued(queued: Boolean): PumpEnactResultImpl = this.also { it.queued = queued }
+    override fun success(success: Boolean): PumpEnactResultObject = this.also { this.success = success }
+    override fun enacted(enacted: Boolean): PumpEnactResultObject = this.also { it.enacted = enacted }
+    override fun comment(comment: String): PumpEnactResultObject = this.also { it.comment = comment }
+    override fun comment(comment: Int): PumpEnactResultObject = this.also { it.comment = rh.gs(comment) }
+    override fun duration(duration: Int): PumpEnactResultObject = this.also { it.duration = duration }
+    override fun absolute(absolute: Double): PumpEnactResultObject = this.also { it.absolute = absolute }
+    override fun percent(percent: Int): PumpEnactResultObject = this.also { it.percent = percent }
+    override fun isPercent(isPercent: Boolean): PumpEnactResultObject = this.also { it.isPercent = isPercent }
+    override fun isTempCancel(isTempCancel: Boolean): PumpEnactResultObject = this.also { it.isTempCancel = isTempCancel }
+    override fun bolusDelivered(bolusDelivered: Double): PumpEnactResultObject = this.also { it.bolusDelivered = bolusDelivered }
+    override fun carbsDelivered(carbsDelivered: Double): PumpEnactResultObject = this.also { it.carbsDelivered = carbsDelivered }
+    override fun queued(queued: Boolean): PumpEnactResultObject = this.also { it.queued = queued }
 
     override fun log(): String {
         return "Success: " + success +

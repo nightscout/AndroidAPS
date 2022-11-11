@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.interfaces.utils.JsonHelper
@@ -41,7 +41,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
-        callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
     }
 
     override fun toJSON(): String {

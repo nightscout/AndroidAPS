@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.combo.R
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
@@ -34,7 +34,7 @@ class ComboPluginTest : TestBase() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is PumpEnactResultImpl) {
+            if (it is PumpEnactResultObject) {
                 it.rh = rh
             }
         }

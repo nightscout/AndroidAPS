@@ -10,7 +10,7 @@ import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.data.PumpEnactResultImpl;
+import info.nightscout.androidaps.data.PumpEnactResultObject;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
@@ -136,7 +136,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     // Pump interface
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
 
         if (sExecutionService == null) {
             getAapsLogger().error("setNewBasalProfile sExecutionService is null");
@@ -216,7 +216,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
@@ -269,7 +269,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
@@ -320,7 +320,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             if (!danaPump.isExtendedInProgress()) {

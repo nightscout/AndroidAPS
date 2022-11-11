@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -39,7 +39,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
         rxBus.send(EventNewNotification(notification))
         disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(text.value)).subscribe()
         rxBus.send(EventRefreshOverview("ActionNotification"))
-        callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
     }
 
     override fun toJSON(): String {

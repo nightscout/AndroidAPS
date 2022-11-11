@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -69,10 +69,10 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                                ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                            )
-                           callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+                           callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.error)).run()
+                           callback.result(PumpEnactResultObject(injector).success(false).comment(R.string.error)).run()
                        })
     }
 

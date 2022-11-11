@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
@@ -40,9 +40,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
                 UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
                 ValueWithUnit.Minute(minutes.getMinutes())
             )
-            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.alreadysuspended)).run()
+            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.alreadysuspended)).run()
         }
     }
 

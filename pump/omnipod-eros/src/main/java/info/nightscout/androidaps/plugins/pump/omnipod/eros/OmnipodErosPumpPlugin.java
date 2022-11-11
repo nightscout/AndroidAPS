@@ -34,7 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.PumpEnactResultImpl;
+import info.nightscout.androidaps.data.PumpEnactResultObject;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
@@ -603,7 +603,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         if (!podStateManager.hasPodState())
-            return new PumpEnactResultImpl(getInjector()).enacted(false).success(false).comment("Null pod state");
+            return new PumpEnactResultObject(getInjector()).enacted(false).success(false).comment("Null pod state");
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.getSuccess());
@@ -661,7 +661,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
+            return new PumpEnactResultObject(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
                     .comment(R.string.invalidinput);
         } else if (detailedBolusInfo.insulin > 0) {
             // bolus needed, ask pump to deliver it
@@ -679,7 +679,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                             "[date=%d, carbs=%.2f, pumpSerial=%s] - Result: %b",
                     detailedBolusInfo.timestamp, detailedBolusInfo.carbs, serialNumber(), result));
 
-            return new PumpEnactResultImpl(getInjector()).success(true).enacted(true).bolusDelivered(0d)
+            return new PumpEnactResultObject(getInjector()).success(true).enacted(true).bolusDelivered(0d)
                     .carbsDelivered(detailedBolusInfo.carbs);
         }
     }
@@ -697,7 +697,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
-            return new PumpEnactResultImpl(getInjector()).success(false).comment(rh.gs(R.string.omnipod_eros_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
+            return new PumpEnactResultObject(getInjector()).success(false).comment(rh.gs(R.string.omnipod_eros_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
         }
 
         // read current TBR
@@ -711,7 +711,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (tbrCurrent != null && !enforceNew) {
             if (Round.INSTANCE.isSame(tbrCurrent.getRate(), absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
-                return new PumpEnactResultImpl(getInjector()).success(true).enacted(false);
+                return new PumpEnactResultObject(getInjector()).success(true).enacted(false);
             }
         }
 
@@ -733,7 +733,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
         if (tbrCurrent == null) {
             aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already cancelled.");
-            return new PumpEnactResultImpl(getInjector()).success(true).enacted(false);
+            return new PumpEnactResultObject(getInjector()).success(true).enacted(false);
         }
 
         return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodErosManager::cancelTemporaryBasal);
@@ -857,7 +857,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
         if (!podStateManager.hasPodState())
-            return new PumpEnactResultImpl(getInjector()).enacted(false).success(false).comment("Null pod state");
+            return new PumpEnactResultObject(getInjector()).enacted(false).success(false).comment("Null pod state");
         if (command instanceof CommandSilenceAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
@@ -887,7 +887,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
 
         aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + command.getClass().getName());
-        return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).comment(rh.gs(R.string.omnipod_common_error_unsupported_custom_command, command.getClass().getName()));
+        return new PumpEnactResultObject(getInjector()).success(false).enacted(false).comment(rh.gs(R.string.omnipod_common_error_unsupported_custom_command, command.getClass().getName()));
     }
 
     private PumpEnactResult retrievePulseLog() {
@@ -895,7 +895,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         try {
             result = executeCommand(OmnipodCommandType.READ_POD_PULSE_LOG, aapsOmnipodErosManager::readPulseLog);
         } catch (Exception ex) {
-            return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
+            return new PumpEnactResultObject(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
         }
 
         Intent i = new Intent(context, activityNames.getErrorHelperActivity());
@@ -905,7 +905,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         i.putExtra("clipboardContent", result.toString());
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
-        return new PumpEnactResultImpl(getInjector()).success(true).enacted(false);
+        return new PumpEnactResultObject(getInjector()).success(true).enacted(false);
     }
 
     @NonNull private PumpEnactResult updateAlertConfiguration() {
@@ -1170,7 +1170,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).comment(resourceId);
+        return new PumpEnactResultObject(getInjector()).success(false).enacted(false).comment(resourceId);
     }
 
 }

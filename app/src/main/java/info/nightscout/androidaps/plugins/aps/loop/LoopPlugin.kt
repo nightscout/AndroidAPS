@@ -16,7 +16,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
@@ -382,7 +382,7 @@ class LoopPlugin @Inject constructor(
                     if (resultAfterConstraints.isChangeRequested
                         && !commandQueue.bolusInQueue()
                     ) {
-                        val waiting = PumpEnactResultImpl(injector)
+                        val waiting = PumpEnactResultObject(injector)
                         waiting.queued = true
                         if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
                         if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
@@ -533,18 +533,18 @@ class LoopPlugin @Inject constructor(
      */
     private fun applyTBRRequest(request: APSResult, profile: Profile, callback: Callback?) {
         if (!request.tempBasalRequested) {
-            callback?.result(PumpEnactResultImpl(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
+            callback?.result(PumpEnactResultObject(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
             return
         }
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultObject(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pumpsuspended))
-            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultObject(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
@@ -558,7 +558,7 @@ class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                 callback?.result(
-                    PumpEnactResultImpl(injector).absolute(request.rate).duration(0)
+                    PumpEnactResultObject(injector).absolute(request.rate).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly)
                 )?.run()
             }
@@ -571,7 +571,7 @@ class LoopPlugin @Inject constructor(
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(
-                        PumpEnactResultImpl(injector).percent(request.percent).duration(0)
+                        PumpEnactResultObject(injector).percent(request.percent).duration(0)
                             .enacted(false).success(true).comment(R.string.basal_set_correctly)
                     )?.run()
                 }
@@ -582,7 +582,7 @@ class LoopPlugin @Inject constructor(
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(
-                    PumpEnactResultImpl(injector).percent(request.percent)
+                    PumpEnactResultObject(injector).percent(request.percent)
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                         .comment(R.string.let_temp_basal_run)
                 )?.run()
@@ -605,7 +605,7 @@ class LoopPlugin @Inject constructor(
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(
-                    PumpEnactResultImpl(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
+                    PumpEnactResultObject(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                         .comment(R.string.let_temp_basal_run)
                 )?.run()
@@ -631,7 +631,7 @@ class LoopPlugin @Inject constructor(
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(
-                PumpEnactResultImpl(injector)
+                PumpEnactResultObject(injector)
                     .comment(R.string.smb_frequency_exceeded)
                     .enacted(false).success(false)
             )?.run()
@@ -639,12 +639,12 @@ class LoopPlugin @Inject constructor(
         }
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultObject(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pumpsuspended))
-            callback?.result(PumpEnactResultImpl(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResultObject(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")

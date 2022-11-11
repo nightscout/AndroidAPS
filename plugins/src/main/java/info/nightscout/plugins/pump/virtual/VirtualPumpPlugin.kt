@@ -4,7 +4,7 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
@@ -133,7 +133,7 @@ open class VirtualPumpPlugin @Inject constructor(
     override var fakeDataDetected = false
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
-        return PumpEnactResultImpl(injector)
+        return PumpEnactResultObject(injector)
     }
 
     override fun isInitialized(): Boolean = true
@@ -158,7 +158,7 @@ open class VirtualPumpPlugin @Inject constructor(
         lastDataTime = System.currentTimeMillis()
         rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
         // Do nothing here. we are using database profile
-        return PumpEnactResultImpl(injector).success(true).enacted(true)
+        return PumpEnactResultObject(injector).success(true).enacted(true)
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) ?: false
@@ -175,7 +175,7 @@ open class VirtualPumpPlugin @Inject constructor(
         get() = batteryPercent
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
             .success(true)
             .bolusDelivered(detailedBolusInfo.insulin)
             .carbsDelivered(detailedBolusInfo.carbs)
@@ -191,7 +191,7 @@ open class VirtualPumpPlugin @Inject constructor(
             rxBus.send(bolusingEvent)
             delivering += 0.1
             if (BolusProgressDialog.stopPressed)
-                return PumpEnactResultImpl(injector)
+                return PumpEnactResultObject(injector)
                     .success(false)
                     .enacted(false)
                     .comment(rh.gs(R.string.stoppressed))
@@ -226,7 +226,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
         result.success = true
         result.enacted = true
         result.isTempCancel = false
@@ -250,7 +250,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
         result.success = true
         result.enacted = true
         result.percent = percent
@@ -299,7 +299,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
         result.success = true
         result.isTempCancel = true
         result.comment = rh.gs(R.string.virtualpump_resultok)
@@ -319,7 +319,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResultObject(injector)
         if (pumpSync.expectedPumpState().extendedBolus != null) {
             pumpSync.syncStopExtendedBolusWithPumpId(
                 timestamp = dateUtil.now(),

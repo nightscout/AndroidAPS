@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.services.DanaRExecutionService;
-import info.nightscout.androidaps.data.PumpEnactResultImpl;
+import info.nightscout.androidaps.data.PumpEnactResultObject;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueue;
@@ -165,7 +165,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
-            PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+            PumpEnactResult result = new PumpEnactResultObject(getInjector());
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.getInsulin())
                     .carbsDelivered(detailedBolusInfo.carbs);
@@ -193,7 +193,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         serialNumber());
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+            PumpEnactResult result = new PumpEnactResultObject(getInjector());
             result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
@@ -205,7 +205,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
 
         absoluteRate = constraints.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
@@ -327,7 +327,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         if (danaPump.isExtendedInProgress() && useExtendedBoluses) {
             return cancelExtendedBolus();
         }
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
         result.success(true).enacted(false).comment(R.string.ok).isTempCancel(true);
         return result;
     }
@@ -338,7 +338,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     private PumpEnactResult cancelRealTempBasal() {
-        PumpEnactResult result = new PumpEnactResultImpl(getInjector());
+        PumpEnactResult result = new PumpEnactResultObject(getInjector());
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
             if (!danaPump.isTempBasalInProgress()) {
@@ -360,7 +360,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult loadEvents() {
-        return new PumpEnactResultImpl(getInjector()); // no history, not needed
+        return new PumpEnactResultObject(getInjector()); // no history, not needed
     }
 
     @NonNull @Override

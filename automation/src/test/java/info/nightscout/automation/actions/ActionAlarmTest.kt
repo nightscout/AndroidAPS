@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.shared.utils.DateUtil
@@ -40,7 +40,7 @@ class ActionAlarmTest : TestBase() {
                 it.dateUtil = dateUtil
                 it.config = config
             }
-            if (it is PumpEnactResultImpl) {
+            if (it is PumpEnactResultObject) {
                 it.rh = rh
             }
         }

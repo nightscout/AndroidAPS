@@ -2,7 +2,7 @@ package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
@@ -33,9 +33,9 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
             configBuilder.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))
             uel.log(UserEntry.Action.LOOP_ENABLED, Sources.Automation, title)
-            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.alreadyenabled)).run()
+            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.alreadyenabled)).run()
         }
     }
 
