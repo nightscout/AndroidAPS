@@ -27,7 +27,6 @@
     <string name="paused">En pause</string>
     <string name="invalid">INVALIDE</string>
     <string name="login">Connexion</string>
-    <string name="upload_now">Télécharger maintenant</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
