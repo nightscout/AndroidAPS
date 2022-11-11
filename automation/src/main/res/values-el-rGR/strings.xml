@@ -24,7 +24,6 @@
     <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
     <string name="starttemptarget">Έναρξη προσ. στόχου</string>
-    <string name="stoptemptarget">Λήξη προσ. στόχου</string>
     <string name="islesser">είναι λιγότερο από</string>
     <string name="isequalorlesser">είναι ίσο ή μικρότερο από</string>
     <string name="isequal">είναι ίσο με</string>
@@ -86,4 +85,5 @@
     <string name="edit_short">Επεξεργασία</string>
     <string name="triggers">Ενεργοποιήσεις:</string>
     <string name="preconditions">Προϋποθέσεις:</string>
+    <!-- WeekdayPicker -->
 </resources>
