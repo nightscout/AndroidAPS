@@ -26,7 +26,6 @@
     <string name="paused">일시중지</string>
     <string name="invalid">유효하지 않음</string>
     <string name="login">로그인</string>
-    <string name="upload_now">지금 업로드하기</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
