@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Сериен номер на помпа</string>
     <string name="bolus_delivered">%1$.2fЕ / %2$.2fЕ доставени</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Никога не сме се свързвали</string>
-    <string name="pump_status_waking_up">Събуждане</string>
-    <string name="pump_status_error_comm">Грешка в комуникацията</string>
-    <string name="pump_status_timeout_comm">Изтече времето за връзка</string>
-    <string name="pump_status_pump_unreachable">Помпата е недостъпна</string>
-    <string name="pump_status_invalid_config">Грешна конфигурация</string>
-    <string name="pump_status_active">Активна</string>
-    <string name="pump_status_sleeping">Спинка си</string>
     <string name="pump_status_not_initialized">Под не е инициализиран</string>
     <string name="pump_status_suspended">Прекратено</string>
     <!-- PumpCommon - History Group -->
