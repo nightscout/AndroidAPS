@@ -43,7 +43,6 @@
     <string name="paused">In pausa</string>
     <string name="invalid">NON VALIDO</string>
     <string name="login">Login</string>
-    <string name="upload_now">Carica adesso</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
