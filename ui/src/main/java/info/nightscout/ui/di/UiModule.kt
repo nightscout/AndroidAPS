@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
+import info.nightscout.ui.activities.ProfileHelperActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.SurveyActivity
 import info.nightscout.ui.activities.TDDStatsActivity
@@ -35,6 +36,7 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesStatsActivity(): StatsActivity
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
     @ContributesAndroidInjector abstract fun contributesTreatmentsActivity(): TreatmentsActivity
+    @ContributesAndroidInjector abstract fun contributesProfileHelperActivityActivity(): ProfileHelperActivity
 
     @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusCarbsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment

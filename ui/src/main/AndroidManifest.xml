@@ -47,6 +47,10 @@
             android:name="info.nightscout.ui.activities.TreatmentsActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name="info.nightscout.ui.activities.ProfileHelperActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
 
     </application>
 

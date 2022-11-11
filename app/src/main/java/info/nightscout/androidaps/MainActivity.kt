@@ -33,7 +33,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
+import info.nightscout.ui.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.events.EventPreferenceChange

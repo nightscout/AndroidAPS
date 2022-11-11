@@ -533,7 +533,6 @@
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
-    <string name="selected_profile">Selected:</string>
     <string name="unitsnosemicolon">Units</string>
     <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
     <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
@@ -545,7 +544,6 @@
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
-    <string name="invalidpct">Invalid % entry</string>
     <string name="randombg">Random BG</string>
     <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
     <string name="randombg_short">BG</string>
@@ -576,17 +574,6 @@
     <string name="largedisplay_description">Large display</string>
     <string name="key_skin" translatable="false">skin</string>
     <string name="skin">Skin</string>
-    <string name="comapareprofile">Compare profiles</string>
-    <string name="nav_profilehelper">Profile helper</string>
-    <string name="motoldefaultprofile">Default profile</string>
-    <string name="currentprofile">Current profile</string>
-    <string name="availableprofile">Available profile</string>
-    <string name="profiletype">Profile type</string>
-    <string name="formatwithtdd">Age: %1$.0f TDD: %2$.0f U</string>
-    <string name="formatwittddandpct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
-    <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
-    <string name="basalpctfromtdd_label">% of basal</string>
-    <string name="dpvdefaultprofile">DPV Default profile</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
@@ -662,8 +649,6 @@
     <string name="sort_label">Sort</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
-    <string name="profile1">Profile 1</string>
-    <string name="profile2">Profile 2</string>
     <string name="a11y_open_settings">open settings</string>
     <string name="a11y_set_carb_timer">set carb timer alarm</string>
     <string name="device_all">All</string>

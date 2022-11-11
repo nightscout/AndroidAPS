@@ -80,4 +80,21 @@
     <string name="show_loop_records">Show loop records</string>
     <string name="show_hide_records">Hide loop records</string>
 
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profile 1</string>
+    <string name="profile2">Profile 2</string>
+    <string name="profiletype">Profile type</string>
+    <string name="basalpctfromtdd_label">% of basal</string>
+    <string name="selected_profile">Selected:</string>
+    <string name="comapareprofile">Compare profiles</string>
+    <string name="nav_profilehelper">Profile helper</string>
+    <string name="motoldefaultprofile">Default profile</string>
+    <string name="currentprofile">Current profile</string>
+    <string name="availableprofile">Available profile</string>
+    <string name="formatwithtdd">Age: %1$.0f TDD: %2$.0f U</string>
+    <string name="formatwittddandpct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
+    <string name="dpvdefaultprofile">DPV Default profile</string>
+    <string name="invalidpct">Invalid % entry</string>
+
 </resources>

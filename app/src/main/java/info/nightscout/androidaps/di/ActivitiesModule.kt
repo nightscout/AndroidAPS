@@ -5,7 +5,6 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
@@ -24,6 +23,5 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
     @ContributesAndroidInjector abstract fun contributesSetupWizardActivity(): SetupWizardActivity
     @ContributesAndroidInjector abstract fun contributesSingleFragmentActivity(): SingleFragmentActivity
-    @ContributesAndroidInjector abstract fun contributesDefaultProfileActivity(): ProfileHelperActivity
 
 }

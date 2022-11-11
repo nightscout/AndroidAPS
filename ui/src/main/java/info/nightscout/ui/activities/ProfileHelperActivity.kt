@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.ui.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,9 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -21,12 +20,13 @@ import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.ActivityProfilehelperBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
 import info.nightscout.ui.defaultProfile.DefaultProfileDPV
 import io.reactivex.rxjava3.core.Single
@@ -41,7 +41,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var defaultProfileDPV: DefaultProfileDPV
-    @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
@@ -135,8 +134,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, rh.gs(R.string.careportal_profileswitch), rh.gs(R.string.copytolocalprofile), Runnable {
-                    profilePlugin.addProfile(
-                        profilePlugin.copyFrom(
+                    activePlugin.activeProfileSource.addProfile(
+                        activePlugin.activeProfileSource.copyFrom(
                             it, "DefaultProfile " +
                                 dateUtil.dateAndTimeAndSecondsString(dateUtil.now())
                                     .replace(".", "/")
