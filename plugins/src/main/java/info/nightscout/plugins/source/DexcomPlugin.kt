@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import android.content.Intent
@@ -8,12 +8,10 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.core.profile.unit
 import info.nightscout.database.entities.GlucoseValue
@@ -29,7 +27,8 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
+import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.safeGetInstalledPackages
@@ -56,7 +55,7 @@ class DexcomPlugin @Inject constructor(
         .pluginIcon(R.drawable.ic_dexcom_g6)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
-        .preferencesId(R.xml.pref_bgsourcedexcom)
+        .preferencesId(R.xml.pref_dexcom)
         .description(R.string.description_source_dexcom),
     aapsLogger, rh, injector
 ), BgSource {
@@ -75,7 +74,7 @@ class DexcomPlugin @Inject constructor(
         (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)
-            && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+            && sp.getBoolean(R.string.key_do_ns_upload, false)
 
     override fun onStart() {
         super.onStart()
@@ -157,7 +156,7 @@ class DexcomPlugin @Inject constructor(
                             sourceSensor = sourceSensor
                         )
                 }
-                var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && bundle.containsKey("sensorInsertionTime")) {
+                var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false) && bundle.containsKey("sensorInsertionTime")) {
                     bundle.getLong("sensorInsertionTime", 0) * 1000
                 } else {
                     null

@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.receivers.Intents
@@ -18,7 +17,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

@@ -191,7 +191,7 @@
             android:name=".plugins.general.maintenance.activities.LogSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".plugins.source.activities.RequestDexcomPermissionActivity"
+            android:name="info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
         <uses-library

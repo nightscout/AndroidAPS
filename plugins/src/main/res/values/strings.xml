@@ -392,7 +392,10 @@
     <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
 
     <!-- Source -->
-    <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_do_ns_upload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
+    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
 
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
@@ -421,11 +424,16 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Random BG</string>
+    <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
+    <string name="random_bg_short">BG</string>
 
-    <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
-    <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
+    <string name="do_xdrip_upload_title">Send BG data to xDrip+</string>
+    <string name="do_xdrip_upload_summary">In xDrip+ select 640g/Eversense data source</string>
+    <string name="do_ns_upload_title">Upload BG data to NS</string>
     <string name="bgsource_upload">BG upload settings</string>
+    <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
 
     <!-- NSClient -->
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>

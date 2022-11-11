@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -22,7 +21,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.safeGetInstalledPackages
@@ -180,11 +179,10 @@ class IntelligoPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(R.string.key_do_ns_upload, false)
 
     companion object {
 
-        @Suppress("SpellCheckingInspection")
         const val AUTHORITY = "alexpr.co.uk.infinivocgm.intelligo.cgm_db.CgmExternalProvider"
 
         //const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"

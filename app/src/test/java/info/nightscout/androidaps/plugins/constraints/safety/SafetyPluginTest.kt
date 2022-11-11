@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.source.GlimpPlugin
+import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Constants

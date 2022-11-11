@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -15,7 +14,7 @@ import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -68,7 +67,7 @@ class MM640gPlugin @Inject constructor(
             if (collection == "entries") {
                 val data = inputData.getString("data")
                 aapsLogger.debug(LTag.BGSOURCE, "Received MM640g Data: $data")
-                if (data != null && data.isNotEmpty()) {
+                if (!data.isNullOrEmpty()) {
                     try {
                         val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                         val jsonArray = JSONArray(data)
@@ -110,6 +109,6 @@ class MM640gPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(R.string.key_do_ns_upload, false)
 
 }

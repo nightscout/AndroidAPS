@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.database.entities.GlucoseValue
@@ -16,7 +15,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -101,6 +100,6 @@ class PoctechPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.POCTECH_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.POCTECH_NATIVE && sp.getBoolean(R.string.key_do_ns_upload, false)
 
 }

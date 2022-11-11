@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -20,7 +19,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -153,13 +152,13 @@ class GlunovoPlugin @Inject constructor(
                                 aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                             }
                             savedValues.calibrationsInserted.forEach { calibration ->
-                                calibration.glucose?.let { glucosevalue ->
+                                calibration.glucose?.let { glucoseValue ->
                                     uel.log(
                                         UserEntry.Action.CALIBRATION,
                                         UserEntry.Sources.Dexcom,
                                         ValueWithUnit.Timestamp(calibration.timestamp),
                                         ValueWithUnit.TherapyEventType(calibration.type),
-                                        ValueWithUnit.fromGlucoseUnit(glucosevalue, calibration.glucoseUnit.toString)
+                                        ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.toString)
                                     )
                                 }
                                 aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
@@ -172,11 +171,10 @@ class GlunovoPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(R.string.key_do_ns_upload, false)
 
     companion object {
 
-        @Suppress("SpellCheckingInspection")
         const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
         const val TABLE_NAME = "CgmReading"
         const val INTERVAL = 180000L // 3 min

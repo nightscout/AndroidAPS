@@ -325,7 +325,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="urgent_alarm">Acil önemli Alarm</string>
     <string name="info">BİLGİ</string>
     <string name="eversense">Eversense App (yamalı)</string>
-    <string name="dexcomg5_nsupload_title">KŞ verilerini NighScout\'a yükle</string>
+    <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
     <string name="bgsource_upload">KŞ yükleme ayarları</string>
     <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
     <string name="wear_detailed_delta_summary">Deltayı bir ondalık basamakla daha göster</string>
@@ -335,8 +335,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="uamsmbmaxminutes_summary">UAM da SMB\'yi sınırlamak için maksimum bazal dakika</string>
     <string name="carbsReqThreshold">Gerekli Minimum Karbonhidrat Önerisi</string>
     <string name="carbsReqThreshold_summary">Bir karbonhidrat öneri uyarısı görüntülemek için minimum karbonhidrat gramı. Bu sayının altındaki karbonhidrat önerileri bildirilmeyecektir.</string>
-    <string name="dexcomg5_xdripupload_title">XDrip+\'a KŞ verilerini gönder</string>
-    <string name="dexcomg5_xdripupload_summary">Xdrip+ içerisinde 640g/Eversense veri kaynağı seç</string>
+    <string name="do_xdrip_upload_title">XDrip+\'a KŞ verilerini gönder</string>
+    <string name="do_xdrip_upload_summary">Xdrip+ içerisinde 640g/Eversense veri kaynağı seç</string>
     <string name="nsclientbg">Nightscout Client KŞ</string>
     <string name="nsclientbgshort">NS KŞ</string>
     <string name="overview_editquickwizard_usebg">KŞ Hesaplaması</string>
@@ -516,8 +516,8 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_openmode_min_change">Minimum istek değişikliği [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
     <string name="profile_total">== ∑  %1$s Ü</string>
-    <string name="dexcom_lognssensorchange_title">Sensör değişimlerini NS\'a kaydet</string>
-    <string name="dexcom_lognssensorchange_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
+    <string name="dexcom_log_ns_sensor_change_title">Sensör değişimlerini NS\'a kaydet</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>

@@ -324,7 +324,7 @@
     <string name="urgent_alarm">Urgentní alarm</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense aplikace (upravená)</string>
-    <string name="dexcomg5_nsupload_title">Nahrávat data do NS</string>
+    <string name="do_ns_upload_title">Nahrávat data do NS</string>
     <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
     <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
     <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
@@ -334,8 +334,8 @@
     <string name="uamsmbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB pro UAM</string>
     <string name="carbsReqThreshold">Minimální množství sacharidů potřebných pro návrh</string>
     <string name="carbsReqThreshold_summary">Minimální množství sacharidů v gramech, které spustí upozornění návrhu sacharidů. Množství sacharidů pod touto hodnotou nespustí oznámení.</string>
-    <string name="dexcomg5_xdripupload_title">Odesílat data do xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
+    <string name="do_xdrip_upload_title">Odesílat data do xDrip+</string>
+    <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
     <string name="nsclientbg">Glykémie z NS</string>
     <string name="nsclientbgshort">NSGL</string>
     <string name="overview_editquickwizard_usebg">Kalkulace glykémie</string>
@@ -515,8 +515,8 @@
     <string name="loop_openmode_min_change">Minimální změna pro výzvu [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="dexcom_lognssensorchange_title">Zaznamenávat výměnu senzoru do NS</string>
-    <string name="dexcom_lognssensorchange_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
+    <string name="dexcom_log_ns_sensor_change_title">Zaznamenávat výměnu senzoru do NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Vaše uživatelské jméno na Tidepoolu, obvykle vaše e-mailová adresa</string>

@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.utils.extensions.isRunningTest
@@ -15,8 +14,8 @@ import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.plugins.R
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.plugins.source.BGSourceFragment
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -46,10 +45,10 @@ class RandomBgPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(R.drawable.ic_dice)
-        .pluginName(R.string.randombg)
-        .shortName(R.string.randombg_short)
+        .pluginName(R.string.random_bg)
+        .shortName(R.string.random_bg_short)
         .preferencesId(R.xml.pref_bgsource)
-        .description(R.string.description_source_randombg),
+        .description(R.string.description_source_random_bg),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -78,7 +77,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(R.string.key_do_ns_upload, false)
 
     override fun onStart() {
         super.onStart()

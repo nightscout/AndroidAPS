@@ -520,9 +520,6 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
-    <string name="dexcom_lognssensorchange_title">Log sensor change to NS</string>
-    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
     <string name="twohours">2h</string>
@@ -544,9 +541,6 @@
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
-    <string name="randombg">Random BG</string>
-    <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
-    <string name="randombg_short">BG</string>
     <string name="tools">Tools</string>
     <string name="show_calculation">Show calcuation</string>
     <string name="show_removed">Show removed</string>
@@ -597,8 +591,6 @@
     <string name="statuslights_cannula_age">cannula age</string>
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
-    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
-    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="a11y_dialog">dialog</string>

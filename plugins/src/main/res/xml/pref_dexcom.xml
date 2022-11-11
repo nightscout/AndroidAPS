@@ -9,20 +9,20 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_dexcomg5_nsupload"
-            android:title="@string/dexcomg5_nsupload_title" />
+            android:key="@string/key_do_ns_upload"
+            android:title="@string/do_ns_upload_title" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_dexcomg5_xdripupload"
-            android:summary="@string/dexcomg5_xdripupload_summary"
-            android:title="@string/dexcomg5_xdripupload_title" />
+            android:summary="@string/do_xdrip_upload_summary"
+            android:title="@string/do_xdrip_upload_title" />
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_dexcom_lognssensorchange"
-            android:summary="@string/dexcom_lognssensorchange_summary"
-            android:title="@string/dexcom_lognssensorchange_title" />
+            android:key="@string/key_dexcom_log_ns_sensor_change"
+            android:summary="@string/dexcom_log_ns_sensor_change_summary"
+            android:title="@string/dexcom_log_ns_sensor_change_title" />
 
     </PreferenceCategory>
 

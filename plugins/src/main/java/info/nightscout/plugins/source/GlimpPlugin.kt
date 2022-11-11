@@ -1,11 +1,11 @@
-package info.nightscout.androidaps.plugins.source
+package info.nightscout.plugins.source
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.database.entities.GlucoseValue
@@ -14,7 +14,7 @@ import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.source.BGSourceFragment
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -22,8 +22,9 @@ import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-class TomatoPlugin @Inject constructor(
+class GlimpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -32,24 +33,22 @@ class TomatoPlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_sensor)
-    .pluginName(R.string.tomato)
+    .pluginIcon(R.drawable.ic_glimp)
+    .pluginName(R.string.glimp)
     .preferencesId(R.xml.pref_bgsource)
-    .shortName(R.string.tomato_short)
-    .description(R.string.description_source_tomato),
+    .description(R.string.description_source_glimp),
     aapsLogger, rh, injector
 ), BgSource {
 
     // cannot be inner class because of needed injection
-    class TomatoWorker(
+    class GlimpWorker(
         context: Context,
         params: WorkerParameters
     ) : Worker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var tomatoPlugin: TomatoPlugin
+        @Inject lateinit var glimpPlugin: GlimpPlugin
         @Inject lateinit var aapsLogger: AAPSLogger
-        @Inject lateinit var sp: SP
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
 
@@ -57,23 +56,23 @@ class TomatoPlugin @Inject constructor(
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
-        @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!tomatoPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (!glimpPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: $inputData}")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                timestamp = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0),
-                value = inputData.getDouble("com.fanqies.tomatofn.Extras.BgEstimate", 0.0),
-                raw = 0.0,
+                timestamp = inputData.getLong("myTimestamp", 0),
+                value = inputData.getDouble("mySGV", 0.0),
+                raw = inputData.getDouble("mySGV", 0.0),
                 noise = null,
-                trendArrow = GlucoseValue.TrendArrow.NONE,
-                sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_TOMATO
+                trendArrow = GlucoseValue.TrendArrow.fromString(inputData.getString("myTrend")),
+                sourceSensor = GlucoseValue.SourceSensor.GLIMP
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Tomato App", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Glimp App", it)
                     ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
@@ -88,6 +87,6 @@ class TomatoPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(R.string.key_do_ns_upload, false)
 
 }

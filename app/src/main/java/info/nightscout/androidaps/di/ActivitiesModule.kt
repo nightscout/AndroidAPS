@@ -8,7 +8,7 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
-import info.nightscout.androidaps.plugins.source.activities.RequestDexcomPermissionActivity
+import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 
 @Module

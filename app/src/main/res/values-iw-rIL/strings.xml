@@ -318,7 +318,7 @@
     <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
-    <string name="dexcomg5_nsupload_title">טוען נתוני סוכר ל-Nightscout</string>
+    <string name="do_ns_upload_title">טוען נתוני סוכר ל-Nightscout</string>
     <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
     <string name="wear_detailed_delta_title">הצגת דלתא מפורטת</string>
     <string name="wear_detailed_delta_summary">הצגת דלתא עם עוד נק\' עשרונית אחת</string>
@@ -328,8 +328,8 @@
     <string name="uamsmbmaxminutes_summary">מקס\' דקות של בזאלי להגבלת SMB לארוחות לא מוכרזות</string>
     <string name="carbsReqThreshold">סף מינ\' הפחמימות הנדרשות להצעה</string>
     <string name="carbsReqThreshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
-    <string name="dexcomg5_xdripupload_title">שליחת נתוני סוכר אל xDrip</string>
-    <string name="dexcomg5_xdripupload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
+    <string name="do_xdrip_upload_title">שליחת נתוני סוכר אל xDrip</string>
+    <string name="do_xdrip_upload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
     <string name="nsclientbg">נתוני סוכר מ-NSClient</string>
     <string name="nsclientbgshort">סוכר NS</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
@@ -507,7 +507,7 @@
     <string name="loop_openmode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="profile_total">== ∑  %1$s יח\'</string>
-    <string name="dexcom_lognssensorchange_title">רישום החלפת סנסור ב-Nightscout</string>
+    <string name="dexcom_log_ns_sensor_change_title">רישום החלפת סנסור ב-Nightscout</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>

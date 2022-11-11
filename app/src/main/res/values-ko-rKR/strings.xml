@@ -309,7 +309,7 @@
     <string name="urgent_alarm">긴급 알람</string>
     <string name="info">정보</string>
     <string name="eversense">Eversense 앱(패치버전)</string>
-    <string name="dexcomg5_nsupload_title">NS에 혈당데이터 업로드하기</string>
+    <string name="do_ns_upload_title">NS에 혈당데이터 업로드하기</string>
     <string name="bgsource_upload">혈당 업로드 설정</string>
     <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
     <string name="wear_detailed_delta_summary">소수점 자리 추가된 증분값 보여주기</string>
@@ -319,8 +319,8 @@
     <string name="uamsmbmaxminutes_summary">SMB가 UAM에 대해 basal을 제한할 수 있는 최대 시간(분)</string>
     <string name="carbsReqThreshold">제안을 위한 최소 탄수화물 필요량</string>
     <string name="carbsReqThreshold_summary">탄수화물 제안 알림을 보여주는 최소 탄수화물 g수. 이 양보다 적은 경우 탄수화물 제안 알림이 작동하지 않습니다.</string>
-    <string name="dexcomg5_xdripupload_title">혈당 데이터를 xDrip+에 전송하기</string>
-    <string name="dexcomg5_xdripupload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
+    <string name="do_xdrip_upload_title">혈당 데이터를 xDrip+에 전송하기</string>
+    <string name="do_xdrip_upload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
     <string name="nsclientbg">NSClient 혈당</string>
     <string name="overview_editquickwizard_usebg">혈당 계산</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB 계산</string>
@@ -480,7 +480,7 @@
     <string name="loop_openmode_min_change">최소 요청 변화 [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop가 %단위로 이 값보다 변화가 더 클 경우에만 새 변경 요청을 팝업합니다. 기본값은 20 %입니다</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="dexcom_lognssensorchange_title">센서 교체 NS에 기록하기</string>
+    <string name="dexcom_log_ns_sensor_change_title">센서 교체 NS에 기록하기</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>
