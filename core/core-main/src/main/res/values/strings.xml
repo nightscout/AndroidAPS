@@ -91,6 +91,7 @@
     <string name="key_ns_receive_profile_switch" translatable="false">ns_receive_profile_switch</string>
     <string name="key_ns_receive_offline_event" translatable="false">ns_receive_offline_event</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
+    <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>

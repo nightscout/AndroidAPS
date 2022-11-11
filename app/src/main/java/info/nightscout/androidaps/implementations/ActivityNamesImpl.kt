@@ -7,7 +7,7 @@ import androidx.annotation.RawRes
 import androidx.fragment.app.FragmentManager
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
+import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.interfaces.ui.ActivityNames

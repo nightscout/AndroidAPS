@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
     <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
     <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>

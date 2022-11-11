@@ -3,7 +3,6 @@ package info.nightscout.ui.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
-import info.activityMonitor.ActivityMonitor
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
@@ -15,6 +14,7 @@ import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.ui.R
+import info.nightscout.ui.activityMonitor.ActivityMonitor
 import info.nightscout.ui.databinding.ActivityStatsBinding
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -26,7 +26,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var dexcomTirCalculator: DexcomTirCalculator
-    @Inject lateinit var activityMonitor: info.activityMonitor.ActivityMonitor
+    @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy

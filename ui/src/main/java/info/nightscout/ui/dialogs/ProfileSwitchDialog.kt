@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.content.Context
 import android.os.Bundle
@@ -9,9 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -19,11 +18,9 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
@@ -37,6 +34,8 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogProfileswitchBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -179,7 +178,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(R.string.percent) + ": " + percent + "%")
         val timeShift = binding.timeshift.value.toInt()
         if (timeShift != 0)
-            actions.add(rh.gs(R.string.careportal_newnstreatment_timeshift_label) + ": " + rh.gs(R.string.format_hours, timeShift.toDouble()))
+            actions.add(rh.gs(R.string.timeshift_label) + ": " + rh.gs(R.string.format_hours, timeShift.toDouble()))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(rh.gs(R.string.notes_label) + ": " + notes)
@@ -206,8 +205,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                             timestamp = eventTime
                         )
                     ) {
-                        uel.log(Action.PROFILE_SWITCH,
-                                Sources.ProfileSwitchDialog,
+                        uel.log(UserEntry.Action.PROFILE_SWITCH,
+                                UserEntry.Sources.ProfileSwitchDialog,
                                 notes,
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.SimpleString(profileName),
@@ -231,7 +230,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                             aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                         })
                             uel.log(
-                                Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
+                                UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                                     TemporaryTarget.Reason.ACTIVITY
                                 ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                             )
@@ -252,7 +251,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     override fun onResume() {
         super.onResume()
-        if(!queryingProtection) {
+        if (!queryingProtection) {
             queryingProtection = true
             activity?.let { activity ->
                 val cancelFail = {
@@ -261,7 +260,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
-                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
         }
     }

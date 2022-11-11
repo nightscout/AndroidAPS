@@ -1,4 +1,4 @@
-package info.activityMonitor
+package info.nightscout.ui.activityMonitor
 
 import android.app.Activity
 import android.app.Application

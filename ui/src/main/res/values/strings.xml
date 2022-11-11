@@ -65,6 +65,9 @@
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
 
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
+    <string name="timeshift_label">Time shift</string>
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
