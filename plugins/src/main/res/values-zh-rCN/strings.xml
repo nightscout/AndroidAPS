@@ -23,64 +23,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
     <string name="smscommunicator_allowednumbers">允许的手机号码</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_temptargetwithcode">要设置临时目标 %1$s，请回复验证码 %2$s</string>
-    <string name="smscommunicator_temptargetcancel">要取消临时目标，请回复验证码 %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">要禁用短信遥控服务，请回复验证码%1$s.\n\n请记住，你只能在AAPS闭环手机上重新激活此功能。</string>
-    <string name="smscommunicator_stoppedsms">短信遥控服务已禁用。要重新激活它，请使用AAPS闭环手机。</string>
-    <string name="smscommunicator_calibrationreplywithcode">要发送校准值 %1$.2f 回复如下代码 %2$s</string>
-    <string name="smscommunicator_bolusfailed">大剂量输注失败</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">一次远程遥控输注命令与下一次命令之间必须经过的最小分钟数</string>
-    <string name="smscommunicator_remotebolusmindistance">两次短信遥控胰岛素输注的时间间隔</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">为了您的安全，您需要添加至少两个电话号码。</string>
-    <string name="smscommunicator_bolusdelivered">成功输注大剂量%1$.2fU</string>
-    <string name="smscommunicator_mealbolusdelivered">成功输注餐时大剂量%1$.2fU</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">目标 %1$s 执行 %2$d 分钟</string>
     <string name="smscommunicator_tt_set">目标 %1$s 执行 %2$d 分钟设置成功</string>
     <string name="smscommunicator_tt_canceled">临时目标已成功取消</string>
-    <string name="smscommunicator_remotecommandsallowed">通过SMS短信允许远程命令</string>
-    <string name="smscommunicator_loophasbeendisabled">闭环已经被禁用</string>
-    <string name="smscommunicator_loophasbeenenabled">闭环已经被启用</string>
-    <string name="smscommunicator_loopisenabled">闭环被启用</string>
-    <string name="smscommunicator_pumpconnectwithcode">连接泵，请回复验证码：%1$s</string>
-    <string name="smscommunicator_pumpconnectfail">连接泵失败</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">断开泵%1$d分钟，请回复验证码：%2$s</string>
-    <string name="smscommunicator_pumpdisconnected">泵已断开</string>
     <string name="smscommunicator_reconnect">泵已重新连接</string>
-    <string name="smscommunicator_remotecommandnotallowed">远程命令没有被允许</string>
-    <string name="smscommunicator_remotebolusnotallowed">远程大剂量不可用。请稍后再试。</string>
-    <string name="smscommunicator_basalreplywithcode">执行基础率%1$.2fU/h持续时间%2$d分钟，请回复验证码：%3$s</string>
-    <string name="smscommunicator_profilereplywithcode">要切换配置文件到 %1$s %2$d%% 请回复代码 %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">要开始扩展大剂量 %1$.2fU/h 持续时间%2$d 分钟，请回复验证码：%3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">要在 %2$s 输入 %1$d 克，请回复验证码 %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">要开始基础率 %1$d%% 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">要暂停闭环 %1$d 分钟请回复如下代码 %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">恢复闭环，请回复验证码：%1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">启用闭环，请回复验证码：%1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">禁用闭环，请回复验证码：%1$s</string>
-    <string name="smscommunicator_tempbasalset">临时基础率 %1$.2fU/h 持续 %2$d 分钟启用成功了</string>
-    <string name="smscommunicator_extendedset">扩展大剂量 %1$.2fU/h 持续时间 %2$d 分钟已经启用成功了</string>
-    <string name="smscommunicator_carbsset">碳水%1$d克输入成功</string>
-    <string name="smscommunicator_carbsfailed">输入 %1$d 克碳水化合物失败</string>
-    <string name="smscommunicator_tempbasalset_percent">临时基础率 %1$d%% 持续时间 %2$d 分钟 启用成功了</string>
-    <string name="smscommunicator_tempbasalfailed">开始临时基础率失败了</string>
-    <string name="smscommunicator_extendedfailed">开始扩展大剂量失败了</string>
-    <string name="smscommunicator_basalstopreplywithcode">要停止临时基础率，请回复如下代码 %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">要停止扩展大剂量，请回复如下代码 %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">临时基础率取消了</string>
-    <string name="smscommunicator_extendedcanceled">扩展大剂量已经取消了</string>
-    <string name="smscommunicator_tempbasalcancelfailed">取消临时基础率失败</string>
-    <string name="smscommunicator_extendedcancelfailed">取消扩展大剂量失败</string>
-    <string name="smscommunicator_unknowncommand">未知的命令或者错误的回复</string>
     <string name="smscommunicator_another_bolus_in_queue">队列中在执行另一个大剂量命令，请稍后再试。</string>
-    <string name="smscommunicator_wrongduration">错误的持续时间</string>
-    <string name="smscommunicator_loopsuspended">闭环暂停了</string>
-    <string name="smscommunicator_loopresumed">闭环恢复了</string>
-    <string name="smscommunicator_invalidphonennumber">无效的SMS手机号码</string>
-    <string name="smscommunicator_calibrationsent">校准已发送。必须在 xDrip+ 中启用接收功能。</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+未接收校准</string>
-    <string name="smscommunicator_messagebody">无效消息</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">如果触发泵连接丢失事件，则发送短信通知。</string>
-    <string name="smscommunicator_pump_ureachable">泵连接丢失报告</string>
     <string name="sms_delta">增量:</string>
     <string name="sms_iob">IOB活性胰岛素:</string>
     <string name="sms_bolus">大剂量:</string>
@@ -100,16 +46,12 @@
     <string name="rapid_acting_oref">速效 Oref</string>
     <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
     <!-- Food-->
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
     <string name="filter">筛选</string>
     <string name="food">食物</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">蛋白质</string>
-    <string name="shortfat">脂肪</string>
     <string name="category">类别</string>
     <string name="subcategory">子类别</string>
     <!-- Theme switcher dark and light mode-->
@@ -159,5 +101,111 @@
     <!-- Objectives -->
     <string name="not_completed_yet">尚未完成</string>
     <string name="time_elapsed">已用时间</string>
+    <!-- Actions -->
+    <!-- Safety -->
     <!-- Overview -->
+    <string name="snooze">稍后再响</string>
+    <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
+    <string name="statuslights_iage_warning">胰岛素状态灯警示阀值[小时]</string>
+    <string name="statuslights_iage_critical">胰岛素状态灯临界阀值[小时]</string>
+    <string name="statuslights_sage_warning">传感器状态灯警示阀值[小时]</string>
+    <string name="statuslights_sage_critical">传感器状态灯临界阀值[小时]</string>
+    <string name="statuslights_sbat_warning">传感器剩余电量状态灯警示阀值[百分比]</string>
+    <string name="statuslights_sbat_critical">传感器剩余电量状态灯临界阀值[百分比]</string>
+    <string name="statuslights_bage_warning">胰岛素泵电池使用时长状态灯警示阀值[小时]</string>
+    <string name="statuslights_bage_critical">胰岛素泵电池使用时长状态灯临界阀值[小时]</string>
+    <string name="statuslights_res_warning">储药器药量低于阈值[U] 警告</string>
+    <string name="statuslights_res_critical">储药器药量低于阈值[U] 严重警告</string>
+    <string name="statuslights_bat_warning">胰岛素泵剩余电量状态灯警示阀值[百分比]</string>
+    <string name="statuslights_bat_critical">胰岛素泵剩余电量状态灯临界阀值[百分比]</string>
+    <string name="statuslights">状态指示灯</string>
+    <string name="statuslights_copy_ns">从NS复制设置</string>
+    <!-- NSClient -->
+    <string name="restart">重新启动</string>
+    <string name="deliver_now">立即输注</string>
+    <string name="clear_queue">清除队列</string>
+    <string name="show_queue">显示队列</string>
+    <string name="queue">队列：</string>
+    <string name="status">状态:</string>
+    <string name="full_sync">完全同步</string>
+    <string name="full_sync_comment">完全同步数据? 这可能需要很长时间，在完成以前你将无法在NS中看到新数据。</string>
+    <string name="ns_sync_options">同步</string>
+    <string name="ns_upload_summary">将用户配置，大剂量，碳水化合物，临时基础率的数据上传到NS网站</string>
+    <string name="ns_upload">上传数据到NS网站</string>
+    <string name="ns_receive_profile_store">接收存储用户配置</string>
+    <string name="ns_receive_profile_store_summary">同步NS配置文件编辑器的用户配置到本地。</string>
+    <string name="ns_receive_temp_target">接收临时目标</string>
+    <string name="ns_receive_temp_target_summary">允许通过NS或NS客户端接收血糖的临时目标值。</string>
+    <string name="ns_receive_profile_switch">接收用户配置文件切换</string>
+    <string name="ns_receive_profile_switch_summary">允许通过NS或NS客户端接收用户配置文件切换。</string>
+    <string name="ns_receive_offline_event">接收 APS 离线事件</string>
+    <string name="ns_receive_offline_event_summary">允许通过NS或NS客户端接收APS 离线事件。</string>
+    <string name="ns_receive_tbr_eb">接收TBR 和 EB</string>
+    <string name="ns_receive_tbr_eb_summary">接受通过另一个实例输入 TBR 和 EB</string>
+    <string name="ns_receive_insulin">接收胰岛素输注</string>
+    <string name="ns_receive_insulin_summary">允许通过NS或 NS客户端接收胰岛素输注 (它并不会输注胰岛素，只计算为活性胰岛素IOB)</string>
+    <string name="ns_receive_carbs">接收碳水化合物</string>
+    <string name="ns_receive_carbs_summary">允许通过NS或NS客户端接收碳水化合物输入。</string>
+    <string name="ns_receive_therapy_events">接收治疗事件</string>
+    <string name="ns_receive_therapy_events_summary">允许通过NS或NS客户端接收(导管更换、胰岛素更换、电池更换等) 护理事件</string>
+    <string name="ns_receive_cgm">接收/回填CGM数据</string>
+    <string name="ns_receive_cgm_summary">接受来自NS 的 CGM 数据</string>
+    <string name="run_question">运行 %s？</string>
+    <string name="ns_sync_slow">放慢上传速度</string>
+    <string name="ns_alarms">创建来自NS报警的通知</string>
+    <string name="ns_announcements">创建来自NS公告的通知</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>
+    <string name="title_tidepool_username">登录用户名</string>
+    <string name="summary_tidepool_password">登录密码</string>
+    <string name="title_tidepool_password">登录密码</string>
+    <string name="title_tidepool_test_login">测试Tidepool登录</string>
+    <string name="summary_tidepool_dev_servers">如果启用，则上载将转到https://intapp.tidepool.org，而不是常规https://app.tidepool.org/。</string>
+    <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">数据上传到Tidepool</string>
+    <string name="tidepool_upload_cgm">上传CGM数据</string>
+    <string name="tidepool_upload_bolus">上传治疗方案（胰岛素，碳水化合物）</string>
+    <string name="tidepool_upload_tbr">上传临时基础率</string>
+    <string name="tidepool_upload_profile">上传配置文件切换，临时目标</string>
+    <string name="tidepool_upload_bg">上传血糖值</string>
+    <string name="remove_all">删除全部</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
+    <string name="virtualpump_settings">虚拟泵设置</string>
+    <string name="virtualpump_uploadstatus_title">将状态上传到 NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
+    <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
+    <string name="eversense">Everyang App (补丁)</string>
+    <string name="description_source_eversense">从 Eversense 补丁app接收血糖值。</string>
+    <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
+    <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
+    <string name="tomato">番茄（喵喵）</string>
+    <string name="tomato_short">番茄</string>
+    <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
+    <string name="aidex_short">Aidex动泰</string>
+    <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
+    <string name="bgsource_upload">血糖上传设置</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_create_announcements_from_errors_title">创建错误公告</string>
+    <string name="ns_create_announcements_from_carbs_req_title">从碳水需求警报创建NS公告</string>
+    <string name="ns_create_announcements_from_errors_summary">为错误对话框和本地警报创建Nightscout公告(在治疗标签下的护理记录里也可查看)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">为碳水化合物需求警报创建Nightscout网站的公告</string>
+    <string name="description_ns_client">将数据与 Nightscout 同步</string>
+    <string name="blocked_by_charging">被充电选项阻止</string>
+    <string name="blocked_by_connectivity">被连接选项阻止</string>
+    <string name="openaps_short">OpenAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
 </resources>
