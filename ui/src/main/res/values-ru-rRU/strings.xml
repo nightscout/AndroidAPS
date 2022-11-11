@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
     <string name="constraint_applied">применено ограничение!</string>
     <string name="bolus_constraint_applied">применено ограничение болюса</string>
     <string name="carbs_constraint_applied">применено ограничение углеводов</string>
@@ -29,7 +28,6 @@
     <string name="weight_label">Вес</string>
     <string name="most_common_profile">Наиболее часто применяемый профиль:</string>
     <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
-    <!-- CareDialog -->
     <string name="glucose_type">Тип глюкозы</string>
     <string name="bg_other">Другое</string>
     <string name="bg_meter">Глюкометр</string>
@@ -40,6 +38,11 @@
     <string name="format_carbs_ic">%1$.0fг IC: %2$.1f</string>
     <string name="superbolus">Суперболюс</string>
     <string name="treatments_wizard_total_label">Всего</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
     <string name="calculation_short">Кальк</string>
@@ -62,4 +65,6 @@
     <string name="carbs_and_bolus">Углеводы и болюс</string>
     <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
     <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>
