@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>
     <string name="sendsmsactiontext">Send SMS med tekst</string>
     <string name="starttemptarget">Start temp target</string>
-    <string name="stoptemptarget">Avbryt temp target</string>
     <string name="islesser">er mindre enn</string>
     <string name="isequalorlesser">er lik eller mindre enn</string>
     <string name="isequal">er lik som</string>
@@ -122,4 +121,12 @@
     <string name="add_automation">Legg til regel</string>
     <string name="remove_sort">Fjern/sorter</string>
     <string name="stop_processing">Stopp prosessering</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">O</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">L</string>
+    <string name="sunday_short">S</string>
 </resources>
