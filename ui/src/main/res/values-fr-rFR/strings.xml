@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
     <string name="constraint_applied">Restriction appliquée !</string>
     <string name="bolus_constraint_applied">Restriction de bolus appliquée</string>
     <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
@@ -29,7 +28,6 @@
     <string name="weight_label">Poids </string>
     <string name="most_common_profile">Profil le plus courant :</string>
     <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour obtenir le résultat \"temps dans la cible\". Votre aide est appréciée.</string>
-    <!-- CareDialog -->
     <string name="glucose_type">Source de Glycémie</string>
     <string name="bg_other">Autre</string>
     <string name="bg_meter">Lecteur</string>
@@ -38,14 +36,17 @@
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
     <!-- Treatments -->
     <string name="no_records_available">Aucun enregistrement disponible</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA: </string>
-    <string name="invalid">INVALIDE</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Glucides:</string>
     <string name="treatments_iobtotal_label_string">IA Totale:</string>
@@ -75,4 +76,6 @@
     <string name="clone_label">Dupliquer</string>
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>
