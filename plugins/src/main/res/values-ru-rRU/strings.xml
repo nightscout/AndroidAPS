@@ -118,6 +118,8 @@
     <!-- Objectives -->
     <string name="not_completed_yet">Не завершено</string>
     <string name="time_elapsed">Прошло времени</string>
+    <!-- Actions -->
+    <!-- Safety -->
     <!-- Overview -->
     <string name="snooze">Отложить</string>
     <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>
@@ -220,9 +222,6 @@
     <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
     <string name="aidex_short">Aidex </string>
     <string name="description_source_aidex">Получить значения ГК от GlucoRx Aidex</string>
-    <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
-    <string name="dexcomg5_nsupload_title">Загрузить данные СК в Nightscout</string>
     <string name="bgsource_upload">Параметры загрузки СК</string>
     <!-- NSClient -->
     <string name="ns_cellular">Использовать мобильное подключение</string>
@@ -240,5 +239,5 @@
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">ЗАГРУЗ</string>
-    <!-- Objectives -->
+    <!-- Skins -->
 </resources>
