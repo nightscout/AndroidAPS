@@ -51,7 +51,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.TTDialog            -> R.drawable.ic_temptarget_high
         Sources.ProfileSwitchDialog -> R.drawable.ic_actions_profileswitch
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
-        Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
+        Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
         Sources.CalibrationDialog   -> R.drawable.ic_calibration
         Sources.FillDialog          -> R.drawable.ic_cp_pump_cannula
         Sources.BgCheck             -> R.drawable.ic_cp_bgcheck

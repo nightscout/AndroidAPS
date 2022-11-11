@@ -259,7 +259,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<TemporaryTarget>): String {
         if (selectedItems.size() == 1) {
             val tempTarget = selectedItems.valueAt(0)
-            return "${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
+            return "${rh.gs(R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
                 dateUtil.dateAndTimeString(tempTarget.timestamp)
         }
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())

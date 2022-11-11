@@ -995,7 +995,7 @@ class DataHandlerMobile @Inject constructor(
             ret += if (!result.isChangeRequested) {
                 rh.gs(R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
-                rh.gs(R.string.canceltemp) + "\n"
+                rh.gs(R.string.cancel_temp) + "\n"
             } else {
                 rh.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
                     "(" + DecimalFormatter.to2Decimal(result.rate / activePlugin.activePump.baseBasalRate * 100) + "%)\n" +

@@ -29,7 +29,7 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.databinding.OverviewFragmentBinding
+import info.nightscout.plugins.databinding.OverviewFragmentBinding
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -54,7 +54,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOve
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.androidaps.skins.SkinProvider
+import info.nightscout.plugins.skins.SkinProvider
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -88,6 +88,7 @@ import info.nightscout.plugins.source.DexcomPlugin
 import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
+import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange

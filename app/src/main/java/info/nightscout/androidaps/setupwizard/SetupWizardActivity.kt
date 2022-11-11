@@ -13,7 +13,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.setupwizard.elements.SWItem
-import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
+import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.locale.LocaleHelper.update

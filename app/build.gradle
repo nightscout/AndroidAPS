@@ -222,9 +222,6 @@ dependencies {
     // MainApp
     api "com.uber.rxdogtag2:rxdogtag:2.0.1"
 
-    // Overview
-    api 'com.google.android.flexbox:flexbox:3.0.0'
-
     // APS
     api 'org.mozilla:rhino:1.7.14'
 

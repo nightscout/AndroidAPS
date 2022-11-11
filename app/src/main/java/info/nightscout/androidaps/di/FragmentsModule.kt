@@ -3,13 +3,13 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
+import info.nightscout.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
-import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
+import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
+import info.nightscout.plugins.constraints.objectives.activities.ObjectivesExamDialog
+import info.nightscout.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog

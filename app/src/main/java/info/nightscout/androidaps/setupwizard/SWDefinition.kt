@@ -14,8 +14,8 @@ import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
+import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
+import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -32,7 +32,7 @@ import info.nightscout.androidaps.setupwizard.elements.SWInfoText
 import info.nightscout.androidaps.setupwizard.elements.SWPlugin
 import info.nightscout.androidaps.setupwizard.elements.SWPreference
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton
-import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
+import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.interfaces.AndroidPermission

@@ -26,6 +26,9 @@ dependencies {
     implementation project(':interfaces')
     implementation project(':ns-sdk')
 
+    api "androidx.appcompat:appcompat:$appcompat_version"
+    api "com.google.android.material:material:$material_version"
+
     // Actions
     api 'androidx.gridlayout:gridlayout:1.0.0'
 
@@ -48,4 +51,6 @@ dependencies {
     api 'com.eatthepath:java-otp:0.3.1'
     api 'com.github.kenglxn.QRGen:android:2.6.0'
 
+    // Overview
+    api 'com.google.android.flexbox:flexbox:3.0.0'
 }

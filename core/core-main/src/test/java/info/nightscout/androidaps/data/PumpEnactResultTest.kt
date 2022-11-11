@@ -30,7 +30,7 @@ class PumpEnactResultTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.configbuilder_insulin)).thenReturn("Insulin")
         `when`(rh.gs(R.string.smb_shortname)).thenReturn("SMB")
         `when`(rh.gs(R.string.insulin_unit_shortname)).thenReturn("U")
-        `when`(rh.gs(R.string.canceltemp)).thenReturn("Cancel temp basal")
+        `when`(rh.gs(R.string.cancel_temp)).thenReturn("Cancel temp basal")
         `when`(rh.gs(R.string.duration)).thenReturn("Duration")
         `when`(rh.gs(R.string.percent)).thenReturn("Percent")
         `when`(rh.gs(R.string.absolute)).thenReturn("Absolute")

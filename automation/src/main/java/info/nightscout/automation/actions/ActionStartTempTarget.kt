@@ -79,7 +79,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun generateDialog(root: LinearLayout) {
         val unitResId = if (value.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.careportal_temporarytarget) + "\n[" + rh.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(rh, rh.gs(R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
             .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }

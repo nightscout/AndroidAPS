@@ -33,6 +33,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import javax.inject.Inject
@@ -55,7 +56,8 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
-    private val glucoseStatusProvider: GlucoseStatusProvider
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val sp: SP
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -66,7 +68,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         .preferencesId(R.xml.pref_openapsama)
         .description(R.string.description_ama),
     aapsLogger, rh, injector
-), APS {
+), APS, Constraints {
 
     // last values
     override var lastAPSRun: Long = 0
@@ -206,5 +208,14 @@ class OpenAPSAMAPlugin @Inject constructor(
         rxBus.send(EventOpenAPSUpdateGui())
 
         //deviceStatus.suggested = determineBasalResultAMA.json;
+    }
+
+    override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+        if (isEnabled()) {
+            val maxIobPref: Double = sp.getDouble(R.string.key_openapsma_max_iob, 1.5)
+            maxIob.setIfSmaller(aapsLogger, maxIobPref, rh.gs(R.string.limitingiob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
+            maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), rh.gs(R.string.limitingiob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
+        }
+        return maxIob
     }
 }

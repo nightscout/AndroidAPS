@@ -14,9 +14,6 @@ import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
@@ -25,19 +22,23 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
+import info.nightscout.plugins.constraints.objectives.objectives.Objective
+import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -210,7 +211,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 fabricPrivacy,
                 dateUtil,
                 repository,
-                glucoseStatusProvider
+                glucoseStatusProvider,
+                sp
             )
         safetyPlugin =
             SafetyPlugin(
@@ -220,10 +222,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 sp,
                 rxBus,
                 constraintChecker,
-                openAPSAMAPlugin,
-                openAPSSMBPlugin,
-                openAPSSMBDynamicISFPlugin,
-                sensitivityOref1Plugin,
                 activePlugin,
                 hardLimits,
                 BuildHelperImpl(config, fileListProvider),
@@ -238,6 +236,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         constraintsPluginsList.add(danaRPlugin)
         constraintsPluginsList.add(danaRSPlugin)
         constraintsPluginsList.add(insightPlugin)
+        constraintsPluginsList.add(openAPSAMAPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
         `when`(activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)).thenReturn(constraintsPluginsList)
         objectivesPlugin.onStart()
@@ -260,7 +259,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun isClosedLoopAllowedTest() {
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
-        objectivesPlugin.objectives[ObjectivesPlugin.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
+        objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
@@ -275,7 +274,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // Safety & Objectives
     @Test
     fun isAutosensModeEnabledTest() {
-        objectivesPlugin.objectives[ObjectivesPlugin.AUTOSENS_OBJECTIVE].startedOn = 0
+        objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(R.string.key_openapsama_useautosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
@@ -304,7 +303,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // Safety & Objectives
     @Test
     fun isSMBModeEnabledTest() {
-        objectivesPlugin.objectives[ObjectivesPlugin.SMB_OBJECTIVE].startedOn = 0
+        objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
@@ -423,7 +422,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         val d = constraintChecker.getMaxIOBAllowed()
         Assert.assertEquals(1.5, d.value(), 0.01)
         Assert.assertEquals(d.reasonList.toString(), 2, d.reasonList.size)
-        Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 
     @Test
@@ -439,6 +438,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         val d = constraintChecker.getMaxIOBAllowed()
         Assert.assertEquals(3.0, d.value(), 0.01)
         Assert.assertEquals(d.reasonList.toString(), 2, d.reasonList.size)
-        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }

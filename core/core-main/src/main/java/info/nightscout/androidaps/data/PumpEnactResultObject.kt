@@ -75,7 +75,7 @@ class PumpEnactResultObject(injector: HasAndroidInjector) : PumpEnactResult {
                 isTempCancel       -> {
                     ret += "\n${rh.gs(R.string.enacted)}: $enacted"
                     if (comment.isNotEmpty()) ret += "\n${rh.gs(R.string.comment)}: $comment"
-                    ret += "\n${rh.gs(R.string.canceltemp)}"
+                    ret += "\n${rh.gs(R.string.cancel_temp)}"
                 }
 
                 isPercent          -> {
@@ -113,7 +113,7 @@ class PumpEnactResultObject(injector: HasAndroidInjector) : PumpEnactResult {
                 isTempCancel               -> {
                     ret += "<br><b>" + rh.gs(R.string.enacted) + "</b>: " + enacted
                     ret += "<br><b>" + rh.gs(R.string.comment) + "</b>: " + comment +
-                        "<br>" + rh.gs(R.string.canceltemp)
+                        "<br>" + rh.gs(R.string.cancel_temp)
                 }
 
                 isPercent && percent != -1 -> {

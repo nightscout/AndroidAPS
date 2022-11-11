@@ -102,7 +102,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.canceltemp)} "
+            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
             else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
             else if (usePercent) "${rh.gs(R.string.rate)}: ${DecimalFormatter.to2Decimal(percent.toDouble())}% (${DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
                 "${rh.gs(R.string.duration)}: ${DecimalFormatter.to2Decimal(duration.toDouble())} min "
@@ -127,7 +127,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) rh.gs(R.string.canceltemp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(percent.toDouble()) + "% " +
+            var ret: String = if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(percent.toDouble()) + "% " +
                 "(" + DecimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
                 "<b>" + rh.gs(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                 "(" + DecimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +

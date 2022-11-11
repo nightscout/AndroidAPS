@@ -60,6 +60,7 @@
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
+    <string name="percentage_label">Percentage</string>
 
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
@@ -74,6 +75,12 @@
     <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
     <string name="resume">Resume</string>
     <string name="reconnect">Reconnect Pump</string>
+    <string name="duration15m">15 mins</string>
+    <string name="duration30m">30 mins</string>
+    <string name="duration1h">1 hour</string>
+    <string name="duration2h">2 hours</string>
+    <string name="duration3h">3 hours</string>
+    <string name="duration10h">10 hours</string>
 
     <!-- WizardDialog -->
     <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
@@ -86,6 +93,10 @@
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="missing_carbs">Missing %1$d g</string>
+    <string name="a11y_current_bg">current blood glucose</string>
+    <string name="carb_time_label">Carb time</string>
+    <string name="a11y_set_carb_timer">set carb timer alarm</string>
+    <string name="show_calculation">Show calcuation</string>
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>
@@ -137,5 +148,8 @@
     <string name="format_with_weight">Age: %1$.0f Weight: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Default profile</string>
     <string name="invalid_pct">Invalid % entry</string>
+
+    <!-- Other dialogs -->
+    <string name="basal_rate">Basal rate</string>
 
 </resources>

@@ -189,7 +189,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         val target = defaultValueHelper.determineActivityTT()
         val units = profileFunction.getUnits()
         if (isTT)
-            actions.add(rh.gs(R.string.careportal_temporarytarget) + ": " + rh.gs(R.string.activity))
+            actions.add(rh.gs(R.string.temporary_target) + ": " + rh.gs(R.string.activity))
 
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime) ?: return@let

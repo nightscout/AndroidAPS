@@ -1087,6 +1087,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
+    @Override
     public boolean isUseRileyLinkBatteryLevel() {
         return aapsOmnipodErosManager.isShowRileyLinkBatteryLevel();
     }
