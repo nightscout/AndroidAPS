@@ -26,63 +26,10 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_temptargetwithcode">Per impostare il Temp-Target %1$s rispondi con il codice %2$s</string>
-    <string name="smscommunicator_temptargetcancel">Per cancellare il Temp-Target rispondi col codice %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">Per disabilitare il servizio di controllo remoto tramite SMS rispondi col codice %1$s.\n\nRicorda che potrai riattivarlo solo in maniera diretta dallo smartphone master in cui è installato AAPS.</string>
-    <string name="smscommunicator_stoppedsms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
-    <string name="smscommunicator_calibrationreplywithcode">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
-    <string name="smscommunicator_bolusfailed">Bolo fallito</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Numero minimo di minuti che devono trascorrere tra un bolo remoto e il successivo</string>
-    <string name="smscommunicator_remotebolusmindistance">Quanti minuti devono trascorrere, almeno, tra un bolo e il successivo</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Per la tua sicurezza, per modificare questa preferenza hai bisogno di aggiungere almeno 2 numeri di telefono.</string>
-    <string name="smscommunicator_bolusdelivered">Bolo di %1$.2f U erogato con successo</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolo pasto di %1$.2f U erogato con successo</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s per %2$d minuti</string>
     <string name="smscommunicator_tt_set">Target %1$s per %2$d minuti impostato con successo</string>
     <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
-    <string name="smscommunicator_remotecommandsallowed">Consenti comandi remoti tramite SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Il loop è stato disabilitato</string>
-    <string name="smscommunicator_loophasbeenenabled">Il loop è stato abilitato</string>
-    <string name="smscommunicator_loopisenabled">Il loop è abilitato</string>
-    <string name="smscommunicator_pumpconnectwithcode">Per connettere il micro rispondi col codice %1$s</string>
-    <string name="smscommunicator_pumpconnectfail">Connessione al micro fallita</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Per disconnettere il micro per %1$d minuti rispondi col codice %2$s</string>
-    <string name="smscommunicator_pumpdisconnected">Micro disconnesso</string>
     <string name="smscommunicator_reconnect">Micro riconnesso</string>
-    <string name="smscommunicator_remotecommandnotallowed">Il comando da remoto non è permesso</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolo remoto non disponibile. Riprova più tardi.</string>
-    <string name="smscommunicator_basalreplywithcode">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">Per passare al profilo %1$s %2$d%% rispondi col codice %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Per avviare il bolo esteso %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">Per riprendere il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">Per abilitare il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Per disabilitare il loop rispondi col codice %1$s</string>
-    <string name="smscommunicator_tempbasalset">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
-    <string name="smscommunicator_extendedset">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
-    <string name="smscommunicator_carbsset">CHO %1$d g inseriti con successo</string>
-    <string name="smscommunicator_carbsfailed">Inserimento di %1$dg di CHO fallito</string>
-    <string name="smscommunicator_tempbasalset_percent">Basale temporanea %1$d%% per %2$d min avviata con successo</string>
-    <string name="smscommunicator_tempbasalfailed">Avvio basale temporanea fallito</string>
-    <string name="smscommunicator_extendedfailed">Avvio bolo esteso fallito</string>
-    <string name="smscommunicator_basalstopreplywithcode">Per stoppare la basale temporanea rispondi col codice %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Per stoppare il bolo esteso rispondi col codice %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Basale temporanea cancellata</string>
-    <string name="smscommunicator_extendedcanceled">Bolo esteso cancellato</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Basale temporanea: cancellazione fallita</string>
-    <string name="smscommunicator_extendedcancelfailed">Bolo esteso: cancellazione fallita</string>
-    <string name="smscommunicator_unknowncommand">Comando sconosciuto o risposta errata</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
-    <string name="smscommunicator_wrongduration">Durata errata</string>
-    <string name="smscommunicator_loopsuspended">Loop sospeso</string>
-    <string name="smscommunicator_loopresumed">Loop ripreso</string>
-    <string name="smscommunicator_invalidphonennumber">Numero di telefono SMS non valido</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ non sta ricevendo calibrazioni</string>
-    <string name="smscommunicator_messagebody">Corpo del messaggio non valido</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
-    <string name="smscommunicator_pump_ureachable">Segnala micro irraggiungibile</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolo:</string>
@@ -103,16 +50,12 @@
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
+    <!-- StatusLine -->
     <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
     <!-- Food-->
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
     <string name="filter">Filtro</string>
     <string name="food">Cibo</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">Enr</string>
-    <string name="shortprotein">Prt</string>
-    <string name="shortfat">Grs</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Sottocategoria</string>
     <!-- Theme switcher dark and light mode-->
@@ -162,5 +105,118 @@
     <!-- Objectives -->
     <string name="not_completed_yet">Non ancora completato</string>
     <string name="time_elapsed">Tempo trascorso</string>
+    <!-- Actions -->
+    <!-- Safety -->
     <!-- Overview -->
+    <string name="snooze">Posticipa</string>
+    <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
+    <string name="statuslights_iage_warning">Età insulina: soglia di avviso [h]</string>
+    <string name="statuslights_iage_critical">Età insulina: soglia critica [h]</string>
+    <string name="statuslights_sage_warning">Età sensore: soglia di avviso [h]</string>
+    <string name="statuslights_sage_critical">Età sensore: soglia critica [h]</string>
+    <string name="statuslights_sbat_warning">Livello batteria sensore: soglia di avviso [%]</string>
+    <string name="statuslights_sbat_critical">Livello batteria sensore: soglia critica [%]</string>
+    <string name="statuslights_bage_warning">Età batteria micro: soglia di avviso [h]</string>
+    <string name="statuslights_bage_critical">Età batteria micro: soglia critica [h]</string>
+    <string name="statuslights_res_warning">Livello serbatoio: soglia di avviso [U]</string>
+    <string name="statuslights_res_critical">Livello serbatoio: soglia critica [U]</string>
+    <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
+    <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
+    <string name="statuslights">Indicatori di stato</string>
+    <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
+    <!-- NSClient -->
+    <string name="restart">Riavvio</string>
+    <string name="deliver_now">Invia ora</string>
+    <string name="clear_queue">Cancella coda</string>
+    <string name="show_queue">Mostra coda</string>
+    <string name="queue">Coda:</string>
+    <string name="status">Stato:</string>
+    <string name="full_sync">Sincronizzazione completa</string>
+    <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
+    <string name="ns_sync_options">Sincronizzazione</string>
+    <string name="ns_upload_summary">Profili, boli, CHO, basali temporanee vengono caricati su NS</string>
+    <string name="ns_upload">Carica dati su NS</string>
+    <string name="ns_receive_profile_store">Ricevi profilo</string>
+    <string name="ns_receive_profile_store_summary">Sincronizza i profili dall\'editor profilo di NS</string>
+    <string name="ns_receive_temp_target">Ricevi target temporanei</string>
+    <string name="ns_receive_temp_target_summary">Accetta target temporanei inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_profile_switch">Ricevi cambi profilo</string>
+    <string name="ns_receive_profile_switch_summary">Accetta cambi profilo inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_offline_event">Ricevi eventi APS offline</string>
+    <string name="ns_receive_offline_event_summary">Accetta eventi APS offline inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_tbr_eb">Ricevi TBR e EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accetta TBR e EB inseriti attraverso altra istanza</string>
+    <string name="ns_receive_insulin">Ricevi insulina</string>
+    <string name="ns_receive_insulin_summary">Accetta insulina inserita tramite NS o NSClient (non viene erogata, solo calcolata per IOB)</string>
+    <string name="ns_receive_carbs">Ricevi CHO</string>
+    <string name="ns_receive_carbs_summary">Accetta CHO inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_therapy_events">Ricevi eventi terapia</string>
+    <string name="ns_receive_therapy_events_summary">Accetta eventi terapia (cambio cannula, insulina, batteria, ecc.) inseriti tramite NS o NSClient</string>
+    <string name="ns_receive_cgm">Ricevi/riempi dati CGM</string>
+    <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
+    <string name="run_question">Eseguire %s?</string>
+    <string name="ns_sync_slow">Rallenta caricamenti</string>
+    <string name="ns_alarms">Crea notifiche da allarmi NS</string>
+    <string name="ns_announcements">Crea notifiche da avvisi NS</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Il tuo nome utente per l\'accesso a Tidepool, generalmente il tuo indirizzo email</string>
+    <string name="title_tidepool_username">Nome utente</string>
+    <string name="summary_tidepool_password">La tua password di Tidepool</string>
+    <string name="title_tidepool_password">Password</string>
+    <string name="title_tidepool_test_login">Test di accesso a Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Se abilitato, gli upload andranno su https://int-app.tidepool.org invece che su https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Usa server integrativi (test)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Carica dati su Tidepool</string>
+    <string name="tidepool_upload_cgm">Carica dati CGM</string>
+    <string name="tidepool_upload_bolus">Carica trattamenti (insulina, CHO)</string>
+    <string name="tidepool_upload_tbr">Carica basali temporanee</string>
+    <string name="tidepool_upload_profile">Carica cambi profilo, target temporanei</string>
+    <string name="tidepool_upload_bg">Carica test BG</string>
+    <string name="remove_all">Rimuovi tutto</string>
+    <string name="reset_start">Avvio reset</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
+    <string name="virtualpump_settings">Impostazioni micro virtuale</string>
+    <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
+    <string name="eversense">Eversense app (modificata)</string>
+    <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
+    <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
+    <string name="description_source_mm640g">Ricevi valori glicemia da 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ricevi valori glicemia da app Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ricevi valori da app Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
+    <string name="aidex_short">GlucoRx Aidex</string>
+    <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
+    <string name="bgsource_upload">Impostazioni caricamento BG</string>
+    <!-- NSClient -->
+    <string name="ns_cellular">Usa connessione cellulare</string>
+    <string name="ns_wifi">Usa connessione WiFi</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Durante la ricarica</string>
+    <string name="ns_battery">Utilizzo batteria</string>
+    <string name="ns_create_announcements_from_errors_title">Crea avvisi da errori</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Crea avvisi da CHO richiesti</string>
+    <string name="ns_create_announcements_from_errors_summary">Crea avviso su Nightscout per finestre di errore e allarmi locali (visualizzabile anche nella sezione Portale sotto la voce Trattamenti)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Crea avvisi su Nightscout dagli avvisi per CHO richiesti</string>
+    <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
+    <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
+    <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
 </resources>
