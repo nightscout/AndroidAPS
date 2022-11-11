@@ -91,6 +91,13 @@
     <string name="key_ns_receive_profile_switch" translatable="false">ns_receive_profile_switch</string>
     <string name="key_ns_receive_offline_event" translatable="false">ns_receive_offline_event</string>
     <string name="key_ns_receive_temp_target" translatable="false">ns_receive_temp_target</string>
+    <string name="key_objectiveuseprofileswitch" translatable="false">ObjectivesProfileSwitchUsed</string>
+    <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
+    <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
+    <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
+    <string name="key_aps_mode" translatable="false">aps_mode</string>
+    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -131,8 +138,8 @@
     <string name="stoppressed">STOP PRESSED</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
-    <string name="invalidprofile">Invalid profile!</string>
-    <string name="noprofileset">NO PROFILE SET</string>
+    <string name="invalid_profile">Invalid profile!</string>
+    <string name="no_profile_set">NO PROFILE SET</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Date</string>
     <string name="units_label">Units</string>
@@ -254,6 +261,13 @@
     <string name="invalid">INVALID</string>
     <string name="login">Login</string>
     <string name="upload_now">Upload now</string>
+    <string name="prime_fill">Prime/Fill</string>
+    <string name="overview_insulin_label">Insulin</string>
+    <string name="stoptemptarget">Stop temp target</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Low Glucose Suspend</string>
+    <string name="confirm">Confirm</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -295,7 +309,7 @@
     <string name="startprofile">Start profile %1$d%% for %2$d min</string>
 
     <!--    APSResult-->
-    <string name="canceltemp">Cancel temp basal</string>
+    <string name="cancel_temp">Cancel temp basal</string>
     <string name="let_temp_basal_run">Let temp basal run</string>
     <string name="rate">Rate</string>
     <string name="duration">Duration</string>
@@ -320,12 +334,12 @@
     <string name="careportal_note_message">Note : %1$s</string>
     <string name="careportal_question_message">Question : %1$s</string>
     <string name="careportal_exercise_message">Exercise : %1$s</string>
-    <string name="careportal_pumpsitechange">Pump Site Change</string>
-    <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
+    <string name="careportal_pump_site_change">Pump Site Change</string>
+    <string name="cgm_sensor_insert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
     <string name="careportal_dad_alert">D.A.D. Alert</string>
-    <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
+    <string name="careportal_insulin_cartridge_change">Insulin Cartridge Change</string>
     <string name="careportal_profileswitch">Profile switch</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
@@ -335,8 +349,8 @@
     <string name="careportal_tempbasalend">Temp Basal End</string>
     <string name="careportal_carbscorrection">Carbs correction</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-    <string name="careportal_pumpbatterychange">Pump Battery Change</string>
-    <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="pump_battery_change">Pump Battery Change</string>
+    <string name="temporary_target">Temporary target</string>
     <string name="careportal_temporarytargetvalue">Temporary target value</string>
     <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
     <string name="boluswizard">Bolus wizard</string>
@@ -655,6 +669,35 @@
 
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+
+    <!-- BolusWizard -->
+    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
+    <string name="bolus_advisor">Bolus advisor</string>
+    <string name="bolus_advisor_message">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
+
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
+    <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
+    <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
+    <string name="advisoralarm">Run alarm when is time to eat</string>
+    <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
+    <string name="wizard_no_active_profile">No active profile set!</string>
+    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
+    <string name="wizard_carbs_constraint">Carb constraint violation!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
+    <string name="wizard_pump_not_available">No pump available!</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
