@@ -30,7 +30,6 @@
     <string name="paused">Pausad</string>
     <string name="invalid">OGILTIG</string>
     <string name="login">Logga in</string>
-    <string name="upload_now">Ladda upp nu</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
