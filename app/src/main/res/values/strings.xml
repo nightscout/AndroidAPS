@@ -35,9 +35,6 @@
     <string name="key_openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
-    <string name="treatmentssafety_title">Treatments safety</string>
-    <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
     <string name="treatmentssafety_lgsThreshold_title">BG level below which low glucose suspend occurs</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="nav_preferences">Preferences</string>
@@ -45,9 +42,7 @@
     <string name="nav_resetdb">Reset Databases</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
-    <string name="description_actions">Some buttons to quickly access common features</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
-    <string name="description_objectives">Learning program</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_ama">State of the algorithm in 2017</string>
     <string name="description_smb">Most recent algorithm for advanced users</string>
@@ -68,7 +63,6 @@
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="result">Result</string>
-    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="openapsma_request_label">Request</string>
     <string name="delta">Delta</string>
@@ -93,25 +87,15 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_tbrsetbypump_label">Temp basal set by pump</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
-    <string name="safety">Safety</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
-    <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
-    <string name="apsmode_title">APS Mode</string>
-    <string name="closedloop">Closed Loop</string>
-    <string name="openloop">Open Loop</string>
-    <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
-    <string name="carb_time_label">Carb time</string>
     <string name="profile_label">Profile</string>
-    <string name="overview_tempbasal_button">TempBasal</string>
-    <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="missing_carbs">Missing %1$d g</string>
     <string name="exported">Preferences exported</string>
     <string name="ue_exported">User Entries exported</string>
     <string name="export_to">Export settings to</string>
@@ -146,7 +130,6 @@
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
     <string name="save">Save</string>
     <string name="reloadprofile">Reload profile</string>
-    <string name="quickwizard">QuickWizard</string>
     <string name="quickwizardsettings">QuickWizard settings</string>
     <string name="overview_editquickwizard_buttontext">Button text:</string>
     <string name="overview_editquickwizard_carbs">Carbs:</string>
@@ -154,16 +137,9 @@
     <string name="overview_editquickwizardlistactivity_add">Add</string>
     <string name="overview_quickwizard_item_edit_button">Edit</string>
     <string name="correctionbous">Corr</string>
-    <string name="actions">Actions</string>
     <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
     <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
-    <string name="primefill">Prime/Fill</string>
-    <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
-    <string name="fillbolus_title">Fill/Prime standard insulin amounts</string>
-    <string name="button1">Button 1</string>
-    <string name="button2">Button 2</string>
-    <string name="button3">Button 3</string>
     <string name="units">Units</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
@@ -172,7 +148,6 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="basal_rate">Basal rate</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -180,14 +155,12 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use Autosens feature</string>
-    <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="overview_shortname">HOME</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
@@ -206,37 +179,11 @@
     <string name="executing">Executing</string>
     <string name="wear_settings">Wear settings</string>
     <string name="nosuccess">not successful - please check phone</string>
-    <string name="patientage">Patient type</string>
-    <string name="child">Child</string>
-    <string name="teenage">Teenage</string>
-    <string name="adult">Adult</string>
-    <string name="resistantadult">Insulin resistant adult</string>
-    <string name="pregnant">Pregnancy</string>
-    <string name="patientage_summary">Please select patient type to setup safety limits</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
-    <string name="suspendloopfor1h">Suspend loop for 1h</string>
-    <string name="suspendloopfor2h">Suspend loop for 2h</string>
-    <string name="suspendloopfor3h">Suspend loop for 3h</string>
-    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
-    <string name="disconnectpump">Disconnect pump</string>
-    <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
-    <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
-    <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
-    <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
-    <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
-    <string name="duration15m">15 mins</string>
-    <string name="duration30m">30 mins</string>
-    <string name="duration1h">1 hour</string>
-    <string name="duration2h">2 hours</string>
-    <string name="duration3h">3 hours</string>
-    <string name="duration10h">10 hours</string>
-    <string name="resume">Resume</string>
-    <string name="reconnect">Reconnect Pump</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
-    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
     <string name="prediction_shortname">PRED</string>
@@ -248,13 +195,7 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
-    <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_insulin_label">Insulin</string>
-    <string name="careportal_pb_label">Pump battery</string>
-    <string name="careportal_age_label">age:</string>
-    <string name="careportal_level_label">level:</string>
     <string name="ns_alarm_options">Alarm options</string>
     <string name="key_ns_announcements" translatable="false">ns_announcements</string>
     <string name="key_ns_alarms" translatable="false">ns_alarms</string>
@@ -288,18 +229,12 @@
     <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
-    <string name="key_use_smb" translatable="false">use_smb</string>
-    <string name="key_use_uam" translatable="false">use_uam</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
     <string name="enableuam">Enable UAM</string>
     <string name="enablesmb">Enable SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
     <string name="invalid">INVALID</string>
-    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
-    <string name="careportal_newnstreatment_percentage_label">Percentage</string>
-    <string name="careportal_newnstreatment_timeshift_label">Time shift</string>
     <string name="default_temptargets">Default Temp-Targets</string>
     <string name="eatingsoon_duration">eatingsoon duration</string>
     <string name="eatingsoon_target">eatingsoon target</string>
@@ -307,7 +242,6 @@
     <string name="activity_target">activity target</string>
     <string name="hypo_duration">hypo duration</string>
     <string name="hypo_target">hypo target</string>
-    <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
@@ -336,13 +270,6 @@
     <string name="overview_editquickwizard_usecob">COB calculation</string>
     <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
     <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
-    <string name="loopenabled">Loop enabled</string>
-    <string name="apsselected">APS selected</string>
-    <string name="synchaswritepermission">Synchronization service has write permission</string>
-    <string name="closedmodeenabled">Closed mode enabled</string>
-    <string name="maxiobset">Maximal IOB set properly</string>
-    <string name="hasbgdata">BG available from selected source</string>
-    <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
     <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
@@ -358,7 +285,6 @@
     <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
     <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
     <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise, above 100 mg/dl or 5.5 mmol/l)</string>
-    <string name="overview_insulin_label">Insulin</string>
     <string name="overview_buttons_selection">Buttons</string>
     <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
     <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
@@ -368,17 +294,12 @@
     <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
     <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
-    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
-    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
-    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
-    <string name="overview_cgm">CGM</string>
     <string name="ignore5m">Ignore 5m</string>
     <string name="ignore15m">Ignore 15m</string>
     <string name="ignore30m">Ignore 30m</string>
-    <string name="nav_historybrowser">History browser</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
@@ -388,8 +309,6 @@
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
-    <string name="do_not_bolus_record_only">Do not bolus, record only</string>
-    <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>
@@ -398,36 +317,10 @@
     <string name="overview_show_cob">Carbs On Board</string>
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
-    <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
-    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
-    <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
-    <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
-    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
-    <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
-    <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
-    <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
-    <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
-    <string name="maxbasalmultiplier">max basal multiplier</string>
-    <string name="maxdailybasalmultiplier">max daily basal multiplier</string>
-    <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
-    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
-    <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
-    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
-    <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
-    <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
-    <string name="maxvalueinpreferences">max value in preferences</string>
-    <string name="hardlimit">hard limit</string>
-    <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
-    <string name="record_pump_site_change">Record pump site change</string>
-    <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
-    <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
-    <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
-    <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
@@ -513,49 +406,24 @@
     <string name="miscellaneous">Miscellaneous</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
-    <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
-    <string name="dexcom_lognssensorchange_title">Log sensor change to NS</string>
-    <string name="dexcom_lognssensorchange_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
-    <string name="twohours">2h</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
-    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
-    <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
-    <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
-    <string name="selected_profile">Selected:</string>
     <string name="unitsnosemicolon">Units</string>
-    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
-    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
-    <string name="objectives_button_unfinish">Clear finished</string>
-    <string name="objectives_button_unstart">Clear started</string>
-    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
     <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
-    <string name="invalidpct">Invalid % entry</string>
-    <string name="randombg">Random BG</string>
-    <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
-    <string name="randombg_short">BG</string>
-    <string name="tools">Tools</string>
-    <string name="show_calculation">Show calcuation</string>
     <string name="show_removed">Show removed</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
-    <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
-    <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
     <string name="chartmenu">Chart menu</string>
     <string name="databroadcaster" translatable="false">Data Broadcaster</string>
     <string name="loop_smbrequest_time_label">SMB request time</string>
@@ -570,34 +438,14 @@
     <string name="overview_show_absinsulin">Absolute insulin</string>
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
     <string name="current_master_password">Current master password</string>
-    <string name="classic_description">Original skin</string>
-    <string name="lowres_description">Low Resolution skin</string>
-    <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
-    <string name="largedisplay_description">Large display</string>
-    <string name="key_skin" translatable="false">skin</string>
-    <string name="skin">Skin</string>
-    <string name="comapareprofile">Compare profiles</string>
-    <string name="nav_profilehelper">Profile helper</string>
-    <string name="motoldefaultprofile">Default profile</string>
-    <string name="currentprofile">Current profile</string>
-    <string name="availableprofile">Available profile</string>
-    <string name="profiletype">Profile type</string>
-    <string name="formatwithtdd">Age: %1$.0f TDD: %2$.0f U</string>
-    <string name="formatwittddandpct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
-    <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
-    <string name="basalpctfromtdd_label">% of basal</string>
-    <string name="dpvdefaultprofile">DPV Default profile</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="advisoralarm">Run alarm when is time to eat</string>
-    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="enablebolusreminder">Enable bolus reminder</string>
     <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard ("post-bolus")</string>
     <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="graph_menu_divider_header">Graph</string>
-    <string name="chart_menu">Chart menu</string>
     <string name="clear_filter">Clear filter</string>
     <string name="cannula">Cannula</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
@@ -607,23 +455,10 @@
     <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
     <string name="data_status">BG data status</string>
     <string name="remove_bg_readings">Remove BG readings</string>
-    <string name="statuslights_cannula_age">cannula age</string>
-    <string name="statuslights_patch_pump_age">patch pump age</string>
-    <string name="patch_pump">Patch pump</string>
-    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
-    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="a11y_dialog">dialog</string>
-    <string name="a11y_current_bg">current blood glucose</string>
-    <string name="a11_correction_percentage">correct outcome with %</string>
-    <string name="a11_correction_units">correct outcome with units</string>
     <string name="not_available_full">Not available</string>
-    <string name="a11y_graph">graph</string>
-    <string name="a11y_bg_quality">blood glucose quality</string>
-    <string name="a11y_insulin_label">insulin</string>
-    <string name="a11y_blood_glucose">blood glucose</string>
-    <string name="a11y_bg_outdated">outdated</string>
     <!-- WEAR OS-->
     <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
@@ -638,22 +473,6 @@
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
-    <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
-    <string name="wizard_no_active_profile">No active profile set!</string>
-    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
-    <string name="wizard_carbs_constraint">Carb constraint violation!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
-    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
-    <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
-    <string name="wizard_explain_tt">TempT: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
-    <string name="wizard_pump_not_available">No pump available!</string>
     <string name="wear_unknown_action_string">Unknown action command:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Application default</string>
@@ -662,10 +481,7 @@
     <string name="sort_label">Sort</string>
     <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
-    <string name="profile1">Profile 1</string>
-    <string name="profile2">Profile 2</string>
     <string name="a11y_open_settings">open settings</string>
-    <string name="a11y_set_carb_timer">set carb timer alarm</string>
     <string name="device_all">All</string>
     <string name="device_phone">Phone</string>
     <string name="device_watch">Watch</string>
