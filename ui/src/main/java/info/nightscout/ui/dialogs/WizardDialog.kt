@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -18,9 +18,7 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -30,12 +28,11 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
@@ -55,6 +52,8 @@ import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogWizardBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -469,7 +468,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.correctionInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
 
             // Superbolus
-            binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.twohours) else ""
+            binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.two_hours) else ""
             binding.sbInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
 
             // Trend
@@ -529,7 +528,7 @@ class WizardDialog : DaggerDialogFragment() {
                     ToastUtils.warnToast(ctx, R.string.dialog_canceled)
                     dismiss()
                 }
-                protectionCheck.queryProtection(activity, BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)
             }
         }
     }

@@ -22,9 +22,9 @@ import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWiza
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.wizard.QuickWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.wizard.QuickWizard
+import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.interfaces.dragHelpers.OnStartDragListener
 import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback

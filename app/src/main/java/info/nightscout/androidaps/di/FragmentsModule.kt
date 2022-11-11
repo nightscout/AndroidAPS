@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
-import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.plugins.aps.OpenAPSFragment
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
@@ -16,6 +15,7 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.wear.WearFragment
 import info.nightscout.androidaps.utils.protection.PasswordCheck
+import info.nightscout.ui.dialogs.WizardDialog
 
 @Module
 @Suppress("unused")

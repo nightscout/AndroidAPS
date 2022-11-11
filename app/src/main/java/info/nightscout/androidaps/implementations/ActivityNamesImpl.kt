@@ -7,14 +7,14 @@ import androidx.annotation.RawRes
 import androidx.fragment.app.FragmentManager
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
-import info.nightscout.ui.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.TDDStatsActivity
+import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import info.nightscout.ui.dialogs.ProfileViewerDialog
+import info.nightscout.ui.dialogs.WizardDialog
 import javax.inject.Inject
 
 class ActivityNamesImpl @Inject constructor() : ActivityNames {

@@ -68,7 +68,6 @@
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="result">Result</string>
-    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="openapsma_request_label">Request</string>
     <string name="delta">Delta</string>
@@ -108,7 +107,6 @@
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="missing_carbs">Missing %1$d g</string>
     <string name="exported">Preferences exported</string>
     <string name="ue_exported">User Entries exported</string>
     <string name="export_to">Export settings to</string>
@@ -215,7 +213,6 @@
     <string name="duration10h">10 hours</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
-    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
     <string name="prediction_shortname">PRED</string>
@@ -275,8 +272,6 @@
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
     <string name="invalid">INVALID</string>
-    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
     <string name="careportal_newnstreatment_percentage_label">Percentage</string>
     <string name="default_temptargets">Default Temp-Targets</string>
     <string name="eatingsoon_duration">eatingsoon duration</string>
@@ -490,16 +485,9 @@
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
     <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
-    <string name="twohours">2h</string>
-    <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
-    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
-    <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="unitsnosemicolon">Units</string>
-    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
-    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
     <string name="objectives_button_unfinish">Clear finished</string>
     <string name="objectives_button_unstart">Clear started</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
@@ -538,8 +526,6 @@
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="advisoralarm">Run alarm when is time to eat</string>
-    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="enablebolusreminder">Enable bolus reminder</string>
     <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard ("post-bolus")</string>
@@ -562,8 +548,6 @@
     <string name="identification_not_set">Identification not set in dev mode</string>
     <string name="a11y_dialog">dialog</string>
     <string name="a11y_current_bg">current blood glucose</string>
-    <string name="a11_correction_percentage">correct outcome with %</string>
-    <string name="a11_correction_units">correct outcome with units</string>
     <string name="not_available_full">Not available</string>
     <string name="a11y_graph">graph</string>
     <string name="a11y_bg_quality">blood glucose quality</string>
@@ -584,22 +568,6 @@
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
     <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
-    <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
-    <string name="wizard_no_active_profile">No active profile set!</string>
-    <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>
-    <string name="wizard_carbs_constraint">Carb constraint violation!</string>
-    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
-    <string name="wizard_explain_carbs">Carbs: %1$.2fU</string>
-    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">BG: %1$.2fU</string>
-    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
-    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
-    <string name="wizard_explain_percent">Percentage: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
-    <string name="wizard_constraint_bolus_size">Insulin constraint violation!\nCannot deliver %1$.2fU</string>
-    <string name="wizard_explain_tt">TempT: %1$s</string>
-    <string name="wizard_explain_tt_to">%1$s to %2$s</string>
-    <string name="wizard_pump_not_available">No pump available!</string>
     <string name="wear_unknown_action_string">Unknown action command:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Application default</string>

@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.utils.wizard
+package info.nightscout.core.wizard
 
 import android.content.Context
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.iob.round
+import info.nightscout.core.main.R
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.BolusCalculatorResult

@@ -30,7 +30,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.androidaps.dialogs.WizardDialog
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -62,12 +61,12 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.ui.SingleClickButton
 import info.nightscout.androidaps.utils.ui.UIRunnable
-import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.toSignedUnitsString
 import info.nightscout.core.profile.toTargetRangeString
 import info.nightscout.core.profile.toUnits
+import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.interfaces.end
@@ -112,6 +111,7 @@ import info.nightscout.ui.dialogs.LoopDialog
 import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
+import info.nightscout.ui.dialogs.WizardDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale

@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.ui.dialogs.InsulinDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.total
@@ -25,14 +24,14 @@ import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.wizard.BolusWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.core.wizard.QuickWizard
+import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
@@ -66,6 +65,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.InsulinDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat

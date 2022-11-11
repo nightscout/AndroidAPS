@@ -6,8 +6,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.wizard.QuickWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
+import info.nightscout.core.wizard.QuickWizard
+import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.junit.Assert

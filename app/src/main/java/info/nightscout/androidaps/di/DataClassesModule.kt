@@ -3,8 +3,8 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.utils.wizard.BolusWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
+import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.core.wizard.QuickWizardEntry
 
 @Module
 @Suppress("unused")

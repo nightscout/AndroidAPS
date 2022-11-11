@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobTotal

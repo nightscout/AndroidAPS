@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">No action selected, nothing will happen</string>
     <string name="constraint_applied">Constraint applied!</string>
     <string name="bolus_constraint_applied">Bolus constraint applied</string>
     <string name="carbs_constraint_applied">Carbs constraint applied</string>
@@ -34,9 +33,6 @@
     <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
 
 
-    <!-- Dialogs -->
-    <string name="bolus_constraint_applied_warn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
-
     <string name="glucose_type">Glucose type</string>
     <string name="bg_other">Other</string>
     <string name="bg_meter">Meter</string>
@@ -60,7 +56,6 @@
 
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
-    <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
 
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
@@ -79,6 +74,18 @@
     <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
     <string name="resume">Resume</string>
     <string name="reconnect">Reconnect Pump</string>
+
+    <!-- WizardDialog -->
+    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
+    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
+    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
+    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
+
+    <string name="a11_correction_percentage">correct outcome with %</string>
+    <string name="a11_correction_units">correct outcome with units</string>
+    <string name="two_hours">2h</string>
+    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
+    <string name="missing_carbs">Missing %1$d g</string>
 
     <!-- Treatments -->
     <string name="no_records_available">No records available</string>

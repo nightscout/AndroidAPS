@@ -1,14 +1,13 @@
-package info.nightscout.androidaps.utils.wizard
+package info.nightscout.core.wizard
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.core.main.R
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Singleton
 class QuickWizard @Inject constructor(
