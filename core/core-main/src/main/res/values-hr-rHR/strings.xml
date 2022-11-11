@@ -68,4 +68,5 @@
     <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
+    <!-- BolusWizard -->
 </resources>
