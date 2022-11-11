@@ -6,14 +6,6 @@
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Pomp Reeks Nommer</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nooit gekontak nie</string>
-    <string name="pump_status_waking_up">Besig om te wek</string>
-    <string name="pump_status_error_comm">Fout met kommunikasie</string>
-    <string name="pump_status_timeout_comm">Te lank op kommunikasie gewag</string>
-    <string name="pump_status_pump_unreachable">Pomp onbereikbaar</string>
-    <string name="pump_status_invalid_config">Ongeldige konfigirasie</string>
-    <string name="pump_status_active">Aktief</string>
-    <string name="pump_status_sleeping">Slaap</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Basale</string>
     <string name="history_group_configuration">Konfigurasies</string>
