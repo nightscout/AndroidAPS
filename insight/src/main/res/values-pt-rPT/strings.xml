@@ -11,7 +11,6 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="started">Iniciado</string>
     <string name="stopped">Parado</string>
-    <string name="paused">Em pausa</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
@@ -45,7 +44,6 @@
     <string name="short_status_tdd">TDI: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Confirmar</string>
     <string name="mute_alert">Silêncio</string>
     <string name="release_software_version">Lançar versão de software</string>
     <string name="ui_processor_software_version">Versão de software do processador de interface do utilizador</string>
