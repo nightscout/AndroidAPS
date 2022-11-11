@@ -35,7 +35,6 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -64,6 +63,7 @@ import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -204,8 +204,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(rh, R.string.key_keep_screen_on)) setWakeLock()
-        if (ev.isChanged(rh, R.string.key_skin)) recreate()
+        if (ev.isChanged(rh.gs(R.string.key_keep_screen_on))) setWakeLock()
+        if (ev.isChanged(rh.gs(R.string.key_skin))) recreate()
     }
 
     private fun setupViews() {

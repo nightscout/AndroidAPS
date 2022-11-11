@@ -6,7 +6,6 @@ import android.os.HandlerThread
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.automation.actions.Action
@@ -54,6 +53,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventBTChange
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -137,7 +137,7 @@ class AutomationPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ e ->
-                           if (e.isChanged(rh, R.string.key_location)) {
+                           if (e.isChanged(rh.gs(R.string.key_location))) {
                                locationServiceHelper.stopService(context)
                                locationServiceHelper.startService(context)
                            }

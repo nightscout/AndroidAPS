@@ -22,8 +22,7 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
+import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -69,6 +68,7 @@ import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -125,7 +125,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
-    @Inject lateinit var openHumansUploader: OpenHumansUploader
+    @Inject lateinit var openHumansUploaderPlugin: OpenHumansUploaderPlugin
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
 
     override fun onAttach(context: Context) {
@@ -225,7 +225,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
             addPreferencesFromResource(R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(openHumansUploader, rootKey)
+            addPreferencesFromResourceIfEnabled(openHumansUploaderPlugin, rootKey)
         }
         initSummary(preferenceScreen, pluginId != -1)
         preprocessPreferences()

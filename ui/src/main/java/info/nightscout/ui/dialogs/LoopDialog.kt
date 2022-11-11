@@ -11,7 +11,6 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -37,6 +36,7 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

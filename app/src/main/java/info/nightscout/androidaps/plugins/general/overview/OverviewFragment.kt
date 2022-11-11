@@ -31,7 +31,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
@@ -94,6 +93,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale
 import info.nightscout.rx.events.EventTempBasalChange
@@ -221,7 +221,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay += 6
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
-            rxBus.send(EventPreferenceChange(rh, R.string.key_rangetodisplay))
+            rxBus.send(EventPreferenceChange(rh.gs(R.string.key_rangetodisplay)))
             sp.putBoolean(R.string.key_objectiveusescale, true)
             false
         }
@@ -285,7 +285,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
                            sp.putInt(R.string.key_rangetodisplay, it.hours)
-                           rxBus.send(EventPreferenceChange(rh, R.string.key_rangetodisplay))
+                           rxBus.send(EventPreferenceChange(rh.gs(R.string.key_rangetodisplay)))
                            sp.putBoolean(R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus

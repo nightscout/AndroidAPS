@@ -7,7 +7,6 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventNewHistoryData
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
@@ -42,6 +41,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -116,14 +116,14 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh, R.string.key_openapsama_autosens_period) ||
-                               event.isChanged(rh, R.string.key_age) ||
-                               event.isChanged(rh, R.string.key_absorption_maxtime) ||
-                               event.isChanged(rh, R.string.key_openapsama_min_5m_carbimpact) ||
-                               event.isChanged(rh, R.string.key_absorption_cutoff) ||
-                               event.isChanged(rh, R.string.key_openapsama_autosens_max) ||
-                               event.isChanged(rh, R.string.key_openapsama_autosens_min) ||
-                               event.isChanged(rh, R.string.key_insulin_oref_peak)
+                           if (event.isChanged(rh.gs(R.string.key_openapsama_autosens_period)) ||
+                               event.isChanged(rh.gs(R.string.key_age)) ||
+                               event.isChanged(rh.gs(R.string.key_absorption_maxtime)) ||
+                               event.isChanged(rh.gs(R.string.key_openapsama_min_5m_carbimpact)) ||
+                               event.isChanged(rh.gs(R.string.key_absorption_cutoff)) ||
+                               event.isChanged(rh.gs(R.string.key_openapsama_autosens_max)) ||
+                               event.isChanged(rh.gs(R.string.key_openapsama_autosens_min)) ||
+                               event.isChanged(rh.gs(R.string.key_insulin_oref_peak))
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }

@@ -8,7 +8,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
@@ -30,6 +29,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper

@@ -19,7 +19,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHAppIDDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHCounterDelegate
 import info.nightscout.androidaps.plugin.general.openhumans.delegates.OHStateDelegate
@@ -32,6 +31,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -55,7 +55,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OpenHumansUploader @Inject internal constructor(
+class OpenHumansUploaderPlugin @Inject internal constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,

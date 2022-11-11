@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventThemeSwitch
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -40,7 +40,7 @@ class ThemeSwitcherPlugin @Inject constructor(
 
     override fun onStart() {
         compositeDisposable.add(rxBus.toObservable(EventPreferenceChange::class.java).subscribe {
-            if (it.isChanged(rh, id = R.string.key_use_dark_mode)) {
+            if (it.isChanged(rh.gs(R.string.key_use_dark_mode))) {
                 setThemeMode()
                 rxBus.send(EventThemeSwitch())
             }

@@ -22,7 +22,7 @@ class OpenHumansWorker(
     lateinit var logger: AAPSLogger
 
     @Inject
-    lateinit var openHumansUploader: OpenHumansUploader
+    lateinit var openHumansUploader: OpenHumansUploaderPlugin
 
     override suspend fun doWork(): Result {
         return try {

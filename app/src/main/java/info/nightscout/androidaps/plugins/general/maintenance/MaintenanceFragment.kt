@@ -12,7 +12,6 @@ import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.dana.database.DanaHistoryDatabase
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryDatabase
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -33,6 +32,7 @@ import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
@@ -110,7 +110,7 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeOn(aapsSchedulers.io)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
-                                onComplete = { rxBus.send(EventPreferenceChange(rh, R.string.key_units)) }
+                                onComplete = { rxBus.send(EventPreferenceChange(rh.gs(R.string.key_units))) }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })

@@ -35,7 +35,6 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.PumpEnactResultObject;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -107,6 +106,7 @@ import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventAppExit;
 import info.nightscout.rx.events.EventAppInitialized;
+import info.nightscout.rx.events.EventPreferenceChange;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
@@ -330,25 +330,25 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED)) {
+                    if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED))) {
                         aapsOmnipodErosManager.reloadSettings();
-                    } else if (event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS)) {
+                    } else if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS))) {
                         if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }

@@ -11,7 +11,6 @@ import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.PumpEnactResultObject;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -35,6 +34,7 @@ import info.nightscout.interfaces.utils.Round;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventConfigBuilderChange;
+import info.nightscout.rx.events.EventPreferenceChange;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.interfaces.ResourceHelper;
@@ -108,7 +108,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh(), R.string.key_danar_bt_name)) {
+                    if (event.isChanged(getRh().gs(R.string.key_danar_bt_name))) {
                         danaPump.reset();
                         pumpSync.connectNewPump(true);
                         getCommandQueue().readStatus(getRh().gs(R.string.device_changed), null);

@@ -6,7 +6,6 @@ import android.os.HandlerThread
 import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
@@ -68,6 +67,7 @@ import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventTempBasalChange
@@ -487,10 +487,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 {
-                    if (it.isChanged(rh, R.string.key_omnipod_common_expiration_reminder_enabled) ||
-                        it.isChanged(rh, R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown) ||
-                        it.isChanged(rh, R.string.key_omnipod_common_low_reservoir_alert_enabled) ||
-                        it.isChanged(rh, R.string.key_omnipod_common_low_reservoir_alert_units)
+                    if (it.isChanged(rh.gs(R.string.key_omnipod_common_expiration_reminder_enabled)) ||
+                        it.isChanged(rh.gs(R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown)) ||
+                        it.isChanged(rh.gs(R.string.key_omnipod_common_low_reservoir_alert_enabled)) ||
+                        it.isChanged(rh.gs(R.string.key_omnipod_common_low_reservoir_alert_units))
                     ) {
                         commandQueue.customCommand(CommandUpdateAlertConfiguration(), null)
                     }

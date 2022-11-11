@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Loop
@@ -24,6 +23,7 @@ import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.events.EventConfigBuilderChange
 import info.nightscout.rx.events.EventExtendedBolusChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventTempBasalChange
 import info.nightscout.rx.events.EventTreatmentChange

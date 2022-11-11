@@ -467,6 +467,7 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
     <string name="remove_all">Remove all</string>
     <string name="reset_start">Reset start</string>
+    <string name="upload_now">Upload now</string>
 
     <!-- VirtualPump -->
     <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>

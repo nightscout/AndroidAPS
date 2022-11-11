@@ -11,7 +11,6 @@ import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNewHistoryData
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
@@ -26,6 +25,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventOfflineChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -99,11 +99,11 @@ class CalculationWorkflow @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh, R.string.key_units)) {
+                           if (event.isChanged(rh.gs(R.string.key_units))) {
                                overviewData.reset()
                                rxBus.send(EventNewHistoryData(0, false))
                            }
-                           if (event.isChanged(rh, R.string.key_rangetodisplay)) {
+                           if (event.isChanged(rh.gs(R.string.key_rangetodisplay))) {
                                overviewData.initRange()
                                runOnScaleChanged()
                                rxBus.send(EventNewHistoryData(0, false))

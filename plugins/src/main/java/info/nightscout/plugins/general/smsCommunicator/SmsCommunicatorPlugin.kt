@@ -12,7 +12,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
@@ -62,6 +61,7 @@ import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -222,7 +222,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processSettings(ev: EventPreferenceChange?) {
-        if (ev == null || ev.isChanged(rh, R.string.key_smscommunicator_allowednumbers)) {
+        if (ev == null || ev.isChanged(rh.gs(R.string.key_smscommunicator_allowednumbers))) {
             val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
             allowedNumbers.clear()
             val substrings = settings.split(";").toTypedArray()

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
@@ -34,6 +33,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -85,9 +85,9 @@ class EopatchPumpPlugin @Inject constructor(
                              .toObservable(EventPreferenceChange::class.java)
                              .observeOn(aapsSchedulers.io)
                              .subscribe({ event: EventPreferenceChange ->
-                                            if (event.isChanged(rh, SettingKeys.LOW_RESERVOIR_REMINDERS) || event.isChanged(rh, SettingKeys.EXPIRATION_REMINDERS)) {
+                                            if (event.isChanged(rh.gs(SettingKeys.LOW_RESERVOIR_REMINDERS)) || event.isChanged(rh.gs(SettingKeys.EXPIRATION_REMINDERS))) {
                                                 patchManager.changeReminderSetting()
-                                            } else if (event.isChanged(rh, SettingKeys.BUZZER_REMINDERS)) {
+                                            } else if (event.isChanged(rh.gs(SettingKeys.BUZZER_REMINDERS))) {
                                                 patchManager.changeBuzzerSetting()
                                             }
                                         }) { throwable: Throwable -> fabricPrivacy.logException(throwable) }

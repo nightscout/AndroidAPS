@@ -6,7 +6,6 @@ import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.interfaces.IobCobCalculator
@@ -34,6 +33,7 @@ import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -112,7 +112,7 @@ open class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh, R.string.key_virtualpump_type)) refreshConfiguration() }, fabricPrivacy::logException)
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh.gs(R.string.key_virtualpump_type))) refreshConfiguration() }, fabricPrivacy::logException)
         refreshConfiguration()
     }
 

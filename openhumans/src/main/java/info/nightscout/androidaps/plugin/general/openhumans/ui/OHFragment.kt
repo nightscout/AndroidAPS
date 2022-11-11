@@ -10,9 +10,9 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.LiveData
 import com.google.android.material.button.MaterialButton
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugin.general.openhumans.R
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansState
-import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
+import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
+import info.nightscout.androidaps.plugin.general.openhumans.R
 import javax.inject.Inject
 
 class OHFragment : DaggerFragment() {
@@ -20,7 +20,7 @@ class OHFragment : DaggerFragment() {
     @Inject
     internal lateinit var stateLiveData: LiveData<OpenHumansState?>
     @Inject
-    internal lateinit var plugin: OpenHumansUploader
+    internal lateinit var plugin: OpenHumansUploaderPlugin
 
     private lateinit var setup: MaterialButton
     private lateinit var logout: MaterialButton
