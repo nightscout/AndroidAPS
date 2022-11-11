@@ -3,7 +3,27 @@
     <string name="unit_minute_short">nóim</string>
     <!--    Widget-->
     <!--     Activities-->
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Lomlán</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Inslin:</string>
+    <string name="treatments_carbs_label_string">Carbí:</string>
+    <string name="treatments_iobtotal_label_string">Lomlán IOB:</string>
+    <string name="tempbasals_realduration_label_string">Fad:</string>
+    <string name="tempbasals_netratio_label_string">Cóimheas:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Lomlán IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Cear</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>
