@@ -21,7 +21,6 @@
     <string name="paused">Pozastavené</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Prihlásenie</string>
-    <string name="upload_now">Nahrať teraz</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
