@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.aps.loop
 import android.content.Context
 import android.content.Intent
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.interfaces.Loop
+import info.nightscout.interfaces.aps.Loop
 import javax.inject.Inject
 
 class CarbSuggestionReceiver : DaggerBroadcastReceiver() {

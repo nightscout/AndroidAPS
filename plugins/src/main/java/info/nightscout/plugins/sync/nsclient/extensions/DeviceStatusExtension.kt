@@ -2,10 +2,10 @@ package info.nightscout.plugins.sync.nsclient.extensions
 
 import android.os.Build
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.core.iob.json
 import info.nightscout.database.entities.DeviceStatus
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.plugins.configBuilder.RunningConfiguration

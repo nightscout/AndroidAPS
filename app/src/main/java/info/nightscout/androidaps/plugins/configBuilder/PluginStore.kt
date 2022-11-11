@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.interfaces.APS
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.aps.APS
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.constraints.Safety
 import info.nightscout.interfaces.insulin.Insulin

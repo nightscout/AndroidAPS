@@ -6,11 +6,11 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.isPSEvent5minBack
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.core.profile.secondsFromMidnight
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile

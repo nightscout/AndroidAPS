@@ -18,7 +18,6 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Devia
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -26,6 +25,7 @@ import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction

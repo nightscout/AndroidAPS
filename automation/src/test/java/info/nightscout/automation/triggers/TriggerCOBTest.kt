@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.automation.elements.Comparator
+import info.nightscout.interfaces.iob.CobInfo
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before

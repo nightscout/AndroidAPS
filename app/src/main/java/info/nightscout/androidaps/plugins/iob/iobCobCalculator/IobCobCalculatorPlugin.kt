@@ -29,6 +29,9 @@ import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.aps.BasalData
+import info.nightscout.interfaces.iob.CobInfo
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.plugin.PluginBase

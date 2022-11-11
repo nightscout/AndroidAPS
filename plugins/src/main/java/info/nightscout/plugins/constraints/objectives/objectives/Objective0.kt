@@ -3,9 +3,9 @@ package info.nightscout.plugins.constraints.objectives.objectives
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.R
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin

@@ -20,7 +20,6 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Fixed
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.iob.round
@@ -29,6 +28,7 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.iob.CobInfo
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger

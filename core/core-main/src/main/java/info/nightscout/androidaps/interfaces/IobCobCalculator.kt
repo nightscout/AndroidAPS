@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.BasalData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
+import info.nightscout.interfaces.aps.BasalData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.iob.CobInfo
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.profile.Profile

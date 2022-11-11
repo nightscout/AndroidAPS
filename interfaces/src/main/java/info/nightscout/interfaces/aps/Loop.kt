@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.interfaces.aps
 
 import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.PumpEnactResult

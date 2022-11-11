@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.interfaces.aps
 
 import org.json.JSONObject
 
