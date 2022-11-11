@@ -11,7 +11,6 @@
     <string name="stop_pump">Stop pomp</string>
     <string name="started">Begin</string>
     <string name="stopped">Gestaak</string>
-    <string name="paused">Onderbreek</string>
     <string name="operating_mode">Bedryf modus</string>
     <string name="description_pump_insight_local">Integrasie vir Accu-Chek Insight pompe</string>
     <string name="not_inserted">Nie ingesteek</string>
@@ -38,7 +37,6 @@
     <string name="short_status_multiwave">Multigolf: %1$.2f / %2$.2f U vir %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Bevestig</string>
     <string name="mute_alert">Demp</string>
     <string name="release_software_version">Vrygestelde sagteware weergawe</string>
     <string name="ui_processor_software_version">UI verwerker sagteware weergawe</string>
