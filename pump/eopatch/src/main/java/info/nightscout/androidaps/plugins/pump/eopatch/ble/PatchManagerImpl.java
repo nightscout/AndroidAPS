@@ -382,14 +382,6 @@ public class PatchManagerImpl {
                     if (success) {
                         TaskBase.enqueue(TaskFunc.LOW_RESERVOIR);
                         TaskBase.enqueue(TaskFunc.INFO_REMINDER);
-                        pumpSync.connectNewPump(true);
-                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-                                System.currentTimeMillis(),
-                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                                null,
-                                null,
-                                PumpType.EOFLOW_EOPATCH2,
-                                null);
                     }
                 });
     }
