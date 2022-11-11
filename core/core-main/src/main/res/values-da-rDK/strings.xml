@@ -37,7 +37,6 @@
     <string name="paused">Pauset</string>
     <string name="invalid">UGYLDIG</string>
     <string name="login">Log ind</string>
-    <string name="upload_now">Upload nu</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <string name="ok">OK</string>
