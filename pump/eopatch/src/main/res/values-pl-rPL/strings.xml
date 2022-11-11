@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
+    <string name="cancel">Anuluj</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="next">Dalej</string>
+</resources>
