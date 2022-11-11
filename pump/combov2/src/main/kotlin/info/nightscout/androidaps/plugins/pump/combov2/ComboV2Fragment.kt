@@ -258,7 +258,7 @@ class ComboV2Fragment : DaggerFragment() {
         // we display a different message, one that
         // warns the user that a long time passed
         val bolusAgoText = when (val secondsPassed = (currentTimestamp - lastBolus.timestamp.toEpochMilliseconds()) / 1000) {
-            in 60..(30 * 60) ->
+            in 0..59 ->
                 rh.gs(R.string.combov2_less_than_one_minute_ago)
 
             else ->
