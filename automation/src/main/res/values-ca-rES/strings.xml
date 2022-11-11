@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Enviar SMS a tots els números</string>
     <string name="sendsmsactiontext">Enviar SMS amb text</string>
     <string name="starttemptarget">Iniciar objectiu temporal</string>
-    <string name="stoptemptarget">Aturar objectiu temporal</string>
     <string name="islesser">és menor que</string>
     <string name="isequalorlesser">és igual o menor que</string>
     <string name="isequal">és igual a</string>
@@ -110,4 +109,5 @@
     <string name="automation_event">Esdeveniment d\'automatització</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Acció de l’usuari</string>
+    <!-- WeekdayPicker -->
 </resources>
