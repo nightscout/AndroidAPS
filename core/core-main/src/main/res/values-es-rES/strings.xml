@@ -9,9 +9,12 @@
     <string name="format_carbs">%1$d g</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="invalid_profile">Perfil inválido</string>
+    <string name="no_profile_set">NINGÚN PERFIL ACTIVO</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="no">No</string>
     <string name="virtualpump_resultok">OK</string>
@@ -37,7 +40,13 @@
     <string name="paused">Pausado</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Inicio de sesión</string>
-    <string name="upload_now">Subir ahora</string>
+    <string name="prime_fill">Cebar/Llenar</string>
+    <string name="overview_insulin_label">Insulina</string>
+    <string name="stoptemptarget">Detener objetivo temporal</string>
+    <string name="closedloop">Lazo cerrado</string>
+    <string name="openloop">Lazo abierto</string>
+    <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
+    <string name="confirm">Confirmar</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
@@ -48,10 +57,15 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <!--    APSResult-->
+    <string name="cancel_temp">Cancelar basal temporal</string>
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
+    <string name="cgm_sensor_insert">Inserción de sensor</string>
+    <string name="careportal_insulin_cartridge_change">Cambio de cartucho de insulina</string>
+    <string name="pump_battery_change">Cambio batería bomba</string>
+    <string name="temporary_target">Objetivo temporal</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="ns">NS</string>
     <!--    Command-->
@@ -75,10 +89,12 @@
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_shortname">AT</string>
+    <string name="autotune_percent">%</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Usa las notificaciones del sistema para las alarmas y las notificaciones</string>
     <string name="urgent_alarm">Alarma urgente</string>
     <string name="info">INFORMACIÓN</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Asistente de bolo</string>
 </resources>
