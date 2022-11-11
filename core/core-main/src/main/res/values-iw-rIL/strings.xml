@@ -44,7 +44,6 @@
     <string name="paused">מושהה</string>
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
-    <string name="upload_now">העלה עכשיו</string>
     <!--    Constraints-->
     <!--    Dialogs-->
     <!--    BlePreCheck-->
