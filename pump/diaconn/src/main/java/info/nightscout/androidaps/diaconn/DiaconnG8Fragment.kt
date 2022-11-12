@@ -128,8 +128,8 @@ class DiaconnG8Fragment : DaggerFragment() {
 
                                else                                       -> {}
                            }
-                           if (it.getStatus(rh) != "") {
-                               binding.diaconnG8Pumpstatus.text = it.getStatus(rh)
+                           if (it.getStatus(requireContext()) != "") {
+                               binding.diaconnG8Pumpstatus.text = it.getStatus(requireContext())
                                binding.diaconnG8Pumpstatuslayout.visibility = View.VISIBLE
                            } else {
                                binding.diaconnG8Pumpstatuslayout.visibility = View.GONE

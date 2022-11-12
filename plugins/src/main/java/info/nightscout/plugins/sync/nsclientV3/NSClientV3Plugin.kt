@@ -146,7 +146,7 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
                            if (event.version == NsClient.Version.V3) {
-                               status = event.getStatus(rh)
+                               status = event.getStatus(context)
                                rxBus.send(EventNSClientUpdateGUI())
                            }
                        }, fabricPrivacy::logException)

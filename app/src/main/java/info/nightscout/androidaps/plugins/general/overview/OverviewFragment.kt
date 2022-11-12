@@ -75,7 +75,6 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
@@ -145,7 +144,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
@@ -318,7 +316,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.main)
             .delay(30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
             .subscribe({
-                           overviewData.pumpStatus = it.getStatus(rh)
+                           overviewData.pumpStatus = it.getStatus(requireContext())
                            updatePumpStatus()
                        }, fabricPrivacy::logException)
         disposable += rxBus

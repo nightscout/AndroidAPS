@@ -56,7 +56,7 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(rh) }) { fabricPrivacy.logException(it) }
+            .subscribe({ binding.status.text = it.getStatus(this@DiaconnG8HistoryActivity) }) { fabricPrivacy.logException(it) }
         swapAdapter(showingType)
     }
 

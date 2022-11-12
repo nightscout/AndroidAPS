@@ -252,7 +252,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateBluetoothConnectionStatus(event: EventPumpStatusChanged) {
-        val status = event.getStatus(rh)
+        val status = event.getStatus(requireContext())
         bluetoothStatusBinding.omnipodDashBluetoothStatus.text = status
     }
 

@@ -196,7 +196,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
             rxBus
                 .toObservable(EventPumpStatusChanged::class.java)
                 .observeOn(aapsSchedulers.main)
-                .subscribe({ event -> binding.connectionStatus.text = event.getStatus(rh) }, fabricPrivacy::logException)
+                .subscribe({ event -> binding.connectionStatus.text = event.getStatus(this@TDDStatsActivity) }, fabricPrivacy::logException)
         )
         disposable.add(
             rxBus

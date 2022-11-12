@@ -61,7 +61,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(rh) }, fabricPrivacy::logException)
+            .subscribe({ binding.status.text = it.getStatus(this@DanaHistoryActivity) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)

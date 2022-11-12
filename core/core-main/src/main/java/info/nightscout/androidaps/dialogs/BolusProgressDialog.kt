@@ -120,7 +120,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe { binding.status.text = it.getStatus(rh) }
+            .subscribe { binding.status.text = it.getStatus(requireContext()) }
         disposable += rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(aapsSchedulers.main)
