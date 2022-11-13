@@ -27,6 +27,11 @@
     <string name="time_1hr">1 ч.</string>
     <string name="time_1hr_30min">1 час 30 мин</string>
     <string name="time_2hr">2 часа</string>
+    <string name="all_blank">\u0020</string>
+    <string name="patch_safe_deactivation_desc">Для перехода на новый Patch, Завершите пользование Patch\'ем. Подача инсулина этим Patch\'ем будет отменена.</string>
+    <string name="patch_discard_complete_title">Пользование Patch\'ем завершено.</string>
+    <string name="patch_discard_complete_desc">Patch был отключен.\nЗавершить пользование Patch\'ем\nУдалите Patch с тела.</string>
+    <string name="patch_change_confirm_desc">Завершить пользование этим Patch\'ем?</string>
     <string name="patch_forced_discard">Завершить пользование</string>
     <string name="patch_comm_error_during_discard_status">Ошибка связи при завершении пользования разовой помпой Patch </string>
     <string name="patch_comm_error_during_discard_desc">Для нормальной деактивации нажмите \'Повтор\'.\n Для односторонней деактивации нажмите \'Завершить пользование\'.</string>
@@ -38,8 +43,13 @@
     <string name="patch_manually_turning_off_alarm_step_1">1. Снимите Patch с тела и удалите липкую ленту.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Используя скрепку, сильно проткните отверстие рядом с портом заполнения инсулина.</string>
     <string name="patch_wake_up">Заполнение Инсулина</string>
+    <string name="string_change_patch">Завершить пользование Patch\'ем/Заменить Patch</string>
+    <string name="string_discard_patch">Завершить пользование Patch\'ем</string>
+    <string name="discard">Завершить пользование</string>
     <string name="cancel">Отменить</string>
     <string name="confirm">Подтверждаю</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Завершить пользование этим Patch\'ем?</string>
+    <string name="needle_insertion_error_3">Нажмите \'Завершить пользование Patch\'ем\', чтобы деактивировать Patch.</string>
     <string name="string_resume_insulin_delivery_title">Возобновить подачу инсулина</string>
     <string name="string_resume_insulin_delivery_message">Окончание приостановки подачи инсулина.\n Нажмите \'Подтвердить\', чтобы возобновить подачу.\n\n[Caution]\n Подача не возобновится, если не нажать \'Подтвердить\'.\n Если не нажать \'Подтвердить\', может развиться гипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Введение инсулина приостановлено.</string>
