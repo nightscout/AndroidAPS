@@ -118,8 +118,67 @@
     <!-- Objectives -->
     <string name="not_completed_yet">Не завершено</string>
     <string name="time_elapsed">Прошло времени</string>
+    <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
+    <string name="hasbgdata">ГК доступна из выбранного источника</string>
+    <string name="synchaswritepermission">Служба синхронизации имеет разрешение на запись</string>
+    <string name="loopenabled">Цикл активирован</string>
+    <string name="apsselected">Выбран APS</string>
+    <string name="closedmodeenabled">Режим замкнутого цикла включен</string>
+    <string name="objectives_shortname">ЦЕЛИ</string>
+    <string name="description_objectives">Обучающая программа</string>
+    <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять достигнутое.</string>
+    <string name="objectives_next_button">Далее</string>
+    <string name="objectives_previous_button">Назад</string>
+    <string name="objectives_button_unfinish">Очистить завершенные</string>
+    <string name="objectives_button_unstart">Очистить начатые</string>
     <!-- Actions -->
+    <string name="actions">Действия</string>
+    <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
+    <string name="actions_shortname">ДЕЙСТВ</string>
+    <string name="tempbasal_button">ВремБазал</string>
+    <string name="extended_bolus_button">Пролонгированный болюс</string>
+    <string name="extended_bolus_cancel_button">Отменить пролонгированный болюс</string>
+    <string name="tools">Инструменты</string>
+    <string name="nav_history_browser">Просмотр журнала</string>
+    <string name="sensor_label">Сенсор</string>
+    <string name="age_label">возраст:</string>
+    <string name="level_label">уровень:</string>
+    <string name="insulin_label">Инсулин</string>
+    <string name="pb_label">Батарея помпы</string>
+    <string name="cannula">Катетер помпы</string>
+    <string name="ebstopsloop">Функция Пролонгированный Болюс остановит режим замкнутого цикла на время действия пролонгированного болюса. Подтверждаете выбор?</string>
+    <string name="extendedbolusdeliveryerror">Ошибка подачи пролонгированного болюса</string>
+    <string name="statuslights_cannula_age">время, отработанное катетером помпы</string>
+    <string name="statuslights_patch_pump_age">время отработанное разовой помпой</string>
+    <string name="patch_pump">Разовая помпа</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Ограничение пролонгированного болюса до %1$.1f ед. из-за %2$s</string>
+    <string name="limitingcarbs">Ограничение углеводов до %1$d г. из-за %2$s</string>
+    <string name="limitingiob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
+    <string name="maxbasalmultiplier">множитель макс базала</string>
+    <string name="maxdailybasalmultiplier">множитель макс суточного базала</string>
+    <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
+    <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
+    <string name="autosensdisabledinpreferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
+    <string name="smbdisabledinpreferences">Супер микро болюс SMB отключен в настройках</string>
+    <string name="uamdisabledinpreferences">Незапланированный прием пищи UAM отключен в настройках</string>
+    <string name="uamdisabledoref1notselected">Незапланированный прием пищи UAM отключен, поскольку он основывается на модуле чувствительности из Oref1</string>
+    <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
+    <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
+    <string name="smbnotallowedinopenloopmode">В режиме незамкнутого цикла open loop супер микро болюс SMB не допускается</string>
+    <string name="increasingmaxbasal">Повышаю максимальное допустимое значение базы т. к. оно меньше максимального в профиле</string>
+    <string name="maxvalueinpreferences">максимальное значение в настройках</string>
+    <string name="hardlimit">жесткий предел</string>
+    <string name="treatmentssafety_title">Безопасность терапии</string>
+    <string name="patientage_summary">Выберите возраст пациента для установки ограничителей безопасности</string>
+    <string name="child">Ребенок</string>
+    <string name="teenage">Подросток</string>
+    <string name="adult">Взрослый</string>
+    <string name="resistantadult">Инсулинорезистентный взрослый</string>
+    <string name="pregnant">Беременность</string>
+    <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы [g]</string>
+    <string name="patientage">Тип пациента</string>
     <!-- Overview -->
     <string name="snooze">Отложить</string>
     <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>
@@ -139,6 +198,9 @@
     <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
     <string name="statuslights">Индикаторы состояния</string>
     <string name="statuslights_copy_ns">Копировать параметры из NS</string>
+    <string name="a11y_graph">график</string>
+    <string name="a11y_insulin_label">инсулин</string>
+    <string name="chart_menu">Меню графика</string>
     <!-- NSClient -->
     <string name="ns_client_v3">NSClientV3</string>
     <string name="ns_client_v3_short_name">NSV3</string>
