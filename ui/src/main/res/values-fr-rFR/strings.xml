@@ -77,5 +77,15 @@
     <string name="show_loop_records">Afficher les entrées de la boucle</string>
     <string name="show_hide_records">Masquer les entrées de la boucle</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Type de profil</string>
+    <string name="basal_pct_from_tdd_label">% de basal</string>
+    <string name="selected_profile">Sélectionné :</string>
+    <string name="compare_profile">Comparer les profils</string>
+    <string name="nav_profile_helper">Assistant Profil</string>
+    <string name="motol_default_profile">Profil par défaut</string>
+    <string name="current_profile">Profil actuel</string>
+    <string name="available_profile">Profils disponibles</string>
+    <string name="format_with_tdd">Âge: %1$.0f DTI: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Âge: %1$.0f DTI: %2$.0f U %3$d%%</string>
     <!-- Other dialogs -->
 </resources>
