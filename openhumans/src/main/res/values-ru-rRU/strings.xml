@@ -53,4 +53,5 @@
     <string name="we_re_done">Готово!</string>
     <string name="silently_upload_date_note">С этого момента ваш телефон будет иногда загружать данные в фоновом режиме.</string>
     <string name="close">Закрыть</string>
+    <string name="upload_now">Загрузить сейчас</string>
 </resources>
