@@ -54,7 +54,6 @@ import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionGetUserOption
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpTime
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetUserOption
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -261,7 +260,7 @@ class DanaRSService : DaggerService() {
 
     fun loadEvents(): PumpEnactResult {
         if (!danaRSPlugin.isInitialized()) {
-            val result = PumpEnactResultObject(injector).success(false)
+            val result = PumpEnactResult(injector).success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -283,13 +282,13 @@ class DanaRSService : DaggerService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
         sendMessage(DanaRSPacketGeneralInitialScreenInformation(injector))
         danaPump.lastConnection = System.currentTimeMillis()
-        return PumpEnactResultObject(injector).success(msg.success())
+        return PumpEnactResult(injector).success(msg.success())
     }
 
     fun setUserSettings(): PumpEnactResult {
         val message = DanaRSPacketOptionSetUserOption(injector)
         sendMessage(message)
-        return PumpEnactResultObject(injector).success(message.success())
+        return PumpEnactResult(injector).success(message.success())
     }
 
     fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
@@ -499,7 +498,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = PumpEnactResultObject(injector)
+        val result = PumpEnactResult(injector)
         if (!isConnected) return result
         var msg: DanaRSPacketHistory? = null
         when (type) {

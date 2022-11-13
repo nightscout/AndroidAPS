@@ -16,9 +16,11 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
+import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -135,9 +137,9 @@ class LoopFragment : DaggerFragment(), MenuProvider {
             binding.tbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
             binding.tbrexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
 
-            binding.tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
+            binding.tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml(rh)) }
                 ?: ""
-            binding.smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
+            binding.smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml(rh)) }
                 ?: ""
 
             var constraints =
@@ -168,4 +170,44 @@ class LoopFragment : DaggerFragment(), MenuProvider {
         binding.smbsetbypump.text = ""
         binding.swipeRefresh.isRefreshing = false
     }
+
+    private fun PumpEnactResult.toHtml(rh: ResourceHelper): String {
+        var ret = "<b>" + rh.gs(info.nightscout.core.main.R.string.success) + "</b>: " + success
+        if (queued) {
+            ret = rh.gs(info.nightscout.core.main.R.string.waitingforpumpresult)
+        } else if (enacted) {
+            when {
+                bolusDelivered > 0         -> {
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.enacted) + "</b>: " + enacted
+                    if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.comment) + "</b>: " + comment
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + rh.gs(info.nightscout.core.main.R.string.insulin_unit_shortname)
+                }
+
+                isTempCancel               -> {
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.enacted) + "</b>: " + enacted
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.comment) + "</b>: " + comment +
+                        "<br>" + rh.gs(info.nightscout.core.main.R.string.cancel_temp)
+                }
+
+                isPercent && percent != -1 -> {
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.enacted) + "</b>: " + enacted
+                    if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.comment) + "</b>: " + comment
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.duration) + "</b>: " + duration + " min"
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.percent) + "</b>: " + percent + "%"
+                }
+
+                absolute != -1.0           -> {
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.enacted) + "</b>: " + enacted
+                    if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.comment) + "</b>: " + comment
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.duration) + "</b>: " + duration + " min"
+                    ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h"
+                }
+            }
+        } else {
+            if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(info.nightscout.core.main.R.string.comment) + "</b>: " + comment
+        }
+        return ret
+    }
+
+
 }

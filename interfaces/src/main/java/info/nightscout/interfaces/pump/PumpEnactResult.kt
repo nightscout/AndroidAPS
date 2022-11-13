@@ -1,40 +1,43 @@
 package info.nightscout.interfaces.pump
 
-import org.json.JSONObject
+import android.content.Context
+import dagger.android.HasAndroidInjector
+import javax.inject.Inject
 
-interface PumpEnactResult {
+class PumpEnactResult(injector: HasAndroidInjector) {
 
-    var success: Boolean // request was processed successfully (but possible no change was needed)
-    var enacted: Boolean // request was processed successfully and change has been made
-    var comment: String
+    @Inject lateinit var context: Context
+
+    init {
+        injector.androidInjector().inject(this)
+    }
+
+    var success = false // request was processed successfully (but possible no change was needed)
+    var enacted = false // request was processed successfully and change has been made
+    var comment = ""
 
     // Result of basal change
-    var duration: Int // duration set [minutes]
-    var absolute: Double // absolute rate [U/h] , isPercent = false
-    var percent: Int // percent of current basal [%] (100% = current basal), isPercent = true
-    var isPercent: Boolean // if true percent is used, otherwise absolute
-    var isTempCancel: Boolean // if true we are canceling temp basal
+    var duration = -1 // duration set [minutes]
+    var absolute = -1.0 // absolute rate [U/h] , isPercent = false
+    var percent = -1 // percent of current basal [%] (100% = current basal), isPercent = true
+    var isPercent = false // if true percent is used, otherwise absolute
+    var isTempCancel = false // if true we are canceling temp basal
 
     // Result of treatment delivery
-    var bolusDelivered: Double // real value of delivered insulin
-    var carbsDelivered: Double // real value of delivered carbs
-    var queued: Boolean
+    var bolusDelivered = 0.0 // real value of delivered insulin
+    var carbsDelivered = 0.0 // real value of delivered carbs
+    var queued = false
 
-    fun success(success: Boolean): PumpEnactResult
-    fun enacted(enacted: Boolean): PumpEnactResult
-    fun comment(comment: String): PumpEnactResult
-    fun comment(comment: Int): PumpEnactResult
-    fun duration(duration: Int): PumpEnactResult
-    fun absolute(absolute: Double): PumpEnactResult
-    fun percent(percent: Int): PumpEnactResult
-    fun isPercent(isPercent: Boolean): PumpEnactResult
-    fun isTempCancel(isTempCancel: Boolean): PumpEnactResult
-    fun bolusDelivered(bolusDelivered: Double): PumpEnactResult
-    fun carbsDelivered(carbsDelivered: Double): PumpEnactResult
-    fun queued(queued: Boolean): PumpEnactResult
-
-    fun log(): String
-    fun toHtml(): String
-    fun toText(): String
-    fun json(baseBasal: Double): JSONObject
+    fun success(success: Boolean): PumpEnactResult = this.also { this.success = success }
+    fun enacted(enacted: Boolean): PumpEnactResult = this.also { it.enacted = enacted }
+    fun comment(comment: String): PumpEnactResult = this.also { it.comment = comment }
+    fun comment(comment: Int): PumpEnactResult = this.also { it.comment = context.getString(comment) }
+    fun duration(duration: Int): PumpEnactResult = this.also { it.duration = duration }
+    fun absolute(absolute: Double): PumpEnactResult = this.also { it.absolute = absolute }
+    fun percent(percent: Int): PumpEnactResult = this.also { it.percent = percent }
+    fun isPercent(isPercent: Boolean): PumpEnactResult = this.also { it.isPercent = isPercent }
+    fun isTempCancel(isTempCancel: Boolean): PumpEnactResult = this.also { it.isTempCancel = isTempCancel }
+    fun bolusDelivered(bolusDelivered: Double): PumpEnactResult = this.also { it.bolusDelivered = bolusDelivered }
+    fun carbsDelivered(carbsDelivered: Double): PumpEnactResult = this.also { it.carbsDelivered = carbsDelivered }
+    fun queued(queued: Boolean): PumpEnactResult = this.also { it.queued = queued }
 }

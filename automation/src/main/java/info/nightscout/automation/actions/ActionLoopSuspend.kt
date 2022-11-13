@@ -3,7 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
@@ -13,6 +12,7 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.bus.RxBus
@@ -40,9 +40,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
                 UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
                 ValueWithUnit.Minute(minutes.getMinutes())
             )
-            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.alreadysuspended)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()
         }
     }
 

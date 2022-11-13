@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
@@ -313,7 +312,7 @@ abstract class PumpPluginAbstract protected constructor(
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input")
-                PumpEnactResultObject(injector).success(false).enacted(false).bolusDelivered(0.0).carbsDelivered(0.0)
+                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).carbsDelivered(0.0)
                     .comment(R.string.invalidinput)
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
@@ -329,7 +328,7 @@ abstract class PumpPluginAbstract protected constructor(
                 bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
-                PumpEnactResultObject(injector).success(true).enacted(true).bolusDelivered(0.0)
+                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0)
                     .carbsDelivered(detailedBolusInfo.carbs).comment(R.string.common_resultok)
             }
         } finally {
@@ -350,7 +349,7 @@ abstract class PumpPluginAbstract protected constructor(
     protected abstract fun triggerUIChange()
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult =
-        PumpEnactResultObject(injector).success(false).enacted(false).comment(resourceId)
+        PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
 
     init {
         pumpDescription.fillFor(pumpType)

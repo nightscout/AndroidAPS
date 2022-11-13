@@ -3,9 +3,9 @@ package info.nightscout.automation.actions
 import androidx.annotation.DrawableRes
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.queue.Callback
 import org.json.JSONObject
 
 class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
@@ -17,7 +17,7 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
     override fun isValid(): Boolean = true
 
     override fun doAction(callback: Callback) {
-        callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
     }
 
     override fun toJSON(): String {

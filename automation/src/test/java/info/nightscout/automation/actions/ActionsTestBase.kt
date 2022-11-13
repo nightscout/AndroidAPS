@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.database.entities.OfflineEvent

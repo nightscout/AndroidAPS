@@ -1,7 +1,6 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
@@ -9,6 +8,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
@@ -34,7 +34,7 @@ class CommandSetProfile constructor(
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
-            callback?.result(PumpEnactResultObject(injector).success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return
         }
         val r = activePlugin.activePump.setNewBasalProfile(profile)
@@ -53,6 +53,6 @@ class CommandSetProfile constructor(
     override fun log(): String = "SET PROFILE"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResultObject(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
     }
 }

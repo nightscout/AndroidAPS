@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
@@ -74,7 +74,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
             )
         ).thenAnswer { invocation: InvocationOnMock ->
             val pair = invocation.getArgument<TempBasalPair>(0)
-            val result = PumpEnactResultObject(injector)
+            val result = PumpEnactResult(injector)
             result.absolute(pair.insulinRate)
             result.duration(pair.durationMinutes)
             result

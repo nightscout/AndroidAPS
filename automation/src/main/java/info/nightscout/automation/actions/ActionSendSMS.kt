@@ -2,11 +2,11 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.interfaces.utils.JsonHelper
@@ -25,7 +25,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
-        callback.result(PumpEnactResultObject(injector).success(result).comment(if (result) R.string.ok else R.string.error)).run()
+        callback.result(PumpEnactResult(injector).success(result).comment(if (result) R.string.ok else R.string.error)).run()
     }
 
     override fun isValid(): Boolean = text.value.isNotEmpty()

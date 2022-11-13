@@ -3,7 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
@@ -25,6 +24,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
@@ -69,10 +69,10 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                                ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                            )
-                           callback.result(PumpEnactResultObject(injector).success(true).comment(R.string.ok)).run()
+                           callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           callback.result(PumpEnactResultObject(injector).success(false).comment(R.string.error)).run()
+                           callback.result(PumpEnactResult(injector).success(false).comment(R.string.error)).run()
                        })
     }
 

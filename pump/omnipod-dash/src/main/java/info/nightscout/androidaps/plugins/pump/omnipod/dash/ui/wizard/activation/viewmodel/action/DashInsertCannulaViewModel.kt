@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
@@ -91,7 +90,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                 .subscribeBy(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
-                        source.onSuccess(PumpEnactResultObject(injector).success(false).comment(I8n.textFromException(throwable, rh)))
+                        source.onSuccess(PumpEnactResult(injector).success(false).comment(I8n.textFromException(throwable, rh)))
                     },
                     onComplete = {
                         logger.debug("Pod activation part 2 completed")
@@ -121,7 +120,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                         )
                         rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED))
                         fabricPrivacy.logCustom("OmnipodDashPodActivated")
-                        source.onSuccess(PumpEnactResultObject(injector).success(true))
+                        source.onSuccess(PumpEnactResult(injector).success(true))
                     }
                 )
         }

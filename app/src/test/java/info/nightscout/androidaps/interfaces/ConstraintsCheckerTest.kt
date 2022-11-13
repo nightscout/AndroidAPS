@@ -8,7 +8,6 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin

@@ -4,7 +4,6 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
@@ -133,7 +132,7 @@ open class VirtualPumpPlugin @Inject constructor(
     override var fakeDataDetected = false
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
-        return PumpEnactResultObject(injector)
+        return PumpEnactResult(injector)
     }
 
     override fun isInitialized(): Boolean = true
@@ -158,7 +157,7 @@ open class VirtualPumpPlugin @Inject constructor(
         lastDataTime = System.currentTimeMillis()
         rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
         // Do nothing here. we are using database profile
-        return PumpEnactResultObject(injector).success(true).enacted(true)
+        return PumpEnactResult(injector).success(true).enacted(true)
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) ?: false
@@ -175,7 +174,7 @@ open class VirtualPumpPlugin @Inject constructor(
         get() = batteryPercent
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        val result = PumpEnactResultObject(injector)
+        val result = PumpEnactResult(injector)
             .success(true)
             .bolusDelivered(detailedBolusInfo.insulin)
             .carbsDelivered(detailedBolusInfo.carbs)
@@ -191,7 +190,7 @@ open class VirtualPumpPlugin @Inject constructor(
             rxBus.send(bolusingEvent)
             delivering += 0.1
             if (BolusProgressDialog.stopPressed)
-                return PumpEnactResultObject(injector)
+                return PumpEnactResult(injector)
                     .success(false)
                     .enacted(false)
                     .comment(rh.gs(R.string.stoppressed))
@@ -226,7 +225,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResultObject(injector)
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.isTempCancel = false
@@ -243,14 +242,14 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResultObject(injector)
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.percent = percent
@@ -268,7 +267,7 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
@@ -292,14 +291,14 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = PumpEnactResultObject(injector)
+        val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
         result.comment = rh.gs(R.string.virtualpump_resultok)
@@ -311,7 +310,7 @@ open class VirtualPumpPlugin @Inject constructor(
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
                 pumpSerial = serialNumber()
             )
-            aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText()}")
+            aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText(rh)}")
             rxBus.send(EventVirtualPumpUpdateGui())
         }
         lastDataTime = System.currentTimeMillis()
@@ -319,7 +318,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResultObject(injector)
+        val result = PumpEnactResult(injector)
         if (pumpSync.expectedPumpState().extendedBolus != null) {
             pumpSync.syncStopExtendedBolusWithPumpId(
                 timestamp = dateUtil.now(),
@@ -332,7 +331,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.enacted = true
         result.isTempCancel = true
         result.comment = rh.gs(R.string.virtualpump_resultok)
-        aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
@@ -400,4 +399,40 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
+
+    private fun PumpEnactResult.toText(rh: ResourceHelper): String {
+        var ret = rh.gs(info.nightscout.core.main.R.string.success) + ": " + success
+        if (enacted) {
+            when {
+                bolusDelivered > 0 -> {
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.configbuilder_insulin)}: $bolusDelivered ${rh.gs(info.nightscout.core.main.R.string.insulin_unit_shortname)}"
+                }
+
+                isTempCancel       -> {
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
+                    if (comment.isNotEmpty()) ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.cancel_temp)}"
+                }
+
+                isPercent          -> {
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
+                    if (comment.isNotEmpty()) ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.duration)}: $duration min"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.percent)}: $percent%"
+                }
+
+                else               -> {
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
+                    if (comment.isNotEmpty()) ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.duration)}: $duration min"
+                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.absolute)}: $absolute U/h"
+                }
+            }
+        } else {
+            ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
+        }
+        return ret
+    }
 }

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultObject
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
@@ -44,30 +43,30 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
 
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun getPumpStatus(reason: String) {}
-    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResultObject(injector)
+    override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector)
     override fun isThisProfileSet(profile: Profile): Boolean = isProfileSet
     override fun lastDataTime(): Long = lastData
     override val baseBasalRate: Double = baseBasal
     override val reservoirLevel: Double = 0.0
     override val batteryLevel: Int = 0
-    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResultObject(injector).success(true)
+    override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResult(injector).success(true)
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        PumpEnactResultObject(injector).success(true)
+        PumpEnactResult(injector).success(true)
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
-        PumpEnactResultObject(injector).success(true)
+        PumpEnactResult(injector).success(true)
 
-    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult = PumpEnactResultObject(injector).success(true)
-    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = PumpEnactResultObject(injector).success(true)
-    override fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResultObject(injector).success(true)
+    override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult = PumpEnactResult(injector).success(true)
+    override fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResult(injector).success(true)
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject = JSONObject()
     override fun manufacturer(): ManufacturerType = ManufacturerType.AAPS
     override fun model(): PumpType = PumpType.GENERIC_AAPS
     override fun serialNumber(): String = "1"
     override fun shortStatus(veryShort: Boolean): String = ""
     override val isFakingTempsByExtendedBoluses: Boolean = false
-    override fun loadTDDs(): PumpEnactResult = PumpEnactResultObject(injector).success(true)
+    override fun loadTDDs(): PumpEnactResult = PumpEnactResult(injector).success(true)
     override fun canHandleDST(): Boolean = true
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 }

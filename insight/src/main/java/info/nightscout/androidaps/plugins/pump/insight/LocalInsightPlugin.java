@@ -30,7 +30,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.PumpEnactResultObject;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.insight.database.InsightBolusID;
 import info.nightscout.androidaps.insight.database.InsightDbHelper;
@@ -475,7 +474,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
@@ -575,7 +574,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
             throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
         if (insulin > 0) {
             try {
@@ -691,7 +690,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
@@ -741,7 +740,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
         else if (percent > 250) percent = 250;
@@ -797,7 +796,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes, boolean disableVibration) {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
             bolusMessage.setBolusType(BolusType.EXTENDED);
@@ -829,7 +828,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         PumpEnactResult cancelEBResult = null;
         if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
         PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
@@ -850,7 +849,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     private PumpEnactResult cancelTempBasalOnly() {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             alertService.ignore(AlertType.WARNING_36);
             connectionService.requestMessage(new CancelTBRMessage()).await();
@@ -893,7 +892,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     private PumpEnactResult cancelExtendedBolusOnly() {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             for (ActiveBolus activeBolus : activeBoluses) {
                 if (activeBolus.getBolusType() == BolusType.EXTENDED || activeBolus.getBolusType() == BolusType.MULTIWAVE) {
@@ -1012,7 +1011,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult stopPump() {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STOPPED);
@@ -1034,7 +1033,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult startPump() {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STARTED);
@@ -1056,7 +1055,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult setTBROverNotification(boolean enabled) {
-        PumpEnactResult result = new PumpEnactResultObject(getInjector());
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         boolean valueBefore = tbrOverNotificationBlock.isEnabled();
         tbrOverNotificationBlock.setEnabled(enabled);
         try {
@@ -1119,7 +1118,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
-        return new PumpEnactResultObject(getInjector()).success(true);
+        return new PumpEnactResult(getInjector()).success(true);
     }
 
     private void readHistory() {
