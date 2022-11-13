@@ -39,6 +39,11 @@
     <string name="superbolus">Суперболюс</string>
     <string name="treatments_wizard_total_label">Всего</string>
     <!-- FillDialog -->
+    <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
+    <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
+    <string name="button1">Кнопка 1</string>
+    <string name="button2">Кнопка 2</string>
+    <string name="button3">Кнопка 3</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
