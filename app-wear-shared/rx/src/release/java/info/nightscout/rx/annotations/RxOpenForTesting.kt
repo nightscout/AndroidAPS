@@ -1,7 +1,7 @@
 package info.nightscout.rx.annotations
 
 /**
- * Annotate a class with [DbOpenForTesting] if it should be extendable for testing.
+ * Annotate a class with [RxOpenForTesting] if it should be extendable for testing.
  * In production the class remains final.
  */
 @Target(AnnotationTarget.CLASS)
