@@ -27,6 +27,17 @@
     <string name="time_1hr">1 ч.</string>
     <string name="time_1hr_30min">1 час 30 мин</string>
     <string name="time_2hr">2 часа</string>
+    <string name="patch_forced_discard">Завершить пользование</string>
+    <string name="patch_comm_error_during_discard_status">Ошибка связи при завершении пользования разовой помпой Patch </string>
+    <string name="patch_comm_error_during_discard_desc">Для нормальной деактивации нажмите \'Повтор\'.\n Для односторонней деактивации нажмите \'Завершить пользование\'.</string>
+    <string name="patch_comm_error_during_discard_desc_1">Для нормальной деактивации нажмите «Повтор».</string>
+    <string name="patch_comm_error_during_discard_desc_2">Для односторонней деактивации нажмите \'Завершить пользование\'.</string>
+    <string name="patch_manually_turning_off_alarm_title">Принудительное выключение оповещения Patch</string>
+    <string name="patch_manually_turning_off_alarm_desc_1">Если при ошибке связи Patch отключается в одностороннем порядке, он может не остановить оповещения.</string>
+    <string name="patch_manually_turning_off_alarm_desc_2">В этом случае его можно полностью остановить, проткнув порт ручной активации будильника Patch, как показано ниже:</string>
+    <string name="patch_manually_turning_off_alarm_step_1">1. Снимите Patch с тела и удалите липкую ленту.</string>
+    <string name="patch_manually_turning_off_alarm_step_2">2. Используя скрепку, сильно проткните отверстие рядом с портом заполнения инсулина.</string>
+    <string name="patch_wake_up">Заполнение Инсулина</string>
     <string name="cancel">Отменить</string>
     <string name="confirm">Подтверждаю</string>
     <string name="string_resume_insulin_delivery_title">Возобновить подачу инсулина</string>
