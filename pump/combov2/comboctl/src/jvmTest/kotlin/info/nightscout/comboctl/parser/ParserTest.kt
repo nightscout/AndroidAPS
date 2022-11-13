@@ -732,6 +732,17 @@ class ParserTest {
     }
 
     @Test
+    fun checkTemporaryBasalRatePercentageScreenPercentAndDurationParsing() {
+        val testContext = TestContext(testFrameTemporaryBasalRatePercentage110Screen, 0, skipTitleString = true)
+        val result = TemporaryBasalRatePercentageScreenParser().parse(testContext.parseContext)
+        assertEquals(ParseResult.Value::class, result::class)
+        val screen = (result as ParseResult.Value<*>).value as ParsedScreen.TemporaryBasalRatePercentageScreen
+        assertEquals(false, screen.isBlinkedOut)
+        assertEquals(110, screen.percentage)
+        assertEquals(30, screen.remainingDurationInMinutes)
+    }
+
+    @Test
     fun checkTemporaryBasalRateDurationScreenParsing() {
         val testScreens = listOf(
             Pair(testFrameTbrDurationNoDurationScreen, null),

@@ -360,7 +360,10 @@ class ParsedDisplayFrameStreamTest {
         val parsedFrameIter = parsedFrameList.listIterator()
 
         assertEquals(2, parsedFrameList.size)
-        assertEquals(ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = 110), parsedFrameIter.next().parsedScreen)
+        assertEquals(
+            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = 110, remainingDurationInMinutes = 30),
+            parsedFrameIter.next().parsedScreen
+        )
         assertEquals(ParsedScreen.TemporaryBasalRateDurationScreen(durationInMinutes = 30), parsedFrameIter.next().parsedScreen)
     }
 }

@@ -147,7 +147,7 @@ sealed class ParsedScreen(val isBlinkedOut: Boolean = false) {
         val basalRateNumber: Int
     ) : ParsedScreen(isBlinkedOut = (numUnits == null))
 
-    data class TemporaryBasalRatePercentageScreen(val percentage: Int?) :
+    data class TemporaryBasalRatePercentageScreen(val percentage: Int?, val remainingDurationInMinutes: Int?) :
         ParsedScreen(isBlinkedOut = (percentage == null))
     data class TemporaryBasalRateDurationScreen(val durationInMinutes: Int?) :
         ParsedScreen(isBlinkedOut = (durationInMinutes == null))
@@ -1226,9 +1226,12 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
         val parseResult = SequenceParser(
             listOf(
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.BASAL)),
-                OptionalParser(IntegerParser()),
-                SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.PERCENT))
-            )
+                OptionalParser(IntegerParser()), // TBR percentage
+                SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.PERCENT)),
+                SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
+                TimeParser()
+            ),
+            allowIncompleteSequences = true
         ).parse(parseContext)
 
         if (!parseResult.isSuccess)
@@ -1236,8 +1239,17 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
 
         parseResult as ParseResult.Sequence
 
+        val remainingTbrDurationParseResult = if (parseResult.size >= 2)
+            parseResult.valueAtOrNull<LocalDateTime>(1)
+        else
+            null
+        val remainingTbrDurationInMinutes = remainingTbrDurationParseResult?.let { it.hour * 60 + it.minute } ?: 0
+
         return ParseResult.Value(
-            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = parseResult.valueAtOrNull<Int>(0))
+            ParsedScreen.TemporaryBasalRatePercentageScreen(
+                percentage = parseResult.valueAtOrNull<Int>(0),
+                remainingDurationInMinutes = remainingTbrDurationInMinutes
+            )
         )
     }
 }

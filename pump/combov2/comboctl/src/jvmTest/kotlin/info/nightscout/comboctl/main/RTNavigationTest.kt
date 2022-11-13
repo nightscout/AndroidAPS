@@ -498,8 +498,8 @@ class RTNavigationTest {
                 batteryState = BatteryState.FULL_BATTERY
             )),
             ParsedScreen.TemporaryBasalRateMenuScreen,
-            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = 110),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = null),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = 110, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = null, remainingDurationInMinutes = null),
             ParsedScreen.TemporaryBasalRateDurationScreen(durationInMinutes = 45)
         ))
 
@@ -727,18 +727,18 @@ class RTNavigationTest {
         // using short RT button presses until the target quantity is observed.
 
         val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.TemporaryBasalRatePercentageScreen(100),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(110),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(120),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(130),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(140),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(150),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(100, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(110, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(120, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(130, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(140, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(150, remainingDurationInMinutes = 30),
             // No 160 quantity here, on purpose, to test overshoot handling
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(160),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(160)
+            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
         ))
 
         runBlockingWithWatchdog(6000) {
