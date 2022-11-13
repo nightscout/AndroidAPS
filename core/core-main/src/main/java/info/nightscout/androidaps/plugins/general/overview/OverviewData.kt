@@ -164,7 +164,7 @@ class OverviewData @Inject constructor(
         profileFunction.getProfile()?.let { profile ->
             var temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
-            temporaryBasal?.let { "T:" + it.toStringShort() }
+            temporaryBasal?.let { "T:" + it.toStringShort(sp.getBoolean(rh.gs(R.string.key_show_tbr_as_percent), false), profile.getBasal()) }
                 ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
         } ?: rh.gs(R.string.value_unavailable_short)
 

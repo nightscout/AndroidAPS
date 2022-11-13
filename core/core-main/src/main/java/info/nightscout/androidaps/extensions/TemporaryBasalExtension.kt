@@ -60,6 +60,13 @@ fun TemporaryBasal.toStringShort(): String =
     if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) DecimalFormatter.to2Decimal(rate) + "U/h"
     else "${DecimalFormatter.to0Decimal(rate)}%"
 
+fun TemporaryBasal.toStringShort(forcePercentage: Boolean, profileBasal: Double): String =
+    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) {
+        if (forcePercentage) to0Decimal(rate / profileBasal * 100) + "%"
+        else to2Decimal(rate) + "U/h"
+    }
+    else "${to0Decimal(rate)}%"
+
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
