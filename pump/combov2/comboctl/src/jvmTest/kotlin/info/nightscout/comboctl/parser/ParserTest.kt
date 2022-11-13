@@ -480,8 +480,30 @@ class ParserTest {
                 remainingBolusDurationInMinutes = 3 * 60 + 0,
                 isExtendedBolus = true,
                 remainingBolusAmount = 2300,
+                tbrIsActive = false,
                 activeBasalProfileNumber = 1,
                 currentBasalRateFactor = 790,
+                batteryState = BatteryState.FULL_BATTERY
+            ),
+            screen.content
+        )
+    }
+
+    @Test
+    fun checkExtendedBolusWithTbrMainScreenParsing() {
+        val testContext = TestContext(testFrameMainScreenWithExtendedBolusInfoAndTbr, 1, parseTopLeftTime = true)
+        val result = ExtendedAndMultiwaveBolusMainScreenParser().parse(testContext.parseContext)
+        assertEquals(ParseResult.Value::class, result::class)
+        val screen = (result as ParseResult.Value<*>).value as ParsedScreen.MainScreen
+        assertEquals(
+            MainScreenContent.ExtendedOrMultiwaveBolus(
+                currentTime = testContext.parseContext.topLeftTime!!,
+                remainingBolusDurationInMinutes = 1 * 60 + 31,
+                isExtendedBolus = true,
+                remainingBolusAmount = 1300,
+                tbrIsActive = true,
+                activeBasalProfileNumber = 1,
+                currentBasalRateFactor = 384,
                 batteryState = BatteryState.FULL_BATTERY
             ),
             screen.content
@@ -501,6 +523,7 @@ class ParserTest {
                 remainingBolusDurationInMinutes = 1 * 60 + 30,
                 isExtendedBolus = false,
                 remainingBolusAmount = 1700,
+                tbrIsActive = false,
                 activeBasalProfileNumber = 1,
                 currentBasalRateFactor = 790,
                 batteryState = BatteryState.FULL_BATTERY

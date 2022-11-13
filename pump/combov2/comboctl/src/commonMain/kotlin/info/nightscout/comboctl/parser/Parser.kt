@@ -70,6 +70,7 @@ sealed class MainScreenContent {
         val remainingBolusDurationInMinutes: Int,
         val isExtendedBolus: Boolean,
         val remainingBolusAmount: Int,
+        val tbrIsActive: Boolean,
         val activeBasalProfileNumber: Int,
         val currentBasalRateFactor: Int,
         val batteryState: BatteryState
@@ -1381,6 +1382,7 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
                 SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.ARROW)),
                 TimeParser(), // Remaining extended/multiwave bolus duration
                 SingleGlyphTypeParser(Glyph.LargeSymbol::class), // Extended / multiwave symbol
+                OptionalParser(SingleGlyphTypeParser(Glyph.SmallSymbol::class)), // TBR arrow up/down symbol (only present if TBR is active)
                 DecimalParser(), // Remaining bolus amount
                 SingleGlyphParser(Glyph.LargeCharacter('u')),
                 SingleGlyphTypeParser(Glyph.SmallDigit::class), // Active basal rate number
@@ -1395,7 +1397,7 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
             return ParseResult.Failed
 
         parseResult as ParseResult.Sequence
-        if (parseResult.size < 5)
+        if (parseResult.size < 6)
             return ParseResult.Failed
 
         // At that location, only the extended and multiwave bolus symbols
@@ -1406,8 +1408,15 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
             else -> return ParseResult.Failed
         }
 
+        val tbrIsActive = when (parseResult.valueAtOrNull<Glyph.SmallSymbol>(2)?.symbol) {
+            SmallSymbol.UP,
+            SmallSymbol.DOWN -> true
+            null -> false
+            else -> return ParseResult.Failed
+        }
+
         val batteryState = batteryStateFromSymbol(
-            if (parseResult.size >= 6) parseResult.valueAt<Glyph.SmallSymbol>(5).symbol else null
+            if (parseResult.size >= 7) parseResult.valueAt<Glyph.SmallSymbol>(5).symbol else null
         )
 
         val remainingBolusDuration = parseResult.valueAt<LocalDateTime>(0)
@@ -1418,9 +1427,10 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
                     currentTime = parseContext.topLeftTime!!,
                     remainingBolusDurationInMinutes = remainingBolusDuration.hour * 60 + remainingBolusDuration.minute,
                     isExtendedBolus = isExtendedBolus,
-                    remainingBolusAmount = parseResult.valueAt<Int>(2),
-                    activeBasalProfileNumber = parseResult.valueAt<Glyph.SmallDigit>(3).digit,
-                    currentBasalRateFactor = parseResult.valueAt<Int>(4),
+                    remainingBolusAmount = parseResult.valueAt<Int>(3),
+                    tbrIsActive = tbrIsActive,
+                    activeBasalProfileNumber = parseResult.valueAt<Glyph.SmallDigit>(4).digit,
+                    currentBasalRateFactor = parseResult.valueAt<Int>(5),
                     batteryState = batteryState
                 )
             )
