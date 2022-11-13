@@ -44,10 +44,43 @@
     <string name="button1">Кнопка 1</string>
     <string name="button2">Кнопка 2</string>
     <string name="button3">Кнопка 3</string>
+    <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
+    <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
+    <string name="timeshift_label">Сдвиг по времени</string>
+    <string name="percentage_label">В процентах</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Приостановить цикл на 1 час</string>
+    <string name="suspendloopfor2h">Приостановить цикл на 2 часа</string>
+    <string name="suspendloopfor3h">Приостановить цикл на 3 часа</string>
+    <string name="suspendloopfor10h">Приостановить цикл на 10 часов</string>
+    <string name="disconnectpump">Отсоединить помпу</string>
+    <string name="disconnectpumpfor15m">Отсоединить помпу на 15 мин</string>
+    <string name="disconnectpumpfor30m">Отсоединить помпу на 30 мин</string>
+    <string name="disconnectpumpfor1h">Отсоединить помпу на 1 час</string>
+    <string name="disconnectpumpfor2h">Отсоединить помпу на 2 час</string>
+    <string name="disconnectpumpfor3h">Отсоединить помпу на 3 часа</string>
+    <string name="resume">Возобновить</string>
+    <string name="reconnect">Возобновить соединение с помпой</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часов</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">изменить результат на %</string>
+    <string name="a11_correction_units">изменить результат на ед</string>
+    <string name="two_hours">2ч</string>
+    <string name="result_insulin_carbs">Результат: %1$s %2$s</string>
+    <string name="missing_carbs">Не хватает %1$d г</string>
+    <string name="a11y_current_bg">текущий уровень глюкозы крови</string>
+    <string name="carb_time_label">Время приема углеводов</string>
+    <string name="a11y_set_carb_timer">установить будильник приема углеводов</string>
+    <string name="show_calculation">Показать расчет</string>
     <!-- Treatments -->
     <string name="no_records_available">Нет доступных записей</string>
     <string name="calculation_short">Кальк</string>
@@ -71,5 +104,20 @@
     <string name="show_invalidated_records">Показать недействительные / удаленные записи</string>
     <string name="hide_invalidated_records">Скрыть недействительные / удаленные записи</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Профиль 1</string>
+    <string name="profile2">Профиль 2</string>
+    <string name="profile_type">Тип профиля</string>
+    <string name="basal_pct_from_tdd_label">% базального</string>
+    <string name="selected_profile">Выбрано:</string>
+    <string name="compare_profile">Сравнить профили</string>
+    <string name="nav_profile_helper">Помощник профиля</string>
+    <string name="motol_default_profile">Профиль по умолчанию</string>
+    <string name="current_profile">Текущий профиль</string>
+    <string name="available_profile">Доступный профиль</string>
+    <string name="format_with_tdd_and_pct">Возраст: %1$.0f Суточная Потребность: %2$.0f ед %3$d%%</string>
+    <string name="format_with_weight">Возраст: %1$.0f Вес: %2$.0f кг</string>
+    <string name="dpv_default_profile">Значение для профиля по умолчанию</string>
+    <string name="invalid_pct">Некорректное значение</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Базальная скорость</string>
 </resources>
