@@ -290,7 +290,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
         graphData.addInRangeArea(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
-        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
+        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], menuChartSettings[0][OverviewMenus.CharType.RAW.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
         graphData.addTreatments(context)
         graphData.addEps(context, 0.95)

@@ -1020,7 +1020,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val menuChartSettings = overviewMenus.setting
         if (menuChartSettings.isEmpty()) return
         graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
-        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
+        graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], menuChartSettings[0][OverviewMenus.CharType.RAW.ordinal], context)
         if (buildHelper.isDev()) graphData.addBucketedData()
         graphData.addTreatments(context)
         graphData.addEps(context, 0.95)

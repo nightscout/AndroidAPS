@@ -243,6 +243,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="raw_bg_shortname">RAW</string>
     <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
@@ -391,6 +392,7 @@
     <string name="do_not_bolus_record_only">Do not bolus, record only</string>
     <string name="bolusrecordedonly">Bolus will be recorded only (not delivered by pump)</string>
     <string name="loop_smbsetbypump_label">SMB set by pump</string>
+    <string name="overview_show_raw_bg">Raw BG</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>
     <string name="overview_show_sensitivity">Sensitivity</string>

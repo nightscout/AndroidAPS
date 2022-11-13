@@ -38,6 +38,7 @@ class OverviewMenus @Inject constructor(
 ) {
 
     enum class CharType(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
+        RAW(R.string.overview_show_raw_bg, R.attr.defaultTextColor, R.attr.menuTextColorInverse, primary = true, secondary = false, shortnameId = R.string.activity_shortname),
         PRE(R.string.overview_show_predictions, R.attr.predictionColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname),
         TREAT(R.string.overview_show_treatments, R.attr.cobColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname),
         BAS(R.string.overview_show_basals, R.attr.basal, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname),
@@ -126,6 +127,7 @@ class OverviewMenus @Inject constructor(
                     if (g == 0 && !m.primary) return@forEach
                     if (g > 0 && !m.secondary) return@forEach
                     var insert = true
+                    if (m == CharType.RAW) insert = sp.getBoolean(info.nightscout.androidaps.core.R.string.key_use_data_smoothing, false)
                     if (m == CharType.PRE) insert = predictionsAvailable
                     if (m == CharType.DEVSLOPE) insert = buildHelper.isDev()
                     if (used.contains(m.ordinal)) insert = false
