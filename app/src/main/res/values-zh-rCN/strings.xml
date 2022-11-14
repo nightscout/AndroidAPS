@@ -70,7 +70,6 @@
     <string name="openapsma_maxiob_title">OpenAPS通过基础率可以输注的IOB活性胰岛素的最大值[U]</string>
     <string name="openapsma_maxiob_summary">这个值在OpenAPS中被成为最大IOB\n这是APS单次可以输注的胰岛素的最大值[U]</string>
     <string name="password_preferences_encrypt_prompt">请您输入主密码，该密码将用于加密导出的首选项配置。</string>
-    <string name="password_preferences_decrypt_prompt">请您输入主密码，该密码将用于解密导入的首选项配置。</string>
     <string name="preferences_export_canceled">导出已取消！首选项未导出！</string>
     <string name="preferences_import_canceled">导入已取消! 未导入首选项 !</string>
     <string name="preferences_import_impossible">无法导入首选项 !</string>
