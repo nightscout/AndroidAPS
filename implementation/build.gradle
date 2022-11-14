@@ -24,4 +24,5 @@ dependencies {
     implementation project(':interfaces')
     implementation project(':core:core-main')
     implementation project(':core:fabric')
+    implementation project(':core:ui')
 }

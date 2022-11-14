@@ -170,8 +170,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="pairing">Pairing</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="bolusdelivered">Bolus %1$.2f U delivered successfully</string>
     <string name="virtualpump_resultok">OK</string>
@@ -270,13 +268,6 @@
     <string name="itmustbepositivevalue">it must be positive value</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
-
-    <!--    Dialogs-->
-    <string name="confirmation">Confirmation</string>
-    <string name="message">Message</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="dismiss">DISMISS</string>
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>

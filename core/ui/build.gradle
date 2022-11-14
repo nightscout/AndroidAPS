@@ -1,0 +1,19 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+//apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+//apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
+
+android {
+    namespace 'info.nightscout.core.ui'
+}
+
+dependencies {
+
+    implementation "androidx.core:core-ktx:$core_version"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "com.google.android.material:material:$material_version"
+}

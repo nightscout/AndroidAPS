@@ -1,17 +1,22 @@
-package info.nightscout.androidaps.utils.alertDialogs
+package info.nightscout.core.ui.dialogs
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.core.main.R
-import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.core.ui.R
 
 // if you need error dialog - duplicate to ErrorDialog and make it and use: AppThemeErrorDialog & R.drawable.ic_header_error instead
 
 object WarningDialog {
+
+    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
+        Handler(Looper.getMainLooper()).post(it)
+    }
 
     @SuppressLint("InflateParams")
     fun showWarning(context: Context, title: String, message: String, @StringRes positiveButton: Int = -1, ok: (() -> Unit)? = null, cancel: (() -> Unit)? = null) {
@@ -25,11 +30,7 @@ object WarningDialog {
                     okClicked = true
                     dialog.dismiss()
                     SystemClock.sleep(100)
-                    if (cancel != null) {
-                        runOnUiThread(Runnable {
-                            cancel()
-                        })
-                    }
+                    if (cancel != null) runOnUiThread { cancel() }
                 }
             }
 
@@ -40,11 +41,7 @@ object WarningDialog {
                     okClicked = true
                     dialog.dismiss()
                     SystemClock.sleep(100)
-                    if (ok != null) {
-                        runOnUiThread(Runnable {
-                            ok()
-                        })
-                    }
+                    if (ok != null) runOnUiThread { ok() }
                 }
             }
         }
@@ -52,5 +49,4 @@ object WarningDialog {
         val dialog = builder.show()
         dialog.setCanceledOnTouchOutside(true)
     }
-
 }

@@ -23,8 +23,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPu
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.utils.WarnColors
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback

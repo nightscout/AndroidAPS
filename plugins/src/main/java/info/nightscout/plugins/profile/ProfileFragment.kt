@@ -13,10 +13,10 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants

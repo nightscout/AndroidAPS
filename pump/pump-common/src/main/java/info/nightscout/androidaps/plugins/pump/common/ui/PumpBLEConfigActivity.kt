@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.pump.common.databinding.PumpBleConfigA
 import info.nightscout.androidaps.plugins.pump.common.driver.PumpBLESelector
 import info.nightscout.androidaps.plugins.pump.common.driver.PumpBLESelectorText
 import info.nightscout.androidaps.plugins.pump.common.driver.PumpDriverConfigurationCapable
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

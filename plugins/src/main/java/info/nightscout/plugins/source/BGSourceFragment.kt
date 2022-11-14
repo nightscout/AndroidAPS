@@ -19,8 +19,8 @@ import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources

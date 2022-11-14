@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit

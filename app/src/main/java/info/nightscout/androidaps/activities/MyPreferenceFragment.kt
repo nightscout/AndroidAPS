@@ -37,7 +37,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.BIOMETRIC
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
@@ -45,6 +44,7 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionTyp
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.profile.toCurrentUnits
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
@@ -248,7 +248,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         if (key == rh.gs(R.string.key_openapsama_useautosens) && sp.getBoolean(R.string.key_openapsama_useautosens, false)) {
             activity?.let {
-                show(it, rh.gs(R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
+                OKDialog.show(it, rh.gs(R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
         checkForBiometricFallback(key)
@@ -274,7 +274,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
                 val message = rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection))
-                show(it, title = title, message = message)
+                OKDialog.show(it, title = title, message = message)
             }
         }
 
@@ -286,7 +286,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
                 val message = rh.gs(R.string.unsecure_fallback_descriotion_biometric)
-                show(it, title = title, message = message)
+                OKDialog.show(it, title = title, message = message)
             }
         }
     }

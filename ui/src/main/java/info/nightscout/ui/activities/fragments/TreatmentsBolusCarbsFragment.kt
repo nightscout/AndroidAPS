@@ -21,8 +21,8 @@ import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs

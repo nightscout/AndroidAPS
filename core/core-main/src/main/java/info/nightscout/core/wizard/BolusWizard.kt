@@ -9,11 +9,11 @@ import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
@@ -372,8 +372,8 @@ class BolusWizard @Inject constructor(
                 carbTimer.removeAutomationEventEatReminder()
             if (sp.getBoolean(R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
                 OKDialog.showYesNoCancel(ctx, rh.gs(R.string.bolus_advisor), rh.gs(R.string.bolus_advisor_message),
-                                         { bolusAdvisorProcessing(ctx) },
-                                         { commonProcessing(ctx) }
+                                                                         { bolusAdvisorProcessing(ctx) },
+                                                                         { commonProcessing(ctx) }
                 )
             else
                 commonProcessing(ctx)

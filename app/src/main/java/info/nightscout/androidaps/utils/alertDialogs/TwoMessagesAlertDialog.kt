@@ -23,9 +23,9 @@ object TwoMessagesAlertDialog {
         MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(
-                AlertDialogHelper.buildCustomTitle(
+                info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(
                     context, title, icon
-                        ?: R.drawable.ic_check_while_48dp
+                        ?: R.drawable.ic_check_white_48dp
                 )
             )
             .setView(secondMessageLayout)

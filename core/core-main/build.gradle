@@ -20,6 +20,7 @@ dependencies {
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':interfaces')
+    implementation project(':core:ui')
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"

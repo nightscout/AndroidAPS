@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.alertDialogs
+package info.nightscout.core.ui.dialogs
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.core.main.R
+import info.nightscout.core.ui.R
 
 object AlertDialogHelper {
 
@@ -19,7 +19,7 @@ object AlertDialogHelper {
         MaterialAlertDialogBuilder(ContextThemeWrapper(context, themeResId))
 
     fun buildCustomTitle(context: Context, title: String,
-                         @DrawableRes iconResource: Int = R.drawable.ic_check_while_48dp,
+                         @DrawableRes iconResource: Int = R.drawable.ic_check_white_48dp,
                          @StyleRes themeResId: Int = R.style.AppTheme,
                          @LayoutRes layoutResource: Int = R.layout.dialog_alert_custom_title): View? {
         val titleLayout = LayoutInflater.from(ContextThemeWrapper(context, themeResId)).inflate(layoutResource, null)

@@ -14,8 +14,8 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.plugin.ActivePlugin

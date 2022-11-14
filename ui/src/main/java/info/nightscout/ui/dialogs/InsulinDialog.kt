@@ -14,11 +14,11 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.pumpExtensions.insertBolusTransaction
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit

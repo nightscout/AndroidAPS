@@ -21,8 +21,8 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.UserEntry.Action

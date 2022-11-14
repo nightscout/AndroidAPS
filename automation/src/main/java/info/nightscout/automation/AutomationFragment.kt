@@ -25,7 +25,6 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.automation.databinding.AutomationEventItemBinding
 import info.nightscout.automation.databinding.AutomationFragmentBinding
 import info.nightscout.automation.dialogs.EditEventDialog
@@ -33,6 +32,7 @@ import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter

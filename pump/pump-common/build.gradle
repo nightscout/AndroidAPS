@@ -27,4 +27,5 @@ dependencies {
     }
 
     api "com.google.code.gson:gson:$gson_version"
+    implementation project(path: ':core:ui')
 }

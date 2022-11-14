@@ -1,16 +1,21 @@
-package info.nightscout.androidaps.utils.alertDialogs
+package info.nightscout.core.ui.dialogs
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.core.main.R
-import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.core.ui.R
 
 object OKDialog {
+
+    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
+        Handler(Looper.getMainLooper()).post(it)
+    }
 
     @SuppressLint("InflateParams")
     fun show(context: Context, title: String, message: String, runnable: Runnable? = null) {

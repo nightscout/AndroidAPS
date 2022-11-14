@@ -21,10 +21,10 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
@@ -133,7 +133,7 @@ class AutotuneFragment : DaggerFragment() {
             val localName = rh.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             autotunePlugin.tunedProfile?.let { tunedProfile ->
-                showConfirmation(requireContext(),
+                OKDialog.showConfirmation(requireContext(),
                                  rh.gs(R.string.autotune_copy_localprofile_button),
                                  rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName,
                                  Runnable {
@@ -151,7 +151,7 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneUpdateProfile.setOnClickListener {
             val localName = autotunePlugin.pumpProfile.profilename
-            showConfirmation(requireContext(),
+            OKDialog.showConfirmation(requireContext(),
                              rh.gs(R.string.autotune_update_input_profile_button),
                              rh.gs(R.string.autotune_update_local_profile_message, localName),
                              Runnable {
@@ -171,7 +171,7 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneRevertProfile.setOnClickListener {
             val localName = autotunePlugin.pumpProfile.profilename
-            showConfirmation(requireContext(),
+            OKDialog.showConfirmation(requireContext(),
                              rh.gs(R.string.autotune_revert_input_profile_button),
                              rh.gs(R.string.autotune_revert_local_profile_message, localName),
                              Runnable {
@@ -231,7 +231,7 @@ class AutotuneFragment : DaggerFragment() {
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
                 tunedP.profileStore(circadian)?.let {
-                    showConfirmation(requireContext(),
+                    OKDialog.showConfirmation(requireContext(),
                                      rh.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?",
                                      Runnable {
                                          uel.log(

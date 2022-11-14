@@ -94,7 +94,7 @@ object PrefImportSummaryDialog {
 
                 MaterialAlertDialogBuilder(context, R.style.DialogTheme)
                     .setCustomTitle(
-                        AlertDialogHelper.buildCustomTitle(
+                        info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(
                             context,
                             context.getString(R.string.check_preferences_details_title),
                             R.drawable.ic_header_log,
@@ -111,7 +111,7 @@ object PrefImportSummaryDialog {
 
         val builder = MaterialAlertDialogBuilder(context, theme)
             .setMessage(context.getString(messageRes))
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.nav_import), headerIcon, theme))
+            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.nav_import), headerIcon, theme))
             .setView(innerLayout)
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()

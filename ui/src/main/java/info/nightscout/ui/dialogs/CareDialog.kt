@@ -15,9 +15,9 @@ import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toCurrentUnitsString
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit

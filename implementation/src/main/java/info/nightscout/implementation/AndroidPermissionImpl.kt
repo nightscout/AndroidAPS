@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
