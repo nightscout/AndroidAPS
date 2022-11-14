@@ -77,7 +77,6 @@
     <string name="openapsma_maxiob_title">Maximální bazální IOB [U]</string>
     <string name="openapsma_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána max IOB</string>
     <string name="password_preferences_encrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k šifrování exportovaných předvoleb.</string>
-    <string name="password_preferences_decrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k dešifrování importovaných předvoleb.</string>
     <string name="preferences_export_canceled">Export zrušen! Předvolby NEBYLY exportovány!</string>
     <string name="preferences_import_canceled">Import zrušen! Předvolby NEBYLY importovány!</string>
     <string name="preferences_import_impossible">Nelze naimportovat nastavení!</string>
