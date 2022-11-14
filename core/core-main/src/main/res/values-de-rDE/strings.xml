@@ -2,7 +2,6 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
-    <string name="handshaking">Handshaking</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="youareonallowedlimit">Erlaubtes Limit erreicht</string>
