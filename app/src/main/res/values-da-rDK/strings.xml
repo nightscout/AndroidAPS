@@ -71,7 +71,6 @@
     <string name="openapsma_maxiob_title">Maksimum basal IOB OpenAPS kan levere [U]</string>
     <string name="openapsma_maxiob_summary">Denne værdi kaldes for Maks IOB i OpenAPS-kontekst\nDette er Maksimal-insulin i [U] APS kan levere på én gang.</string>
     <string name="password_preferences_encrypt_prompt">Du bliver bedt om hovedadgangskode, som vil blive brugt til at kryptere eksporterede præferencer.</string>
-    <string name="password_preferences_decrypt_prompt">Du vil blive bedt om hovedadgangskode, som er nødvendig for at dekryptere importerede præferencer.</string>
     <string name="preferences_export_canceled">Eksport annulleret! Indstillinger er IKKE eksporteret!</string>
     <string name="preferences_import_canceled">Import er annulleret! Præferencer er IKKE importeret!</string>
     <string name="preferences_import_impossible">Kan ikke importere præferencer!</string>
