@@ -4,7 +4,14 @@
     <!--     Activities-->
     <string name="statistics">Statisztikák</string>
     <string name="calculation_in_progress">Számítás folyamatban</string>
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="superbolus">Szuperbólus</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>
