@@ -76,7 +76,6 @@
     <string name="openapsma_maxiob_title">Max IOB da basale a cui limitare OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
-    <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
     <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
     <string name="preferences_import_impossible">Impossibile importare le preferenze!</string>
