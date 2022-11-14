@@ -1,7 +1,7 @@
-package info.nightscout.androidaps.utils.ui
+package info.nightscout.core.ui.elements
 
-import info.nightscout.core.main.databinding.NumberPickerLayoutBinding
-import info.nightscout.core.main.databinding.NumberPickerLayoutVerticalBinding
+import info.nightscout.core.ui.databinding.NumberPickerLayoutBinding
+import info.nightscout.core.ui.databinding.NumberPickerLayoutVerticalBinding
 
 /**
  * NumberPickerViewAdapter binds both NumberPickerLayoutBinding and NumberPickerLayoutVerticalBinding shared attributes to one common view adapter.
@@ -9,7 +9,7 @@ import info.nightscout.core.main.databinding.NumberPickerLayoutVerticalBinding
  */
 class NumberPickerViewAdapter(
     val nH: NumberPickerLayoutBinding?,
-    val nV: NumberPickerLayoutVerticalBinding?,
+    nV: NumberPickerLayoutVerticalBinding?,
 ) {
 
     init {

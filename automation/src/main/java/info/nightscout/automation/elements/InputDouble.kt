@@ -2,8 +2,8 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.androidaps.utils.ui.NumberPicker
 import info.nightscout.automation.R
+import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
 class InputDouble() : Element() {

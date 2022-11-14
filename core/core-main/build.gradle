@@ -46,7 +46,6 @@ dependencies {
     api "androidx.navigation:navigation-runtime-ktx:$nav_version"
     api "androidx.navigation:navigation-ui-ktx:$nav_version"
     api 'androidx.percentlayout:percentlayout:1.0.0'
-    api "androidx.preference:preference-ktx:$preferencektx_version"
     api 'androidx.recyclerview:recyclerview:1.2.1'
 
     api 'androidx.gridlayout:gridlayout:1.0.0'

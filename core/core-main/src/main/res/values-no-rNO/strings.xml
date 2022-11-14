@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpen er opptatt</string>
     <string name="connectionerror">Tilkoblingsfeil til pumpe</string>
-    <string name="youareonallowedlimit">Tillatt grense nådd</string>
+    <string name="you_are_on_allowed_limit">Tillatt grense nådd</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="close">Lukk</string>
     <string name="please_wait">Vennligst vent…</string>

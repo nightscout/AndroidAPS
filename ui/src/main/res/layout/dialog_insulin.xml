@@ -83,7 +83,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
+            <info.nightscout.core.ui.elements.MinutesNumberPicker
                 android:id="@+id/time"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -119,11 +119,11 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/amount"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
-                app:customContentDescription="@string/overview_insulin_label"/>
+                app:customContentDescription="@string/overview_insulin_label" />
 
             <TextView
                 android:layout_width="wrap_content"

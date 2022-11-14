@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d мин</string>
     <string name="pumpbusy">помпа занята</string>
     <string name="connectionerror">ошибка соединения</string>
-    <string name="youareonallowedlimit">Разрешенный предел достигнут</string>
+    <string name="you_are_on_allowed_limit">Разрешенный предел достигнут</string>
     <string name="objectives">Цели</string>
     <string name="close">Закрыть</string>
     <string name="please_wait">Подождите…</string>

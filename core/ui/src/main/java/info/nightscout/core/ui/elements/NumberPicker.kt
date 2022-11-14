@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.ui
+package info.nightscout.core.ui.elements
 
 import android.annotation.SuppressLint
 import android.app.Service
@@ -21,8 +21,8 @@ import android.view.accessibility.AccessibilityManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.LinearLayout
-import info.nightscout.core.main.R
-import info.nightscout.core.main.databinding.NumberPickerLayoutBinding
+import info.nightscout.core.ui.R
+import info.nightscout.core.ui.databinding.NumberPickerLayoutBinding
 import info.nightscout.core.ui.toast.ToastUtils
 import java.text.NumberFormat
 import java.util.concurrent.Executors
@@ -189,13 +189,13 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
                 currentValue = stringToDouble(binding.editText.text.toString())
                 if (currentValue > maxValue) {
                     currentValue = maxValue
-                    ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+                    ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
                     updateEditText()
                     okButton?.visibility = VISIBLE
                 }
                 if (currentValue < minValue) {
                     currentValue = minValue
-                    ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+                    ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
                     updateEditText()
                     okButton?.visibility = VISIBLE
                 }
@@ -232,11 +232,11 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         get() {
             if (currentValue > maxValue) {
                 currentValue = maxValue
-                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+                ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
             }
             if (currentValue < minValue) {
                 currentValue = minValue
-                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+                ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
             }
             return currentValue
         }
@@ -245,11 +245,11 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             currentValue = value
             if (currentValue > maxValue) {
                 currentValue = maxValue
-                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+                ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
             }
             if (currentValue < minValue) {
                 currentValue = minValue
-                ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+                ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
             }
             callValueChangedListener()
             updateEditText()
@@ -264,7 +264,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         if (currentValue > maxValue) {
             currentValue = maxValue
             callValueChangedListener()
-            ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+            ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
             stopUpdating()
         }
         updateEditText()
@@ -275,7 +275,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         if (currentValue < minValue) {
             currentValue = minValue
             callValueChangedListener()
-            ToastUtils.warnToast(context, R.string.youareonallowedlimit)
+            ToastUtils.warnToast(context, R.string.you_are_on_allowed_limit)
             stopUpdating()
         }
         updateEditText()

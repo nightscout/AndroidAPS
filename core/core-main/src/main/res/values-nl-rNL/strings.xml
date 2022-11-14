@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d minuten</string>
     <string name="pumpbusy">Pomp is bezig</string>
     <string name="connectionerror">Pomp verbindingsstoring</string>
-    <string name="youareonallowedlimit">Toegestane limiet bereikt</string>
+    <string name="you_are_on_allowed_limit">Toegestane limiet bereikt</string>
     <string name="objectives">Doelen</string>
     <string name="close">Sluiten</string>
     <string name="please_wait">Even geduld a.u.b.…</string>

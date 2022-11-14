@@ -81,7 +81,7 @@
                         android:textSize="14sp" />
 
 
-                    <info.nightscout.androidaps.utils.ui.NumberPicker
+                    <info.nightscout.core.ui.elements.NumberPicker
                         android:id="@+id/tune_days"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

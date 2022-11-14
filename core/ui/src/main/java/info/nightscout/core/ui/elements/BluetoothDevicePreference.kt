@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.ui
+package info.nightscout.core.ui.elements
 
 import android.Manifest
 import android.bluetooth.BluetoothManager
@@ -8,7 +8,7 @@ import android.os.Build
 import android.util.AttributeSet
 import androidx.core.app.ActivityCompat
 import androidx.preference.ListPreference
-import info.nightscout.core.main.R
+import info.nightscout.core.ui.R
 import info.nightscout.core.ui.toast.ToastUtils
 import java.util.Vector
 

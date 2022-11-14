@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.ui;
+package info.nightscout.core.ui.elements;
 
 import android.text.InputType;
 import android.text.SpannableStringBuilder;

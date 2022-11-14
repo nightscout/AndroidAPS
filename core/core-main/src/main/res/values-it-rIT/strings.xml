@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
-    <string name="youareonallowedlimit">Limite consentito raggiunto</string>
+    <string name="you_are_on_allowed_limit">Limite consentito raggiunto</string>
     <string name="objectives">Obiettivi</string>
     <string name="close">Chiudi</string>
     <string name="please_wait">Attendi…</string>

@@ -1,9 +1,9 @@
-package info.nightscout.androidaps.utils.ui
+package info.nightscout.core.ui.elements
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import info.nightscout.core.main.databinding.NumberPickerLayoutVerticalBinding
+import info.nightscout.core.ui.databinding.NumberPickerLayoutVerticalBinding
 
 class NumberPickerVertical(context: Context, attrs: AttributeSet? = null) : NumberPicker(context, attrs) {
 

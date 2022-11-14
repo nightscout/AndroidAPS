@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
-    <string name="youareonallowedlimit">Límite permitido alcanzado</string>
+    <string name="you_are_on_allowed_limit">Límite permitido alcanzado</string>
     <string name="objectives">Objetivos</string>
     <string name="close">Cerrar</string>
     <string name="please_wait">Por favor, espere…</string>

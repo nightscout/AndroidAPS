@@ -17,7 +17,9 @@ android {
 
 dependencies {
 
-    implementation "androidx.core:core-ktx:$core_version"
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "com.google.android.material:material:$material_version"
+    api "androidx.core:core-ktx:$core_version"
+    api "androidx.appcompat:appcompat:$appcompat_version"
+    api "androidx.preference:preference-ktx:$preferencektx_version"
+
+    api "com.google.android.material:material:$material_version"
 }

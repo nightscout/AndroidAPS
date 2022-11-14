@@ -24,7 +24,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.utils.ui.NumberPicker;
+import info.nightscout.core.ui.elements.NumberPicker;
 import info.nightscout.core.ui.elements.SpinnerHelper;
 import info.nightscout.plugins.R;
 import info.nightscout.rx.logging.AAPSLogger;

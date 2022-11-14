@@ -31,7 +31,7 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
-    <string name="youareonallowedlimit">Byl dosažen povolený limit</string>
+    <string name="you_are_on_allowed_limit">Byl dosažen povolený limit</string>
     <string name="objectives">Cíle</string>
     <string name="close">Zavřít</string>
     <string name="please_wait">Počkejte prosím…</string>
