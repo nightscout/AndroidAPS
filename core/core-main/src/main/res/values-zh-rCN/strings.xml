@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">临时基础输注错误</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
     <string name="waitingforpump">正在等待泵</string>
-    <string name="connectingfor">正在连接 %1$d 秒</string>
     <string name="bolusdelivering">正在输注 %1$.2f U</string>
-    <string name="handshaking">握手</string>
     <string name="connecting">正在连接</string>
-    <string name="connected">已连接</string>
     <string name="disconnected">已断开连接</string>
-    <string name="disconnecting">正在断开连接</string>
-    <string name="waiting_for_disconnection">正在等待连接</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
