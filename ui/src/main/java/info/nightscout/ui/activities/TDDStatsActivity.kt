@@ -15,7 +15,6 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.total
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
@@ -28,6 +27,7 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventDanaRSyncStatus
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.T

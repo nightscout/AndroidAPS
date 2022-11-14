@@ -1,10 +1,14 @@
-package info.nightscout.androidaps.data
+package info.nightscout.androidaps.pump
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.main.R
+import info.nightscout.core.pumpExtensions.toHtml
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.plugins.extensions.toText
+import info.nightscout.plugins.sync.nsShared.extensions.json
+import info.nightscout.plugins.sync.nsShared.extensions.log
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Before
@@ -16,8 +20,8 @@ class PumpEnactResultTest : TestBaseWithProfile() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is PumpEnactResultObject) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
@@ -130,7 +134,7 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Enacted: true
     Comment: AAA
     Insulin: 10.0 U
-    """.trimIndent(), per.toString()
+    """.trimIndent(), per.toText(rh)
         )
         per = PumpEnactResult(injector).enacted(true).isTempCancel(true).comment("AAA")
         Assert.assertEquals(
@@ -139,7 +143,7 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Enacted: true
     Comment: AAA
     Cancel temp basal
-    """.trimIndent(), per.toString()
+    """.trimIndent(), per.toText(rh)
         )
         per = PumpEnactResult(injector).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
         Assert.assertEquals(
@@ -149,7 +153,7 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Comment: AAA
     Duration: 20 min
     Percent: 90%
-    """.trimIndent(), per.toString()
+    """.trimIndent(), per.toText(rh)
         )
         per = PumpEnactResult(injector).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
         Assert.assertEquals(
@@ -159,29 +163,29 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     Comment: AAA
     Duration: 30 min
     Absolute: 1.0 U/h
-    """.trimIndent(), per.toString()
+    """.trimIndent(), per.toText(rh)
         )
         per = PumpEnactResult(injector).enacted(false).comment("AAA")
         Assert.assertEquals(
             """
     Success: false
     Comment: AAA
-    """.trimIndent(), per.toString()
+    """.trimIndent(), per.toText(rh)
         )
     }
 
     @Test fun toHtmlTest() {
 
         var per: PumpEnactResult = PumpEnactResult(injector).enacted(true).bolusDelivered(10.0).comment("AAA")
-        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U", per.toHtml())
+        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U", per.toHtml(rh))
         per = PumpEnactResult(injector).enacted(true).isTempCancel(true).comment("AAA")
-        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal", per.toHtml())
+        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal", per.toHtml(rh))
         per = PumpEnactResult(injector).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%", per.toHtml())
+        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%", per.toHtml(rh))
         per = PumpEnactResult(injector).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h", per.toHtml())
+        Assert.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h", per.toHtml(rh))
         per = PumpEnactResult(injector).enacted(false).comment("AAA")
-        Assert.assertEquals("<b>Success</b>: false<br><b>Comment</b>: AAA", per.toHtml())
+        Assert.assertEquals("<b>Success</b>: false<br><b>Comment</b>: AAA", per.toHtml(rh))
     }
 
     @Test fun jsonTest() {

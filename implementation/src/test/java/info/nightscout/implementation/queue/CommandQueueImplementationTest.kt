@@ -24,6 +24,7 @@ import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
@@ -104,8 +105,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             if (it is CommandLoadHistory) {
                 it.activePlugin = activePlugin
             }
-            if (it is PumpEnactResultObject) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
@@ -254,7 +255,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertEquals(2, commandQueue.size())
 
         // when
-        commandQueue.cancelAllBoluses(anyLong())
+        commandQueue.cancelAllBoluses(null)
 
         // then
         Assert.assertEquals(0, commandQueue.size())

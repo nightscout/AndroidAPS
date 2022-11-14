@@ -31,7 +31,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -94,6 +93,7 @@ import info.nightscout.rx.events.EventAcceptOpenLoopChange
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale
 import info.nightscout.rx.events.EventTempBasalChange

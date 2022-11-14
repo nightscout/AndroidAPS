@@ -6,7 +6,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.putDouble
 import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.extensions.putString
@@ -29,6 +28,7 @@ import info.nightscout.plugins.general.overview.notifications.NotificationWithAc
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

@@ -28,6 +28,7 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.plugins.R
+import info.nightscout.plugins.extensions.toText
 import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -399,40 +400,4 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
-
-    private fun PumpEnactResult.toText(rh: ResourceHelper): String {
-        var ret = rh.gs(info.nightscout.core.main.R.string.success) + ": " + success
-        if (enacted) {
-            when {
-                bolusDelivered > 0 -> {
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.configbuilder_insulin)}: $bolusDelivered ${rh.gs(info.nightscout.core.main.R.string.insulin_unit_shortname)}"
-                }
-
-                isTempCancel       -> {
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
-                    if (comment.isNotEmpty()) ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.cancel_temp)}"
-                }
-
-                isPercent          -> {
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
-                    if (comment.isNotEmpty()) ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.duration)}: $duration min"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.percent)}: $percent%"
-                }
-
-                else               -> {
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.enacted)}: $enacted"
-                    if (comment.isNotEmpty()) ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.duration)}: $duration min"
-                    ret += "\n${rh.gs(info.nightscout.core.main.R.string.absolute)}: $absolute U/h"
-                }
-            }
-        } else {
-            ret += "\n${rh.gs(info.nightscout.core.main.R.string.comment)}: $comment"
-        }
-        return ret
-    }
 }

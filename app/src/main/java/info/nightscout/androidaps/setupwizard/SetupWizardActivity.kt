@@ -9,11 +9,9 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.setupwizard.elements.SWItem
-import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.locale.LocaleHelper.update
@@ -21,6 +19,8 @@ import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged
 import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

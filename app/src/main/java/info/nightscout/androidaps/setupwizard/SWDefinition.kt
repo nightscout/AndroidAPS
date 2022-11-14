@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
@@ -46,6 +45,7 @@ import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

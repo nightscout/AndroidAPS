@@ -4,10 +4,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.shared.utils.T
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.T
 import java.util.GregorianCalendar
 
 class MsgHistoryEventsV2 constructor(

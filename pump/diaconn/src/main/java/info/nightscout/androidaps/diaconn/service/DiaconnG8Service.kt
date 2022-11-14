@@ -45,7 +45,6 @@ import info.nightscout.androidaps.diaconn.packet.TimeInquirePacket
 import info.nightscout.androidaps.diaconn.packet.TimeSettingPacket
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.core.fabric.FabricPrivacy
@@ -68,6 +67,7 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

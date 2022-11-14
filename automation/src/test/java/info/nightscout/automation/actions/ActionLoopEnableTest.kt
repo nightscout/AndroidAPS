@@ -18,7 +18,7 @@ class ActionLoopEnableTest : ActionsTestBase() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true
         `when`(rh.gs(info.nightscout.core.main.R.string.enableloop)).thenReturn("Enable loop")
-        `when`(rh.gs(R.string.alreadyenabled)).thenReturn("Already enabled")
+        `when`(context.getString(R.string.alreadyenabled)).thenReturn("Already enabled")
 
         sut = ActionLoopEnable(injector)
     }

@@ -110,14 +110,9 @@
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
-    <string name="connectingfor">Connecting for %1$d s</string>
     <string name="bolusdelivering">Delivering %1$.2f U</string>
-    <string name="handshaking">Handshaking</string>
     <string name="connecting">Connecting</string>
-    <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="disconnecting">Disconnecting</string>
-    <string name="waiting_for_disconnection">Waiting for disconnection</string>
     <string name="androidaps_start">AAPS started</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>

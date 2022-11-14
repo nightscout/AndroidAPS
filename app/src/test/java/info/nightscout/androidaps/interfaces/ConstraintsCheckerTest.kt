@@ -32,6 +32,7 @@ import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
@@ -89,8 +90,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 it.sp = sp
                 it.dateUtil = dateUtil
             }
-            if (it is PumpEnactResultObject) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
@@ -122,7 +123,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(context.getString(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
         `when`(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor

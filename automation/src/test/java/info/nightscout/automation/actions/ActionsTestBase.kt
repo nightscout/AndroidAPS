@@ -1,5 +1,6 @@
 package info.nightscout.automation.actions
 
+import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
@@ -16,6 +17,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.logging.AAPSLogger
@@ -65,6 +67,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var smsCommunicator: SmsCommunicator
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
+    @Mock lateinit var context: Context
 
     private val pluginDescription = PluginDescription()
     lateinit var testPumpPlugin: TestPumpPlugin
@@ -156,8 +159,8 @@ ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionStopProcessing) {
                 it.rh = rh
             }
-            if (it is PumpEnactResultObject) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
             if (it is Trigger) {
                 it.rh = rh
@@ -179,7 +182,7 @@ ActionsTestBase : TestBaseWithProfile() {
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
 
-        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.core.main.R.string.error)).thenReturn("Error")
+        `when`(context.getString(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(context.getString(info.nightscout.core.main.R.string.error)).thenReturn("Error")
     }
 }

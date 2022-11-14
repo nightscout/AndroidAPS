@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
@@ -47,6 +46,7 @@ import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventCustomActionsChanged;
+import info.nightscout.rx.events.EventPumpStatusChanged;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.shared.interfaces.ResourceHelper;

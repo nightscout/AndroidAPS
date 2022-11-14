@@ -55,7 +55,6 @@ import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpTime
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetUserOption
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
@@ -76,6 +75,7 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

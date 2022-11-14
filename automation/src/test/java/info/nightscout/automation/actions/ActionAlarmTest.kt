@@ -7,6 +7,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.rx.bus.RxBus
@@ -39,16 +40,16 @@ class ActionAlarmTest : TestBase() {
                 it.dateUtil = dateUtil
                 it.config = config
             }
-            if (it is PumpEnactResultObject) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
+        `when`(context.getString(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(context.getString(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
 
         sut = ActionAlarm(injector)

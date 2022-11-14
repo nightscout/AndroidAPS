@@ -15,7 +15,6 @@ import info.nightscout.androidaps.diaconn.common.RecordTypes
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecord
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8HistoryActivityBinding
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -23,6 +22,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
