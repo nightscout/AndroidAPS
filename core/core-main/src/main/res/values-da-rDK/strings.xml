@@ -4,7 +4,6 @@
     <!--    General-->
     <string name="androidaps_start">AAPS startet</string>
     <string name="format_carbs">%1$d g</string>
-    <string name="youareonallowedlimit">Tilladt grænse nået</string>
     <string name="stop">Stop</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="dia_label">DIA</string>
@@ -38,8 +37,6 @@
     <string name="invalid">UGYLDIG</string>
     <string name="login">Log ind</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
