@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Storing toedienen tijdelijk basaal</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="waitingforpump">Wacht op pomp</string>
-    <string name="connectingfor">Verbinding maken gedurende %1$d s</string>
     <string name="bolusdelivering">%1$.2f E worden toegediend</string>
-    <string name="handshaking">Handshaking</string>
     <string name="connecting">Verbining maken</string>
-    <string name="connected">Verbonden</string>
     <string name="disconnected">Verbinding verbroken</string>
-    <string name="disconnecting">Verbinding aan het verbreken</string>
-    <string name="waiting_for_disconnection">Wachten op het loskoppelen</string>
     <string name="androidaps_start">AAPS gestart</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
