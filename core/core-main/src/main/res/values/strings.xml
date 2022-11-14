@@ -258,9 +258,6 @@
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="confirm">Confirm</string>
-    <string name="dia">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
