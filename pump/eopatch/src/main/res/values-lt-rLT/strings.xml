@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="cancel">Atšaukti</string>
+    <string name="confirm">Patvirtinti</string>
+</resources>
