@@ -286,7 +286,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
 
     private fun dismissNotification() {
         NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID)
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
     }
 
     inner class LocalBinder : Binder() {
