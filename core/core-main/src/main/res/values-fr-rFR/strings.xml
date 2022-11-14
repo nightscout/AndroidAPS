@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
-    <string name="connectingfor">Connexion en cours : %1$d sec.</string>
     <string name="bolusdelivering">%1$.2f U ont été injectées</string>
-    <string name="handshaking">Connexion</string>
     <string name="connecting">Connexion en cours</string>
-    <string name="connected">Connectée</string>
     <string name="disconnected">Déconnectée</string>
-    <string name="disconnecting">Déconnexion en cours</string>
-    <string name="waiting_for_disconnection">Attente de déconnexion</string>
     <string name="androidaps_start">AAPS démarré</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
