@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Erro na entrega da basal temporária</string>
     <string name="goingtodeliver">Iniciando aplicação de %1$.2f U</string>
     <string name="waitingforpump">Aguardando a bomba</string>
-    <string name="connectingfor">Conectando para %1$d</string>
     <string name="bolusdelivering">Aplicando %1$.2fU</string>
-    <string name="handshaking">Cumprimento</string>
     <string name="connecting">Conectando</string>
-    <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
-    <string name="disconnecting">A desligar</string>
-    <string name="waiting_for_disconnection">Aguardando a desconexão</string>
     <string name="androidaps_start">AAPS iniciado</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
