@@ -18,7 +18,7 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.maintenance.Prefs
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.shared.extensions.runOnUiThread

@@ -2,8 +2,9 @@ package info.nightscout.implementation
 
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.main.R
+import info.nightscout.core.toast.showToastAdNotification
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.interfaces.utils.HardLimits
@@ -101,7 +102,7 @@ class HardLimitsImpl @Inject constructor(
             msg += rh.gs(R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
-            ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)
+            ToastUtils.showToastAdNotification(context, rxBus, msg, R.raw.error)
         }
         return newValue
     }

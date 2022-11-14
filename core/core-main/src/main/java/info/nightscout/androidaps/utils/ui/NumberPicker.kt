@@ -23,9 +23,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import info.nightscout.core.main.R
 import info.nightscout.core.main.databinding.NumberPickerLayoutBinding
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.shared.SafeParse
+import info.nightscout.core.ui.toast.ToastUtils
 import java.text.NumberFormat
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -69,6 +67,20 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         false
     })
 
+    private fun Boolean.toVisibility() = if (this) View.VISIBLE else View.GONE
+    private fun stringToDouble(inputString: String?, defaultValue: Double = 0.0): Double {
+        var input = inputString ?: return defaultValue
+        var result = defaultValue
+        input = input.replace(",", ".")
+        input = input.replace("−", "-")
+        if (input == "") return defaultValue
+        try {
+            result = input.toDouble()
+        } catch (e: Exception) {
+//            log.error("Error parsing " + input + " to double");
+        }
+        return result
+    }
     private inner class UpdateCounterTask(private val mInc: Boolean) : Runnable {
 
         private var repeated = 0
@@ -121,7 +133,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                if (focused) currentValue = SafeParse.stringToDouble(binding.editText.text.toString())
+                if (focused) currentValue = stringToDouble(binding.editText.text.toString())
                 callValueChangedListener()
                 val inValid = currentValue > maxValue || currentValue < minValue
                 okButton?.visibility = inValid.not().toVisibility()
@@ -174,7 +186,7 @@ open class NumberPicker(context: Context, attrs: AttributeSet? = null) : LinearL
         binding.editText.addTextChangedListener(textWatcher)
         binding.editText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!hasFocus) {
-                currentValue = SafeParse.stringToDouble(binding.editText.text.toString())
+                currentValue = stringToDouble(binding.editText.text.toString())
                 if (currentValue > maxValue) {
                     currentValue = maxValue
                     ToastUtils.warnToast(context, R.string.youareonallowedlimit)

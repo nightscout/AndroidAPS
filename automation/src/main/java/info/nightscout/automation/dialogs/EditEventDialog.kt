@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.automation.AutomationEvent
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.R
@@ -23,6 +22,7 @@ import info.nightscout.automation.events.EventAutomationUpdateAction
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.events.EventAutomationUpdateTrigger
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility

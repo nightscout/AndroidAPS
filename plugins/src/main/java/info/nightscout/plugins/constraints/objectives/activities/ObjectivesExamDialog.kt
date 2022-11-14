@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.plugins.R
 import info.nightscout.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.plugins.constraints.objectives.objectives.Objective

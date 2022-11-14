@@ -1,10 +1,12 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.core.ui.toast
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
+import android.text.Html
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,12 +14,8 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.core.main.R
+import info.nightscout.core.ui.R
 import info.nightscout.core.ui.getThemeColor
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.utils.HtmlHelper
-import info.nightscout.rx.bus.RxBus
 
 object ToastUtils {
 
@@ -78,27 +76,21 @@ object ToastUtils {
             val toast: Toast =
                 Toast.makeText(
                     ctx,
-                    HtmlHelper.fromHtml("<font color='" + ContextThemeWrapper(ctx, R.style.AppTheme).getThemeColor(R.attr.toastBaseTextColor) + "'>" + string + "</font>"),
+                    fromHtml("<font color='" + ContextThemeWrapper(ctx, R.style.AppTheme).getThemeColor(R.attr.toastBaseTextColor) + "'>" + string + "</font>"),
                     Toast.LENGTH_SHORT
                 )
             toast.show()
         }
     }
 
-    fun showToastInUiThread(
-        ctx: Context?, rxBus: RxBus,
-        string: String?, soundID: Int
-    ) {
-        showToastInUiThread(ctx, string)
-        playSound(ctx, soundID)
-        val notification = Notification(Notification.TOAST_ALARM, string!!, Notification.URGENT)
-        rxBus.send(EventNewNotification(notification))
-    }
-
-    private fun playSound(ctx: Context?, soundID: Int) {
+    fun playSound(ctx: Context?, soundID: Int) {
         val soundMP = MediaPlayer.create(ctx, soundID)
         soundMP.start()
         soundMP.setOnCompletionListener { obj: MediaPlayer -> obj.release() }
+    }
+
+    private fun fromHtml(source: String): Spanned {
+        return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
     }
 
     object Long {

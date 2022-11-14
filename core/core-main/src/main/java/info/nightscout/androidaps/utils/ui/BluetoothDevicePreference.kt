@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils.ui
 
 import android.Manifest
-import kotlin.jvm.JvmOverloads
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,8 +9,8 @@ import android.util.AttributeSet
 import androidx.core.app.ActivityCompat
 import androidx.preference.ListPreference
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.utils.ToastUtils
-import java.util.*
+import info.nightscout.core.ui.toast.ToastUtils
+import java.util.Vector
 
 class BluetoothDevicePreference @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ListPreference(context, attrs) {
 

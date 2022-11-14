@@ -12,8 +12,9 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.toast.showToastAdNotification
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
@@ -186,7 +187,7 @@ class NSClientPlugin @Inject constructor(
             }
             return fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            ToastUtils.showToastInUiThread(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            ToastUtils.showToastAdNotification(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
         return fromHtml("")
     }

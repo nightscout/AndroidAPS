@@ -110,7 +110,6 @@
     <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
     <string name="language" translatable="false">Language</string>
     <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
-    <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
     <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
     <string name="preferences_import_impossible">Cannot import preferences!</string>

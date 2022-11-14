@@ -9,6 +9,10 @@ apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
 
 android {
     namespace 'info.nightscout.core.ui'
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {

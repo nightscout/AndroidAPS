@@ -7,8 +7,9 @@ import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.toast.showToastAdNotification
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -171,7 +172,7 @@ class TidepoolPlugin @Inject constructor(
             }
             textLog = HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            ToastUtils.showToastInUiThread(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            ToastUtils.showToastAdNotification(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
     }
 

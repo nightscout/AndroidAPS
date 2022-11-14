@@ -9,14 +9,14 @@ import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorConnect
 import info.nightscout.automation.elements.InputDropdownMenu
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.events.EventBTChange
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
