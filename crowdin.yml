@@ -9,8 +9,8 @@ files:
     translation: /wear/src/main/res/values-%android_code%/strings.xml
   - source: /app/src/main/res/values/protection.xml
     translation: /app/src/main/res/values-%android_code%/protection.xml
-  - source: /core/src/main/res/values/validator.xml
-    translation: /core/src/main/res/values-%android_code%/validator.xml
+  - source: /core/aps/src/main/res/values/validator.xml
+    translation: /core/aps/src/main/res/values-%android_code%/validator.xml
   - source: /core/core-main/src/main/res/values/strings.xml
     translation: /core/core-main/src/main/res/values-%android_code%/strings.xml
   - source: /shared/src/main/res/values/strings.xml
