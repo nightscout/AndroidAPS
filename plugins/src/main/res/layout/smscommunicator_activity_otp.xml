@@ -93,7 +93,7 @@
             style="@style/warning_label"
             android:text="@string/smscommunicator_otp_reset_warning" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <info.nightscout.core.ui.elements.SingleClickButton
             android:id="@+id/otp_reset"
             style="@style/GrayButton"
             android:layout_width="fill_parent"

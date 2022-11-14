@@ -160,7 +160,7 @@
                 android:layout_marginStart="10dp"
                 android:orientation="vertical" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/copy_to_local_profile"
                 style="@style/GrayButton"
                 android:layout_width="match_parent"
@@ -234,7 +234,7 @@
 
         </LinearLayout>
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <info.nightscout.core.ui.elements.SingleClickButton
             android:id="@+id/compare_profiles"
             style="@style/GrayButton"
             android:layout_width="match_parent"

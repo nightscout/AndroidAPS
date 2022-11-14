@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
-import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.BuildHelper
@@ -239,7 +239,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
     private fun displayNotConfiguredDialog() {
         context.let {
-            UIRunnable {
+            info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(
                     it, rh.gs(R.string.omnipod_common_warning),
                     rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null

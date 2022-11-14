@@ -12,20 +12,16 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.view.ContextThemeWrapper
-import info.nightscout.core.main.R
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.main.R
+import info.nightscout.core.ui.getThemeColor
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.utils.resources.getThemeColor
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.bus.RxBus
 
 object ToastUtils {
 
     private var lastToast: Toast? = null
-    fun showToastInUiThread(ctx: Context, stringId: Int) {
-        showToastInUiThread(ctx, ctx.getString(stringId))
-    }
-
     fun warnToast(ctx: Context?, string: String?) {
         graphicalToast(ctx, string, R.drawable.ic_toast_warn, true)
     }

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.resources
+package info.nightscout.core.ui
 
 import android.content.Context
 import android.util.TypedValue

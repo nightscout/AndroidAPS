@@ -47,8 +47,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.ui.SingleClickButton
-import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.ui.elements.SingleClickButton
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.displayText

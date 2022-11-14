@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.BuildHelper

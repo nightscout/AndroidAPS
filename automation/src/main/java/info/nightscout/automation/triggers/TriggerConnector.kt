@@ -11,7 +11,7 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
-import info.nightscout.androidaps.utils.ui.VerticalTextView
+import info.nightscout.core.ui.elements.VerticalTextView
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog
 import info.nightscout.rx.logging.LTag

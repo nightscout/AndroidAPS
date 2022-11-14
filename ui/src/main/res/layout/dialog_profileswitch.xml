@@ -69,7 +69,7 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/reusebutton"
                 style="@style/ButtonSmallFontStyle"
                 android:drawablePadding="10dp"
