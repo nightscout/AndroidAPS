@@ -7,6 +7,7 @@
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore: %1$s seguito da PIN</string>
     <string name="smscommunicator_otp_pin">PIN obbligatorio aggiuntivo a fine token</string>
     <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
+    <string name="smscommunicator_tab_otp_label">Configurazione autenticatore</string>
     <string name="smscommunicator_code_verify_label">Codice controllo:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Il codice di verifica è composto da 6 cifre visualizzate dall\'app autenticatore (note come OTP) seguite da 3 o più cifre del PIN obbligatorio.</string>
@@ -23,12 +24,48 @@
     <string name="smscommunicator_otp_reset_header">Resetta autenticatori</string>
     <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resettando l\'autenticatore rendi non validi tutti gli autenticatori già forniti. Dovrai configurarli di nuovo!</string>
+    <string name="sms_wrong_code">Codice errato. Comando cancellato.</string>
+    <string name="sms_timeout_while_waiting">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Per erogare il bolo di %1$.2fU rispondi col codice %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Per erogare il bolo pasto di %1$.2fU rispondi col codice %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Per impostare il Temp-Target %1$s rispondi con il codice %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Per cancellare il Temp-Target rispondi col codice %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Per disabilitare il servizio di controllo remoto tramite SMS rispondi col codice %1$s.\n\nRicorda che potrai riattivarlo solo in maniera diretta dallo smartphone master in cui è installato AAPS.</string>
+    <string name="smscommunicator_stopped_sms">Servizio di controllo remoto tramite SMS stoppato. Per riattivarlo, usa lo smartphone master in cui è installato AAPS.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Per inviare la calibrazione %1$.2f rispondi col codice %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolo fallito</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Numero minimo di minuti che devono trascorrere tra un bolo remoto e il successivo</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Quanti minuti devono trascorrere, almeno, tra un bolo e il successivo</string>
+    <string name="smscommunicator_remote_bolus_min_distance_caveat">Per la tua sicurezza, per modificare questa preferenza hai bisogno di aggiungere almeno 2 numeri di telefono.</string>
+    <string name="smscommunicator_bolus_delivered">Bolo di %1$.2f U erogato con successo</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bolo pasto di %1$.2f U erogato con successo</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s per %2$d minuti</string>
     <string name="smscommunicator_tt_set">Target %1$s per %2$d minuti impostato con successo</string>
     <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
+    <string name="smscommunicator_remote_commands_allowed">Consenti comandi remoti tramite SMS</string>
+    <string name="smscommunicator_loop_has_been_disabled">Il loop è stato disabilitato</string>
+    <string name="smscommunicator_loop_has_been_enabled">Il loop è stato abilitato</string>
+    <string name="smscommunicator_loop_is_enabled">Il loop è abilitato</string>
+    <string name="smscommunicator_pump_connect_with_code">Per connettere il micro rispondi col codice %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Connessione al micro fallita</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Per disconnettere il micro per %1$d minuti rispondi col codice %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Micro disconnesso</string>
     <string name="smscommunicator_reconnect">Micro riconnesso</string>
+    <string name="smscommunicator_remote_command_not_allowed">Il comando da remoto non è permesso</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Bolo remoto non disponibile. Riprova più tardi.</string>
+    <string name="smscommunicator_basal_reply_with_code">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Per passare al profilo %1$s %2$d%% rispondi col codice %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Per avviare il bolo esteso %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Per inserire %1$dg a %2$s rispondi col codice %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Per avviare la basale %1$d%% per %2$d min rispondi col codice %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Per sospendere il loop per %1$d minuti rispondi col codice %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Per riprendere il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Per abilitare il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Per disabilitare il loop rispondi col codice %1$s</string>
+    <string name="smscommunicator_tempbasal_set">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
@@ -67,12 +104,15 @@
     <string name="localprofile_shortname">PL</string>
     <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
     <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
+    <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
+    <string name="delete_current_profile">Rimuovere il profilo corrente?</string>
     <string name="units_colon">Unità:</string>
     <string name="missing_profile_name">Nome profilo mancante</string>
     <string name="error_in_ic_values">Errore nei valori IC</string>
     <string name="error_in_basal_values">Errore nei valori della basale</string>
     <string name="error_in_target_values">Errore nei valori del target</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
+    <string name="profile_name_contains_dot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
     <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
     <string name="view">Vista</string>
     <string name="errors">Errori</string>
@@ -95,6 +135,7 @@
     <string name="dst_in_24h_warning">Cambio all\'ora legale/solare in 24h o meno</string>
     <string name="dst_loop_disabled_warning">Cambio all\'ora legale/solare avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <!-- Signature verifier -->
     <!-- Version Checker -->
     <string name="old_version">versione datata</string>
@@ -103,6 +144,7 @@
     <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="completed_well_done">Completato, ben fatto!</string>
     <string name="not_completed_yet">Non ancora completato</string>
     <string name="time_elapsed">Tempo trascorso</string>
     <!-- Actions -->
