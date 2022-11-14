@@ -68,7 +68,6 @@
     <string name="openapsma_maxiob_title">OpenAPS가 주입할수 있는 최대 Basal IOB [U]</string>
     <string name="openapsma_maxiob_summary">이 값은 OpenAPS에서 Max IOB라고 부르는 값입니다\n기본값은 0으로 설정되어 있습니다. 몇일 혹은 몇주 정도 사용 후 적절한 값으로 변경할 수 있습니다.</string>
     <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
-    <string name="password_preferences_decrypt_prompt">내보낸 preferences를 가져오기 위해서는 마스터 비밀번호가 필요합니다.</string>
     <string name="preferences_export_canceled">내보내기 취소됩니다! 환경 설정을 내보내지 않았습니다!</string>
     <string name="preferences_import_canceled">가져오고 취소됩니다! 환경설정을 가져오지 않았습니다.</string>
     <string name="preferences_import_impossible">기본 설정을 가져올 수 없습니다.</string>
