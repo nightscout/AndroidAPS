@@ -29,8 +29,6 @@
     <string name="invalid">GREŠKA</string>
     <string name="login">Login</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="cancel">Otkaži</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -64,7 +62,6 @@
     <string name="autotune_run_without_autoswitch">Autotune je odradio bez promjene profila</string>
     <string name="autotune_run_with_autoswitch">Autotune je pokrenut i profil se automatski promijenio</string>
     <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
-    <string name="needconnectpermission">Aplikacija treba bluetooth dozvolu</string>
     <!-- Alerts -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
