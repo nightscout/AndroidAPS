@@ -53,4 +53,5 @@
     <string name="we_re_done">Abbiamo fatto!</string>
     <string name="silently_upload_date_note">D\'ora in poi, il tuo telefono caricherà i dati in background di tanto in tanto.</string>
     <string name="close">Chiudi</string>
+    <string name="upload_now">Carica adesso</string>
 </resources>
