@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.userEntry
+package info.nightscout.interfaces.userEntry
 
 import info.nightscout.database.entities.UserEntry
 

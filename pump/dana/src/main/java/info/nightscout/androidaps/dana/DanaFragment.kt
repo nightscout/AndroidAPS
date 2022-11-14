@@ -15,8 +15,6 @@ import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -26,6 +24,8 @@ import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.userEntry.UserEntryMapper.Action
+import info.nightscout.interfaces.userEntry.UserEntryMapper.Sources
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange

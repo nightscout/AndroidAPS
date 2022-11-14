@@ -40,10 +40,10 @@ class DexcomTirCalculatorImpl @Inject constructor(
         TableLayout(context).also { layout ->
             val tir = calculate()
             layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
-            layout.addView(tir.toRangeHeaderView(context, rh, profileFunction))
-            layout.addView(tir.toTableRowHeader(context, rh))
-            layout.addView(tir.toTableRow(context, rh))
-            layout.addView(tir.toSDView(context, rh, profileFunction))
-            layout.addView(tir.toHbA1cView(context, rh))
+            layout.addView(tir.toRangeHeaderView(context, profileFunction))
+            layout.addView(tir.toTableRowHeader(context))
+            layout.addView(tir.toTableRow(context))
+            layout.addView(tir.toSDView(context, profileFunction))
+            layout.addView(tir.toHbA1cView(context))
         }
 }
