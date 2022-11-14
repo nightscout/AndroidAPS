@@ -11,7 +11,6 @@
     <string name="stop_pump">Stoppa micro</string>
     <string name="started">Avviato</string>
     <string name="stopped">Stoppato</string>
-    <string name="paused">In pausa</string>
     <string name="operating_mode">Modalità operativa</string>
     <string name="description_pump_insight_local">Integrazione del microinfusore Accu-Chek Insight</string>
     <string name="not_inserted">Non inserito</string>
@@ -45,7 +44,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Serb.: %1$.2f U</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
-    <string name="confirm">Conferma</string>
     <string name="mute_alert">Muto</string>
     <string name="release_software_version">Versione Release software</string>
     <string name="ui_processor_software_version">Versione UI processor software</string>
