@@ -48,10 +48,6 @@
     <string name="itmustbepositivevalue">πρέπει να είναι θετική τιμή</string>
     <string name="limitingbolus">Περιορίζεται το bolus σε %1$.1f U λόγω %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Η αντλία δεν έχει ρυθμιστεί, δεν ορίστηκε προφίλ!</string>
-    <!--    Dialogs-->
-    <string name="ok">ΟΚ</string>
-    <string name="cancel">Ακύρωση</string>
-    <string name="dismiss">ΑΠΟΡΡΙΨΗ</string>
     <!--    BlePreCheck-->
     <string name="location_not_found_title">Τοποθεσία μη ενεργοποιημένη</string>
     <string name="location_not_found_message">Για την εύρεση Bluetooth σε νεότερες συσκευές, η τοποθεσία πρέπει να είναι ενεργοποιημένη. Το AAPS δεν παρακολουθεί την τοποθεσία σας και μπορεί να απενεργοποιηθεί μετά την επιτυχή σύζευξη.</string>
