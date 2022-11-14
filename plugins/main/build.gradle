@@ -49,7 +49,7 @@ dependencies {
     api 'com.scottyab:rootbeer-lib:0.1.0'
 
     //SmsCommunicator
-    api 'com.eatthepath:java-otp:0.3.1'
+    api 'com.eatthepath:java-otp:0.4.0'
     api 'com.github.kenglxn.QRGen:android:2.6.0'
 
     // Overview
