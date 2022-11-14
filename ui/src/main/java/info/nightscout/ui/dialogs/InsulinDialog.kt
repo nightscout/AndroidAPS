@@ -13,7 +13,7 @@ import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.extensions.toSignedString
+import info.nightscout.ui.extensions.toSignedString
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.pumpExtensions.insertBolusTransaction
