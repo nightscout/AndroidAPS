@@ -70,7 +70,6 @@
     <string name="openapsma_maxiob_title">Maximal basal IOB som OpenAPS kan ge [E]</string>
     <string name="openapsma_maxiob_summary">Detta värde kallas Max IOB i OpenAPS. Det är ställt till noll från start. Efter flera dagar till veckor, beroende på hur du känner, kan du välja att justera denna.</string>
     <string name="password_preferences_encrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att kryptera exporterade inställningar.</string>
-    <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
     <string name="preferences_export_canceled">Exporten avbröts. Inställningarna har INTE exporterats!</string>
     <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>
     <string name="preferences_import_impossible">Kan inte importera inställningar!</string>
