@@ -69,7 +69,6 @@
     <string name="openapsma_maxiob_title">Basal Máxima IA que OpenAPS pode administrar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Máx IA em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que a APS pode administrar de uma vez.</string>
     <string name="password_preferences_encrypt_prompt">Ser-lhe-á pedida a senha mestra, que será usada para encriptar preferências exportadas.</string>
-    <string name="password_preferences_decrypt_prompt">Ser-lhe-á pedida a senha mestra, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
     <string name="preferences_import_impossible">Não é possível importar as preferências!</string>
