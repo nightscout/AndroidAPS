@@ -2,7 +2,6 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
-    <string name="waiting_for_disconnection">A aguardar a desconexão</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
