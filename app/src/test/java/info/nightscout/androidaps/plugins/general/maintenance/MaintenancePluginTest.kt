@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
-import info.nightscout.plugins.general.maintenance.LoggerUtils
+import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

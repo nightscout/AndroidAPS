@@ -115,7 +115,6 @@
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
 
-    <string name="dia">DIA</string>
     <string name="lyumjev">Lyumjev</string>
     <string name="description_insulin_rapid">Insulin preset for Humalog and NovoRapid / NovoLog</string>
     <string name="description_insulin_ultra_rapid">Insulin preset for Fiasp</string>
@@ -124,7 +123,6 @@
     <string name="insulin_shortname">INS</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
-    <string name="insulin_peak">Peak</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
@@ -196,8 +194,6 @@
     <string name="a11y_clone_profile">clone current profile</string>
     <string name="a11y_delete_current_profile">delete current profile</string>
     <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
 
@@ -276,35 +272,20 @@
     <string name="patch_pump">Patch pump</string>
 
     <!-- Safety -->
-    <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
-    <string name="key_use_smb" translatable="false">use_smb</string>
-    <string name="key_use_uam" translatable="false">use_uam</string>
-    <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
-    <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
-    <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
-    <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
-    <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
 
     <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
     <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
 
-    <string name="maxbasalmultiplier">max basal multiplier</string>
-    <string name="maxdailybasalmultiplier">max daily basal multiplier</string>
-    <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
     <string name="safety" translatable="false">Safety</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
     <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
-    <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
-    <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
-    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
     <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
     <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
     <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
     <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
-    <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
     <string name="treatmentssafety_title">Treatments safety</string>

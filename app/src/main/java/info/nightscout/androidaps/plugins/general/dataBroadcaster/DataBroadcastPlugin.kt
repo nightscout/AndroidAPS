@@ -8,7 +8,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -72,7 +71,7 @@ class DataBroadcastPlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         disposable += rxBus
-            .toObservable(EventOpenAPSUpdateGui::class.java)
+            .toObservable(info.nightscout.plugins.aps.events.EventOpenAPSUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException)
         disposable += rxBus

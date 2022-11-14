@@ -1,5 +1,6 @@
 package info.nightscout.interfaces.profile
 
+import androidx.fragment.app.FragmentActivity
 import info.nightscout.interfaces.Constants
 import org.json.JSONArray
 
@@ -34,4 +35,9 @@ interface ProfileSource {
     val profileName: String?
     fun addProfile(p: SingleProfile)
     fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile
+
+    var currentProfileIndex: Int
+    fun currentProfile(): SingleProfile?
+    fun storeSettings(activity: FragmentActivity? = null)
+
 }

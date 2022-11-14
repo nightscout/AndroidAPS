@@ -16,7 +16,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
-import info.nightscout.plugins.utils.Percentile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -117,7 +116,7 @@ class SensitivityAAPSPlugin @Inject constructor(
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
         Arrays.sort(deviations)
-        val percentile = Percentile.percentile(deviations, 0.50)
+        val percentile = info.nightscout.plugins.aps.utils.Percentile.percentile(deviations, 0.50)
         val basalOff = percentile * (60.0 / 5.0) / sens
         val ratio = 1 + basalOff / profile.getMaxDailyBasal()
         sensResult = when {

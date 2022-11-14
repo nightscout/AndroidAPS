@@ -14,7 +14,6 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
@@ -26,6 +25,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
@@ -146,8 +146,8 @@ class IobCobOrefWorker @Inject internal constructor(
 
                 // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
                 if (i < bucketedData.size - 16) { // we need 1h of data to calculate minDeviationSlope
-                    @Suppress("UNUSED_VARIABLE") var maxDeviation = 0.0
-                    @Suppress("UNUSED_VARIABLE") var minDeviation = 999.0
+                    var maxDeviation = 0.0
+                    var minDeviation = 999.0
                     val hourAgo = bgTime + 10 * 1000 - 60 * 60 * 1000L
                     val hourAgoData = ads.getAutosensDataAtTime(hourAgo)
                     if (hourAgoData != null) {

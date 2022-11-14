@@ -9,10 +9,10 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.general.maintenance.LoggerUtils
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper

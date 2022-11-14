@@ -7,7 +7,6 @@ import dagger.Module
         InsulinModule::class,
         FoodModule::class,
         SMSCommunicatorModule::class,
-        AutotuneModule::class,
         ProfileModule::class,
         SyncModule::class,
         SourceModule::class,

@@ -4,7 +4,6 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import info.nightcout.shared.impl.di.SharedImplModule
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.combo.di.ComboModule
 import info.nightscout.androidaps.dana.di.DanaHistoryModule
@@ -24,10 +23,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
+import info.nightscout.plugins.aps.di.ApsModule
 import info.nightscout.plugins.di.PluginsModule
-import info.nightscout.plugins.di.SkinsModule
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
+import info.nightscout.shared.impl.di.SharedImplModule
 import info.nightscout.ui.di.UiModule
 import javax.inject.Singleton
 
@@ -42,7 +42,7 @@ import javax.inject.Singleton
         ReceiversModule::class,
         ServicesModule::class,
         WizardModule::class,
-        APSModule::class,
+        ApsModule::class,
         WorkflowModule::class,
         PreferencesModule::class,
         OverviewModule::class,

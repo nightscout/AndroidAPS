@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Aaps
 import info.nightscout.rx.di.RxModule
-import info.nightcout.shared.impl.di.SharedImplModule
 import info.nightscout.shared.di.SharedModule
+import info.nightscout.shared.impl.di.SharedImplModule
 
 @Suppress("unused")
 @Module(

@@ -87,9 +87,9 @@ class ProfilePlugin @Inject constructor(
     var profiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
 
     val numOfProfiles get() = profiles.size
-    var currentProfileIndex = 0
+    override var currentProfileIndex = 0
 
-    fun currentProfile(): ProfileSource.SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
+    override fun currentProfile(): ProfileSource.SingleProfile? = if (numOfProfiles > 0 && currentProfileIndex < numOfProfiles) profiles[currentProfileIndex] else null
 
     @Synchronized
     fun isValidEditState(activity: FragmentActivity?): Boolean {
@@ -174,7 +174,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun storeSettings(activity: FragmentActivity? = null) {
+    override fun storeSettings(activity: FragmentActivity?) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
                 name?.let { name ->

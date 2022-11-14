@@ -33,7 +33,6 @@ import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.floor
 
 @Singleton
 class SafetyPlugin @Inject constructor(
@@ -85,23 +84,9 @@ class SafetyPlugin @Inject constructor(
         return value
     }
 
-    override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_openapsama_useautosens, false)
-        if (!enabled) value.set(aapsLogger, false, rh.gs(R.string.autosensdisabledinpreferences), this)
-        return value
-    }
-
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_use_smb, false)
-        if (!enabled) value.set(aapsLogger, false, rh.gs(R.string.smbdisabledinpreferences), this)
         val closedLoop = constraintChecker.isClosedLoopAllowed()
         if (!closedLoop.value()) value.set(aapsLogger, false, rh.gs(R.string.smbnotallowedinopenloopmode), this)
-        return value
-    }
-
-    override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_use_uam, false)
-        if (!enabled) value.set(aapsLogger, false, rh.gs(R.string.uamdisabledinpreferences), this)
         return value
     }
 
@@ -113,22 +98,6 @@ class SafetyPlugin @Inject constructor(
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
         absoluteRate.setIfGreater(aapsLogger, 0.0, rh.gs(R.string.limitingbasalratio, 0.0, rh.gs(R.string.itmustbepositivevalue)), this)
-        if (config.APS) {
-            var maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1.0)
-            if (maxBasal < profile.getMaxDailyBasal()) {
-                maxBasal = profile.getMaxDailyBasal()
-                absoluteRate.addReason(rh.gs(R.string.increasingmaxbasal), this)
-            }
-            absoluteRate.setIfSmaller(aapsLogger, maxBasal,rh.gs(R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
-
-            // Check percentRate but absolute rate too, because we know real current basal in pump
-            val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
-            val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, rh.gs(R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.maxbasalmultiplier)), this)
-            val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
-            val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromDaily,rh.gs(R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.maxdailybasalmultiplier)), this)
-        }
         absoluteRate.setIfSmaller(aapsLogger, hardLimits.maxBasal(),rh.gs(R.string.limitingbasalratio, hardLimits.maxBasal(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         // check for pump max

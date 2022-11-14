@@ -10,9 +10,6 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
-import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
@@ -21,7 +18,6 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
@@ -32,6 +28,7 @@ import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
@@ -80,9 +77,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var danaRPlugin: DanaRPlugin
     private lateinit var danaRSPlugin: DanaRSPlugin
     private lateinit var insightPlugin: LocalInsightPlugin
-    private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
-    private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-    private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
+    private lateinit var openAPSSMBPlugin: info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+    private lateinit var openAPSAMAPlugin: info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+    private lateinit var openAPSSMBDynamicISFPlugin: info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -101,13 +98,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
         `when`(rh.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
-        `when`(rh.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences")
-        `when`(rh.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences")
+        `when`(rh.gs(R.string.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
+        `when`(rh.gs(R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
         `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        `when`(rh.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier")
-        `when`(rh.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier")
+        `when`(rh.gs(R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
+        `when`(rh.gs(R.string.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
         `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
         `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
@@ -162,7 +159,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
             )
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync)
         openAPSSMBPlugin =
-            OpenAPSSMBPlugin(
+            info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin(
                 injector,
                 aapsLogger,
                 rxBus,
@@ -180,7 +177,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 glucoseStatusProvider
             )
         openAPSSMBDynamicISFPlugin =
-            OpenAPSSMBDynamicISFPlugin(
+            info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin(
                 injector,
                 aapsLogger,
                 rxBus,
@@ -199,7 +196,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 buildHelper
             )
         openAPSAMAPlugin =
-            OpenAPSAMAPlugin(
+            info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin(
                 injector,
                 aapsLogger,
                 rxBus,
@@ -277,8 +274,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // Safety & Objectives
     @Test
     fun isAutosensModeEnabledTest() {
+        openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
-        `when`(sp.getBoolean(R.string.key_openapsama_useautosens, false)).thenReturn(false)
+        `when`(sp.getBoolean(R.string.key_openapsama_use_autosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
         Assert.assertEquals(true, c.mostLimitedReasonList.size == 2) // Safety & Objectives
@@ -306,6 +304,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // Safety & Objectives
     @Test
     fun isSMBModeEnabledTest() {
+        openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
