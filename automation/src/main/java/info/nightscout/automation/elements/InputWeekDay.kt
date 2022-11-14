@@ -4,7 +4,8 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import info.nightscout.automation.ui.WeekdayPicker
 import info.nightscout.automation.R
-import java.util.Calendar
+import java.util.*
+import kotlin.collections.ArrayList
 
 class InputWeekDay : Element() {
 
@@ -67,7 +68,7 @@ class InputWeekDay : Element() {
 
     fun isSet(timestamp: Long): Boolean {
         val scheduledDayOfWeek = Calendar.getInstance().also { it.time = Date(timestamp) }
-        return isSet(Objects.requireNonNull(DayOfWeek.fromCalendarInt(scheduledDayOfWeek[Calendar.DAY_OF_WEEK])))
+        return isSet(DayOfWeek.fromCalendarInt(scheduledDayOfWeek[Calendar.DAY_OF_WEEK]))
     }
 
     fun getSelectedDays(): List<Int> {

@@ -53,4 +53,5 @@ dependencies {
 
     // Overview
     api 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation project(path: ':automation')
 }

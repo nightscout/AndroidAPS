@@ -11,7 +11,6 @@ import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback

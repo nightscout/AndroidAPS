@@ -5,10 +5,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.interfaces.insulin.Insulin
@@ -36,9 +36,10 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.TimeZone
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 /*
  * adaptation from oref0 autotune developed by philoul on 2022 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
@@ -107,7 +108,7 @@ class AutotunePlugin @Inject constructor(
         var counter = 0
         for (i in days.getSelectedDays()) {
             if (counter++ > 0) sb.append(",")
-            sb.append(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(i)))
+            sb.append(InputWeekDay.DayOfWeek.fromCalendarInt(i))
         }
         log(sb.toString())
         tunedProfile = null
