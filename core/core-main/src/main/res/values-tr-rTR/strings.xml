@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Geçici Bazal teslimat hatası</string>
     <string name="goingtodeliver">%1$.2f Ü gönderilecek</string>
     <string name="waitingforpump">Pompa bekleniyor</string>
-    <string name="connectingfor">%1$d bağlanıyor</string>
     <string name="bolusdelivering">%1$.2f Ü gönderiliyor</string>
-    <string name="handshaking">Bağlandı</string>
     <string name="connecting">Bağlanıyor</string>
-    <string name="connected">Bağlanıldı</string>
     <string name="disconnected">Bağlantı kesildi</string>
-    <string name="disconnecting">Bağlantı kesiliyor</string>
-    <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
     <string name="format_carbs">%1$d g</string>
     <string name="base_basal_rate_label">Temel bazal oranı</string>
     <string name="extended_bolus_label">Yayma Bolus</string>
