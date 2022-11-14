@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="patch_expiration_reminders">Připomenutí expirace pumpy</string>
+    <string name="time_30min">30 min</string>
+    <string name="time_1hr">1 h</string>
+    <string name="time_1hr_30min">1 h 30 min</string>
+    <string name="time_2hr">2 h</string>
+    <string name="cancel">Zrušit</string>
+    <string name="confirm">Potvrdit</string>
+    <string name="next">Další</string>
+</resources>
