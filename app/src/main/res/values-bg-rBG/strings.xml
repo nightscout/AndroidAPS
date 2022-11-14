@@ -70,7 +70,6 @@
     <string name="openapsma_maxiob_title">Максимален IOB</string>
     <string name="openapsma_maxiob_summary">Този параметър се нарича максимален IOB в OpenAPS и подразбиране е 0. След няколко дни или седмици можете да го увеличите.</string>
     <string name="password_preferences_encrypt_prompt">Главна парола, която ще бъде използвана за криптиране на експортирани настройки.</string>
-    <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
     <string name="preferences_export_canceled">Експорт неуспешен! Настройките не са експортирани!</string>
     <string name="preferences_import_canceled">Импорт неуспешен! Настройките не са импортирани!</string>
     <string name="preferences_import_impossible">Импортирането неуспешно!</string>
