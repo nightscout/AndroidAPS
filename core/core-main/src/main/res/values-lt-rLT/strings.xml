@@ -27,7 +27,6 @@
     <string name="invalid">KLAIDA</string>
     <string name="login">Prisijungti</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -43,7 +42,6 @@
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
