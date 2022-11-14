@@ -34,7 +34,6 @@
     <string name="iob">IAB</string>
     <string name="cob">KOB</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="event_time_label">Gebeurtenis tyd</string>
     <string name="shortgramm">g</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="overview_treatment_label">Behandeling</string>
@@ -49,10 +48,6 @@
     <string name="itmustbepositivevalue">dit moet \'n positiewe waarde wees</string>
     <string name="limitingbolus">Beperk bolus %1$.1f U as gevolg van %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pomp nie geïnisialiseer, profiel nie opgestel nie!</string>
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
-    <string name="cancel">Kanselleer</string>
-    <string name="dismiss">DISMISS</string>
     <!--    BlePreCheck-->
     <string name="location_not_found_title">Location nie aan</string>
     <string name="location_not_found_message">Vir Bluetooth ontdek om te werk op nuwer toestelle, lokaliteit moet aan wees. AAPS speur nie jou lokaliteit en kan afgeskakel na paring.</string>
