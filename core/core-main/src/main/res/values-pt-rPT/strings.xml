@@ -32,8 +32,6 @@
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -69,7 +67,6 @@
     <!--    TDDStatsActivity-->
     <string name="basalrate">Basal</string>
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <string name="version_expire">Versão: %1$s criada em %2$s</string>
