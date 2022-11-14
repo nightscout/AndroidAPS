@@ -10,6 +10,6 @@ annotation class DbOpenClass
 /**
  * Annotate a class with [DbOpenForTesting] if it should be extendable for testing.
  */
-@info.nightscout.database.annotations.DbOpenClass
+@DbOpenClass
 @Target(AnnotationTarget.CLASS)
 annotation class DbOpenForTesting

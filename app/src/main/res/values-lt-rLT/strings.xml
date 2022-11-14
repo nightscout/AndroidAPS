@@ -311,7 +311,7 @@
     <string name="urgent_alarm">Kritiniai perspėjimai</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense programėlė (modifikuota)</string>
-    <string name="dexcomg5_nsupload_title">Perduoti KG duomenis į NS</string>
+    <string name="do_ns_upload_title">Perduoti KG duomenis į NS</string>
     <string name="bgsource_upload">KG duomenų perdavimo nustatymai</string>
     <string name="wear_detailed_delta_title">Rodyti gliukozės pokyčio detales</string>
     <string name="wear_detailed_delta_summary">Rodyti pokytį su reikšme po kablelio</string>
@@ -321,8 +321,8 @@
     <string name="uamsmbmaxminutes_summary">NDM SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
     <string name="carbsReqThreshold">Minimali būtinų angliavandenių priminimo riba</string>
     <string name="carbsReqThreshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nėra pranešami.</string>
-    <string name="dexcomg5_xdripupload_title">Siųsti KG duomenis į xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">Xdrip+ pasirinkite 640g/Eversense duomenų šaltinį</string>
+    <string name="do_xdrip_upload_title">Siųsti KG duomenis į xDrip+</string>
+    <string name="do_xdrip_upload_summary">Xdrip+ pasirinkite 640g/Eversense duomenų šaltinį</string>
     <string name="nsclientbg">NSClient KG</string>
     <string name="nsclientbgshort">NS KG</string>
     <string name="overview_editquickwizard_usebg">KG apskaičiavimas</string>
@@ -488,7 +488,7 @@
     <string name="loop_openmode_min_change">Minimalaus pokyčio užklausa [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <string name="profile_total">== ∑  %1$s vv</string>
-    <string name="dexcom_lognssensorchange_title">Registruoti sensoriaus keitimą NS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>

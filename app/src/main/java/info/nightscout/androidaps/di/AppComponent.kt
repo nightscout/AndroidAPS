@@ -25,6 +25,7 @@ import info.nightscout.automation.di.AutomationModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.di.PluginsModule
+import info.nightscout.plugins.di.SkinsModule
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.ui.di.UiModule
@@ -36,12 +37,10 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         AppModule::class,
         PluginsListModule::class,
-        SkinsModule::class,
         ActivitiesModule::class,
         FragmentsModule::class,
         ReceiversModule::class,
         ServicesModule::class,
-        ObjectivesModule::class,
         WizardModule::class,
         APSModule::class,
         WorkflowModule::class,

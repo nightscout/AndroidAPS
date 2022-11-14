@@ -54,4 +54,6 @@
     <string name="we_re_done">We\'re done!</string>
     <string name="silently_upload_date_note">From now on, your phone will silently upload data in the background from time to time.</string>
     <string name="close">Close</string>
+    <string name="upload_now">Upload now</string>
+
 </resources>

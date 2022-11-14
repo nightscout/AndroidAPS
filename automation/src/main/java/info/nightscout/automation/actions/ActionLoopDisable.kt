@@ -2,17 +2,17 @@ package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
                 }
             })
         } else {
-            callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.alreadydisabled)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadydisabled)).run()
         }
     }
 

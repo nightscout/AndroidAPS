@@ -13,7 +13,6 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
@@ -22,6 +21,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.events.EventCustomCalculationFinished

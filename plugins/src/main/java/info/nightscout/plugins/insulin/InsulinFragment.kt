@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.InsulinFragmentBinding
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class InsulinFragment : DaggerFragment() {

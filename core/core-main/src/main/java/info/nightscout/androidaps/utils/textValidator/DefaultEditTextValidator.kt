@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.textValidator.validators.AlphaNumericValidator
 import info.nightscout.androidaps.utils.textValidator.validators.AlphaValidator
 import info.nightscout.androidaps.utils.textValidator.validators.AndValidator
@@ -38,6 +37,7 @@ import info.nightscout.androidaps.utils.textValidator.validators.WebUrlValidator
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")

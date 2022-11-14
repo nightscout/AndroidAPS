@@ -22,7 +22,7 @@
         android:id="@+id/nav_historybrowser"
         android:orderInCategory="1"
         app:showAsAction="never"
-        android:title="@string/nav_historybrowser" />
+        android:title="@string/nav_history_browser" />
     <item
         android:id="@+id/nav_setupwizard"
         android:orderInCategory="1"
@@ -43,7 +43,7 @@
         android:id="@+id/nav_defaultprofile"
         android:orderInCategory="1"
         app:showAsAction="never"
-        android:title="@string/nav_profilehelper" />
+        android:title="@string/nav_profile_helper" />
     <group android:id="@+id/about_exit">
     <item
         android:id="@+id/nav_about"

@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.FetchAlarmTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.InternalSuspendedTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ReadBolusFinishTimeTask;
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;

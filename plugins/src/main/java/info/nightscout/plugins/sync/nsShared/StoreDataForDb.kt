@@ -5,8 +5,6 @@ import android.os.SystemClock
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.database.entities.Bolus
@@ -37,7 +35,9 @@ import info.nightscout.database.impl.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.database.impl.transactions.UserEntryTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.R
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin

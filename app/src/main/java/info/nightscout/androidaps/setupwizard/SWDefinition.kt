@@ -9,14 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -33,22 +26,30 @@ import info.nightscout.androidaps.setupwizard.elements.SWInfoText
 import info.nightscout.androidaps.setupwizard.elements.SWPlugin
 import info.nightscout.androidaps.setupwizard.elements.SWPreference
 import info.nightscout.androidaps.setupwizard.elements.SWRadioButton
-import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
+import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -439,8 +440,8 @@ class SWDefinition @Inject constructor(
             SWFragment(injector, this)
                 .add(ObjectivesFragment())
         )
-        .validator { objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted }
-        .visibility { !objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted && config.APS }
+        .validator { objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].isStarted }
+        .visibility { !objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].isStarted && config.APS }
 
     private fun swDefinitionFull() { // List all the screens here
         add(screenSetupWizard)

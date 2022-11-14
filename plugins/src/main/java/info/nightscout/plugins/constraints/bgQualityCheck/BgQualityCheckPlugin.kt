@@ -1,11 +1,11 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType

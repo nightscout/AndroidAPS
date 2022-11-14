@@ -324,7 +324,7 @@
     <string name="urgent_alarm">Dringend alarm</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense App (aangepast)</string>
-    <string name="dexcomg5_nsupload_title">Upload BG gegevens naar NS</string>
+    <string name="do_ns_upload_title">Upload BG gegevens naar NS</string>
     <string name="bgsource_upload">BG upload instellingen</string>
     <string name="wear_detailed_delta_title">Toon gedetailleerde delta</string>
     <string name="wear_detailed_delta_summary">Toon delta met een extra decimaal punt</string>
@@ -334,8 +334,8 @@
     <string name="uamsmbmaxminutes_summary">Max minuten basaal om SMB tot te limiteren voor UAM</string>
     <string name="carbsReqThreshold">Minimaal benodigde koolhydraten voor waarschuwing</string>
     <string name="carbsReqThreshold_summary">Minimum gram benodigde koolhydraten waarbij een waarschuwing wordt gegeven. Wanneer er minder koolhydraten nodig zijn dan dit getal, wordt er geen waarschuwing gegeven.</string>
-    <string name="dexcomg5_xdripupload_title">Stuur BG data naar xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">In xDrip+ kies 640g/Eversense data bron</string>
+    <string name="do_xdrip_upload_title">Stuur BG data naar xDrip+</string>
+    <string name="do_xdrip_upload_summary">In xDrip+ kies 640g/Eversense data bron</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">BG berekening</string>
@@ -515,8 +515,8 @@
     <string name="loop_openmode_min_change">Minimale verzoek voor aanpassing [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
-    <string name="dexcom_lognssensorchange_title">Noteer sensor wissel in NS</string>
-    <string name="dexcom_lognssensorchange_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
+    <string name="dexcom_log_ns_sensor_change_title">Noteer sensor wissel in NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>

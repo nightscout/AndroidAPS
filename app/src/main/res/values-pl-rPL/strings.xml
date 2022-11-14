@@ -312,7 +312,7 @@
     <string name="urgent_alarm">Pilny alarm</string>
     <string name="info">INFO</string>
     <string name="eversense">Apka Eversense (spatchowana)</string>
-    <string name="dexcomg5_nsupload_title">Przekaż dane BG do NS</string>
+    <string name="do_ns_upload_title">Przekaż dane BG do NS</string>
     <string name="bgsource_upload">Ustawienia wysyłania wartości BG (poziomów cukru)</string>
     <string name="wear_detailed_delta_title">Pokaż szczegółowe delta</string>
     <string name="wear_detailed_delta_summary">Pokaż deltę z jednym więcej miejscem dziesiętnym</string>
@@ -322,8 +322,8 @@
     <string name="uamsmbmaxminutes_summary">Maks. ilość minut dawki bazowej do ograniczenia SMB dla UAM</string>
     <string name="carbsReqThreshold">Minimalna sugestia węglowodanów (dosłodzenia)</string>
     <string name="carbsReqThreshold_summary">Minimalna ilość węglowodanów, w gramach, niezbędna dla pokazania sugestii dosłodzenia. Sugestie dosłodzenia poniżej tej wartości będą ignorowane - powiadomienie nie będzie pokazywane.</string>
-    <string name="dexcomg5_xdripupload_title">Prześlij dane BG do xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
+    <string name="do_xdrip_upload_title">Prześlij dane BG do xDrip+</string>
+    <string name="do_xdrip_upload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
     <string name="nsclientbg">NSClient BG</string>
     <string name="nsclientbgshort">NS BG</string>
     <string name="overview_editquickwizard_usebg">Obliczenia BG</string>
@@ -490,7 +490,7 @@
     <string name="loop_openmode_min_change">Minimalna żądana zmiana [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
     <string name="profile_total">== ∑ %1$s U</string>
-    <string name="dexcom_lognssensorchange_title">Prześlij zmianę sensora do NS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Prześlij zmianę sensora do NS</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Twoja nazwa użytkownika Tidepool, zwykle Twój adres e-mail</string>

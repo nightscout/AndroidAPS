@@ -6,7 +6,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.putDouble
 import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.extensions.putString
@@ -29,6 +28,7 @@ import info.nightscout.plugins.general.overview.notifications.NotificationWithAc
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -50,7 +50,8 @@ class OverviewPlugin @Inject constructor(
     rh: ResourceHelper,
     private val config: Config,
     private val overviewData: OverviewData,
-    private val overviewMenus: OverviewMenus
+    private val overviewMenus: OverviewMenus,
+    private val context: Context
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -68,12 +69,6 @@ class OverviewPlugin @Inject constructor(
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
-
-    @FunctionalInterface
-    interface RunnableWithContext : Runnable {
-
-        var context: Context?
-    }
 
     override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String) {
         rxBus.send(
@@ -131,7 +126,7 @@ class OverviewPlugin @Inject constructor(
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           overviewData.pumpStatus = it.getStatus(rh)
+                           overviewData.pumpStatus = it.getStatus(context)
                        }, fabricPrivacy::logException)
 
     }

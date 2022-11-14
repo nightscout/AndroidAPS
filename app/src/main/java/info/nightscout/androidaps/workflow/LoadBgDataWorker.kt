@@ -5,12 +5,13 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.utils.DateUtil
+import loadBgData
 import javax.inject.Inject
 
 class LoadBgDataWorker(

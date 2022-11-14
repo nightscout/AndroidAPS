@@ -3,8 +3,8 @@ package info.nightscout.plugins.sync.tidepool.comm
 import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolStatus
 import info.nightscout.plugins.sync.tidepool.messages.AuthReplyMessage

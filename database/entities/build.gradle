@@ -7,11 +7,14 @@ plugins {
 }
 
 apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
 
 android {
 
     namespace 'info.nightscout.database.entities'
+
+    buildFeatures {
+        buildConfig = false
+    }
 }
 
 dependencies {
@@ -26,5 +29,5 @@ dependencies {
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.androidaps.annotations.DbOpenForTesting'
+    annotation 'info.nightscout.database.annotations.DbOpenForTesting'
 }

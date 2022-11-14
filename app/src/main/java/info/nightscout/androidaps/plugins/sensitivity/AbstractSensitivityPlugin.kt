@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Sensitivity
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
+import info.nightscout.interfaces.aps.AutosensDataStore
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.aps.Sensitivity
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.utils.Round
@@ -47,7 +47,7 @@ abstract class AbstractSensitivityPlugin(
         //If not-excluded data >= MIN_HOURS_FULL_AUTOSENS -> full Autosens
         //Between MIN_HOURS and MIN_HOURS_FULL_AUTOSENS: gradually increase autosens
         val autosensContrib = (min(max(Sensitivity.MIN_HOURS, deviationsArraySize / 12.0),
-            Sensitivity.MIN_HOURS_FULL_AUTOSENS) - Sensitivity.MIN_HOURS) / (Sensitivity.MIN_HOURS_FULL_AUTOSENS - Sensitivity.MIN_HOURS)
+                                   Sensitivity.MIN_HOURS_FULL_AUTOSENS) - Sensitivity.MIN_HOURS) / (Sensitivity.MIN_HOURS_FULL_AUTOSENS - Sensitivity.MIN_HOURS)
         ratio = autosensContrib * (ratio - 1) + 1
         if (autosensContrib != 1.0) {
             ratioLimit += "(" + deviationsArraySize + " of " + Sensitivity.MIN_HOURS_FULL_AUTOSENS * 12 + " values) "

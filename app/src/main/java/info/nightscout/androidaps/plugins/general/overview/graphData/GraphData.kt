@@ -9,9 +9,6 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.BolusDataPoint
@@ -20,9 +17,12 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Effec
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max

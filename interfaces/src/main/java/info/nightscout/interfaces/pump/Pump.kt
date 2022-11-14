@@ -284,4 +284,8 @@ interface Pump {
      * Pumps with a hardware link can set via config "Battery Change Logging"
      */
     fun isBatteryChangeLoggingEnabled(): Boolean = false
+    /**
+     * Pumps is connect via RileyLink
+     */
+    fun isUseRileyLinkBatteryLevel(): Boolean = false
 }

@@ -296,7 +296,7 @@
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="dexcomg5_nsupload_title">Enviar dados Glic. para NS</string>
+    <string name="do_ns_upload_title">Enviar dados Glic. para NS</string>
     <string name="bgsource_upload">Configurações de upload de BG</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
@@ -305,8 +305,8 @@
     <string name="uamsmbmaxminutes">UAM SMB máx minutos</string>
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
     <string name="carbsReqThreshold">Limite mínimo de carboidratos necessários para sugerir</string>
-    <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
+    <string name="do_xdrip_upload_title">Enviar dados Glic. para xDrip+</string>
+    <string name="do_xdrip_upload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glic NSCliente</string>
     <string name="overview_editquickwizard_usebg">Cálculos Glic</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo de Bólus IOB</string>
@@ -460,7 +460,7 @@
     <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registar mudança de sensor para NS</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>

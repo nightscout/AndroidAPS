@@ -4,8 +4,8 @@ import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.HardLimits

@@ -13,15 +13,15 @@ import android.widget.ScrollView
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginFragment
+import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.NsClientFragmentBinding

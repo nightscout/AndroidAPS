@@ -4,36 +4,36 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpPluginBase
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpPluginBase
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.plugins.R
+import info.nightscout.plugins.extensions.toText
 import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -112,7 +112,7 @@ open class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh, R.string.key_virtualpump_type)) refreshConfiguration() }, fabricPrivacy::logException)
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh.gs(R.string.key_virtualpump_type))) refreshConfiguration() }, fabricPrivacy::logException)
         refreshConfiguration()
     }
 
@@ -133,7 +133,7 @@ open class VirtualPumpPlugin @Inject constructor(
     override var fakeDataDetected = false
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
-        return PumpEnactResultImpl(injector)
+        return PumpEnactResult(injector)
     }
 
     override fun isInitialized(): Boolean = true
@@ -158,7 +158,7 @@ open class VirtualPumpPlugin @Inject constructor(
         lastDataTime = System.currentTimeMillis()
         rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
         // Do nothing here. we are using database profile
-        return PumpEnactResultImpl(injector).success(true).enacted(true)
+        return PumpEnactResult(injector).success(true).enacted(true)
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) ?: false
@@ -175,7 +175,7 @@ open class VirtualPumpPlugin @Inject constructor(
         get() = batteryPercent
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
             .success(true)
             .bolusDelivered(detailedBolusInfo.insulin)
             .carbsDelivered(detailedBolusInfo.carbs)
@@ -191,7 +191,7 @@ open class VirtualPumpPlugin @Inject constructor(
             rxBus.send(bolusingEvent)
             delivering += 0.1
             if (BolusProgressDialog.stopPressed)
-                return PumpEnactResultImpl(injector)
+                return PumpEnactResult(injector)
                     .success(false)
                     .enacted(false)
                     .comment(rh.gs(R.string.stoppressed))
@@ -226,7 +226,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.isTempCancel = false
@@ -243,14 +243,14 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.percent = percent
@@ -268,7 +268,7 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
@@ -292,14 +292,14 @@ open class VirtualPumpPlugin @Inject constructor(
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
-        aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Setting extended bolus: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
         result.comment = rh.gs(R.string.virtualpump_resultok)
@@ -311,7 +311,7 @@ open class VirtualPumpPlugin @Inject constructor(
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
                 pumpSerial = serialNumber()
             )
-            aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText()}")
+            aapsLogger.debug(LTag.PUMP, "Canceling temp basal: ${result.toText(rh)}")
             rxBus.send(EventVirtualPumpUpdateGui())
         }
         lastDataTime = System.currentTimeMillis()
@@ -319,7 +319,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
         if (pumpSync.expectedPumpState().extendedBolus != null) {
             pumpSync.syncStopExtendedBolusWithPumpId(
                 timestamp = dateUtil.now(),
@@ -332,7 +332,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.enacted = true
         result.isTempCancel = true
         result.comment = rh.gs(R.string.virtualpump_resultok)
-        aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText()}")
+        aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         return result

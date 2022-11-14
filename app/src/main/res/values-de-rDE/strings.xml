@@ -318,7 +318,7 @@
     <string name="urgent_alarm">Wichtiger Alarm</string>
     <string name="info">INFO</string>
     <string name="eversense">Eversense App (gepatcht)</string>
-    <string name="dexcomg5_nsupload_title">Speichere BZ-Werte in Nightscout</string>
+    <string name="do_ns_upload_title">Speichere BZ-Werte in Nightscout</string>
     <string name="bgsource_upload">BZ Upload Einstellungen</string>
     <string name="wear_detailed_delta_title">Zeige detailliertes Delta</string>
     <string name="wear_detailed_delta_summary">Delta wird mit Dezimalstelle angezeigt.</string>
@@ -328,8 +328,8 @@
     <string name="uamsmbmaxminutes_summary">SMB Basal-Limit in Minuten für UAM</string>
     <string name="carbsReqThreshold">Minimale KH-Menge, die für einen Vorschlag erforderlich ist</string>
     <string name="carbsReqThreshold_summary">Minimale KH-Menge in Gramm, die Vorschlags-Alarm erforderlich ist. Vorschläge unterhalb dieser Menge, lösen keine Benachrichtigung aus.</string>
-    <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
+    <string name="do_xdrip_upload_title">Sende BZ-Werte zu xDrip+</string>
+    <string name="do_xdrip_upload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
     <string name="nsclientbg">Nightscout-Client BZ</string>
     <string name="nsclientbgshort">NS BZ</string>
     <string name="overview_editquickwizard_usebg">BZ Berechnung</string>
@@ -506,7 +506,7 @@ Unerwartetes Verhalten.</string>
     <string name="loop_openmode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="profile_total">== ∑  %1$s IE</string>
-    <string name="dexcom_lognssensorchange_title">Speichere Sensor Wechsel in Nightscout</string>
+    <string name="dexcom_log_ns_sensor_change_title">Speichere Sensor Wechsel in Nightscout</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>

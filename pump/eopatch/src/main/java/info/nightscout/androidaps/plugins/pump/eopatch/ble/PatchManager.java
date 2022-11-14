@@ -8,10 +8,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.pump.eopatch.R;
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
@@ -41,12 +37,16 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
+import info.nightscout.interfaces.plugin.ActivePlugin;
+import info.nightscout.interfaces.profile.ProfileFunction;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventCustomActionsChanged;
+import info.nightscout.rx.events.EventPumpStatusChanged;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.shared.interfaces.ResourceHelper;
@@ -82,40 +82,41 @@ public class PatchManager implements IPatchManager {
     private Disposable mConnectingDisposable = null;
 
     @Inject
-    public PatchManager() {}
+    public PatchManager() {
+    }
 
     @Inject
     void onInit() {
         patchScanner = new PatchScanner(context);
 
         mCompositeDisposable.add(observePatchConnectionState()
-             .subscribe(bleConnectionState ->  {
-                 switch (bleConnectionState) {
-                     case DISCONNECTED:
-                         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
-                         rxBus.send(new EventRefreshOverview("Eopatch connection state: " + bleConnectionState.name(), true));
-                         rxBus.send(new EventCustomActionsChanged());
-                         stopObservingConnection();
-                     break;
+                .subscribe(bleConnectionState -> {
+                    switch (bleConnectionState) {
+                        case DISCONNECTED:
+                            rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
+                            rxBus.send(new EventRefreshOverview("Eopatch connection state: " + bleConnectionState.name(), true));
+                            rxBus.send(new EventCustomActionsChanged());
+                            stopObservingConnection();
+                            break;
 
-                     case CONNECTED:
-                         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
-                         rxBus.send(new EventRefreshOverview("Eopatch connection state: " + bleConnectionState.name(), true));
-                         rxBus.send(new EventCustomActionsChanged());
-                         stopObservingConnection();
-                     break;
+                        case CONNECTED:
+                            rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
+                            rxBus.send(new EventRefreshOverview("Eopatch connection state: " + bleConnectionState.name(), true));
+                            rxBus.send(new EventCustomActionsChanged());
+                            stopObservingConnection();
+                            break;
 
-                     case CONNECTING:
-                         mConnectingDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
-                             .observeOn(aapsSchedulers.getMain())
-                             .takeUntil(n -> getPatchConnectionState().isConnected() || n > 10 * 60)
-                             .subscribe(n -> rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, n.intValue())));
-                     break;
+                        case CONNECTING:
+                            mConnectingDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
+                                    .observeOn(aapsSchedulers.getMain())
+                                    .takeUntil(n -> getPatchConnectionState().isConnected() || n > 10 * 60)
+                                    .subscribe(n -> rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, n.intValue())));
+                            break;
 
-                     default:
-                         stopObservingConnection();
-                 }
-             })
+                        default:
+                            stopObservingConnection();
+                    }
+                })
         );
         mCompositeDisposable.add(rxBus
                 .toObservable(EventPatchActivationNotComplete.class)
@@ -137,8 +138,8 @@ public class PatchManager implements IPatchManager {
         setConnection();
     }
 
-    private void stopObservingConnection(){
-        if(mConnectingDisposable != null) {
+    private void stopObservingConnection() {
+        if (mConnectingDisposable != null) {
             mConnectingDisposable.dispose();
             mConnectingDisposable = null;
         }
@@ -216,7 +217,7 @@ public class PatchManager implements IPatchManager {
 
     @Override
     public void setConnection() {
-        if(pm.getPatchConfig().hasMacAddress()){
+        if (pm.getPatchConfig().hasMacAddress()) {
             patchManager.updateMacAddress(pm.getPatchConfig().getMacAddress(), false);
         }
     }
@@ -256,24 +257,26 @@ public class PatchManager implements IPatchManager {
     public Single<Boolean> patchActivation(long timeout) {
         return patchManager.patchActivation(timeout)
                 .doOnSuccess(success -> {
-//                    if (success) {
-//                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-//                                getPatchConfig().getPatchWakeupTimestamp(),
-//                                DetailedBolusInfo.EventType.CANNULA_CHANGE,
-//                                null,
-//                                null,
-//                                PumpType.EOFLOW_EOPATCH2,
-//                                getPatchConfig().getPatchSerialNumber()
-//                        );
-//                        pumpSync.insertTherapyEventIfNewWithTimestamp(
-//                                getPatchConfig().getPatchWakeupTimestamp(),
-//                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
-//                                null,
-//                                null,
-//                                PumpType.EOFLOW_EOPATCH2,
-//                                getPatchConfig().getPatchSerialNumber()
-//                        );
-//                    }
+                    if (success) {
+                        pumpSync.connectNewPump(true);
+                        Thread.sleep(1000);
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                System.currentTimeMillis(),
+                                DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                                null,
+                                null,
+                                PumpType.EOFLOW_EOPATCH2,
+                                getPatchConfig().getPatchSerialNumber()
+                        );
+                        pumpSync.insertTherapyEventIfNewWithTimestamp(
+                                System.currentTimeMillis(),
+                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                                null,
+                                null,
+                                PumpType.EOFLOW_EOPATCH2,
+                                getPatchConfig().getPatchSerialNumber()
+                        );
+                    }
                 });
     }
 
@@ -328,7 +331,7 @@ public class PatchManager implements IPatchManager {
     }
 
 
-    public Single<ComboBolusStopResponse> stopComboBolus(){
+    public Single<ComboBolusStopResponse> stopComboBolus() {
         return patchManager.stopComboBolus();
     }
 
@@ -363,7 +366,7 @@ public class PatchManager implements IPatchManager {
     public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
         DetailedBolusInfo detailedBolusInfo = originalDetailedBolusInfo.copy();
 
-        if(detailedBolusInfo.insulin > 0) {
+        if (detailedBolusInfo.insulin > 0) {
             pumpSync.syncBolusWithPumpId(
                     detailedBolusInfo.timestamp,
                     detailedBolusInfo.insulin,
@@ -387,7 +390,7 @@ public class PatchManager implements IPatchManager {
     @Override
     public void changeBuzzerSetting() {
         boolean buzzer = sp.getBoolean(SettingKeys.Companion.getBUZZER_REMINDERS(), false);
-        if(pm.getPatchConfig().getInfoReminder() != buzzer) {
+        if (pm.getPatchConfig().getInfoReminder() != buzzer) {
             if (isActivated()) {
                 mCompositeDisposable.add(infoReminderSet(buzzer)
                         .observeOn(aapsSchedulers.getMain())
@@ -407,23 +410,23 @@ public class PatchManager implements IPatchManager {
         int doseUnit = sp.getInt(SettingKeys.Companion.getLOW_RESERVOIR_REMINDERS(), 0);
         int hours = sp.getInt(SettingKeys.Companion.getEXPIRATION_REMINDERS(), 0);
         PatchConfig pc = pm.getPatchConfig();
-        if(pc.getLowReservoirAlertAmount() != doseUnit || pc.getPatchExpireAlertTime() != hours) {
+        if (pc.getLowReservoirAlertAmount() != doseUnit || pc.getPatchExpireAlertTime() != hours) {
             if (isActivated()) {
                 mCompositeDisposable.add(setLowReservoir(doseUnit, hours)
-                    .observeOn(aapsSchedulers.getMain())
-                    .doOnSubscribe(disposable -> {
-                        if(pc.getPatchExpireAlertTime() != hours){
-                            Maybe.just(AlarmCode.B000)
-                                .flatMap(alarmCode -> alarmRegistry.remove(alarmCode))
-                                .flatMap(alarmCode -> alarmRegistry.add(alarmCode, (pc.getExpireTimestamp() - System.currentTimeMillis() - TimeUnit.HOURS.toMillis(hours)), false))
-                                .subscribe();
-                        }
-                    })
-                    .subscribe(patchBooleanResponse -> {
-                        pc.setLowReservoirAlertAmount(doseUnit);
-                        pc.setPatchExpireAlertTime(hours);
-                        pm.flushPatchConfig();
-                    }));
+                        .observeOn(aapsSchedulers.getMain())
+                        .doOnSubscribe(disposable -> {
+                            if (pc.getPatchExpireAlertTime() != hours) {
+                                Maybe.just(AlarmCode.B000)
+                                        .flatMap(alarmCode -> alarmRegistry.remove(alarmCode))
+                                        .flatMap(alarmCode -> alarmRegistry.add(alarmCode, (pc.getExpireTimestamp() - System.currentTimeMillis() - TimeUnit.HOURS.toMillis(hours)), false))
+                                        .subscribe();
+                            }
+                        })
+                        .subscribe(patchBooleanResponse -> {
+                            pc.setLowReservoirAlertAmount(doseUnit);
+                            pc.setPatchExpireAlertTime(hours);
+                            pm.flushPatchConfig();
+                        }));
             } else {
                 pc.setLowReservoirAlertAmount(doseUnit);
                 pc.setPatchExpireAlertTime(hours);
@@ -433,8 +436,8 @@ public class PatchManager implements IPatchManager {
     }
 
     @Override
-    public void checkActivationProcess(){
-        if(getPatchConfig().getLifecycleEvent().isSubStepRunning()
+    public void checkActivationProcess() {
+        if (getPatchConfig().getLifecycleEvent().isSubStepRunning()
                 && !pm.getAlarms().isOccurring(AlarmCode.A005)
                 && !pm.getAlarms().isOccurring(AlarmCode.A020)) {
             rxAction.runOnMainThread(() -> rxBus.send(new EventPatchActivationNotComplete()));

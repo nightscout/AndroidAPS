@@ -16,8 +16,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.receivers.DataWorkerStorage
@@ -26,6 +24,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
@@ -56,6 +55,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventConfigBuilderChange
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
@@ -142,9 +142,9 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
-                           if (event.isChanged(rh, R.string.key_nsclientinternal_url) ||
-                               event.isChanged(rh, R.string.key_nsclientinternal_api_secret) ||
-                               event.isChanged(rh, R.string.key_ns_client_paused)
+                           if (event.isChanged(rh.gs(R.string.key_nsclientinternal_url)) ||
+                               event.isChanged(rh.gs(R.string.key_nsclientinternal_api_secret)) ||
+                               event.isChanged(rh.gs(R.string.key_ns_client_paused))
                            ) {
                                latestDateInReceivedData = 0
                                destroy()

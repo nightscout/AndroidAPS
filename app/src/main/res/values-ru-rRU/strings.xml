@@ -324,7 +324,7 @@
     <string name="urgent_alarm">Сигнал тревоги</string>
     <string name="info">ИНФОРМАЦИЯ</string>
     <string name="eversense">Приложение Eversense (пропатченное)</string>
-    <string name="dexcomg5_nsupload_title">Загрузить данные СК в Nightscout</string>
+    <string name="do_ns_upload_title">Загрузить данные СК в Nightscout</string>
     <string name="bgsource_upload">Параметры загрузки СК</string>
     <string name="wear_detailed_delta_title">Показать подробно дельту</string>
     <string name="wear_detailed_delta_summary">Показать дельту еще с одним десятичным знаком</string>
@@ -334,8 +334,8 @@
     <string name="uamsmbmaxminutes_summary">Максимум минут базала ограничивающего микроболюсы SMB на непредвиденный прием пищи UAM</string>
     <string name="carbsReqThreshold">Минимальный порог для напоминания о необходимых углеводах</string>
     <string name="carbsReqThreshold_summary">Минимум граммов для активации предложения углеводов. Предложения ниже этой величины не будут инициировать уведомление.</string>
-    <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
+    <string name="do_xdrip_upload_title">Отправить данные СК на xDrip+</string>
+    <string name="do_xdrip_upload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
     <string name="nsclientbg">СК с клиента Nightscout</string>
     <string name="nsclientbgshort">ГК с NS </string>
     <string name="overview_editquickwizard_usebg">Вычисление СК</string>
@@ -515,8 +515,8 @@
     <string name="loop_openmode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
     <string name="profile_total">== ∑  %1$s ед</string>
-    <string name="dexcom_lognssensorchange_title">Внести замену сенсора в лог NS</string>
-    <string name="dexcom_lognssensorchange_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
+    <string name="dexcom_log_ns_sensor_change_title">Внести замену сенсора в лог NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="summary_tidepool_username">Имя пользователя Tidepool, обычно ваш адрес электронной почты</string>

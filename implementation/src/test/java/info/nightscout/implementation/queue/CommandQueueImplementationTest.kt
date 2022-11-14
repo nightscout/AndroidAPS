@@ -6,11 +6,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.impl.AppRepository
@@ -25,9 +20,14 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
@@ -105,8 +105,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             if (it is CommandLoadHistory) {
                 it.activePlugin = activePlugin
             }
-            if (it is PumpEnactResultImpl) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
@@ -255,7 +255,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertEquals(2, commandQueue.size())
 
         // when
-        commandQueue.cancelAllBoluses(anyLong())
+        commandQueue.cancelAllBoluses(null)
 
         // then
         Assert.assertEquals(0, commandQueue.size())

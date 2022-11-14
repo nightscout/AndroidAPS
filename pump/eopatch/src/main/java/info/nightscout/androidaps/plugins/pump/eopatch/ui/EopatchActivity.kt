@@ -278,7 +278,6 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                     this@EopatchActivity.finish()
                 }
                 start()
-                return
             }
         }
 

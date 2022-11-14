@@ -1,5 +1,6 @@
 package info.nightscout.database.impl
 
+import info.nightscout.database.annotations.DbOpenForTesting
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -31,7 +32,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@info.nightscout.database.annotations.DbOpenForTesting
+@DbOpenForTesting
 @Singleton class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
 ) {

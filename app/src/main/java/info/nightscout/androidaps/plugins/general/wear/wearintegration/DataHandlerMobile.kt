@@ -4,19 +4,11 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.dialogs.InsulinDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -25,14 +17,15 @@ import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.wizard.BolusWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.core.wizard.QuickWizard
+import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
@@ -48,12 +41,19 @@ import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporar
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -66,6 +66,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.InsulinDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
@@ -540,7 +541,7 @@ class DataHandlerMobile @Inject constructor(
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-        var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
+        var message = rh.gs(R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
@@ -554,7 +555,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
-        var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
+        var message = rh.gs(R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
@@ -995,7 +996,7 @@ class DataHandlerMobile @Inject constructor(
             ret += if (!result.isChangeRequested) {
                 rh.gs(R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
-                rh.gs(R.string.canceltemp) + "\n"
+                rh.gs(R.string.cancel_temp) + "\n"
             } else {
                 rh.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
                     "(" + DecimalFormatter.to2Decimal(result.rate / activePlugin.activePump.baseBasalRate * 100) + "%)\n" +

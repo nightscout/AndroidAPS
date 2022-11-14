@@ -1,18 +1,19 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.interfaces.APS
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BgSource
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Sensitivity
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.aps.APS
+import info.nightscout.interfaces.aps.Sensitivity
+import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.constraints.Safety
 import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.rx.logging.AAPSLogger
@@ -187,6 +188,8 @@ class PluginStore @Inject constructor(
 
     override val activeIobCobCalculator: IobCobCalculator
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
+    override val activeObjectives: Objectives?
+        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives
 
     override val activeNsClient: NsClient?
         get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?

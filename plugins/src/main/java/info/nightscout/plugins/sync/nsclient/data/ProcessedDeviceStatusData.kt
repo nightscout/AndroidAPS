@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.Round
@@ -158,8 +158,8 @@ class ProcessedDeviceStatusData @Inject constructor(
     val openApsTimestamp: Long
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
-    fun getAPSResult(injector: HasAndroidInjector): APSResult {
-        val result = APSResult(injector)
+    fun getAPSResult(injector: HasAndroidInjector): APSResultObject {
+        val result = APSResultObject(injector)
         result.json = openAPSData.suggested
         result.date = openAPSData.clockSuggested
         return result

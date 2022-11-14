@@ -33,14 +33,8 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.ProfileHelperActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
@@ -56,8 +50,12 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -65,9 +63,11 @@ import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.activities.ProfileHelperActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.TreatmentsActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -204,8 +204,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(rh, R.string.key_keep_screen_on)) setWakeLock()
-        if (ev.isChanged(rh, R.string.key_skin)) recreate()
+        if (ev.isChanged(rh.gs(R.string.key_keep_screen_on))) setWakeLock()
+        if (ev.isChanged(rh.gs(R.string.key_skin))) recreate()
     }
 
     private fun setupViews() {

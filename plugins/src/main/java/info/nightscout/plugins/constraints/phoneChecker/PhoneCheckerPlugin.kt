@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import com.scottyab.rootbeer.RootBeer
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Constraints
+import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.ui.widget.WidgetConfigureActivity
-import info.nightscout.androidaps.skins.SkinListPreference
+import info.nightscout.plugins.skins.SkinListPreference
 import info.nightscout.ui.widget.Widget
 
 @Module

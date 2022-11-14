@@ -13,17 +13,17 @@ import info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity
 import info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivity
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8FragmentBinding
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
-import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.rx.events.EventTempBasalChange
 import info.nightscout.rx.logging.AAPSLogger
@@ -128,8 +128,8 @@ class DiaconnG8Fragment : DaggerFragment() {
 
                                else                                       -> {}
                            }
-                           if (it.getStatus(rh) != "") {
-                               binding.diaconnG8Pumpstatus.text = it.getStatus(rh)
+                           if (it.getStatus(requireContext()) != "") {
+                               binding.diaconnG8Pumpstatus.text = it.getStatus(requireContext())
                                binding.diaconnG8Pumpstatuslayout.visibility = View.VISIBLE
                            } else {
                                binding.diaconnG8Pumpstatuslayout.visibility = View.GONE

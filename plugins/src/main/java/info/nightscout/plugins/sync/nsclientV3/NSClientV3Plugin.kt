@@ -12,7 +12,6 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.BuildHelper
@@ -41,6 +40,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.NSAndroidClientImpl
@@ -146,7 +146,7 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
                            if (event.version == NsClient.Version.V3) {
-                               status = event.getStatus(rh)
+                               status = event.getStatus(context)
                                rxBus.send(EventNSClientUpdateGUI())
                            }
                        }, fabricPrivacy::logException)
@@ -237,7 +237,7 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun pause(newState: Boolean) {
         sp.putBoolean(R.string.key_ns_client_paused, newState)
-        rxBus.send(EventPreferenceChange(rh, R.string.key_ns_client_paused))
+        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
     }
 
     override val version: NsClient.Version

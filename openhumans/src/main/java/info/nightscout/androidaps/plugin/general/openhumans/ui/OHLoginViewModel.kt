@@ -3,14 +3,14 @@ package info.nightscout.androidaps.plugin.general.openhumans.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploader
+import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 internal class OHLoginViewModel @Inject constructor(
-    private val plugin: OpenHumansUploader
+    private val plugin: OpenHumansUploaderPlugin
 ) : ViewModel(), CoroutineScope by MainScope() {
 
     private val _state = MutableLiveData(State.WELCOME)

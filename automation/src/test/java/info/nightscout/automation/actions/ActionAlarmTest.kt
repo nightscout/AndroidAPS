@@ -4,15 +4,15 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -40,16 +40,16 @@ class ActionAlarmTest : TestBase() {
                 it.dateUtil = dateUtil
                 it.config = config
             }
-            if (it is PumpEnactResultImpl) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
-        `when`(rh.gs(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
+        `when`(context.getString(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(context.getString(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
 
         sut = ActionAlarm(injector)

@@ -5,14 +5,14 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolus

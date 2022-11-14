@@ -315,7 +315,7 @@
     <string name="urgent_alarm">Спешна аларма</string>
     <string name="info">ИНФО</string>
     <string name="eversense">Eversense приложение(модифицирано)</string>
-    <string name="dexcomg5_nsupload_title">Качвай данните за КЗ в NS</string>
+    <string name="do_ns_upload_title">Качвай данните за КЗ в NS</string>
     <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
@@ -325,8 +325,8 @@
     <string name="uamsmbmaxminutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
     <string name="carbsReqThreshold">Минимум въглехидрати, необходими за аларма</string>
     <string name="carbsReqThreshold_summary">Грама въглехидрати минимум, за да се покаже аларма. Нужни въглехидрати под това число няма да доведат до уведомяване.</string>
-    <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
+    <string name="do_xdrip_upload_title">Изпращай данни за КЗ към xDrip+</string>
+    <string name="do_xdrip_upload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
     <string name="nsclientbg">КЗ от NS</string>
     <string name="nsclientbgshort">NS КЗ</string>
     <string name="overview_editquickwizard_usebg">Калкулиране на КЗ</string>
@@ -495,7 +495,7 @@
     <string name="loop_openmode_min_change">Минимална стойност за промяна [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <string name="profile_total">Общо  %1$s Е</string>
-    <string name="dexcom_lognssensorchange_title">Записвай смяната на сензор в NS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Записвай смяната на сензор в NS</string>
     <string name="tomato">Tomato(MяоМяо)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>

@@ -2,6 +2,7 @@ package info.nightscout.interfaces.ui
 
 import android.content.Context
 import androidx.annotation.RawRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 
 /**
@@ -12,6 +13,7 @@ interface ActivityNames {
 
     val mainActivityClass: Class<*>
     val tddStatsActivity: Class<*>
+    val historyBrowseActivity: Class<*>
     val errorHelperActivity: Class<*>
     val bolusProgressHelperActivity: Class<*>
     val singleFragmentActivity: Class<*>
@@ -25,5 +27,28 @@ interface ActivityNames {
      */
     fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int = 0)
     fun runWizard(fragmentManager: FragmentManager, carbs: Int, name: String)
-    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?)
+    fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String? = null)
+    fun runTempBasalDialog(fragmentManager: FragmentManager)
+    fun runTempTargetDialog(fragmentManager: FragmentManager)
+    fun runExtendedBolusDialog(fragmentManager: FragmentManager)
+    fun runFillDialog(fragmentManager: FragmentManager)
+
+    enum class Mode(val i: Int) {
+        RUNNING_PROFILE(1),
+        CUSTOM_PROFILE(2),
+        DB_PROFILE(3),
+        PROFILE_COMPARE(4)
+    }
+    fun runProfileViewerDialog(fragmentManager: FragmentManager, time: Long, mode: Mode, customProfile: String?= null, customProfileName: String? = null, customProfile2: String? = null)
+    enum class EventType {
+        BGCHECK,
+        SENSOR_INSERT,
+        BATTERY_CHANGE,
+        NOTE,
+        EXERCISE,
+        QUESTION,
+        ANNOUNCEMENT
+    }
+
+    fun runCareDialog(fragmentManager: FragmentManager, options: EventType, @StringRes event: Int)
 }

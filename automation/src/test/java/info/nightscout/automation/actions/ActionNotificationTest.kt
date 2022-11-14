@@ -1,17 +1,18 @@
 package info.nightscout.automation.actions
 
+import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.PumpEnactResultImpl
+import info.nightscout.automation.R
+import info.nightscout.automation.elements.InputString
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.database.impl.transactions.Transaction
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.automation.R
-import info.nightscout.automation.elements.InputString
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.core.Completable
 import org.junit.Assert
 import org.junit.Before
@@ -24,6 +25,7 @@ import org.mockito.Mockito.`when`
 class ActionNotificationTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var context: Context
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var repository: AppRepository
 
@@ -35,15 +37,15 @@ class ActionNotificationTest : TestBase() {
                 it.rxBus = rxBus
                 it.repository = repository
             }
-            if (it is PumpEnactResultImpl) {
-                it.rh = rh
+            if (it is PumpEnactResult) {
+                it.context = context
             }
         }
     }
 
     @Before
     fun setup() {
-        `when`(rh.gs(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
+        `when`(context.getString(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
         `when`(rh.gs(info.nightscout.core.main.R.string.notification)).thenReturn("Notification")
         `when`(
             rh.gs(

@@ -1,13 +1,14 @@
 package info.nightscout.androidaps.setupwizard
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventStatus
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventStatus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ class SWEventListener constructor(
     private var visibilityValidator: SWValidator? = null
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var context: Context
 
     // TODO: Adrian how to clear disposable in this case?
     init {
@@ -30,7 +32,7 @@ class SWEventListener constructor(
             .toObservable(clazz)
             .observeOn(aapsSchedulers.main)
             .subscribe { event: Any ->
-                status = (event as EventStatus).getStatus(rh)
+                status = (event as EventStatus).getStatus(context)
                 @SuppressLint("SetTextI18n")
                 textView?.text = (if (textLabel != 0) rh.gs(textLabel) else "") + " " + status
             }

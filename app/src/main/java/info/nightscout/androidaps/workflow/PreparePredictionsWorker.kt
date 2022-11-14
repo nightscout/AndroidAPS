@@ -5,9 +5,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
@@ -15,7 +12,10 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Gluco
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

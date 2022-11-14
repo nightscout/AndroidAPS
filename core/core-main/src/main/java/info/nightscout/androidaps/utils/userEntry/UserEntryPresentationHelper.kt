@@ -2,7 +2,6 @@ package info.nightscout.androidaps.utils.userEntry
 
 import android.text.Spanned
 import dagger.Reusable
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.core.main.R
@@ -15,6 +14,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
@@ -51,9 +51,9 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.TTDialog            -> R.drawable.ic_temptarget_high
         Sources.ProfileSwitchDialog -> R.drawable.ic_actions_profileswitch
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
-        Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
+        Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
         Sources.CalibrationDialog   -> R.drawable.ic_calibration
-        Sources.FillDialog          -> R.drawable.ic_cp_pump_canula
+        Sources.FillDialog          -> R.drawable.ic_cp_pump_cannula
         Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
         Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
         Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery

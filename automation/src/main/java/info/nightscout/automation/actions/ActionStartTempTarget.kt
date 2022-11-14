@@ -3,10 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResultImpl
 import info.nightscout.androidaps.extensions.friendlyDescription
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorExists
@@ -24,7 +21,10 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
@@ -69,17 +69,17 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                                ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                            )
-                           callback.result(PumpEnactResultImpl(injector).success(true).comment(R.string.ok)).run()
+                           callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           callback.result(PumpEnactResultImpl(injector).success(false).comment(R.string.error)).run()
+                           callback.result(PumpEnactResult(injector).success(false).comment(R.string.error)).run()
                        })
     }
 
     override fun generateDialog(root: LinearLayout) {
         val unitResId = if (value.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.careportal_temporarytarget) + "\n[" + rh.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(rh, rh.gs(R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
             .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }

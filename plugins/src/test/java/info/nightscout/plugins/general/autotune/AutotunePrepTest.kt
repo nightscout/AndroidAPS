@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.shiftBlock
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue
@@ -13,6 +12,7 @@ import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R

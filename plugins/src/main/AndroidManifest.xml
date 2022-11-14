@@ -10,7 +10,7 @@
 
     <application>
         <activity
-            android:name="info.nightscout.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
+            android:name=".general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
@@ -18,6 +18,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".source.activities.RequestDexcomPermissionActivity"
+            android:exported="false" />
 
         <service
             android:name=".sync.nsclient.services.NSClientService"

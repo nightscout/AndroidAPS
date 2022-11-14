@@ -234,9 +234,89 @@
     <string name="phone_checker" translatable="false">PhoneChecker</string>
 
     <!-- Objectives -->
+    <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
+    <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
+
     <string name="completed_well_done">Completed, well done!</string>
     <string name="not_completed_yet">Not completed yet</string>
     <string name="time_elapsed">Time elapsed</string>
+    <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
+    <string name="synchaswritepermission">Synchronization service has write permission</string>
+    <string name="loopenabled">Loop enabled</string>
+    <string name="apsselected">APS selected</string>
+    <string name="closedmodeenabled">Closed mode enabled</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Learning program</string>
+    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
+    <string name="objectives_next_button">Next</string>
+    <string name="objectives_previous_button">Prev</string>
+    <string name="objectives_button_unfinish">Clear finished</string>
+    <string name="objectives_button_unstart">Clear started</string>
+
+    <!-- Actions -->
+    <string name="actions">Actions</string>
+    <string name="description_actions">Some buttons to quickly access common features</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="tempbasal_button">TempBasal</string>
+    <string name="extended_bolus_button">Extended Bolus</string>
+    <string name="extended_bolus_cancel_button">Cancel Extended Bolus</string>
+    <string name="tools">Tools</string>
+    <string name="nav_history_browser">History browser</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="age_label">age:</string>
+    <string name="level_label">level:</string>
+    <string name="insulin_label">Insulin</string>
+    <string name="pb_label">Pump battery</string>
+    <string name="cannula">Cannula</string>
+    <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
+    <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
+    <string name="statuslights_cannula_age">cannula age</string>
+    <string name="statuslights_patch_pump_age">patch pump age</string>
+    <string name="patch_pump">Patch pump</string>
+
+    <!-- Safety -->
+    <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
+    <string name="key_use_smb" translatable="false">use_smb</string>
+    <string name="key_use_uam" translatable="false">use_uam</string>
+    <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
+    <string name="key_openapsama_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
+    <string name="key_openapsama_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
+    <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
+
+    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
+    <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
+    <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
+
+    <string name="maxbasalmultiplier">max basal multiplier</string>
+    <string name="maxdailybasalmultiplier">max daily basal multiplier</string>
+    <string name="key_openapsma_max_iob" translatable="false">openapsma_max_iob</string>
+    <string name="safety" translatable="false">Safety</string>
+    <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
+    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
+    <string name="autosensdisabledinpreferences">Autosens disabled in preferences</string>
+    <string name="smbdisabledinpreferences">SMB disabled in preferences</string>
+    <string name="uamdisabledinpreferences">UAM disabled in preferences</string>
+    <string name="uamdisabledoref1notselected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
+    <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
+    <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
+    <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
+    <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
+    <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
+    <string name="maxvalueinpreferences">max value in preferences</string>
+    <string name="hardlimit">hard limit</string>
+    <string name="treatmentssafety_title">Treatments safety</string>
+    <string name="patientage_summary">Please select patient type to setup safety limits</string>
+    <string name="child">Child</string>
+    <string name="teenage">Teenage</string>
+    <string name="adult">Adult</string>
+    <string name="resistantadult">Insulin resistant adult</string>
+    <string name="pregnant">Pregnancy</string>
+    <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
+    <string name="patientage">Patient type</string>
 
     <!-- Overview -->
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
@@ -276,6 +356,16 @@
     <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="statuslights">Status lights</string>
     <string name="statuslights_copy_ns">Copy settings from NS</string>
+    <string name="a11y_graph">graph</string>
+    <string name="a11y_insulin_label">insulin</string>
+    <string name="chart_menu">Chart menu</string>
+    <string name="a11y_bg_quality">blood glucose quality</string>
+    <string name="a11y_blood_glucose">blood glucose</string>
+    <string name="a11y_bg_outdated">outdated</string>
+    <string name="apsmode_title">APS Mode</string>
+    <string name="setbasalquestion">Accept new temp basal:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">QuickWizard</string>
 
     <!-- NSClient -->
     <string name="key_ns_client_autoscroll" translatable="false">ns_client_autoscroll</string>
@@ -377,6 +467,7 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
     <string name="remove_all">Remove all</string>
     <string name="reset_start">Reset start</string>
+    <string name="upload_now">Upload now</string>
 
     <!-- VirtualPump -->
     <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
@@ -392,7 +483,10 @@
     <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
 
     <!-- Source -->
-    <string name="key_dexcomg5_nsupload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_do_ns_upload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+    <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
+    <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
 
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
@@ -421,11 +515,16 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Receive BG values from GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Random BG</string>
+    <string name="description_source_random_bg">Generate random BG data (Demo mode only)</string>
+    <string name="random_bg_short">BG</string>
 
-    <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
-    <string name="dexcomg5_nsupload_title">Upload BG data to NS</string>
+    <string name="do_xdrip_upload_title">Send BG data to xDrip+</string>
+    <string name="do_xdrip_upload_summary">In xDrip+ select 640g/Eversense data source</string>
+    <string name="do_ns_upload_title">Upload BG data to NS</string>
     <string name="bgsource_upload">BG upload settings</string>
+    <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
 
     <!-- NSClient -->
     <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
@@ -475,8 +574,13 @@
     <string name="uploader_short">UPLD</string>
     <string name="ns_malfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
 
-    <!-- Objectives -->
-    <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
-    <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
+    <!-- Skins -->
+    <string name="key_skin" translatable="false">skin</string>
+
+    <string name="classic_description">Original skin</string>
+    <string name="lowres_description">Low Resolution skin</string>
+    <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
+    <string name="largedisplay_description">Large display</string>
+    <string name="skin">Skin</string>
 
 </resources>

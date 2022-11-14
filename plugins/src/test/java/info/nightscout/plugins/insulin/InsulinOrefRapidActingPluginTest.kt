@@ -2,9 +2,9 @@ package info.nightscout.plugins.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus

@@ -12,10 +12,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Loop
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale

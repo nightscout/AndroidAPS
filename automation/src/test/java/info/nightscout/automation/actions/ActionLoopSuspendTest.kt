@@ -1,8 +1,8 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
+import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -17,9 +17,9 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     @Before
     fun setup() {
 
-        `when`(rh.gs(info.nightscout.core.main.R.string.suspendloop)).thenReturn("Suspend loop")
+        `when`(context.getString(info.nightscout.core.main.R.string.suspendloop)).thenReturn("Suspend loop")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.suspendloopforXmin), ArgumentMatchers.anyInt())).thenReturn("Suspend loop for %d min")
-        `when`(rh.gs(R.string.alreadysuspended)).thenReturn("Already suspended")
+        `when`(context.getString(R.string.alreadysuspended)).thenReturn("Already suspended")
 
         sut = ActionLoopSuspend(injector)
     }

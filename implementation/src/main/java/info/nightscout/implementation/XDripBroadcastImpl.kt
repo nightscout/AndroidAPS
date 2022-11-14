@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.receivers.Intents
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.safeQueryBroadcastReceivers

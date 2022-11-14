@@ -6,7 +6,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.fabric.FabricPrivacy
@@ -27,6 +26,7 @@ import info.nightscout.plugins.sync.tidepool.utils.RateLimit
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -109,9 +109,9 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh, R.string.key_tidepool_dev_servers)
-                               || event.isChanged(rh, R.string.key_tidepool_username)
-                               || event.isChanged(rh, R.string.key_tidepool_password)
+                           if (event.isChanged(rh.gs(R.string.key_tidepool_dev_servers))
+                               || event.isChanged(rh.gs(R.string.key_tidepool_username))
+                               || event.isChanged(rh.gs(R.string.key_tidepool_password))
                            )
                                tidepoolUploader.resetInstance()
                        }, fabricPrivacy::logException)

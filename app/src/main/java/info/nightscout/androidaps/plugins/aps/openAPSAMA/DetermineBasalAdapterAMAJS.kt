@@ -5,19 +5,19 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.DetermineBasalAdapterInterface
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
-import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.GlucoseStatus
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -38,7 +38,7 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.min
 
-class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader, injector: HasAndroidInjector) : DetermineBasalAdapterInterface {
+class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader, injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     private val injector: HasAndroidInjector
 
@@ -64,7 +64,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
-    override operator fun invoke(): APSResult? {
+    override operator fun invoke(): APSResultObject? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })
         aapsLogger.debug(LTag.APS, "IOB data:       " + iobData.toString().also { iobDataParam = it })

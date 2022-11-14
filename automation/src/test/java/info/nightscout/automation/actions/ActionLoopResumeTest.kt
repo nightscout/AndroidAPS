@@ -1,9 +1,9 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.automation.R
 import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
@@ -19,7 +19,7 @@ class ActionLoopResumeTest : ActionsTestBase() {
     fun setup() {
 
         `when`(rh.gs(info.nightscout.core.main.R.string.resumeloop)).thenReturn("Resume loop")
-        `when`(rh.gs(R.string.notsuspended)).thenReturn("Not suspended")
+        `when`(context.getString(R.string.notsuspended)).thenReturn("Not suspended")
 
         sut = ActionLoopResume(injector)
     }

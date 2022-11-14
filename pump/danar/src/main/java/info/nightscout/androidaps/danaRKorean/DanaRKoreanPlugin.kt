@@ -10,24 +10,23 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.androidaps.data.PumpEnactResultImpl
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -134,7 +133,7 @@ class DanaRKoreanPlugin @Inject constructor(
                     detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.carbsTimestamp
                         ?: detailedBolusInfo.timestamp, t
                 )
-            val result = PumpEnactResultImpl(injector)
+            val result = PumpEnactResult(injector)
             result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
                 .bolusDelivered(t.insulin)
             if (!result.success) result.comment(rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(R.string.ok)
@@ -151,7 +150,7 @@ class DanaRKoreanPlugin @Inject constructor(
             )
             result
         } else {
-            val result = PumpEnactResultImpl(injector)
+            val result = PumpEnactResult(injector)
             result.success(false).bolusDelivered(0.0).carbsDelivered(0.0).comment(R.string.invalidinput)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
@@ -191,7 +190,7 @@ class DanaRKoreanPlugin @Inject constructor(
                 return cancelRealTempBasal()
             }
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK")
-            return PumpEnactResultImpl(injector).success(true).enacted(false).percent(100).isPercent(true).isTempCancel(true)
+            return PumpEnactResult(injector).success(true).enacted(false).percent(100).isPercent(true).isTempCancel(true)
         }
         if (doLowTemp || doHighTemp) {
             // If extended in progress
@@ -212,7 +211,7 @@ class DanaRKoreanPlugin @Inject constructor(
                         cancelTempBasal(true)
                     } else {
                         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)")
-                        return PumpEnactResultImpl(injector).success(true).percent(percentRate).enacted(false).duration(danaPump.tempBasalRemainingMin).isPercent(true).isTempCancel(false)
+                        return PumpEnactResult(injector).success(true).percent(percentRate).enacted(false).duration(danaPump.tempBasalRemainingMin).isPercent(true).isTempCancel(false)
                     }
                 }
             }
@@ -251,7 +250,7 @@ class DanaRKoreanPlugin @Inject constructor(
             if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAbsoluteRate - extendedRateToSet) < pumpDescription.extendedBolusStep) {
                 // correct extended already set
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct extended already set")
-                return PumpEnactResultImpl(injector).success(true).absolute(danaPump.extendedBolusAbsoluteRate).enacted(false).duration(danaPump.extendedBolusRemainingMinutes).isPercent(false)
+                return PumpEnactResult(injector).success(true).absolute(danaPump.extendedBolusAbsoluteRate).enacted(false).duration(danaPump.extendedBolusRemainingMinutes).isPercent(false)
                     .isTempCancel(false)
             }
 
@@ -269,7 +268,7 @@ class DanaRKoreanPlugin @Inject constructor(
         }
         // We should never end here
         aapsLogger.error("setTempBasalAbsolute: Internal error")
-        return PumpEnactResultImpl(injector).success(false).comment("Internal error")
+        return PumpEnactResult(injector).success(false).comment("Internal error")
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
@@ -277,7 +276,7 @@ class DanaRKoreanPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress && useExtendedBoluses) {
             return cancelExtendedBolus()
         }
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
         result.success(true).enacted(false).comment(R.string.ok).isTempCancel(true)
         return result
     }
@@ -285,7 +284,7 @@ class DanaRKoreanPlugin @Inject constructor(
     override fun model(): PumpType = PumpType.DANA_R_KOREAN
 
     private fun cancelRealTempBasal(): PumpEnactResult {
-        val result = PumpEnactResultImpl(injector)
+        val result = PumpEnactResult(injector)
         if (danaPump.isTempBasalInProgress) {
             sExecutionService.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
@@ -304,6 +303,6 @@ class DanaRKoreanPlugin @Inject constructor(
         return result
     }
 
-    override fun loadEvents(): PumpEnactResult = PumpEnactResultImpl(injector) // no history, not needed
-    override fun setUserOptions(): PumpEnactResult = PumpEnactResultImpl(injector)
+    override fun loadEvents(): PumpEnactResult = PumpEnactResult(injector) // no history, not needed
+    override fun setUserOptions(): PumpEnactResult = PumpEnactResult(injector)
 }

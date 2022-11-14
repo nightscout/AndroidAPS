@@ -8,6 +8,7 @@
       <w>actionstring</w>
       <w>aidex</w>
       <w>alarmack</w>
+      <w>alexpr</w>
       <w>allowednumbers</w>
       <w>androidaps</w>
       <w>autosens</w>
@@ -43,9 +44,14 @@
       <w>dexcom</w>
       <w>dexdrip</w>
       <w>diaconn</w>
+      <w>dlvoy</w>
+      <w>dttm</w>
+      <w>ecarbs</w>
       <w>enteredby</w>
       <w>enteredinsulin</w>
+      <w>eoflow</w>
       <w>eopatch</w>
+      <w>epss</w>
       <w>eveningoutpost</w>
       <w>eversense</w>
       <w>extendedbolus</w>
@@ -56,12 +62,15 @@
       <w>gson</w>
       <w>hmac</w>
       <w>iage</w>
+      <w>infinivocgm</w>
       <w>insulet</w>
+      <w>intelligo</w>
       <w>iobtotal</w>
       <w>joda</w>
       <w>libre</w>
       <w>listdelimiter</w>
       <w>localprofile</w>
+      <w>lyumjev</w>
       <w>mdtp</w>
       <w>medtronic</w>
       <w>mgdl</w>
@@ -74,6 +83,7 @@
       <w>nightscout</w>
       <w>notif</w>
       <w>nsclient</w>
+      <w>oaps</w>
       <w>okcancel</w>
       <w>omnipod</w>
       <w>openaps</w>
@@ -88,10 +98,12 @@
       <w>profileswitch</w>
       <w>pumpbtcomm</w>
       <w>pumpcontrol</w>
+      <w>pumpdrivers</w>
       <w>quickwizard</w>
       <w>readstatus</w>
       <w>realduration</w>
       <w>refresheventsfromnightscout</w>
+      <w>rfspy</w>
       <w>rileylink</w>
       <w>roboelectric</w>
       <w>rozman</w>
@@ -104,6 +116,8 @@
       <w>soundid</w>
       <w>splitted</w>
       <w>ssid</w>
+      <w>statuslight</w>
+      <w>statuslights</w>
       <w>superbolus</w>
       <w>targethigh</w>
       <w>targetlow</w>
@@ -119,6 +133,7 @@
       <w>totp</w>
       <w>tunedays</w>
       <w>uart</w>
+      <w>unfinshed</w>
       <w>urgentalarm</w>
       <w>wizzardpage</w>
       <w>xdrip</w>

@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.content.Context
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.Bolus
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class BolusDataPoint(

@@ -15,11 +15,11 @@ import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OpenapsFragmentBinding
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.utils.JSONFormatter
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

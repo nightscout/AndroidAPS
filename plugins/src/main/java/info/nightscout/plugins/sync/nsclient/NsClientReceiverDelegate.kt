@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclient
 
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -30,16 +30,16 @@ class NsClientReceiverDelegate @Inject constructor(
 
     fun onStatusEvent(ev: EventPreferenceChange) {
         when {
-            ev.isChanged(rh, R.string.key_ns_wifi) ||
-                ev.isChanged(rh, R.string.key_ns_cellular) ||
-                ev.isChanged(rh, R.string.key_ns_wifi_ssids) ||
-                ev.isChanged(rh, R.string.key_ns_allow_roaming) -> {
+            ev.isChanged(rh.gs(R.string.key_ns_wifi)) ||
+                ev.isChanged(rh.gs(R.string.key_ns_cellular)) ||
+                ev.isChanged(rh.gs(R.string.key_ns_wifi_ssids)) ||
+                ev.isChanged(rh.gs(R.string.key_ns_allow_roaming)) -> {
                 receiverStatusStore.updateNetworkStatus()
                 receiverStatusStore.lastNetworkEvent?.let { onStatusEvent(it) }
             }
 
-            ev.isChanged(rh, R.string.key_ns_charging) ||
-                ev.isChanged(rh, R.string.key_ns_battery)       -> {
+            ev.isChanged(rh.gs(R.string.key_ns_charging)) ||
+                ev.isChanged(rh.gs(R.string.key_ns_battery))       -> {
                 receiverStatusStore.broadcastChargingState()
             }
         }

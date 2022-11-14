@@ -32,12 +32,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/tempbasal_label"
-            android:icon="@drawable/ic_actions_starttempbasal" />
+            android:icon="@drawable/ic_actions_start_temp_basal" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/careportal_temporarytarget"
+            android:contentDescription="@string/temporary_target"
             android:icon="@drawable/ic_temptarget_high" />
 
         <com.google.android.material.tabs.TabItem

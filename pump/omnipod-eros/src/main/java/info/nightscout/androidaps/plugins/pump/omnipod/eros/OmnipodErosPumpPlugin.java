@@ -34,12 +34,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.PumpEnactResultImpl;
-import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
@@ -87,18 +81,22 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.core.fabric.FabricPrivacy;
 import info.nightscout.core.pumpExtensions.DetailedBolusInfoExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
 import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.profile.ProfileFunction;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.interfaces.pump.Pump;
 import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpPluginBase;
 import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.actions.CustomActionType;
 import info.nightscout.interfaces.pump.defs.ManufacturerType;
 import info.nightscout.interfaces.pump.defs.PumpDescription;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.Callback;
+import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.interfaces.queue.CustomCommand;
 import info.nightscout.interfaces.ui.ActivityNames;
 import info.nightscout.interfaces.utils.Round;
@@ -107,6 +105,7 @@ import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventAppExit;
 import info.nightscout.rx.events.EventAppInitialized;
+import info.nightscout.rx.events.EventPreferenceChange;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
@@ -330,25 +329,25 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED)) {
+                    if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED))) {
                         aapsOmnipodErosManager.reloadSettings();
-                    } else if (event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS)) {
+                    } else if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS))) {
                         if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
@@ -603,7 +602,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         if (!podStateManager.hasPodState())
-            return new PumpEnactResultImpl(getInjector()).enacted(false).success(false).comment("Null pod state");
+            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("Null pod state");
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.getSuccess());
@@ -661,7 +660,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
                     .comment(R.string.invalidinput);
         } else if (detailedBolusInfo.insulin > 0) {
             // bolus needed, ask pump to deliver it
@@ -679,7 +678,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                             "[date=%d, carbs=%.2f, pumpSerial=%s] - Result: %b",
                     detailedBolusInfo.timestamp, detailedBolusInfo.carbs, serialNumber(), result));
 
-            return new PumpEnactResultImpl(getInjector()).success(true).enacted(true).bolusDelivered(0d)
+            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
                     .carbsDelivered(detailedBolusInfo.carbs);
         }
     }
@@ -697,7 +696,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
-            return new PumpEnactResultImpl(getInjector()).success(false).comment(rh.gs(R.string.omnipod_eros_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
+            return new PumpEnactResult(getInjector()).success(false).comment(rh.gs(R.string.omnipod_eros_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
         }
 
         // read current TBR
@@ -711,7 +710,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (tbrCurrent != null && !enforceNew) {
             if (Round.INSTANCE.isSame(tbrCurrent.getRate(), absoluteRate)) {
                 aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
-                return new PumpEnactResultImpl(getInjector()).success(true).enacted(false);
+                return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         }
 
@@ -733,7 +732,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
         if (tbrCurrent == null) {
             aapsLogger.info(LTag.PUMP, "cancelTempBasal - TBR already cancelled.");
-            return new PumpEnactResultImpl(getInjector()).success(true).enacted(false);
+            return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
         return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodErosManager::cancelTemporaryBasal);
@@ -857,7 +856,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
         if (!podStateManager.hasPodState())
-            return new PumpEnactResultImpl(getInjector()).enacted(false).success(false).comment("Null pod state");
+            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("Null pod state");
         if (command instanceof CommandSilenceAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
@@ -887,7 +886,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
 
         aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + command.getClass().getName());
-        return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).comment(rh.gs(R.string.omnipod_common_error_unsupported_custom_command, command.getClass().getName()));
+        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(rh.gs(R.string.omnipod_common_error_unsupported_custom_command, command.getClass().getName()));
     }
 
     private PumpEnactResult retrievePulseLog() {
@@ -895,7 +894,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         try {
             result = executeCommand(OmnipodCommandType.READ_POD_PULSE_LOG, aapsOmnipodErosManager::readPulseLog);
         } catch (Exception ex) {
-            return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
         }
 
         Intent i = new Intent(context, activityNames.getErrorHelperActivity());
@@ -905,7 +904,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         i.putExtra("clipboardContent", result.toString());
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
-        return new PumpEnactResultImpl(getInjector()).success(true).enacted(false);
+        return new PumpEnactResult(getInjector()).success(true).enacted(false);
     }
 
     @NonNull private PumpEnactResult updateAlertConfiguration() {
@@ -1087,6 +1086,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
+    @Override
     public boolean isUseRileyLinkBatteryLevel() {
         return aapsOmnipodErosManager.isShowRileyLinkBatteryLevel();
     }
@@ -1170,7 +1170,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     }
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResultImpl(getInjector()).success(false).enacted(false).comment(resourceId);
+        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceId);
     }
 
 }

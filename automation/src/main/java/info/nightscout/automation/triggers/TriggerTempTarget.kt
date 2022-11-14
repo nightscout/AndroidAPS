@@ -54,7 +54,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.careportal_temporarytarget
+    override fun friendlyName(): Int = R.string.temporary_target
 
     override fun friendlyDescription(): String =
         rh.gs(R.string.temptargetcompared, rh.gs(comparator.value.stringRes))
@@ -65,7 +65,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, R.string.careportal_temporarytarget, this))
+            .add(StaticLabel(rh, R.string.temporary_target, this))
             .add(comparator)
             .build(root)
     }

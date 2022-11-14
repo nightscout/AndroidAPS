@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.combo.R
 import info.nightscout.androidaps.combo.databinding.CombopumpFragmentBinding
-import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil
 import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil.DisplayType
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged

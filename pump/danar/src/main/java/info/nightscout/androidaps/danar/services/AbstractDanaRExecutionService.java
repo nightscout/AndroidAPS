@@ -39,13 +39,11 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.androidaps.data.PumpEnactResultImpl;
-import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.core.fabric.FabricPrivacy;
 import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
@@ -54,6 +52,7 @@ import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventAppExit;
 import info.nightscout.rx.events.EventBTChange;
 import info.nightscout.rx.events.EventOverviewBolusProgress;
+import info.nightscout.rx.events.EventPumpStatusChanged;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.interfaces.ResourceHelper;
@@ -242,7 +241,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public PumpEnactResult loadHistory(byte type) {
-        PumpEnactResult result = new PumpEnactResultImpl(injector);
+        PumpEnactResult result = new PumpEnactResult(injector);
         if (!isConnected()) return result;
         MessageBase msg = null;
         switch (type) {

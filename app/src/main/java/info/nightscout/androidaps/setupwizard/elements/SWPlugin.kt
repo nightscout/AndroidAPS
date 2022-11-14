@@ -12,7 +12,7 @@ import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.setupwizard.SWDefinition
-import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
+import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.events.EventConfigBuilderChange

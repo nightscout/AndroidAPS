@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.plugins.iob.iobCalculator
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.asRounded
+import info.nightscout.core.iob.asRounded
+import info.nightscout.core.iob.log
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.iob.GlucoseStatus
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.Assert
@@ -23,7 +24,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
-    @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var autosensDataStore: AutosensDataStoreObject
 
     @Before
     fun prepare() {

@@ -11,7 +11,9 @@ import dagger.Module
         ProfileModule::class,
         SyncModule::class,
         SourceModule::class,
-        VirtualPumpModule::class
+        VirtualPumpModule::class,
+        ObjectivesModule::class,
+        SkinsModule::class
     ]
 )
 

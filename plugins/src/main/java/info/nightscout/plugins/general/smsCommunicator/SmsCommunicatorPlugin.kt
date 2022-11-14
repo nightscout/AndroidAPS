@@ -12,15 +12,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.XDripBroadcast
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
@@ -28,6 +20,7 @@ import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.toCurrentUnits
 import info.nightscout.core.profile.toMgdl
@@ -45,15 +38,22 @@ import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporar
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.smsCommunicator.Sms
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.plugins.R
@@ -62,6 +62,7 @@ import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -222,7 +223,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processSettings(ev: EventPreferenceChange?) {
-        if (ev == null || ev.isChanged(rh, R.string.key_smscommunicator_allowednumbers)) {
+        if (ev == null || ev.isChanged(rh.gs(R.string.key_smscommunicator_allowednumbers))) {
             val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
             allowedNumbers.clear()
             val substrings = settings.split(";").toTypedArray()
@@ -620,7 +621,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided[1].uppercase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, profileName))
         } else if (divided[1].uppercase(Locale.getDefault()) == "LIST") {
-            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalidprofile)))
+            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalid_profile)))
             else {
                 var reply = ""
                 for (i in list.indices) {
@@ -655,7 +656,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))
                                 )
                             } else {
-                                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalidprofile)))
+                                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalid_profile)))
                             }
                         }
                     })

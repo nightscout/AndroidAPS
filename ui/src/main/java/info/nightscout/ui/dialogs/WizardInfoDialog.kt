@@ -9,12 +9,12 @@ import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
 import info.nightscout.androidaps.extensions.toJson
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.core.profile.toUnits
 import info.nightscout.core.profile.toUnitsString
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R

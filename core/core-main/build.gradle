@@ -33,7 +33,6 @@ dependencies {
 
     api 'androidx.biometric:biometric:1.1.0'
 
-    api "androidx.browser:browser:1.4.0"
     api 'androidx.cardview:cardview:1.0.0'
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     api "androidx.core:core-ktx:$core_version"
@@ -68,14 +67,11 @@ dependencies {
     api 'com.madgag.spongycastle:core:1.58.0.0'
     api "com.google.crypto.tink:tink-android:$tink_version"
 
-    // pumpCommon
-    api "com.google.code.gson:gson:$gson_version"
-
     //WorkManager
     api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
-//    api "androidx.work:work-rxjava3:$work_version"
-    api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+    //api "androidx.work:work-rxjava3:$work_version"
+    //api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
 
 
     api "commons-codec:commons-codec:$commonscodec_version"

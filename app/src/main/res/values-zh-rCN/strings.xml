@@ -316,7 +316,7 @@
     <string name="urgent_alarm">紧急报警</string>
     <string name="info">信息</string>
     <string name="eversense">Everyang App (补丁)</string>
-    <string name="dexcomg5_nsupload_title">将 数据血糖数据上传到 NS服务器</string>
+    <string name="do_ns_upload_title">将 数据血糖数据上传到 NS服务器</string>
     <string name="bgsource_upload">血糖上传设置</string>
     <string name="wear_detailed_delta_title">显示详细的增量</string>
     <string name="wear_detailed_delta_summary">增量再多显示一个小数位</string>
@@ -326,8 +326,8 @@
     <string name="uamsmbmaxminutes_summary">监测到UAM(未通知膳食) 后启用SMB(微型大剂量) 替代基础率的最大分钟数</string>
     <string name="carbsReqThreshold">碳水化合物需求建议的最小值</string>
     <string name="carbsReqThreshold_summary">显示碳水化合物需求警告的最小克数。低于此数值的碳水化合物需求不会触发通知。</string>
-    <string name="dexcomg5_xdripupload_title">将血糖数据发送到 xDrip +</string>
-    <string name="dexcomg5_xdripupload_summary">在 xDrip + 选择640ｇ/Eversense 数据源</string>
+    <string name="do_xdrip_upload_title">将血糖数据发送到 xDrip +</string>
+    <string name="do_xdrip_upload_summary">在 xDrip + 选择640ｇ/Eversense 数据源</string>
     <string name="nsclientbg">NSClient 血糖</string>
     <string name="nsclientbgshort">NS血糖</string>
     <string name="overview_editquickwizard_usebg">血糖计算</string>
@@ -496,7 +496,7 @@
     <string name="loop_openmode_min_change">最小请求更改[%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="dexcom_lognssensorchange_title">记录传感器更换至NS服务器</string>
+    <string name="dexcom_log_ns_sensor_change_title">记录传感器更换至NS服务器</string>
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>

@@ -311,7 +311,7 @@
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="dexcomg5_nsupload_title">Enviar dados Glicose para NS</string>
+    <string name="do_ns_upload_title">Enviar dados Glicose para NS</string>
     <string name="bgsource_upload">Definições de Envio da Glicose</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
@@ -321,8 +321,8 @@
     <string name="uamsmbmaxminutes_summary">Máx minutos de basal para limitar SMB para RNA</string>
     <string name="carbsReqThreshold">Mínimo De Hidratos Necessários Para Sugestão</string>
     <string name="carbsReqThreshold_summary">Mínimo de gramas de hidratos de carbono para exibir um alerta de sugestão de hidratos. As sugestões de hidratos abaixo deste número não ativarão uma notificação.</string>
-    <string name="dexcomg5_xdripupload_title">Enviar dados Glicose para xDrip+</string>
-    <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
+    <string name="do_xdrip_upload_title">Enviar dados Glicose para xDrip+</string>
+    <string name="do_xdrip_upload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
     <string name="nsclientbg">Glicose ClienteNS</string>
     <string name="nsclientbgshort">Glicemia do NS</string>
     <string name="overview_editquickwizard_usebg">Cálculos Glicose</string>
@@ -488,7 +488,7 @@
     <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança para uma nova basal temporária for superior a este valor em %. O valor padrão é 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
-    <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registar mudança de sensor para NS</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
