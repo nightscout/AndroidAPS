@@ -13,7 +13,6 @@ files:
     translation: /core/src/main/res/values-%android_code%/validator.xml
   - source: /core/core-main/src/main/res/values/strings.xml
     translation: /core/core-main/src/main/res/values-%android_code%/strings.xml
-    translate_attributes: 0
   - source: /shared/src/main/res/values/strings.xml
     translation: /shared/src/main/res/values-%android_code%/strings.xml
   - source: /pump/combo/src/main/res/values/strings.xml
@@ -56,5 +55,7 @@ files:
     translation: /implementation/src/main/res/values-%android_code%/strings.xml
   - source: /ui/src/main/res/values/strings.xml
     translation: /ui/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/src/main/res/values/strings.xml
-    translation: /plugins/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/aps/src/main/res/values/strings.xml
+    translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/main/src/main/res/values/strings.xml
+    translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
