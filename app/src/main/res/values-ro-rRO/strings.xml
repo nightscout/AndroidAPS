@@ -69,7 +69,6 @@
     <string name="openapsma_maxiob_title">Maximul de bazală IOB pe care o poate livra OpenAPS[U]</string>
     <string name="openapsma_maxiob_summary">Această valoare este denumită Max IOB în contextul OpenAPS\nAceastă valoare este implicit nulă (0). După câteva zile sau săptămâni, în funcție de opțiunea dumneavoastră, puteți ajusta acest număr.</string>
     <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
-    <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
     <string name="preferences_export_canceled">Exportarea a eșuat! Preferințele NU au fost exportate!</string>
     <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
     <string name="preferences_import_impossible">Nu se pot prelua setările!</string>
