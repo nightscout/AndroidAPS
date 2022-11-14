@@ -4,13 +4,14 @@
     <!--    General-->
     <string name="save">Sačuvaj</string>
     <string name="treatmentdeliveryerror">Bolus je prijavio grešku. Ručno proverite stvarnu isporučenu količinu</string>
+    <string name="overview_treatment_label">Tretman</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basalni IOB</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
@@ -23,10 +24,11 @@
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
     <!-- Autotune -->
+    <!-- Alerts -->
     <!-- SmsCommunicator -->
+    <!-- BolusWizard -->
 </resources>
