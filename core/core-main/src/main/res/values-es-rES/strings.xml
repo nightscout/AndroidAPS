@@ -16,7 +16,6 @@
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="no">No</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -48,7 +47,6 @@
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="confirm">Confirmar</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
