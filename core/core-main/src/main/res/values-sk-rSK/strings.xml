@@ -22,8 +22,6 @@
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Prihlásenie</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -43,7 +41,6 @@
     <string name="bolus">Bolus</string>
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
