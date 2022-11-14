@@ -77,7 +77,6 @@
     <string name="openapsma_maxiob_title">макс базал активн инс подаваемый с OpenAPS (ед)</string>
     <string name="openapsma_maxiob_summary">Эта величина называется Max IOB (макс активн инс) в OpenAPS\n. Это макс кол-во инсулина в ед. [U] которое APS может подать единовременно.</string>
     <string name="password_preferences_encrypt_prompt">Будет предложено ввести главный пароль, который будет использоваться для шифрования экспортированных параметров.</string>
-    <string name="password_preferences_decrypt_prompt">Вам будет предложено ввести главный пароль, необходимый для расшифровки импортированных настроек.</string>
     <string name="preferences_export_canceled">Экспорт отменен! Настройки НЕ экспортированы!</string>
     <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>
     <string name="preferences_import_impossible">Не удается импортировать настройки!</string>
