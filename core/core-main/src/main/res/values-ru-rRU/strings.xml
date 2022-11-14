@@ -49,4 +49,14 @@
     <string name="info">ИНФОРМАЦИЯ</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="wizard_explain_cob">Акт Инс COB: %1$.0fг %2$.2fед</string>
+    <string name="wizard_explain_bg">ГК: %1$.2f</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fед</string>
+    <string name="wizard_explain_superbolus">Суперболюс:%1$.2fед</string>
+    <string name="wizard_explain_trend">тренд 15\': %1$.2f</string>
+    <string name="wizard_explain_percent">В процентах: %1$.2fед x %2$d%% = %3$.2f</string>
+    <string name="wizard_constraint_bolus_size">Нарушено ограничение по инсулину!\nНевозможно подать %1$.2fед</string>
+    <string name="wizard_explain_tt">ВремЦ: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s до %2$s</string>
+    <string name="wizard_pump_not_available">Нет помпы!</string>
 </resources>
