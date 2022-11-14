@@ -6,11 +6,8 @@
     <string name="profile_set_ok">Το Βασικό προφίλ στην αντλία ενημερώθηκε</string>
     <string name="tempbasaldeliveryerror">Σφάλμα παράδοσης Προσ Ρυθμού</string>
     <string name="waitingforpump">Αναμονή για αντλία</string>
-    <string name="handshaking">Δημιουργία σύνδεσης</string>
     <string name="connecting">Συνδέεται</string>
-    <string name="connected">Συνδέθηκε</string>
     <string name="disconnected">Αποσυνδέθηκε</string>
-    <string name="disconnecting">Αποσυνδέεται</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
