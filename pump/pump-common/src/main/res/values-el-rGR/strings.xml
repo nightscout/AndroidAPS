@@ -6,14 +6,6 @@
     <string name="common_resultok">ΟΚ</string>
     <string name="pump_serial_number">Σειριακός Αριθμός Αντλίας</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Ποτέ δεν επικοινωνήσατε</string>
-    <string name="pump_status_waking_up">Ξύπνημα</string>
-    <string name="pump_status_error_comm">Σφάλμα με επικοινωνία</string>
-    <string name="pump_status_timeout_comm">Λήξη χρόνου επικοινωνίας</string>
-    <string name="pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
-    <string name="pump_status_invalid_config">Μη έγκυρη παραμετροποίηση</string>
-    <string name="pump_status_active">Ενεργή</string>
-    <string name="pump_status_sleeping">Sleeping</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Βασικοί</string>
     <string name="history_group_configuration">Ρύθμιση παραμέτρων</string>
