@@ -69,7 +69,6 @@
     <string name="openapsma_maxiob_title">Didžiausias valandinės bazės insulino kiekis, kurį gali suleisti OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Ši vertė OpenAPS kontekste vadinama Maks AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
     <string name="password_preferences_encrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
-    <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas atšifruojant importuotus nustatymus.</string>
     <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
     <string name="preferences_import_canceled">Importas nutrauktas! Nustatymai NE importuoti!</string>
     <string name="preferences_import_impossible">Negalima importuoti nustatymų!</string>
