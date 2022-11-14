@@ -77,7 +77,6 @@
     <string name="openapsma_maxiob_title">IA Basal max que OpenAPS pourra délivrer [U]</string>
     <string name="openapsma_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nC\'estlle maximum d\'insuline en [U] que APS peut délivrer en une seule fois.</string>
     <string name="password_preferences_encrypt_prompt">Le mot de passe principal vous sera demandé pour crypter les préférences exportées.</string>
-    <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
     <string name="preferences_export_canceled">Export annulé ! Les préférences n\'ont PAS été exportées !</string>
     <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>
     <string name="preferences_import_impossible">Impossible d\'importer les préférences !</string>
