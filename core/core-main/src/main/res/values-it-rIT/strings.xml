@@ -26,7 +26,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
-    <string name="youareonallowedlimit">Limite consentito raggiunto</string>
     <string name="objectives">Obiettivi</string>
     <string name="close">Chiudi</string>
     <string name="please_wait">Attendi…</string>
@@ -69,8 +68,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
     <string name="pairing">Associazione</string>
-    <string name="yes">Sì</string>
-    <string name="no">No</string>
     <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
     <string name="bolusdelivered">Bolo di %1$.2f U erogato con successo</string>
     <string name="virtualpump_resultok">OK</string>
@@ -100,7 +97,6 @@
     <string name="time">Tempo</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Caricamento…</string>
-    <string name="event_time_label">Ora evento</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Rimuovi</string>
     <string name="addnew">Aggiungi nuovo</string>
@@ -160,12 +156,6 @@
     <string name="itmustbepositivevalue">deve essere un valore positivo</string>
     <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Micro non inizializzato, profilo non impostato!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Conferma</string>
-    <string name="message">Messaggio</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Annulla</string>
-    <string name="dismiss">RIMUOVI</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
@@ -269,7 +259,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Rilevamento tempo</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Muto per 5 minuti</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
@@ -441,8 +430,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
-    <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
-    <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
@@ -500,7 +487,6 @@
     <string name="autotune_run_with_autoswitch">Autotune eseguito e profilo cambiato automaticamente</string>
     <string name="autotune_run_with_error">Errore durante l\'ultima esecuzione di Autotune</string>
     <string name="autotune_run_cancelled">È stata rilevata un\'altra esecuzione di Autotune, esecuzione annullata</string>
-    <string name="needconnectpermission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
     <string name="urgent_alarm">Allarme urgente</string>
