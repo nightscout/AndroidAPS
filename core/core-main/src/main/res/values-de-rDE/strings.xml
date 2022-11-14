@@ -4,7 +4,6 @@
     <!--    General-->
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
-    <string name="youareonallowedlimit">Erlaubtes Limit erreicht</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -36,8 +35,6 @@
     <string name="invalid">Ungültig</string>
     <string name="login">Login</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -67,7 +64,6 @@
     <string name="tdd">TDD</string>
     <string name="olddata_Message">Veraltete Daten, bitte klicke auf \"NEU LADEN\"</string>
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
