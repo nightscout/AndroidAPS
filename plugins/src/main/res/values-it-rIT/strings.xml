@@ -66,11 +66,41 @@
     <string name="smscommunicator_loop_enable_reply_with_code">Per abilitare il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_loop_disable_reply_with_code">Per disabilitare il loop rispondi col codice %1$s</string>
     <string name="smscommunicator_tempbasal_set">Basale temporanea %1$.2fU/h per %2$d min avviata con successo</string>
+    <string name="smscommunicator_extended_set">Bolo esteso %1$.2fU/h per %2$d min avviato con successo</string>
+    <string name="smscommunicator_carbs_set">CHO %1$d g inseriti con successo</string>
+    <string name="smscommunicator_carbs_failed">Inserimento di %1$dg di CHO fallito</string>
+    <string name="smscommunicator_tempbasal_set_percent">Basale temporanea %1$d%% per %2$d min avviata con successo</string>
+    <string name="smscommunicator_tempbasal_failed">Avvio basale temporanea fallito</string>
+    <string name="smscommunicator_extended_failed">Avvio bolo esteso fallito</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Per stoppare la basale temporanea rispondi col codice %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Per stoppare il bolo esteso rispondi col codice %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Basale temporanea cancellata</string>
+    <string name="smscommunicator_extended_canceled">Bolo esteso cancellato</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Basale temporanea: cancellazione fallita</string>
+    <string name="smscommunicator_extended_cancel_failed">Bolo esteso: cancellazione fallita</string>
+    <string name="smscommunicator_unknown_command">Comando sconosciuto o risposta errata</string>
     <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
+    <string name="smscommunicator_wrong_duration">Durata errata</string>
+    <string name="smscommunicator_loop_suspended">Loop sospeso</string>
+    <string name="smscommunicator_loop_resumed">Loop ripreso</string>
+    <string name="smscommunicator_invalid_phone_number">Numero di telefono SMS non valido</string>
+    <string name="smscommunicator_calibration_sent">Calibrazione inviata. La ricezione deve essere abilitata in xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ non sta ricevendo calibrazioni</string>
+    <string name="smscommunicator_message_body">Corpo del messaggio non valido</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
+    <string name="smscommunicator_pump_unreachable">Segnala micro irraggiungibile</string>
+    <string name="wrong_format">Formato errato</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">Ultimo BG:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="sms_basal">Basale:</string>
+    <string name="sms_min_ago">%1$dmin fa</string>
+    <string name="sms_loop_suspended_for">Sospeso (%1$d m)</string>
+    <string name="sms_read_status_failed">Lettura stato fallita</string>
+    <string name="sms_profile_switch_created">Cambio profilo creato</string>
+    <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <!-- Insulin -->
     <string name="dia">DIA</string>
@@ -85,25 +115,45 @@
     <string name="insulin_peak">Picco</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">Statusline xDrip+ (smartwatch)</string>
+    <string name="xdrip_status_shortname">xds</string>
     <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
+    <string name="xdrip_status_detailed_iob_title">Mostra IOB dettagliato</string>
+    <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
+    <string name="disabled_loop">Loop disabilitato</string>
+    <string name="xdrip_status_show_bgi_title">Mostra BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Aggiungi BGI alla statusline</string>
+    <string name="xdrip_status_settings">Stato xDrip+ (smartwatch)</string>
     <!-- Food-->
+    <string name="food_short">Cibo</string>
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
     <string name="filter">Filtro</string>
     <string name="food">Cibo</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">Enr</string>
+    <string name="short_protein">Prt</string>
+    <string name="short_fat">Grs</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Sottocategoria</string>
+    <string name="calculator_label">Calcolatore</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Scegli tema scuro, chiaro o segui quello del sistema</string>
     <string name="app_color_scheme">Schema colori app</string>
     <string name="dark_theme">Tema scuro</string>
     <string name="light_theme">Tema chiaro</string>
     <string name="follow_system_theme">Usa tema dispositivo</string>
     <!-- Profile -->
+    <string name="localprofile">Profilo</string>
     <string name="localprofile_shortname">PL</string>
     <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
     <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
+    <string name="do_you_want_switch_profile">Vuoi cambiare profilo e scartare le modifiche apportate al profilo corrente?</string>
     <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
     <string name="delete_current_profile">Rimuovere il profilo corrente?</string>
     <string name="units_colon">Unità:</string>
@@ -151,6 +201,7 @@
     <!-- Safety -->
     <!-- Overview -->
     <string name="snooze">Posticipa</string>
+    <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
     <string name="statuslights_iage_warning">Età insulina: soglia di avviso [h]</string>
     <string name="statuslights_iage_critical">Età insulina: soglia critica [h]</string>
@@ -167,12 +218,24 @@
     <string name="statuslights">Indicatori di stato</string>
     <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
     <!-- NSClient -->
+    <string name="no_write_permission">NSCLIENT non ha l\'autorizzazione di scrittura. API secret errato?</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_autoscroll">Autoscorrimento</string>
     <string name="restart">Riavvio</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">URL di Nightscout</string>
+    <string name="ns_client_url_dialog_message">Inserisci il tuo URL di Nightscout</string>
+    <string name="ns_client_secret_title">API secret di NS</string>
+    <string name="ns_client_secret_dialog_title">API secret di NS</string>
+    <string name="ns_client_secret_dialog_message">Inserisci l\'API secret di NS (minimo 12 caratteri)</string>
     <string name="deliver_now">Invia ora</string>
     <string name="clear_queue">Cancella coda</string>
     <string name="show_queue">Mostra coda</string>
     <string name="queue">Coda:</string>
     <string name="status">Stato:</string>
+    <string name="clear_log">Cancella log</string>
     <string name="full_sync">Sincronizzazione completa</string>
     <string name="full_sync_comment">Sincronizzazione completa? Potrebbe richiedere molte ore e fino alla fine del processo non vedrai nuovi dati in NS.</string>
     <string name="ns_sync_options">Sincronizzazione</string>
@@ -198,8 +261,14 @@
     <string name="ns_receive_cgm_summary">Accetta dati CGM da NS</string>
     <string name="run_question">Eseguire %s?</string>
     <string name="ns_sync_slow">Rallenta caricamenti</string>
+    <string name="ns_alarm_options">Opzioni allarme</string>
     <string name="ns_alarms">Crea notifiche da allarmi NS</string>
     <string name="ns_announcements">Crea notifiche da avvisi NS</string>
+    <string name="ns_alarm_stale_data_value_label">Soglia dati non aggiornati [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Soglia dati non aggiornati da molto tempo [min]</string>
+    <string name="ns_log_app_started_event">Registra l\'avvio dell\'app in NS</string>
+    <string name="ns_local_broadcasts">Abilita trasmissioni ad altre app (come xDrip+). Non abilitare se hai installato più di un\'istanza di AAPS o AAPSClient!</string>
+    <string name="ns_local_broadcasts_title">Abilita trasmissioni locali</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Il tuo nome utente per l\'accesso a Tidepool, generalmente il tuo indirizzo email</string>
     <string name="title_tidepool_username">Nome utente</string>
@@ -219,10 +288,18 @@
     <string name="remove_all">Rimuovi tutto</string>
     <string name="reset_start">Avvio reset</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Tipo micro virtuale</string>
+    <string name="virtual_pump_definition">Definizione micro</string>
+    <string name="virtual_pump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump">Micro virtuale</string>
+    <string name="virtual_pump_shortname">MICROV</string>
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
+    <string name="virtual_pump_label">MICRO VIRTUALE</string>
     <string name="virtualpump_settings">Impostazioni micro virtuale</string>
     <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
     <!-- Source -->
+    <string name="ns_client_bg">BG NSClient</string>
+    <string name="ns_client_bg_short">BG NS</string>
     <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
     <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
@@ -231,7 +308,9 @@
     <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
     <string name="eversense">Eversense app (modificata)</string>
     <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Ricevi valori glicemia da 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
@@ -242,6 +321,7 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
+    <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">GlucoRx Aidex</string>
     <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
     <string name="bgsource_upload">Impostazioni caricamento BG</string>
@@ -251,6 +331,9 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_charging">Durante la ricarica</string>
     <string name="ns_battery">Utilizzo batteria</string>
+    <string name="connection_settings_title">Impostazioni connessione</string>
+    <string name="ns_wifi_allowed_ssids">SSID ammessi (separati da punto e virgola)</string>
+    <string name="ns_allow_roaming">Consenti connessione in roaming</string>
     <string name="ns_create_announcements_from_errors_title">Crea avvisi da errori</string>
     <string name="ns_create_announcements_from_carbs_req_title">Crea avvisi da CHO richiesti</string>
     <string name="ns_create_announcements_from_errors_summary">Crea avviso su Nightscout per finestre di errore e allarmi locali (visualizzabile anche nella sezione Portale sotto la voce Trattamenti)</string>
@@ -258,7 +341,9 @@
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
+    <string name="unsupported_ns_version">Versione non supportata di Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
+    <string name="ns_malfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
     <!-- Skins -->
 </resources>
