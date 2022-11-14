@@ -11,14 +11,9 @@
     <string name="tempbasaldeliveryerror">Error en lliurar basal temporal</string>
     <string name="goingtodeliver">A punt de lliurar %1$.2f U</string>
     <string name="waitingforpump">Esperant bomba</string>
-    <string name="connectingfor">Connectant %1$d s</string>
     <string name="bolusdelivering">Lliurant %1$.2f U</string>
-    <string name="handshaking">Establint comunicació</string>
     <string name="connecting">Connectant</string>
-    <string name="connected">Connectat</string>
     <string name="disconnected">Desconnectat</string>
-    <string name="disconnecting">Desconnectant</string>
-    <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
