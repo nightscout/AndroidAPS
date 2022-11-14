@@ -26,7 +26,20 @@
     <!-- FillDialog -->
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
+    <string name="percentage_label">Percentuale</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Sospendi loop per 1h</string>
+    <string name="suspendloopfor2h">Sospendi loop per 2h</string>
+    <string name="suspendloopfor3h">Sospendi loop per 3h</string>
+    <string name="suspendloopfor10h">Sospendi loop per 10h</string>
+    <string name="disconnectpump">Disconnetti micro</string>
+    <string name="disconnectpumpfor15m">Disconnetti micro per 15 min</string>
+    <string name="disconnectpumpfor30m">Disconnetti micro per 30 min</string>
+    <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
+    <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
+    <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
+    <string name="resume">Riprendi</string>
+    <string name="reconnect">Riconnetti micro</string>
     <!-- WizardDialog -->
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
