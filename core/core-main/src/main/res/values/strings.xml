@@ -124,7 +124,6 @@
     <string name="format_mins">%1$d mins</string>
     <string name="pumpbusy">Pump is busy</string>
     <string name="connectionerror">Pump connection error</string>
-    <string name="youareonallowedlimit">Allowed limit reached</string>
     <string name="objectives">Objectives</string>
     <string name="close">Close</string>
     <string name="please_wait">Please wait…</string>
@@ -170,8 +169,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="pairing">Pairing</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="bolusdelivered">Bolus %1$.2f U delivered successfully</string>
     <string name="virtualpump_resultok">OK</string>
@@ -201,7 +198,6 @@
     <string name="time">Time</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Loading …</string>
-    <string name="event_time_label">Event time</string>
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="addnew">Add new</string>
@@ -270,13 +266,6 @@
     <string name="itmustbepositivevalue">it must be positive value</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
-
-    <!--    Dialogs-->
-    <string name="confirmation">Confirmation</string>
-    <string name="message">Message</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="dismiss">DISMISS</string>
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
@@ -399,7 +388,6 @@
 
     <!--    Ntp-->
     <string name="timedetection">Time detection</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
 
     <string name="mute5min">Mute for 5 minutes</string>
 
@@ -584,8 +572,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
-    <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
-    <string name="a11y_plus_button_description">increment %1$s by %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
@@ -652,7 +638,6 @@
     <string name="autotune_run_with_autoswitch">Autotune ran and profile automatically switched</string>
     <string name="autotune_run_with_error">Error during last Autotune run</string>
     <string name="autotune_run_cancelled">Another run of Autotune is detected, run cancelled</string>
-    <string name="needconnectpermission">Application needs bluetooth permission</string>
 
     <!-- Alerts -->
     <string name="key_raise_notifications_as_android_notifications" translatable="false">raise_urgent_alarms_as_android_notification</string>
