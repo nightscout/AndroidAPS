@@ -75,7 +75,6 @@
     <string name="openapsma_maxiob_title">OpenAPS\'in gönderebileceği maksimum bazal AİNS (Aktif insülin) [U]</string>
     <string name="openapsma_maxiob_summary">Bu değere OpenAPS bağlamında Maks AİNS denir.\nAPS\'de bir kerede verilebilen maksimum insülin [U] ü.</string>
     <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
-    <string name="password_preferences_decrypt_prompt">İçe aktarılan tercihlerin şifresini çözmek için gerekli olan ana parola sorulacaktır.</string>
     <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
     <string name="preferences_import_canceled">Aktarım iptal edildi! Tercihler içe aktarılmadı!</string>
     <string name="preferences_import_impossible">Tercihler içe aktarılamıyor!</string>
