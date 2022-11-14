@@ -39,8 +39,6 @@
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/l</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="yes">Tá</string>
-    <string name="no">Níl</string>
     <string name="loopdisabled">LÚB DÍCHUMASAITHE LE SRIANTA</string>
     <string name="exit">Scoir</string>
     <string name="alarm">Aláram</string>
@@ -59,11 +57,6 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_basaliob_label">Bunaidh IOB</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="confirmation">Deimhniú</string>
-    <string name="message">Teachtaireacht</string>
-    <string name="ok">Ceart go leor</string>
-    <string name="cancel">Cuir ar ceal</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -107,7 +100,6 @@
     <string name="amount_days"># Lá</string>
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$du %2$dn</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
