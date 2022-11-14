@@ -64,8 +64,6 @@
     <string name="btwatchdog_title">蓝牙看门狗</string>
     <string name="btwatchdog_summary">如果无法与泵连接，将关闭手机的蓝牙一秒钟后再自动打开。在一些蓝牙堆栈僵死的手机上是有帮助的。</string>
     <string name="pairing">配对中</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
     <string name="loopdisabled">按约束条件禁用循环</string>
     <string name="bolusdelivered">成功输注大剂量 %1$.2f U</string>
     <string name="virtualpump_resultok">确定</string>
@@ -105,7 +103,6 @@
     <string name="invalid">无效</string>
     <string name="login">登录</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -125,7 +122,6 @@
     <!--    TDDStatsActivity-->
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
