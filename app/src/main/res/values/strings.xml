@@ -32,7 +32,10 @@
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
+    <string name="key_openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
+    <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
+    <string name="treatmentssafety_lgsThreshold_title">BG level below which low glucose suspend occurs</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
@@ -41,6 +44,9 @@
     <string name="nav_exit">Exit</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
+    <string name="description_ama">State of the algorithm in 2017</string>
+    <string name="description_smb">Most recent algorithm for advanced users</string>
+    <string name="description_smb_dynamic_isf">Most recent algorithm for advanced users with dynamic/automatic ISF</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
@@ -48,6 +54,17 @@
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
     <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
+    <string name="openapsma_run">Run now</string>
+    <string name="openapsma_lastrun_label">Last run</string>
+    <string name="openapsma_inputparameters_label">Input parameters</string>
+    <string name="openapsma_glucosestatus_label">Glucose status</string>
+    <string name="openapsma_currenttemp_label">Current temp</string>
+    <string name="openapsma_iobdata_label">IOB data</string>
+    <string name="openapsma_profile_label">Profile</string>
+    <string name="openapsma_mealdata_label">Meal data</string>
+    <string name="result">Result</string>
+    <string name="openapsma_noglucosedata">No glucose data available</string>
+    <string name="openapsma_request_label">Request</string>
     <string name="delta">Delta</string>
     <string name="configbuilder">Config Builder</string>
     <string name="overview">Overview</string>
@@ -63,12 +80,14 @@
     <string name="configbuilder_sync">Synchronization</string>
     <string name="configbuilder_sync_description">Data upload and synchronization plugins.</string>
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
+    <string name="constraints">Constraints</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Use this to activate AAPS\' loop integration.</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_tbrsetbypump_label">Temp basal set by pump</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
+    <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
@@ -85,6 +104,10 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
+    <string name="openapsma_maxbasal_title">Max U/h a Temp Basal can be set to</string>
+    <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
+    <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
+    <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
     <string name="language" translatable="false">Language</string>
     <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
@@ -126,12 +149,33 @@
     <string name="open_settings_on_wear">Open Settings on Wear</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
+    <string name="openapsma_autosensdata_label">Autosens data</string>
+    <string name="openapsma_scriptdebugdata_label">Script debug</string>
+    <string name="openapsama_useautosens">Use Autosens feature</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="overview_shortname">HOME</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="wear_shortname">WEAR</string>
     <string name="short_tabtitles">Shorten tab titles</string>
+    <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
+    <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip+ gets noisy.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
+    <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
+    <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
+    <string name="openapsama_autosens_adjusttargets">Autosens adjust targets, too</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
+    <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
+    <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
+    <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
+    <string name="executing">Executing</string>
     <string name="wear_settings">Wear settings</string>
     <string name="nosuccess">not successful - please check phone</string>
     <string name="patient_name">Patient name</string>
@@ -179,7 +223,16 @@
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamic ISF</string>
+    <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
     <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
+    <string name="enableuam">Enable UAM</string>
+    <string name="enablesmb">Enable SMB</string>
+    <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
+    <string name="enableuam_summary">Detection of Unannounced meals</string>
     <string name="invalid">INVALID</string>
     <string name="default_temptargets">Default Temp-Targets</string>
     <string name="eatingsoon_duration">eatingsoon duration</string>
@@ -198,6 +251,14 @@
     <string name="enable_carbs_req_alert">Alert if carbs are required</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
+    <string name="key_smbinterval" translatable="false">smbinterval</string>
+    <string name="smbinterval_summary">How frequently SMBs will be given in min</string>
+    <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
+    <string name="uamsmbmaxminutes">UAM SMB max minutes</string>
+    <string name="uamsmbmaxminutes_summary">Max minutes of basal to limit SMB to for UAM</string>
+    <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
+    <string name="carbsReqThreshold">Minimum Carbs Required For Suggestion</string>
+    <string name="carbsReqThreshold_summary">Minimum grams of carbs to display a carbs suggestion alert. Carbs suggestions below this number will not trigger a notification.</string>
     <string name="overview_editquickwizard_usebg">BG calculation</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB calculation</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
@@ -208,6 +269,21 @@
     <string name="overview_editquickwizard_usecob">COB calculation</string>
     <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
     <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
+    <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
+    <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
+    <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
+    <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
+    <string name="key_allowSMB_with_high_temptarget" translatable="false">enableSMB_with_high_temptarget</string>
+    <string name="enablesmbalways">Enable SMB always</string>
+    <string name="enablesmbalways_summary">Enable SMB always independently to boluses. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enablesmbaftercarbs">Enable SMB after carbs</string>
+    <string name="enablesmbaftercarbs_summary">Enable SMB for 6h after carbs, even with 0 COB. Possible only with BG source with nice filtering of data like G5</string>
+    <string name="enablesmbwithcob">Enable SMB with COB</string>
+    <string name="enablesmbwithcob_summary">Enable SMB when there is COB active.</string>
+    <string name="enablesmbwithtemptarget">Enable SMB with temp targets</string>
+    <string name="enablesmbwithtemptarget_summary">Enable SMB when there is temp target active (eating soon, exercise)</string>
+    <string name="enablesmbwithhightemptarget">Enable SMB with high temp targets</string>
+    <string name="enablesmbwithhightemptarget_summary">Enable SMB when there is high temp target active (exercise, above 100 mg/dl or 5.5 mmol/l)</string>
     <string name="overview_buttons_selection">Buttons</string>
     <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
     <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
@@ -244,8 +320,11 @@
     <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
     <string name="basal_set_correctly">Basal set correctly</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
+    <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
+    <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
+    <string name="treatmentssafety_lgsThreshold_summary">BG value below which insulin is suspended. Default value uses standard target model. User can set value between 60mg/dl (3.3mmol/l) and 100mg/dl(5.5mmol/l). Values below 65/3.6 result in use of default model</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="title_activity_setup_wizard" translatable="false">SetupWizardActivity</string>
     <string name="next_button">Next</string>
@@ -259,8 +338,12 @@
     <string name="secondcarbsincrement">Second carbs increment</string>
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
+    <string name="key_always_use_shortavg" translatable="false">always_use_shortavg</string>
     <string name="openapsama_autosens_max">Max autosens ratio</string>
     <string name="openapsama_autosens_min">Min autosens ratio</string>
+    <string name="openapsama_bolussnooze_dia_divisor">Bolus snooze dia divisor</string>
+    <string name="openapsama_max_daily_safety_multiplier">Max daily safety multiplier</string>
+    <string name="openapsama_current_basal_safety_multiplier">Current basal safety multiplier</string>
     <string name="key_wearwizard_bg" translatable="false">wearwizard_bg</string>
     <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
     <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
@@ -286,6 +369,18 @@
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="nav_plugin_preferences">Plugin preferences</string>
+    <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
+    <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
+    <string name="high_temptarget_raises_sensitivity_title">High temptarget raises sensitivity</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Raise sensitivity for temptargets >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Low temptarget lowers sensitivity</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
+    <string name="key_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
+    <string name="resistance_lowers_target_title">Resistance lowers target</string>
+    <string name="resistance_lowers_target_summary">When resistance is detected, lower the target glucose</string>
+    <string name="key_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
+    <string name="sensitivity_raises_target_title">Sensitivity raises target</string>
+    <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
@@ -305,6 +400,7 @@
     <string name="delete_logs">Delete Logs</string>
     <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), delay: %3$d m</string>
+    <string name="openaps_noasdata">No autosens data available</string>
     <string name="log_files">Log files</string>
     <string name="miscellaneous">Miscellaneous</string>
     <string name="nav_logsettings">Log settings</string>
@@ -315,6 +411,8 @@
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="profile_total">== ∑  %1$s U</string>
+    <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
+    <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="unitsnosemicolon">Units</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
@@ -392,6 +490,8 @@
     <string name="search">Search</string>
 
     <string name="no_watch_connected">(No Watch Connected)</string>
+    <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
     <string name="database_cleanup">Database cleanup</string>
     <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
     <string name="cleared_entries">Cleared entries</string>
