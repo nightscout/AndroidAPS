@@ -26,7 +26,6 @@
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpen er opptatt</string>
     <string name="connectionerror">Tilkoblingsfeil til pumpe</string>
-    <string name="youareonallowedlimit">Tillatt grense nådd</string>
     <string name="objectives">Opplæringsmål</string>
     <string name="close">Lukk</string>
     <string name="please_wait">Vennligst vent…</string>
@@ -70,8 +69,6 @@
     <string name="btwatchdog_title">Overvåking av Bluetooth</string>
     <string name="btwatchdog_summary">Restarter telefonens bluetooth i ett sekund hvis tilkobling til pumpen mislykkes. Dette hjelper på enkelte telefoner hvor bluetooth av og til stopper.</string>
     <string name="pairing">Kobler sammen</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nei</string>
     <string name="loopdisabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
     <string name="bolusdelivered">Bolus %1$.2f E er levert</string>
     <string name="virtualpump_resultok">OK</string>
@@ -101,7 +98,6 @@
     <string name="time">Tid</string>
     <string name="ns_wifi_ssids">WiFi nettverksnavn</string>
     <string name="loading">Laster…</string>
-    <string name="event_time_label">Tidspunkt for hendelse</string>
     <string name="notes_label">Merknader</string>
     <string name="remove_button">Fjern</string>
     <string name="addnew">Legg til ny</string>
@@ -161,12 +157,6 @@
     <string name="itmustbepositivevalue">det på være positiv verdi</string>
     <string name="limitingbolus">Begrenser bolus til %1$.1f E på grunn av %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pumpen ikke initialisert, ingen profil valgt!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Bekreftelse</string>
-    <string name="message">Melding</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Avbryt</string>
-    <string name="dismiss">Avvis</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
     <string name="ble_not_supported_or_not_paired">Lavenergi Bluetooth er ikke støttet eller enheten er ikke paret.</string>
@@ -270,7 +260,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Tidsdetektering</string>
-    <string name="format_hour_minute">%1$dt %2$dm</string>
     <string name="mute5min">Demp i 5 minutter</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportert for %1$s siden</string>
@@ -442,8 +431,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
-    <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
-    <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
@@ -502,7 +489,6 @@
     <string name="autotune_run_with_autoswitch">Autotune utført og profil ble automatisk skiftet ut</string>
     <string name="autotune_run_with_error">Feil oppdaget under siste Autotune kjøring</string>
     <string name="autotune_run_cancelled">Autotune kjører allerede. Kjøring avbrutt</string>
-    <string name="needconnectpermission">Appen trenger bluetooth-tillatelse</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Bruk systemvarslinger for alarmer og varslinger</string>
     <string name="urgent_alarm">Kritisk alarm</string>
