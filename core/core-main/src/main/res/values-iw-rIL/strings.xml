@@ -3,7 +3,6 @@
     <!--    Keys-->
     <!--    General-->
     <string name="androidaps_start">הופעל AndroidAPS</string>
-    <string name="youareonallowedlimit">הגעתם לגבול המותר</string>
     <string name="dia_label">DIA</string>
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
@@ -45,7 +44,6 @@
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
