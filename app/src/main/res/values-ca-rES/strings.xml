@@ -67,7 +67,6 @@
     <string name="openapsma_maxiob_title">Màxima basal IOB que OpenAPS pot suministrar [U]</string>
     <string name="openapsma_maxiob_summary">A OpenAPS d\'aquest valor se\'n diu Màx IOB\nÉs la màxima quantitat d\'insulina en [U] que APS pot suministrar d\'una vegada.</string>
     <string name="password_preferences_encrypt_prompt">Se us demanarà una clau mestra, es farà servir per encriptar la configuració exportada.</string>
-    <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
     <string name="preferences_export_canceled">Exportació cancel·lada! Configuració NO exportada!</string>
     <string name="preferences_import_canceled">Importació cancel·lada! Configuració NO importada!</string>
     <string name="preferences_import_impossible">No s\'ha pogut importar la configuració!</string>
