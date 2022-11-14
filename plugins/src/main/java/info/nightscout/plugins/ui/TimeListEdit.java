@@ -24,11 +24,12 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.shared.utils.DateUtil;
 import info.nightscout.androidaps.utils.ui.NumberPicker;
+import info.nightscout.core.ui.elements.SpinnerHelper;
 import info.nightscout.plugins.R;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.shared.SafeParse;
+import info.nightscout.shared.utils.DateUtil;
 
 /**
  * Created by mike on 29.12.2016.

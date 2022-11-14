@@ -6,7 +6,9 @@ import dagger.Provides
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.HardLimitsImpl
+import info.nightscout.implementation.pump.WarnColorsImpl
 import info.nightscout.implementation.resources.ResourceHelperImpl
+import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -32,4 +34,8 @@ open class ImplementationModule {
     @Singleton
     fun provideHardLimits(aapsLogger: AAPSLogger, rxBus: RxBus, sp: SP, rh: ResourceHelper, context: Context, repository: AppRepository): HardLimits =
         HardLimitsImpl(aapsLogger, rxBus, sp, rh, context, repository)
+
+    @Provides
+    @Singleton
+    fun provideWarnColors(rh: ResourceHelper): WarnColors = WarnColorsImpl(rh)
 }

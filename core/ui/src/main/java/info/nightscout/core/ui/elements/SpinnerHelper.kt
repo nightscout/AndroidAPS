@@ -1,4 +1,4 @@
-package info.nightscout.plugins.ui
+package info.nightscout.core.ui.elements
 
 import android.view.MotionEvent
 import android.view.View

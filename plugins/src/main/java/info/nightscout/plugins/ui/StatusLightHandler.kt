@@ -3,12 +3,12 @@ package info.nightscout.plugins.ui
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsclient.extensions.age

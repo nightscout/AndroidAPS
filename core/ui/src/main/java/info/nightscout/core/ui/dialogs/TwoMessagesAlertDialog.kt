@@ -1,18 +1,23 @@
-package info.nightscout.androidaps.utils.alertDialogs
+package info.nightscout.core.ui.dialogs
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.androidaps.R
-import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.core.ui.R
 
 object TwoMessagesAlertDialog {
+
+    private fun runOnUiThread(theRunnable: Runnable?) = theRunnable?.let {
+        Handler(Looper.getMainLooper()).post(it)
+    }
 
     @SuppressLint("InflateParams")
     fun showAlert(context: Context, title: String, message: String, secondMessage: String, ok: (() -> Unit)?, cancel: (() -> Unit)? = null, @DrawableRes icon: Int? = null) {
@@ -23,7 +28,7 @@ object TwoMessagesAlertDialog {
         MaterialAlertDialogBuilder(context, R.style.DialogTheme)
             .setMessage(message)
             .setCustomTitle(
-                info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(
+                AlertDialogHelper.buildCustomTitle(
                     context, title, icon
                         ?: R.drawable.ic_check_white_48dp
                 )
