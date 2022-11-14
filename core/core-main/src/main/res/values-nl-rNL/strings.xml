@@ -26,7 +26,6 @@
     <string name="format_mins">%1$d minuten</string>
     <string name="pumpbusy">Pomp is bezig</string>
     <string name="connectionerror">Pomp verbindingsstoring</string>
-    <string name="youareonallowedlimit">Toegestane limiet bereikt</string>
     <string name="objectives">Doelen</string>
     <string name="close">Sluiten</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
@@ -70,8 +69,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Zet de bluetooth van de telefoon even kort uit en weer aan. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="pairing">Koppelen</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
     <string name="loopdisabled">LOOP UITGESCHAKELD DOOR BEPERKINGEN</string>
     <string name="bolusdelivered">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="virtualpump_resultok">OK</string>
@@ -101,7 +98,6 @@
     <string name="time">Tijd</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Bezig met laden …</string>
-    <string name="event_time_label">Tijdstip</string>
     <string name="notes_label">Notities</string>
     <string name="remove_button">Verwijder</string>
     <string name="addnew">Voeg nieuw toe</string>
@@ -161,12 +157,6 @@
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pomp niet geïnitialiseerd, profiel niet ingesteld!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Bevestiging</string>
-    <string name="message">Bericht</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Afbreken</string>
-    <string name="dismiss">AFWIJZEN</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy wordt niet ondersteund of het apparaat is niet gekoppeld.</string>
@@ -270,7 +260,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Tijd detectie</string>
-    <string name="format_hour_minute">%1$du %2$dm</string>
     <string name="mute5min">5 minuten dempen</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
@@ -442,8 +431,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
-    <string name="a11y_min_button_description">verlaag %1$s met %2$s</string>
-    <string name="a11y_plus_button_description">verhoog %1$s met %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basaal</string>
     <string name="basalpct">Basaal %</string>
@@ -502,7 +489,6 @@
     <string name="autotune_run_with_autoswitch">Autotune uitgevoerd en profiel automatisch gewisseld</string>
     <string name="autotune_run_with_error">Fout tijdens laatste Autotune uitvoeren</string>
     <string name="autotune_run_cancelled">Een ander Autotune proces loopt nog, de uitvoering is geannuleerd</string>
-    <string name="needconnectpermission">Applicatie heeft bluetooth toestemming nodig</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Gebruik systeem notificaties voor waarschuwingen en notificaties</string>
     <string name="urgent_alarm">Dringend alarm</string>
