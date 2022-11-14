@@ -19,8 +19,6 @@
     <string name="invalid">НЕВЕРНО</string>
     <string name="login">Логин</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
