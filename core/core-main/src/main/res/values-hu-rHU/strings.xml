@@ -17,8 +17,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="pairing">Párosítás</string>
-    <string name="yes">Igen</string>
-    <string name="no">Nem</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="exit">Kilép</string>
     <string name="alarm">Riasztás</string>
@@ -36,7 +34,6 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_basaliob_label">Bázis IOB</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
     <!--    Protection-->
     <string name="wrongpassword">Hibás jelszó</string>
