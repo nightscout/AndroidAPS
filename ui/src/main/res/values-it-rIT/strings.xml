@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="constraint_applied">Vincolo applicato!</string>
+    <string name="bolus_constraint_applied">Vincolo bolo applicato</string>
+    <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
+    <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Finestra di dialogo cancellata</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
@@ -18,14 +22,23 @@
     <string name="age">Età</string>
     <string name="weight_label">Peso</string>
     <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati (in modo anonimo). Un ID è assegnato a questa installazione di AAPS. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
+    <string name="bg_other">Altro</string>
+    <string name="bg_sensor">Sensore</string>
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="superbolus">Superbolo</string>
     <string name="treatments_wizard_total_label">Totale</string>
     <!-- FillDialog -->
+    <string name="button1">Tasto 1</string>
+    <string name="button2">Tasto 2</string>
+    <string name="button3">Tasto 3</string>
+    <string name="record_pump_site_change">Registra cambio posizione cannula</string>
+    <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">No bolo, solo record</string>
     <!-- ProfileSwitchDialog -->
+    <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentuale</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Sospendi loop per 1h</string>
