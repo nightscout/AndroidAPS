@@ -77,7 +77,6 @@
     <string name="openapsma_maxiob_title">Maximálny bazálny IOB, ktorý OpenAPS môže podať [JI]</string>
     <string name="openapsma_maxiob_summary">Táto hodnota je nazývaná v kontexte OpenAPS ako max IOB, je to maximálne množstvo inzulínu v [JI], ktoré APS môže naraz podať.</string>
     <string name="password_preferences_encrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie exportovaných nastavení.</string>
-    <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <string name="preferences_export_canceled">Export zrušený! Nastavenia neboli exportované!</string>
     <string name="preferences_import_canceled">Import zrušený! Nastavenia neboli importované!</string>
     <string name="preferences_import_impossible">Nastavenia sa nedajú importovať!</string>
