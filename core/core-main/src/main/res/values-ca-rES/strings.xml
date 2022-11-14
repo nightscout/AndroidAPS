@@ -56,8 +56,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Apaga el bluetooth del telèfon un segon si no és possible connectar amb la bomba. Pot ajudar amb certs telèfons a on la connexió bluetooth es bloqueja.</string>
     <string name="pairing">Sincronitzant</string>
-    <string name="yes">Sí</string>
-    <string name="no">No</string>
     <string name="loopdisabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
     <string name="bolusdelivered">Bolus %1$.2f U lliurat correctament</string>
     <string name="virtualpump_resultok">OK</string>
@@ -87,7 +85,6 @@
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
     <string name="loading">Carregant…</string>
-    <string name="event_time_label">Hora de l\'esdeveniment</string>
     <string name="notes_label">Notes</string>
     <string name="remove_button">Eliminar</string>
     <string name="addnew">Afegir</string>
@@ -111,11 +108,6 @@
     <string name="itmustbepositivevalue">ha de ser un valor positiu</string>
     <string name="limitingbolus">Limitant bolus a %1$.1f U a causa de %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Bomba no iniciada, perfil no establert!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Confirmació</string>
-    <string name="message">Missatge</string>
-    <string name="cancel">Cancel·lar</string>
-    <string name="dismiss">DESCARTAR</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
@@ -201,7 +193,6 @@
     <string name="tbb2">TBB (Total Basal Base) * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detecció de temps</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Silenciar 5 minuts</string>
     <!-- Maintenance -->
     <string name="exported_at" comment="at placeholder we add export date">exportat a les %1$s</string>
