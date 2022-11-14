@@ -7,12 +7,13 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.setupwizard.SWNumberValidator
-import info.nightscout.shared.SafeParse
 import info.nightscout.androidaps.utils.ui.NumberPicker
+import info.nightscout.core.profile.toCurrentUnits
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.SafeParse
 import java.text.DecimalFormat
 import javax.inject.Inject
 

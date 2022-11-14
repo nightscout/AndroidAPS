@@ -1,14 +1,33 @@
 package info.nightscout.androidaps.db
 
 import android.content.Context
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.events.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
-import info.nightscout.androidaps.widget.updateWidget
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
+import info.nightscout.androidaps.events.EventNewBG
+import info.nightscout.androidaps.events.EventNewHistoryData
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.Food
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventExtendedBolusChange
+import info.nightscout.rx.events.EventFoodDatabaseChanged
+import info.nightscout.rx.events.EventOfflineChange
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.events.EventTempBasalChange
+import info.nightscout.rx.events.EventTempTargetChange
+import info.nightscout.rx.events.EventTherapyEventChange
+import info.nightscout.rx.events.EventTreatmentChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,7 +44,7 @@ class CompatDBHelper @Inject constructor(
         .changeObservable()
         .doOnSubscribe {
             rxBus.send(EventNewBG(null))
-            updateWidget(context)
+            Widget.updateWidget(context)
         }
         .subscribe {
             /**
@@ -38,7 +57,7 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<GlucoseValue>().maxByOrNull { gv -> gv.timestamp }?.let { gv ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
                 rxBus.send(EventNewBG(gv))
-                updateWidget(context)
+                Widget.updateWidget(context)
                 newestGlucoseValue = gv
             }
             it.filterIsInstance<GlucoseValue>().minOfOrNull { gv -> gv.timestamp }?.let { timestamp ->

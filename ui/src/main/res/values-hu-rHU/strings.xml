@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="statistics">Statisztikák</string>
+    <string name="calculation_in_progress">Számítás folyamatban</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+</resources>

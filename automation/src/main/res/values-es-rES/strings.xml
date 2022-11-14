@@ -81,7 +81,6 @@
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
-    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">Diferencia de glucosa</string>
     <string name="deltalabel_u">Diferencia de glucosa %1$s</string>
@@ -108,7 +107,6 @@
     <string name="please_choose_a_trigger_type">Selecciona un disparador</string>
     <string name="please_choose_a_operation_type">Elija un tipo de operación</string>
     <string name="triggers">Disparadores:</string>
-    <string name="remove_label">ELIMINAR</string>
     <string name="preconditions">Precondiciones:</string>
     <string name="automation_event">Automatización de eventos</string>
     <string name="reorder_label">Reordenar</string>

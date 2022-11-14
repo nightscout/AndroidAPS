@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
+    <string name="constraint_applied">Aplikované obmedzenie!</string>
+    <string name="bolus_constraint_applied">Aplikované obmedzenie bolusu</string>
+    <string name="carbs_constraint_applied">Aplikované obmedzenie sacharidov</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialóg zrušený</string>
+    <string name="start_activity_tt">Spustiť Dočasný cieľ Aktivita</string>
+    <string name="start_eating_soon_tt">Spustiť Dočasný cieľ Blížiace sa jedlo</string>
+    <string name="start_hypo_tt">Spustiť doč. cieľ Hypo</string>
+    <string name="time_offset">Časový posun</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Upozorniť na bolus neskôr</string>
+    <string name="a11y_carb_reminder">nastaviť pripomienku</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurovať priehľadnosť</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor aktivity</string>
+    <string name="do_you_want_reset_stats">Chcete resetovať štatistiky aktivity?</string>
+    <string name="statistics">Štatistika</string>
+    <string name="calculation_in_progress">Prebieha výpočet</string>
+    <string name="invalid_age">Neplatný záznam veku</string>
+    <string name="invalid_weight">Neplatný záznam váhy</string>
+    <string name="id">ID:</string>
+    <string name="submit">Odoslať</string>
+    <string name="age">Vek</string>
+    <string name="weight_label">Váha</string>
+    <string name="most_common_profile">Najčastejšie používaný profil:</string>
+    <string name="survey_comment">Poznámka: Len údaje zobrazené na tejto obrazovke budú odosielané anonymne. ID je pridelené na túto inštaláciu AndroidAPS. Údaje môžete odoslať znova, ak sa váš hlavný profil zmení, ale nechajte ho bežať aspoň týždeň, aby bol výsledok času v rozsahu viditeľný. Vaša pomoc je vítaná.</string>
+    <!-- CareDialog -->
+    <string name="glucose_type">Zadanie glykémie</string>
+    <string name="bg_other">Iné</string>
+    <string name="bg_meter">Glukomer</string>
+    <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+</resources>

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interaction.utils
 
 import dagger.android.DaggerActivity
 import javax.inject.Inject
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.androidaps.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder
 import android.os.Bundle

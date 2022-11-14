@@ -1,0 +1,28 @@
+android {
+
+    flavorDimensions "standard"
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+        pumpcontrol {
+            dimension "standard"
+        }
+        aapsclient {
+            dimension "standard"
+        }
+        aapsclient2 {
+            dimension "standard"
+        }
+    }
+
+    // disable for modules here
+    buildFeatures {
+        buildConfig = false
+    }
+}
+
+dependencies {
+    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+}

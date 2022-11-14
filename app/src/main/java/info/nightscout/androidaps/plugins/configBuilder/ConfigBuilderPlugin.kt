@@ -3,22 +3,33 @@ package info.nightscout.androidaps.plugins.configBuilder
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.events.EventAppInitialized
-import info.nightscout.androidaps.events.EventConfigBuilderChange
-import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.aps.APS
+import info.nightscout.interfaces.aps.Sensitivity
+import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppInitialized
+import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventRebuildTabs
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,16 +43,17 @@ class ConfigBuilderPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync
-) : PluginBase(PluginDescription()
-    .mainType(PluginType.GENERAL)
-    .fragmentClass(ConfigBuilderFragment::class.java.name)
-    .showInList(true)
-    .alwaysEnabled(true)
-    .alwaysVisible(false)
-    .pluginIcon(R.drawable.ic_cogs)
-    .pluginName(R.string.configbuilder)
-    .shortName(R.string.configbuilder_shortname)
-    .description(R.string.description_config_builder),
+) : PluginBase(
+    PluginDescription()
+        .mainType(PluginType.GENERAL)
+        .fragmentClass(ConfigBuilderFragment::class.java.name)
+        .showInList(true)
+        .alwaysEnabled(true)
+        .alwaysVisible(false)
+        .pluginIcon(R.drawable.ic_cogs)
+        .pluginName(R.string.configbuilder)
+        .shortName(R.string.configbuilder_shortname)
+        .description(R.string.description_config_builder),
     aapsLogger, rh, injector
 ), ConfigBuilder {
 
@@ -66,65 +78,67 @@ class ConfigBuilderPlugin @Inject constructor(
             val type = p.getType()
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible) continue
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
-            savePref(p, type, true)
+            savePref(p, type)
         }
     }
 
-    private fun savePref(p: PluginBase, type: PluginType, storeVisible: Boolean) {
+    private fun savePref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
         sp.putBoolean(settingEnabled, p.isEnabled())
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled())
-        if (storeVisible) {
-            val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-            sp.putBoolean(settingVisible, p.isFragmentVisible())
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible())
-        }
+        val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
+        sp.putBoolean(settingVisible, p.isFragmentVisible())
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible())
     }
 
     private fun loadSettings() {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings")
         for (p in activePlugin.getPluginsList()) {
             val type = p.getType()
-            loadPref(p, type, true)
+            loadPref(p, type)
         }
         activePlugin.verifySelectionInCategories()
     }
 
-    private fun loadPref(p: PluginBase, type: PluginType, loadVisible: Boolean) {
+    private fun loadPref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
+        if (sp.contains(settingEnabled)) p.setPluginEnabled(
+            type,
+            sp.getBoolean(settingEnabled, false)
+        ) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type))
-        if (loadVisible) {
-            val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-            if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
-                p.setFragmentVisible(type, true)
-            }
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
+        val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
+        if (sp.contains(settingVisible)) p.setFragmentVisible(
+            type,
+            sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)
+        ) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+            p.setFragmentVisible(type, true)
         }
+        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
     }
 
     fun logPluginStatus() {
         for (p in activePlugin.getPluginsList()) {
             aapsLogger.debug(
                 LTag.CONFIGBUILDER, p.name + ":" +
-                (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
-                (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
-                (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
-                (if (p.isEnabled(PluginType.APS)) " APS" else "") +
-                (if (p.isEnabled(PluginType.PUMP)) " PUMP" else "") +
-                (if (p.isEnabled(PluginType.CONSTRAINTS)) " CONSTRAINTS" else "") +
-                (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
-                (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
-                if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else ""
+                    (if (p.isEnabled(PluginType.GENERAL)) " GENERAL" else "") +
+                    (if (p.isEnabled(PluginType.SENSITIVITY)) " SENSITIVITY" else "") +
+                    (if (p.isEnabled(PluginType.PROFILE)) " PROFILE" else "") +
+                    (if (p.isEnabled(PluginType.APS)) " APS" else "") +
+                    (if (p.isEnabled(PluginType.PUMP)) " PUMP" else "") +
+                    (if (p.isEnabled(PluginType.CONSTRAINTS)) " CONSTRAINTS" else "") +
+                    (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
+                    (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
+                    if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else ""
             )
         }
     }
 
     // Ask when switching to physical pump plugin
     fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
-        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(R.string.virtualpump))
+        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(R.string.virtual_pump))
             confirmPumpPluginActivation(changedPlugin, newState, activity, type)
         else if (changedPlugin.getType() == PluginType.PUMP) {
             performPluginSwitch(changedPlugin, newState, type)
@@ -142,36 +156,41 @@ class ConfigBuilderPlugin @Inject constructor(
                 performPluginSwitch(changedPlugin, newState, type)
                 pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                        ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+                uel.log(
+                    Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                )
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, {
-                rxBus.send(EventConfigBuilderUpdateGui())
-                aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
-            })
+                                          rxBus.send(EventConfigBuilderUpdateGui())
+                                          aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
+                                      })
         }
     }
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
-        if(enabled && !changedPlugin.isEnabled()) {
-            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
-        }
-        else if(!enabled) {
-            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+        if (enabled && !changedPlugin.isEnabled()) {
+            uel.log(
+                Action.PLUGIN_ENABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+            )
+        } else if (!enabled) {
+            uel.log(
+                Action.PLUGIN_DISABLED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+            )
         }
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)
-        storeSettings("CheckedCheckboxEnabled")
+        storeSettings("RemoteConfiguration")
         rxBus.send(EventRebuildTabs())
         rxBus.send(EventConfigBuilderChange())
         rxBus.send(EventConfigBuilderUpdateGui())
         logPluginStatus()
     }
 
-    fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
+    fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
             PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
@@ -180,12 +199,14 @@ class ConfigBuilderPlugin @Inject constructor(
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
+            // Process only NSClients
+            PluginType.SYNC        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
 
             else                   -> {
             }
         }
         if (pluginsInCategory != null) {
-            val newSelection = changedPlugin.isEnabled(type!!)
+            val newSelection = changedPlugin.isEnabled(type)
             if (newSelection) { // new plugin selected -> disable others
                 for (p in pluginsInCategory) {
                     if (p.name == changedPlugin.name) {
@@ -195,7 +216,9 @@ class ConfigBuilderPlugin @Inject constructor(
                         p.setFragmentVisible(type, false)
                     }
                 }
-            } else { // enable first plugin in list
+            } else if (type != PluginType.SYNC) {
+                // enable first plugin in list
+                // NSC must not be selected
                 pluginsInCategory[0].setPluginEnabled(type, true)
             }
         }

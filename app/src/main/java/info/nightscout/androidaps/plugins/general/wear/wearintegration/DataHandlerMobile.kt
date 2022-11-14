@@ -3,47 +3,77 @@ package info.nightscout.androidaps.plugins.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.database.interfaces.end
-import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import info.nightscout.androidaps.database.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.androidaps.dialogs.CarbsDialog
-import info.nightscout.androidaps.dialogs.InsulinDialog
-import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.wizard.BolusWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizard
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.generateCOBString
+import info.nightscout.core.iob.round
+import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.core.wizard.QuickWizard
+import info.nightscout.core.wizard.QuickWizardEntry
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TotalDailyDose
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
+import info.nightscout.ui.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.InsulinDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -66,13 +96,13 @@ class DataHandlerMobile @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val profileFunction: ProfileFunction,
     private val loop: Loop,
-    private val nsDeviceStatus: NSDeviceStatus,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val receiverStatusStore: ReceiverStatusStore,
     private val quickWizard: QuickWizard,
     private val defaultValueHelper: DefaultValueHelper,
     private val trendCalculator: TrendCalculator,
     private val dateUtil: DateUtil,
-    private val constraintChecker: ConstraintChecker,
+    private val constraintChecker: Constraints,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
@@ -469,7 +499,7 @@ class DataHandlerMobile @Inject constructor(
         message += rh.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
         message += rh.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
         if (insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0)
-            message += "\n" + rh.gs(R.string.constraintapllied)
+            message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -487,7 +517,7 @@ class DataHandlerMobile @Inject constructor(
             "\n" + rh.gs(R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(R.string.duration) + ": " + command.duration + "h"
         if (carbsAfterConstraints - command.carbs != 0) {
-            message += "\n" + rh.gs(R.string.constraintapllied)
+            message += "\n" + rh.gs(R.string.constraint_applied)
         }
         if (carbsAfterConstraints <= 0) {
             sendError("Carbs = 0! No action taken!")
@@ -511,8 +541,8 @@ class DataHandlerMobile @Inject constructor(
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-        var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraintapllied)
+        var message = rh.gs(R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
+        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -525,8 +555,8 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
-        var message = rh.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
-        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraintapllied)
+        var message = rh.gs(R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
+        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -872,11 +902,11 @@ class DataHandlerMobile @Inject constructor(
 
         //batteries
         val phoneBattery = receiverStatusStore.batteryLevel
-        val rigBattery = nsDeviceStatus.uploaderStatus.trim { it <= ' ' }
+        val rigBattery = processedDeviceStatusData.uploaderStatus.trim { it <= ' ' }
         //OpenAPS status
         val openApsStatus =
             if (config.APS) loop.lastRun?.let { if (it.lastTBREnact != 0L) it.lastTBREnact else -1 } ?: -1
-            else nsDeviceStatus.openApsTimestamp
+            else processedDeviceStatusData.openApsTimestamp
 
         rxBus.send(
             EventMobileToWear(
@@ -966,7 +996,7 @@ class DataHandlerMobile @Inject constructor(
             ret += if (!result.isChangeRequested) {
                 rh.gs(R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
-                rh.gs(R.string.canceltemp) + "\n"
+                rh.gs(R.string.cancel_temp) + "\n"
             } else {
                 rh.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
                     "(" + DecimalFormatter.to2Decimal(result.rate / activePlugin.activePump.baseBasalRate * 100) + "%)\n" +
@@ -1079,7 +1109,7 @@ class DataHandlerMobile @Inject constructor(
     private fun generateStatusString(profile: Profile?, currentBasal: String, iobSum: String, iobDetail: String, bgiString: String): String {
         var status = ""
         profile ?: return rh.gs(R.string.noprofile)
-        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabledloop) + "\n"
+        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
 
         val iobString =
             if (sp.getBoolean(R.string.key_wear_detailediob, false)) "$iobSum $iobDetail"

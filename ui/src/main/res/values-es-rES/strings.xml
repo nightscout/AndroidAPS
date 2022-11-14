@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
+    <string name="dialog_canceled">Diálogo cancelado</string>
+    <string name="start_activity_tt">Iniciar OT Actividad</string>
+    <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
+    <string name="start_hypo_tt">Iniciar OT Hipo</string>
+    <string name="time_offset">Retardo</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Recordar ejecutar el bolo más tarde</string>
+    <string name="a11y_carb_reminder">establecer recordatorio</string>
+    <!--    Widget-->
+    <string name="widget_description">Widget de AAPS</string>
+    <!--     Activities-->
+    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="superbolus">Superbolo</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- Treatments -->
+    <string name="no_records_available">No hay registros disponibles</string>
+    <string name="calculation_short">Cálculo</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="invalid">INVÁLIDO</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Carbohidratos:</string>
+    <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="tempbasals_realduration_label_string">Duración:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
+    <string name="treatments_wizard_tt_label">OT</string>
+    <string name="treatments_wizard_correction_label">Corrección</string>
+    <string name="meal_bolus">Comida</string>
+    <string name="tempt_targets">Objetivos temporales</string>
+    <string name="carbs_and_bolus">Carbohidratos y bolos</string>
+    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
+    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
+    <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
+    <string name="refresheventsfromnightscout">Actualizar desde Nightscout</string>
+    <string name="show_invalidated">Mostrar invalidados</string>
+    <string name="hide_invalidated">Ocultar invalidados</string>
+    <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
+    <string name="hide_loop">Ocultar lazo</string>
+    <string name="show_loop">Mostrar lazo</string>
+    <string name="clone_label">Duplicar</string>
+    <string name="show_loop_records">Mostrar registros del lazo</string>
+</resources>

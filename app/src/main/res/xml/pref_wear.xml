@@ -22,7 +22,7 @@
                 android:defaultValue="true"
                 android:dependency="@string/key_wear_control"
                 android:key="@string/key_wearwizard_bg"
-                android:title="@string/treatments_wizard_bg_label" />
+                android:title="@string/bg_label" />
 
             <CheckBoxPreference
                 android:defaultValue="false"
@@ -56,8 +56,8 @@
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_wear_detailediob"
-                android:summary="@string/wear_detailedIOB_summary"
-                android:title="@string/wear_detailedIOB_title" />
+                android:summary="@string/xdrip_status_detailed_iob_summary"
+                android:title="@string/xdrip_status_detailed_iob_title" />
 
             <SwitchPreference
                 android:defaultValue="false"
@@ -68,8 +68,8 @@
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_wear_showbgi"
-                android:summary="@string/wear_showbgi_summary"
-                android:title="@string/wear_showbgi_title" />
+                android:summary="@string/xdrip_status_show_bgi_summary"
+                android:title="@string/xdrip_status_show_bgi_title" />
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="wear_predictions"

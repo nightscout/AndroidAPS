@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
+    <string name="dialog_canceled">Janela cancelada</string>
+    <string name="start_activity_tt">Iniciar atividade TT</string>
+    <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
+    <string name="start_hypo_tt">Começar TT Hipo</string>
+    <string name="time_offset">Fuso horário</string>
+    <string name="unit_minute_short">min</string>
+    <string name="a11y_carb_reminder">definir lembrete</string>
+    <!--    Widget-->
+    <string name="widget_description">Widget do AAPS</string>
+    <!--     Activities-->
+    <string name="statistics">Estatísticas</string>
+    <string name="calculation_in_progress">Cálculo em andamento</string>
+    <string name="id">ID:</string>
+    <string name="submit">Enviar</string>
+    <string name="age">Idade</string>
+    <string name="weight_label">Peso</string>
+    <string name="survey_comment">Nota: Apenas os dados visíveis nesta tela serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Você pode enviar dados novamente se o perfil principal for alterado, mas deixe-o rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+</resources>

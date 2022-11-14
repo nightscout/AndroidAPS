@@ -17,7 +17,6 @@
     <string name="not_inserted">未插入</string>
     <string name="tdd_bolus">大剂量日总量</string>
     <string name="tdd_basal">基础日总量</string>
-    <string name="tdd_total">胰岛素输注日总量</string>
     <string name="tbr_formatter">%1$d%% 为 %2$d / %3$d 分钟</string>
     <string name="multiwave_bolus">多波</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U 为 %3$d 分钟</string>

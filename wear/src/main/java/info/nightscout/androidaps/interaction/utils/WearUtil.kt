@@ -2,8 +2,9 @@ package info.nightscout.androidaps.interaction.utils
 
 import android.content.Context
 import android.os.PowerManager
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import javax.inject.Inject
 import javax.inject.Singleton
 

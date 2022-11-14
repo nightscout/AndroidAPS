@@ -81,7 +81,6 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Otoduyarlılık %1$s %2$s %%</string>
     <string name="autosenslabel">Otoduyarlılık %</string>
-    <string name="a11y_autosenslabel">Oto duyarlılık</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">KŞ farkı</string>
     <string name="deltalabel_u">KŞ farkı [%1$s]</string>
@@ -108,7 +107,6 @@
     <string name="please_choose_a_trigger_type">Tetikleyici tipini seçin</string>
     <string name="please_choose_a_operation_type">İşlem tipini seçin</string>
     <string name="triggers">Tetikleyiciler:</string>
-    <string name="remove_label">KALDIR</string>
     <string name="preconditions">Ön koşullar:</string>
     <string name="automation_event">Otomasyon durumu</string>
     <string name="reorder_label">Yeniden sırala</string>

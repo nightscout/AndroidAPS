@@ -17,7 +17,6 @@
     <string name="not_inserted">Ikke innsatt</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basal</string>
-    <string name="tdd_total">TDD Total</string>
     <string name="tbr_formatter">%1$d%% i %2$d / %3$d min</string>
     <string name="multiwave_bolus">Kombinasjonsbolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f E i %3$d min</string>

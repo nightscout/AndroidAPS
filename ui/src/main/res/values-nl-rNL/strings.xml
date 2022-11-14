@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
+    <string name="constraint_applied">Beperking toegepast!</string>
+    <string name="bolus_constraint_applied">Bolus limiet ingesteld</string>
+    <string name="carbs_constraint_applied">Koolhydraten beperking ingesteld</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialoog geannuleerd</string>
+    <string name="start_activity_tt">Start inspanning TT</string>
+    <string name="start_eating_soon_tt">Start binnenkort eten TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Tijdverschuiving</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Herinner later te bolussen</string>
+    <string name="a11y_carb_reminder">herinnering instellen</string>
+    <!--    Widget-->
+    <string name="configure">Configureer transparantie</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Activiteitsmonitor</string>
+    <string name="do_you_want_reset_stats">Wil je de activiteitenstatistieken resetten?</string>
+    <string name="statistics">Statistieken</string>
+    <string name="calculation_in_progress">Berekening wordt uitgevoerd</string>
+    <string name="invalid_age">Ongeldige leeftijd ingevoerd</string>
+    <string name="invalid_weight">Ongeldige gewicht ingevoerd</string>
+    <string name="id">ID:</string>
+    <string name="submit">Verzenden</string>
+    <string name="age">Leeftijd</string>
+    <string name="weight_label">Gewicht</string>
+    <string name="most_common_profile">Meest voorkomende profiel:</string>
+    <string name="survey_comment">Opmerking: Alleen gegevens die zichtbaar zijn op dit scherm worden anoniem geüpload. ID is toegewezen aan deze installatie van AAPS. U kunt gegevens opnieuw indienen als uw hoofdprofiel wordt gewijzigd, maar laat het ten minste een week draaien om resultaat zichtbaar te maken in de tijd in het bereik. Uw hulp wordt gewaardeerd.</string>
+    <!-- CareDialog -->
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Andere</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Totaal</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Geen records beschikbaar</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="invalid">Ongeldig</string>
+    <string name="treatments_insulin_label_string">Insuline:</string>
+    <string name="treatments_carbs_label_string">Koolhydraten:</string>
+    <string name="treatments_iobtotal_label_string">Totale IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Totale IOB activiteit:</string>
+    <string name="tempbasals_realduration_label_string">Tijdsduur:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Maaltijd</string>
+    <string name="prime">Vullen</string>
+    <string name="profile_changes">Profiel wijzigingen</string>
+    <string name="tempt_targets">Tijdelijke streefdoelen</string>
+    <string name="carbs_and_bolus">Koolhydraten en bolus</string>
+    <string name="show_invalidated_records">Toon ongeldig gemarkeerde / verwijderde records</string>
+    <string name="hide_invalidated_records">Verberg ongeldig gemarkeerde / verwijderde records</string>
+    <string name="refresh_from_nightscout">Ververs vanaf Nightscout</string>
+    <string name="refresheventsfromnightscout">Ververs van NS</string>
+    <string name="show_invalidated">Toon ongeldig</string>
+    <string name="hide_invalidated">Verberg ongeldig</string>
+    <string name="careportal_remove_started_events">Verwijder AAPS is gestart items</string>
+    <string name="hide_loop">Verberg loop</string>
+    <string name="show_loop">Toon loop</string>
+    <string name="user_entry">Gebruikersinvoer</string>
+    <string name="clone_label">Dupliceren</string>
+    <string name="show_loop_records">Toon loop records</string>
+    <string name="show_hide_records">Verberg loop records</string>
+</resources>

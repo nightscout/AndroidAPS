@@ -10,15 +10,18 @@ buildscript {
         classpath 'com.hiya:jacoco-android:0.2'
     }
 }
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-allopen'
-apply plugin: 'com.hiya.jacoco-android'
 
-apply from: "${project.rootDir}/core/test_dependencies.gradle"
-apply from: "${project.rootDir}/core/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/jacoco_global.gradle"
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 
 def generateGitBuild = { ->
@@ -92,7 +95,9 @@ allprojects {
 
 
 dependencies {
-    implementation project(':shared')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
+    implementation project(':app-wear-shared:shared-impl')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -109,7 +114,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
     implementation(files("${rootProject.rootDir}/libraries/libs/ustwo-clockwise-debug.aar"))
     implementation(files("${rootProject.rootDir}/libraries/libs/wearpreferenceactivity-0.5.0.aar"))
-    implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
+    implementation(files("${rootProject.rootDir}/libraries/libs/hellocharts-library-1.5.8.aar"))
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
@@ -122,11 +127,24 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
 
-    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 }
 repositories {
     mavenCentral()
+}
+
+// This is necessary to prevent Gradle build errors like:
+//
+//  Duplicate class androidx.lifecycle.ViewModelLazy found in modules jetified-lifecycle-viewmodel-ktx-2.3.1-runtime (androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1) and lifecycle-viewmodel-2.5.0-runtime (androidx.lifecycle:lifecycle-viewmodel:2.5.0)
+//
+// By explicitly adding these dependencies, the jetifier
+// is forced to use the correct lifecycle version instead
+// of automatically picking 2.3.1.
+//
+// See: https://stackoverflow.com/a/69832319/560774
+configurations {
+    all {
+        exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+    }
 }

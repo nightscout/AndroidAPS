@@ -4,16 +4,24 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
@@ -27,7 +35,7 @@ class BolusWizardTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var constraintChecker: ConstraintChecker
+    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueue
@@ -35,7 +43,7 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var autosensDataStore: AutosensDataStoreObject
 
     val injector = HasAndroidInjector {
         AndroidInjector {

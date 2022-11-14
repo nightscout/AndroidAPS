@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
+    <string name="constraint_applied">Begrensning benyttet!</string>
+    <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
+    <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog avbrutt</string>
+    <string name="start_activity_tt">Start Trening TT</string>
+    <string name="start_eating_soon_tt">Start Spise snart TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Tidsforskyvning</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Påminnelse til å gi bolus senere</string>
+    <string name="a11y_carb_reminder">angi påminnelse</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurer gjennomsiktighet</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="statistics">Statistikk</string>
+    <string name="calculation_in_progress">Beregning pågår</string>
+    <string name="id">ID:</string>
+    <string name="submit">Lagre</string>
+    <string name="age">Alder</string>
+    <string name="weight_label">Vekt</string>
+    <string name="survey_comment">Merk: Kun data synlig på denne skjermen vil bli anonymt lastet opp. ID er tilordnet denne installasjonen av AndroidAPS. Du kan sende inn data igjen hvis hovedprofilen din blir endret, men la den kjøre i minst en uke for å se effekten av resultatet i tidsperioden. Din hjelp blir verdsatt.</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+</resources>

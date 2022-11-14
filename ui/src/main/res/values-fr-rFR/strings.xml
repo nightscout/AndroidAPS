@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
+    <string name="constraint_applied">Restriction appliquée !</string>
+    <string name="bolus_constraint_applied">Restriction de bolus appliquée</string>
+    <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
+    <string name="temp_target_short">CT</string>
+    <string name="dialog_canceled">Boîte de dialogue annulée</string>
+    <string name="start_activity_tt">Début Activités</string>
+    <string name="start_eating_soon_tt">Début Repas Imminent</string>
+    <string name="start_hypo_tt">Début Traitement Hypo</string>
+    <string name="time_offset">Décalage horaire</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Rappel du bolus plus tard</string>
+    <string name="a11y_carb_reminder">définir un rappel</string>
+    <!--    Widget-->
+    <string name="configure">Configurer l’opacité</string>
+    <string name="widget_description">Widget AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Moniteur d\'activité</string>
+    <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
+    <string name="statistics">Statistiques</string>
+    <string name="calculation_in_progress">Calcul en cours</string>
+    <string name="invalid_age">Âge invalide</string>
+    <string name="invalid_weight">Poids invalide</string>
+    <string name="id">ID :</string>
+    <string name="submit">Envoyer</string>
+    <string name="age">Âge </string>
+    <string name="weight_label">Poids </string>
+    <string name="most_common_profile">Profil le plus courant :</string>
+    <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour obtenir le résultat \"temps dans la cible\". Votre aide est appréciée.</string>
+    <!-- CareDialog -->
+    <string name="glucose_type">Source de Glycémie</string>
+    <string name="bg_other">Autre</string>
+    <string name="bg_meter">Lecteur</string>
+    <string name="bg_sensor">Capteur</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s SI: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Aucun enregistrement disponible</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IA: </string>
+    <string name="invalid">INVALIDE</string>
+    <string name="treatments_insulin_label_string">Insuline:</string>
+    <string name="treatments_carbs_label_string">Glucides:</string>
+    <string name="treatments_iobtotal_label_string">IA Totale:</string>
+    <string name="treatments_iob_activity_total_label_string">Activité IA Totale:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IA:</string>
+    <string name="tempbasals_iobtotal_label_string">IA Totale:</string>
+    <string name="treatments_wizard_tt_label">CT</string>
+    <string name="treatments_wizard_correction_label">Corr.</string>
+    <string name="meal_bolus">Repas</string>
+    <string name="prime">Amorcer</string>
+    <string name="profile_changes">Changements de profil</string>
+    <string name="tempt_targets">Cibles Temp</string>
+    <string name="carbs_and_bolus">Glucides et bolus</string>
+    <string name="show_invalidated_records">Afficher les enregistrements invalidés / supprimés</string>
+    <string name="hide_invalidated_records">Masquer les enregistrements invalidés / supprimés</string>
+    <string name="refresh_from_nightscout">Rafraîchir depuis Nightscout</string>
+    <string name="refresheventsfromnightscout">Actualiser depuis NS</string>
+    <string name="show_invalidated">Montrer les entrées invalides</string>
+    <string name="hide_invalidated">Masquer les entrées invalides</string>
+    <string name="careportal_remove_started_events">Suppr. entrées \"Démarrage AAPS\"</string>
+    <string name="hide_loop">Masquer la boucle</string>
+    <string name="show_loop">Afficher les entrées boucle</string>
+    <string name="user_entry">Entrées utilisateur</string>
+    <string name="clone_label">Dupliquer</string>
+    <string name="show_loop_records">Afficher les entrées de la boucle</string>
+    <string name="show_hide_records">Masquer les entrées de la boucle</string>
+</resources>

@@ -1,0 +1,30 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
+android {
+    namespace 'info.nightscout.androidaps.plugins.pump.common'
+}
+
+dependencies {
+    implementation project(':core:core-main')
+    implementation project(':core:fabric')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
+    implementation project(':interfaces')
+
+    implementation('com.thoughtworks.xstream:xstream:1.4.19') {
+        exclude group: 'xmlpull', module: 'xmlpull'
+    }
+
+    api "com.google.code.gson:gson:$gson_version"
+}

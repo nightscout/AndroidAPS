@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Pompa ir/ar jos valdiklis nepalaiko operacijos.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Pompa dar nepalaiko operacijos.</string>
+    <string name="common_resultok">Gerai</string>
+    <string name="pump_serial_number">Pompos serijos Nr.</string>
+    <string name="bolus_delivered">%1$.2f vv iš %2$.2f vv suleista</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_never_contacted">Niekada nebuvo sujungta</string>
+    <string name="pump_status_waking_up">Pažadinimas</string>
+    <string name="pump_status_error_comm">Ryšio klaida</string>
+    <string name="pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
+    <string name="pump_status_pump_unreachable">Pompa nepasiekiama</string>
+    <string name="pump_status_invalid_config">Neteisinga konfigūracija</string>
+    <string name="pump_status_active">Aktyvi</string>
+    <string name="pump_status_sleeping">Užmigusi</string>
+    <string name="pump_status_not_initialized">Nepavyko paleisti</string>
+    <string name="pump_status_suspended">Sustabdyta</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazė</string>
+    <string name="history_group_configuration">Nustatymai</string>
+    <string name="history_group_notification">Pranešimai</string>
+    <string name="history_group_statistic">Statistika</string>
+    <string name="history_group_unknown">Nežinoma</string>
+    <string name="history_group_all">Visi</string>
+    <string name="history_group_bolus">Bolusai</string>
+    <string name="history_group_prime">Užpildyti sistemą</string>
+    <string name="history_group_alarm">Aliarmai</string>
+    <string name="history_group_glucose">Gliukozė</string>
+    <string name="history_group_other">Kiti</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Skanuoti</string>
+    <string name="ble_config_scan_stop">Stop</string>
+    <string name="ble_config_scan_selected">Parinkta</string>
+    <string name="ble_config_scan_scanning">Skanuojama</string>
+    <string name="ble_config_scan_finished">Skanavimas baigtas</string>
+    <string name="ble_config_scan_error">Skanavimo klaida: %1$d</string>
+    <string name="ble_config_connected_never">Niekada</string>
+    <string name="ble_config_remove">Pašalinti</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth išjungtas</string>
+    <string name="ble_error_no_bt_adapter">Nėra Bluetooth adapterio</string>
+    <string name="ble_error_pump_unreachable">Pompa nepasiekiama</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Bazės profilis / nustatymas pompoje nėra įgalintas. Įgalinkite jį pompoje.</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Pompoje nustatytas neteisingas Max Bolusas (turi būti %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Pompoje nustatyta neteisinga Maks val. bazė (turi būti %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Tipas:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d d.</item>
+        <item quantity="few">%1$d d.</item>
+        <item quantity="many">%1$d d.</item>
+        <item quantity="other">%1$d d.</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d val.</item>
+        <item quantity="few">%1$d val.</item>
+        <item quantity="many">%1$d val.</item>
+        <item quantity="other">%1$d val.</item>
+    </plurals>
+</resources>

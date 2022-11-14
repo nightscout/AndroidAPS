@@ -16,7 +16,6 @@
     <string name="uploading_to_open_humans">AAPS is uploading to Open Humans. This may take a while.</string>
     <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn\'t on purpose.</string>
-    <string name="upload_now">Upload now</string>
     <string name="next">Next</string>
     <string name="welcome_to_open_humans">Welcome to Open Humans</string>
     <string name="setup_data_upload">To setup data upload, click \'Next\'.</string>
@@ -55,4 +54,6 @@
     <string name="we_re_done">We\'re done!</string>
     <string name="silently_upload_date_note">From now on, your phone will silently upload data in the background from time to time.</string>
     <string name="close">Close</string>
+    <string name="upload_now">Upload now</string>
+
 </resources>

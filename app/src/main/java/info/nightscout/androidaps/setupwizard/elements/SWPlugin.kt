@@ -9,13 +9,13 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
-import info.nightscout.androidaps.events.EventConfigBuilderChange
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.setupwizard.SWDefinition
-import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
+import info.nightscout.rx.events.EventSWUpdate
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.rx.events.EventConfigBuilderChange
 import javax.inject.Inject
 
 class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinition) : SWItem(injector, Type.PLUGIN) {
@@ -60,7 +60,7 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
             val p = pluginsInCategory[i]
             rdBtn.id = View.generateViewId()
             rdBtn.text = p.name
-            if (p.isEnabled(pType!!)) {
+            if (p.isEnabled()) {
                 rdBtn.isChecked = true
                 selectedPlugin = p
             }
@@ -78,7 +78,7 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
             val plugin = rb.tag as PluginBase
             plugin.setPluginEnabled(pType!!, rb.isChecked)
             plugin.setFragmentVisible(pType!!, rb.isChecked && makeVisible)
-            configBuilderPlugin.processOnEnabledCategoryChanged(plugin, pType)
+            configBuilderPlugin.processOnEnabledCategoryChanged(plugin, pType!!)
             configBuilderPlugin.storeSettings("SetupWizard")
             rxBus.send(EventConfigBuilderChange())
             rxBus.send(EventSWUpdate(false))

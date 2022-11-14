@@ -3,8 +3,8 @@ package info.nightscout.androidaps.testing.mockers
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.shared.SafeParse.stringToDouble
-import info.nightscout.shared.weardata.EventData
-import info.nightscout.shared.weardata.EventData.SingleBg
+import info.nightscout.rx.weardata.EventData
+import info.nightscout.rx.weardata.EventData.SingleBg
 
 class RawDataMocker(wearUtil: WearUtil) {
 

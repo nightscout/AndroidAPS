@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
+    <string name="constraint_applied">Sınırlaması uygulanır!</string>
+    <string name="bolus_constraint_applied">Bolus kısıtlaması uygulandı</string>
+    <string name="carbs_constraint_applied">Karbonhidrat kısıtlaması uygulandı</string>
+    <string name="temp_target_short">GH</string>
+    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
+    <string name="start_activity_tt">Egzersiz Başlat GH</string>
+    <string name="start_eating_soon_tt">Yakında Öğün GH</string>
+    <string name="start_hypo_tt">Hipo GH başlat</string>
+    <string name="time_offset">Saat farkı</string>
+    <string name="unit_minute_short">dk.</string>
+    <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
+    <string name="a11y_carb_reminder">hatırlatıcıyı kur</string>
+    <!--    Widget-->
+    <string name="configure">Şeffaflığı yapılandır</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="statistics">İstatistikler</string>
+    <string name="calculation_in_progress">Hesaplanıyor</string>
+    <string name="id">Kimlik:</string>
+    <string name="submit">Sunum</string>
+    <string name="age">Yaş</string>
+    <string name="weight_label">Ağırlık</string>
+    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+</resources>

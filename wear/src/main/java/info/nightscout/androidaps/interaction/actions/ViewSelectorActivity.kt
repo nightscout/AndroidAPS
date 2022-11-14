@@ -14,7 +14,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.nondeprecated.DotsPageIndicatorNonDeprecated
 import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
 import info.nightscout.androidaps.nondeprecated.GridViewPagerNonDeprecated
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 

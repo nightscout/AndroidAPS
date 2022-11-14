@@ -1,30 +1,33 @@
 package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.isPSEvent5minBack
-import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensDataStore
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.aps.Sensitivity.SensitivityType
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
+import info.nightscout.plugins.utils.Percentile
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
+import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
@@ -50,7 +53,7 @@ class SensitivityOref1Plugin @Inject constructor(
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
     injector, aapsLogger, rh, sp
-) {
+), Constraints {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val profile = profileFunction.getProfile()
@@ -75,7 +78,7 @@ class SensitivityOref1Plugin @Inject constructor(
         //[0] = 8 hour
         //[1] = 24 hour
         //deviationsHour has DeviationsArray
-        val deviationsHour = mutableListOf(ArrayList<Double>(), ArrayList<Double>())
+        val deviationsHour = mutableListOf(ArrayList(), ArrayList<Double>())
         val pastSensitivityArray = mutableListOf("", "")
         val sensResultArray = mutableListOf("", "")
         val ratioArray = mutableListOf(0.0, 0.0)
@@ -160,8 +163,8 @@ class SensitivityOref1Plugin @Inject constructor(
             val sens = profile.getIsfMgdl()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
-            val pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50)
-            val pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50)
+            val pSensitive = Percentile.percentile(deviations, 0.50)
+            val pResistant = Percentile.percentile(deviations, 0.50)
             var basalOff = 0.0
             when {
                 pSensitive < 0 -> { // sensitive
@@ -196,9 +199,10 @@ class SensitivityOref1Plugin @Inject constructor(
         val output = fillResult(ratioArray[key], current.cob, pastSensitivityArray[key], ratioLimitArray[key], sensResultArray[key] + comparison, deviationsHour[key].size)
         aapsLogger.debug(
             LTag.AUTOSENS, "Sensitivity to: "
-            + dateUtil.dateAndTimeString(toTime) +
-            " ratio: " + output.ratio
-            + " mealCOB: " + current.cob)
+                + dateUtil.dateAndTimeString(toTime) +
+                " ratio: " + output.ratio
+                + " mealCOB: " + current.cob
+        )
         return output
     }
 
@@ -219,7 +223,10 @@ class SensitivityOref1Plugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         try {
-            if (configuration.has(rh.gs(R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(R.string.key_openapsama_min_5m_carbimpact, configuration.getDouble(rh.gs(R.string.key_openapsama_min_5m_carbimpact)))
+            if (configuration.has(rh.gs(R.string.key_openapsama_min_5m_carbimpact))) sp.putDouble(
+                R.string.key_openapsama_min_5m_carbimpact,
+                configuration.getDouble(rh.gs(R.string.key_openapsama_min_5m_carbimpact))
+            )
             if (configuration.has(rh.gs(R.string.key_absorption_cutoff))) sp.putDouble(R.string.key_absorption_cutoff, configuration.getDouble(rh.gs(R.string.key_absorption_cutoff)))
             if (configuration.has(rh.gs(R.string.key_openapsama_autosens_max))) sp.getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_max)))
             if (configuration.has(rh.gs(R.string.key_openapsama_autosens_min))) sp.getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(R.string.key_openapsama_autosens_min)))
@@ -230,4 +237,9 @@ class SensitivityOref1Plugin @Inject constructor(
 
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_OREF1
+
+    override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!isEnabled()) value.set(aapsLogger, false, rh.gs(info.nightscout.plugins.R.string.uamdisabledoref1notselected), this)
+        return value
+    }
 }

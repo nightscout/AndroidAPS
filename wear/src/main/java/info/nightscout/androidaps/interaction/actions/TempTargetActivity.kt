@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
 import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
 import info.nightscout.shared.SafeParse
-import info.nightscout.shared.weardata.EventData.ActionTempTargetPreCheck
+import info.nightscout.rx.weardata.EventData.ActionTempTargetPreCheck
 import java.text.DecimalFormat
 
 class TempTargetActivity : ViewSelectorActivity() {

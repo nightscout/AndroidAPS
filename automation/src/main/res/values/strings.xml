@@ -30,7 +30,6 @@
     <string name="sendsmsactiondescription">Send SMS to all numbers</string>
     <string name="sendsmsactiontext">Send SMS with text</string>
     <string name="starttemptarget">Start temp target</string>
-    <string name="stoptemptarget">Stop temp target</string>
     <string name="islesser">is lesser than</string>
     <string name="isequalorlesser">is equal or lesser than</string>
     <string name="isequal">is equal to</string>
@@ -83,7 +82,6 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
-    <string name="a11y_autosenslabel">Auto sens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BG difference</string>
     <string name="deltalabel_u">BG difference [%1$s]</string>
@@ -110,7 +108,6 @@
     <string name="please_choose_a_trigger_type">Choose a trigger type</string>
     <string name="please_choose_a_operation_type">Choose a operation type</string>
     <string name="triggers">Triggers:</string>
-    <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
     <string name="automation_event">Automation event</string>
     <string name="reorder_label">Reorder</string>
@@ -127,5 +124,14 @@
     <string name="add_automation">Add rule</string>
     <string name="remove_sort">Remove/sort</string>
     <string name="stop_processing">Stop processing</string>
+
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">S</string>
 
 </resources>

@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
+import info.nightscout.rx.logging.LTag
 import org.json.JSONException
 import org.json.JSONObject
 import org.mozilla.javascript.NativeObject
 
-class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) : APSResult(injector) {
+class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) : APSResultObject(injector) {
 
     private var eventualBG = 0.0
     private var snoozeBG = 0.0
@@ -17,7 +17,7 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
         json = j
         if (result.containsKey("error")) {
             reason = result["error"].toString()
-            tempBasalRequested = false
+            isTempBasalRequested = false
             rate = (-1).toDouble()
             duration = -1
         } else {
@@ -27,17 +27,17 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
             if (result.containsKey("rate")) {
                 rate = result["rate"] as Double
                 if (rate < 0.0) rate = 0.0
-                tempBasalRequested = true
+                isTempBasalRequested = true
             } else {
                 rate = (-1).toDouble()
-                tempBasalRequested = false
+                isTempBasalRequested = false
             }
             if (result.containsKey("duration")) {
                 duration = (result["duration"] as Double).toInt()
                 //changeRequested as above
             } else {
                 duration = -1
-                tempBasalRequested = false
+                isTempBasalRequested = false
             }
         }
     }

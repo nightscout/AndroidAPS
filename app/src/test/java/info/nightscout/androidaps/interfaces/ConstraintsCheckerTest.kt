@@ -2,23 +2,17 @@ package info.nightscout.androidaps.interfaces
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
@@ -26,19 +20,34 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.source.GlimpPlugin
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.Objectives
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
+import info.nightscout.plugins.constraints.objectives.objectives.Objective
+import info.nightscout.plugins.constraints.safety.SafetyPlugin
+import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import java.util.*
 
 /**
  * Created by mike on 18.03.2018.
@@ -54,7 +63,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var profiler: Profiler
-    @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var pumpSync: PumpSync
@@ -62,9 +70,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var ruffyScripter: RuffyScripter
     @Mock lateinit var buildHelper: BuildHelper
 
+    private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
     private lateinit var insightDbHelper: InsightDbHelper
-    private lateinit var constraintChecker: ConstraintChecker
+    private lateinit var constraintChecker: ConstraintsImpl
     private lateinit var safetyPlugin: SafetyPlugin
     private lateinit var objectivesPlugin: ObjectivesPlugin
     private lateinit var comboPlugin: ComboPlugin
@@ -74,16 +83,15 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
-    private lateinit var hardLimits: HardLimits
 
-    val injector = HasAndroidInjector {
+    private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is Objective) {
                 it.sp = sp
                 it.dateUtil = dateUtil
             }
             if (it is PumpEnactResult) {
-                it.rh = rh
+                it.context = context
             }
         }
     }
@@ -115,7 +123,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(context.getString(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
         `when`(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
@@ -123,22 +131,107 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         //SafetyPlugin
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        constraintChecker = ConstraintChecker(activePlugin)
+        constraintChecker = ConstraintsImpl(activePlugin)
 
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
 
+        hardLimits = HardLimitsMock(sp, rh)
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, rh, context, repository)
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config, dateUtil, uel)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, context, pumpSync, dateUtil, ruffyScripter)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
-        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
+        danaRSPlugin =
+            DanaRSPlugin(
+                injector,
+                aapsLogger,
+                aapsSchedulers,
+                rxBus,
+                context,
+                rh,
+                constraintChecker,
+                profileFunction,
+                sp,
+                commandQueue,
+                danaPump,
+                pumpSync,
+                detailedBolusInfoStorage,
+                temporaryBasalStorage,
+                fabricPrivacy,
+                dateUtil
+            )
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync)
-        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
-        openAPSSMBDynamicISFPlugin = OpenAPSSMBDynamicISFPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider, buildHelper)
-        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, openAPSSMBDynamicISFPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelperImpl(config, fileListProvider), iobCobCalculator, config, dateUtil)
+        openAPSSMBPlugin =
+            OpenAPSSMBPlugin(
+                injector,
+                aapsLogger,
+                rxBus,
+                constraintChecker,
+                rh,
+                profileFunction,
+                context,
+                activePlugin,
+                iobCobCalculator,
+                hardLimits,
+                profiler,
+                sp,
+                dateUtil,
+                repository,
+                glucoseStatusProvider
+            )
+        openAPSSMBDynamicISFPlugin =
+            OpenAPSSMBDynamicISFPlugin(
+                injector,
+                aapsLogger,
+                rxBus,
+                constraintChecker,
+                rh,
+                profileFunction,
+                context,
+                activePlugin,
+                iobCobCalculator,
+                hardLimits,
+                profiler,
+                sp,
+                dateUtil,
+                repository,
+                glucoseStatusProvider,
+                buildHelper
+            )
+        openAPSAMAPlugin =
+            OpenAPSAMAPlugin(
+                injector,
+                aapsLogger,
+                rxBus,
+                constraintChecker,
+                rh,
+                profileFunction,
+                context,
+                activePlugin,
+                iobCobCalculator,
+                hardLimits,
+                profiler,
+                fabricPrivacy,
+                dateUtil,
+                repository,
+                glucoseStatusProvider,
+                sp
+            )
+        safetyPlugin =
+            SafetyPlugin(
+                injector,
+                aapsLogger,
+                rh,
+                sp,
+                rxBus,
+                constraintChecker,
+                activePlugin,
+                hardLimits,
+                BuildHelperImpl(config, fileListProvider),
+                iobCobCalculator,
+                config,
+                dateUtil
+            )
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)
         constraintsPluginsList.add(objectivesPlugin)
@@ -146,6 +239,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         constraintsPluginsList.add(danaRPlugin)
         constraintsPluginsList.add(danaRSPlugin)
         constraintsPluginsList.add(insightPlugin)
+        constraintsPluginsList.add(openAPSAMAPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
         `when`(activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)).thenReturn(constraintsPluginsList)
         objectivesPlugin.onStart()
@@ -168,7 +262,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun isClosedLoopAllowedTest() {
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
-        objectivesPlugin.objectives[ObjectivesPlugin.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
+        objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
@@ -183,7 +277,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // Safety & Objectives
     @Test
     fun isAutosensModeEnabledTest() {
-        objectivesPlugin.objectives[ObjectivesPlugin.AUTOSENS_OBJECTIVE].startedOn = 0
+        objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(R.string.key_openapsama_useautosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
@@ -212,7 +306,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // Safety & Objectives
     @Test
     fun isSMBModeEnabledTest() {
-        objectivesPlugin.objectives[ObjectivesPlugin.SMB_OBJECTIVE].startedOn = 0
+        objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
@@ -331,7 +425,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         val d = constraintChecker.getMaxIOBAllowed()
         Assert.assertEquals(1.5, d.value(), 0.01)
         Assert.assertEquals(d.reasonList.toString(), 2, d.reasonList.size)
-        Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 
     @Test
@@ -347,6 +441,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         val d = constraintChecker.getMaxIOBAllowed()
         Assert.assertEquals(3.0, d.value(), 0.01)
         Assert.assertEquals(d.reasonList.toString(), 2, d.reasonList.size)
-        Assert.assertEquals("Safety: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assert.assertEquals("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }

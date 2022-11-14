@@ -81,7 +81,6 @@
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Gevoeligheid %1$s %2$s %%</string>
     <string name="autosenslabel">Gevoeligheid %</string>
-    <string name="a11y_autosenslabel">Autosens</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="deltalabel">BG verschil</string>
     <string name="deltalabel_u">BG verschil [%1$s]</string>
@@ -108,7 +107,6 @@
     <string name="please_choose_a_trigger_type">Kies een type trigger</string>
     <string name="please_choose_a_operation_type">Kies een type bewerking</string>
     <string name="triggers">Triggers:</string>
-    <string name="remove_label">VERWIJDER</string>
     <string name="preconditions">Voorwaarden:</string>
     <string name="automation_event">Automation gebeurtenis</string>
     <string name="reorder_label">Sorteren</string>
@@ -123,4 +121,5 @@
     <string name="run_automations">Automatisering uitvoeren</string>
     <string name="add_automation">Regel toevoegen</string>
     <string name="remove_sort">Verwijderen/sorteren</string>
+    <string name="stop_processing">Stop met verwerken</string>
 </resources>

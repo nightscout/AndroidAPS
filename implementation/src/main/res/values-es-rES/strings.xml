@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="xdrip_not_installed">xDrip+ no se encuentra instalado</string>
+    <string name="calibration_sent">Calibración enviada a xDrip+</string>
+    <string name="bg_label">BG</string>
+    <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
+    <string name="time_to_eat">Hora de comer</string>
+    <string name="enable_bolus_advisor">Habilitar asistente de bolo</string>
+    <string name="bolus_advisor">Asistente de bolo</string>
+    <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
+    <string name="executing_right_now">Orden se esta efectuando en este momento</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Muy bajo</string>
+    <string name="low" comment="3.1-3.9">Bajo</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Muy alto</string>
+    <string name="below" comment="below &quot;in range&quot;">Por debajo de</string>
+    <string name="in_range">En rango</string>
+    <string name="above" comment="above &quot;in range&quot;">Por encima de</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">Desviación estándar: %1$s</string>
+    <string name="detailed_14_days">Datos detallados de 14 días</string>
+    <string name="day_tir">TIR Diurno</string>
+    <string name="night_tir">TIR Nocturno</string>
+</resources>

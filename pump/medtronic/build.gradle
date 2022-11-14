@@ -1,0 +1,29 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
+android {
+    namespace 'info.nightscout.androidaps.plugins.pump.medtronic'
+}
+
+dependencies {
+    implementation project(':libraries')
+    implementation project(':app-wear-shared:rx')
+    implementation project(':app-wear-shared:shared')
+    implementation project(':core:core-main')
+    implementation project(':pump:pump-common')
+    implementation project(':pump:pump-core')
+    implementation project(':pump:rileylink')
+    implementation project(':interfaces')
+    implementation project(path: ':core:fabric')
+    testImplementation project(path: ':database:impl')
+}

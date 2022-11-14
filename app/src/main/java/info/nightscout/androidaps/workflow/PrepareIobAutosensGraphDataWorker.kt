@@ -10,29 +10,31 @@ import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DeviationDataPoint
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import java.util.ArrayList
+import info.nightscout.core.iob.combine
+import info.nightscout.core.iob.copy
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -52,15 +54,47 @@ class PrepareIobAutosensGraphDataWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
     var ctx: Context
+
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        ctx =  rh.getThemedCtx(context)
+        ctx = rh.getThemedCtx(context)
     }
 
     class PrepareIobAutosensData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
         val overviewData: OverviewData
     )
+
+    class IobTotalDataPoint(time: Long) : IobTotal(time), DataPointWithLabelInterface {
+
+        constructor(i: IobTotal) : this(i.time) {
+            iob = i.iob
+            activity = i.activity
+            bolussnooze = i.bolussnooze
+            basaliob = i.basaliob
+            netbasalinsulin = i.netbasalinsulin
+            hightempinsulin = i.hightempinsulin
+            lastBolusTime = i.lastBolusTime
+            iobWithZeroTemp = i.iobWithZeroTemp?.copy()
+            netInsulin = i.netInsulin
+            extendedBolusInsulin = i.extendedBolusInsulin
+        }
+
+        private var color = 0
+        override fun getX(): Double = time.toDouble()
+        override fun getY(): Double = iob
+        override fun setY(y: Double) {}
+        override val label = ""
+        override val duration = 0L
+        override val shape = PointsWithLabelGraphSeries.Shape.IOB_PREDICTION
+        override val size = 0.5f
+
+        override fun color(context: Context?): Int = color
+        fun setColor(color: Int): IobTotalDataPoint {
+            this.color = color
+            return this
+        }
+    }
 
     override fun doWork(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareIobAutosensData?
@@ -87,7 +121,7 @@ class PrepareIobAutosensGraphDataWorker(
         val bgiArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         data.overviewData.maxBGIValue = Double.MIN_VALUE
 
-        val devArray: MutableList<OverviewPlugin.DeviationDataPoint> = ArrayList()
+        val devArray: MutableList<DeviationDataPoint> = ArrayList()
         data.overviewData.maxDevValueFound = Double.MIN_VALUE
 
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -113,7 +147,7 @@ class PrepareIobAutosensGraphDataWorker(
             val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
             val baseBasalIob = data.iobCobCalculator.calculateAbsoluteIobFromBaseBasals(time)
             val absIob = IobTotal.combine(iob, baseBasalIob)
-            val autosensData = adsData.getAutosensDataAtTime(time)
+            val autosensData = adsData.getAutosensDataAtTime(time) as AutosensDataObject?
             if (abs(lastIob - iob.iob) > 0.02) {
                 if (abs(lastIob - iob.iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, data.overviewData.iobScale))
                 iobArray.add(ScaledDataPoint(time, iob.iob, data.overviewData.iobScale))
@@ -158,17 +192,17 @@ class PrepareIobAutosensGraphDataWorker(
 
             // DEVIATIONS
             if (autosensData != null) {
-                var color =  rh.gac( ctx, R.attr.deviationBlackColor)  // "="
+                var color = rh.gac(ctx, R.attr.deviationBlackColor)  // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color =  rh.gac( ctx, R.attr.deviationGreyColor)
-                    if (autosensData.pastSensitivity == "+") color =  rh.gac( ctx, R.attr.deviationGreenColor)
-                    if (autosensData.pastSensitivity == "-") color =  rh.gac( ctx, R.attr.deviationRedColor)
+                    if (autosensData.pastSensitivity == "C") color = rh.gac(ctx, R.attr.deviationGreyColor)
+                    if (autosensData.pastSensitivity == "+") color = rh.gac(ctx, R.attr.deviationGreenColor)
+                    if (autosensData.pastSensitivity == "-") color = rh.gac(ctx, R.attr.deviationRedColor)
                 } else if (autosensData.type == "uam") {
-                    color =  rh.gac( ctx, R.attr.uamColor)
+                    color = rh.gac(ctx, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
-                    color =  rh.gac( ctx, R.attr.deviationGreyColor)
+                    color = rh.gac(ctx, R.attr.deviationGreyColor)
                 }
-                devArray.add(OverviewPlugin.DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
+                devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, data.overviewData.devScale))
                 data.overviewData.maxDevValueFound = maxOf(data.overviewData.maxDevValueFound, abs(autosensData.deviation), abs(bgi))
             }
 
@@ -192,14 +226,14 @@ class PrepareIobAutosensGraphDataWorker(
         // IOB
         data.overviewData.iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and  rh.gac( ctx, R.attr.iobColor)  //50%
-            it.color = rh.gac( ctx, R.attr.iobColor)
+            it.backgroundColor = -0x7f000001 and rh.gac(ctx, R.attr.iobColor)  //50%
+            it.color = rh.gac(ctx, R.attr.iobColor)
             it.thickness = 3
         }
         data.overviewData.absIobSeries = FixedLineGraphSeries(Array(absIobArray.size) { i -> absIobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and rh.gac( ctx, R.attr.iobColor) //50%
-            it.color = rh.gac( ctx, R.attr.iobColor)
+            it.backgroundColor = -0x7f000001 and rh.gac(ctx, R.attr.iobColor) //50%
+            it.color = rh.gac(ctx, R.attr.iobColor)
             it.thickness = 3
         }
 
@@ -210,7 +244,7 @@ class PrepareIobAutosensGraphDataWorker(
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = data.iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
-                iobPrediction.add(i.setColor(rh.gac( ctx, R.attr.iobPredASColor)))
+                iobPrediction.add(IobTotalDataPoint(i).setColor(rh.gac(ctx, R.attr.iobPredASColor)))
                 data.overviewData.maxIobValueFound = max(data.overviewData.maxIobValueFound, abs(i.iob))
             }
             data.overviewData.iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
@@ -222,8 +256,8 @@ class PrepareIobAutosensGraphDataWorker(
         // COB
         data.overviewData.cobSeries = FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and  rh.gac( ctx, R.attr.cobColor) //50%
-            it.color = rh.gac( ctx, R.attr.cobColor)
+            it.backgroundColor = -0x7f000001 and rh.gac(ctx, R.attr.cobColor) //50%
+            it.color = rh.gac(ctx, R.attr.cobColor)
             it.thickness = 3
         }
         data.overviewData.cobMinFailOverSeries = PointsWithLabelGraphSeries(Array(minFailOverActiveList.size) { i -> minFailOverActiveList[i] })
@@ -231,7 +265,7 @@ class PrepareIobAutosensGraphDataWorker(
         // ACTIVITY
         data.overviewData.activitySeries = FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gac( ctx, R.attr.activityColor)
+            it.color = rh.gac(ctx, R.attr.activityColor)
             it.thickness = 3
         }
         data.overviewData.activityPredictionSeries = FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
@@ -239,14 +273,14 @@ class PrepareIobAutosensGraphDataWorker(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = rh.gac( ctx, R.attr.activityColor)
+                paint.color = rh.gac(ctx, R.attr.activityColor)
             })
         }
 
         // BGI
         data.overviewData.minusBgiSeries = FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gac( ctx, R.attr.bgiColor)
+            it.color = rh.gac(ctx, R.attr.bgiColor)
             it.thickness = 3
         }
         data.overviewData.minusBgiHistSeries = FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
@@ -254,28 +288,28 @@ class PrepareIobAutosensGraphDataWorker(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = rh.gac( ctx, R.attr.bgiColor)
+                paint.color = rh.gac(ctx, R.attr.bgiColor)
             })
         }
 
         // DEVIATIONS
         data.overviewData.deviationsSeries = BarGraphSeries(Array(devArray.size) { i -> devArray[i] }).also {
-            it.setValueDependentColor { data: OverviewPlugin.DeviationDataPoint -> data.color }
+            it.setValueDependentColor { data: DeviationDataPoint -> data.color }
         }
 
         // RATIO
         data.overviewData.ratioSeries = LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = rh.gac( ctx, R.attr.ratioColor)
+            it.color = rh.gac(ctx, R.attr.ratioColor)
             it.thickness = 3
         }
 
         // DEV SLOPE
         data.overviewData.dsMaxSeries = LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = rh.gac( ctx, R.attr.devSlopePosColor)
+            it.color = rh.gac(ctx, R.attr.devSlopePosColor)
             it.thickness = 3
         }
         data.overviewData.dsMinSeries = LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = rh.gac( ctx, R.attr.devSlopeNegColor)
+            it.color = rh.gac(ctx, R.attr.devSlopeNegColor)
             it.thickness = 3
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 100, null))

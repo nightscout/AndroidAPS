@@ -3,10 +3,10 @@ package info.nightscout.androidaps.interaction.menus
 import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventWearToMobile
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.actions.FillActivity
 import info.nightscout.androidaps.interaction.utils.MenuListActivity
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.rx.weardata.EventData
 
 class FillMenuActivity : MenuListActivity() {
 

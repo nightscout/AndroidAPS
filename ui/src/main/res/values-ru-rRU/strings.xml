@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
+    <string name="constraint_applied">применено ограничение!</string>
+    <string name="bolus_constraint_applied">применено ограничение болюса</string>
+    <string name="carbs_constraint_applied">применено ограничение углеводов</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Диалог отменен</string>
+    <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
+    <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>
+    <string name="start_hypo_tt">Начать временную цель ТТ Гипо</string>
+    <string name="time_offset">Смещение по времени</string>
+    <string name="unit_minute_short">мин</string>
+    <string name="remind_to_bolus_later">Напомнить о болюсе позже</string>
+    <string name="a11y_carb_reminder">установить напоминание</string>
+    <!--    Widget-->
+    <string name="configure">Настроить прозрачность</string>
+    <string name="widget_description">Виджет AAPS</string>
+    <!--     Activities-->
+    <string name="statistics">Статистика</string>
+    <string name="calculation_in_progress">Идет подсчет</string>
+    <string name="id">Идентификатор:</string>
+    <string name="submit">Отправить</string>
+    <string name="age">Возраст</string>
+    <string name="weight_label">Вес</string>
+    <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
+    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+</resources>

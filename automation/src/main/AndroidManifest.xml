@@ -7,7 +7,7 @@
 
     <application>
         <service
-            android:name="info.nightscout.androidaps.services.LocationService"
+            android:name=".services.LocationService"
             android:exported="false" />
 
     </application>

@@ -1,39 +1,25 @@
 package info.nightscout.androidaps.di
 
 import android.content.Context
-import androidx.preference.PreferenceManager
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Aaps
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.AAPSLoggerProduction
-import info.nightscout.shared.logging.L
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.sharedPreferences.SPImplementation
-import javax.inject.Singleton
+import info.nightscout.rx.di.RxModule
+import info.nightcout.shared.impl.di.SharedImplModule
+import info.nightscout.shared.di.SharedModule
 
 @Suppress("unused")
-@Module(includes = [
-    WearModule.AppBindings::class,
-    WearActivitiesModule::class
-])
+@Module(
+    includes = [
+        WearModule.AppBindings::class,
+        WearActivitiesModule::class,
+        RxModule::class,
+        SharedModule::class,
+        SharedImplModule::class
+    ]
+)
 open class WearModule {
-
-    @Provides
-    @Singleton
-    fun provideSharedPreferences(context: Context): SP = SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), context)
-
-    @Provides
-    @Singleton
-    fun provideAAPSLogger(l: L): AAPSLogger = AAPSLoggerProduction(l)
-
-    @Provides
-    @Singleton
-    internal fun provideSchedulers(): AapsSchedulers = DefaultAapsSchedulers()
 
     @Module
     interface AppBindings {

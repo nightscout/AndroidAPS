@@ -1,8 +1,23 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.aps.APS
+import info.nightscout.interfaces.aps.Sensitivity
+import info.nightscout.interfaces.constraints.Objectives
+import info.nightscout.interfaces.constraints.Safety
+import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.interfaces.sync.Sync
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -121,8 +136,10 @@ class PluginStore @Inject constructor(
         setFragmentVisibilities((activePumpStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
     }
 
-    private fun setFragmentVisibilities(activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
-                                        pluginType: PluginType) {
+    private fun setFragmentVisibilities(
+        activePluginName: String, pluginsInCategory: ArrayList<PluginBase>,
+        pluginType: PluginType
+    ) {
         aapsLogger.debug(LTag.CONFIGBUILDER, "Selected interface: $activePluginName")
         for (p in pluginsInCategory)
             if (p.name != activePluginName)
@@ -171,6 +188,19 @@ class PluginStore @Inject constructor(
 
     override val activeIobCobCalculator: IobCobCalculator
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
+    override val activeObjectives: Objectives?
+        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives
+
+    override val activeNsClient: NsClient?
+        get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?
+
+    @Suppress("UNCHECKED_CAST")
+    override val firstActiveSync: Sync?
+        get() = (getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>).firstOrNull { it.connected }
+
+    @Suppress("UNCHECKED_CAST")
+    override val activeSyncs: ArrayList<Sync>
+        get() = getSpecificPluginsList(PluginType.SYNC) as ArrayList<Sync>
 
     override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 

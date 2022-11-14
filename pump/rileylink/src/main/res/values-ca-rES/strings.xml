@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Escanejar</string>
+    <string name="riley_link_ble_config_scan_stop">Aturar</string>
+    <string name="riley_link_ble_config_scan_selected">Seleccionat</string>
+    <string name="riley_link_ble_config_scan_title">Escaneig RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">Escanejant</string>
+    <string name="riley_link_ble_config_scan_finished">Escaneig finalitzat</string>
+    <string name="riley_link_ble_config_scan_error">Error d\'escaneig: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Mai</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink seleccionat actualment</string>
+    <string name="riley_link_ble_config_remove_riley_link">Eliminar</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Esteu segurs que voleu eliminar el vostre RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Eliminar RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Cap RileyLink seleccionat</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Configuració</string>
+    <string name="rileylink_settings_tab2">Històric</string>
+    <string name="rileylink_status">Estat RileyLink</string>
+    <string name="medtronic_pump_status">Estat bomba</string>
+    <string name="title_activity_rileylink_settings">Configuració RileyLink</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adreça:</string>
+    <string name="rileylink_name">Nom:</string>
+    <string name="rileylink_battery_level">Nivell de la bateria:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Estat de la connexió:</string>
+    <string name="rileylink_connection_error">Error de connexió:</string>
+    <string name="rileylink_device">Dispositiu</string>
+    <string name="rileylink_device_type">Tipus de dispositiu:</string>
+    <string name="rileylink_configured_device_model">Model dispositiu configurat:</string>
+    <string name="rileylink_connected_device_model">Model dispositiu connectat:</string>
+    <string name="rileylink_last_used_frequency">Darrera freqüència utilitzada:</string>
+    <string name="rileylink_last_device_contact">Últim contacte dispositiu:</string>
+    <string name="rileylink_firmware_version">Versió del firmware:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_pump_serial_number">Número de sèrie bomba:</string>
+    <string name="rileylink_pump_frequency">Freqüència bomba:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Inicialitzant Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Error de Bluetooth</string>
+    <string name="rileylink_state_bt_ready">Bluetooth a punt</string>
+    <string name="rileylink_state_not_started">No iniciat</string>
+    <string name="rileylink_state_rl_init">Inicialitzant RileyLink…</string>
+    <string name="rileylink_state_rl_error">Error de RileyLink</string>
+    <string name="rileylink_state_pc_tune_up">Posant a punt RileyLink i bomba</string>
+    <string name="rileylink_state_pc_error">Problema en connectar amb la bomba</string>
+    <string name="rileylink_state_connected">Connectat</string>
+    <string name="rileylink_state_rl_ready">RileyLink a punt</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">El dispositiu no és un RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink no accessible</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth desactivat</string>
+    <string name="rileylink_error_no_bt_adapter">No hi ha adaptador Bluetooth</string>
+    <string name="rileylink_error_tuneup_failed">Error en la posada a punt</string>
+    <string name="rileylink_error_pump_unreachable">Bomba no accessible</string>
+    <string name="rileylink_error_pod_unreachable">Pod no accessible</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Sí</string>
+    <string name="riley_link_common_no">No</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Mostrar nivell de batería reportat per OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">NO funciona amb el RileyLink original. Pot ser que no funcioni amb alternatives a RileyLink.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dies</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d hores</item>
+    </plurals>
+    <string name="rileylink_configuration">Configuració RileyLink</string>
+</resources>

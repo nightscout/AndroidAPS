@@ -97,7 +97,7 @@
 
         </PreferenceCategory>
 
-        <info.nightscout.androidaps.skins.SkinListPreference
+        <info.nightscout.plugins.skins.SkinListPreference
             android:key="@string/key_skin"
             android:title="@string/skin" />
 

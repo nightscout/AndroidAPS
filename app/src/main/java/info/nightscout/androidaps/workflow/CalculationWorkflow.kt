@@ -2,30 +2,35 @@ package info.nightscout.androidaps.workflow
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.*
+import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkContinuation
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.Event
-import info.nightscout.androidaps.events.EventAppInitialized
-import info.nightscout.androidaps.events.EventOfflineChange
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventTherapyEventChange
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Worker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOrefWorker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.Event
+import info.nightscout.rx.events.EventAppInitialized
+import info.nightscout.rx.events.EventOfflineChange
+import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventTherapyEventChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -94,11 +99,11 @@ class CalculationWorkflow @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh, R.string.key_units)) {
+                           if (event.isChanged(rh.gs(R.string.key_units))) {
                                overviewData.reset()
                                rxBus.send(EventNewHistoryData(0, false))
                            }
-                           if (event.isChanged(rh, R.string.key_rangetodisplay)) {
+                           if (event.isChanged(rh.gs(R.string.key_rangetodisplay))) {
                                overviewData.initRange()
                                runOnScaleChanged()
                                rxBus.send(EventNewHistoryData(0, false))

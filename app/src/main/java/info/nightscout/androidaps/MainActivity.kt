@@ -30,37 +30,49 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
-import info.nightscout.androidaps.activities.*
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.activities.HistoryBrowseActivity
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventRebuildTabs
-import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.utils.AndroidPermission
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
-import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.interfaces.ui.IconsProvider
+import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventRebuildTabs
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.activities.ProfileHelperActivity
+import info.nightscout.ui.activities.StatsActivity
+import info.nightscout.ui.activities.TreatmentsActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
@@ -72,7 +84,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var loop: Loop
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var buildHelper: BuildHelper
@@ -80,7 +92,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
@@ -152,7 +164,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         androidPermission.notifyForBatteryOptimizationPermission(this)
         if (!config.NSCLIENT) androidPermission.notifyForLocationPermissions(this)
         if (config.PUMPDRIVERS) {
-            androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
+            androidPermission.notifyForSMSPermissions(this, smsCommunicator)
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }
@@ -192,8 +204,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(rh, R.string.key_keep_screen_on)) setWakeLock()
-        if (ev.isChanged(rh, R.string.key_skin)) recreate()
+        if (ev.isChanged(rh.gs(R.string.key_keep_screen_on))) setWakeLock()
+        if (ev.isChanged(rh.gs(R.string.key_skin))) recreate()
     }
 
     private fun setupViews() {
