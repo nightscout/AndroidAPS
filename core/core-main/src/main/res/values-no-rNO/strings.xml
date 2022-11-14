@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Feil ved justering av Temp Basal</string>
     <string name="goingtodeliver">Kommer til å levere %1$.2f enheter</string>
     <string name="waitingforpump">Venter på pumpen</string>
-    <string name="connectingfor">Tilkobler i %1$d sek</string>
     <string name="bolusdelivering">Leverer %1$.2f enheter</string>
-    <string name="handshaking">Tilkobling verifiseres</string>
     <string name="connecting">Tilkobler</string>
-    <string name="connected">Tilkoblet</string>
     <string name="disconnected">Frakoblet</string>
-    <string name="disconnecting">Frakobler</string>
-    <string name="waiting_for_disconnection">Venter på frakobling</string>
     <string name="androidaps_start">AAPS startet</string>
     <string name="formatinsulinunits1">%1$.1f E</string>
     <string name="formatinsulinunits">%1$.2f E</string>
