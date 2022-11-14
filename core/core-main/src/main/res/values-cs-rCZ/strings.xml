@@ -34,8 +34,6 @@
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Přihlášení</string>
     <!--    Constraints-->
-    <!--    Dialogs-->
-    <string name="ok">OK</string>
     <!--    BlePreCheck-->
     <!--    Protection-->
     <!--    Profile-->
@@ -58,7 +56,6 @@
     <!--    TDDStatsActivity-->
     <string name="bolus">Bolus</string>
     <!--    Ntp-->
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <!-- Permissions -->
