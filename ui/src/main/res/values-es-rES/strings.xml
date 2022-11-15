@@ -19,6 +19,7 @@
     <string name="superbolus">Superbolo</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
+    <string name="record_pump_site_change">Anotar el cambio de sitio de la bomba</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
