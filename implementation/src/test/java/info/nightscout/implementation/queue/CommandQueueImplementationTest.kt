@@ -1,6 +1,7 @@
 package info.nightscout.implementation.queue
 
 import android.content.Context
+import android.os.Handler
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -42,7 +43,9 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.invocation.InvocationOnMock
 import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
@@ -162,6 +165,13 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             dateUtil, repository,
             fabricPrivacy, config, androidPermission, activityNames
         )
+        val handler = mock(Handler::class.java)
+        `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->
+            (invocation.arguments[0] as Runnable).run()
+            true
+        }
+        commandQueue.handler = handler
+
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 

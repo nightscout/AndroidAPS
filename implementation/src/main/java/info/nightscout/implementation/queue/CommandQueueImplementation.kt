@@ -99,7 +99,7 @@ class CommandQueueImplementation @Inject constructor(
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    internal var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val queue = LinkedList<Command>()
     @Volatile private var thread: QueueThread? = null
