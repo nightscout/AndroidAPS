@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Upravit citlivost a glykémii</string>
+    <string name="DynISFAdjust_title" formatted="false">Korekční faktor pro DynamicISF v %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Korekční faktor pro DynamicISF. Pro agresivnější korekční dávky nastavte hodnoty vyšší než 100 %, pro méně agresivní korekce nižší než 100 %.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cíl zvýší senzitivitu</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšení senzitivity pro dočasné cíle >= 5.5]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Nízký dočasný cíl sníží senzitivitu</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Nižší senzitivita pro dočasné cíle < 5.5]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamická ISF</string>
+    <string name="resistance_lowers_target_title">Rezistence snižuje cíl</string>
+    <string name="resistance_lowers_target_summary">Je-li zjištěna rezistence, sníží nastavenou cílovou glykémii</string>
+    <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
+    <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší nastavenou cílovou glykémii</string>
+    <string name="openapsma_disabled">Modul zakázán</string>
+    <string name="dynisf_shortname">DYNSENZ</string>
+    <string name="executing">Provádím</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Pole %1$d prvků.\nAktuální hodnota:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Stav algoritmu v roce 2017</string>
+    <string name="description_smb">Nejnovější algoritmus pro pokročilé uživatele</string>
+    <string name="description_smb_dynamic_isf">Nejnovější algoritmus pro pokročilé uživatele s dynamickým/automatickým ISF</string>
+    <string name="openapsma_run">Spustit teď</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="result">Výsledek</string>
+    <string name="openapsma_request_label">Požadavek</string>
+    <string name="constraints">Omezení</string>
+    <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3 Toto je klíčová hodnota zabezpečení. Říká, že maximální nastavitelný bazál je trojnásobkem maximálního denního bazálu. Patrně to nebudete muset měnit, případně si přečtete o tématu \"3x max denní; 4x aktuální\".</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4 Toto je druhá klíčová hodnota. Říká, že maximální hodnota dočasného bazálu nikdy nebude větší, než čtyřnásobek aktuálního bazálu. Je to proto, aby se lidé nedostali do nebezpečných hodnot dříve, než pochopí jak OpenAPS pracuje. Znovu, výchozí hodnota je 4 a většina lidí ji nikdy nebude muset změnit. Pokud nestačí, obvykle je problém někde jinde.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Max násobitel denního nejvyššího bazálu</string>
+    <string name="openapsama_current_basal_safety_multiplier">Max násobitel současného bazálu</string>
+    <string name="openapsama_autosens_max_summary">Výchozí hodnota: 1.2\nToto je bezpečnostní nastavení pro detekci sensitivity (a brzy autotune). Říká, že autosense může zvýšit bazály, snížit ISF a snížit cílovou hodnotu glykémie o 20 %.</string>
+    <string name="openapsama_autosens_min_summary">Výchozí hodnota: 0.7\nToto je bezpečnostní nastavení pro detekci sensitivity. Říká, že autosense může snížit bazály, zvýšit ISF a zvýšit cílovou hodnotu glykémie na 70 %.</string>
     <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
+    <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->
 </resources>
