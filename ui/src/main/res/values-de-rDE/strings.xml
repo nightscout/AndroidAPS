@@ -26,10 +26,40 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <!-- FillDialog -->
+    <string name="button1">Schaltfläche 1</string>
+    <string name="button2">Schaltfläche 2</string>
+    <string name="button3">Schaltfläche 3</string>
+    <string name="record_pump_site_change">Katheter-Wechsel erfassen</string>
+    <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Pausiere Loop für 2 h</string>
+    <string name="suspendloopfor3h">Pausiere Loop für 3 h</string>
+    <string name="suspendloopfor10h">Pausiere Loop für 10 h</string>
+    <string name="disconnectpump">Pumpe trennen</string>
+    <string name="disconnectpumpfor15m">Trenne Pumpe für 15 min</string>
+    <string name="disconnectpumpfor30m">Trenne Pumpe für 30 min</string>
+    <string name="disconnectpumpfor1h">Trenne Pumpe für 1 h</string>
+    <string name="disconnectpumpfor2h">Trenne Pumpe für 2 h</string>
+    <string name="disconnectpumpfor3h">Trenne Pumpe für 3 h</string>
+    <string name="resume">Fortsetzen</string>
+    <string name="reconnect">Pumpe erneut verbinden</string>
+    <string name="duration15m">15 Min.</string>
+    <string name="duration30m">30 Min.</string>
+    <string name="duration1h">1 Std.</string>
+    <string name="duration2h">2 Std.</string>
+    <string name="duration3h">3 Std.</string>
+    <string name="duration10h">10 Std.</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">korrektes Ergebnis mit %</string>
+    <string name="a11_correction_units">korrektes Ergebnis mit Einheiten</string>
+    <string name="result_insulin_carbs">Ergebnis: %1$s %2$s</string>
+    <string name="missing_carbs">%1$d g fehlen</string>
+    <string name="a11y_current_bg">Aktueller Blutzucker</string>
+    <string name="carb_time_label">KH-Zeit</string>
+    <string name="a11y_set_carb_timer">setze Alarm für KH Timer</string>
+    <string name="show_calculation">Berechnung anzeigen</string>
     <!-- Treatments -->
     <string name="calculation_short">Berech.</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -59,5 +89,7 @@
     <string name="show_loop_records">Zeige Loop Datensätze</string>
     <string name="show_hide_records">Verberge Loop Datensätze</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Ausgewählt:</string>
     <!-- Other dialogs -->
 </resources>
