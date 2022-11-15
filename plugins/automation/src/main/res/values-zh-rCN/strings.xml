@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="iob_u">IOB [U]:</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">周一</string>
+    <string name="tuesday_short">周二</string>
+    <string name="wednesday_short">周三</string>
+    <string name="thursday_short">周四</string>
+    <string name="friday_short">周五</string>
+    <string name="saturday_short">周六</string>
+    <string name="sunday_short">周日</string>
 </resources>
