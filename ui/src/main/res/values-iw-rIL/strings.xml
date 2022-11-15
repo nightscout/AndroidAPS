@@ -22,10 +22,40 @@
     <string name="superbolus">סופר בולוס</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <!-- FillDialog -->
+    <string name="button1">כפתור 1</string>
+    <string name="button2">כפתור 2</string>
+    <string name="button3">כפתור 3</string>
+    <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
+    <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">השהה לולאה ל-2 ש\'</string>
+    <string name="suspendloopfor3h">השהה לולאה ל-3 ש\'</string>
+    <string name="suspendloopfor10h">השהה לולאה ל-10 ש\'</string>
+    <string name="disconnectpump">ניתוק משאבה</string>
+    <string name="disconnectpumpfor15m">נתק את המשאבה למשך 15 דקות</string>
+    <string name="disconnectpumpfor30m">נתק את המשאבה למשך 30 דקות</string>
+    <string name="disconnectpumpfor1h">נתק את המשאבה למשך שעה</string>
+    <string name="disconnectpumpfor2h">נתק את המשאבה למשך שעתיים</string>
+    <string name="disconnectpumpfor3h">נתק את המשאבה למשך שלוש שעות</string>
+    <string name="resume">חידוש</string>
+    <string name="reconnect">חיבור משאבה מחדש</string>
+    <string name="duration15m">15 דקות</string>
+    <string name="duration30m">30 דקות</string>
+    <string name="duration1h">שעה אחת</string>
+    <string name="duration2h">שעתיים</string>
+    <string name="duration3h">3 שעות</string>
+    <string name="duration10h">10 שעות</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">תיקון עם %</string>
+    <string name="a11_correction_units">תיקון עם יחידות</string>
+    <string name="result_insulin_carbs">תוצאה: %1$s %2$s</string>
+    <string name="missing_carbs">חסרים %1$d גר\'</string>
+    <string name="a11y_current_bg">רמת סוכר נוכחית</string>
+    <string name="carb_time_label">זמן פחמימות</string>
+    <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
+    <string name="show_calculation">הצג חישוב</string>
     <!-- Treatments -->
     <string name="calculation_short">חישוב</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
@@ -55,5 +85,7 @@
     <string name="show_loop_records">הצג רשומות לולאה</string>
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">פרופיל 2</string>
+    <string name="selected_profile">נבחר:</string>
     <!-- Other dialogs -->
 </resources>
