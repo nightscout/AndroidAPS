@@ -39,10 +39,40 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
+    <string name="button1">Knapp 1</string>
+    <string name="button2">Knapp 2</string>
+    <string name="button3">Knapp 3</string>
+    <string name="record_pump_site_change">Logg bytte av slangesett</string>
+    <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Pause loop i 2t</string>
+    <string name="suspendloopfor3h">Pause loop i 3t</string>
+    <string name="suspendloopfor10h">Pause loop i 10t</string>
+    <string name="disconnectpump">Koble fra pumpen</string>
+    <string name="disconnectpumpfor15m">Koble fra pumpen i 15 min</string>
+    <string name="disconnectpumpfor30m">Koble fra pumpen i 30 min</string>
+    <string name="disconnectpumpfor1h">Koble fra pumpen i 1t</string>
+    <string name="disconnectpumpfor2h">Koble fra pumpen i 2t</string>
+    <string name="disconnectpumpfor3h">Koble fra pumpen i 3t</string>
+    <string name="resume">Gjenoppta</string>
+    <string name="reconnect">Koble til pumpen</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 time</string>
+    <string name="duration2h">2 timer</string>
+    <string name="duration3h">3 timer</string>
+    <string name="duration10h">10 timer</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">korriger resultatet med %</string>
+    <string name="a11_correction_units">korriger resultatet med enheter</string>
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
+    <string name="missing_carbs">Mangler %1$d g</string>
+    <string name="a11y_current_bg">nåværende blodsukker</string>
+    <string name="carb_time_label">Karbo-tid</string>
+    <string name="a11y_set_carb_timer">angi karbo nedtellings alarm</string>
+    <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
     <string name="calculation_short">Kalk</string>
@@ -77,5 +107,7 @@
     <string name="show_loop_records">Vis loop-registreringer</string>
     <string name="show_hide_records">Skjul loop-registreringer</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Valgt:</string>
     <!-- Other dialogs -->
 </resources>
