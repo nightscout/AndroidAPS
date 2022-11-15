@@ -87,6 +87,7 @@ import info.nightscout.interfaces.plugin.PluginType;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.profile.ProfileFunction;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.OmnipodEros;
 import info.nightscout.interfaces.pump.Pump;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpPluginBase;
@@ -121,7 +122,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice {
+public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice, OmnipodEros {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;

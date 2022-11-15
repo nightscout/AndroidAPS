@@ -51,6 +51,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
         binding = ActivitySetupwizardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        swDefinition.activity = this
         screens = swDefinition.getScreens()
         val intent = intent
         currentWizardPage = intent.getIntExtra(intentMessage, 0)
@@ -60,7 +61,6 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
             //Set screen name
             val screenName = findViewById<TextView>(R.id.sw_content)
             screenName.text = currentScreen.getHeader()
-            swDefinition.activity = this
             //Generate layout first
             generateLayout()
             updateButtons()
