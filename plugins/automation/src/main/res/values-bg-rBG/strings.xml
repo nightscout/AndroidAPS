@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">П</string>
+    <string name="tuesday_short">Вт</string>
+    <string name="wednesday_short">Ср</string>
+    <string name="thursday_short">Ч</string>
+    <string name="friday_short">П</string>
+    <string name="saturday_short">С</string>
+    <string name="sunday_short">Н</string>
 </resources>
