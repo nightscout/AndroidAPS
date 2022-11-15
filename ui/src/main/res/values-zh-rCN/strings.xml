@@ -22,10 +22,40 @@
     <string name="superbolus">超级大剂量Superbolus</string>
     <string name="treatments_wizard_total_label">总计</string>
     <!-- FillDialog -->
+    <string name="button1">按钮1</string>
+    <string name="button2">按钮2</string>
+    <string name="button3">按钮3</string>
+    <string name="record_pump_site_change">记录泵管路更换</string>
+    <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">暂停闭环2个小时</string>
+    <string name="suspendloopfor3h">暂停闭环3个小时</string>
+    <string name="suspendloopfor10h">暂停闭环10个小时</string>
+    <string name="disconnectpump">断开泵连接</string>
+    <string name="disconnectpumpfor15m">与泵断开连接15分钟</string>
+    <string name="disconnectpumpfor30m">与泵断开连接30分钟</string>
+    <string name="disconnectpumpfor1h">与泵断开连接1个小时</string>
+    <string name="disconnectpumpfor2h">与泵断开连接2个小时</string>
+    <string name="disconnectpumpfor3h">与泵断开连接3个小时</string>
+    <string name="resume">恢复</string>
+    <string name="reconnect">重新连接泵</string>
+    <string name="duration15m">15 分钟</string>
+    <string name="duration30m">30 分钟</string>
+    <string name="duration1h">1 小时</string>
+    <string name="duration2h">2 小时</string>
+    <string name="duration3h">3 小时</string>
+    <string name="duration10h">10 小时</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">校正结果使用%</string>
+    <string name="a11_correction_units">校正结果使用单位</string>
+    <string name="result_insulin_carbs">结果: %1$s %2$s</string>
+    <string name="missing_carbs">缺少 %1$d 克</string>
+    <string name="a11y_current_bg">当前血糖</string>
+    <string name="carb_time_label">碳水时间</string>
+    <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
+    <string name="show_calculation">显示计时器</string>
     <!-- Treatments -->
     <string name="calculation_short">计算</string>
     <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
@@ -55,5 +85,7 @@
     <string name="show_loop_records">显示闭环记录</string>
     <string name="show_hide_records">隐藏闭环记录</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">配置文件 2</string>
+    <string name="selected_profile">已选择:</string>
     <!-- Other dialogs -->
 </resources>
