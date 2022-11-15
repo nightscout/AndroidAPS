@@ -18,10 +18,36 @@
     <string name="superbolus">Superbólus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
+    <string name="button1">Botão 1</string>
+    <string name="button2">Botão 2</string>
+    <string name="button3">Botão 3</string>
+    <string name="record_pump_site_change">Registar mudança local bomba</string>
+    <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Suspender loop por 2h</string>
+    <string name="suspendloopfor3h">Suspender loop por 3h</string>
+    <string name="suspendloopfor10h">Suspender loop por 10h</string>
+    <string name="disconnectpump">Remover a bomba</string>
+    <string name="disconnectpumpfor15m">Remover bomba por 15 min</string>
+    <string name="disconnectpumpfor30m">Remover bomba por 30 min</string>
+    <string name="disconnectpumpfor1h">Remover bomba por 1 h</string>
+    <string name="disconnectpumpfor2h">Remover bomba por 2 h</string>
+    <string name="disconnectpumpfor3h">Remover bomba por 3 h</string>
+    <string name="resume">Retomar</string>
+    <string name="reconnect">Re-ligar a Bomba</string>
+    <string name="duration15m">15 min.</string>
+    <string name="duration30m">30 min.</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 horas</string>
+    <string name="duration3h">3 horas</string>
+    <string name="duration10h">10 horas</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
+    <string name="missing_carbs">A faltar %1$d g</string>
+    <string name="carb_time_label">Hora dos Hidratos</string>
+    <string name="show_calculation">Mostrar Localização</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IA:</string>
@@ -39,5 +65,6 @@
     <string name="refresheventsfromnightscout">Atualizar a partir do NS</string>
     <string name="clone_label">Clone</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Seleccionado:</string>
     <!-- Other dialogs -->
 </resources>
