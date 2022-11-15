@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Athnuachan</string>
     <string name="error">Earráid</string>
     <string name="save">Sábháil</string>
     <string name="waitingforpump">Ag fanacht do caidéil</string>
@@ -28,33 +29,50 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Bunaidh</string>
     <string name="target_label">Cuspóir</string>
+    <string name="basal_long_label">Bunaidh ráta</string>
     <string name="initializing">Tosaithe ...</string>
     <string name="serialnumber">Sraithuimhir</string>
     <string name="battery_label">Ceallraí</string>
     <string name="lastconnection_label">Nasc deiridh</string>
     <string name="lastbolus_label">Bólas deiridh</string>
     <string name="dailyunits">Aonaid lá</string>
+    <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
     <string name="reservoir_label">Taiscumar</string>
     <string name="pumphistory">Stair caidéil</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="loopdisabled">LÚB DÍCHUMASAITHE LE SRIANTA</string>
+    <string name="virtualpump_resultok">Ceart go leor</string>
     <string name="exit">Scoir</string>
+    <string name="loopisdisabled">Is lúb díchumasaithe</string>
     <string name="alarm">Aláram</string>
     <string name="disableloop">Díchumasaigh lúb</string>
     <string name="enableloop">Cumasaigh lúb</string>
     <string name="resumeloop">Lúb Atosú</string>
     <string name="suspendloop">Fionraí lúb</string>
+    <string name="duration_min_label">Fad [min]</string>
     <string name="glucose">Glúcóis</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="name_short">Ainm:</string>
     <string name="time">Am</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="notes_label">Nótaí</string>
     <string name="addnew">Cuir nua</string>
+    <string name="bg_label">BG</string>
+    <string name="calibration">Calabrú</string>
+    <string name="duration_label">Fad</string>
     <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Caidéil ar fionraí</string>
+    <string name="loopsuspended">Lúb ar fionraí</string>
+    <string name="a11y_high">ard</string>
+    <string name="a11y_low">íseal</string>
+    <string name="tdd_total">TDD Lomlán</string>
+    <string name="profile">Próifíl</string>
     <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bólas IOB</string>
     <string name="treatments_wizard_basaliob_label">Bunaidh IOB</string>
     <string name="overview_insulin_label">Inslin</string>
     <string name="closedloop">Lúb dúnta</string>
@@ -88,6 +106,7 @@
     <string name="activity">Gníomhaíocht</string>
     <string name="pump">Caidéil</string>
     <string name="loop">Lúb</string>
+    <string name="reading_pump_history">Léigh stair caidéil</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <string name="comment">Tuairim</string>
@@ -110,13 +129,25 @@
     <!-- VersionChecker -->
     <!-- Permissions -->
     <!-- User Entry -->
+    <string name="ue_action">Gníomh</string>
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bunaidh</string>
+    <string name="basalpct">Bunaidh %</string>
     <!-- Autotune -->
+    <string name="autotune_result">Toradh: %1$s</string>
     <!-- Alerts -->
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <plurals name="days">
+        <item quantity="one">%1$d lá</item>
+        <item quantity="two">%1$d lá</item>
+        <item quantity="few">%1$d lá</item>
+        <item quantity="many">%1$d lá</item>
+        <item quantity="other">%1$d lá</item>
+    </plurals>
     <plurals name="hours">
         <item quantity="one">%1$d uair</item>
         <item quantity="two">%1$d uair</item>
