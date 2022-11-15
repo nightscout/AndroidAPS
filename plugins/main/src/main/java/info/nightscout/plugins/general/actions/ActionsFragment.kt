@@ -171,8 +171,8 @@ class ActionsFragment : DaggerFragment() {
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { activityNames.runFillDialog(childFragmentManager) })
             }
         }
-        binding.historyBrowser.setOnClickListener { startActivity(Intent(context, activityNames.historyBrowseActivity::class.java)) }
-        binding.tddStats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity::class.java)) }
+        binding.historyBrowser.setOnClickListener { startActivity(Intent(context, activityNames.historyBrowseActivity)) }
+        binding.tddStats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
         binding.bgCheck.setOnClickListener {
             activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.BGCHECK, R.string.careportal_bgcheck)
         }
