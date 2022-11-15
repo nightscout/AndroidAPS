@@ -82,7 +82,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
     ) {
 
-        override fun notifyAboutNewCommand() {}
+        override fun notifyAboutNewCommand() : Boolean = true
 
     }
 
