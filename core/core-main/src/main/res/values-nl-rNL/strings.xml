@@ -150,6 +150,12 @@
     <string name="paused">Gepauzeerd</string>
     <string name="invalid">Ongeldig</string>
     <string name="login">Aanmelden</string>
+    <string name="overview_insulin_label">Insuline</string>
+    <string name="stoptemptarget">Stop tijdelijk doel</string>
+    <string name="closedloop">Closed loop</string>
+    <string name="openloop">Open loop</string>
+    <string name="lowglucosesuspend">Stop bij laag</string>
+    <string name="confirm">Bevestig</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Beperken van basaal tot max %1$.2f E/uur wegens de %2$s</string>
     <string name="pumplimit">Pomp limiet</string>
@@ -496,6 +502,29 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bolusadviseur</string>
+    <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
+    <string name="partialboluswizard">Voer dit deel van het bolus wizard resultaat uit [%]</string>
+    <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
+    <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
+    <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
+    <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
+    <string name="wizard_no_cob">Onbekende COB! BG uitlezing ontbreekt of de recente app herstart?</string>
+    <string name="wizard_carbs_constraint">Koolhydraten beperking overschreden!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Koolhydraten: %1$.2fE</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
+    <string name="wizard_explain_bg">BG: %1$.2fE</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
+    <string name="wizard_explain_percent">Percentage: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
+    <string name="wizard_constraint_bolus_size">Insuline beperking!\nKan %1$.2fE niet leveren</string>
+    <string name="wizard_explain_tt">Tijdelijk Doel: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s tot %2$s</string>
+    <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
