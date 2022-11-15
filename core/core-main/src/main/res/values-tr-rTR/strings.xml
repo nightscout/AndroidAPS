@@ -39,6 +39,9 @@
     <string name="paused">Duraklatıldı</string>
     <string name="invalid">GEÇERSİZ</string>
     <string name="login">Giriş</string>
+    <string name="dia">İES</string>
+    <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
+    <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
