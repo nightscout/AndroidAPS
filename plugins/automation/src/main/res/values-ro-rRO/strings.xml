@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="automation_short">Auto</string>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
+    <string name="latitude_short">Lat:</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="iob_u">IOB [U]:</string>
+    <string name="distance_short">Dist [m]:</string>
+    <string name="remove_automation">Elimină automatizarea</string>
+    <string name="sort_automation">Sortează automatizarea</string>
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="sort_label">Sortează</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">L</string>
+    <string name="tuesday_short">Ma</string>
+    <string name="wednesday_short">Mi</string>
+    <string name="thursday_short">J</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">D</string>
 </resources>
