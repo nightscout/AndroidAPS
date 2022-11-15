@@ -159,6 +159,9 @@
     <string name="openloop">Boucle Ouverte</string>
     <string name="lowglucosesuspend">Arrêt Glycémie Basse</string>
     <string name="confirm">Confirmer</string>
+    <string name="dia">DAI</string>
+    <string name="ic_short">G/I</string>
+    <string name="isf_short">SI</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
