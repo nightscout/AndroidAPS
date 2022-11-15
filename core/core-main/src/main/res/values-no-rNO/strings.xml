@@ -34,6 +34,8 @@
     <string name="stoppressed">STOPP trykket</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Karbohydrater</string>
+    <string name="invalid_profile">Ugyldig profil!</string>
+    <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheter</string>
@@ -150,6 +152,16 @@
     <string name="paused">Pauset</string>
     <string name="invalid">UGYLDIG</string>
     <string name="login">Logg inn</string>
+    <string name="prime_fill">Prime/fylling</string>
+    <string name="overview_insulin_label">Insulin</string>
+    <string name="stoptemptarget">Avbryt temp target</string>
+    <string name="closedloop">Lukket Loop</string>
+    <string name="openloop">Åpen Loop</string>
+    <string name="lowglucosesuspend">Slumre ved lavt BS</string>
+    <string name="confirm">Bekreft</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IK</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
@@ -178,6 +190,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Start profil %1$d%% i %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Avbryt temp basal</string>
     <string name="let_temp_basal_run">Fortsett temp basal</string>
     <string name="rate">Dose</string>
     <string name="duration">Varighet</string>
@@ -199,9 +212,12 @@
     <string name="careportal_note_message">Notat: %1$s</string>
     <string name="careportal_question_message">Spørsmål: %1$s</string>
     <string name="careportal_exercise_message">Aktivitet: %1$s</string>
+    <string name="careportal_pump_site_change">Bytte av pumpens kanyle</string>
+    <string name="cgm_sensor_insert">Bytte av CGM sensor</string>
     <string name="careportal_cgmsensorstart">CGM sensor start</string>
     <string name="careportal_cgm_sensor_stop">CGM sensor stopp</string>
     <string name="careportal_dad_alert">Logg varsel fra diabetes-hund</string>
+    <string name="careportal_insulin_cartridge_change">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profilbytte</string>
     <string name="careportal_snackbolus">Mellommåltidsbolus</string>
     <string name="careportal_mealbolus">Måltidsbolus</string>
@@ -211,6 +227,8 @@
     <string name="careportal_tempbasalend">Temp basal slutt</string>
     <string name="careportal_carbscorrection">Karbo korreksjon</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="pump_battery_change">Bytte pumpebatteri</string>
+    <string name="temporary_target">Midlertidig BS mål</string>
     <string name="careportal_temporarytargetvalue">Temp target verdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt temp mål</string>
     <string name="boluswizard">Bolusassistent</string>
@@ -496,6 +514,31 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bolus veiviser</string>
+    <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjons bolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Advarsel: Treg KH absorpsjon oppdaget: %2$d%% av tiden. Dobbeltsjekk din beregning. COB can være misvisende og du risikerer å få for mye insulin !!!!!</font>]]></string>
+    <string name="partialboluswizard">Doser denne delen av bolus wizard resultat [%]</string>
+    <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
+    <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
+    <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
+    <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
+    <string name="wizard_no_actual_bg">Mangler nylige BS verdier til å bruke i beregninger!</string>
+    <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
+    <string name="wizard_no_cob">Ukjent COB! BS verdier mangler eller nylig oppstart av appen?</string>
+    <string name="wizard_carbs_constraint">Brudd på karbo begrensninger!</string>
+    <string name="wizard_explain_calc">Kalk (IK: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Karbo: %1$.2fE</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
+    <string name="wizard_explain_bg">BS: %1$.2fE</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fE</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
+    <string name="wizard_explain_percent">Prosent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
+    <string name="wizard_constraint_bolus_size">Insulinbegrensning nådd!\nKan ikke levere %1$.2fE</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s til %2$s</string>
+    <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
