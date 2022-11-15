@@ -24,10 +24,40 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">I alt</string>
     <!-- FillDialog -->
+    <string name="button1">Knap 1</string>
+    <string name="button2">Knap 2</string>
+    <string name="button3">Knap 3</string>
+    <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
+    <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Suspendér loop i 2t</string>
+    <string name="suspendloopfor3h">Suspendér loop i 3t</string>
+    <string name="suspendloopfor10h">Suspendér loop i 10t</string>
+    <string name="disconnectpump">Afbryd pumpe</string>
+    <string name="disconnectpumpfor15m">Afbryd pumpen i 15 min</string>
+    <string name="disconnectpumpfor30m">Afbryd pumpen i 30 min</string>
+    <string name="disconnectpumpfor1h">Afbryd pumpen i 1 time</string>
+    <string name="disconnectpumpfor2h">Afbryd pumpen i 2 timer</string>
+    <string name="disconnectpumpfor3h">Afbryd pumpen i 3 timer</string>
+    <string name="resume">Genoptag</string>
+    <string name="reconnect">Genforbind Pumpe</string>
+    <string name="duration15m">15 minutter</string>
+    <string name="duration30m">30 minutter</string>
+    <string name="duration1h">1 time</string>
+    <string name="duration2h">2 timer</string>
+    <string name="duration3h">3 timer</string>
+    <string name="duration10h">10 timer</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">korrekt resultat med %</string>
+    <string name="a11_correction_units">korrekt resultat med enheder</string>
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
+    <string name="missing_carbs">Mangler %1$d g</string>
+    <string name="a11y_current_bg">nuværende blodglukose</string>
+    <string name="carb_time_label">Kulhydrat tid</string>
+    <string name="a11y_set_carb_timer">indstil KH alarm</string>
+    <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
     <string name="calculation_short">Beregn</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -57,5 +87,7 @@
     <string name="show_loop_records">Vis loop poster</string>
     <string name="show_hide_records">Skjul loop poster</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Valgt:</string>
     <!-- Other dialogs -->
 </resources>
