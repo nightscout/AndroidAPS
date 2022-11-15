@@ -7,6 +7,7 @@
     <string name="ic_label">IC</string>
     <string name="isf_label">ISF</string>
     <string name="basal_long_label">מינון בזאלי</string>
+    <string name="shortpercent">%</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="trend_arrow">חץ מגמה</string>
@@ -43,6 +44,15 @@
     <string name="paused">מושהה</string>
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
+    <string name="overview_insulin_label">אינסולין</string>
+    <string name="stoptemptarget">הפסקת ערך מטרה זמני</string>
+    <string name="closedloop">לולאה סגורה</string>
+    <string name="openloop">לולאה פתוחה</string>
+    <string name="lowglucosesuspend">השהיה עקב ערך סוכר נמוך</string>
+    <string name="confirm">אישור</string>
+    <string name="dia">משך פעילות אינסולין</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -72,10 +82,32 @@
     <string name="formatPercent">%1$.0f%%</string>
     <!-- Autotune -->
     <string name="autotune_shortname">AT</string>
+    <string name="autotune_percent">%</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">שימוש בהודעות מערכת עבור התראות ודיווחים</string>
     <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!!! זוהתה ספיגת פחמימות איטית: %2$d%% מהזמן הצפוי. הערכת כמות הפחמימות הפעילות עלולה להיות ביתר ולכן תיתכן הזרקת אינסולין עודפת !!!!!!</font>]]></string>
+    <string name="partialboluswizard">ספק את חלק זה מתוצאת אשף הבולוס [%]</string>
+    <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
+    <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
+    <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
+    <string name="wizard_no_active_profile">לא הופעל פרופיל!</string>
+    <string name="wizard_no_cob">הפחמימות הפעילות לא ידועות! חסרות קריאות סוכר או שאותחל היישום לאחרונה?</string>
+    <string name="wizard_carbs_constraint">הפרת מגבלות פחמימה!</string>
+    <string name="wizard_explain_calc">מחשבון (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">פחמ\': %1$.2f יח\'</string>
+    <string name="wizard_explain_cob">פחמ\': %1$.0f גר\' %2$.2f יח\'</string>
+    <string name="wizard_explain_bg">סוכר: %1$.2f יח\'</string>
+    <string name="wizard_explain_iob">אינ\' פעיל: %1$.2f יח\'</string>
+    <string name="wizard_explain_superbolus">סופר בולוס: %1$.2f יח\'</string>
+    <string name="wizard_explain_trend">מגמת 15 דק\': %1$.2f יח\'</string>
+    <string name="wizard_explain_percent">אחוזים: %1$.2f יח\' x %2$d%% ≈ %3$.2f יח\'</string>
+    <string name="wizard_constraint_bolus_size">הופעלה מגבלת אינסולין!\nלא ניתן להזריק %1$.2f יח\'</string>
+    <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
+    <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
 </resources>
