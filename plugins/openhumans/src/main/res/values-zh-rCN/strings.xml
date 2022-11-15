@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="open_humans_short">OH</string>
+    <string name="info_openhumans">这是一个开源工具，可以将您的数据复制到 Open Humans。未经您的明确授权，我们不保留与第三方共享您的数据的权利。项目和应用程序接收到的数据是通过随机用户 ID 识别的，并且只有在您对该过程的授权后才会安全地传输到 Open Humans 账户。您可以随时通过 www.openhumans.org 停止上传和删除您的上传数据。</string>
+    <string name="careportal_events">Careportal事件(除笔记外)</string>
+    <string name="final_touches">最后的润色</string>
+    <string name="uploading_proceed">您离上传您的数据到Open Humans只剩最后一步，您想要继续吗？</string>
+    <string name="this_may_take_a_few_seconds">这可能需要几秒钟</string>
+    <string name="silently_upload_date_note">从现在起，您的手机将不时在后台自动上传数据</string>
+</resources>
