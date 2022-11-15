@@ -20,10 +20,36 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Razem</string>
     <!-- FillDialog -->
+    <string name="button1">Przycisk 1</string>
+    <string name="button2">Przycisk 2</string>
+    <string name="button3">Przycisk 3</string>
+    <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
+    <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Wstrzymaj pętlę na 2h</string>
+    <string name="suspendloopfor3h">Wstrzymaj pętlę na 3h</string>
+    <string name="suspendloopfor10h">Wstrzymaj pętlę na 10 h</string>
+    <string name="disconnectpump">Odłącz pompę</string>
+    <string name="disconnectpumpfor15m">Wyłącz pompę na 15 min</string>
+    <string name="disconnectpumpfor30m">Wyłącz pompę na 30 min</string>
+    <string name="disconnectpumpfor1h">Wyłącz pompę na 1 h</string>
+    <string name="disconnectpumpfor2h">Wyłącz pompę na 2 h</string>
+    <string name="disconnectpumpfor3h">Wyłącz pompę na 3 h</string>
+    <string name="resume">Wznów</string>
+    <string name="reconnect">Połącz ponownie pompę</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 godzina</string>
+    <string name="duration2h">2 godziny</string>
+    <string name="duration3h">3 godziny</string>
+    <string name="duration10h">10 godzin</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Wynik: %1$s %2$s</string>
+    <string name="missing_carbs">Brakuje %1$d g</string>
+    <string name="carb_time_label">Czas węglow.</string>
+    <string name="show_calculation">Pokaż obliczenia</string>
     <!-- Treatments -->
     <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -41,5 +67,6 @@
     <string name="refresheventsfromnightscout">Odśwież z NS</string>
     <string name="clone_label">Sklonuj</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Wybrany:</string>
     <!-- Other dialogs -->
 </resources>
