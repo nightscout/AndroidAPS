@@ -39,14 +39,21 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Celkem</string>
     <!-- FillDialog -->
+    <string name="fill_warning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
+    <string name="fill_bolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
     <string name="button3">Tlačítko 3</string>
     <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nepouštět bolus, jen zaznamenat</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
+    <string name="timeshift_label">Posun času</string>
+    <string name="percentage_label">% změna</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pozastavit smyčku na 1 h</string>
     <string name="suspendloopfor2h">Pozastavit smyčku na 2 h</string>
     <string name="suspendloopfor3h">Pozastavit smyčku na 3 h</string>
     <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
@@ -67,6 +74,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">správný výsledek v %</string>
     <string name="a11_correction_units">správný výsledek s jednotkami</string>
+    <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Výsledek: %1$s %2$s</string>
     <string name="missing_carbs">Chybí %1$d g</string>
     <string name="a11y_current_bg">aktuální hodnota glykémie</string>
@@ -107,7 +115,21 @@
     <string name="show_loop_records">Zobrazit záznamy smyčky</string>
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
     <string name="profile2">Profil 2</string>
+    <string name="profile_type">Typ profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazálu</string>
     <string name="selected_profile">Vybráno:</string>
+    <string name="compare_profile">Porovnat profily</string>
+    <string name="nav_profile_helper">Pomocník s profilem</string>
+    <string name="motol_default_profile">Výchozí profil</string>
+    <string name="current_profile">Aktuální profil</string>
+    <string name="available_profile">Dostupný profil</string>
+    <string name="format_with_tdd">Věk: %1$.0f CDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Věk: %1$.0f CDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Věk: %1$.0f Hmotnost: %2$.0f kg</string>
+    <string name="dpv_default_profile">Výchozí profil DPV</string>
+    <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Bazál</string>
 </resources>
