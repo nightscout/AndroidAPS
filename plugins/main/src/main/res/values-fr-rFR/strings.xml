@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Communicateur SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Commander à distance AAPS en utilisant les commandes SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">depuis l\'application Authenticator pour : %1$s suivie du code PIN</string>
+    <string name="smscommunicator_otp_pin">Code PIN obligatoire à la fin de l\'OTP</string>
+    <string name="smscommunicator_otp_pin_summary">Chiffres supplémentaires qui doivent être mémorisés et collés à la fin de chaque OTP généré</string>
+    <string name="smscommunicator_tab_otp_label">Configuration de l\'Authentificateur</string>
+    <string name="smscommunicator_code_verify_label">Code à vérifier :</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Le code de vérification est composé de 6 chiffres affichés par l\'application Authenticator (appelée OTP) suivi du code PIN obligatoire constitué de 3 chiffres ou plus.</string>
+    <string name="smscommunicator_otp_reset_btn">Réinitialiser les authentificateurs</string>
+    <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
+    <string name="smscommunicator_otp_reset_prompt">Voulez-vous réinitialiser la clé de l\'Authenticateur ? Cela rendra tous authentificateurs configurés invalides, et vous devrez les configurer à nouveau.</string>
+    <string name="smscommunicator_otp_reset_successful">Nouvelle clé de l\'Authenticateur générée ! Veuillez utiliser le QRCode mis à jour pour les authentificateurs.</string>
+    <string name="smscommunicator_otp_export_title">Exportation de l\'OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Êtes-vous sûr de vouloir copier l\'OTP secret dans le presse-papiers ?\n\nVous pouvez en avoir besoin uniquement si votre application d\'authentification a des problèmes pour scanner le QRCode, si vous voulez le saisir manuellement ou si vous voulez configurer un jeton OTP matériel en utilisant une application dédiée.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (au format Base32) exporté et copié dans le presse-papiers. Collez-le dans l\'authentificateur ou le graveur OTP matériel !</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scannez le code pour configurer les codes OTP AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
+    <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
+    <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà initialisés. Vous devrez les reconfigurer !</string>
+    <string name="sms_wrong_code">Code incorrect. Commande annulée.</string>
+    <string name="sms_timeout_while_waiting">Délai d\'attente pour finir la communication précédente avec la pompe</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
+    <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Pour injecter le bolus de %1$.2f U, renvoyez le code %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Pour injecter le bolus repas de %1$.2f U, renvoyez le code %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Pour définir la cible temp %1$s, renvoyez le code %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Pour annuler la cible temp, renvoyez le code %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">Pour désactiver les commandes à distance SMS, renvoyez le code %1$s.\n\nGardez à l\'esprit que vous ne pourrez le réactiver que directement à partir de l\'application AAPS du smartphone maître.</string>
@@ -16,6 +43,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus de %1$.2f U délivré avec succès</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolus repas de %1$.2f U délivré avec succès</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Cible %1$s pendant %2$d minutes</string>
+    <string name="smscommunicator_tt_set">Cible %1$s pendant %2$d minutes définie avec succès</string>
+    <string name="smscommunicator_tt_canceled">Cible Temp annulée avec succès</string>
     <string name="smscommunicator_remote_commands_allowed">Autoriser les commandes à distance par SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">La Boucle a été désactivée</string>
     <string name="smscommunicator_loop_has_been_enabled">La Boucle a été activée</string>
@@ -24,11 +53,13 @@
     <string name="smscommunicator_pump_connect_fail">Echec de la connexion pompe</string>
     <string name="smscommunicator_pump_disconnect_with_code">Pour déconnecter la pompe pendant %1$d min, renvoyez le code %2$s</string>
     <string name="smscommunicator_pump_disconnected">Pompe déconnectée</string>
+    <string name="smscommunicator_reconnect">Pompe reconnectée</string>
     <string name="smscommunicator_remote_command_not_allowed">La commande à distance n\'est pas autorisée</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus à distance non disponible. Réessayez plus tard.</string>
     <string name="smscommunicator_basal_reply_with_code">Pour démarrer la basal de %1$.2f U/h pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Pour changer le profil vers %1$s %2$d%%, renvoyez le code %3$s</string>
     <string name="smscommunicator_extended_reply_with_code">Pour démarrer le bolus étendu de %1$.2f U/h pendant %2$d min, renvoyez le code %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Pour entrer %1$dg à %2$s, renvoyez le code %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Pour démarrer la Basal %1$d%% pendant %2$d min, renvoyez le code %3$s</string>
     <string name="smscommunicator_suspend_reply_with_code">Pour suspendre la boucle pendant %1$d min, renvoyez le code %2$s</string>
     <string name="smscommunicator_loop_resume_reply_with_code">Pour reprendre la boucle, renvoyez le code %1$s</string>
@@ -42,28 +73,126 @@
     <string name="smscommunicator_tempbasal_failed">Le démarrage du basal temporaire a échoué</string>
     <string name="smscommunicator_extended_failed">Le départ du Bolus étendu a échoué</string>
     <string name="smscommunicator_basal_stop_reply_with_code">Pour arrêter la basal temp, renvoyez le code %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Pour arrêter le bolus étendu, renvoyez le code %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Basal temporaire annulé</string>
+    <string name="smscommunicator_extended_canceled">Bolus étendu annulé</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Echec de l\'annulation du basal temporaire</string>
+    <string name="smscommunicator_extended_cancel_failed">Échec de l\'annulation du Bolus étendu</string>
+    <string name="smscommunicator_unknown_command">Commande inconnue ou mauvaise réponse</string>
+    <string name="smscommunicator_another_bolus_in_queue">Un autre bolus est en file d\'attente. Réessayez plus tard.</string>
+    <string name="smscommunicator_wrong_duration">Durée incorrecte</string>
+    <string name="smscommunicator_loop_suspended">Boucle suspendue</string>
+    <string name="smscommunicator_loop_resumed">Boucle relancée</string>
+    <string name="smscommunicator_invalid_phone_number">Numéro de tél. SMS invalide</string>
+    <string name="smscommunicator_calibration_sent">Étalonnage envoyé. La réception doit être activée dans xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ ne reçoit pas les étalonnages</string>
+    <string name="smscommunicator_message_body">Message invalide</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
+    <string name="smscommunicator_pump_unreachable">Signaler Pompe hors de portée</string>
+    <string name="wrong_format">Format incorrect</string>
+    <string name="sms_actual_bg">Gly:</string>
+    <string name="sms_last_bg">Dernière Gly:</string>
     <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IA:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
+    <string name="sms_min_ago">il y a %1$d min</string>
+    <string name="sms_loop_suspended_for">Suspendu (%1$d m)</string>
+    <string name="sms_read_status_failed">La lecture du statut a échoué</string>
+    <string name="sms_profile_switch_created">Changement de profil effectué</string>
+    <string name="sms_wrong_tbr_duration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
+    <string name="a11y_otp_qr_code">QR Code pour configurer un mot de passe à usage unique</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Réglages pour les insulines Humalog et NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Réglages pour l\'insuline Fiasp</string>
+    <string name="description_insulin_lyumjev">Réglages pour l\'insuline Lyumjev</string>
+    <string name="description_insulin_free_peak">Permet de définir le pic de l’activité de l’insuline et ne doit être utilisé que par les utilisateurs avancés</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Durée du Pic de la Courbe IA</string>
+    <string name="insulin_peak_time">Temps du Pic [min]</string>
+    <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
+    <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
+    <string name="ultra_rapid_oref">Insuline Ultra Rapide Oref</string>
+    <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">Barre d\'état pour xDrip+ (Montre)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
+    <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
+    <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
+    <string name="disabled_loop">Boucle désactivée</string>
+    <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
+    <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
+    <string name="xdrip_status_settings">état Xdrip+ (montre)</string>
     <!-- Food-->
+    <string name="food_short">Aliments</string>
+    <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
+    <string name="filter">Filtrer</string>
+    <string name="food">Aliments</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">En</string>
+    <string name="short_protein">Pr</string>
+    <string name="short_fat">Lipides</string>
+    <string name="category">Catégorie</string>
+    <string name="subcategory">Sous-catégorie</string>
+    <string name="calculator_label">Assistant</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Choisissez le thème sombre, clair ou le thème système</string>
+    <string name="app_color_scheme">Thèmes de couleurs de l\'appli</string>
+    <string name="dark_theme">Thème sombre</string>
+    <string name="light_theme">Thème clair</string>
+    <string name="follow_system_theme">Utiliser le thème de l’appareil</string>
     <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Définissez un profil qui est disponible hors ligne.</string>
+    <string name="a11y_add_new_to_list">ajouter un nouveau à la liste</string>
+    <string name="do_you_want_switch_profile">Voulez-vous changer de profil et annuler les modifications faites dans le profil actuel ?</string>
+    <string name="save_or_reset_changes_first">Sauver ou réinitialiser les modifications actuelles en premier</string>
+    <string name="delete_current_profile">Supprimer le profil actuel ?</string>
+    <string name="units_colon">Unités :</string>
+    <string name="missing_profile_name">Nom de profil manquant</string>
+    <string name="error_in_ic_values">Erreur dans les valeurs de G/I</string>
+    <string name="error_in_basal_values">Erreur dans les valeurs de basal</string>
+    <string name="error_in_target_values">Erreur dans les valeurs cibles</string>
+    <string name="error_in_isf_values">Erreur dans les valeurs de SI</string>
+    <string name="profile_name_contains_dot">Le nom du profil contient des points.\nCe n\'est pas pris en charge par NS.\nLe profil n\'est pas remonté dans NS.</string>
+    <string name="invalid_profile_not_accepted">Profil %1$s non valide, refusé par NS</string>
+    <string name="view">Vue</string>
+    <string name="errors">Erreurs</string>
+    <string name="select_profile">Sélectionnez le profil à modifier</string>
+    <string name="profile_name">Nom du profil :</string>
+    <string name="a11y_add_new_profile">ajouter un nouveau profil</string>
+    <string name="a11y_clone_profile">dupliquer le profil actuel</string>
+    <string name="a11y_delete_current_profile">supprimer le profil actuel</string>
+    <string name="dia_short">DAI</string>
+    <string name="target_short">CIBLE</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Données recalculées utilisées</string>
+    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculé</string>
+    <string name="a11y_bg_quality_doubles">entrées doubles</string>
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
+    <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">ancienne version</string>
+    <string name="very_old_version">très ancienne version</string>
+    <string name="application_expired">Application expirée</string>
+    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="completed_well_done">Terminé, félicitations !</string>
+    <string name="not_completed_yet">Pas encore terminé</string>
+    <string name="time_elapsed">Temps écoulé</string>
     <string name="maxiobset">Maximum IA réglé correctement</string>
     <string name="hasbgdata">Glycémie disponible depuis la source sélectionnée</string>
     <string name="synchaswritepermission">Le service de synchronisation a l\'autorisation d\'écriture</string>
@@ -121,7 +250,11 @@
     <string name="treatmentssafety_maxcarbs_title">Maximum de Glucides autorisé [g]</string>
     <string name="patientage">Type de patient</string>
     <!-- Overview -->
+    <string name="snooze">Masquer</string>
+    <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="show_statuslights">Afficher les voyants d\'état sur l\'écran d\'accueil</string>
+    <string name="statuslights_cage_warning">Seuil d\'alerte âge canule [h]</string>
+    <string name="statuslights_cage_critical">Seuil critique âge canule [h]</string>
     <string name="statuslights_iage_warning">Seuil d\'alerte âge insuline [h]</string>
     <string name="statuslights_iage_critical">Seuil critique âge insuline [h]</string>
     <string name="statuslights_sage_warning">Seuil d\'alerte âge capteur [h]</string>
@@ -147,7 +280,20 @@
     <string name="overview_cgm">MGC</string>
     <string name="quickwizard">Assistant Rapide</string>
     <!-- NSClient -->
+    <string name="no_write_permission">NSCLIENT ne possède pas la permission d\'écriture. Mauvais API secret?</string>
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">URL :</string>
+    <string name="ns_client_autoscroll">Défilement automatique</string>
     <string name="restart">Redémarrer</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">URL Nightscout</string>
+    <string name="ns_client_url_dialog_message">Entrez l’URL de votre site Nightscout</string>
+    <string name="ns_client_secret_title">NS API Secret</string>
+    <string name="ns_client_secret_dialog_title">NS API Secret</string>
+    <string name="ns_client_secret_dialog_message">Entrez NS API secret (12 carac. min)</string>
     <string name="nsclient_token_title">Jeton d\'accès NS</string>
     <string name="nsclient_token_dialog_title">Jeton d\'accès NS</string>
     <string name="nsclient_token_dialog_message">Jeton d\'accès généré sur la page d\'administration NS (min. 17 caractères)</string>
@@ -156,6 +302,7 @@
     <string name="show_queue">Afficher queue</string>
     <string name="queue">Queue :</string>
     <string name="status">État :</string>
+    <string name="clear_log">Effacer le journal</string>
     <string name="full_sync">Synchronisation complète</string>
     <string name="full_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et jusqu\'à la fin, vous ne verrez pas de nouvelles données sur NS.</string>
     <string name="ns_sync_options">Synchronisation</string>
@@ -184,6 +331,11 @@
     <string name="ns_alarm_options">Options d\'alarme</string>
     <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
     <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
+    <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Gly [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
+    <string name="ns_log_app_started_event">Démarrage AAPS entré dans NS</string>
+    <string name="ns_local_broadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de AAPSClient sont installées !</string>
+    <string name="ns_local_broadcasts_title">Activer les transmissions locales</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
     <string name="title_tidepool_username">Nom d\'utilisateur</string>
@@ -204,6 +356,10 @@
     <string name="reset_start">Réinitialiser le démarrage</string>
     <string name="upload_now">Télécharger maintenant</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Type de pompe virtuelle</string>
+    <string name="virtual_pump_definition">Définition de pompe</string>
+    <string name="virtual_pump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
+    <string name="virtual_pump">Pompe virtuelle</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="virtualpump_settings">Paramètres pompe virtuelle</string>
     <string name="virtualpump_uploadstatus_title">Remontée des informations vers NS</string>
