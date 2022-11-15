@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.RawRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
@@ -91,7 +92,7 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
             .show(fragmentManager, "ProfileViewer")
     }
 
-    override fun runCareDialog(fragmentManager: FragmentManager, options: ActivityNames.EventType, event: Int) {
+    override fun runCareDialog(fragmentManager: FragmentManager, options: ActivityNames.EventType, @StringRes event: Int) {
         CareDialog()
             .also {
                 it.arguments = Bundle().also { bundle ->

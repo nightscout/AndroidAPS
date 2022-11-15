@@ -85,9 +85,9 @@ class CareDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        savedInstanceState?.let {
-            event = savedInstanceState.getInt("event", R.string.error)
-            options = ActivityNames.EventType.values()[savedInstanceState.getInt("options", 0)]
+        (savedInstanceState ?: arguments)?.let {
+            event = it.getInt("event", R.string.error)
+            options = ActivityNames.EventType.values()[it.getInt("options", 0)]
         }
 
         binding.icon.setImageResource(
