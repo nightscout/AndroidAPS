@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="automation_short">Auto</string>
+    <string name="alarm_message">Alarm: %1$s</string>
+    <string name="alarm_short">Alarm:</string>
+    <string name="iobcompared">IOB %1$s %2$.1f</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="iob_u">IOB [U]:</string>
+    <string name="edit_short">EDIT</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Út</string>
+    <string name="wednesday_short">St</string>
+    <string name="thursday_short">Čt</string>
+    <string name="friday_short">Pá</string>
+    <string name="saturday_short">So</string>
+    <string name="sunday_short">Ne</string>
 </resources>
