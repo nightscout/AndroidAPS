@@ -28,6 +28,9 @@
     <string name="treatments_wizard_basaliob_label">Bazalni aktivni inzulin</string>
     <string name="invalid">GREŠKA</string>
     <string name="login">Login</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -66,4 +69,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Savjetnik za bolus</string>
+    <string name="bolus_advisor_message">Imate visoku glikemiju. Umjesto da jedete sada, preporuča se pričekati bolju glikemiju. Želite li sada napraviti korekcijski bolus i podsjetiti vas kada je vrijeme za jelo? U ovom slučaju neće biti zabilježeni ugljikohidrati i morate ponovno koristiti čarobnjaka kada vas podsjetimo.</string>
+    <string name="no_action_selected">Nije odabrana radnja, ništa se neće dogoditi</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
 </resources>
