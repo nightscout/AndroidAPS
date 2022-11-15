@@ -21,10 +21,36 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Viso</string>
     <!-- FillDialog -->
+    <string name="button1">Mygtukas 1</string>
+    <string name="button2">Mygtukas 2</string>
+    <string name="button3">Mygtukas 3</string>
+    <string name="record_pump_site_change">Įrašas apie infuzijos rinkinio keitimą</string>
+    <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Sustabdyti ciklą 2 val</string>
+    <string name="suspendloopfor3h">Sustabdyti ciklą 3 val</string>
+    <string name="suspendloopfor10h">Sustabdyti ciklą 10 val</string>
+    <string name="disconnectpump">Atjungti pompą</string>
+    <string name="disconnectpumpfor15m">Atjungti pompą 15 min</string>
+    <string name="disconnectpumpfor30m">Atjungti pompą 30 min</string>
+    <string name="disconnectpumpfor1h">Atjungti pompą 1 val</string>
+    <string name="disconnectpumpfor2h">Atjungti pompą 2 val</string>
+    <string name="disconnectpumpfor3h">Atjungti pompą 3 val</string>
+    <string name="resume">Atnaujinti</string>
+    <string name="reconnect">Prijungti pompą</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 val.</string>
+    <string name="duration2h">2 val.</string>
+    <string name="duration3h">3 val.</string>
+    <string name="duration10h">10 val.</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Rezultatas: %1$s %2$s</string>
+    <string name="missing_carbs">Trūksta %1$d g</string>
+    <string name="carb_time_label">AV laikas</string>
+    <string name="show_calculation">Rodyti skaičiavimą</string>
     <!-- Treatments -->
     <string name="calculation_short">Skaič.</string>
     <string name="treatments_iob_label_string">AIO:</string>
@@ -42,5 +68,6 @@
     <string name="refresheventsfromnightscout">Atnaujinti iš NS</string>
     <string name="clone_label">Klonuoti</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Parinkta:</string>
     <!-- Other dialogs -->
 </resources>
