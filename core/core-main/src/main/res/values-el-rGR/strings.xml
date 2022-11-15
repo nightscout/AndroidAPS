@@ -42,6 +42,12 @@
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
     <string name="paused">Παύση</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
+    <string name="overview_insulin_label">Ινσουλίνη</string>
+    <string name="stoptemptarget">Λήξη προσ. στόχου</string>
+    <string name="closedloop">Κλειστό Κύκλωμα</string>
+    <string name="openloop">Ανοιχτό Κύκλωμα</string>
+    <string name="lowglucosesuspend">Αναστολή Χαμηλής Γλυκόζης</string>
+    <string name="confirm">Επιβεβαίωση</string>
     <!--    Constraints-->
     <string name="pumplimit">όριο αντλίας</string>
     <string name="limitingpercentrate">Περιορίζεται το μέγιστο επί τοις εκατό ποσοστό σε %1$d%% λόγω %2$s</string>
@@ -116,4 +122,7 @@
     <string name="info">Πληροφορίες</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
+    <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
+    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
 </resources>
