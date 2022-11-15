@@ -2,6 +2,8 @@ package info.nightscout.implementation.queue
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
@@ -97,6 +99,7 @@ class CommandQueueImplementation @Inject constructor(
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val queue = LinkedList<Command>()
     @Volatile private var thread: QueueThread? = null
@@ -205,7 +208,7 @@ class CommandQueueImplementation @Inject constructor(
 
     // After new command added to the queue
     // start thread again if not already running
-    @Synchronized fun notifyAboutNewCommand() {
+    @Synchronized fun notifyAboutNewCommand() = handler.post {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
             thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
