@@ -24,10 +24,36 @@
     <string name="superbolus">Суперболус</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <!-- FillDialog -->
+    <string name="button1">Бутон 1</string>
+    <string name="button2">Бутон 2</string>
+    <string name="button3">Бутон 3</string>
+    <string name="record_pump_site_change">Запис смяна на сет</string>
+    <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Изключи APS за 2ч</string>
+    <string name="suspendloopfor3h">Изключи APS за 3ч</string>
+    <string name="suspendloopfor10h">Изключи APS за 10 ч</string>
+    <string name="disconnectpump">Изключване на помпата</string>
+    <string name="disconnectpumpfor15m">Изключи помпата за 15 мин.</string>
+    <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
+    <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
+    <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
+    <string name="disconnectpumpfor3h">Изключи помпата за 3 ч</string>
+    <string name="resume">Възстанови</string>
+    <string name="reconnect">Свържи помпа</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часа</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Резултат: %1$s %2$s</string>
+    <string name="missing_carbs">Нужни %1$d гр</string>
+    <string name="carb_time_label">ВХ след</string>
+    <string name="show_calculation">Покажи изчисленията</string>
     <!-- Treatments -->
     <string name="calculation_short">Калк</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -47,5 +73,6 @@
     <string name="hide_invalidated">Скрий невалидните</string>
     <string name="clone_label">Клонирай</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Избрано:</string>
     <!-- Other dialogs -->
 </resources>
