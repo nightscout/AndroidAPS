@@ -92,8 +92,14 @@
     <string name="patch_communication_succeed_message">Подключено к Patch.</string>
     <string name="patch_cancel_pairing">Отменить сопряжение</string>
     <string name="symbol_days">дней</string>
+    <string name="insulin_suspend_msg1">После приостановки текущий болюс &amp; Временный базал будет отменен. \n\nСкорость базала: %1$s ед/ч\nОсталось времени: %2$s\n&amp; инсулина: %3$.2f U</string>
+    <string name="insulin_suspend_msg2">После приостановки текущий болюс будет отменен. \n\n Осталось инсулина: %1$.2f U</string>
+    <string name="insulin_suspend_msg3">После приостановки текущий Временный базал будет отменен.\n\n Скорость базала: %1$s ед/ч\n Осталось времени: %2$s</string>
+    <string name="insulin_suspend_msg4">Введение инсулина будет приостановлено.</string>
     <string name="string_change_patch">Завершить пользование Patch\'ем/Заменить Patch</string>
+    <string name="string_activate_patch">Активировать Patch</string>
     <string name="string_discard_patch">Завершить пользование Patch\'ем</string>
+    <string name="string_resume">Возобновить</string>
     <string name="discard">Завершить пользование</string>
     <string name="cancel">Отменить</string>
     <string name="confirm">Подтверждаю</string>
