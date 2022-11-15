@@ -13,6 +13,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="duration_min_label">Duration [min]</string>
@@ -30,6 +31,15 @@
     <string name="paused">Pausad</string>
     <string name="invalid">OGILTIG</string>
     <string name="login">Logga in</string>
+    <string name="overview_insulin_label">Insulin</string>
+    <string name="stoptemptarget">Avbryt temp mål</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Stopp innan lågt</string>
+    <string name="confirm">Bekräfta</string>
+    <string name="dia">Duration</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -88,4 +98,23 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">COB kontra IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>Varning! Långsam KH-absorption upptäckt %2$d%% av tiden. Dubbelkolla din beräkning. COB kan vara väldigt missvisande och du riskerar få för mycket insulin!</font>]]></string>
+    <string name="partialboluswizard">Direkt bolus [%]</string>
+    <string name="advisoralarm">Larma när det är dags att äta</string>
+    <string name="no_action_selected">Ingen åtgärd vald. Inget ändras.</string>
+    <string name="wizard_no_actual_bg">Inget nytt BG-värde att basera beräkning på!</string>
+    <string name="wizard_no_active_profile">Ingen aktiv profil vald!</string>
+    <string name="wizard_no_cob">Okänt COB! Saknas BG eller är appen nyss omstartad?</string>
+    <string name="wizard_carbs_constraint">Max KH uppnått!</string>
+    <string name="wizard_explain_carbs">Kolhydrater: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Procent: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Max bolus uppnått!\nKan inte leverera %1$.2fU</string>
+    <string name="wizard_explain_tt">TempM: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s till %2$s</string>
+    <string name="wizard_pump_not_available">Ingen pump tillgänglig!</string>
 </resources>
