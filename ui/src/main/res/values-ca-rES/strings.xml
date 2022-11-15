@@ -22,10 +22,35 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
+    <string name="button1">Botó 1</string>
+    <string name="button2">Botó 2</string>
+    <string name="button3">Botó 3</string>
+    <string name="record_pump_site_change">Anotar canvi de cànula</string>
+    <string name="record_insulin_cartridge_change">Anotar canvi reservori d\'insulina</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Aturar el llaç 2h</string>
+    <string name="suspendloopfor3h">Aturar el llaç 3h</string>
+    <string name="suspendloopfor10h">Aturar el llaç 10h</string>
+    <string name="disconnectpump">Desconnectar bomba</string>
+    <string name="disconnectpumpfor15m">Desconnectar bomba 15 min</string>
+    <string name="disconnectpumpfor30m">Desconnectar bomba 30 min</string>
+    <string name="disconnectpumpfor1h">Desconnectar bomba 1 h</string>
+    <string name="disconnectpumpfor2h">Desconnectar bomba 2 h</string>
+    <string name="disconnectpumpfor3h">Desconnectar bomba 3 h</string>
+    <string name="resume">Reprendre</string>
+    <string name="reconnect">Reconnectar bomba</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 hores</string>
+    <string name="duration3h">3 hores</string>
+    <string name="duration10h">10 hores</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
+    <string name="missing_carbs">Falten %1$d g</string>
+    <string name="show_calculation">Mostrar càlcul</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -42,5 +67,6 @@
     <string name="refresheventsfromnightscout">Actualitzar des de NS</string>
     <string name="clone_label">Duplicar</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Seleccionat:</string>
     <!-- Other dialogs -->
 </resources>
