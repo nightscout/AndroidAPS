@@ -15,6 +15,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="alarm">Alarm</string>
@@ -36,6 +37,15 @@
     <string name="paused">Pauset</string>
     <string name="invalid">UGYLDIG</string>
     <string name="login">Log ind</string>
+    <string name="overview_insulin_label">Insulin</string>
+    <string name="stoptemptarget">Stop midlertidig mål</string>
+    <string name="closedloop">Lukket Loop</string>
+    <string name="openloop">Åben Loop</string>
+    <string name="lowglucosesuspend">Lav glukose suspendering</string>
+    <string name="confirm">Bekræft</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -91,10 +101,32 @@
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_shortname">AT</string>
+    <string name="autotune_percent">%</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Brug systemnotifikationer til advarsler og notifikationer</string>
     <string name="urgent_alarm">Akut alarm</string>
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsomme kulhydrater opdaget: %2$d%% af tiden. Dobbelttjek din beregning. COB kan overvurderes og der kan således gives mere insulin !!!!!</font>]]></string>
+    <string name="partialboluswizard">Afgiv denne del af bolusguidens resultat [%]</string>
+    <string name="advisoralarm">Kør alarm når det er tid til at spise</string>
+    <string name="no_action_selected">Ingen handling valgt, intet vil ske</string>
+    <string name="wizard_no_actual_bg">Ingen nylig BG til at basere beregningen på!</string>
+    <string name="wizard_no_active_profile">Ingen aktiv profil angivet!</string>
+    <string name="wizard_no_cob">Ukendt COB! BG læsning mangler eller nylig app genstart?</string>
+    <string name="wizard_carbs_constraint">KH begrænsninger overtrådt!</string>
+    <string name="wizard_explain_calc">Beregner (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Kulhydrater: %1$.2fE</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
+    <string name="wizard_explain_bg">BS: %1$.2fE</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fE</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fE</string>
+    <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
+    <string name="wizard_explain_percent">Procent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
+    <string name="wizard_constraint_bolus_size">Overtrædelse af insulinbegrænsning!\nKan ikke levere %1$.2fE</string>
+    <string name="wizard_explain_tt">Midl: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s til %2$s</string>
+    <string name="wizard_pump_not_available">Ingen pumpe tilgængelig!</string>
 </resources>
