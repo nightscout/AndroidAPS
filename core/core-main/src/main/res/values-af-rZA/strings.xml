@@ -42,6 +42,12 @@
     <string name="treatments_wizard_basaliob_label">Basale IAB</string>
     <string name="paused">Onderbreek</string>
     <string name="invalid">ONGELDIG</string>
+    <string name="overview_insulin_label">Insulien</string>
+    <string name="stoptemptarget">Tydelike teiken gestop</string>
+    <string name="closedloop">Geslote lus</string>
+    <string name="openloop">Oop lus</string>
+    <string name="confirm">Bevestig</string>
+    <string name="dia">DIA</string>
     <!--    Constraints-->
     <string name="pumplimit">pomp limiet</string>
     <string name="limitingpercentrate">Beperk maks persentasie koers tot %1$d%% agv %2$s</string>
@@ -117,4 +123,5 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
 </resources>
