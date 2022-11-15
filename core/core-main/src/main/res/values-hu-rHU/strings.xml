@@ -14,6 +14,7 @@
     <string name="initializing">Inicializálás ...</string>
     <string name="serialnumber">Sorozatszám</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="pairing">Párosítás</string>
@@ -33,6 +34,9 @@
     <string name="tir">TIR</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_basaliob_label">Bázis IOB</string>
+    <string name="overview_insulin_label">Inzulin</string>
+    <string name="lowglucosesuspend">Alacsony SZG felfüggesztés</string>
+    <string name="dia">DIA</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
