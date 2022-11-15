@@ -40,10 +40,12 @@
     <string name="login_open_humans">Login no Open Humans</string>
     <string name="final_touches">Toques finais</string>
     <string name="uploading_proceed">Você está apenas a um passo de enviar seus dados para o Open Humans. Deseja continuar?</string>
+    <string name="cancel">Cancelar</string>
     <string name="proceed">Prosseguir</string>
     <string name="finishing">Concluindo...</string>
     <string name="this_may_take_a_few_seconds">Isto pode levar alguns segundos.</string>
     <string name="we_re_done">Estamos prontos!</string>
     <string name="silently_upload_date_note">De agora em diante, o telefone fará o upload silencioso de dados em segundo plano de vez em quando.</string>
+    <string name="close">Fechar</string>
     <string name="upload_now">Enviar agora</string>
 </resources>
