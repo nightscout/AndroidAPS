@@ -57,6 +57,7 @@
     <string name="eventtype">Tipo de evento</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Configurações Avançadas</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Watchdog BT</string>
@@ -135,6 +136,15 @@
     <string name="paused">Pausado</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
+    <string name="overview_insulin_label">Insulina</string>
+    <string name="stoptemptarget">Parar Alvo Temp</string>
+    <string name="closedloop">Loop Fechado</string>
+    <string name="openloop">Loop Aberto</string>
+    <string name="lowglucosesuspend">Suspensão de Glicémia Baixa</string>
+    <string name="confirm">Confirmar</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">FSI</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <string name="ble_not_supported_or_not_paired">Bluetoothn Low Energy (BLE) não suportado ou o dispositivo não está acoplado.</string>
@@ -367,6 +377,7 @@
     <string name="autotune_partial_result">Resultado parcial - dia %1$d / %2$d ajustado</string>
     <string name="autotune_result">Resultado: %1$s</string>
     <string name="autotune_param">Parâmetro</string>
+    <string name="autotune_percent">%</string>
     <string name="autotune_missing">Faltando</string>
     <string name="autotune_profile_name">Autotune perfil: %1$s</string>
     <string name="autotune_run">Executar Autotune</string>
@@ -389,6 +400,27 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">CA vs IA</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
+    <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
+    <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>
+    <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
+    <string name="wizard_no_actual_bg">Nenhuma glicemia recente para base de cálculo!</string>
+    <string name="wizard_no_active_profile">Nenhum perfil ativo definido!</string>
+    <string name="wizard_no_cob">CA desconhecido! Leitura de Glicemia faltando ou reinício recente do app?</string>
+    <string name="wizard_carbs_constraint">Violação da restrição de carboidrato!</string>
+    <string name="wizard_explain_calc">Calc (I:C: %1$.1f, FS: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Carboidratos: %1$.2fU</string>
+    <string name="wizard_explain_cob">CA: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">Glicemia: %1$.2fU</string>
+    <string name="wizard_explain_iob">IA: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">Tendência 15min: %1$.2fU</string>
+    <string name="wizard_explain_percent">Porcentagem: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Violação de restrição de insulina!\nNão é possível entregar %1$.2fU</string>
+    <string name="wizard_explain_tt">AlvoTemporário: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s para %2$s</string>
+    <string name="wizard_pump_not_available">Nenhuma bomba disponível!</string>
     <plurals name="minutes">
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minutos</item>
