@@ -39,10 +39,40 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Celkem</string>
     <!-- FillDialog -->
+    <string name="button1">Tlačítko 1</string>
+    <string name="button2">Tlačítko 2</string>
+    <string name="button3">Tlačítko 3</string>
+    <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
+    <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Pozastavit smyčku na 2 h</string>
+    <string name="suspendloopfor3h">Pozastavit smyčku na 3 h</string>
+    <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
+    <string name="disconnectpump">Odpojit pumpu</string>
+    <string name="disconnectpumpfor15m">Odpojit pumpu na 15 min</string>
+    <string name="disconnectpumpfor30m">Odpojit pumpu na 30 min</string>
+    <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
+    <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
+    <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
+    <string name="resume">Uvolnit</string>
+    <string name="reconnect">Znovu připojit pumpu</string>
+    <string name="duration15m">15 minut</string>
+    <string name="duration30m">30 minut</string>
+    <string name="duration1h">1 hodina</string>
+    <string name="duration2h">2 hodiny</string>
+    <string name="duration3h">3 hodiny</string>
+    <string name="duration10h">10 hodin</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">správný výsledek v %</string>
+    <string name="a11_correction_units">správný výsledek s jednotkami</string>
+    <string name="result_insulin_carbs">Výsledek: %1$s %2$s</string>
+    <string name="missing_carbs">Chybí %1$d g</string>
+    <string name="a11y_current_bg">aktuální hodnota glykémie</string>
+    <string name="carb_time_label">Čas jídla</string>
+    <string name="a11y_set_carb_timer">nastavit upozornění na sacharidy</string>
+    <string name="show_calculation">Zobrazit kalkulaci</string>
     <!-- Treatments -->
     <string name="no_records_available">Nejsou k dispozici žádné záznamy</string>
     <string name="calculation_short">Kalk</string>
@@ -77,5 +107,7 @@
     <string name="show_loop_records">Zobrazit záznamy smyčky</string>
     <string name="show_hide_records">Skrýt záznamy smyčky</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Vybráno:</string>
     <!-- Other dialogs -->
 </resources>
