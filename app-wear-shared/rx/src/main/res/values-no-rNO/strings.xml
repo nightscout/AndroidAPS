@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="handshaking">Tilkobling verifiseres</string>
+    <string name="connected">Tilkoblet</string>
+    <string name="disconnecting">Frakobler</string>
+    <string name="waiting_for_disconnection">Venter på frakobling</string>
+</resources>
