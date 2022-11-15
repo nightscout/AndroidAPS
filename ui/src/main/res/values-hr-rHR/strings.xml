@@ -9,7 +9,10 @@
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
+    <string name="a11y_set_carb_timer">postavite timer alarma ugljikohidrata</string>
     <!-- Treatments -->
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
     <!-- Other dialogs -->
 </resources>
