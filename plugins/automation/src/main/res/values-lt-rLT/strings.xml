@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="automation_short">Auto</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
+    <string name="autosenslabel">Autosens %</string>
+    <string name="deltacompared">%3$s %1$s %2$s</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">A</string>
+    <string name="wednesday_short">T</string>
+    <string name="thursday_short">K</string>
+    <string name="friday_short">Pn</string>
+    <string name="saturday_short">Š</string>
+    <string name="sunday_short">S</string>
 </resources>
