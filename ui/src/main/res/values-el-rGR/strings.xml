@@ -14,10 +14,33 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Σύνολο</string>
     <!-- FillDialog -->
+    <string name="button1">Πλήκτρο 1</string>
+    <string name="button2">Πλήκτρο 2</string>
+    <string name="button3">Πλήκτρο 3</string>
+    <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
+    <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Κύκλωμα σε αναστολή για 2h</string>
+    <string name="suspendloopfor3h">Κύκλωμα σε αναστολή για 3h</string>
+    <string name="suspendloopfor10h">Κύκλωμα σε αναστολή για 10h</string>
+    <string name="disconnectpumpfor15m">Αποσύνδεση αντλίας για 15 λεπτά</string>
+    <string name="disconnectpumpfor30m">Αποσύνδεση αντλίας για 30 λεπτά</string>
+    <string name="disconnectpumpfor1h">Αποσύνδεση αντλίας για 1h</string>
+    <string name="disconnectpumpfor2h">Αποσύνδεση αντλίας για 2h</string>
+    <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
+    <string name="resume">Επαναφορά</string>
+    <string name="reconnect">Επανασύνδεση αντλίας</string>
+    <string name="duration15m">15 λεπτά</string>
+    <string name="duration30m">30 λεπτά</string>
+    <string name="duration1h">1 ώρα</string>
+    <string name="duration2h">2 ώρες</string>
+    <string name="duration3h">3 ώρες</string>
+    <string name="duration10h">10 ώρες</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
+    <string name="missing_carbs">Που υπολείπεται%1$d</string>
     <!-- Treatments -->
     <string name="calculation_short">Υπολογ</string>
     <string name="treatments_iob_label_string">IOB:</string>
