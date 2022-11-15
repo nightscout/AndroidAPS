@@ -1,26 +1,42 @@
 files:
   - source: /app/src/main/res/values/strings.xml
     translation: /app/src/main/res/values-%android_code%/strings.xml
-  - source: /app/src/main/res/values/exam.xml
-    translation: /app/src/main/res/values-%android_code%/%original_file_name%
-  - source: /app/src/main/res/values/objectives.xml
-    translation: /app/src/main/res/values-%android_code%/%original_file_name%
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml
-  - source: /app/src/main/res/values/protection.xml
-    translation: /app/src/main/res/values-%android_code%/protection.xml
-  - source: /core/aps/src/main/res/values/validator.xml
-    translation: /core/aps/src/main/res/values-%android_code%/validator.xml
+  - source: /plugins/aps/src/main/res/values/strings.xml
+    translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/main/src/main/res/values/strings.xml
+    translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/main/src/main/res/values/exam.xml
+    translation: /plugins/main/src/main/res/values-%android_code%/%original_file_name%
+  - source: /plugins/main/src/main/res/values/objectives.xml
+    translation: /plugins/main/src/main/res/values-%android_code%/%original_file_name%
+  - source: /plugins/automation/src/main/res/values/strings.xml
+    translation: /plugins/automation/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/openhumans/src/main/res/values/strings.xml
+    translation: /plugins/openhumans/src/main/res/values-%android_code%/strings.xml
+  - source: /core/core-main/src/main/res/values/protection.xml
+    translation: /core/core-main/src/main/res/values-%android_code%/protection.xml
+  - source: /core/core-main/src/main/res/values/validator.xml
+    translation: /core/core-main/src/main/res/values-%android_code%/validator.xml
   - source: /core/core-main/src/main/res/values/strings.xml
     translation: /core/core-main/src/main/res/values-%android_code%/strings.xml
-  - source: /shared/src/main/res/values/strings.xml
-    translation: /shared/src/main/res/values-%android_code%/strings.xml
+  - source: /core/fabric/src/main/res/values/strings.xml
+    translation: /core/fabric/src/main/res/values-%android_code%/strings.xml
+  - source: /core/ui/src/main/res/values/strings.xml
+    translation: /core/ui/src/main/res/values-%android_code%/strings.xml
+  - source: /app-wear-shared/shared/src/main/res/values/strings.xml
+    translation: /app-wear-shared/shared/src/main/res/values-%android_code%/strings.xml
+  - source: /app-wear-shared/rx/src/main/res/values/strings.xml
+    translation: /app-wear-shared/rx/src/main/res/values-%android_code%/strings.xml
   - source: /pump/combo/src/main/res/values/strings.xml
     translation: /pump/combo/src/main/res/values-%android_code%/strings.xml
   - source: /pump/dana/src/main/res/values/strings.xml
     translation: /pump/dana/src/main/res/values-%android_code%/strings.xml
   - source: /pump/danar/src/main/res/values/strings.xml
     translation: /pump/danar/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/danars/src/main/res/values/strings.xml
+    translation: /pump/danars/src/main/res/values-%android_code%/strings.xml
   - source: /pump/medtronic/src/main/res/values/strings.xml
     translation: /pump/medtronic/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod-common/src/main/res/values/strings.xml
@@ -41,21 +57,13 @@ files:
     translation: /insight/src/main/res/values-%android_code%/alert_titles.xml
   - source: /insight/src/main/res/values/exceptions.xml
     translation: /insight/src/main/res/values-%android_code%/exceptions.xml
-  - source: /plugins/automation/src/main/res/values/strings.xml
-    translation: /plugins/automation/src/main/res/values-%android_code%/strings.xml
   - source: /pump/eopatch/src/main/res/values/strings.xml
     translation: /pump/eopatch/src/main/res/values-%android_code%/strings.xml
   - source: /pump/diaconn/src/main/res/values/strings.xml
     translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
   - source: /pump/pump-common/src/main/res/values/strings.xml
     translation: /pump/pump-common/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/openhumans/src/main/res/values/strings.xml
-    translation: /plugins/openhumans/src/main/res/values-%android_code%/strings.xml
   - source: /implementation/src/main/res/values/strings.xml
     translation: /implementation/src/main/res/values-%android_code%/strings.xml
   - source: /ui/src/main/res/values/strings.xml
     translation: /ui/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/aps/src/main/res/values/strings.xml
-    translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/main/src/main/res/values/strings.xml
-    translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
