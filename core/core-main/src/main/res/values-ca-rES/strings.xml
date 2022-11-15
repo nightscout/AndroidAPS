@@ -51,6 +51,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Configuració avançada</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
@@ -101,6 +102,14 @@
     <string name="paused">En pausa</string>
     <string name="invalid">NO VÀLID</string>
     <string name="login">Iniciar sessió</string>
+    <string name="stoptemptarget">Aturar objectiu temporal</string>
+    <string name="closedloop">Llaç tancat</string>
+    <string name="openloop">Llaç obert</string>
+    <string name="lowglucosesuspend">Suspensió per glucèmia baixa (LGS)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="dia">DIA (Durada de l\'Acció de la Insulina)</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitant màx ràtio basal a %1$.2f U a causa de %2$s</string>
     <string name="pumplimit">límit de la bomba</string>
@@ -312,6 +321,11 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detectada absorció lenta de carbohidrats: %2$d%% del temps. Torneu a comprovar els vostres càlculs. Els COB (carbs actius) podrien sobreestimar-se i lliurar-se més insulina del compte!!!!!</font>]]></string>
+    <string name="partialboluswizard">Lliurar aquesta part del resultat del càlcul [%]</string>
+    <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
+    <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dies</item>
