@@ -14,6 +14,7 @@
     <string name="ic_label">IC</string>
     <string name="basal_label">Basal</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="wrong_pump_data">Os dados vêm de uma bomba diferente. Altera o driver da bomba para redefinir o seu estado.</string>
@@ -31,6 +32,15 @@
     <string name="paused">Em pausa</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
+    <string name="overview_insulin_label">Bólus</string>
+    <string name="stoptemptarget">Parar Alvo Temp</string>
+    <string name="closedloop">Loop Fechado</string>
+    <string name="openloop">Loop Aberto</string>
+    <string name="lowglucosesuspend">Suspensão Glicose Baixa</string>
+    <string name="confirm">Confirmar</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IHC</string>
+    <string name="isf_short">FSI</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -125,4 +135,10 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">HCA vs IA</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detetada: %2$d%% do tempo. Verifique o seu cálculo. HCA podem estar sobrestimados, assim mais insulina pode ser dada !!!</font>]]></string>
+    <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
+    <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
+    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
 </resources>
