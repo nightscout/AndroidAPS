@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Control remoto de AAPS usando comandos SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">desde la aplicación de autenticación para: %1$s seguido de PIN</string>
+    <string name="smscommunicator_otp_pin">PIN obligatorio adicional al final del token</string>
+    <string name="smscommunicator_otp_pin_summary">Los dígitos adicionales se deben memorizar y pegar al final de cada una de las contraseñas generadas por One Time Password</string>
+    <string name="smscommunicator_code_verify_label">Código para comprobar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">El código de verificación consta de 6 dígitos mostrados por la aplicación Authenticator (conocido como OTP) seguido de 3 o más dígitos del PIN obligatorio.</string>
+    <string name="smscommunicator_otp_reset_btn">Restablecer autentificadores</string>
+    <string name="smscommunicator_otp_reset_title">Restablecer clave de autentificación</string>
+    <string name="smscommunicator_otp_reset_prompt">¿Está seguro de que desea restablecer la clave del autenticador? Los autenticadores configurados actualmente no seran válidos, y tendrá que volver a configurarlos.</string>
+    <string name="smscommunicator_otp_reset_successful">¡Se ha generado una clave de autenticador nueva! Utilice QRCode actualizado para suministrar autenticadores.</string>
+    <string name="smscommunicator_otp_export_title">Exportando OTP secreto</string>
+    <string name="smscommunicator_otp_export_prompt">¿Estás seguro que deseas copiar el secreto OTP al portapapeles?\n\nSólo lo necesitas si tu aplicación de autentificación tiene problemas para escanear el código QR, quieres introducirlo manualmente o quieres configurar el token de hardware OTP usando una aplicación dedicada.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secreto (en formato Base32) exportado y copiado en portapapeles. Pegalo en el autenticador o grabador hardware OTP!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Instalar autenticador</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Escanea el código para configurar los códigos AAPS OTP</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Probar la contraseña de Uso único</string>
+    <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
+    <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
+    <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
+    <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
+    <string name="smscommunicator_tt_set">Objetivo %1$s para %2$d minutos establecido correctamente</string>
+    <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado correctamente</string>
+    <string name="smscommunicator_reconnect">Bomba reconectada</string>
+    <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolo:</string>
+    <string name="sms_basal">Dosis Basal:</string>
+    <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="description_insulin_rapid">Ajustes de insulina preestablecidos para Humalog y NovoRapid/NovoLog</string>
@@ -23,6 +53,7 @@
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Mostrar información sobre tu lazo en tu esfera xDrip+</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar detalles IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="disabled_loop">Lazo desactivado</string>
@@ -31,16 +62,43 @@
     <string name="xdrip_status_settings">Estado de xDrip+ (reloj)</string>
     <!-- Food-->
     <string name="food_short">Comida</string>
+    <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
+    <string name="filter">Filtro</string>
+    <string name="food">Comida</string>
+    <string name="category">Categoría</string>
+    <string name="subcategory">Subcategoría</string>
     <string name="calculator_label">Calculadora</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">Elegir tema oscuro, claro o seguir con el predeterminado del sistema</string>
+    <string name="app_color_scheme">Esquema de color de aplicación</string>
+    <string name="dark_theme">Tema oscuro</string>
+    <string name="light_theme">Tema claro</string>
+    <string name="follow_system_theme">Usar tema del dispositivo</string>
     <!-- Profile -->
     <string name="localprofile">Perfil</string>
+    <string name="localprofile_shortname">PERFIL</string>
+    <string name="description_profile_local">Define un perfil que esté disponible cuando tengas una desconexión</string>
+    <string name="a11y_add_new_to_list">añadir nuevo a la lista</string>
     <string name="do_you_want_switch_profile">¿Desea cambiar el perfil y descartar los cambios realizados al perfil actual?</string>
     <string name="save_or_reset_changes_first">Guardar o restablecer los cambios actuales primero</string>
     <string name="delete_current_profile">¿Desea eliminar el perfil actual?</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="missing_profile_name">Falta el nombre de perfil</string>
+    <string name="error_in_ic_values">Error en valores IC</string>
+    <string name="error_in_basal_values">Error en valores basales</string>
+    <string name="error_in_target_values">Error en los valores de objetivo</string>
+    <string name="error_in_isf_values">Error en valores ISF</string>
     <string name="profile_name_contains_dot">El nombre de perfil contiene puntos.\nEsto no está permitido por NS.\nEl perfil no se cargará en NS.</string>
+    <string name="invalid_profile_not_accepted">Perfil no válido %1$s no aceptado desde Nightscout</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errores</string>
+    <string name="select_profile">Seleccione el perfil a editar</string>
+    <string name="profile_name">Nombre del perfil:</string>
+    <string name="a11y_add_new_profile">añadir nuevo perfil</string>
+    <string name="a11y_clone_profile">clonar el perfil actual</string>
+    <string name="a11y_delete_current_profile">borrar el perfil actual</string>
     <string name="dia_short">DIA</string>
+    <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
     <!-- BG Quality -->
     <string name="recalculated_data_used">Datos usados para recalcular</string>
@@ -54,9 +112,15 @@
     <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡Loop se encuentra desactivado!</string>
     <!-- Signature verifier -->
     <!-- Version Checker -->
+    <string name="old_version">versión antigua</string>
+    <string name="very_old_version">versión muy antigua</string>
+    <string name="application_expired">Aplicación caducada</string>
+    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Soporte a la función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">¡Logrado, bien hecho!</string>
+    <string name="not_completed_yet">No logrado</string>
+    <string name="time_elapsed">Tiempo agotado</string>
     <string name="maxiobset">Máximo IOB ajustado correctamente</string>
     <string name="hasbgdata">Glucosa disponible desde la fuente seleccionada</string>
     <string name="loopenabled">Lazo activado</string>
