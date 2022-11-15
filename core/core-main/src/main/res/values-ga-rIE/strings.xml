@@ -56,6 +56,12 @@
     <string name="shortgramm">g</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_basaliob_label">Bunaidh IOB</string>
+    <string name="overview_insulin_label">Inslin</string>
+    <string name="closedloop">Lúb dúnta</string>
+    <string name="openloop">Lúb oscailte</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
