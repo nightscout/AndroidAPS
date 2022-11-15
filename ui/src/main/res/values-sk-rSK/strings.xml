@@ -39,10 +39,40 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Spolu</string>
     <!-- FillDialog -->
+    <string name="button1">Tlačidlo 1</string>
+    <string name="button2">Tlačidlo 2</string>
+    <string name="button3">Tlačidlo 3</string>
+    <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
+    <string name="record_insulin_cartridge_change">Zaznamenať výmenu inzulínu</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Pozastaviť uzavretý okruh na 2 h</string>
+    <string name="suspendloopfor3h">Pozastaviť uzavretý okruh na 3 h</string>
+    <string name="suspendloopfor10h">Pozastaviť uzavretý okruh na 10 h</string>
+    <string name="disconnectpump">Odpojenie pumpy</string>
+    <string name="disconnectpumpfor15m">Odpojiť pumpu na 15 min</string>
+    <string name="disconnectpumpfor30m">Odpojiť pumpu na 30 min</string>
+    <string name="disconnectpumpfor1h">Odpojiť pumpu na 1 h</string>
+    <string name="disconnectpumpfor2h">Odpojiť pumpu na 2 h</string>
+    <string name="disconnectpumpfor3h">Odpojiť pumpu na 3 h</string>
+    <string name="resume">Pokračovať</string>
+    <string name="reconnect">Znovu pripojiť pumpu</string>
+    <string name="duration15m">15 minút</string>
+    <string name="duration30m">30 minút</string>
+    <string name="duration1h">1 hodina</string>
+    <string name="duration2h">2 hodiny</string>
+    <string name="duration3h">3 hodiny</string>
+    <string name="duration10h">10 hodiny</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">správny výsledok v %</string>
+    <string name="a11_correction_units">správny výsledok s jednotkami</string>
+    <string name="result_insulin_carbs">Výsledok: %1$s %2$s</string>
+    <string name="missing_carbs">Chýba %1$d g</string>
+    <string name="a11y_current_bg">aktuálna glykémia</string>
+    <string name="carb_time_label">Čas jedla</string>
+    <string name="a11y_set_carb_timer">nastaviť upozornenie na sacharidy</string>
+    <string name="show_calculation">Zobraziť kalkuláciu</string>
     <!-- Treatments -->
     <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
     <string name="calculation_short">Kalk</string>
@@ -77,5 +107,7 @@
     <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Vybrané:</string>
     <!-- Other dialogs -->
 </resources>
