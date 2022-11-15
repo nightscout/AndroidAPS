@@ -8,6 +8,7 @@
     <string name="base_basal_rate_label">Základná hodnota bazálu</string>
     <string name="extended_bolus_label">Predĺžený bolus</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="alarm">Alarm</string>
@@ -21,6 +22,15 @@
     <string name="paused">Pozastavené</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Prihlásenie</string>
+    <string name="overview_insulin_label">Inzulín</string>
+    <string name="stoptemptarget">Koniec dočasného cieľa</string>
+    <string name="closedloop">Uzavretý okruh</string>
+    <string name="openloop">Otvorený okruh</string>
+    <string name="lowglucosesuspend">Pozastavenie pri nízkej glykémii (LGS)</string>
+    <string name="confirm">Potvrdiť</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">I:C</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -56,10 +66,34 @@
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_shortname">AT</string>
+    <string name="autotune_percent">%</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>
     <string name="urgent_alarm">Urgentný alarm</string>
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bolusový poradca</string>
+    <string name="bolus_advisor_message">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
+    <string name="cobvsiob">COB vs. IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
+    <string name="partialboluswizard">Podaj túto časť z výsledku kalkulácie [%]</string>
+    <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
+    <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
+    <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
+    <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
+    <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>
+    <string name="wizard_carbs_constraint">Sacharidy mimo povolený rozsah!</string>
+    <string name="wizard_explain_calc">Kalk (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Sacharidy: %1$.2fJI</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fJI</string>
+    <string name="wizard_explain_bg">Gly: %1$.2fJI</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fJI</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fJI</string>
+    <string name="wizard_explain_trend">15min trend: %1$.2fJI</string>
+    <string name="wizard_explain_percent">Percentá: %1$.2fJI x %2$d%% ≈ %3$.2fJI</string>
+    <string name="wizard_constraint_bolus_size">Inzulín mimo povolený rozsah!\nNie je možné podať %1$.2fJI</string>
+    <string name="wizard_explain_tt">DC: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s do %2$s</string>
+    <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
 </resources>
