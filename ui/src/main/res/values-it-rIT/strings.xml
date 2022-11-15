@@ -54,6 +54,12 @@
     <string name="resume">Riprendi</string>
     <string name="reconnect">Riconnetti micro</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
+    <string name="missing_carbs">Mancanti %1$d g</string>
+    <string name="a11y_current_bg">glicemia corrente</string>
+    <string name="carb_time_label">Offset CHO</string>
+    <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
+    <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -83,5 +89,7 @@
     <string name="show_loop_records">Mostra record di loop</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile2">Profilo 2</string>
+    <string name="selected_profile">Selezionato:</string>
     <!-- Other dialogs -->
 </resources>
