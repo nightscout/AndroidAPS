@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
+    <string name="project_member_id">Project Member ID: %1$s</string>
+</resources>
