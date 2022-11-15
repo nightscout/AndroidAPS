@@ -17,10 +17,35 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">합계</string>
     <!-- FillDialog -->
+    <string name="button1">버튼1</string>
+    <string name="button2">버튼2</string>
+    <string name="button3">버튼3</string>
+    <string name="record_pump_site_change">펌프 위치 변경 기록</string>
+    <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">2시간동안 Loop 일시중지</string>
+    <string name="suspendloopfor3h">3시간동안 Loop 일시중지</string>
+    <string name="suspendloopfor10h">10시간동안 Loop 일시중지</string>
+    <string name="disconnectpump">펌프 일시중지</string>
+    <string name="disconnectpumpfor15m">15분동안 펌프 일시중지</string>
+    <string name="disconnectpumpfor30m">30분동안 펌프 일시중지</string>
+    <string name="disconnectpumpfor1h">1시간동안 펌프 일시중지</string>
+    <string name="disconnectpumpfor2h">2시간동안 펌프 일시중지</string>
+    <string name="disconnectpumpfor3h">3시간동안 펌프 일시중지</string>
+    <string name="resume">재실행</string>
+    <string name="reconnect">펌프 재연결</string>
+    <string name="duration15m">15분</string>
+    <string name="duration30m">30분</string>
+    <string name="duration1h">1시간</string>
+    <string name="duration2h">2시간</string>
+    <string name="duration3h">3시간</string>
+    <string name="duration10h">10시간</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">결과: %1$s %2$s</string>
+    <string name="missing_carbs">부족 %1$d g</string>
+    <string name="show_calculation">계산 표시</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -38,5 +63,6 @@
     <string name="refresheventsfromnightscout">NS로부터 최신 정보로 업데이트 함.</string>
     <string name="clone_label">복사</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">선택:</string>
     <!-- Other dialogs -->
 </resources>
