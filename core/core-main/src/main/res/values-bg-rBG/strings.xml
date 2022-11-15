@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="iob">IOB</string>
     <string name="overview_treatment_label">Болус</string>
@@ -14,6 +15,15 @@
     <string name="paused">Пауза</string>
     <string name="invalid">НЕВАЛИДНО</string>
     <string name="login">Вход</string>
+    <string name="overview_insulin_label">Инсулин</string>
+    <string name="stoptemptarget">Спри временна цел</string>
+    <string name="closedloop">Затворен кръг</string>
+    <string name="openloop">Отворен кръг</string>
+    <string name="lowglucosesuspend">Спиране на базал при ниска КЗ</string>
+    <string name="confirm">Потвърди</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">И / Въгл</string>
+    <string name="isf_short">Чувств</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -44,4 +54,11 @@
     <string name="info">ИНФО</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Съветник на болус</string>
+    <string name="bolus_advisor_message">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
+    <string name="cobvsiob">COB срещу IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
+    <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
+    <string name="advisoralarm">Алармата, когато е време за хранене.</string>
+    <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
 </resources>
