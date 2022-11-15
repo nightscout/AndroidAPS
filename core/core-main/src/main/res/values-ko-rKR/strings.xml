@@ -13,6 +13,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="shortgramm">g</string>
@@ -26,6 +27,15 @@
     <string name="paused">일시중지</string>
     <string name="invalid">유효하지 않음</string>
     <string name="login">로그인</string>
+    <string name="overview_insulin_label">인슐린</string>
+    <string name="stoptemptarget">임시 목표 중지</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">저혈당 주입정지</string>
+    <string name="confirm">확인</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -64,4 +74,9 @@
     <string name="info">정보</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
+    <string name="partialboluswizard">Bolus 마법사 결과의 이 부분 주입[%]</string>
+    <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
+    <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
 </resources>
