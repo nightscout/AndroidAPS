@@ -18,10 +18,36 @@
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
+    <string name="button1">Buton 1</string>
+    <string name="button2">Buton 2</string>
+    <string name="button3">Buton 3</string>
+    <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
+    <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
+    <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
+    <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
+    <string name="disconnectpump">Deconectează pompa</string>
+    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
+    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
+    <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
+    <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
+    <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
+    <string name="resume">Restabilește</string>
+    <string name="reconnect">Reconectaţi pompa</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 oră</string>
+    <string name="duration2h">2 ore</string>
+    <string name="duration3h">3 ore</string>
+    <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
+    <string name="missing_carbs">Lipsă %1$d g</string>
+    <string name="carb_time_label">Ora carbohidrați</string>
+    <string name="show_calculation">Arată calculul</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -39,5 +65,6 @@
     <string name="refresheventsfromnightscout">Actualizează din NS</string>
     <string name="clone_label">Clonează</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Selectat:</string>
     <!-- Other dialogs -->
 </resources>
