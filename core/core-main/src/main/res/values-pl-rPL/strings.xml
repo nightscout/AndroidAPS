@@ -16,6 +16,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="virtualpump_resultok">OK</string>
@@ -37,6 +38,15 @@
     <string name="paused">Wstrzymano</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="login">Zaloguj się</string>
+    <string name="overview_insulin_label">Insulina</string>
+    <string name="stoptemptarget">Zatrzymaj cel tymczasowy</string>
+    <string name="closedloop">Zamknięta pętla</string>
+    <string name="openloop">Otwarta pętla</string>
+    <string name="lowglucosesuspend">Zawieszenie przy niskiej glikemii</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -82,4 +92,9 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
+    <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
+    <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
+    <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
 </resources>
