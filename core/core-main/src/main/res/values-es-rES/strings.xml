@@ -46,6 +46,9 @@
     <string name="openloop">Lazo abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="confirm">Confirmar</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -95,4 +98,17 @@
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
     <string name="bolus_advisor">Asistente de bolo</string>
+    <string name="wizard_carbs_constraint">¡Violación de restricción de carbohidratos!</string>
+    <string name="wizard_explain_calc">Calcular (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Carbohidratos: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolo: %1$.2fU</string>
+    <string name="wizard_explain_trend">Tendencia 15\': %1$.2fU</string>
+    <string name="wizard_explain_percent">Porcentaje: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">¡Violación de restricciones de insulina!\nNo se puede entregar %1$.2fU</string>
+    <string name="wizard_explain_tt">BasalT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s a %2$s</string>
+    <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
 </resources>
