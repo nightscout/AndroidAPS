@@ -16,6 +16,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="virtualpump_resultok">OK</string>
@@ -34,6 +35,15 @@
     <string name="paused">Suspendat</string>
     <string name="invalid">INVALID</string>
     <string name="login">Autentificare</string>
+    <string name="overview_insulin_label">Insulină</string>
+    <string name="stoptemptarget">Oprește o țintă temporară</string>
+    <string name="closedloop">Buclă închisă</string>
+    <string name="openloop">Buclă deschisă</string>
+    <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
+    <string name="confirm">Confirmă</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <!--    BlePreCheck-->
     <!--    Protection-->
@@ -81,4 +91,9 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
+    <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
+    <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
+    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
 </resources>
