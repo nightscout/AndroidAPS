@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Juster sensitivitet og BS</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamiskISF justeringsfaktor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for dynamisk ISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mildere korreksjonsdoser.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Høy temp target øker sensitiviteten</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Øk sensitiviteten for temp target >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Lav temp target reduserer sensitiviteten</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Reduser sensitiviteten for temp target < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
+    <string name="resistance_lowers_target_title">Resistens reduserer BS målverdi</string>
+    <string name="resistance_lowers_target_summary">Hvis resistens oppdages vil det redusere BS målverdi</string>
+    <string name="sensitivity_raises_target_title">Sensitivitet øker BS målverdi</string>
+    <string name="sensitivity_raises_target_summary">Når systemet oppdager økt insulinsensitivitet, vil BS målverdi økes</string>
+    <string name="openapsma_disabled">Plugin er deaktivert</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="executing">Utfører</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Slik algoritmen var definert i 2017</string>
+    <string name="description_smb">Siste utgave av algoritmen for avanserte brukere</string>
+    <string name="description_smb_dynamic_isf">Nyeste algoritme for avanserte brukere med dynamisk/automatisk ISF</string>
+    <string name="openapsma_run">Utfør nå</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="result">Resultat</string>
+    <string name="openapsma_request_label">Forespørsel</string>
+    <string name="constraints">Begrensninger</string>
+    <string name="openapsma_autosensdata_label">Autosens-data</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine basaler til maks 3x av din høyeste basalverdi. Du vil trolig ikke behøve å endre denne verdien, men les og forstå hva som menes med \"3x max daglig; 4x gjeldende\" som sikkerhetsinnstilling.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine temp basal til max 4 ganger din nåværende basal dose, uansett hva som er maks basal i pumpen. Dette er for å unngå at man setter farlige høye maks basal doser uten at man har forstått algoritmene. Når du taket i denne begrensningen bør du i stedet fokusere på å endre andre innstillinger.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Multiplikator for max daglig basal</string>
+    <string name="openapsama_current_basal_safety_multiplier">Multiplikator får gjeldende basal</string>
+    <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDetta er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISK kan reduseres og hvor lavt BS målverdi kan settes.</string>
+    <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for autosens sikkerhet. Den begrenser autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS mål med ikke mer enn enn 30%.</string>
     <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
+    <string name="hardlimit">hard begrensning</string>
     <!--    Autotune   -->
 </resources>
