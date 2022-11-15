@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">모든 번호에 SMS 전송</string>
     <string name="sendsmsactiontext">문자 포함된 SMS 보내기</string>
     <string name="starttemptarget">임시 목표 시작</string>
-    <string name="stoptemptarget">임시 목표 중지</string>
     <string name="islesser">보다 적은</string>
     <string name="isequalorlesser">같거나 작은</string>
     <string name="isequal">같은</string>
@@ -105,4 +104,12 @@
     <string name="preconditions">전제 조건:</string>
     <string name="automation_event">자동화 이벤트</string>
     <string name="reorder_label">정렬</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">월</string>
+    <string name="tuesday_short">화</string>
+    <string name="wednesday_short">수</string>
+    <string name="thursday_short">목</string>
+    <string name="friday_short">금</string>
+    <string name="saturday_short">토</string>
+    <string name="sunday_short">일</string>
 </resources>

@@ -3,7 +3,16 @@
     <!--    Widget-->
     <!--     Activities-->
     <string name="survey_comment">Napomena: Anonimno će se učitati samo podaci vidljivi na ovom zaslonu. ID je dodijeljen ovoj instalaciji AAPS-a. Možete ponovno poslati podatke ako se vaš glavni profil promijeni, ali pustite ga da radi barem tjedan dana kako bi rezultat bio vidljiv u određenom vremenskom rasponu. Cijenimo vašu pomoć.</string>
-    <!-- CareDialog -->
     <!-- WizardDialog -->
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
+    <string name="a11y_set_carb_timer">postavite timer alarma ugljikohidrata</string>
     <!-- Treatments -->
+    <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <!-- Other dialogs -->
 </resources>

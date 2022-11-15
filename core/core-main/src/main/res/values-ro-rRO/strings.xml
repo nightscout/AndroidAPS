@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Eroare la livrare bazală temporară</string>
     <string name="goingtodeliver">Se vor livra %1$.2fU</string>
     <string name="waitingforpump">Se așteaptă pompa</string>
-    <string name="connectingfor">Conectat de %1$d s</string>
     <string name="bolusdelivering">Livrare %1$.2f U</string>
-    <string name="handshaking">Împerechere</string>
     <string name="connecting">Se conectează</string>
-    <string name="connected">Conectat</string>
     <string name="disconnected">Deconectat</string>
-    <string name="disconnecting">Se deconectează</string>
-    <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -38,7 +33,6 @@
     <string name="stoppressed">STOP APĂSAT</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbohidrați</string>
-    <string name="noprofileset">NICIUN PROFIL SETAT</string>
     <string name="active"><![CDATA[<Activ>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unități</string>
@@ -47,15 +41,16 @@
     <string name="isf_label">ISF</string>
     <string name="basal_label">Bazală</string>
     <string name="target_label">Țintă</string>
+    <string name="basal_long_label">Rată bazală</string>
     <string name="initializing">Inițializare...</string>
     <string name="serialnumber">Număr serial</string>
     <string name="battery_label">Baterie</string>
     <string name="lastconnection_label">Ultima conexiune</string>
     <string name="lastbolus_label">Ultimul bolus</string>
     <string name="dailyunits">Unități zilnic</string>
-    <string name="basebasalrate_label">Rată bazală implicită</string>
+    <string name="base_basal_rate_label">Rată bazală normală</string>
     <string name="tempbasal_label">Bazală temporară</string>
-    <string name="virtualpump_extendedbolus_label">Bolus extins</string>
+    <string name="extended_bolus_label">Bolus extins</string>
     <string name="reservoir_label">Rezervor</string>
     <string name="pumphistory">Istoric pompă</string>
     <string name="viewprofile">Afișează profilul</string>
@@ -69,8 +64,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Oprește bluetooth-ul telefonului pentru o secundă dacă nu se poate conecta la pompă. Aceasta poate ajuta în cazul telefoanelor cu bluetooth incompatitibil.</string>
     <string name="pairing">Împerechere</string>
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
     <string name="loopdisabled">BUCLĂ DEZACTIVATĂ DATORITĂ CONSTRÂNGERILOR</string>
     <string name="bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
     <string name="virtualpump_resultok">OK</string>
@@ -100,13 +93,16 @@
     <string name="time">Timp</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
     <string name="loading">Se încarcă…</string>
-    <string name="event_time_label">Ora evenimentului</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Șterge</string>
     <string name="addnew">Adăugare</string>
     <string name="wrong_pump_data">Datele vin de la o pompa diferita. Schimba driver-ul de pompa pentru a reseta starea pompei.</string>
+    <string name="bg_label">Gl</string>
+    <string name="calibration">Calibrare</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
     <string name="treatmentdeliveryerror">Bolus a raportat o eroare. Verifică manual cantitatea livrată</string>
+    <string name="bolus_reminder">Memento bolus</string>
+    <string name="duration_label">Durată</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
     <string name="notconfigured">Nu este configurat</string>
@@ -114,6 +110,10 @@
     <string name="trend_arrow">Săgeată tendinţă</string>
     <string name="value_unavailable_short">indisponibil</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_none">nimic</string>
+    <string name="a11y_arrow_unknown">necunoscută</string>
+    <string name="a11y_high">hiper</string>
+    <string name="a11y_low">hipo</string>
     <string name="average">Medie</string>
     <string name="tir">Timp în țintă</string>
     <string name="tdd_total">Total TDD</string>
@@ -123,6 +123,26 @@
     <string name="reset">resetare</string>
     <string name="profileswitch_ismissing">Lipsă SchimbareProfil. Efectuați o schimbare de profil sau apăsați \"Activare profil\" în ProfilulLocal.</string>
     <string name="profile">Profil</string>
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="overview_treatment_label">Tratament</string>
+    <string name="copytolocalprofile">Creați un profil nou din acest profil?</string>
+    <string name="wear_wizard_settings">Asistent setări</string>
+    <string name="bg_trend_label">Tendință 15min</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">IOB bolus</string>
+    <string name="treatments_wizard_basaliob_label">IOB bazală</string>
+    <string name="paused">Suspendat</string>
+    <string name="invalid">INVALID</string>
+    <string name="login">Autentificare</string>
+    <string name="overview_insulin_label">Insulină</string>
+    <string name="stoptemptarget">Oprește o țintă temporară</string>
+    <string name="closedloop">Buclă închisă</string>
+    <string name="openloop">Buclă deschisă</string>
+    <string name="lowglucosesuspend">Suspendare la hipoglicemie</string>
+    <string name="confirm">Confirmă</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
     <string name="pumplimit">limită pompă</string>
@@ -130,12 +150,6 @@
     <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
     <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pompa nu este inițializată, profilul nu este setat!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Confirmare</string>
-    <string name="message">Mesaj</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Renunță</string>
-    <string name="dismiss">RENUNȚĂ</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE nu este suportat.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
@@ -153,11 +167,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Utilizează profilul %1$d%% pentru %2$d min</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Pompa virtuală acceptă doar valori specifice ca și incremente, nu și intervale de valori.
-* Doar valorile specifice, nu şi intervalele de valori sunt suportate ca şi incremente în pompa virtuală.</string>
     <!--    APSResult-->
-    <string name="canceltemp">Anulează bazala temporară</string>
     <string name="let_temp_basal_run">Lasă să funcționeze bazala temporară</string>
     <string name="rate">Rată</string>
     <string name="duration">Durată</string>
@@ -179,12 +189,9 @@
     <string name="careportal_note_message">Notă: %1$s</string>
     <string name="careportal_question_message">Întrebare : %1$s</string>
     <string name="careportal_exercise_message">Exercițiu fizic: %1$s</string>
-    <string name="careportal_pumpsitechange">Schimbare loc pompă</string>
-    <string name="careportal_cgmsensorinsert">Inserare senzor</string>
     <string name="careportal_cgmsensorstart">Start senzor</string>
     <string name="careportal_cgm_sensor_stop">Stop senzor CGM</string>
     <string name="careportal_dad_alert">Alertă D.A.D.</string>
-    <string name="careportal_insulincartridgechange">Schimbare cartuș insulină</string>
     <string name="careportal_profileswitch">Schimbare de profil</string>
     <string name="careportal_snackbolus">Bolus Gustare</string>
     <string name="careportal_mealbolus">Bolus Masă</string>
@@ -194,8 +201,6 @@
     <string name="careportal_tempbasalend">Sfârșit bazală temporară</string>
     <string name="careportal_carbscorrection">Corecție de carbohidrați</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-    <string name="careportal_pumpbatterychange">Schimbare baterie pompă</string>
-    <string name="careportal_temporarytarget">Ţintă temporară</string>
     <string name="careportal_temporarytargetvalue">Valoare țintă temporară</string>
     <string name="careportal_temporarytargetcancel">Oprire ţintă temporară</string>
     <string name="boluswizard">Asistent bolusare</string>
@@ -243,7 +248,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detectare timp</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Dezactivează pentru 5 minute</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat cu %1$s în urmă</string>
@@ -274,14 +278,6 @@
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <string name="version_expire">Versiunea %1$s expiră pe %2$s</string>
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
-    <string name="monday_short">L</string>
-    <string name="tuesday_short">Ma</string>
-    <string name="wednesday_short">Mi</string>
-    <string name="thursday_short">J</string>
-    <string name="friday_short">V</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">D</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_calculator">CALCULATOR DE BOLUS</string>
@@ -409,7 +405,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Bazală depăşită.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Conectare la pompă apăsat</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Driver-ul pompei a fost schimbat.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompa.</string>
     <string name="device_changed" comment="26 characters max for translation">Dispozitiv modificat</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Reîmprospătare apăsată</string>
@@ -420,11 +415,27 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Buton Reîmprospătare Insight</string>
+    <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Rate bazale</string>
+    <string name="basalpct">Bazală %</string>
     <string name="sort_label">Sortează</string>
+    <string name="a11y_user">utilizator</string>
     <!-- Autotune -->
-    <string name="needconnectpermission">Aplicația are nevoie de permisiune Bluetooth</string>
+    <string name="autotune_result">Rezultat: %1$s</string>
+    <string name="autotune_missing">Lipsă</string>
+    <string name="autotune_compare_profile">Compară profilurile</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
+    <string name="urgent_alarm">Alarmă urgentă</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
+    <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
+    <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
+    <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
+    <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Onay</string>
+    <string name="message">İleti</string>
+    <string name="ok">Tamam</string>
+    <string name="cancel">Vazgeç</string>
+    <string name="dismiss">REDDET</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="a11y_plus_button_description">%2$s\'dan %1$s\'a artış</string>
+    <string name="format_hour_minute">%1$dsa %2$ddk</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

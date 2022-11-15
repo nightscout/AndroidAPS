@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AAPS téléverse vers Open Humans. Cela peut prendre un certain temps.</string>
     <string name="you_have_been_signed_out_of_open_humans">Vous avez été déconnecté d\'Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Cliquez ici pour vous connecter à nouveau si ce n\'était pas volontaire.</string>
-    <string name="upload_now">Télécharger maintenant</string>
     <string name="next">Suivant</string>
     <string name="welcome_to_open_humans">Bienvenue à Open Humans</string>
     <string name="setup_data_upload">Pour configurer l\'envoi de données, cliquez sur \'Suivant\'.</string>
@@ -54,4 +53,5 @@
     <string name="we_re_done">Nous avons terminé !</string>
     <string name="silently_upload_date_note">Désormais, votre téléphone téléversera les données en arrière-plan de temps en temps.</string>
     <string name="close">Fermer</string>
+    <string name="upload_now">Télécharger maintenant</string>
 </resources>

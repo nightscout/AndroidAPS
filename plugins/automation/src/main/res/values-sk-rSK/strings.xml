@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Poslať SMS na všetky čísla</string>
     <string name="sendsmsactiontext">Odoslať SMS s textom</string>
     <string name="starttemptarget">Začiatok dočasného cieľa</string>
-    <string name="stoptemptarget">Koniec dočasného cieľa</string>
     <string name="islesser">je menšia ako</string>
     <string name="isequalorlesser">je rovnaká, alebo menšia ako</string>
     <string name="isequal">je rovnaká</string>
@@ -122,4 +121,12 @@
     <string name="add_automation">Pridať pravidlo</string>
     <string name="remove_sort">Odstrániť/zoradiť</string>
     <string name="stop_processing">Zastaviť spracovanie</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Ut</string>
+    <string name="wednesday_short">St</string>
+    <string name="thursday_short">Št</string>
+    <string name="friday_short">Pi</string>
+    <string name="saturday_short">So</string>
+    <string name="sunday_short">Ne</string>
 </resources>

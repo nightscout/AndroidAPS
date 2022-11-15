@@ -3,7 +3,6 @@
     <!-- PumoCommon - Pump Abstract -->
     <string name="common_resultok">Ceart go leor</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_active">Gníomhach</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bunaidhi</string>
     <string name="history_group_all">Ar fad</string>

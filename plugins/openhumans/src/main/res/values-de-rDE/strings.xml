@@ -14,7 +14,6 @@
     <string name="open_humans_notifications">Open Humans Benachrichtigungen</string>
     <string name="you_have_been_signed_out_of_open_humans">Du wurdest von Open Humans abgemeldet.</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicke hier, um Dich erneut anzumelden, falls dies versehentlich passiert ist.</string>
-    <string name="upload_now">Jetzt hochladen</string>
     <string name="next">Weiter</string>
     <string name="welcome_to_open_humans">Willkommen bei Open Humans</string>
     <string name="setup_data_upload">Klicken Sie auf \'Weiter\', um das Hochladen der Daten einzurichten.</string>
@@ -53,4 +52,5 @@
     <string name="we_re_done">Wir sind fertig!</string>
     <string name="silently_upload_date_note">Von nun an wird Ihr Telefon von Zeit zu Zeit stillschweigend Daten im Hintergrund hochladen.</string>
     <string name="close">Schließen</string>
+    <string name="upload_now">Jetzt hochladen</string>
 </resources>

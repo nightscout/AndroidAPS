@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">אישור</string>
+    <string name="message">הודעה</string>
+    <string name="ok">אישור</string>
+    <string name="cancel">ביטול</string>
+    <string name="dismiss">בטל</string>
+    <string name="yes">כן</string>
+    <string name="no">לא</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>
+    <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

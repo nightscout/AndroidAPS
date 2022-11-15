@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

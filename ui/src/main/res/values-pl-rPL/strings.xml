@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
     <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
     <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
     <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
@@ -15,7 +14,59 @@
     <string name="submit">Wyślij</string>
     <string name="age">Czas</string>
     <string name="weight_label">Waga</string>
-    <!-- CareDialog -->
     <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Razem</string>
+    <!-- FillDialog -->
+    <string name="button1">Przycisk 1</string>
+    <string name="button2">Przycisk 2</string>
+    <string name="button3">Przycisk 3</string>
+    <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
+    <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Wstrzymaj pętlę na 2h</string>
+    <string name="suspendloopfor3h">Wstrzymaj pętlę na 3h</string>
+    <string name="suspendloopfor10h">Wstrzymaj pętlę na 10 h</string>
+    <string name="disconnectpump">Odłącz pompę</string>
+    <string name="disconnectpumpfor15m">Wyłącz pompę na 15 min</string>
+    <string name="disconnectpumpfor30m">Wyłącz pompę na 30 min</string>
+    <string name="disconnectpumpfor1h">Wyłącz pompę na 1 h</string>
+    <string name="disconnectpumpfor2h">Wyłącz pompę na 2 h</string>
+    <string name="disconnectpumpfor3h">Wyłącz pompę na 3 h</string>
+    <string name="resume">Wznów</string>
+    <string name="reconnect">Połącz ponownie pompę</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 godzina</string>
+    <string name="duration2h">2 godziny</string>
+    <string name="duration3h">3 godziny</string>
+    <string name="duration10h">10 godzin</string>
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Wynik: %1$s %2$s</string>
+    <string name="missing_carbs">Brakuje %1$d g</string>
+    <string name="carb_time_label">Czas węglow.</string>
+    <string name="show_calculation">Pokaż obliczenia</string>
     <!-- Treatments -->
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Węglow.:</string>
+    <string name="treatments_iobtotal_label_string">Całkowita IOB:</string>
+    <string name="tempbasals_realduration_label_string">Czas:</string>
+    <string name="tempbasals_netratio_label_string">Iloczyn:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Całkowita IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Poprawka</string>
+    <string name="prime">Wypełnianie</string>
+    <string name="refresheventsfromnightscout">Odśwież z NS</string>
+    <string name="clone_label">Sklonuj</string>
+    <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Wybrany:</string>
+    <!-- Other dialogs -->
 </resources>

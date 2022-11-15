@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">SMS verzenden naar alle nummers</string>
     <string name="sendsmsactiontext">Stuur SMS met tekst</string>
     <string name="starttemptarget">Start tijdelijk doel</string>
-    <string name="stoptemptarget">Stop tijdelijk doel</string>
     <string name="islesser">is minder dan</string>
     <string name="isequalorlesser">is gelijk aan of minder dan</string>
     <string name="isequal">is gelijk aan</string>
@@ -122,4 +121,12 @@
     <string name="add_automation">Regel toevoegen</string>
     <string name="remove_sort">Verwijderen/sorteren</string>
     <string name="stop_processing">Stop met verwerken</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">S</string>
 </resources>

@@ -2,7 +2,6 @@
 <resources>
     <string name="enable_tbr_over_notification">Activar avisos de fi de TBR\n(configuració bomba)</string>
     <string name="disable_tbr_over_notification">Desactivar avisos de fi de TBR\n(configuració bomba)</string>
-    <string name="paused">En pausa</string>
     <string name="insightpump_shortname">Insight</string>
     <string name="disable_vibration_summary">Per bolus i bolus estès (només disponible amb Insight firmware 3.x)</string>
     <string name="pump_stopped">Bomba aturada</string>

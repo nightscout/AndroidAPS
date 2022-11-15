@@ -24,7 +24,6 @@
     <string name="sendsmsactionlabel">Stuur\'n SMS: %1$s</string>
     <string name="sendsmsactiontext">Stuur\'n SMS met die teks</string>
     <string name="starttemptarget">Tydelike teiken begin</string>
-    <string name="stoptemptarget">Tydelike teiken gestop</string>
     <string name="islesser">is minder as</string>
     <string name="isequalorlesser">is ewe of groter as</string>
     <string name="isequal">is gelyk aan</string>
@@ -74,6 +73,7 @@
     <string name="glucose_u">Glukose [%1$s]:</string>
     <string name="lastboluslabel">Laaste bolus</string>
     <string name="lastboluscompared">Laaste bolus tyd %1$s %2$s min terug</string>
+    <string name="triggercoblabel">KOB</string>
     <string name="cobcompared">KOB %1$s %2$.0f</string>
     <string name="iob_u">IAB [U]:</string>
     <string name="distance_short">Afst [m]:</string>
@@ -86,4 +86,5 @@
     <string name="edit_short">WYSIG</string>
     <string name="triggers">Snellers:</string>
     <string name="preconditions">Vereistes:</string>
+    <!-- WeekdayPicker -->
 </resources>

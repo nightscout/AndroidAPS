@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="constraint_applied">Aplikované obmedzenie!</string>
     <string name="bolus_constraint_applied">Aplikované obmedzenie bolusu</string>
     <string name="carbs_constraint_applied">Aplikované obmedzenie sacharidov</string>
@@ -29,11 +28,86 @@
     <string name="weight_label">Váha</string>
     <string name="most_common_profile">Najčastejšie používaný profil:</string>
     <string name="survey_comment">Poznámka: Len údaje zobrazené na tejto obrazovke budú odosielané anonymne. ID je pridelené na túto inštaláciu AndroidAPS. Údaje môžete odoslať znova, ak sa váš hlavný profil zmení, ale nechajte ho bežať aspoň týždeň, aby bol výsledok času v rozsahu viditeľný. Vaša pomoc je vítaná.</string>
-    <!-- CareDialog -->
     <string name="glucose_type">Zadanie glykémie</string>
     <string name="bg_other">Iné</string>
     <string name="bg_meter">Glukomer</string>
     <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Spolu</string>
+    <!-- FillDialog -->
+    <string name="button1">Tlačidlo 1</string>
+    <string name="button2">Tlačidlo 2</string>
+    <string name="button3">Tlačidlo 3</string>
+    <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
+    <string name="record_insulin_cartridge_change">Zaznamenať výmenu inzulínu</string>
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Pozastaviť uzavretý okruh na 2 h</string>
+    <string name="suspendloopfor3h">Pozastaviť uzavretý okruh na 3 h</string>
+    <string name="suspendloopfor10h">Pozastaviť uzavretý okruh na 10 h</string>
+    <string name="disconnectpump">Odpojenie pumpy</string>
+    <string name="disconnectpumpfor15m">Odpojiť pumpu na 15 min</string>
+    <string name="disconnectpumpfor30m">Odpojiť pumpu na 30 min</string>
+    <string name="disconnectpumpfor1h">Odpojiť pumpu na 1 h</string>
+    <string name="disconnectpumpfor2h">Odpojiť pumpu na 2 h</string>
+    <string name="disconnectpumpfor3h">Odpojiť pumpu na 3 h</string>
+    <string name="resume">Pokračovať</string>
+    <string name="reconnect">Znovu pripojiť pumpu</string>
+    <string name="duration15m">15 minút</string>
+    <string name="duration30m">30 minút</string>
+    <string name="duration1h">1 hodina</string>
+    <string name="duration2h">2 hodiny</string>
+    <string name="duration3h">3 hodiny</string>
+    <string name="duration10h">10 hodiny</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">správny výsledok v %</string>
+    <string name="a11_correction_units">správny výsledok s jednotkami</string>
+    <string name="result_insulin_carbs">Výsledok: %1$s %2$s</string>
+    <string name="missing_carbs">Chýba %1$d g</string>
+    <string name="a11y_current_bg">aktuálna glykémia</string>
+    <string name="carb_time_label">Čas jedla</string>
+    <string name="a11y_set_carb_timer">nastaviť upozornenie na sacharidy</string>
+    <string name="show_calculation">Zobraziť kalkuláciu</string>
     <!-- Treatments -->
+    <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Inzulín:</string>
+    <string name="treatments_carbs_label_string">Sacharidy:</string>
+    <string name="treatments_iobtotal_label_string">Celkový IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Celková aktivita IOB:</string>
+    <string name="tempbasals_realduration_label_string">Trv:</string>
+    <string name="tempbasals_netratio_label_string">Pomer:</string>
+    <string name="tempbasals_netinsulin_label_string">Inz:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
+    <string name="treatments_wizard_tt_label">DC</string>
+    <string name="treatments_wizard_correction_label">Korekcia</string>
+    <string name="meal_bolus">Jedlo</string>
+    <string name="prime">Plnenie</string>
+    <string name="profile_changes">Zmeny profilu</string>
+    <string name="tempt_targets">Dočasné ciele</string>
+    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
+    <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
+    <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
+    <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
+    <string name="refresheventsfromnightscout">Aktualizovať z NS</string>
+    <string name="show_invalidated">Zobraziť zneplatnené</string>
+    <string name="hide_invalidated">Skryť zneplatnené</string>
+    <string name="careportal_remove_started_events">Odstrániť všetky záznamy AAPS spustený</string>
+    <string name="hide_loop">Skryť uzavretý okruh</string>
+    <string name="show_loop">Zobraziť uzavretý okruh</string>
+    <string name="user_entry">Záznam užívateľa</string>
+    <string name="clone_label">Klonovať</string>
+    <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
+    <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Vybrané:</string>
+    <!-- Other dialogs -->
 </resources>

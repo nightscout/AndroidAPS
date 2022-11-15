@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Patvirtinimas</string>
+    <string name="message">Pranešimas</string>
+    <string name="ok">Gerai</string>
+    <string name="cancel">Atšaukti</string>
+    <string name="dismiss">ATMESTI</string>
+    <string name="yes">Taip</string>
+    <string name="no">Ne</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">כיוונון הרגישות והסוכר בדם</string>
+    <string name="DynISFAdjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
+    <string name="DynISFAdjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
+    <string name="high_temptarget_raises_sensitivity_title">ערך מטרה זמני גבוה מעלה את הרגישות</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[הגבר רגישות עבור ערך מטרה זמני >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">ערך מטרה זמני נמוך מוריד את הרגישות</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[הורד רגישות עבור ערך מטרה זמני < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">רגישות דינאמית</string>
+    <string name="resistance_lowers_target_title">תנגודת מורידה את ערך המטרה</string>
+    <string name="resistance_lowers_target_summary">כשמזוהה תנגודת, הורד את ערך המטרה של הגלוקוז</string>
+    <string name="sensitivity_raises_target_title">רגישות מעלה את ערך המטרה</string>
+    <string name="sensitivity_raises_target_summary">כשמזוהה רגישות, הגדל את ערך המטרה של הגלוקוז</string>
+    <string name="openapsma_disabled">התוסף אינו זמין</string>
+    <string name="dynisf_shortname">DynISF</string>
+    <string name="executing">מבצע</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">מערך של %1$d אלמנטים. \n ערך נוכחי:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">הישאר עם האלגוריתם של 2017</string>
+    <string name="description_smb">האלגוריתם העדכני ביותר, עבור משתמשים מתקדמים בלבד</string>
+    <string name="description_smb_dynamic_isf">האלגוריתם העדכני ביותר, נועד למשתמשים מתקדמים עם רגישות (ISF) דינאמית\\אוטומטית</string>
+    <string name="openapsma_run">בצע</string>
+    <string name="openapsma_profile_label">פרופיל</string>
+    <string name="result">תוצאה</string>
+    <string name="openapsma_request_label">בקשה</string>
+    <string name="constraints">מגבלות</string>
+    <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
+    <string name="openapsama_max_daily_safety_multiplier">מכפלת בטיחות בזאלי יומי מרבי</string>
+    <string name="openapsama_current_basal_safety_multiplier">מכפלת בטיחות בזאלי נוכחי</string>
+    <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של Autosens (ובקרוב Autotune) שמגדירה 20% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
+    <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של Autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
+    <string name="hardlimit">מגבלה קשיחה</string>
+    <!--    Autotune   -->
+</resources>

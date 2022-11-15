@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Potvrzení</string>
+    <string name="message">Zpráva</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Zrušit</string>
+    <string name="dismiss">ODMÍTNOUT</string>
+    <string name="yes">Ano</string>
+    <string name="no">Ne</string>
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k dešifrování importovaných předvoleb.</string>
+    <!-- NumberPicker -->
+    <string name="a11y_min_button_description">snížení %1$s o %2$s</string>
+    <string name="a11y_plus_button_description">zvýšení %1$s o %2$s</string>
+    <string name="you_are_on_allowed_limit">Byl dosažen povolený limit</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <string name="event_time_label">Čas</string>
+    <!-- BluetoothDevicePreference -->
+    <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
+</resources>

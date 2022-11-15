@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AAPS sta caricando i dati su Open Humans. Potrebbe volerci un po\' di tempo.</string>
     <string name="you_have_been_signed_out_of_open_humans">Sei stato disconnesso da Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Fare click qui per accedere di nuovo.</string>
-    <string name="upload_now">Carica adesso</string>
     <string name="next">Avanti</string>
     <string name="welcome_to_open_humans">Benvenuto in Open Humans</string>
     <string name="setup_data_upload">Per configurare il caricamento dei dati, fai click su \'Avanti\'.</string>
@@ -54,4 +53,5 @@
     <string name="we_re_done">Abbiamo fatto!</string>
     <string name="silently_upload_date_note">D\'ora in poi, il tuo telefono caricherà i dati in background di tanto in tanto.</string>
     <string name="close">Chiudi</string>
+    <string name="upload_now">Carica adesso</string>
 </resources>

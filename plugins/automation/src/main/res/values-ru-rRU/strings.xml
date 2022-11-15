@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Отправить SMS на все номера</string>
     <string name="sendsmsactiontext">Отправить SMS с текстом</string>
     <string name="starttemptarget">Начать врем цель</string>
-    <string name="stoptemptarget">Остановить врем цель</string>
     <string name="islesser">меньше чем</string>
     <string name="isequalorlesser">равно или меньше чем</string>
     <string name="isequal">равно</string>
@@ -122,4 +121,12 @@
     <string name="add_automation">Добавить правило</string>
     <string name="remove_sort">Удаление/сортировка</string>
     <string name="stop_processing">Остановить обработку</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Пн</string>
+    <string name="tuesday_short">Вт</string>
+    <string name="wednesday_short">Ср</string>
+    <string name="thursday_short">Чт</string>
+    <string name="friday_short">Пт</string>
+    <string name="saturday_short">Сб</string>
+    <string name="sunday_short">Вс</string>
 </resources>

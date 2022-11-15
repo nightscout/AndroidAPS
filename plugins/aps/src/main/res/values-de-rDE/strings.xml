@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">Empfindlichkeit und BZ anpassen</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamicISF Anpassungsfaktor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Anpassungsfaktor für DynamicISF. Stelle mehr als 100 % für aggressivere Korrekturdosen ein, und weniger als 100 % für weniger aggressive Korrekturen.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Hohe temporäre Ziele erhöhen die Sensitivität</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Niedrige temporäre Ziele senken die Sensitivität</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Senke die Sensitivität für temporäre Ziele < 100.]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamischer ISF</string>
+    <string name="resistance_lowers_target_title">Resistenz senkt den Zielwert</string>
+    <string name="resistance_lowers_target_summary">Wenn Resistenz festgestellt wird, senke den Glukose-Zielwert</string>
+    <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
+    <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
+    <string name="openapsma_disabled">Plugin ist deaktiviert</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="executing">Wird ausgeführt</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Array mit %1$d Elementen.\nWert:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Stand des Algorithmus in 2017</string>
+    <string name="description_smb">Der aktuellste Algorithmus für erfahrene Nutzer</string>
+    <string name="description_smb_dynamic_isf">Neuester Algorithmus für fortgeschrittene Benutzer mit dynamischer/automatischer ISF</string>
+    <string name="openapsma_run">Ausführen</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="result">Ergebnis</string>
+    <string name="openapsma_request_label">Anfrage</string>
+    <string name="constraints">Beschränkungen</string>
+    <string name="openapsma_autosensdata_label">Autosens-Daten</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Sicherheitsmultiplikator des Basalhöchstwertes</string>
+    <string name="openapsama_current_basal_safety_multiplier">Sicherheitsmultiplikator der aktuellen Basalrate</string>
+    <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie stark Autosens Basalraten erhöhen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
+    <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
+    <string name="hardlimit">festem Grenzwert</string>
+    <!--    Autotune   -->
+</resources>

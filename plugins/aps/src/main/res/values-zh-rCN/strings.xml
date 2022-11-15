@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DynISFAdjust_title" formatted="false">动态ISF 调整因子 %</string>
+    <string name="DynISFAdjust_summary" formatted="false">动态ISF的调整因子。设置100%以上用于更积极的校正，100%以下则不那么积极校正。</string>
+    <string name="high_temptarget_raises_sensitivity_title">高临时目标增加灵敏度</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[当临时目标 >=100 mg/dl (5.5 mmol/l) 时提高灵敏度]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">低临时目标降低灵敏度</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[当临时目标 ＜= 100 mg/dl (5.5 mmol/l) 时降低灵敏度]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">动态ISF(胰岛素敏感系数)</string>
+    <string name="resistance_lowers_target_title">抗药时降低目标</string>
+    <string name="resistance_lowers_target_summary">当检测到胰岛素抵抗时，降低血糖的目标值。</string>
+    <string name="sensitivity_raises_target_title">敏感时提高目标</string>
+    <string name="sensitivity_raises_target_summary">当检测到胰岛素敏感时，提高血糖的目标值。</string>
+    <string name="openapsma_disabled">插件已禁用</string>
+    <string name="dynisf_shortname">动态ISF</string>
+    <string name="executing">正在执行</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">%1$d 元素的数组. \n 实际值:</string>
+    <string name="oaps_shortname">OpenAPS</string>
+    <string name="description_ama">算法的状态在2017年</string>
+    <string name="description_smb">最新的适合高级用户的算法</string>
+    <string name="description_smb_dynamic_isf">面向高级用户的最新算法，可以动态/自动调整ISF胰岛素敏感系数</string>
+    <string name="openapsma_run">现在运行</string>
+    <string name="openapsma_profile_label">配置文件</string>
+    <string name="result">结果</string>
+    <string name="openapsma_request_label">请求</string>
+    <string name="constraints">约束条件</string>
+    <string name="openapsma_autosensdata_label">Autosens 数据</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">默认值: 3 这是一个关键的 OpenAPS 安全阀值。这是限制你的闭环可以最大扩张3倍的日最大基础率。你可能不需要改变这个值 但你应该这个值的含义。日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">默认值: 4 这是另一个的关键 OpenAPS 安全阀值, 日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值。这意味着你的基础率, 无论你的泵上的最大基础率设置的多少，也 不能超过你的当前基础率的4倍。这是为了防止人们在了解该算法的工作原理之前进入危险的领域 。同样, 默认值为 4倍; 大多数人将永远不需要调整, 而是更有可能需要调整其他设置,</string>
+    <string name="openapsama_max_daily_safety_multiplier">最大日基础率安全倍数</string>
+    <string name="openapsama_current_basal_safety_multiplier">当前基础率安全倍数</string>
+    <string name="openapsama_autosens_max_summary">默认值: 1.2 \n 这是 autosens 的安全阀值 对 autosens ( 很快autotune) 比率的高值设置最大增加20%% 最大限制, 这反过来决定了 autosens 可以调整的基础率的上限值, 可以调整的胰岛素敏感系数的下限值, 以及它可以设置血糖目标的下限值。</string>
+    <string name="openapsama_autosens_min_summary">默认值: 0.7 \n 　这是autosens 的另一个安全阈值, 。这个值决定了 autosens 可以调整的基础率的下限值, 可以调整的胰岛素敏感系数的上限值, 以及它可以设置血糖目标的上限值。</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">在参数选项里的最大值</string>
+    <string name="hardlimit">硬限制</string>
+    <!--    Autotune   -->
+</resources>

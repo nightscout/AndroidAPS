@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Trimite SMS către toate numerele</string>
     <string name="sendsmsactiontext">Trimite SMS cu text</string>
     <string name="starttemptarget">Pornește o țintă temporară</string>
-    <string name="stoptemptarget">Oprește o țintă temporară</string>
     <string name="islesser">este mai mică decât</string>
     <string name="isequalorlesser">este mai mică sau egală cu</string>
     <string name="isequal">este egală cu</string>
@@ -111,4 +110,16 @@
     <string name="automation_event">Eveniment automatizare</string>
     <string name="reorder_label">Reordonează</string>
     <string name="user_action">Acțiunea utilizatorului</string>
+    <string name="remove_automation">Elimină automatizarea</string>
+    <string name="sort_automation">Sortează automatizarea</string>
+    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
+    <string name="sort_label">Sortează</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">L</string>
+    <string name="tuesday_short">Ma</string>
+    <string name="wednesday_short">Mi</string>
+    <string name="thursday_short">J</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">D</string>
 </resources>

@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Skicka SMS till alla nummer</string>
     <string name="sendsmsactiontext">Skicka SMS med text</string>
     <string name="starttemptarget">Starta temp mål</string>
-    <string name="stoptemptarget">Avbryt temp mål</string>
     <string name="islesser">är mindre än</string>
     <string name="isequalorlesser">är samma eller mindre än</string>
     <string name="isequal">är lika med</string>
@@ -111,4 +110,12 @@
     <string name="automation_event">Automationshändelse</string>
     <string name="reorder_label">Ändra ordning</string>
     <string name="user_action">Användaråtgärd</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">O</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">L</string>
+    <string name="sunday_short">S</string>
 </resources>

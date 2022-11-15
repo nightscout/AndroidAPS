@@ -7,7 +7,7 @@
     <string name="days_ago">%1$.1f dagen geleden</string>
     <string name="days_ago_round">%1$.0f dagen geleden</string>
     <string name="in_days">over %1$.0f dagen</string>
-    <string name="in_days_round">over %1$.0f dagen</string>
+    <string name="in_days_round">binnen %1$.0f dagen</string>
     <string name="shorthour">u</string>
     <string name="days">dagen</string>
     <string name="hours">uren</string>

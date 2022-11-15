@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">将 SMS 发送到所有号码</string>
     <string name="sendsmsactiontext">使用文本发送 SMS</string>
     <string name="starttemptarget">启动临时目标</string>
-    <string name="stoptemptarget">停止临时目标</string>
     <string name="islesser">小于</string>
     <string name="isequalorlesser">等于或小于</string>
     <string name="isequal">等于</string>
@@ -121,4 +120,12 @@
     <string name="run_automations">运行自动化</string>
     <string name="add_automation">添加规则</string>
     <string name="remove_sort">移除/排序</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">周一</string>
+    <string name="tuesday_short">周二</string>
+    <string name="wednesday_short">周三</string>
+    <string name="thursday_short">周四</string>
+    <string name="friday_short">周五</string>
+    <string name="saturday_short">周六</string>
+    <string name="sunday_short">周日</string>
 </resources>

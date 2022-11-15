@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AAPS, Open Humans\'a yükleniyor. Bu biraz zaman alabilir.</string>
     <string name="you_have_been_signed_out_of_open_humans">Open Humans\'dan çıkış yaptınız</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Bu bilerek yapılmadıysa tekrar oturum açmak için burayı tıklayın.</string>
-    <string name="upload_now">Şimdi yükle</string>
     <string name="next">İleri</string>
     <string name="welcome_to_open_humans">Open Humans\'a hoş geldiniz</string>
     <string name="setup_data_upload">Veri yüklemeyi ayarlamak için \'İleri\'yi tıklayın.</string>
@@ -54,4 +53,5 @@
     <string name="we_re_done">Bitirdik!</string>
     <string name="silently_upload_date_note">Artık telefonunuz zaman zaman arka planda sessizce veri yükleyecektir.</string>
     <string name="close">Kapat</string>
+    <string name="upload_now">Şimdi yükle</string>
 </resources>

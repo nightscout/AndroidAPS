@@ -7,8 +7,6 @@
     <string name="time_to_eat">Tijd om te eten</string>
     <string name="enable_bolus_advisor">Bolusadviseur inschakelen</string>
     <string name="enable_bolus_advisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
-    <string name="bolus_advisor">Bolusadviseur</string>
-    <string name="bolus_advisor_message">Je hebt een hoge bloedglucose. In plaats van te eten, is het nu aan te raden om te wachten op een betere bloedglucose. Wil je nu een correctiebolus uitvoeren en je laten weten wanneer het tijd is om te eten? In dit geval worden er geen koolhydraten opgenomen en moet je de wizard opnieuw gebruiken wanneer we je er aan herinneren.</string>
     <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>

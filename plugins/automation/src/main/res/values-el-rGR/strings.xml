@@ -24,7 +24,6 @@
     <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
     <string name="starttemptarget">Έναρξη προσ. στόχου</string>
-    <string name="stoptemptarget">Λήξη προσ. στόχου</string>
     <string name="islesser">είναι λιγότερο από</string>
     <string name="isequalorlesser">είναι ίσο ή μικρότερο από</string>
     <string name="isequal">είναι ίσο με</string>
@@ -74,6 +73,7 @@
     <string name="glucose_u">Γλυκόζη [%1$s]:</string>
     <string name="lastboluslabel">Τελευταίο Bolus</string>
     <string name="lastboluscompared">Τελευταίο bolus %1$s %2$s λεπτά πριν</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">ΙΟΒ [U]:</string>
     <string name="distance_short">Αποστ [m]:</string>
@@ -86,4 +86,5 @@
     <string name="edit_short">Επεξεργασία</string>
     <string name="triggers">Ενεργοποιήσεις:</string>
     <string name="preconditions">Προϋποθέσεις:</string>
+    <!-- WeekdayPicker -->
 </resources>

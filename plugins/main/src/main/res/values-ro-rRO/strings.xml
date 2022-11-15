@@ -1,152 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator">Comunicator SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
-    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicația Authenticator pentru: %1$s urmat de PIN</string>
-    <string name="smscommunicator_otp_pin">PIN obligatoriu suplimentar la sfârșitul token-ului</string>
-    <string name="smscommunicator_otp_pin_summary">Cifre suplimentare care ar trebui să fie memorate și adăugate la sfârșitul fiecărei parole unice generate</string>
-    <string name="smscommunicator_code_verify_label">Cod de verificat:</string>
-    <string name="smscommunicator_code_verify_hint">OTP + cod PIN</string>
-    <string name="smscommunicator_code_verify_info">Codul de verificare constă din 6 cifre afişate de către aplicaţia Authentificator (cunoscută ca OTP), urmat de 3 sau mai multe cifre de PIN obligatoriu.</string>
-    <string name="smscommunicator_otp_reset_btn">Resetați Authenticatori</string>
-    <string name="smscommunicator_otp_reset_title">Resetați cheia pentru Authenticator</string>
-    <string name="smscommunicator_otp_reset_prompt">Sunteți sigur că vreți sa resetați cheia pentru Authenticator? Acest lucru va invalida toți Authenticatorii configurați și va trebui să ii setați din nou.</string>
-    <string name="smscommunicator_otp_reset_successful">S-a generat o nouă cheie pentru Authenticator! Vă rugăm să utilizați QRCode actualizat pentru a configura autentificatori.</string>
-    <string name="smscommunicator_otp_export_title">Se exporta secretul OTP</string>
-    <string name="smscommunicator_otp_export_prompt">Sunteţi sigur că doriţi să copiaţi secretul OTP în clipboard?\n\nS-ar putea să aveţi nevoie doar dacă aplicaţia dumneavoastră de autentificare are probleme de scanare a QRCode, doriţi să o introduceţi manual sau doriţi să configuraţi token-ul hardware OTP folosind aplicaţia dedicată.</string>
-    <string name="smscommunicator_otp_export_successful">Secret OTP (în formatul Base32) exportat şi copiat în clipboard. Lipiţi-l în autentificator sau in hardware OTP burner!</string>
-    <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
-    <string name="smscommunicator_otp_step3_test_header">3. Testați o parolă unică</string>
-    <string name="smscommunicator_otp_reset_header">Resetați Authenticatori</string>
-    <string name="smscommunicator_otp_install_info">Pe fiecare telefon urmăritor instalați o aplicație de tip Authenticator care suporta tokens RFC 6238 TOTP. Asemenea aplicații gratuite populare sunt:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
-    <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
-    <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
-    <string name="smscommunicator_temptargetwithcode">Pentru a seta tinta temporara %1$s raspundeti cu: %2$s</string>
-    <string name="smscommunicator_temptargetcancel">Pentru a anula tinta temporara raspundeți cu: %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">Pentru a dezactiva serviciul SMS la distanta raspundeti cu: %1$s.\n\nRetineti ca o sa il puteti reactiva doar direct de pe smartphone-ul master AAPS.</string>
-    <string name="smscommunicator_stoppedsms">Serviciul SMS la distanta s-a oprit. Pentru a il reactiva, utilizati AAPS de pe smartphone-ul master.</string>
-    <string name="smscommunicator_calibrationreplywithcode">Pentru a trimite calibrarea cu %1$.2f răspundeți cu codul %2$s</string>
-    <string name="smscommunicator_bolusfailed">Bolusare eșuată</string>
-    <string name="smscommunicator_remotebolusmindistance_summary">Numarul minim de minute care trebuie sa treaca intre un bolus la distanta si urmatorul</string>
-    <string name="smscommunicator_remotebolusmindistance">Cate minute trebuie sa treaca, cel puţin, intre un bolus si următorul</string>
-    <string name="smscommunicator_remotebolusmindistance_caveat">Pentru siguranta dumneavoastra, pentru a edita aceasta preferinta trebuie sa adaugati cel putin 2 numere de telefon.</string>
-    <string name="smscommunicator_bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
-    <string name="smscommunicator_mealbolusdelivered">Bolusul de masa de %1$.2fU a fost livrat cu succes</string>
-    <string name="smscommunicator_mealbolusdelivered_tt">Țintă %1$s pentru %2$d minute</string>
-    <string name="smscommunicator_tt_set">Tinta %1$s pentru %2$d minute este setata cu succes</string>
-    <string name="smscommunicator_tt_canceled">Tinta temporara anulata cu succes</string>
-    <string name="smscommunicator_remotecommandsallowed">Permite comenzi de la distanță, prin SMS</string>
-    <string name="smscommunicator_loophasbeendisabled">Bucla a fost dezactivată</string>
-    <string name="smscommunicator_loophasbeenenabled">Bucla a fost activată</string>
-    <string name="smscommunicator_loopisenabled">Bucla este activată</string>
-    <string name="smscommunicator_pumpconnectwithcode">Pentru a conecta pompa raspundeti cu codul %1$s</string>
-    <string name="smscommunicator_pumpconnectfail">Conectarea cu pompa a esuat</string>
-    <string name="smscommunicator_pumpdisconnectwithcode">Pentru a deconecta pompa timp de %1$d minute, răspundeți cu: %2$s</string>
-    <string name="smscommunicator_pumpdisconnected">Pompă deconectată</string>
-    <string name="smscommunicator_reconnect">Pompă reconectată</string>
-    <string name="smscommunicator_remotecommandnotallowed">Comanda de la distanță nu este permisă</string>
-    <string name="smscommunicator_remotebolusnotallowed">Bolus de la distanță nu este disponibil. Încearcă din nou mai târziu.</string>
-    <string name="smscommunicator_basalreplywithcode">Pentru a iniția bazala de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">Pentru a schimba profilul în %1$s %2$d%% trimiteți codul %3$s</string>
-    <string name="smscommunicator_extendedreplywithcode">Pentru a iniția bolusul extins de %1$.2fU/h pentru %2$d min trimiteți codul %3$s</string>
-    <string name="smscommunicator_carbsreplywithcode">Pentru a introduce %1$dg la %2$s, raspundeti cu: %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Pentru a iniția bazala de %1$d%% pentru %2$d min trimiteți codul %3$s</string>
-    <string name="smscommunicator_suspendreplywithcode">Pentru suspendarea buclei pentru %1$d minute trimiteți codul %2$s</string>
-    <string name="smscommunicator_loopresumereplywithcode">Pentru a reactiva bucla inchisa, raspundeti cu %1$s</string>
-    <string name="smscommunicator_loopenablereplywithcode">Pentru a activa bucla inchisa, raspundeti cu %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Pentru a dezactiva bucla inchisa, raspundeti cu %1$s</string>
-    <string name="smscommunicator_tempbasalset">Bazala temporară %1$.2fU/h pentru %2$d minute a fost trimisă cu succes</string>
-    <string name="smscommunicator_extendedset">Bolusul extins de %1$.2fU pentru %2$d min a fost inițiat</string>
-    <string name="smscommunicator_carbsset">%1$dg carbohidrați introduși cu succes</string>
-    <string name="smscommunicator_carbsfailed">Introducerea a %1$dg de carbohidrati a esuat</string>
-    <string name="smscommunicator_tempbasalset_percent">Bazala temporară %1$d%% pentru %2$d minute a fost stabilită cu succes</string>
-    <string name="smscommunicator_tempbasalfailed">Trimiterea bazalei temporare a eșuat</string>
-    <string name="smscommunicator_extendedfailed">Pornirea bolusului extins a eșuat</string>
-    <string name="smscommunicator_basalstopreplywithcode">Pentru oprirea bazalei temporare, răspundeți cu codul %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Pentru oprirea bolusului extins, răspundeți cu codul %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Bazala temporară a fost anulată</string>
-    <string name="smscommunicator_extendedcanceled">Bolus extins anulat</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Renunțarea la bazala temporară a eșuat</string>
-    <string name="smscommunicator_extendedcancelfailed">Anularea bolusului extins a eșuat</string>
-    <string name="smscommunicator_unknowncommand">Comandă necunoscută sau răspuns greșit</string>
-    <string name="smscommunicator_another_bolus_in_queue">Există un alt bolus în coada de așteptare. Încercați din nou mai târziu.</string>
-    <string name="smscommunicator_wrongduration">Durată greșită</string>
-    <string name="smscommunicator_loopsuspended">Buclă suspendată</string>
-    <string name="smscommunicator_loopresumed">Buclă restabilită</string>
-    <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
-    <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip+.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ nu recepționează calibrări</string>
-    <string name="smscommunicator_messagebody">Conținutul mesajului nu este valid</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
-    <string name="smscommunicator_pump_ureachable">Raportează pompa inaccesibilă</string>
-    <string name="sms_delta">Diferență:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="sms_basal">Bazală:</string>
     <!-- Insulin -->
-    <string name="dia">DIA</string>
     <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Setări prestabilite pentru insulinele Humalog sau NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Setări prestabilite pentru Fiasp</string>
-    <string name="description_insulin_lyumjev">Setări prestabilite pentru Lyumjev</string>
-    <string name="description_insulin_free_peak">Vă permite definirea vârfului activităţii insulinei şi ar trebui folosit doar de către utilizatorii avansaţi</string>
     <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Curbă timp vârf IOB</string>
-    <string name="insulin_peak_time">Timp vârf [min]</string>
-    <string name="free_peak_oref">Oref Vârf-Liber</string>
-    <string name="rapid_acting_oref">Oref Insulină-Rapidă</string>
-    <string name="dia_too_short">DIA din %1$f prea scurtă - se folosește %2$f în schimb!</string>
     <!-- xDrip status line -->
-    <!-- Statusline -->
-    <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
+    <!-- StatusLine -->
     <!-- Food-->
-    <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
-    <string name="filter">Filtru</string>
-    <string name="food">Mâncare</string>
-    <string name="shortkilojoul">kJ</string>
-    <string name="shortenergy">En</string>
-    <string name="shortprotein">Pr</string>
-    <string name="shortfat">Grăsime</string>
-    <string name="category">Categorie</string>
-    <string name="subcategory">Subcategorie</string>
     <!-- Theme switcher dark and light mode-->
-    <string name="app_color_scheme">Schemă de culori aplicații</string>
     <!-- Profile -->
     <string name="localprofile_shortname">LP</string>
-    <string name="description_profile_local">Definire profil care să fie valabil offline.</string>
-    <string name="units_colon">Unități:</string>
-    <string name="missing_profile_name">Lipsește numele profilului</string>
-    <string name="error_in_ic_values">Eroare in valorile IC</string>
-    <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
-    <string name="error_in_target_values">Eroare in valorile tinta</string>
-    <string name="error_in_isf_values">Eroare in valorile ISF</string>
-    <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
-    <string name="view">Vizualizare</string>
-    <string name="errors">Erori</string>
-    <string name="profile_name">Nume profil:</string>
     <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
-    <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
-    <string name="basal_short">BZL</string>
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Date recalculate utilizate</string>
-    <string name="bg_too_close">BG prea aproape:\n%1$s\n%2$s</string>
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
-    <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă închisă dezactivată</string>
     <!-- Storage constraint -->
     <!-- Signature verifier -->
     <!-- Version Checker -->
-    <string name="old_version">versiune veche</string>
-    <string name="very_old_version">versiune foarte veche</string>
-    <string name="application_expired">Aplicația a expirat</string>
-    <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>
     <!-- PhoneChecker -->
     <!-- Objectives -->
-    <string name="not_completed_yet">Încă incomplet</string>
-    <string name="time_elapsed">Timp scurs</string>
+    <string name="completed_well_done">Finalizat cu succes!</string>
+    <string name="maxiobset">IOB maxim configurat corect</string>
+    <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
+    <string name="loopenabled">Buclă activată</string>
+    <string name="apsselected">APS selectat</string>
+    <string name="closedmodeenabled">Mod buclă închisă activat</string>
+    <string name="objectives_shortname">OBI</string>
+    <string name="description_objectives">Program de învăţare</string>
+    <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
+    <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>
+    <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
+    <!-- Actions -->
+    <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="tools">Instrumente</string>
+    <string name="cannula">Canula</string>
+    <string name="ebstopsloop">Utilizarea unui bolus extins va opri modul buclă închisă pe timpul livrării bolusului extins. Sigur doriți acest lucru?</string>
+    <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U datorită %2$s</string>
+    <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
+    <string name="limitingiob">Se limitează IOB la %1$.1f U datorită %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
+    <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
+    <string name="uamdisabledoref1notselected">UAM dezactivat deoarece este bazat pe plugin-ul Oref1 pentru sensibilitate</string>
+    <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
+    <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
+    <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
+    <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
+    <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
+    <string name="hardlimit">limită fizică</string>
+    <string name="treatmentssafety_title">Setări siguranță tratament</string>
+    <string name="patientage_summary">Te rog confirmă tipul de pacient pentru a stabilii limitele de siguranță</string>
+    <string name="child">Copil</string>
+    <string name="teenage">Adolescent</string>
+    <string name="adult">Adult</string>
+    <string name="resistantadult">Adult rezistent la insulină</string>
+    <string name="pregnant">Sarcină</string>
+    <string name="treatmentssafety_maxbolus_title">Bolus maxim admis [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Carbohidrați admiși maxim [g]</string>
+    <string name="patientage">Tip de pacient</string>
     <!-- Overview -->
+    <string name="snooze">Amână</string>
+    <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
+    <string name="statuslights_iage_warning">Prag de avertizare vechime insulină [h]</string>
+    <string name="statuslights_iage_critical">Prag critic vechime insulină [h]</string>
+    <string name="statuslights_sage_warning">Prag de avertizare vechime senzor [h]</string>
+    <string name="statuslights_sage_critical">Prag critic vechime senzor [h]</string>
+    <string name="statuslights_sbat_warning">Prag de avertizare nivel baterie senzor [%]</string>
+    <string name="statuslights_sbat_critical">Prag nivel critic baterie senzor [%]</string>
+    <string name="statuslights_bage_warning">Prag de avertizare vârstă baterie [h]</string>
+    <string name="statuslights_bage_critical">Prag critic vârstă baterie [h]</string>
+    <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
+    <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
+    <string name="statuslights_bat_warning">Prag de avertizare nivel baterie [%]</string>
+    <string name="statuslights_bat_critical">Prag critic nivel baterie [%]</string>
+    <string name="statuslights">Lumini de stare</string>
+    <string name="statuslights_copy_ns">Copiați setările din NS</string>
+    <string name="chart_menu">Meniu diagramă</string>
+    <string name="apsmode_title">Mod APS</string>
+    <string name="setbasalquestion">Acceptă noua bazală temporară:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">AsistentRapid</string>
+    <!-- NSClient -->
+    <string name="restart">Restartare</string>
+    <string name="deliver_now">Livrează acum</string>
+    <string name="clear_queue">Curăță coada de așteptare</string>
+    <string name="show_queue">Arată coada de așteptare</string>
+    <string name="queue">Coadă:</string>
+    <string name="status">Stare:</string>
+    <string name="full_sync">Sincronizare completă</string>
+    <string name="full_sync_comment">Sincronizare completă? Poate dura multe ore şi până la final nu veţi vedea date noi în NS.</string>
+    <string name="ns_sync_options">Sincronizare</string>
+    <string name="ns_upload_summary">Profilurile, bolusurile, carbohidrații, bazalele temporare sunt încărcate în NS</string>
+    <string name="ns_upload">Încarcă date în NS</string>
+    <string name="ns_receive_profile_store">Primire stocare profile</string>
+    <string name="ns_receive_profile_store_summary">Sincronizează profilurile din editorul de profil NS</string>
+    <string name="ns_receive_temp_target">Primește ținte temporare</string>
+    <string name="ns_receive_temp_target_summary">Acceptați țintele temporare introduse prin NS sau NSClient</string>
+    <string name="ns_receive_profile_switch">Primește schimbări de profil</string>
+    <string name="ns_receive_profile_switch_summary">Acceptați schimbările de profil introduse prin NS sau NSClient</string>
+    <string name="ns_receive_offline_event">Primiți evenimente APS offline</string>
+    <string name="ns_receive_offline_event_summary">Acceptați evenimente offline APS introduse prin NS sau NSClient</string>
+    <string name="ns_receive_insulin">Primiţi date insulina</string>
+    <string name="ns_receive_insulin_summary">Acceptaţi insulina introdusă prin NS sau NSClient (nu este livrată, ci doar calculată in IoB)</string>
+    <string name="ns_receive_carbs">Primește carbohidrați</string>
+    <string name="ns_receive_carbs_summary">Acceptați carbohidrați introduși prin NS sau NSClient</string>
+    <string name="ns_receive_therapy_events">Primește evenimente terapeutice</string>
+    <string name="ns_receive_therapy_events_summary">Acceptaţi evenimentele de tratament (canulă, insulină, modificarea bateriei etc.) introduse prin NS sau NSClient</string>
+    <string name="ns_receive_cgm">Primire/completare date CGM</string>
+    <string name="ns_receive_cgm_summary">Acceptați datele CGM din NS</string>
+    <string name="run_question">Executați %s?</string>
+    <string name="ns_sync_slow">Încarcă mai lent</string>
+    <string name="ns_alarms">Creare notificări din alarmele NS</string>
+    <string name="ns_announcements">Creare notificări din anunţurile NS</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Utilizatorul Tidepool (de obicei adresa de email)</string>
+    <string name="title_tidepool_username">Numele de utilizator</string>
+    <string name="summary_tidepool_password">Parola Tidepool</string>
+    <string name="title_tidepool_password">Parola utilizatorului</string>
+    <string name="title_tidepool_test_login">Testează conectarea la Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Dacă este activ, înregistrările vor fi transmise către https://int-app.tidepool.org, în loc să fie transmise către https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Folosește serverele Integration (test)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Înregistrează datele la Tidepool</string>
+    <string name="tidepool_upload_cgm">Înregistrează datele din CGM</string>
+    <string name="tidepool_upload_bolus">Înregistrează tratamentele (insulină, carbohidrați)</string>
+    <string name="tidepool_upload_tbr">Înregistrează bazalele temporare</string>
+    <string name="tidepool_upload_profile">Înregistrează schimbările de profil, țintele temporare</string>
+    <string name="tidepool_upload_bg">Înregistrează testările de glicemie</string>
+    <string name="upload_now">Încarcă acum</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
+    <string name="virtualpump_settings">Setări pompă virtuală</string>
+    <string name="virtualpump_uploadstatus_title">Trimitere status către NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Primește valori de glicemie de la aplicația Dexcom modificată.</string>
+    <string name="eversense">Aplicația Eversense (modificată)</string>
+    <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
+    <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
+    <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Citire a valorii glicemiei din aplicația Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Primiți glicemii de la aplicația Glunovo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
+    <string name="bgsource_upload">Setări înregistrare glicemie</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="ns_create_announcements_from_errors_title">Crează anunțuri pentru erori</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Crează anunțuri din alertele de cerere carbohidrați</string>
+    <string name="ns_create_announcements_from_errors_summary">Crează anunțuri în Nightscout pentru dialoguri de erori și alerte locale (vizibile și în Careportal - Tratamente)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Creează anunțuri Nightscout din alertele de cerere carbohidrați</string>
+    <string name="description_ns_client">Sincronizare a datelor cu Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
+    <string name="classic_description">Tema originală</string>
+    <string name="lowres_description">Skin de rezoluție redusă</string>
+    <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
+    <string name="largedisplay_description">Display mare</string>
+    <string name="skin">Tema</string>
 </resources>

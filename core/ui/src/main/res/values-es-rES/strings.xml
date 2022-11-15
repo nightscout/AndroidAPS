@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmación</string>
+    <string name="message">Mensaje</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancelar</string>
+    <string name="dismiss">DESCARTAR</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
+    <string name="format_hour_minute">%1$dhoras %2$dmin</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

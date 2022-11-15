@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AAPS nahrává na Open Humans. To může chvíli trvat.</string>
     <string name="you_have_been_signed_out_of_open_humans">Byl jste odhlášen z Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Chcete-li se znovu přihlásit, klepněte zde, pokud to nebylo schválně.</string>
-    <string name="upload_now">Nahrát nyní</string>
     <string name="next">Další</string>
     <string name="welcome_to_open_humans">Vítejte v Open Humans</string>
     <string name="setup_data_upload">Chcete-li nastavit nahrávání dat, klikněte na \'Další\'.</string>
@@ -54,4 +53,5 @@
     <string name="we_re_done">Jsme hotovi!</string>
     <string name="silently_upload_date_note">Od této chvíle bude telefon čas od času tiše nahrávat data na pozadí.</string>
     <string name="close">Zavřít</string>
+    <string name="upload_now">Nahrát nyní</string>
 </resources>

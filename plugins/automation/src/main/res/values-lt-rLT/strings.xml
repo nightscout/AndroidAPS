@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>
     <string name="sendsmsactiontext">Išsiųsti SMS žinutę su tekstu</string>
     <string name="starttemptarget">Nustatykite laikiną tikslą</string>
-    <string name="stoptemptarget">Sustabdykite laikiną tikslą</string>
     <string name="islesser">mažesnis nei</string>
     <string name="isequalorlesser">lygus arba mažesnis nei</string>
     <string name="isequal">yra lygus</string>
@@ -112,4 +111,12 @@
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Vartotojo veiksmas</string>
     <string name="sort_label">Rūšiuoti</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">A</string>
+    <string name="wednesday_short">T</string>
+    <string name="thursday_short">K</string>
+    <string name="friday_short">Pn</string>
+    <string name="saturday_short">Š</string>
+    <string name="sunday_short">S</string>
 </resources>

@@ -12,9 +12,9 @@
     <string name="only_upload_if_charging">Upload kun ved opladning</string>
     <string name="open_humans_uploading">Uploader til Open Humans…</string>
     <string name="open_humans_notifications">Open Humans Notifikationer</string>
+    <string name="uploading_to_open_humans">AAPS uploader til Open Humans. Dette kan tage et stykke tid.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du er blevet logget ud af Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik her for at logge ind igen, hvis dette ikke var meningen.</string>
-    <string name="upload_now">Upload nu</string>
     <string name="next">Næste</string>
     <string name="welcome_to_open_humans">Velkommen til Open Humans</string>
     <string name="setup_data_upload">Klik på \'Næste\' for at opsætte dataoverførsel.</string>
@@ -53,4 +53,5 @@
     <string name="we_re_done">Vi er færdige!</string>
     <string name="silently_upload_date_note">Fra nu af vil telefonen lydløst uploade data i baggrunden fra tid til anden.</string>
     <string name="close">Luk</string>
+    <string name="upload_now">Upload nu</string>
 </resources>

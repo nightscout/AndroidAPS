@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Enviar SMS a tots els números</string>
     <string name="sendsmsactiontext">Enviar SMS amb text</string>
     <string name="starttemptarget">Iniciar objectiu temporal</string>
-    <string name="stoptemptarget">Aturar objectiu temporal</string>
     <string name="islesser">és menor que</string>
     <string name="isequalorlesser">és igual o menor que</string>
     <string name="isequal">és igual a</string>
@@ -105,9 +104,18 @@
     <string name="edit_short">EDIT</string>
     <string name="please_choose_an_action_type">Escolliu tipus d\'acció</string>
     <string name="please_choose_a_trigger_type">Escolliu tipus d\'activador</string>
+    <string name="please_choose_a_operation_type">Escolliu tipus d\'operació</string>
     <string name="triggers">Activadors:</string>
     <string name="preconditions">Precondicions:</string>
     <string name="automation_event">Esdeveniment d\'automatització</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Acció de l’usuari</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Dl</string>
+    <string name="tuesday_short">Dt</string>
+    <string name="wednesday_short">Dc</string>
+    <string name="thursday_short">Dj</string>
+    <string name="friday_short">Dv</string>
+    <string name="saturday_short">Ds</string>
+    <string name="sunday_short">Dg</string>
 </resources>

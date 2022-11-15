@@ -15,7 +15,6 @@
     <string name="uploading_to_open_humans">AndroidAPS is aan het uploaden naar Open Humans. Dit kan even duren.</string>
     <string name="you_have_been_signed_out_of_open_humans">Je bent uitgelogd van Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klik hier om opnieuw in te loggen als dit niet opzettelijk was.</string>
-    <string name="upload_now">Nu Uploaden</string>
     <string name="next">Volgende</string>
     <string name="welcome_to_open_humans">Welkom bij Open Humans</string>
     <string name="setup_data_upload">Klik op \'Volgende\' om gegevens te uploaden.</string>
@@ -54,4 +53,5 @@
     <string name="we_re_done">We zijn klaar!</string>
     <string name="silently_upload_date_note">Voortaan zal je telefoon zo nu en dan op de achtergrond gegevens uploaden.</string>
     <string name="close">Sluiten</string>
+    <string name="upload_now">Nu Uploaden</string>
 </resources>

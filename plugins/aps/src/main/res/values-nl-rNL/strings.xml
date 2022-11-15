@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="DynISFAdjust_summary" formatted="false">Aanpassingsfactor voor DynamicISF. Stel meer dan 100% in voor een agressievere correctie en minder dan 100% voor minder agressieve correctie.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhogen van de gevoeligheid voor temptargets > = 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Laag tijdelijk streefdoel verlaagt gevoeligheid</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lagere gevoeligheid voor temptargets < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
+    <string name="resistance_lowers_target_title">Resistentie verlaagt het doel</string>
+    <string name="resistance_lowers_target_summary">Wanneer insulineresistentie wordt gedetecteerd, wordt het BG streefdoel verlaagd</string>
+    <string name="sensitivity_raises_target_title">Gevoeligheid verhoogt het doel</string>
+    <string name="sensitivity_raises_target_summary">Wanneer insulinegevoeligheid wordt gedetecteerd, wordt het BG streefdoel verhoogd</string>
+    <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="executing">Uitvoeren</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Array van %1$d elementen. \nActuele waarde:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Het algoritme uit 2017</string>
+    <string name="description_smb">Meest recente algoritme voor gevorderde gebruikers</string>
+    <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
+    <string name="openapsma_run">Nu uitvoeren</string>
+    <string name="openapsma_profile_label">Profiel</string>
+    <string name="result">Resultaat</string>
+    <string name="openapsma_request_label">Voorstel</string>
+    <string name="constraints">Beperkingen</string>
+    <string name="openapsma_autosensdata_label">Autosens gegevens</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standaard waarde: 3.0 Dit is een belangrijke veiligheid parameter van OpenAPS. Dit limiteert je basaal met een max van 3 maal je hoogste basale dosis. Normaal hoef je deze niet te veranderen. Het is echter belangrijk dat je de ingebouwde limieten kent.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft. Dit is een veiligheidsmaatregel om te voorkomen dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Maximale dagelijkse veiligheids vermeningvuldigings factor</string>
+    <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
+    <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor voor autosense (en binnenkort autotune) die zorgt dat de autosens ratio maximaal 20%% kan zijn. Dit maximum bepaalt in hoeverre je basaal kan worden verhoogd, en hoeveel je ISF en BG doel verlaagd kunnen worden.</string>
+    <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
+    <string name="hardlimit">max limiet (SC)</string>
+    <!--    Autotune   -->
+</resources>

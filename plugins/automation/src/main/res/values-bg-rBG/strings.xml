@@ -28,7 +28,6 @@
     <string name="sendsmsactiondescription">Изпратете SMS на всички</string>
     <string name="sendsmsactiontext">Изпрати SMS с текст</string>
     <string name="starttemptarget">Стартирай временна цел</string>
-    <string name="stoptemptarget">Спри временна цел</string>
     <string name="islesser">е по-малко от</string>
     <string name="isequalorlesser">е равно или по-малко от</string>
     <string name="isequal">е равно на</string>
@@ -111,4 +110,12 @@
     <string name="automation_event">Събитие</string>
     <string name="reorder_label">Подреди</string>
     <string name="user_action">Потребителско действие</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">П</string>
+    <string name="tuesday_short">Вт</string>
+    <string name="wednesday_short">Ср</string>
+    <string name="thursday_short">Ч</string>
+    <string name="friday_short">П</string>
+    <string name="saturday_short">С</string>
+    <string name="sunday_short">Н</string>
 </resources>

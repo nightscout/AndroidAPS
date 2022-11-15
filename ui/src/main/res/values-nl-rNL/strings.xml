@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
     <string name="constraint_applied">Beperking toegepast!</string>
     <string name="bolus_constraint_applied">Bolus limiet ingesteld</string>
     <string name="carbs_constraint_applied">Koolhydraten beperking ingesteld</string>
@@ -29,7 +28,6 @@
     <string name="weight_label">Gewicht</string>
     <string name="most_common_profile">Meest voorkomende profiel:</string>
     <string name="survey_comment">Opmerking: Alleen gegevens die zichtbaar zijn op dit scherm worden anoniem geüpload. ID is toegewezen aan deze installatie van AAPS. U kunt gegevens opnieuw indienen als uw hoofdprofiel wordt gewijzigd, maar laat het ten minste een week draaien om resultaat zichtbaar te maken in de tijd in het bereik. Uw hulp wordt gewaardeerd.</string>
-    <!-- CareDialog -->
     <string name="glucose_type">Glucose type</string>
     <string name="bg_other">Andere</string>
     <string name="bg_meter">Meter</string>
@@ -38,14 +36,47 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="format_percent">%1$d%%</string>
     <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
+    <!-- FillDialog -->
+    <string name="button1">Knop 1</string>
+    <string name="button2">Knop 2</string>
+    <string name="button3">Knop 3</string>
+    <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
+    <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Onderbreek loop voor 2u</string>
+    <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
+    <string name="suspendloopfor10h">Onderbreek loop voor 10u</string>
+    <string name="disconnectpump">Pomp afkoppelen</string>
+    <string name="disconnectpumpfor15m">Verbreek verbinding 15min met pomp</string>
+    <string name="disconnectpumpfor30m">Verbreek verbinding 30min met pomp</string>
+    <string name="disconnectpumpfor1h">Verbreek verbinding 1u met pomp</string>
+    <string name="disconnectpumpfor2h">Verbreek verbinding 2u met pomp</string>
+    <string name="disconnectpumpfor3h">Verbreek verbinding 3u met pomp</string>
+    <string name="resume">Hervatten</string>
+    <string name="reconnect">Opnieuw verbinden met pomp</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 uur</string>
+    <string name="duration2h">2 uur</string>
+    <string name="duration3h">3 uur</string>
+    <string name="duration10h">10 uur</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
+    <string name="a11_correction_units">corrigeer uitkomt met units</string>
+    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
+    <string name="missing_carbs">Er ontbreekt %1$d g</string>
+    <string name="a11y_current_bg">huidige bloedglucose</string>
+    <string name="carb_time_label">KH tijdsduur</string>
+    <string name="a11y_set_carb_timer">koolhydraten timer alarm instellen</string>
+    <string name="show_calculation">Toon berekening</string>
     <!-- Treatments -->
     <string name="no_records_available">Geen records beschikbaar</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
-    <string name="invalid">Ongeldig</string>
     <string name="treatments_insulin_label_string">Insuline:</string>
     <string name="treatments_carbs_label_string">Koolhydraten:</string>
     <string name="treatments_iobtotal_label_string">Totale IOB:</string>
@@ -75,4 +106,8 @@
     <string name="clone_label">Dupliceren</string>
     <string name="show_loop_records">Toon loop records</string>
     <string name="show_hide_records">Verberg loop records</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile2">Profiel 2</string>
+    <string name="selected_profile">Geselecteerd:</string>
+    <!-- Other dialogs -->
 </resources>

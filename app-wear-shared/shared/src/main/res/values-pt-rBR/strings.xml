@@ -5,6 +5,9 @@
     <string name="minago_long">%1$d minutos atrás</string>
     <string name="hoursago">%1$.1fh atrás</string>
     <string name="days_ago">%1$d dias atrás</string>
+    <string name="days_ago_round">%1$.0f dias atrás</string>
+    <string name="in_days">em %1$.0f dias</string>
+    <string name="in_days_round">em %1$.0f dias</string>
     <string name="shorthour">h</string>
     <string name="days">dias</string>
     <string name="hours">horas</string>
@@ -19,4 +22,8 @@
     <string name="unit_days">dias</string>
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
+    <string name="later_today">Hoje, Mais tarde</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
 </resources>

@@ -4,7 +4,7 @@
     <string name="error_only_numeric_digits_range_allowed">Povolena jsou pouze čísla v rozsahu %1$s - %2$s.</string>
     <string name="error_this_field_cannot_contain_special_character">Toto pole nesmí obsahovat speciální znaky</string>
     <string name="error_only_standard_letters_are_allowed">Jsou povolena pouze standardní písmena</string>
-    <string name="error_field_must_not_be_empty">Toto pole nesmí být prázdné</string>
+    <string name="error_field_must_not_be_empty">Položka nesmí být prázdná</string>
     <string name="error_email_address_not_valid">E-mailová adresa je neplatná</string>
     <string name="error_creditcard_number_not_valid">Číslo kreditní karty není platné</string>
     <string name="error_phone_not_valid">Neplatné telefonní číslo</string>

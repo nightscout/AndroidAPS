@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">확인</string>
+    <string name="message">메시지</string>
+    <string name="ok">네</string>
+    <string name="cancel">취소</string>
+    <string name="dismiss">무시</string>
+    <string name="yes">네</string>
+    <string name="no">아니오</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="format_hour_minute">%1$d시 %2$d분</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

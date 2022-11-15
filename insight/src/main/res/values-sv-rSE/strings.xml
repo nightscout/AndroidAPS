@@ -11,7 +11,6 @@
     <string name="stop_pump">Stoppa pumpen</string>
     <string name="started">Startade</string>
     <string name="stopped">Stoppade</string>
-    <string name="paused">Pausad</string>
     <string name="operating_mode">Driftläge</string>
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
@@ -45,7 +44,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Res: %1$.2fU</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="confirm">Bekräfta</string>
     <string name="mute_alert">Tysta</string>
     <string name="release_software_version">Mjukvaruversion Release</string>
     <string name="ui_processor_software_version">UI-processorversion</string>
