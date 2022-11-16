@@ -69,7 +69,6 @@ buildscript {
 plugins {
     // Test Gradle build, keep disabled under normal circumstances
     // id "com.osacky.doctor" version "0.8.1"
-    id "io.gitlab.arturbosch.detekt" version "1.21.0"
     id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
     id 'org.barfuin.gradle.jacocolog' version '2.0.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
@@ -96,6 +95,8 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
+
+    apply plugin: 'org.jlleitschuh.gradle.ktlint'
 }
 
 apply from: 'jacoco_project.gradle'
