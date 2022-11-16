@@ -4,7 +4,7 @@ import info.nightscout.database.impl.daos.APSResultLinkDao
 import info.nightscout.database.entities.APSResultLink
 import info.nightscout.database.entities.interfaces.DBEntry
 
-internal class DelegatedAPSResultLinkLinkDao(changes: MutableList<DBEntry>, private val dao: APSResultLinkDao) : DelegatedDao(changes), APSResultLinkDao by dao {
+internal class DelegatedAPSResultLinkDao(changes: MutableList<DBEntry>, private val dao: APSResultLinkDao) : DelegatedDao(changes), APSResultLinkDao by dao {
 
     override fun insertNewEntry(entry: APSResultLink): Long {
         changes.add(entry)
