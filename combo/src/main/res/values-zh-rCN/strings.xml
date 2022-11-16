@@ -57,4 +57,5 @@
     <string name="combo_error_display_never">从不</string>
     <string name="combo_error_display_error">当出错时</string>
     <string name="combo_error_display_always">总是</string>
+    <string name="about_plugin">微信公众号/抖音: 一型码农Lex</string>
 </resources>

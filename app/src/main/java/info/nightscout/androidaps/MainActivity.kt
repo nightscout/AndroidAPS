@@ -334,7 +334,8 @@ class MainActivity : NoSplashAppCompatActivity() {
             }
 
             R.id.nav_about              -> {
-                var message = "Build: ${BuildConfig.BUILDVERSION}\n"
+                var message = "${rh.gs(R.string.about_plugin)}\n"
+                message += "Build: ${BuildConfig.BUILDVERSION}\n"
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${rh.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.getVersion()}"
                 if (buildHelper.isEngineeringMode()) message += "\n${rh.gs(R.string.engineering_mode_enabled)}"

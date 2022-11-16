@@ -1252,5 +1252,9 @@
     <string name="no_watch_connected">(No Watch Connected)</string>
     <string name="error_asking_for_permissions">Error asking for permissions</string>
 
+    <!-- Patched SI App -->
+    <string name="patched_si_app">Patched SI App</string>
+    <string name="description_source_patched_si_app">Receive BG values from the Patched SI App.</string>
+    <string name="about_plugin">WeChat official Account/Douyin: 一型码农Lex</string>
 
 </resources>

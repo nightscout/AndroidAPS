@@ -150,6 +150,8 @@
                 <action android:name="com.fanqies.tomatofn.BgEstimate" />
                 <!-- Receiver from GlucoRx Aidex -->
                 <action android:name="com.microtechmd.cgms.aidex.action.BgEstimate" />
+                <!-- Receiver from patched SI app -->
+                <action android:name="cn.diyaps.sharing.SI_APP" />
             </intent-filter>
         </receiver>
 

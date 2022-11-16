@@ -33,4 +33,5 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesFoodWorker(): FoodPlugin.FoodWorker
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesAidexWorker(): AidexPlugin.AidexWorker
+    @ContributesAndroidInjector abstract fun contributesPatchedSIAppWorker(): PathedSIAppPlugin.PathedSIAppWorker
 }

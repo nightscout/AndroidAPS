@@ -1026,4 +1026,8 @@
     <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
     <string name="blocked_by_charging">被充电选项阻止</string>
     <string name="blocked_by_connectivity">被连接选项阻止</string>
+
+    <!-- Patched SI App -->
+    <string name="patched_si_app">硅基补丁版</string>
+    <string name="description_source_patched_si_app">从硅基补丁版App接收血糖值。</string>
 </resources>

@@ -112,6 +112,7 @@ data class GlucoseValue(
         MM_600_SERIES("MM600Series"),
         EVERSENSE("Eversense"),
         AIDEX("GlucoRx Aidex"),
+        SIApp("SI App"),
         RANDOM("Random"),
         UNKNOWN("Unknown"),
 
