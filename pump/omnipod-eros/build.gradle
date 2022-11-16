@@ -33,6 +33,7 @@ dependencies {
     implementation project(':libraries')
     implementation project(':core:core-main')
     implementation project(':core:fabric')
+    implementation project(':core:ui')
     implementation project(':pump:pump-common')
     implementation project(':pump:pump-core')
     implementation project(':pump:rileylink')

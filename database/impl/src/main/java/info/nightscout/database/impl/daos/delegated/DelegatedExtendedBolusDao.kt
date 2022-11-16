@@ -4,7 +4,7 @@ import info.nightscout.database.impl.daos.ExtendedBolusDao
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.interfaces.DBEntry
 
-internal class DelegatedExtendedExtendedBolusDao(changes: MutableList<DBEntry>, private val dao: ExtendedBolusDao) : DelegatedDao(changes), ExtendedBolusDao by dao {
+internal class DelegatedExtendedBolusDao(changes: MutableList<DBEntry>, private val dao: ExtendedBolusDao) : DelegatedDao(changes), ExtendedBolusDao by dao {
 
     override fun insertNewEntry(entry: ExtendedBolus): Long {
         changes.add(entry)

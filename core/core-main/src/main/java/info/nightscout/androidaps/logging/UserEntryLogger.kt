@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.logging
 
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.UserEntryTransaction
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper
-import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.UserEntryTransaction
+import info.nightscout.interfaces.userEntry.UserEntryMapper
+import info.nightscout.interfaces.userEntry.ValueWithUnitMapper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.DateUtil

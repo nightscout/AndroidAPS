@@ -11,10 +11,10 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import info.nightscout.core.main.R
 import info.nightscout.androidaps.extensions.safeEnable
+import info.nightscout.core.main.R
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import javax.inject.Inject
 import javax.inject.Singleton
 

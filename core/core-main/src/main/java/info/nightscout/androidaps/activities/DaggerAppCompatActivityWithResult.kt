@@ -6,8 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.main.R
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.permissions.OptimizationPermissionContract
 import info.nightscout.rx.logging.AAPSLogger

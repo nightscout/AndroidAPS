@@ -5,7 +5,7 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.dialogs.ErrorDialog
 import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
-import info.nightscout.androidaps.utils.ui.SingleClickButton
+import info.nightscout.core.ui.elements.SingleClickButton
 
 @Module
 @Suppress("unused")

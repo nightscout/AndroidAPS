@@ -34,10 +34,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -124,7 +124,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     context?.let { context ->
                         protectionCheck.queryProtection(
                             activity, ProtectionCheck.Protection.PREFERENCES,
-                            UIRunnable { startActivity(Intent(context, ErosPodManagementActivity::class.java)) }
+                            info.nightscout.core.ui.UIRunnable { startActivity(Intent(context, ErosPodManagementActivity::class.java)) }
                         )
                     }
                 }
@@ -581,7 +581,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            UIRunnable {
+            info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(
                     it, rh.gs(R.string.omnipod_common_warning),
                     rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null
@@ -598,7 +598,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
-            UIRunnable {
+            info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(it, title, message, null)
             }.run()
         }

@@ -11,7 +11,6 @@
     <string name="stop_pump">펌프 중지</string>
     <string name="started">시작됨</string>
     <string name="stopped">중지됨</string>
-    <string name="paused">일시중지</string>
     <string name="operating_mode">작동 모드</string>
     <string name="description_pump_insight_local">아큐-첵 Insight 펌프 연동</string>
     <string name="not_inserted">삽입되지 않음</string>
@@ -44,7 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">잔여 인슐린 양 : %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="confirm">확인</string>
     <string name="mute_alert">음소거</string>
     <string name="release_software_version">출시 소프트웨어 버전</string>
     <string name="ui_processor_software_version">UI 프로세서 소프트웨어 버전</string>

@@ -45,7 +45,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button_activate_pod"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
@@ -66,7 +66,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button_deactivate_pod"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
@@ -95,7 +95,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button_play_test_beep"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
@@ -109,7 +109,7 @@
                 app:layout_constraintRight_toLeftOf="@+id/Actions_Col_1_Row_2_vertical_guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button_pod_history"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
@@ -130,7 +130,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
-            <info.nightscout.androidaps.utils.ui.SingleClickButton
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button_discard_pod"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"

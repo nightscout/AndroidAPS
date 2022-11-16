@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmation</string>
+    <string name="message">Message</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
+
+    <!-- NumberPicker -->
+    <string name="a11y_min_button_description">decrement %1$s by %2$s</string>
+    <string name="a11y_plus_button_description">increment %1$s by %2$s</string>
+    <string name="you_are_on_allowed_limit">Allowed limit reached</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+
+    <!-- datetime layout -->
+    <string name="event_time_label">Event time</string>
+
+    <!-- BluetoothDevicePreference -->
+    <string name="needconnectpermission">Application needs bluetooth permission</string>
+
+</resources>

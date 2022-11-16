@@ -117,7 +117,7 @@
 
                 </LinearLayout>
 
-                <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
+                <info.nightscout.core.ui.elements.MinutesNumberPicker
                     android:id="@+id/time"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -152,7 +152,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.androidaps.utils.ui.NumberPicker
+                <info.nightscout.core.ui.elements.NumberPicker
                     android:id="@+id/duration"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -190,11 +190,11 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
                         android:textStyle="bold" />
 
-                    <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/carbs"
-                        android:layout_width="130dp"
-                        android:layout_height="40dp"
-                        app:customContentDescription="@string/carbs" />
+                <info.nightscout.core.ui.elements.NumberPicker
+                    android:id="@+id/carbs"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    app:customContentDescription="@string/carbs" />
 
                     <TextView
                         android:layout_width="wrap_content"

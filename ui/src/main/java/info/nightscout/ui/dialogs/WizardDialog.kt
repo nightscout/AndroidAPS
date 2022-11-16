@@ -22,12 +22,12 @@ import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper

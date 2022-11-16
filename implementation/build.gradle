@@ -20,8 +20,9 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':automation')
+    implementation project(':plugins:automation')
     implementation project(':interfaces')
     implementation project(':core:core-main')
     implementation project(':core:fabric')
+    implementation project(':core:ui')
 }

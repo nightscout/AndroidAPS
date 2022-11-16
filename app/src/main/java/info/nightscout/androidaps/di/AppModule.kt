@@ -63,7 +63,6 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
-import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.sync.nsclient.DataSyncSelectorImplementation
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
@@ -140,7 +139,7 @@ open class AppModule {
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefsImpl): ImportExportPrefs
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindLoopInterface(loopPlugin: LoopPlugin): Loop
-        @Binds fun bindAutotuneInterface(autotunePlugin: AutotunePlugin): Autotune
+        @Binds fun bindAutotuneInterface(autotunePlugin: info.nightscout.plugins.general.autotune.AutotunePlugin): Autotune
         @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindDataSyncSelectorInterface(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector

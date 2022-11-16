@@ -11,7 +11,6 @@
     <string name="stop_pump">Sustabdyti pompą</string>
     <string name="started">Pradžia</string>
     <string name="stopped">Sustabdyta</string>
-    <string name="paused">Pristabdyta</string>
     <string name="operating_mode">Darbinis režimas</string>
     <string name="description_pump_insight_local">Accu-Chek Insight pompos integracija</string>
     <string name="not_inserted">Neįvestas</string>
@@ -45,7 +44,6 @@
     <string name="short_status_tdd">BPD: %1$.2f</string>
     <string name="short_status_reservoir">Rez.: %1$.2f vv</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Patvirtinti</string>
     <string name="mute_alert">Nutildyti</string>
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
     <string name="ui_processor_software_version">UI procesoriaus programinės įrangos versija</string>

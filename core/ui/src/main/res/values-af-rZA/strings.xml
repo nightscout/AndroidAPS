@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="ok">OK</string>
+    <string name="cancel">Kanselleer</string>
+    <string name="dismiss">DISMISS</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

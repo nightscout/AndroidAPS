@@ -16,13 +16,13 @@ import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry

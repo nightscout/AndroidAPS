@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">Regola sensibilità e BG</string>
+    <string name="DynISFAdjust_title" formatted="false">Fattore di regolazione per ISF Dinamico (%)</string>
+    <string name="DynISFAdjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Temp-Target \"alto\" aumenta la sensibilità</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per temp-target >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Temp-Target \"basso\" riduce la sensibilità</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Riduci la sensibilità per temp-target < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
+    <string name="resistance_lowers_target_title">La resistenza abbassa il target</string>
+    <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
+    <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
+    <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
+    <string name="openapsma_disabled">Il plugin è disabilitato</string>
+    <string name="dynisf_shortname">ISFDIN</string>
+    <string name="executing">Esecuzione</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Matrice di %1$d elementi.\nValore attuale:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
+    <string name="description_smb">Algoritmo più recente per utenti avanzati</string>
+    <string name="description_smb_dynamic_isf">Algoritmo più recente per utenti avanzati con ISF dinamico/automatico</string>
+    <string name="openapsma_run">Esegui ora</string>
+    <string name="openapsma_profile_label">Profilo</string>
+    <string name="result">Risultato</string>
+    <string name="openapsma_request_label">Richiesta</string>
+    <string name="constraints">Vincoli</string>
+    <string name="openapsma_autosensdata_label">Dati autosens</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">[Valore predefinito: 3] Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare le tue basali a essere 3 volte, al più, la tua velocità basale massima. Probabilmente non avrai bisogno di cambiare questo valore, ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">[Valore predefinito: 4] Questo è un ulteriore parametro di sicurezza chiave in OpenAPS. La tua basale temporanea, indipendentemente dalla basale massima impostata sul micro, non può mai essere più alta di questo valore moltiplicato per la tua basale corrente in ogni specifico momento. Questo serve a impedire alle persone di addentrarsi in \"territori pericolosi\" impostando basali massime eccessivamente alte prima di aver capito come funziona l\'algoritmo. Ancora una volta, il valore predefinito è 4x; la maggior parte delle persone non avrà bisogno di modificare questo valore e avrà, invece, maggiori probabilità di dover regolare altre impostazioni se ha la sensazione di \"scontrarsi\" con questo limite di sicurezza.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
+    <string name="openapsama_current_basal_safety_multiplier">Moltiplicatore di sicurezza basale corrente</string>
+    <string name="openapsama_autosens_max_summary">[Valore predefinito: 1.2]\nQuesto è un moltiplicatore di sicurezza per autosens (e presto autotune) per impostare un limite massimo del 20%% (col valore predefinito) su quanto alto può essere il rapporto di autosens, che a sua volta determina quanto in alto autosens può regolare le basali, quanto in basso può regolare ISF e quanto in basso può impostare il target glicemico.</string>
+    <string name="openapsama_autosens_min_summary">[Valore predefinito: 0.7]\nUn altro limite di sicurezza di autosens, imposta un blocco a quanto in basso autosens può regolare le basali e a quanto in alto può regolare ISF e target glicemici.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">valore max nelle preferenze</string>
+    <string name="hardlimit">limite fisso</string>
+    <!--    Autotune   -->
+</resources>

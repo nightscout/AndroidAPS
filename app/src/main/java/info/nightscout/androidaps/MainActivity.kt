@@ -38,13 +38,13 @@ import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
-import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission

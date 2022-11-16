@@ -24,9 +24,6 @@ import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
@@ -37,7 +34,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.BIOMETRIC
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
@@ -45,12 +41,12 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionTyp
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.profile.toCurrentUnits
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
@@ -88,7 +84,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var config: Config
 
     @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var autotunePlugin: AutotunePlugin
+    @Inject lateinit var autotunePlugin: info.nightscout.plugins.general.autotune.AutotunePlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
@@ -100,9 +96,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
-    @Inject lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
+    @Inject lateinit var openAPSAMAPlugin: info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+    @Inject lateinit var openAPSSMBPlugin: info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+    @Inject lateinit var openAPSSMBDynamicISFPlugin: info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
     @Inject lateinit var safetyPlugin: SafetyPlugin
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
@@ -246,9 +242,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.recreate()
             return
         }
-        if (key == rh.gs(R.string.key_openapsama_useautosens) && sp.getBoolean(R.string.key_openapsama_useautosens, false)) {
+        if (key == rh.gs(R.string.key_openapsama_use_autosens) && sp.getBoolean(R.string.key_openapsama_use_autosens, false)) {
             activity?.let {
-                show(it, rh.gs(R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
+                OKDialog.show(it, rh.gs(R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
         checkForBiometricFallback(key)
@@ -274,7 +270,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
                 val message = rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection))
-                show(it, title = title, message = message)
+                OKDialog.show(it, title = title, message = message)
             }
         }
 
@@ -286,7 +282,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.let {
                 val title = rh.gs(R.string.unsecure_fallback_biometric)
                 val message = rh.gs(R.string.unsecure_fallback_descriotion_biometric)
-                show(it, title = title, message = message)
+                OKDialog.show(it, title = title, message = message)
             }
         }
     }

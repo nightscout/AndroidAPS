@@ -14,9 +14,8 @@ import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 import info.nightscout.core.main.R
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.shared.sharedPreferences.SP
 import java.io.File
@@ -76,7 +75,7 @@ class PasswordCheck @Inject constructor(
 
         alertDialogBuilder
             .setCancelable(false)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
             .setPositiveButton(context.getString(R.string.ok)) { _, _ -> validatePassword() }
             .setNegativeButton(context.getString(R.string.cancel)) { dialog, _ ->
                 cancel?.invoke()
@@ -119,7 +118,7 @@ class PasswordCheck @Inject constructor(
 
         alertDialogBuilder
             .setCancelable(false)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
             .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
                 val enteredPassword = userInput.text.toString()
                 val enteredPassword2 = userInput2.text.toString()
@@ -192,7 +191,7 @@ class PasswordCheck @Inject constructor(
 
         alertDialogBuilder
             .setCancelable(false)
-            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
             .setPositiveButton(context.getString(R.string.ok)) { _, _ -> validatePassword() }
             .setNegativeButton(context.getString(R.string.cancel)
             ) { dialog, _ ->

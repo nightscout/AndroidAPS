@@ -48,6 +48,7 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.OmnipodDash
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpPluginBase
@@ -108,7 +109,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump {
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, OmnipodDash {
 
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false

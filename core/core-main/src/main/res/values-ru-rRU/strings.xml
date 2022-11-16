@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">Ошибка подачи врем базала</string>
     <string name="goingtodeliver">Будет подано %1$.2f ед инс</string>
     <string name="waitingforpump">ожидание помпы</string>
-    <string name="connectingfor">Связь установлена за %1$d сек</string>
     <string name="bolusdelivering">Подается болюс %1$.2fед</string>
-    <string name="handshaking">Подтверждение связи</string>
     <string name="connecting">соединение устанавливается</string>
-    <string name="connected">соединение установлено</string>
     <string name="disconnected">Разъединено</string>
-    <string name="disconnecting">разъединение</string>
-    <string name="waiting_for_disconnection">Ожидание разъединения</string>
     <string name="androidaps_start">AAPS запущен</string>
     <string name="formatinsulinunits1">%1$.1f ед</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
@@ -31,7 +26,6 @@
     <string name="format_mins">%1$d мин</string>
     <string name="pumpbusy">помпа занята</string>
     <string name="connectionerror">ошибка соединения</string>
-    <string name="youareonallowedlimit">Разрешенный предел достигнут</string>
     <string name="objectives">Цели</string>
     <string name="close">Закрыть</string>
     <string name="please_wait">Подождите…</string>
@@ -40,8 +34,6 @@
     <string name="stoppressed">нажат стоп</string>
     <string name="stop">стоп</string>
     <string name="carbs">Углеводы</string>
-    <string name="invalidprofile">Недопустимый профиль!</string>
-    <string name="noprofileset">ПРОФИЛЬ НЕ ЗАДАН</string>
     <string name="active"><![CDATA[Активен]]></string>
     <string name="date">дата</string>
     <string name="units_label">единицы</string>
@@ -61,9 +53,9 @@
     <string name="lastconnection_label">прошлое соединение</string>
     <string name="lastbolus_label">предыдущий болюс</string>
     <string name="dailyunits">суточные единицы</string>
-    <string name="basebasalrate_label">базовая величина базала</string>
+    <string name="base_basal_rate_label">базовая величина базала</string>
     <string name="tempbasal_label">врем базал</string>
-    <string name="virtualpump_extendedbolus_label">Пролонгированный болюс</string>
+    <string name="extended_bolus_label">Пролонгированный болюс</string>
     <string name="reservoir_label">Резервуар</string>
     <string name="pumphistory">Журнал помпы</string>
     <string name="viewprofile">просмотр профиля</string>
@@ -77,8 +69,6 @@
     <string name="btwatchdog_title">Дежурный режим Watchdog</string>
     <string name="btwatchdog_summary">Выключает bluetooth телефона на одну секунду, если подключение к помпе невозможно. Это помогает на тех телефонах, где зависает модуль bluetooth.</string>
     <string name="pairing">Сопряжение</string>
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
     <string name="loopdisabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
     <string name="bolusdelivered">Болюс %1$.2f ед. подан успешно</string>
     <string name="virtualpump_resultok">ОК</string>
@@ -108,7 +98,6 @@
     <string name="time">Время</string>
     <string name="ns_wifi_ssids">SSID для Wi-Fi</string>
     <string name="loading">Загрузка…</string>
-    <string name="event_time_label">Время события</string>
     <string name="notes_label">Заметки</string>
     <string name="remove_button">Удалить</string>
     <string name="addnew">Добавить новый</string>
@@ -141,6 +130,7 @@
     <string name="a11y_inrange">в диапазоне</string>
     <string name="a11y_low">низкий</string>
     <string name="average">Средний</string>
+    <string name="tir">Время в целевом диапазоне</string>
     <string name="tdd_total">Суммарный суточный инсулин TDD</string>
     <string name="none"><![CDATA[<отсутствует>]]></string>
     <string name="remove_label">УДАЛИТЬ</string>
@@ -148,6 +138,27 @@
     <string name="reset">сброс</string>
     <string name="profileswitch_ismissing">Профиль не переключен. Переключите профиль или нажмите \"активировать профиль\" в LocalProfile.</string>
     <string name="profile">Профиль</string>
+    <string name="select_for_removal">Выберите для удаления</string>
+    <string name="confirm_remove_multiple_items">Вы уверены, что хотите удалить %1$d элемент</string>
+    <string name="overview_treatment_label">Терапия</string>
+    <string name="copytolocalprofile">Создать новый профиль из этого профиля?</string>
+    <string name="wear_wizard_settings">Настройки мастера</string>
+    <string name="bg_trend_label">15 мин тренд</string>
+    <string name="treatments_wizard_cob_label">АктУгл COB</string>
+    <string name="bolus_iob_label">Болюс IOB</string>
+    <string name="treatments_wizard_basaliob_label">Базал IOB</string>
+    <string name="paused">на паузе</string>
+    <string name="invalid">НЕВЕРНО</string>
+    <string name="login">Логин</string>
+    <string name="overview_insulin_label">Инсулин</string>
+    <string name="stoptemptarget">Остановить врем цель</string>
+    <string name="closedloop">Замкнутый цикл</string>
+    <string name="openloop">открытый цикл</string>
+    <string name="lowglucosesuspend">Приостановка помпы на низкой ГК</string>
+    <string name="confirm">Подтверждаю</string>
+    <string name="dia">Время действия инсулина DIA</string>
+    <string name="ic_short">IC углкоэф ГУ/инс</string>
+    <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -155,12 +166,6 @@
     <string name="itmustbepositivevalue">величина должна быть положительной</string>
     <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">помпа не инициализирована, профиль не установлен</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Подтверждение</string>
-    <string name="message">Сообщение</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Отменить</string>
-    <string name="dismiss">ОТКЛОНИТЬ</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth с низким энергопотреблением не поддерживается.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy не поддерживается или устройство не сопряжено.</string>
@@ -181,10 +186,7 @@
     <string name="profile_carbs_per_unit">г/ед</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
     <!--    APSResult-->
-    <string name="canceltemp">отмена врем базала</string>
     <string name="let_temp_basal_run">Оставить временный базал работающим</string>
     <string name="rate">Скорость</string>
     <string name="duration">Продолжительность</string>
@@ -206,12 +208,9 @@
     <string name="careportal_note_message">Примечание: %1$s</string>
     <string name="careportal_question_message">Вопрос: %1$s</string>
     <string name="careportal_exercise_message">Нагрузка: %1$s</string>
-    <string name="careportal_pumpsitechange">Смена места катетера помпы</string>
-    <string name="careportal_cgmsensorinsert">Установка сенсора мониторинга глюкозы</string>
     <string name="careportal_cgmsensorstart">Сарт сенсора</string>
     <string name="careportal_cgm_sensor_stop">Останов сенсора мониторинга</string>
     <string name="careportal_dad_alert">Сигнал служебной собаки</string>
-    <string name="careportal_insulincartridgechange">Замена картриджа инсулина</string>
     <string name="careportal_profileswitch">Смена профиля</string>
     <string name="careportal_snackbolus">Болюс на перекус</string>
     <string name="careportal_mealbolus">Болюс на еду</string>
@@ -221,8 +220,6 @@
     <string name="careportal_tempbasalend">Оконч действия врем базала</string>
     <string name="careportal_carbscorrection">Коррекция углеводов</string>
     <string name="careportal_openapsoffline">OpenAPS в автономном режиме</string>
-    <string name="careportal_pumpbatterychange">Замена батареи помпы</string>
-    <string name="careportal_temporarytarget">Временная цель</string>
     <string name="careportal_temporarytargetvalue">Временное целевое значение</string>
     <string name="careportal_temporarytargetcancel">Отмена временной цели</string>
     <string name="boluswizard">Мастер Болюса</string>
@@ -272,7 +269,6 @@
     <string name="tbb2">общий базал*2</string>
     <!--    Ntp-->
     <string name="timedetection">Определение времени</string>
-    <string name="format_hour_minute">%1$dч %2$dмин</string>
     <string name="mute5min">Отключить уведомления на 5 минут</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
@@ -304,14 +300,6 @@
     <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AAPS из системных настроек \n иначе AAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Пн</string>
-    <string name="tuesday_short">Вт</string>
-    <string name="wednesday_short">Ср</string>
-    <string name="thursday_short">Чт</string>
-    <string name="friday_short">Пт</string>
-    <string name="saturday_short">Сб</string>
-    <string name="sunday_short">Вс</string>
     <!-- User Entry -->
     <string name="uel_bolus">БОЛЮС</string>
     <string name="uel_bolus_calculator">КАЛЬКУЛЯТОР БОЛЮСА</string>
@@ -442,7 +430,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive Базал устарел.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Нажато подключ к помпе</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Замена драйвера помпы.</string>
     <string name="device_changed" comment="26 characters max for translation">Устройство изменено</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Нажато обновление</string>
@@ -453,8 +440,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
     <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
-    <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
-    <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
@@ -513,9 +498,36 @@
     <string name="autotune_run_with_autoswitch">Autotune выполнен и профиль переключён автоматически</string>
     <string name="autotune_run_with_error">Ошибка во время последнего выполнения Autotune</string>
     <string name="autotune_run_cancelled">Обнаружен другой запуск Autotune, выполнение отменено</string>
-    <string name="needconnectpermission">Приложению требуется разрешение Bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Использовать системные уведомления для предупреждений и уведомлений</string>
+    <string name="urgent_alarm">Сигнал тревоги</string>
+    <string name="info">ИНФОРМАЦИЯ</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
+    <!-- BolusWizard -->
+    <string name="bolus_advisor">Помощник болюса</string>
+    <string name="bolus_advisor_message">У вас высокая гликемия. Лучше подождать, чем есть сейчас. Хотите сделать болюс на коррекцию и установить напоминание о приеме пищи? В этом случае углеводы не будут записаны и после напоминания надо будет снова воспользоваться помощником.</string>
+    <string name="cobvsiob">угл COB к инс IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
+    <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
+    <string name="advisoralarm">Напомнить о еде</string>
+    <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
+    <string name="wizard_no_actual_bg">Нет данных ГК для основы расчета!</string>
+    <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
+    <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>
+    <string name="wizard_carbs_constraint">Нарушено ограничение по углеводам!</string>
+    <string name="wizard_explain_calc">Кальк (IC:%1$.1f ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Углеводов: %1$.2fгУ</string>
+    <string name="wizard_explain_cob">Акт Инс COB: %1$.0fг %2$.2fед</string>
+    <string name="wizard_explain_bg">ГК: %1$.2f</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fед</string>
+    <string name="wizard_explain_superbolus">Суперболюс:%1$.2fед</string>
+    <string name="wizard_explain_trend">тренд 15\': %1$.2f</string>
+    <string name="wizard_explain_percent">В процентах: %1$.2fед x %2$d%% = %3$.2f</string>
+    <string name="wizard_constraint_bolus_size">Нарушено ограничение по инсулину!\nНевозможно подать %1$.2fед</string>
+    <string name="wizard_explain_tt">ВремЦ: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s до %2$s</string>
+    <string name="wizard_pump_not_available">Нет помпы!</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">Justér følsomhed og BG</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamiskISF-justeringsfaktor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for DynamiskISF. Indstil mere end 100% for mere aggressive korrektionsdoser og mindre end 100% for mindre aggressive korrektioner.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Høj midlertidig basal øger sensitivitet</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Hæv følsomheden for midlertidige basaler >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Lav midlertidig basal sænker sensitivitet</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Nedsæt sensitivitet for midlertidige mål < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
+    <string name="resistance_lowers_target_title">Resistens sænker midlertidige mål</string>
+    <string name="resistance_lowers_target_summary">Når der påvises resistens, sænkes målglukosen</string>
+    <string name="sensitivity_raises_target_title">Følsomhed hæver midlertidige mål</string>
+    <string name="sensitivity_raises_target_summary">Når der påvises følsomhed, skal målglukosen hæves</string>
+    <string name="openapsma_disabled">Plugin deaktiveret</string>
+    <string name="dynisf_shortname">DynISF</string>
+    <string name="executing">Udfører</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Række af %1$d elementer.\nFaktisk værdi:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Status for algoritmen i 2017</string>
+    <string name="description_smb">Seneste algoritme for avancerede brugere</string>
+    <string name="description_smb_dynamic_isf">Seneste algoritme for avancerede brugere med dynamisk/automatisk ISF</string>
+    <string name="openapsma_run">Kør nu</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="result">Resultat</string>
+    <string name="openapsma_request_label">Anmod</string>
+    <string name="constraints">Begrænsninger</string>
+    <string name="openapsma_autosensdata_label">Autosens data</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Standardværdi: 3 Dette er en vigtig OpenAPS sikkerhedsforanstaltning. Hvad dette gør, er at begrænse dine basaler til at være 3x din største basal rate. Du vil sandsynligvis ikke være nødt til at ændre dette, men du skal være opmærksom på, at det er hvad der er omtalt som “3x max dagligt; 4x aktuel” i sikkerhedsforanstaltningerne.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Standardværdi: 4 Dette er den anden halvdel af de vigtigste OpenAPS-sikkerhedsforanstaltninger, og den anden halvdel af \"3x maks. daglig, 4x aktuel\" i sikkerhedsforanstaltningerme. Det betyder, at din basal, uanset maks. basalrate på din pumpe, ikke kan være højere end dette antal gange det aktuelle niveau af din basal. Det er for at forhindre folk i at komme ind på et farligt område ved at opstille for høje maks basaler, før man forstår, hvordan algoritmen fungerer. Igen er standardværdien 4x; de fleste mennesker behøver aldrig at rette dette og i stedet være mere tilbøjelige til at tilpasse andre indstillinger, hvis de føler, at de er \"ved at løbe ind i\" denne sikkerhedsforanstaltning.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Maks daglig basal multiplikator</string>
+    <string name="openapsama_current_basal_safety_multiplier">Nuværende basal sikkerheds multiplikator</string>
+    <string name="openapsama_autosens_max_summary">Standardværdi: 1.2\nDette er en multiplikator top for autosens (og snart autotune) for at angive en 20%% maks. grænse for, hvor høj autosens kan være, hvilket til gengæld bestemmer, hvor høj autosens kan tilpasse sig, hvor lav den kan justere ISF, og hvor lav den kan angive BG-målet.</string>
+    <string name="openapsama_autosens_min_summary">Standardværdi: 0,7\nDen anden side af autosens sikkerhedsgrænser, idet den sætter en begrænsning på, hvor lavt autosen kan justere basalerne, og hvor høj den kan justere ISF-og BG-målene.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">max værdi i præferencer</string>
+    <string name="hardlimit">hård grænse</string>
+    <!--    Autotune   -->
+</resources>

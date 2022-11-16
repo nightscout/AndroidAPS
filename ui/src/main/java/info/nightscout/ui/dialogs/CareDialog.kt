@@ -15,9 +15,9 @@ import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toCurrentUnitsString
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -85,9 +85,9 @@ class CareDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        savedInstanceState?.let {
-            event = savedInstanceState.getInt("event", R.string.error)
-            options = ActivityNames.EventType.values()[savedInstanceState.getInt("options", 0)]
+        (savedInstanceState ?: arguments)?.let {
+            event = it.getInt("event", R.string.error)
+            options = ActivityNames.EventType.values()[it.getInt("options", 0)]
         }
 
         binding.icon.setImageResource(

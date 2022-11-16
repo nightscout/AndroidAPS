@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">Ajuster la sensibilité et la glycémie</string>
+    <string name="DynISFAdjust_title" formatted="false">Facteur d\'ajustement Si dynamique %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Facteur d\'ajustement pour Si dynamique. Définissez plus de 100 % pour des corrections plus agressives et moins de 100 % pour des corrections moins agressives.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Cible temp. haute élève la sensibilité</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmente la Sensibilité pour les cibles temporaires >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Cible temp. basse abaisse la sensibilité</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Diminue la Sensibilité pour les cibles temporaires < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">SI dynamique</string>
+    <string name="resistance_lowers_target_title">Résistance diminue la cible</string>
+    <string name="resistance_lowers_target_summary">Quand une résistance est détectée, baisse de la glycémie cible</string>
+    <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
+    <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
+    <string name="openapsma_disabled">Plugin désactivé</string>
+    <string name="dynisf_shortname">DynSI</string>
+    <string name="executing">Exécution en cours</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Tableau de %1$d éléments.\nValeur Actuelle :</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">État de l’algorithme en 2017</string>
+    <string name="description_smb">Algorithme le plus récent pour les utilisateurs avancés</string>
+    <string name="description_smb_dynamic_isf">Algorithme le plus récent pour les utilisateurs avancés avec SI dynamique/automatique</string>
+    <string name="openapsma_run">Exécuter maintenant</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="result">Résultats</string>
+    <string name="openapsma_request_label">Requête</string>
+    <string name="constraints">Restrictions</string>
+    <string name="openapsma_autosensdata_label">Données Autosens</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Multiplicateur max quotidien de sécurité</string>
+    <string name="openapsama_current_basal_safety_multiplier">Multiplicateur de sécurité basale courante</string>
+    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20% en limite maximale du ratio Autosens. En consequence, ceci va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI), et la valeur minimale de la cible glycémique.</string>
+    <string name="openapsama_autosens_min_summary">Valeur par défaut: 0,7\nL\'autre volet des limites de sécurité de l\'autosens, c\'est de définir une limite basse sur l\'ajustement des débits de basal et une limite haute sur l\'ajustement de la SI et des cibles GLY effectués par l\'autosens.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
+    <string name="hardlimit">limite fixée</string>
+    <!--    Autotune   -->
+</resources>

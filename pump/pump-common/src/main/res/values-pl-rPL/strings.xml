@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Numer seryjny pompy</string>
     <string name="bolus_delivered">podano %1$.2f U / %2$.2f U</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nigdy nie połączona</string>
-    <string name="pump_status_waking_up">Wybudzanie</string>
-    <string name="pump_status_error_comm">Błąd komunikacji</string>
-    <string name="pump_status_timeout_comm">Przekroczony limit czasu połączenia</string>
-    <string name="pump_status_pump_unreachable">Pompa nieosiągalna</string>
-    <string name="pump_status_invalid_config">Nieprawidłowe ustawienia</string>
-    <string name="pump_status_active">Aktywna</string>
-    <string name="pump_status_sleeping">Uśpiona</string>
     <string name="pump_status_not_initialized">Nie zainicjowany</string>
     <string name="pump_status_suspended">Wstrzymany</string>
     <!-- PumpCommon - History Group -->

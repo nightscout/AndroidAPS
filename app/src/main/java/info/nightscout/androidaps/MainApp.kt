@@ -17,7 +17,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.di.DaggerAppComponent
-import info.nightscout.androidaps.di.StaticInjector
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
@@ -75,7 +74,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
+    @Suppress("unused") @Inject lateinit var staticInjector: info.nightscout.plugins.aps.utils.StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore

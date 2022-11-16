@@ -9,9 +9,9 @@ buildscript {
         rxkotlin_version = '3.0.1'
         room_version = '2.4.3'
         lifecycle_version = '2.5.1'
-        dagger_version = '2.44'
+        dagger_version = '2.44.2'
         coroutines_version = '1.6.4'
-        activity_version = '1.4.0'
+        activity_version = '1.6.1'
         fragmentktx_version = '1.5.4'
         ormLite_version = '4.46'
         gson_version = '2.10'
@@ -67,7 +67,8 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.21.0"
+    // Test Gradle build, keep disabled under normal circumstances
+    // id "com.osacky.doctor" version "0.8.1"
     id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
     id 'org.barfuin.gradle.jacocolog' version '2.0.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
@@ -94,6 +95,8 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
+
+    apply plugin: 'org.jlleitschuh.gradle.ktlint'
 }
 
 apply from: 'jacoco_project.gradle'

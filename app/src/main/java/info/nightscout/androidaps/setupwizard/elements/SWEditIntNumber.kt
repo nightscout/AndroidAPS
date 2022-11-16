@@ -8,8 +8,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWIntNumberValidator
+import info.nightscout.core.ui.elements.NumberPicker
 import info.nightscout.shared.SafeParse
-import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
 class SWEditIntNumber(injector: HasAndroidInjector, private val init: Int, private val min: Int, private val max: Int) : SWItem(injector, Type.NUMBER) {

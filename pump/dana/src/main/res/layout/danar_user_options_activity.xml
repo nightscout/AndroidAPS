@@ -177,7 +177,7 @@
                 android:text="@string/danar_screentimeout"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/screentimeout"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -214,7 +214,7 @@
                 android:text="@string/danar_backlight"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/backlight"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -270,7 +270,7 @@
                 android:text="@string/danar_shutdown"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/shutdown"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -307,7 +307,7 @@
                 android:text="@string/danar_lowreservoir"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/lowreservoir"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"

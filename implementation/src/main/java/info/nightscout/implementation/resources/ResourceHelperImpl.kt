@@ -18,7 +18,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
-import info.nightscout.androidaps.utils.resources.getThemeColor
+import info.nightscout.core.ui.getThemeColor
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
 import info.nightscout.shared.interfaces.ResourceHelper

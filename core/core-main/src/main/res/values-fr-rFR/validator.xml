@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_only_numeric_digits_allowed">Seuls les chiffres sont autorisés.</string>
+    <string name="error_only_numeric_digits_allowed">Seuls les chiffres sont autorisés</string>
     <string name="error_only_numeric_digits_range_allowed">Seuls les chiffres entre %1$s et %2$s sont autorisés.</string>
     <string name="error_this_field_cannot_contain_special_character">Ce champ ne doit pas contenir de caractères spéciaux</string>
     <string name="error_only_standard_letters_are_allowed">Seules les lettres sont autorisées</string>

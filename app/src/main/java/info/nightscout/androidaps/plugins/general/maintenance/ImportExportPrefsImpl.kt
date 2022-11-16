@@ -27,13 +27,12 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog
-import info.nightscout.androidaps.utils.alertDialogs.TwoMessagesAlertDialog
-import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -173,10 +172,10 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
         if (!sp.contains(R.string.key_master_password) || (sp.getString(R.string.key_master_password, "") == "")) {
-            WarningDialog.showWarning(activity,
-                                      rh.gs(wrongPwdTitle),
-                                      rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
-                                      R.string.nav_preferences, {
+            info.nightscout.core.ui.dialogs.WarningDialog.showWarning(activity,
+                                                                      rh.gs(wrongPwdTitle),
+                                                                      rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
+                                                                      R.string.nav_preferences, {
                                           val intent = Intent(activity, PreferencesActivity::class.java).apply {
                                               putExtra("id", R.xml.pref_general)
                                           }

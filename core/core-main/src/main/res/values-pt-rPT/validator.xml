@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="error_only_numeric_digits_allowed">Apenas dígitos numéricos são permitidos.</string>
+    <string name="error_only_numeric_digits_allowed">Apenas digitos numéricos são permitidos.</string>
     <string name="error_only_numeric_digits_range_allowed">Apenas são permitidos dígitos numéricos dentro do intervalo de %1$s - %2$s.</string>
     <string name="error_this_field_cannot_contain_special_character">Este campo não pode conter qualquer caractere especial</string>
     <string name="error_only_standard_letters_are_allowed">Apenas letras padrão são permitidas</string>

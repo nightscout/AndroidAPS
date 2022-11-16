@@ -1,10 +1,24 @@
 package info.nightscout.androidaps.utils.protection
 
 import androidx.biometric.BiometricPrompt
-import androidx.biometric.BiometricPrompt.*
+import androidx.biometric.BiometricPrompt.AuthenticationResult
+import androidx.biometric.BiometricPrompt.ERROR_CANCELED
+import androidx.biometric.BiometricPrompt.ERROR_HW_NOT_PRESENT
+import androidx.biometric.BiometricPrompt.ERROR_HW_UNAVAILABLE
+import androidx.biometric.BiometricPrompt.ERROR_LOCKOUT
+import androidx.biometric.BiometricPrompt.ERROR_LOCKOUT_PERMANENT
+import androidx.biometric.BiometricPrompt.ERROR_NEGATIVE_BUTTON
+import androidx.biometric.BiometricPrompt.ERROR_NO_BIOMETRICS
+import androidx.biometric.BiometricPrompt.ERROR_NO_DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt.ERROR_NO_SPACE
+import androidx.biometric.BiometricPrompt.ERROR_TIMEOUT
+import androidx.biometric.BiometricPrompt.ERROR_UNABLE_TO_PROCESS
+import androidx.biometric.BiometricPrompt.ERROR_USER_CANCELED
+import androidx.biometric.BiometricPrompt.ERROR_VENDOR
+import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.core.main.R
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.shared.extensions.runOnUiThread
 import java.util.concurrent.Executors
 

@@ -1,4 +1,4 @@
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventBucketedDataCreated
+import info.nightscout.rx.events.EventBucketedDataCreated
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.rx.bus.RxBus

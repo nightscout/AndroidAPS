@@ -19,7 +19,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
-import info.nightscout.plugins.utils.Percentile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -163,8 +162,8 @@ class SensitivityOref1Plugin @Inject constructor(
             val sens = profile.getIsfMgdl()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
-            val pSensitive = Percentile.percentile(deviations, 0.50)
-            val pResistant = Percentile.percentile(deviations, 0.50)
+            val pSensitive = info.nightscout.plugins.aps.utils.Percentile.percentile(deviations, 0.50)
+            val pResistant = info.nightscout.plugins.aps.utils.Percentile.percentile(deviations, 0.50)
             var basalOff = 0.0
             when {
                 pSensitive < 0 -> { // sensitive

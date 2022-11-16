@@ -36,5 +36,7 @@ dependencies {
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
     api "androidx.room:room-rxjava3:$room_version"
+    implementation project(path: ':core:ui')
+    implementation project(path: ':core:ui')
     kapt "androidx.room:room-compiler:$room_version"
 }

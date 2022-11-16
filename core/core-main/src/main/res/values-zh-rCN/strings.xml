@@ -12,14 +12,9 @@
     <string name="tempbasaldeliveryerror">临时基础输注错误</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
     <string name="waitingforpump">正在等待泵</string>
-    <string name="connectingfor">正在连接 %1$d 秒</string>
     <string name="bolusdelivering">正在输注 %1$.2f U</string>
-    <string name="handshaking">握手</string>
     <string name="connecting">正在连接</string>
-    <string name="connected">已连接</string>
     <string name="disconnected">已断开连接</string>
-    <string name="disconnecting">正在断开连接</string>
-    <string name="waiting_for_disconnection">正在等待连接</string>
     <string name="formatinsulinunits1">%1$.1f U</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
@@ -38,7 +33,6 @@
     <string name="stoppressed">停止键按下了</string>
     <string name="stop">停止</string>
     <string name="carbs">碳水化合物</string>
-    <string name="noprofileset">没有设置配置文件</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
     <string name="units_label">单位</string>
@@ -50,6 +44,7 @@
     <string name="dia_long_label">胰岛素作用持续时间DIA</string>
     <string name="ic_long_label">碳水化合物系数（ICR）</string>
     <string name="isf_long_label">胰岛素敏感系数ISF</string>
+    <string name="basal_long_label">基础率</string>
     <string name="target_long_label">血糖目标</string>
     <string name="initializing">正在初始化</string>
     <string name="serialnumber">序列号</string>
@@ -57,9 +52,9 @@
     <string name="lastconnection_label">上次连接</string>
     <string name="lastbolus_label">上次大剂量</string>
     <string name="dailyunits">每日单位数</string>
-    <string name="basebasalrate_label">基础率</string>
+    <string name="base_basal_rate_label">基础率</string>
     <string name="tempbasal_label">临时基础率</string>
-    <string name="virtualpump_extendedbolus_label">扩展大剂量(方波)</string>
+    <string name="extended_bolus_label">扩展大剂量(方波)</string>
     <string name="reservoir_label">储药器</string>
     <string name="pumphistory">泵历史记录</string>
     <string name="viewprofile">查看配置文件</string>
@@ -71,10 +66,8 @@
     <string name="advancedsettings_title">高级设置</string>
     <string name="bluetooth">蓝牙</string>
     <string name="btwatchdog_title">蓝牙看门狗</string>
-    <string name="btwatchdog_summary">如果没有连接到泵，关闭手机的蓝牙一秒钟再自动打开。这在一些蓝牙堆栈僵死的手机上是有帮助的,</string>
+    <string name="btwatchdog_summary">如果无法与泵连接，将关闭手机的蓝牙一秒钟后再自动打开。在一些蓝牙堆栈僵死的手机上是有帮助的。</string>
     <string name="pairing">配对中</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
     <string name="loopdisabled">按约束条件禁用循环</string>
     <string name="bolusdelivered">成功输注大剂量 %1$.2f U</string>
     <string name="virtualpump_resultok">确定</string>
@@ -104,19 +97,23 @@
     <string name="time">时间</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">正在加载…</string>
-    <string name="event_time_label">事件时间</string>
     <string name="notes_label">备注</string>
     <string name="remove_button">删除</string>
     <string name="addnew">添加新条目</string>
     <string name="addnew_above">在顶部新增</string>
     <string name="wrong_pump_data">数据来自不同的胰岛素泵，修改泵的驱动配置用来重置泵的状态。</string>
+    <string name="bg_label">血糖</string>
+    <string name="calibration">校准</string>
     <string name="alarminxmin">在 %1$d 分钟内运行提醒</string>
     <string name="treatmentdeliveryerror">大剂量输注报告了一个错误。请手动检查真实输注量</string>
+    <string name="bolus_reminder">大剂量提醒</string>
+    <string name="duration_label">持续时间</string>
     <string name="shortgramm">克</string>
     <string name="pumpsuspended">泵暂停了</string>
     <string name="notconfigured">未配置</string>
     <string name="loopsuspended">闭环暂停了</string>
     <string name="trend_arrow">趋势箭头</string>
+    <string name="a11y_autosens_label">自动敏感度</string>
     <string name="value_unavailable_short">无可用</string>
     <string name="required">要</string>
     <string name="a11y_arrow_double_down">迅速下降</string>
@@ -140,6 +137,27 @@
     <string name="reset">重置</string>
     <string name="profileswitch_ismissing">配置文件切换缺失。请做一次配置文件切换或者在本地配置文件里按“激活配置文件”</string>
     <string name="profile">配置文件</string>
+    <string name="select_for_removal">选择要删除的</string>
+    <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
+    <string name="overview_treatment_label">治疗</string>
+    <string name="copytolocalprofile">是否复制这个配置文件的参数来创新一个新的配置文件？</string>
+    <string name="wear_wizard_settings">向导设置</string>
+    <string name="bg_trend_label">15分钟 趋势</string>
+    <string name="treatments_wizard_cob_label">碳水</string>
+    <string name="bolus_iob_label">大剂量活性胰岛素IOB</string>
+    <string name="treatments_wizard_basaliob_label">基础 IOB</string>
+    <string name="paused">已暂停</string>
+    <string name="invalid">无效</string>
+    <string name="login">登录</string>
+    <string name="overview_insulin_label">胰岛素</string>
+    <string name="stoptemptarget">停止临时目标</string>
+    <string name="closedloop">闭环</string>
+    <string name="openloop">开环</string>
+    <string name="lowglucosesuspend">低血糖维持模式</string>
+    <string name="confirm">确认</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
@@ -147,12 +165,6 @@
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
     <string name="pumpNotInitializedProfileNotSet">泵未初始化, 配置文件未设置!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">确认</string>
-    <string name="message">消息</string>
-    <string name="ok">确定</string>
-    <string name="cancel">取消</string>
-    <string name="dismiss">忽略</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
     <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
@@ -172,10 +184,7 @@
     <string name="profile_carbs_per_unit">克/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">启动配置文件 %1$d%%在 %2$d 分钟</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">*在虚拟泵中，基础率/大剂量仅支持离散值，不支持范围值。</string>
     <!--    APSResult-->
-    <string name="canceltemp">取消临时基础率</string>
     <string name="let_temp_basal_run">让临时基础率运行</string>
     <string name="rate">比率</string>
     <string name="duration">持续时间</string>
@@ -197,12 +206,9 @@
     <string name="careportal_note_message">备注： %1$s</string>
     <string name="careportal_question_message">问题 : %1$s</string>
     <string name="careportal_exercise_message">运动 : %1$s</string>
-    <string name="careportal_pumpsitechange">泵更换管路</string>
-    <string name="careportal_cgmsensorinsert">CGM 传感器插入</string>
     <string name="careportal_cgmsensorstart">CGM 传感器启动</string>
     <string name="careportal_cgm_sensor_stop">CGM 传感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警告</string>
-    <string name="careportal_insulincartridgechange">更换储药器</string>
     <string name="careportal_profileswitch">配置文件切换</string>
     <string name="careportal_snackbolus">零食大剂量</string>
     <string name="careportal_mealbolus">餐时大剂量</string>
@@ -212,8 +218,6 @@
     <string name="careportal_tempbasalend">临时基础率结束</string>
     <string name="careportal_carbscorrection">碳水化合物校正</string>
     <string name="careportal_openapsoffline">OpenAPS 离线</string>
-    <string name="careportal_pumpbatterychange">更换泵电池</string>
-    <string name="careportal_temporarytarget">临时目标</string>
     <string name="careportal_temporarytargetvalue">临时目标值</string>
     <string name="careportal_temporarytargetcancel">临时目标取消</string>
     <string name="boluswizard">大剂量向导</string>
@@ -261,7 +265,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">时间检测</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">静音 5 分钟</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">已导出 %1$s</string>
@@ -292,14 +295,6 @@
     <string name="versionavailable">版本 %1$s 可用</string>
     <string name="version_expire">版本 %1$s 将在 %2$s 过期</string>
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
-    <string name="monday_short">周一</string>
-    <string name="tuesday_short">周二</string>
-    <string name="wednesday_short">周三</string>
-    <string name="thursday_short">周四</string>
-    <string name="friday_short">周五</string>
-    <string name="saturday_short">周六</string>
-    <string name="sunday_short">周日</string>
     <!-- User Entry -->
     <string name="uel_bolus">大剂量</string>
     <string name="uel_bolus_calculator">大剂量向导</string>
@@ -428,7 +423,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">状态保持. 基础率超时</string>
     <string name="sms" comment="26 characters max for translation">手机SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">单击连接到泵</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">泵驱动程序已变更</string>
     <string name="pump_driver_change" comment="26 characters max for translation">泵驱动程序变更</string>
     <string name="device_changed" comment="26 characters max for translation">设备已更改</string>
     <string name="clicked_refresh" comment="26 characters max for translation">点击刷新</string>
@@ -439,8 +433,6 @@
     <string name="bolus_ok" comment="26 characters max for translation">大剂量完成</string>
     <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
-    <string name="a11y_min_button_description">将%1$s 减少 %2$s</string>
-    <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">基础率</string>
     <string name="basalpct">基础率 %</string>
@@ -452,8 +444,79 @@
     <string name="a11y_file">文件</string>
     <string name="a11y_user">用户</string>
     <!-- Autotune -->
-    <string name="needconnectpermission">应用程序需要蓝牙权限。</string>
+    <string name="autotune">自动调整</string>
+    <string name="autotune_description">帮助对配置文件进行潜在调整（胰岛素敏感系数、碳水化合物系数和基础率）</string>
+    <string name="autotune_shortname">自动调整</string>
+    <string name="autotune_settings">自动调整设置</string>
+    <string name="autotune_auto_title">自动化配置开关</string>
+    <string name="autotune_auto_summary">如果启用，Autotune 将在根据自动化规则计算后自动更新并切换到输入配置文件</string>
+    <string name="autotune_categorize_uam_as_basal_title">将 UAM 归类为基础率</string>
+    <string name="autotune_categorize_uam_as_basal_summary">仅当您可靠地输入了所有摄入的碳水化合物时才启用，使用此选项Autotune观测到血糖突然上升将用于建议更改基础率</string>
+    <string name="autotune_tune_insulin_curve_title">调整胰岛素曲线</string>
+    <string name="autotune_tune_insulin_curve_summary">仅当您使用自由峰值胰岛素模型时时才启用，此选项将调整胰岛素峰值和DIA持续时间</string>
+    <string name="autotune_default_tune_days_title">数据天数</string>
+    <string name="autotune_circadian_ic_isf_title">在昼夜 IC/ISF 中应用平均结果</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune 不会调整昼夜节律变化，此选项仅将 IC 和 ISF 的平均调整应用于您的昼夜节律输入配置文件中</string>
+    <string name="autotune_additional_log_title">包含更多用于调试的日志信息</string>
+    <string name="autotune_additional_log_summary">仅当开发人员要求发送更多日志信息以帮助调试 Autotune 插件时才打开</string>
+    <string name="autotune_default_tune_days_summary">Autotune 处理数据的默认天数（最多 30 天）</string>
+    <string name="autotune_tunedprofile_name">已调整</string>
+    <string name="autotune_profile">配置文件：</string>
+    <string name="autotune_tune_days">调整天数</string>
+    <string name="autotune_last_run">上一次运行</string>
+    <string name="autotune_warning">警告 :</string>
+    <string name="autotune_select_profile">选择配置文件去协调</string>
+    <string name="autotune_ic_warning">选定的配置文件包含 %1$d 个 IC 值。自动调整将使用 %2$.2f g/U</string>
+    <string name="autotune_isf_warning">选定的配置文件包含 %1$d 个 ISF 值。自动调节将使用 %2$.1f %3$s/U</string>
+    <string name="autotune_error">输入数据错误，尝试再次运行自动调谐或减少天数</string>
+    <string name="autotune_warning_during_run">自动协调计算开始，请耐心等待</string>
+    <string name="autotune_warning_after_run">使用前请仔细检查结果！</string>
+    <string name="autotune_partial_result">部分结果天数 %1$d / %2$d 已调整</string>
+    <string name="autotune_result">结果: %1$s</string>
+    <string name="autotune_param">参数</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">缺失</string>
+    <string name="autotune_profile_name">自动协调配置文件 %1$s</string>
+    <string name="autotune_run">运行自动协调</string>
+    <string name="autotune_check_input_profile_button">检查输入配置</string>
+    <string name="autotune_compare_profile">比较配置文件</string>
+    <string name="autotune_copy_localprofile_button">复制到本地配置文件</string>
+    <string name="autotune_update_input_profile_button">更新输入配置文件</string>
+    <string name="autotune_revert_input_profile_button">检查输入配置</string>
+    <string name="autotune_copy_local_profile_message">从此 Autotune 配置文件创建新的本地配置文件？</string>
+    <string name="autotune_update_local_profile_message">用 Autotune 配置文件更新 %1$s 配置文件？</string>
+    <string name="autotune_revert_local_profile_message">使用输入配置文件还原 %1$s 配置文件？</string>
+    <string name="autotune_profile_invalid">配置文件无效</string>
+    <string name="autotune_run_with_error">上次 Autotune 运行期间出错</string>
+    <string name="autotune_run_cancelled">检测到另一次自动调试运行，本次运行已取消</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
+    <string name="urgent_alarm">紧急报警</string>
+    <string name="info">信息</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">缺少 SMS 短信权限</string>
+    <!-- BolusWizard -->
+    <string name="cobvsiob">活性碳水vs活性胰岛素</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 检测到碳水化合物吸收缓慢：%2$d%%的时间。再次检查你的计算。COB可能被高估，因此可以给予更多胰岛素!!!!!</font>]]></string>
+    <string name="partialboluswizard">输注大剂量向导结果的一部分[%]</string>
+    <string name="advisoralarm">在应当吃饭时提醒</string>
+    <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
+    <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
+    <string name="wizard_no_active_profile">没有激活的个人配置文件！</string>
+    <string name="wizard_no_cob">未知的活性碳水！血糖读取缺失或最近重新启动了应用程序？</string>
+    <string name="wizard_carbs_constraint">碳水违反约束条件!</string>
+    <string name="wizard_explain_calc">计算 (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">碳水: %1$.2fU</string>
+    <string name="wizard_explain_cob">活性碳水: %1$.0f克 %2$.2fU</string>
+    <string name="wizard_explain_bg">血糖: %1$.2fU</string>
+    <string name="wizard_explain_iob">活性胰岛素: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">超级大剂量：%1$.2fU</string>
+    <string name="wizard_explain_trend">15分钟趋势：%1$.2fU</string>
+    <string name="wizard_explain_percent">百分比：%1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">胰岛素剂量违法约束！\n无法输注 %1$.2fU</string>
+    <string name="wizard_explain_tt">临时目标：%1$s</string>
+    <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
+    <string name="wizard_pump_not_available">没有可用的泵！</string>
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>

@@ -35,7 +35,6 @@ import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
@@ -45,17 +44,17 @@ import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.ui.SingleClickButton
-import info.nightscout.androidaps.utils.ui.UIRunnable
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.toSignedUnitsString
 import info.nightscout.core.profile.toTargetRangeString
 import info.nightscout.core.profile.toUnits
+import info.nightscout.core.ui.UIRunnable
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.elements.SingleClickButton
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -1122,7 +1121,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
-            if (config.APS && request is DetermineBasalResultSMB) request.variableSens ?: 0.0
+            if (config.APS && request is info.nightscout.plugins.aps.openAPSSMB.DetermineBasalResultSMB) request.variableSens ?: 0.0
             else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
             else 0.0
 
