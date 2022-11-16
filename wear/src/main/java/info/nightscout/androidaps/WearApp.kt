@@ -17,7 +17,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
-class Aaps : DaggerApplication(), OnSharedPreferenceChangeListener {
+class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus

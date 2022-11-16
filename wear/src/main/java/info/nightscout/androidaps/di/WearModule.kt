@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.Binds
 import dagger.Module
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Aaps
+import info.nightscout.androidaps.WearApp
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
@@ -24,8 +24,8 @@ open class WearModule {
     @Module
     interface AppBindings {
 
-        @Binds fun bindContext(aaps: Aaps): Context
-        @Binds fun bindInjector(aaps: Aaps): HasAndroidInjector
+        @Binds fun bindContext(aaps: WearApp): Context
+        @Binds fun bindInjector(aaps: WearApp): HasAndroidInjector
     }
 }
 
