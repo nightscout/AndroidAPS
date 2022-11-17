@@ -4,7 +4,8 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import info.nightscout.automation.ui.WeekdayPicker
 import info.nightscout.automation.R
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.collections.ArrayList
 
 class InputWeekDay : Element() {
