@@ -24,4 +24,8 @@ dependencies {
     implementation project(':interfaces')
 
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    api "androidx.fragment:fragment-ktx:$fragmentktx_version"
+    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
+
+    api "com.google.android.material:material:$material_version"
 }

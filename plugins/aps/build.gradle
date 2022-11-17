@@ -26,6 +26,7 @@ dependencies {
     implementation project(':interfaces')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_version"
 
     // APS
     api 'org.mozilla:rhino:1.7.14'
