@@ -56,7 +56,8 @@ def generateGitRemote = { ->
 
 def generateDate = { ->
     StringBuilder stringBuilder = new StringBuilder()
-    stringBuilder.append((new Date()).format('yyyy.MM.dd-HH:mm'))
+    // showing only date prevents app to rebuild everytime
+    stringBuilder.append((new Date()).format('yyyy.MM.dd'))
     return stringBuilder.toString()
 }
 
