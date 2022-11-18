@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
-    <string name="description_loop">Activer ou désactiver la mise en œuvre déclenchant la Boucle.</string>
     <string name="description_overview">Affiche l’état actuel de votre Boucle et des boutons d’actions les plus courantes</string>
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
@@ -35,16 +34,10 @@
     <string name="configbuilder_constraints_description">Quelles restrictions sont appliquées ?</string>
     <string name="configbuilder_loop">Boucle</string>
     <string name="configbuilder_loop_description">Utilisez ceci pour activer l’intégration de la boucle AAPS.</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Après traitement des restrictions</string>
-    <string name="loop_tbrsetbypump_label">Basal temporaire défini par la pompe</string>
-    <string name="noapsselected">Pas d\'APS sélectionné ou pas de résultat fourni</string>
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="changeyourinput">Changez vos entrées !</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
-    <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
-    <string name="carbssuggestion">Suggestion de glucides</string>
     <string name="profile_label">Profil</string>
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
     <string name="exported">Préférences exportées</string>
@@ -85,7 +78,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="correctionbous">Corr.</string>
     <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
     <string name="ns_upload_only_summary">Envoi NS uniquement (sync désactivée). Inactif sur les Glycémie des capteurs sauf si une source locale comme xDrip+ est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip+) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
-    <string name="pumpNotInitialized">Pompe non initialisée !</string>
     <string name="units">Unités</string>
     <string name="prefs_range_title">Fourchette de visualisation</string>
     <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l\'aperçu et la montre</string>
@@ -97,7 +89,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ongoingnotificaction">Notification en cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">BOUCLE</string>
     <string name="overview_shortname">ACCUEIL</string>
     <string name="treatments_shortname">TRAIT</string>
     <string name="wear_shortname">WEAR</string>
@@ -177,9 +168,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="carb_increment_button_message">Nombre de glucides à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
     <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
-    <string name="ignore5m">Ignorer 5m</string>
-    <string name="ignore15m">Ignorer 15m</string>
-    <string name="ignore30m">Ignorer 30m</string>
     <string name="wear_notifysmb_title">Notifier en SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de montre.</string>
@@ -189,7 +177,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
     <string name="g5appnotdetected">SVP actualisez votre app Dexcom vers une version compatible</string>
     <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
-    <string name="loop_smbsetbypump_label">SMB défini par la pompe</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
     <string name="overview_show_sensitivity">Sensibilité</string>
@@ -198,8 +185,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_show_iob">Insuline Active</string>
     <string name="overview_show_basals">Basals</string>
     <string name="engineering_mode_enabled">Mode ingénierie actif</string>
-    <string name="smb_frequency_exceeded">Un bolus a été délivré dans les 3 dernières minutes, SMB ignoré</string>
-    <string name="basal_set_correctly">Basal correctement configuré</string>
     <string name="absorption_cutoff_title">Durée maximale d’absorption pour un repas [h]</string>
     <string name="absorption_cutoff_summary">Durée où n’importe quel repas est considéré absorbé. Les glucides restants ne seront pas pris en compte.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Affiche les notes dans les dialogues</string>
@@ -256,8 +241,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="sendlogfiles">Envoi des fichiers logs d\'aujourd\'hui aux développeurs avec l\'heure. Cas imprévu.</string>
-    <string name="loop_openmode_min_change">Changement minimum [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">L\'assistant bolus effectue le calcul mais seulement ce pourcentage de l\'insuline calculée est délivré. Utile avec l\'algorithme SMB.</string>
     <string name="unitsnosemicolon">Unités</string>
@@ -267,10 +250,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="show_removed">Afficher les éléments supprimés</string>
     <string name="clearqueueconfirm">Effacer la queue ? Toutes les données en attente seront perdues !</string>
     <string name="chartmenu">Menu Graph</string>
-    <string name="loop_smbrequest_time_label">Heure de demande SMB</string>
-    <string name="loop_smbexecution_time_label">Heure d\'exécution SMB</string>
-    <string name="loop_tbrrequest_time_label">Heure de demande basal temp</string>
-    <string name="loop_tbrexecution_time_label">Heure d\'exécution basal temp</string>
     <string name="overview_show_predictions">Prédictions</string>
     <string name="overview_show_treatments">Traitements</string>
     <string name="overview_show_deviationslope">Pente de déviations</string>
