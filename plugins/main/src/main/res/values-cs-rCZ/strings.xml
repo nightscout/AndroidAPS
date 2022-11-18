@@ -428,4 +428,5 @@
     <string name="buttonson_description">Tlačítka jsou vždy zobrazena v dolní části obrazovky</string>
     <string name="largedisplay_description">Velký displej</string>
     <string name="skin">Vzhled</string>
+    <!--    Loop -->
 </resources>
