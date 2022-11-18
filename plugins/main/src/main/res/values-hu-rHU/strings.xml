@@ -50,4 +50,5 @@
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
     <string name="skin">Megjelenés</string>
+    <!--    Loop -->
 </resources>
