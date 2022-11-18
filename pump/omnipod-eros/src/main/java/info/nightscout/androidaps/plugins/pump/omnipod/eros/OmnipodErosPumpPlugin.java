@@ -108,6 +108,7 @@ import info.nightscout.rx.events.EventAppExit;
 import info.nightscout.rx.events.EventAppInitialized;
 import info.nightscout.rx.events.EventPreferenceChange;
 import info.nightscout.rx.events.EventRefreshOverview;
+import info.nightscout.rx.events.EventSWRLStatus;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.interfaces.ResourceHelper;
@@ -325,6 +326,13 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 .toObservable(EventOmnipodErosFaultEventChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handlePodFaultEvent(), fabricPrivacy::logException)
+        );
+        // Pass only to setup wizard
+        disposable.add(rxBus
+                .toObservable(EventRileyLinkDeviceStatusChange.class)
+                .observeOn(aapsSchedulers.getIo())
+                .subscribe(event -> rxBus.send(new EventSWRLStatus(event.getStatus(context))),
+                        fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)

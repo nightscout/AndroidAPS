@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.setupwizard.elements.SWBreak
 import info.nightscout.androidaps.setupwizard.elements.SWButton
 import info.nightscout.androidaps.setupwizard.elements.SWEditEncryptedPassword
@@ -41,12 +40,10 @@ import info.nightscout.interfaces.pump.OmnipodEros
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
-import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventSWRLStatus
+import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -61,10 +58,8 @@ class SWDefinition @Inject constructor(
     private val rh: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val profilePlugin: ProfilePlugin,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
-    private val objectivesPlugin: ObjectivesPlugin,
     private val configBuilder: ConfigBuilder,
     private val loop: Loop,
     private val importExportPrefs: ImportExportPrefs,
@@ -224,7 +219,7 @@ class SWDefinition @Inject constructor(
         )
         .add(SWBreak(injector))
         .add(
-            SWEventListener(injector, EventNSClientStatus::class.java)
+            SWEventListener(injector, EventSWSyncStatus::class.java)
                 .label(R.string.status)
                 .initialStatus(activePlugin.firstActiveSync?.status ?: "")
         )
@@ -332,10 +327,10 @@ class SWDefinition @Inject constructor(
                 //.add(ProfileFragment())
         )
         .validator {
-            profilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
+            activePlugin.activeProfileSource.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, rh, rxBus, hardLimits, false).isValid }
                 ?: false
         }
-        .visibility { profilePlugin.isEnabled() }
+        .visibility { (activePlugin.activeProfileSource as PluginBase).isEnabled() }
 
     private val screenProfileSwitch get() = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)
@@ -368,7 +363,7 @@ class SWDefinition @Inject constructor(
                     activePump is OmnipodEros && !activePump.isRileyLinkReady()
                 })
         .add( // Omnipod Eros only
-            SWEventListener(injector, EventRileyLinkDeviceStatusChange::class.java)
+            SWEventListener(injector, EventSWRLStatus::class.java)
                 .label(R.string.setupwizard_pump_riley_link_status)
                 .visibility { activePlugin.activePump is OmnipodEros })
         .add(SWButton(injector)
@@ -466,10 +461,11 @@ class SWDefinition @Inject constructor(
         .add(SWBreak(injector))
         .add(
             SWFragment(injector, this)
-                .add(ObjectivesFragment())
+                .add(activity.supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), (activePlugin.activeObjectives as PluginBase).pluginDescription.fragmentClass!!))
+                //.add(ObjectivesFragment())
         )
-        .validator { objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].isStarted }
-        .visibility { !objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].isStarted && config.APS }
+        .validator { activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) ?: false}
+        .visibility { config.APS && !(activePlugin.activeObjectives?.isStarted(Objectives.FIRST_OBJECTIVE) ?: false) }
 
     private fun swDefinitionFull() = // List all the screens here
         add(screenSetupWizard)

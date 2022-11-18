@@ -40,6 +40,7 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -92,10 +93,12 @@ class NSClientPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNSClientStatus ->
+            .subscribe({ event ->
                            if (event.version == NsClient.Version.V1) {
                                status = event.getStatus(context)
                                rxBus.send(EventNSClientUpdateGUI())
+                               // Pass to setup wizard
+                               rxBus.send(EventSWSyncStatus(event.getStatus(context)))
                            }
                        }, fabricPrivacy::logException)
         disposable += rxBus

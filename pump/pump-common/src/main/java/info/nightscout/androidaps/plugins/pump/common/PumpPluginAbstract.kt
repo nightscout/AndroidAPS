@@ -66,7 +66,7 @@ abstract class PumpPluginAbstract protected constructor(
     var pumpSyncStorage: PumpSyncStorage
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
-    private val disposable = CompositeDisposable()
+    protected val disposable = CompositeDisposable()
 
     // Pump capabilities
     final override var pumpDescription = PumpDescription()

@@ -42,6 +42,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.NSAndroidClientImpl
@@ -149,6 +150,8 @@ class NSClientV3Plugin @Inject constructor(
                            if (event.version == NsClient.Version.V3) {
                                status = event.getStatus(context)
                                rxBus.send(EventNSClientUpdateGUI())
+                               // Pass to setup wizard
+                               rxBus.send(EventSWSyncStatus(event.getStatus(context)))
                            }
                        }, fabricPrivacy::logException)
         disposable += rxBus

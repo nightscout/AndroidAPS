@@ -16,4 +16,5 @@ interface Objectives {
     }
 
     fun isAccomplished(index: Int): Boolean
+    fun isStarted(index: Int): Boolean
 }

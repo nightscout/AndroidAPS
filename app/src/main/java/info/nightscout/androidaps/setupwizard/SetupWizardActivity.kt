@@ -10,16 +10,16 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.locale.LocaleHelper.update
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventSWRLStatus
+import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.events.EventSWUpdate
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -80,11 +80,11 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+            .toObservable(EventSWRLStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNSClientStatus::class.java)
+            .toObservable(EventSWSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateButtons() }, fabricPrivacy::logException)
         disposable += rxBus

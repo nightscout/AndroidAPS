@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
@@ -67,6 +68,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshButtonState
 import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventSWRLStatus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -157,6 +159,13 @@ class MedtronicPumpPlugin @Inject constructor(
                 }.start()
             }
         }
+        // Pass only to setup wizard
+        disposable.add(
+            rxBus
+                .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
+        )
         super.onStart()
     }
 
