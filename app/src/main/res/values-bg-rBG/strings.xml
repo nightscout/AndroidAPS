@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="nav_exit">Изход</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
-    <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
     <string name="description_overview">Показва текущото състояние на вашия APS и бутони за най-често използваните действия</string>
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">Синхронизация</string>
     <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
     <string name="configbuilder_loop">Режим на APS - Loop</string>
-    <string name="loop_aps_label">Алгоритъм за APS</string>
-    <string name="loop_constraintsprocessed_label">След ограничения</string>
-    <string name="loop_tbrsetbypump_label">Временният базал зададен от помпата</string>
-    <string name="noapsselected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
-    <string name="openloop_newsuggestion">Има ново предложение</string>
-    <string name="carbssuggestion">Предложение</string>
     <string name="profile_label">Профил</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
     <string name="exported">Настройките са експортирани</string>
@@ -78,7 +71,6 @@
     <string name="correctionbous">Корекция</string>
     <string name="ns_upload_only">(ОПАСНО ЗА ДЕАКТИВИРАНЕ) Само качвай данни в NS</string>
     <string name="ns_upload_only_summary">Само каване в NS (изключи синхронизиране). Може да спре данните за КЗ, освен ако не е избран локален източник като xDrip +. Не е ефективно за профила, освен ако не ползвате NS профил.\n!!! ВНИМАНИЕ !!! Деактивирането на тази опция може да причини проблеми и предозиране на инсулин, ако някой от Вашите компоненти (AAPS, NS, xDrip +) е неправилно конфигуриран. Внимателно гледайте, ако данните, показани от AAPS съответстват на състоянието на помпата!</string>
-    <string name="pumpNotInitialized">Помпата не е инициализирана!</string>
     <string name="units">Единици</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>
@@ -90,7 +82,6 @@
     <string name="ongoingnotificaction">Текущи известия</string>
     <string name="old_data">СТАРИ ДАННИ</string>
     <string name="configbuilder_shortname">КОНФ</string>
-    <string name="loop_shortname">ЦИК</string>
     <string name="overview_shortname">ОСН</string>
     <string name="treatments_shortname">Леч</string>
     <string name="wear_shortname">WEAR</string>
@@ -170,9 +161,6 @@
     <string name="carb_increment_button_message">Количество въглехидрати за добавяне при натискане на бутона</string>
     <string name="insulin_increment_button_message">Количество инсулин за добавяне при натискане на бутона</string>
     <string name="error_starting_cgm">Не може да се стартира CGM приложението. Уверете се, че е инсталирано.</string>
-    <string name="ignore5m">Игнориране за 5 мин</string>
-    <string name="ignore15m">Игнориране за 15 мин</string>
-    <string name="ignore30m">Игнориране за 30 мин</string>
     <string name="wear_notifysmb_title">Уведомяване при SMB</string>
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
     <string name="wear_predictions_summary">Показвай прогнозините КЗ на часовника.</string>
@@ -182,7 +170,6 @@
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
     <string name="g5appnotdetected">Моля обновете Dexcom приложението до поддържана версия</string>
     <string name="dexcom_app_not_installed">Приложението на Dexcom не е инсталирано.</string>
-    <string name="loop_smbsetbypump_label">SMB в помпата</string>
     <string name="overview_show_activity">Активност</string>
     <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
     <string name="overview_show_sensitivity">Чувствителност</string>
@@ -191,8 +178,6 @@
     <string name="overview_show_iob">Действащ инсулин</string>
     <string name="overview_show_basals">Базали</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
-    <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
-    <string name="basal_set_correctly">Базалът е зададен коректно</string>
     <string name="absorption_cutoff_title">Макс. време за усвояване на храна (часове)</string>
     <string name="absorption_cutoff_summary">Време за което всяко хранене се счита за усвоено. Оставащите въглехидрати ще бъдат изчиствани.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Показване на поле \"бележки\" в диалоговите прозорци за лечение</string>
@@ -244,8 +229,6 @@
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="sendlogfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
-    <string name="loop_openmode_min_change">Минимална стойност за промяна [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <string name="profile_total">Общо  %1$s Е</string>
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
     <string name="unitsnosemicolon">Единици</string>
@@ -255,10 +238,6 @@
     <string name="show_removed">Покажи премахнатите</string>
     <string name="clearqueueconfirm">Изтрий опашка? Всички данни ще се загубят!</string>
     <string name="chartmenu">Меню на графиката</string>
-    <string name="loop_smbrequest_time_label">Диапазон между изпълнение на SMB</string>
-    <string name="loop_smbexecution_time_label">Макс. време за изпълнение за SMB</string>
-    <string name="loop_tbrrequest_time_label">Диапазон между временни базали</string>
-    <string name="loop_tbrexecution_time_label">Продължителност на временни базали</string>
     <string name="overview_show_predictions">Прогнозни КЗ</string>
     <string name="overview_show_treatments">Лечения</string>
     <string name="overview_show_deviationslope">Наклон на отклонението</string>
