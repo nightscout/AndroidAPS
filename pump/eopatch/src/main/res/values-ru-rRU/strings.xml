@@ -114,7 +114,11 @@
     <string name="retry">Повторить попытку</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] НЕ удаляйте колпачок иглы и клеящийся слой до дальнейших инструкций.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Завершить пользование этим Patch\'ем?</string>
+    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Из-за неподтвержденной информации о болюсах, невозможно применить калькулятор болюса до %s.\n\n Завершить пользование Patch\'ем?</string>
+    <string name="needle_insertion_error_1">Ошибка ввода иглы.</string>
+    <string name="needle_insertion_error_2">Убедитесь, что направление отверстия после поворота рычага осталось прямым, затем нажмите «Повтор».</string>
     <string name="needle_insertion_error_3">Нажмите \'Завершить пользование Patch\'ем\', чтобы деактивировать Patch.</string>
+    <string name="string_suspend_time_insulin_delivery_title">Время приостановки базала</string>
     <string name="string_resume_insulin_delivery_title">Возобновить подачу инсулина</string>
     <string name="string_resume_insulin_delivery_message">Окончание приостановки подачи инсулина.\n Нажмите \'Подтвердить\', чтобы возобновить подачу.\n\n[Caution]\n Подача не возобновится, если не нажать \'Подтвердить\'.\n Если не нажать \'Подтвердить\', может развиться гипергликемия.</string>
     <string name="string_suspended_insulin_delivery_message">Введение инсулина приостановлено.</string>
