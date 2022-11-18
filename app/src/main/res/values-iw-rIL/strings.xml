@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
-    <string name="description_loop">הפעלת או השבתת הלולאה.</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="description_sensitivity_aaps">חישוב הרגישות נעשה בהתאם ל־Oref0, אך ניתן לשנות את מסגרת הזמן. ספיגת הפחמימות המינימלית מחושבת לפי משך ספיגת הפחמימות המרבי מההעדפות.</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">סינכרון</string>
     <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
     <string name="configbuilder_loop">לולאה</string>
-    <string name="loop_aps_label">אלגוריתם APS</string>
-    <string name="loop_constraintsprocessed_label">מגבלות לאחר עיבוד</string>
-    <string name="loop_tbrsetbypump_label">מינון בזאלי זמני שהוגדר במשאבה</string>
-    <string name="noapsselected">לא נבחרה או סופקה תוצאה ע\"י APS</string>
     <string name="constraints_violation">הפרת מגבלות</string>
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
-    <string name="openloop_newsuggestion">הצעה חדשה זמינה</string>
-    <string name="carbssuggestion">המלצת פחמימות</string>
     <string name="profile_label">פרופיל</string>
     <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
     <string name="exported">ההעדפות יוצאו</string>
@@ -78,7 +71,6 @@
     <string name="correctionbous">תיקון</string>
     <string name="ns_upload_only">(מסוכן להשבית) העלאה בלבד לנייטסקאוט</string>
     <string name="ns_upload_only_summary">העלאה בלבד של נתונים לנייטסקאוט. לא מתאים לשימוש אלא אם מקור נתוני הסוכר הוא מקומי כדוגמת xDrip. לא מתאים לשימוש בפרופילים מקוונים מנייטסקאוט.\n!!! אזהרה !!! ביטול אפשרות זו עלולה לגרום לתקלות ולמינון יתר של אינסולין אם אחד או יותר מרכיבי המערכת (AAPS, xDrip, נייטסקאוט) אינו מוגדר כהלכה. וודאו היטב שהנתונים המוצגים ב-AAPS תואמים את מצב המשאבה!</string>
-    <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
     <string name="units">יחידות</string>
     <string name="prefs_range_title">טווח הצגה</string>
     <string name="prefs_range_summary">סימוני גבוה ונמוך בתרשים סקירה כללית ובשעון חכם</string>
@@ -90,7 +82,6 @@
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">לולאה</string>
     <string name="overview_shortname">בית</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="wear_shortname">WEAR</string>
@@ -170,9 +161,6 @@
     <string name="carb_increment_button_message">מספר פחמימות להוספה כאשר לוחצים על הלחצן</string>
     <string name="insulin_increment_button_message">כמות האינסולין להוספה כאשר לוחצים על הלחצן</string>
     <string name="error_starting_cgm">לא ניתן היה להפעיל את יישום סנסור. וודא שהוא מותקן.</string>
-    <string name="ignore5m">התעלם ל-5 דק\'</string>
-    <string name="ignore15m">התעלם ל-15 דק\'</string>
-    <string name="ignore30m">התעלם ל-30 דק\'</string>
     <string name="wear_notifysmb_title">דיווח על SMB</string>
     <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
     <string name="wear_predictions_summary">הראה את התחזיות על לוח השעון.</string>
@@ -182,7 +170,6 @@
     <string name="allow_automated_crash_reporting">אפשר דיווח אוטומטי על קריסה ושליחת נתוני השימוש למפתחים דרך שירות fabric.io.</string>
     <string name="g5appnotdetected">עדכנו את יישום ה-Dexcom שלכם לגרסה נתמכת</string>
     <string name="dexcom_app_not_installed">אפליקציית Dexcom אינה מותקנת.</string>
-    <string name="loop_smbsetbypump_label">SMB מוגדר באמצעות משאבה</string>
     <string name="overview_show_activity">פעילות</string>
     <string name="overview_show_bgi">השפעת הסוכר בדם</string>
     <string name="overview_show_sensitivity">רגישות</string>
@@ -191,8 +178,6 @@
     <string name="overview_show_iob">אניסולין פעיל</string>
     <string name="overview_show_basals">בזאלי</string>
     <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
-    <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
-    <string name="basal_set_correctly">הבזאלי הוגדר כהלכה</string>
     <string name="absorption_cutoff_title">זמן ספיגה מקסימלי של הארוחה [h]</string>
     <string name="absorption_cutoff_summary">משך זמן בו כל ארוחה תחשב כנספגה. לא תהיה התחשבות בפחמימות שנותרו.</string>
     <string name="overview_show_notes_field_in_dialogs_title">הצגת שדות הערות בתיבות דו-שיח של טיפול</string>
@@ -246,8 +231,6 @@
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="sendlogfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>
-    <string name="loop_openmode_min_change">מינימום לבקשה לשינוי [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <string name="profile_total">== ∑  %1$s יח\'</string>
     <string name="deliverpartofboluswizard">אשף הבולוס מבצע חישוב אך רק חלק זה של האינסולין המחושב מוזרק. שימושי בשימוש עם אלגוריתם SMB.</string>
     <string name="unitsnosemicolon">יחידות</string>
@@ -257,10 +240,6 @@
     <string name="show_removed">הצג מחוקים</string>
     <string name="clearqueueconfirm">לנקות את התור? כל הנתונים בתור יאבדו!</string>
     <string name="chartmenu">תפריט תרשים</string>
-    <string name="loop_smbrequest_time_label">זמן בקשת SMB</string>
-    <string name="loop_smbexecution_time_label">זמן ביצוע SMB</string>
-    <string name="loop_tbrrequest_time_label">זמן בקשת בזאלי זמני</string>
-    <string name="loop_tbrexecution_time_label">זמן הפעלת בזאלי זמני</string>
     <string name="overview_show_predictions">חיזוי</string>
     <string name="overview_show_treatments">טיפולים</string>
     <string name="overview_show_deviationslope">שיפוע הסטייה</string>
