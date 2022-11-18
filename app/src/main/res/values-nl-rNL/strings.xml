@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="nav_exit">Afsluiten</string>
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
-    <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
     <string name="description_overview">Toont de huidige Loop-status en knoppen voor meest gebruikte acties</string>
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
@@ -35,16 +34,10 @@
     <string name="configbuilder_constraints_description">Welke beperkingen worden toegepast?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Gebruik dit om AAPS loop integratie te activeren.</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Berekening met toepassing van limieten</string>
-    <string name="loop_tbrsetbypump_label">Tijdelijk basaal gezet door pomp</string>
-    <string name="noapsselected">GEEN APS GESELECTEERD OF TOEGEKEND RESULTAAT</string>
     <string name="constraints_violation">In strijd met beperkingen</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
-    <string name="openloop_newsuggestion">Nieuw voorstel beschikbaar</string>
-    <string name="carbssuggestion">Koolhydraten Voorstel</string>
     <string name="profile_label">Profiel</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
     <string name="exported">Instellingen geëxporteerd</string>
@@ -84,7 +77,6 @@
     <string name="correctionbous">Correctie</string>
     <string name="ns_upload_only">(GEVAARLIJK OM UIT TE SCHAKELEN) alleen NS upload</string>
     <string name="ns_upload_only_summary">Alleen NS-upload. Heeft geen effect op de SGV, behalve als een lokale bron als xDrip geselecteerd is. Heeft geen effect op profielen wanneer NS-Profielen gebruikt worden.\n!!! WAARSCHUWING !!! Het uitschakelen van deze optie kan fouten veroorzaken en mogelijk resulteren in een overdosis insuline als een van de onderdelen (AAPS, NS, xDrip) onjuist is geconfigureerd. Let goed op of de gegevens van AAPS overeenkomen met de pompstatus!</string>
-    <string name="pumpNotInitialized">Pomp niet geïnitialiseerd!</string>
     <string name="units">Eenheden</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
@@ -96,7 +88,6 @@
     <string name="ongoingnotificaction">Permanent bericht</string>
     <string name="old_data">Oude gegevens</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="overview_shortname">OVZ</string>
     <string name="treatments_shortname">BEHAND</string>
     <string name="wear_shortname">WEAR</string>
@@ -176,9 +167,6 @@
     <string name="carb_increment_button_message">Aantal koolhydraten toevoegen wanneer de knop wordt ingedrukt</string>
     <string name="insulin_increment_button_message">Hoeveelheid insuline dat wordt toegevoegd wanneer er op de knop gedrukt wordt</string>
     <string name="error_starting_cgm">Kon de CGM applicatie niet starten. Zorg dat deze geïnstalleerd is.</string>
-    <string name="ignore5m">Negeer 5m</string>
-    <string name="ignore15m">Negeer 15m</string>
-    <string name="ignore30m">Negeer 30m</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
     <string name="wear_predictions_summary">Toon de voorspellingen op het horloge.</string>
@@ -188,7 +176,6 @@
     <string name="allow_automated_crash_reporting">Sta automatische crashrapporten en verder gebruik van data toe zodat deze naar de ontwikkelaars via fabric.io kan verzonden worden.</string>
     <string name="g5appnotdetected">Gelieve Dexcom app naar ondersteunde versie te updaten</string>
     <string name="dexcom_app_not_installed">Dexcom app is niet geïnstalleerd.</string>
-    <string name="loop_smbsetbypump_label">SMB op de pomp ingesteld</string>
     <string name="overview_show_activity">Activiteit</string>
     <string name="overview_show_bgi">Bloedglucose impact</string>
     <string name="overview_show_sensitivity">Gevoeligheid</string>
@@ -197,8 +184,6 @@
     <string name="overview_show_iob">Opgenomen Insuline</string>
     <string name="overview_show_basals">Basalen</string>
     <string name="engineering_mode_enabled">Engineering modus is geactiveerd</string>
-    <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
-    <string name="basal_set_correctly">Basaal correct ingesteld</string>
     <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd volledig is opgenomen. Resterende KH worden niet mee gerekend.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Toon notities veld in behandeling dialoogvensters</string>
@@ -255,8 +240,6 @@
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="sendlogfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>
-    <string name="loop_openmode_min_change">Minimale verzoek voor aanpassing [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="unitsnosemicolon">Eenheden</string>
@@ -266,10 +249,6 @@
     <string name="show_removed">Laat verwijderde items zien</string>
     <string name="clearqueueconfirm">Wachtrij leegmaken? Alle gegevens in de wachtrij zullen verloren gaan!</string>
     <string name="chartmenu">Grafiek menu</string>
-    <string name="loop_smbrequest_time_label">SMB aanvraagtijd</string>
-    <string name="loop_smbexecution_time_label">SMB uitvoeringstijd</string>
-    <string name="loop_tbrrequest_time_label">Tijdelijk basaal aanvraag tijd</string>
-    <string name="loop_tbrexecution_time_label">Tijdelijke basaal uitvoering tijd</string>
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_treatments">Behandelingen</string>
     <string name="overview_show_deviationslope">Richtingscoëfficiënt afwijking</string>
