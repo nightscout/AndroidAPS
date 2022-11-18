@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.loop
+package info.nightscout.plugins.aps.loop
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -12,17 +12,11 @@ import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.MainActivity
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
-import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
-import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -58,6 +52,10 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.plugins.R
+import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
+import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
+import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
@@ -87,7 +85,7 @@ class LoopPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val sp: SP,
-    config: Config,
+    private val config: Config,
     private val constraintChecker: Constraints,
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
@@ -253,7 +251,7 @@ class LoopPlugin @Inject constructor(
 
             // Check if we have any result
             if (apsResult == null) {
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.noapsselected)))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.no_aps_selected)))
                 return
             }
 
@@ -299,7 +297,7 @@ class LoopPlugin @Inject constructor(
                 buildDeviceStatus(
                     dateUtil, this, iobCobCalculator, profileFunction,
                     activePlugin.activePump, receiverStatusStore, runningConfiguration,
-                    BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION
+                    config.VERSION_NAME + "-" + config.BUILD_VERSION
                 )?.also {
                     repository.insert(it)
                 }
@@ -345,7 +343,7 @@ class LoopPlugin @Inject constructor(
                                 val actionIgnore30m = NotificationCompat.Action(R.drawable.ic_notif_aaps, rh.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
                                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                                 builder.setSmallIcon(R.drawable.notif_icon)
-                                    .setContentTitle(rh.gs(R.string.carbssuggestion))
+                                    .setContentTitle(rh.gs(R.string.carbs_suggestion))
                                     .setContentText(resultAfterConstraints.carbsRequiredText)
                                     .setAutoCancel(true)
                                     .setPriority(Notification.IMPORTANCE_HIGH)
@@ -430,7 +428,7 @@ class LoopPlugin @Inject constructor(
                     if (resultAfterConstraints.isChangeRequested && allowNotification) {
                         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                         builder.setSmallIcon(R.drawable.notif_icon)
-                            .setContentTitle(rh.gs(R.string.openloop_newsuggestion))
+                            .setContentTitle(rh.gs(R.string.open_loop_new_suggestion))
                             .setContentText(resultAfterConstraints.toString())
                             .setAutoCancel(true)
                             .setPriority(Notification.IMPORTANCE_HIGH)
@@ -458,14 +456,14 @@ class LoopPlugin @Inject constructor(
 
     private fun presentSuggestion(builder: NotificationCompat.Builder) {
         // Creates an explicit intent for an Activity in your app
-        val resultIntent = Intent(context, MainActivity::class.java)
+        val resultIntent = Intent(context, activityNames.mainActivity)
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
         // your application to the Home screen.
         val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addParentStack(MainActivity::class.java)
+        stackBuilder.addParentStack(activityNames.mainActivity)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
         val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -492,7 +490,7 @@ class LoopPlugin @Inject constructor(
             rxBus.send(
                 EventMobileToWear(
                     EventData.OpenLoopRequest(
-                        rh.gs(R.string.openloop_newsuggestion),
+                        rh.gs(R.string.open_loop_new_suggestion),
                         it.constraintsProcessed.toString(),
                         EventData.OpenLoopRequestConfirmed(dateUtil.now())
                     )
@@ -515,7 +513,7 @@ class LoopPlugin @Inject constructor(
                             buildDeviceStatus(
                                 dateUtil, this@LoopPlugin, iobCobCalculator, profileFunction,
                                 activePlugin.activePump, receiverStatusStore, runningConfiguration,
-                                BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION
+                                config.VERSION_NAME + "-" + config.BUILD_VERSION
                             )?.also {
                                 repository.insert(it)
                             }
@@ -540,8 +538,8 @@ class LoopPlugin @Inject constructor(
         }
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) {
-            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
+            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pump_not_initialized))
+            callback?.result(PumpEnactResult(injector).comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
@@ -640,8 +638,8 @@ class LoopPlugin @Inject constructor(
             return
         }
         if (!pump.isInitialized()) {
-            aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
+            aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pump_not_initialized))
+            callback?.result(PumpEnactResult(injector).comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {

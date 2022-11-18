@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.loop.events
+package info.nightscout.plugins.aps.loop.events
 
 import info.nightscout.rx.events.Event
 

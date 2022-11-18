@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class ActivityNamesImpl @Inject constructor() : ActivityNames {
 
-    override val mainActivityClass: Class<*> = MainActivity::class.java
+    override val mainActivity: Class<*> = MainActivity::class.java
     override val tddStatsActivity: Class<*> = TDDStatsActivity::class.java
     override val historyBrowseActivity: Class<*> = HistoryBrowseActivity::class.java
     override val errorHelperActivity: Class<*> = ErrorHelperActivity::class.java

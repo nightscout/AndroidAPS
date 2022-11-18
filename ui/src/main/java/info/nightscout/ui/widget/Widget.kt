@@ -107,7 +107,7 @@ class Widget : AppWidgetProvider() {
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 
         // Create an Intent to launch MainActivity when clicked
-        val intent = Intent(context, activityNames.mainActivityClass).also { it.action = intentAction }
+        val intent = Intent(context, activityNames.mainActivity).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)

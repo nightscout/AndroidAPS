@@ -40,7 +40,6 @@
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
     <string name="description_config_builder">Used for configuring the active plugins</string>
-    <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
@@ -65,16 +64,10 @@
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Use this to activate AAPS\' loop integration.</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">After processed constraints</string>
-    <string name="loop_tbrsetbypump_label">Temp basal set by pump</string>
-    <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
-    <string name="openloop_newsuggestion">New suggestion available</string>
-    <string name="carbssuggestion">Carbs Suggestion</string>
     <string name="profile_label">Profile</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="exported">Preferences exported</string>
@@ -115,7 +108,6 @@
     <string name="correctionbous">Corr</string>
     <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
     <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
-    <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="units">Units</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
@@ -127,7 +119,6 @@
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="overview_shortname">HOME</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="wear_shortname">WEAR</string>
@@ -179,7 +170,6 @@
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="notloadedplugins">Not all profiles loaded!</string>
     <string name="valuesnotstored">Values not stored!</string>
-    <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
     <string name="invalid">INVALID</string>
     <string name="default_temptargets">Default Temp-Targets</string>
     <string name="eatingsoon_duration">eatingsoon duration</string>
@@ -220,9 +210,6 @@
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
-    <string name="ignore5m">Ignore 5m</string>
-    <string name="ignore15m">Ignore 15m</string>
-    <string name="ignore30m">Ignore 30m</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
@@ -232,7 +219,6 @@
     <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
-    <string name="loop_smbsetbypump_label">SMB set by pump</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>
     <string name="overview_show_sensitivity">Sensitivity</string>
@@ -241,8 +227,6 @@
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
-    <string name="basal_set_correctly">Basal set correctly</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
@@ -311,8 +295,6 @@
     <string name="resettodefaults">Reset to defaults</string>
     <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
-    <string name="loop_openmode_min_change">Minimal request change [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
@@ -327,10 +309,6 @@
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="chartmenu">Chart menu</string>
     <string name="databroadcaster" translatable="false">Data Broadcaster</string>
-    <string name="loop_smbrequest_time_label">SMB request time</string>
-    <string name="loop_smbexecution_time_label">SMB execution time</string>
-    <string name="loop_tbrrequest_time_label">Temp basal request time</string>
-    <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_deviationslope">Deviation slope</string>

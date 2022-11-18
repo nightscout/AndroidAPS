@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentManager
  */
 interface ActivityNames {
 
-    val mainActivityClass: Class<*>
+    val mainActivity: Class<*>
     val tddStatsActivity: Class<*>
     val historyBrowseActivity: Class<*>
     val errorHelperActivity: Class<*>

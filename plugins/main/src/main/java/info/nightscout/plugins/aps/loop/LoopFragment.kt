@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.loop
+package info.nightscout.plugins.aps.loop
 
 import android.os.Bundle
 import android.os.Handler
@@ -12,15 +12,15 @@ import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.LoopFragmentBinding
-import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
-import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.pump.toHtml
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.plugins.R
+import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
+import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
+import info.nightscout.plugins.databinding.LoopFragmentBinding
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -73,7 +73,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.openapsma_run)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.run_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.setGroupDividerEnabled(true)
     }
 

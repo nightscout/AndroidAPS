@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.wear
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
+import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataHandlerMobile
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper

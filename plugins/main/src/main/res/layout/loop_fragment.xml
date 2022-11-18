@@ -3,7 +3,7 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.aps.loop.LoopFragment">
+    tools:context=".aps.loop.LoopFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/openapsma_last_run_label"
+                    android:text="@string/last_run_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -126,7 +126,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/openapsma_request_label"
+                    android:text="@string/request_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -175,7 +175,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_constraintsprocessed_label"
+                    android:text="@string/loop_constraints_processed_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -271,7 +271,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_tbrrequest_time_label"
+                    android:text="@string/loop_tbr_request_time_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -319,7 +319,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_tbrexecution_time_label"
+                    android:text="@string/loop_tbr_execution_time_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -367,7 +367,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_tbrsetbypump_label"
+                    android:text="@string/loop_tbr_set_by_pump_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -415,7 +415,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_smbrequest_time_label"
+                    android:text="@string/loop_smb_request_time_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -463,7 +463,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_smbexecution_time_label"
+                    android:text="@string/loop_smb_execution_time_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -511,7 +511,7 @@
                     android:layout_weight="2"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/loop_smbsetbypump_label"
+                    android:text="@string/loop_smb_set_by_pump_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 

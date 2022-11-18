@@ -10,7 +10,7 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin

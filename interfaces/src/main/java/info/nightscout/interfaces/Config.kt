@@ -9,6 +9,7 @@ interface Config {
     val PUMPDRIVERS: Boolean
     val FLAVOR: String
     val VERSION_NAME: String
+    val BUILD_VERSION: String
     val DEBUG: Boolean
     val currentDeviceModelString : String
     val appName: Int

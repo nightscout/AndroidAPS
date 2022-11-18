@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.loop
+package info.nightscout.plugins.aps.loop
 
 import android.content.Context
 import android.content.Intent

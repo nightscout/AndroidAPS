@@ -11,7 +11,7 @@ import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.interfaces.stats.TirCalculator
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
