@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="nav_exit">Sair</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
-    <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
     <string name="description_overview">Exibe o estado atual do seu loop e botões para ações mais comuns</string>
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar um período de tempo no passado. A absorção mínima de carboidratos é calculada a partir do tempo de absorção máxima especificado nas preferências.</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">Sincronização</string>
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Depois das restrições processadas</string>
-    <string name="loop_tbrsetbypump_label">Basal temporária definida pela bomba</string>
-    <string name="noapsselected">SEM APS SELECIONADO OU RESULTADO FORNECIDO</string>
     <string name="constraints_violation">Violação das restrições</string>
     <string name="changeyourinput">Altere sua entrada!</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
-    <string name="openloop_newsuggestion">Nova sugestão disponível</string>
-    <string name="carbssuggestion">Sugestão de Carbs</string>
     <string name="profile_label">Perfil</string>
     <string name="configbuilder_nightscoutversion_label">Versão do Nightscout:</string>
     <string name="exported">Preferências exportadas</string>
@@ -77,7 +70,6 @@
     <string name="overview_quickwizard_item_edit_button">Editar</string>
     <string name="correctionbous">Correção</string>
     <string name="ns_upload_only">(PERIGOSO PARA DESATIVAR) somente upload para NS</string>
-    <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="units">Unidades</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
     <string name="prefs_range_summary">Marca alta e baixa para as cartas em Visão geral e Smartwatch</string>
@@ -89,7 +81,6 @@
     <string name="ongoingnotificaction">Notificação em curso</string>
     <string name="old_data">DADOS ANTIGOS</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="overview_shortname">Início</string>
     <string name="treatments_shortname">TRATA</string>
     <string name="wear_shortname">WEAR</string>
@@ -156,9 +147,6 @@
     <string name="carb_increment_button_message">Número de carboidratos a adicionar quando o botão é premido</string>
     <string name="insulin_increment_button_message">Unidades de insulina a adicionar quando o botão é premido</string>
     <string name="error_starting_cgm">Não foi possível lançar aplicação de monitorização contínua. Por favor verifique que está instalada.</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>
@@ -168,7 +156,6 @@
     <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
     <string name="g5appnotdetected">Por favor atualize as sua aplicação Dexcom para uma versão suportada</string>
     <string name="dexcom_app_not_installed">App Dexcom não está instalada.</string>
-    <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Atividade</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
@@ -176,8 +163,6 @@
     <string name="overview_show_iob">Insulina a bordo</string>
     <string name="overview_show_basals">Basais</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
-    <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
-    <string name="basal_set_correctly">Basal correctamente definida</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar campo de notas na janela de tratamentos</string>
@@ -225,8 +210,6 @@
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="sendlogfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
-    <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
     <string name="unitsnosemicolon">Unidades</string>
@@ -236,10 +219,6 @@
     <string name="show_removed">Mostrar removido(a)s</string>
     <string name="clearqueueconfirm">Limpar fila? Todos os dados na fila serão perdidos!</string>
     <string name="chartmenu">Menu do Gráfico</string>
-    <string name="loop_smbrequest_time_label">Hora de solicitação SMB</string>
-    <string name="loop_smbexecution_time_label">Hora de execução do SMB</string>
-    <string name="loop_tbrrequest_time_label">Hora de solicitação Basal Temp</string>
-    <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
     <string name="overview_show_deviationslope">Desvio de inclinação</string>
