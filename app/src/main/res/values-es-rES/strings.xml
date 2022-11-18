@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
     <string name="nav_exit">Salir</string>
     <string name="description_config_builder">Utilizado para configurar complementos activos</string>
-    <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
     <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="description_sensitivity_aaps">La sensibilidad se calcula de la misma manera que en Oref0, pero puede especificarse el rango de tiempo. La absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias</string>
@@ -34,16 +33,10 @@
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
     <string name="configbuilder_loop">Lazo</string>
     <string name="configbuilder_loop_description">Usa esto para habilitar la integración de lazo de AAPS</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Tras procesar las restricciones</string>
-    <string name="loop_tbrsetbypump_label">Basal temporal establecida por la bomba</string>
-    <string name="noapsselected">NO APS Seleccionado o resultado entregado</string>
     <string name="constraints_violation">Violación de restricciones</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
-    <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
-    <string name="carbssuggestion">Sugerencia de carbohidratos</string>
     <string name="profile_label">Perfil</string>
     <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
     <string name="exported">Ajustes exportados</string>
@@ -83,7 +76,6 @@
     <string name="correctionbous">Corrección</string>
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
     <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
-    <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
     <string name="units">Unidades</string>
     <string name="prefs_range_title">Rango de visualización</string>
     <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
@@ -95,7 +87,6 @@
     <string name="ongoingnotificaction">Notificaciones en curso</string>
     <string name="old_data">DATOS CADUCADOS</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LAZO</string>
     <string name="overview_shortname">INICIO</string>
     <string name="treatments_shortname">TRAT</string>
     <string name="wear_shortname">RELOJ</string>
@@ -175,9 +166,6 @@
     <string name="carb_increment_button_message">Cantidad de carbohidratos que se agregan cuando se presiona el botón </string>
     <string name="insulin_increment_button_message">Cantidad de insulina que se agrega cuando se presiona el botón</string>
     <string name="error_starting_cgm">No se pudo iniciar la aplicación CGM. Asegúrate de que está instalada.</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
     <string name="wear_notifysmb_title">Notificar SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB en el reloj como un bolo estándar</string>
     <string name="wear_predictions_summary">Mostrar las predicciones en el reloj</string>
@@ -187,7 +175,6 @@
     <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
     <string name="g5appnotdetected">Actualiza tu aplicación de Dexcom a una versión compatible</string>
     <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
-    <string name="loop_smbsetbypump_label">SMB administrado por bomba</string>
     <string name="overview_show_activity">Actividad</string>
     <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
     <string name="overview_show_sensitivity">Sensibilidad</string>
@@ -196,8 +183,6 @@
     <string name="overview_show_iob">Insulina activa</string>
     <string name="overview_show_basals">Basales</string>
     <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
-    <string name="smb_frequency_exceeded">Un Bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
-    <string name="basal_set_correctly">Basal establecida correctamente</string>
     <string name="absorption_cutoff_title">Tiempo máximo de absorción de la comida [h]</string>
     <string name="absorption_cutoff_summary">Tiempo en el que cualquier comida se considera absorbida. Los carbohidratos restantes serán cortados. </string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar el campo notas en diálogos de tratamientos</string>
@@ -253,8 +238,6 @@
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <string name="sendlogfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
-    <string name="loop_openmode_min_change">Valor mínimo de cambio [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <string name="profile_total">== ∑%1$s U</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
     <string name="unitsnosemicolon">Unidades</string>
@@ -264,10 +247,6 @@
     <string name="show_removed">Mostrar eliminados</string>
     <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
     <string name="chartmenu">Menú gráfico</string>
-    <string name="loop_smbrequest_time_label">Tiempo requerido de SMB</string>
-    <string name="loop_smbexecution_time_label">Tiempo de ejecución de SMB</string>
-    <string name="loop_tbrrequest_time_label">Tiempo requerido para basal temporal</string>
-    <string name="loop_tbrexecution_time_label">Tiempo de ejecución para basal temporal</string>
     <string name="overview_show_predictions">Predicciones</string>
     <string name="overview_show_treatments">Tratamientos</string>
     <string name="overview_show_deviationslope">Pendiente de desviación</string>
