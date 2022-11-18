@@ -192,4 +192,5 @@
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
+    <!--    Loop -->
 </resources>
