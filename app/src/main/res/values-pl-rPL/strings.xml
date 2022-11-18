@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="nav_exit">Wyjście</string>
     <string name="description_config_builder">Konfiguracja aktywnych modułów systemu</string>
-    <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
     <string name="description_overview">Wyświetla bieżący stan twojej pętli i przyciski dla większości typowych działań</string>
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">Synchronizacja</string>
     <string name="configbuilder_constraints_description">Które ograniczenia są zastosowane?</string>
     <string name="configbuilder_loop">Pętla</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Po ograniczeniach</string>
-    <string name="loop_tbrsetbypump_label">Baza tymczasowa ustawiona przez pompę</string>
-    <string name="noapsselected">NIE WYBRANO APS LUB NIE UZYSKANO WYNIKU</string>
     <string name="constraints_violation">Naruszenie ograniczeń</string>
     <string name="changeyourinput">Zmień wprowadzone dane!</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
-    <string name="openloop_newsuggestion">Dostępna nowa sugestia</string>
-    <string name="carbssuggestion">Sugestia węglowodanów</string>
     <string name="profile_label">Profil</string>
     <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
     <string name="exported">Ustawienia wyeksportowane</string>
@@ -78,7 +71,6 @@
     <string name="correctionbous">Korekta</string>
     <string name="ns_upload_only">(NIEBEZPIECZNIE TO WYŁĄCZYĆ) tylko przesyłanie NS</string>
     <string name="ns_upload_only_summary">Tylko przesyłanie NS (wyłączona synchronizacja). Nie ma wpływu na pomiary glikemii (SGV), chyba że wybrane jest lokalne źródło, takie jak xDrip+. Nie wpływa na profile gdy używane są profile z Nightscout.\n!!! OSTRZEŻENIE !!! Wyłączenie tej opcji może spowodować nieprawidłowe działanie i przedawkowanie insuliny, jeśli którykolwiek z Twoich komponentów (AAPS, NS, xDrip+) nie jest skonfigurowany poprawnie. Uważnie obserwuj, czy dane wyświetlane przez AAPS są zgodne ze stanem pompy!</string>
-    <string name="pumpNotInitialized">Pompa nie zainicjowana!</string>
     <string name="units">Jednostki</string>
     <string name="prefs_range_title">Zakres do wizualizacji (na wykresie)</string>
     <string name="prefs_range_summary">Oznaczenia wysokiego i niskiego cukru na wykresie w oknie przegląd i na smartwatch\'u</string>
@@ -90,7 +82,6 @@
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="overview_shortname">HOME</string>
     <string name="treatments_shortname">TREAT</string>
     <string name="wear_shortname">WEAR</string>
@@ -169,9 +160,6 @@
     <string name="carb_increment_button_message">Liczba węglowodanów do dodania po wciśnięciu przycisku</string>
     <string name="insulin_increment_button_message">Ilość insuliny do dodania po wciśnięciu przycisku</string>
     <string name="error_starting_cgm">Nie można uruchomić aplikacji CGM. Upewnij się, że została zainstalowana.</string>
-    <string name="ignore5m">Ignoruj 5 min</string>
-    <string name="ignore15m">Ignoruj 15 min</string>
-    <string name="ignore30m">Ignoruj 30 min</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
     <string name="wear_predictions_summary">Pokaż prognozę poziomu na zegarku.</string>
@@ -181,7 +169,6 @@
     <string name="allow_automated_crash_reporting">Zezwalaj na automatyczne zgłaszanie awarii i danych o użytkowaniu aplikacji do deweloperów za pośrednictwem usługi fabric.io.</string>
     <string name="g5appnotdetected">Proszę uaktualnij swoją Apkę Dexcom do wersji wspieranej</string>
     <string name="dexcom_app_not_installed">Apka Dexcom nie jest zainstalowana.</string>
-    <string name="loop_smbsetbypump_label">SMB ustawiony przez pompę</string>
     <string name="overview_show_activity">Aktywność</string>
     <string name="overview_show_bgi">Wpływ na glikemię (BGI)</string>
     <string name="overview_show_sensitivity">Wrażliwość</string>
@@ -190,8 +177,6 @@
     <string name="overview_show_iob">IOB (Aktywna Insulina)</string>
     <string name="overview_show_basals">Dawki Bazowe</string>
     <string name="engineering_mode_enabled">Tryb Inżynierski włączony</string>
-    <string name="smb_frequency_exceeded">Bolus został podany w ciągu ostatnich 3 minut, opuszczam SMB</string>
-    <string name="basal_set_correctly">Baza ustawiona prawidłowo</string>
     <string name="absorption_cutoff_title">Maksymalny czas wchłaniania posiłku [h]</string>
     <string name="absorption_cutoff_summary">Czas, w którym każdy posiłek jest uznany za wchłonięty. Pozostałe węglowodany zostaną wyzerowane.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Pokaż pole uwag w oknie leczenia</string>
@@ -242,8 +227,6 @@
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="sendlogfiles">Wyślij dzisiejsze pliki logów razem z datą i czasem do programistów. Nieoczekiwana sytuacja.</string>
-    <string name="loop_openmode_min_change">Minimalna żądana zmiana [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
     <string name="profile_total">== ∑ %1$s U</string>
     <string name="deliverpartofboluswizard">Kreator bolusa wykonuje obliczenia, ale tylko ta część obliczonej dawki insuliny jest dostarczana. Pomocne z algorytmem SMB.</string>
     <string name="unitsnosemicolon">Jednostki</string>
@@ -253,10 +236,6 @@
     <string name="show_removed">Pokaż usunięte</string>
     <string name="clearqueueconfirm">Wyczyścić kolejkę? Wszystkie dane w kolejce zostaną utracone!</string>
     <string name="chartmenu">Menu wykresu</string>
-    <string name="loop_smbrequest_time_label">Żądany czas SMB</string>
-    <string name="loop_smbexecution_time_label">Czas wykonywania SMB</string>
-    <string name="loop_tbrrequest_time_label">Żądany czas bazy tymczasowej</string>
-    <string name="loop_tbrexecution_time_label">Czas wykonywania bazy tymczasowej</string>
     <string name="overview_show_predictions">Prognozy poziomu</string>
     <string name="overview_show_treatments">Zabiegi</string>
     <string name="overview_show_deviationslope">Krzywa odchylenie</string>
