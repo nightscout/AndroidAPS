@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
     <string name="nav_exit">Afslut</string>
     <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
-    <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
     <string name="description_sensitivity_aaps">Sensitiviteten er beregnet på samme måde som Oref0, men du kan angive tidsramme for fortiden. Minimal optagelse af kulhydrater beregnes fra maks. kulhydrat optagelse fra præferencer.</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">Synkronisering</string>
     <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Efter bearbejdede begrænsninger</string>
-    <string name="loop_tbrsetbypump_label">Midlertidig basal sat af pumpe</string>
-    <string name="noapsselected">INGEN APS VALGT ELLER GIVET RESULTAT</string>
     <string name="constraints_violation">Begrænsninger overtrådt</string>
     <string name="changeyourinput">Skift dit input!</string>
     <string name="configbuilder_bgsource">BG kilde</string>
-    <string name="openloop_newsuggestion">Nyt forslag tilgængeligt</string>
-    <string name="carbssuggestion">Kulhydrat Forslag</string>
     <string name="profile_label">Profil</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="exported">Præferencer eksporteret</string>
@@ -78,7 +71,6 @@
     <string name="correctionbous">Korrektion</string>
     <string name="ns_upload_only">(FARLIG AT DEAKTIVERE) Kun NS upload</string>
     <string name="ns_upload_only_summary">Kun NS upload (Synkronisering deaktiveret). Ikke effektiv på SVG medmindre en lokal kilde såsom xDrip+ er valgt. Ikke effektiv på profiler når NS-Profil bliver brugt.\n!!! ADVSRSEL !!! Deaktivering af denne indstilling kan forårsage funktionsfejl og overdosis af insulin hvis nogle af dine komponenter (AAPS, NS xDrip+) er konfigureret forkert. Kig nøje efter om data fra AAPS matcher pumpens tilstand!</string>
-    <string name="pumpNotInitialized">Pumpe er ikke initialiseret!</string>
     <string name="units">Enheder</string>
     <string name="prefs_range_title">Område for Visualisering</string>
     <string name="prefs_range_summary">Højeste og laveste værdi for diagrammerne i Oversigt og Smartwatch</string>
@@ -90,7 +82,6 @@
     <string name="ongoingnotificaction">Igangværende Notifikation</string>
     <string name="old_data">GAMLE DATA</string>
     <string name="configbuilder_shortname">KONF</string>
-    <string name="loop_shortname">LOOP</string>
     <string name="overview_shortname">HJEM</string>
     <string name="treatments_shortname">BEHANDL</string>
     <string name="wear_shortname">UR</string>
@@ -170,9 +161,6 @@
     <string name="carb_increment_button_message">Antal kulhydrater der skal tilføjes når der trykkes på knappen</string>
     <string name="insulin_increment_button_message">Mængde insulin der skal tilføjes når der trykkes på knappen</string>
     <string name="error_starting_cgm">Kunne ikke starte CGM applikationen. Kontroller at den er installeret.</string>
-    <string name="ignore5m">Ignorér 5m</string>
-    <string name="ignore15m">Ignorér 15m</string>
-    <string name="ignore30m">Ignorér 30m</string>
     <string name="wear_notifysmb_title">Giv besked ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på uret som en standard bolus.</string>
     <string name="wear_predictions_summary">Vis forudsigelser på urskiven.</string>
@@ -182,7 +170,6 @@
     <string name="allow_automated_crash_reporting">Tillad automatisk nedbruds rapportering og funktionsbrug data som sendes til udviklerne via fabric.io tjenesten.</string>
     <string name="g5appnotdetected">Opdater venligst din Dexcom app til understøttet version</string>
     <string name="dexcom_app_not_installed">Dexcom app er ikke installeret.</string>
-    <string name="loop_smbsetbypump_label">SMB indstillet af pumpe</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukker virkning</string>
     <string name="overview_show_sensitivity">Sensitivitet</string>
@@ -191,8 +178,6 @@
     <string name="overview_show_iob">Aktivt insulin </string>
     <string name="overview_show_basals">Basaler</string>
     <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
-    <string name="smb_frequency_exceeded">En bolus blev leveret inden for de sidste 3 minutter, springer SMB over</string>
-    <string name="basal_set_correctly">Basal sat korrekt </string>
     <string name="absorption_cutoff_title">Måltid max absorptionstid [h]</string>
     <string name="absorption_cutoff_summary">Tid hvor ethvert måltid betragtes som absorberet. Resterende kulhydrater vil blive afskåret.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis notefelt i behandlingsdialoger</string>
@@ -246,8 +231,6 @@
     <string name="resettodefaults">Nulstil til standardindstillinger</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
     <string name="sendlogfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
-    <string name="loop_openmode_min_change">Minimal anmodningsændring [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="deliverpartofboluswizard">Bolus guiden udfører beregning, men kun denne del af beregnet insulin leveres. Nyttig med SMB algoritme.</string>
     <string name="unitsnosemicolon">Enheder</string>
@@ -257,10 +240,6 @@
     <string name="show_removed">Vis fjernede</string>
     <string name="clearqueueconfirm">Ryd køen? Alle data i køen vil gå tabt!</string>
     <string name="chartmenu">Diagrammenu</string>
-    <string name="loop_smbrequest_time_label">SMB anmodningstid</string>
-    <string name="loop_smbexecution_time_label">SMB udførelsestid</string>
-    <string name="loop_tbrrequest_time_label">Midlertidig basal anmodningstid</string>
-    <string name="loop_tbrexecution_time_label">Midlertidig basal afviklingstid</string>
     <string name="overview_show_predictions">Forudsigelser</string>
     <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_deviationslope">Afvigelses hældning</string>
