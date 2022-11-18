@@ -232,4 +232,5 @@
     <string name="buttonson_description">Кнопки всегда отображаются в нижней части экрана</string>
     <string name="largedisplay_description">Большой экран</string>
     <string name="skin">Тема оформления</string>
+    <!--    Loop -->
 </resources>
