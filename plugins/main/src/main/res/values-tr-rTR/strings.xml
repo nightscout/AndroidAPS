@@ -223,4 +223,5 @@
     <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Görünüm</string>
+    <!--    Loop -->
 </resources>
