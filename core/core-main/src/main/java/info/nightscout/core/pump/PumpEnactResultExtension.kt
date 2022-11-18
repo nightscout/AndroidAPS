@@ -1,4 +1,4 @@
-package info.nightscout.core.pumpExtensions
+package info.nightscout.core.pump
 
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.pump.PumpEnactResult

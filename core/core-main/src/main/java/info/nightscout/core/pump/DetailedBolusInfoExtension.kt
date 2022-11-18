@@ -1,4 +1,4 @@
-package info.nightscout.core.pumpExtensions
+package info.nightscout.core.pump
 
 import com.google.gson.Gson
 import info.nightscout.database.impl.transactions.InsertOrUpdateBolusTransaction

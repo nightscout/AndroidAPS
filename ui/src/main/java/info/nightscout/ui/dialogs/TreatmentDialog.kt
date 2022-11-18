@@ -13,8 +13,8 @@ import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.pumpExtensions.insertBolusTransaction
-import info.nightscout.core.pumpExtensions.insertCarbsTransaction
+import info.nightscout.core.pump.insertBolusTransaction
+import info.nightscout.core.pump.insertCarbsTransaction
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.UserEntry

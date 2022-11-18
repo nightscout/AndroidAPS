@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.receivers
+package info.nightscout.interfaces.receivers
 
 @Suppress("unused")
 interface Intents {

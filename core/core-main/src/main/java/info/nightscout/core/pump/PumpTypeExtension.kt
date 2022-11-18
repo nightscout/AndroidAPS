@@ -1,4 +1,4 @@
-package info.nightscout.core.pumpExtensions
+package info.nightscout.core.pump
 
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.embedments.InterfaceIDs

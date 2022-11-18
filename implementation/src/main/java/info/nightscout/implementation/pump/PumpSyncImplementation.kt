@@ -3,9 +3,9 @@ package info.nightscout.implementation.pump
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.main.R
-import info.nightscout.core.pumpExtensions.fromDbPumpType
-import info.nightscout.core.pumpExtensions.toDbPumpType
-import info.nightscout.core.pumpExtensions.toDbSource
+import info.nightscout.core.pump.fromDbPumpType
+import info.nightscout.core.pump.toDbPumpType
+import info.nightscout.core.pump.toDbSource
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.ExtendedBolus

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.pumpExtensions.toJsonString
+import info.nightscout.core.pump.toJsonString
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.shared.utils.T
 import info.nightscout.rx.logging.AAPSLogger

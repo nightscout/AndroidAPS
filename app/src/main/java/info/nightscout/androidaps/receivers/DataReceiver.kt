@@ -17,6 +17,7 @@ import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.androidaps.utils.extensions.copyDouble
 import info.nightscout.androidaps.utils.extensions.copyLong
 import info.nightscout.androidaps.utils.extensions.copyString
+import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.BundleLogger

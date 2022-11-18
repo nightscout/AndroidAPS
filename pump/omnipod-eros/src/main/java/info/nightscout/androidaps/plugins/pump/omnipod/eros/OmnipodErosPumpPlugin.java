@@ -79,7 +79,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUti
 import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.core.fabric.FabricPrivacy;
-import info.nightscout.core.pumpExtensions.DetailedBolusInfoExtensionKt;
+import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
