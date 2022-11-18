@@ -419,4 +419,5 @@
     <string name="buttonson_description">Knapper vises alltid på bunnen av skjermen</string>
     <string name="largedisplay_description">Stor skjerm</string>
     <string name="skin">Tema</string>
+    <!--    Loop -->
 </resources>
