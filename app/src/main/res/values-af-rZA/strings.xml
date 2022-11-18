@@ -9,7 +9,6 @@
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
-    <string name="description_loop">Aktiveer of deaktiveer die implementering die lus wakker maak.</string>
     <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
@@ -27,14 +26,9 @@
     <string name="configbuilder_general_description">Hier is \'n paar algemene invoegtoepassings wat jy dalk nuttig sal vind.</string>
     <string name="configbuilder_constraints_description">Watter beperkings word toegepas?</string>
     <string name="configbuilder_loop">Lus</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Na verwerkte beperkings</string>
-    <string name="loop_tbrsetbypump_label">Tydelike basale gestel deur pomp</string>
-    <string name="noapsselected">GEEN APS GEKIES OF UITSLAG VERSKAF</string>
     <string name="constraints_violation">Beperkings skending</string>
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
-    <string name="openloop_newsuggestion">Nuwe voorstel beskikbaar</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
     <string name="exported">Voorkeure uitgevoer</string>
     <string name="export_to">Uitvoer instellings na</string>
@@ -55,7 +49,6 @@
     <string name="overview_editquickwizardlistactivity_add">Voeg by</string>
     <string name="overview_quickwizard_item_edit_button">Wysig</string>
     <string name="correctionbous">Corr</string>
-    <string name="pumpNotInitialized">Pomp nie geïnisialiseer nie!</string>
     <string name="prefs_range_title">Reeks vir visualisering</string>
     <string name="prefs_range_summary">Hoë en lae merke vir die diagramme in Overview en Smartwatch</string>
     <string name="low_mark">LAE merk</string>
@@ -66,7 +59,6 @@
     <string name="ongoingnotificaction">Voortgesette kennisgewing</string>
     <string name="old_data">OU DATA</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LUS</string>
     <string name="overview_shortname">TUIS</string>
     <string name="treatments_shortname">BEHANDEL</string>
     <string name="wear_shortname">WEAR</string>
@@ -138,7 +130,6 @@
     <string name="allow_automated_crash_reporting">Laat outomatiese Foutverslagdoening en kenmerk data stuur na die ontwikkelaars via die fabric.io diens.</string>
     <string name="g5appnotdetected">Hernuwe asseblief jou G5 toepassing na \'n ondersteunde weergawe</string>
     <string name="dexcom_app_not_installed">Dexcom toep is nie geïnstalleer nie.</string>
-    <string name="loop_smbsetbypump_label">SMB gestel deur pomp</string>
     <string name="overview_show_activity">Aktiwiteit</string>
     <string name="overview_show_sensitivity">Sensitiewiteit</string>
     <string name="overview_show_deviations">Afwykings</string>
@@ -146,8 +137,6 @@
     <string name="overview_show_iob">Insulien AanBoord</string>
     <string name="overview_show_basals">Basale</string>
     <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
-    <string name="smb_frequency_exceeded">\'n Bolus was binne die laaste 3 minute afgelewer, SMB is oorgespring</string>
-    <string name="basal_set_correctly">Basale reggestel</string>
     <string name="absorption_cutoff_title">Maaltyd maks absorpsie tyd [h]</string>
     <string name="absorption_cutoff_summary">Tyd waarteen enige maaltyd as geabsorbeer beskou word. Oorblywende koolhidrate sal afgesny word.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Wys notas veld in behandeling dialoë</string>
@@ -193,8 +182,6 @@
     <string name="resettodefaults">Herstel na verstek</string>
     <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
     <string name="sendlogfiles">Stuur vandag se loglêers aan ontwikkelaars saam met hierdie tyd. Onverwagte situasie.</string>
-    <string name="loop_openmode_min_change">Minimale versoek verandering [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="overview_show_predictions">Projeksies</string>
     <!-- WEAR OS-->
