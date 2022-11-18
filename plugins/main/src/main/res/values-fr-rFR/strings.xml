@@ -428,4 +428,5 @@
     <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
+    <!--    Loop -->
 </resources>
