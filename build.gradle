@@ -18,6 +18,7 @@ buildscript {
         nav_version = '2.5.3'
         appcompat_version = '1.5.1'
         material_version = '1.7.0'
+        gridlayout_version = '1.0.0'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
         commonslang3_version = '3.12.0'

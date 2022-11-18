@@ -31,7 +31,7 @@ dependencies {
     api "com.google.android.material:material:$material_version"
 
     // Actions
-    api 'androidx.gridlayout:gridlayout:1.0.0'
+    api "androidx.gridlayout:gridlayout:$gridlayout_version"
 
     // NSClient, Tidepool
     api("io.socket:socket.io-client:1.0.0") {
