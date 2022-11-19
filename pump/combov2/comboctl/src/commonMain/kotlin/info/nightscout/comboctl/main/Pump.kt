@@ -1610,12 +1610,31 @@ class Pump(
                 // We always re-read the pump status, even if the history delta
                 // checks above detected discrepancies, to make sure the status
                 // is up-to-date.
-                pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
-                // Not calling updateStatusImpl(), instead calling this directly.
-                // That's because updateStatusImpl() calls executeCommand(),
-                // and here, we already are running in a lambda that's run
-                // by executeCommand().
-                updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary = true)
+                // This is done in a loop in case an alert screen appears. If the
+                // alert is a dismissible warning, we dismiss it, and try again
+                // (hence the loop). In particular, a W1 low reservoir warning
+                // can show up if the delivered bolus brought the reservoir level
+                // below the low threshold. W1 is dismissible.
+                while (true) {
+                    try {
+                        pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
+                        // Not calling updateStatusImpl(), instead calling this directly.
+                        // That's because updateStatusImpl() calls executeCommand(),
+                        // and here, we already are running in a lambda that's run
+                        // by executeCommand().
+                        updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary = true)
+                        break
+                    } catch (e: AlertScreenException) {
+                        logger(LogLevel.DEBUG) { "Got alert screen after bolus" }
+                        // If this is a trivial, purely informative, dismissible
+                        // warning screen, this call dismisses it and also emits
+                        // an event if appropriate (like an event about a low
+                        // reservoir level). If this is a non-dismissible warning
+                        // screen or an error screen, this call itself throws
+                        // an AlertScreenException to propagate the alert further.
+                        handleAlertScreenContent(e.alertScreenContent)
+                    }
+                }
             }
         }
     }
@@ -1897,6 +1916,7 @@ class Pump(
                     doAlertCheck = true
                     throw e
                 } catch (e: AlertScreenException) {
+                    logger(LogLevel.DEBUG) { "Alert occurred during command execution" }
                     // We enter this catch block if any alert screens appear
                     // _during_ the command execution. (doAlertCheck is about
                     // alerts that happen _after_ command execution, like a W6
@@ -1960,6 +1980,7 @@ class Pump(
                     }
                 } finally {
                     if (doAlertCheck) {
+                        logger(LogLevel.DEBUG) { "Checking for post-execution alerts" }
                         // Post-command check in case something went wrong
                         // and an alert screen appeared after the command ran.
                         // Most commonly, these are benign warning screens,
