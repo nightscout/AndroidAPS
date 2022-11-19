@@ -7,6 +7,7 @@
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">desde la aplicación de autenticación para: %1$s seguido de PIN</string>
     <string name="smscommunicator_otp_pin">PIN obligatorio adicional al final del token</string>
     <string name="smscommunicator_otp_pin_summary">Los dígitos adicionales se deben memorizar y pegar al final de cada una de las contraseñas generadas por One Time Password</string>
+    <string name="smscommunicator_tab_otp_label">Configuración de autentificación</string>
     <string name="smscommunicator_code_verify_label">Código para comprobar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">El código de verificación consta de 6 dígitos mostrados por la aplicación Authenticator (conocido como OTP) seguido de 3 o más dígitos del PIN obligatorio.</string>
@@ -23,9 +24,14 @@
     <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
+    <string name="sms_wrong_code">Código incorrecto. Comando cancelado.</string>
+    <string name="sms_timeout_while_waiting">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Para entregar bolo %1$.2fU responder con el código %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Para entregar bolo %1$.2fU responder con el código %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Para establecer un basal temporal %1$s responder con el código %2$s</string>
     <string name="smscommunicator_tt_set">Objetivo %1$s para %2$d minutos establecido correctamente</string>
     <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado correctamente</string>
     <string name="smscommunicator_reconnect">Bomba reconectada</string>
