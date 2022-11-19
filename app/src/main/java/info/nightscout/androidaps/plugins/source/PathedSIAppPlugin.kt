@@ -36,7 +36,7 @@ class PathedSIAppPlugin @Inject constructor(
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon(R.drawable.ic_generic_cgm)
     .pluginName(R.string.patched_si_app)
-    .description(R.string.description_source_mm640g),
+    .description(R.string.description_source_patched_si_app),
     aapsLogger, rh, injector
 ), BgSource {
 
