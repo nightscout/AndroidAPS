@@ -274,6 +274,19 @@ class RTNavigationTest {
         )
         assertEquals(Pair(((60 - 50) + (10 - 0)) / 1, RTNavigationButton.DOWN), result)
 
+        // Another cyclic quantity range test with a wrap around,
+        // this time from the other direction (wrapping around
+        // from quantity 58 to target quantity 1).
+        result = computeShortRTButtonPress(
+            currentQuantity = 58,
+            targetQuantity = 1,
+            cyclicQuantityRange = 60,
+            incrementSteps = arrayOf(Pair(0, 1)),
+            incrementButton = RTNavigationButton.UP,
+            decrementButton = RTNavigationButton.DOWN
+        )
+        assertEquals(Pair(3, RTNavigationButton.UP), result)
+
         // Additional test to check that cyclic ranges are handled correctly
         // even if currentQuantity is slightly higher than targetQuantity. This
         // verifies that the computation does not produce negative distances.

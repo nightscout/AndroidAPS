@@ -1045,10 +1045,17 @@ internal fun computeShortRTButtonPress(
         require(stepSize > 0)
         val distance = (targetQuantity - currentQuantity).absoluteValue
         if (cyclicQuantityRange != null) {
+            // With a cyclic quantity, if the absolute distance between
+            // quantities exceeds half of that range, we have the option
+            // to change the quantity in the opposite direction which
+            // requires fewer button presses. For example, if the range
+            // is 60, and the absolute distance is 40, we'd normally have
+            // to press a button 40 times to get to the target quantity.
+            // But since cyclic quantities wrap around, we can instead
+            // press the opposite button 60-40 = 20 times to also get
+            // to the target quantity.
             if (distance > (cyclicQuantityRange / 2)) {
-                val firstPart = (cyclicQuantityRange - targetQuantity)
-                val secondPart = currentQuantity - 0
-                numNeededShortRTButtonPresses = computeNumSteps(stepSize, firstPart + secondPart)
+                numNeededShortRTButtonPresses = computeNumSteps(stepSize, cyclicQuantityRange - distance)
                 shortRTButtonToPress = if (targetQuantity < currentQuantity) incrementButton else decrementButton
             } else {
                 numNeededShortRTButtonPresses = computeNumSteps(stepSize, distance)
