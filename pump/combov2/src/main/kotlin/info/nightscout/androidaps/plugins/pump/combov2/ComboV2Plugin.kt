@@ -95,6 +95,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 @Singleton
@@ -908,13 +909,11 @@ class ComboV2Plugin @Inject constructor (
         // and the percentage must be an integer multiple
         // of 10, otherwise the Combo won't accept it.
 
-        val percentage = (absoluteRate / baseBasalRate * 100).toInt()
-        val roundedPercentage = (absoluteRate / baseBasalRate * 10).roundToInt() * 10
+        val percentage = absoluteRate / baseBasalRate * 100
+        val roundedPercentage = ((absoluteRate / baseBasalRate * 10).roundToInt() * 10)
+        val limitedPercentage = min(roundedPercentage, _pumpDescription.maxTempPercent)
 
-        if (percentage != roundedPercentage)
-            aapsLogger.debug(LTag.PUMP, "Calculated percentage of $percentage% out of absolute rate $absoluteRate; rounded percentage to $roundedPercentage%")
-        else
-            aapsLogger.debug(LTag.PUMP, "Calculated percentage of $percentage% out of absolute rate $absoluteRate")
+        aapsLogger.debug(LTag.PUMP, "Calculated percentage of $percentage% out of absolute rate $absoluteRate; rounded to: $roundedPercentage%; limited to: $limitedPercentage%")
 
         val cctlTbrType = when (tbrType) {
             PumpSync.TemporaryBasalType.NORMAL -> ComboCtlTbr.Type.NORMAL
@@ -923,7 +922,7 @@ class ComboV2Plugin @Inject constructor (
             PumpSync.TemporaryBasalType.SUPERBOLUS -> ComboCtlTbr.Type.SUPERBOLUS
         }
 
-        setTbrInternal(roundedPercentage, durationInMinutes, cctlTbrType, force100Percent = false, pumpEnactResult)
+        setTbrInternal(limitedPercentage, durationInMinutes, cctlTbrType, force100Percent = false, pumpEnactResult)
 
         return pumpEnactResult
     }
@@ -932,26 +931,9 @@ class ComboV2Plugin @Inject constructor (
         val pumpEnactResult = PumpEnactResult(injector)
         pumpEnactResult.isPercent = true
 
-        val adjustedPercentage = percent
-            .let {
-                if (it > _pumpDescription.maxTempPercent) {
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Reducing requested TBR to the maximum support " +
-                            "by the pump: $percent  -> ${_pumpDescription.maxTempPercent}"
-                    )
-                    _pumpDescription.maxTempPercent
-                } else
-                    it
-            }
-            .let {
-                val roundedPercentage = ((it + 5) / 10) * 10
-                if (roundedPercentage != it) {
-                    aapsLogger.debug(LTag.PUMP, "Rounded requested percentage:$it -> $roundedPercentage")
-                    roundedPercentage
-                } else
-                    it
-            }
+        val roundedPercentage = ((percent + 5) / 10) * 10
+        val limitedPercentage = min(roundedPercentage, _pumpDescription.maxTempPercent)
+        aapsLogger.debug(LTag.PUMP, "Got percentage of $percent%; rounded to: $roundedPercentage%; limited to: $limitedPercentage%")
 
         val cctlTbrType = when (tbrType) {
             PumpSync.TemporaryBasalType.NORMAL -> ComboCtlTbr.Type.NORMAL
@@ -960,7 +942,7 @@ class ComboV2Plugin @Inject constructor (
             PumpSync.TemporaryBasalType.SUPERBOLUS -> ComboCtlTbr.Type.SUPERBOLUS
         }
 
-        setTbrInternal(adjustedPercentage, durationInMinutes, cctlTbrType, force100Percent = false, pumpEnactResult)
+        setTbrInternal(limitedPercentage, durationInMinutes, cctlTbrType, force100Percent = false, pumpEnactResult)
 
         return pumpEnactResult
     }
