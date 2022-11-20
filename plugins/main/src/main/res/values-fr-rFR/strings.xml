@@ -454,4 +454,5 @@
     <string name="loop_smb_execution_time_label">Heure d\'exécution SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB défini par la pompe</string>
     <string name="loop_open_mode_min_change">Changement minimum [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
 </resources>
