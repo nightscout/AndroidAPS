@@ -395,7 +395,16 @@ suspend fun longPressRTButtonUntil(
                 rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true)
             }
         } catch (e: TimeoutCancellationException) {
+            // Timeout expired, and we got no new frame. Stop waiting
+            // for one and continue long-pressing the button. We might
+            // be on a screen that does not update on its own.
             null
+        } catch (t: Throwable) {
+            // An exception that's not TimeoutCancellationException
+            // was thrown. Catch it, store it to rethrow it later,
+            // and end the long button press.
+            thrownDuringButtonPress = t
+            return@startLongButtonPress false
         } ?: return@startLongButtonPress true
 
         // It is possible that we got a parsed display frame very quickly.
