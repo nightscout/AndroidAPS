@@ -6,6 +6,7 @@ import info.nightscout.comboctl.base.NullDisplayFrame
 import info.nightscout.comboctl.base.PathSegment
 import info.nightscout.comboctl.base.findShortestPath
 import info.nightscout.comboctl.base.testUtils.runBlockingWithWatchdog
+import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.MainScreenContent
@@ -28,6 +29,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.junit.jupiter.api.BeforeAll
+import kotlin.test.assertFailsWith
 
 class RTNavigationTest {
     /* RTNavigationContext implementation for testing out RTNavigation functionality.
@@ -664,6 +666,48 @@ class RTNavigationTest {
     }
 
     @Test
+    fun checkLongPressRTButtonInnerAbort() {
+        // Modified checkLongPressRTButtonUntil() test with a W6 warning
+        // screen in between. We except the long button press to be aborted
+        // and an AlertScreenException to be thrown.
+
+        val rtNavigationContext = TestRTNavigationContext(listOf(
+            ParsedScreen.MainScreen(MainScreenContent.Normal(
+                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                activeBasalProfileNumber = 1,
+                currentBasalRateFactor = 300,
+                batteryState = BatteryState.FULL_BATTERY
+            )),
+            ParsedScreen.BasalRate1ProgrammingMenuScreen,
+            ParsedScreen.BasalRate2ProgrammingMenuScreen,
+            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6)),
+            ParsedScreen.BasalRate3ProgrammingMenuScreen,
+            ParsedScreen.BasalRate4ProgrammingMenuScreen,
+            ParsedScreen.BasalRate5ProgrammingMenuScreen
+        ))
+
+        runBlockingWithWatchdog(6000) {
+            val e = assertFailsWith<AlertScreenException> {
+                // Keep long-pressing the button. Eventually, the W6 screen is received.
+                longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.MENU) { parsedScreen ->
+                    if (parsedScreen is ParsedScreen.BasalRate4ProgrammingMenuScreen)
+                        LongPressRTButtonsCommand.ReleaseButton
+                    else
+                        LongPressRTButtonsCommand.ContinuePressingButton
+                }
+            }
+            assertIs<AlertScreenContent.Warning>(e.alertScreenContent)
+            assertEquals(6, (e.alertScreenContent as AlertScreenContent.Warning).code)
+            // Simulate a short RT button press that would be used after the exception
+            // was thrown to dismiss the W6 warning. This also checks that the long
+            // button press has been finished correctly; if not, this call may fail
+            // because the code incorrectly thinks that a long press button job
+            // is still ongoing.
+            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
+        }
+    }
+
+    @Test
     fun checkCycleToRTScreen() {
         // Test the cycleToRTScreen() by letting it repeatedly
         // press MENU until it reaches basal rate programming screen 4
@@ -755,6 +799,51 @@ class RTNavigationTest {
     }
 
     @Test
+    fun checkAdjustQuantityOnScreenWithW6WarningDuringShortButtonPresses() {
+        // Modified checkAdjustQuantityOnScreen() variant with a W6 warning screen in between
+        // the screens that are received by the code when it corrects a long button press
+        // overshoot with a number of short button presses. We expect an AlertScreenException
+        // to be thrown. Such a warning screen interrupts and aborts whatever operation we
+        // were doing and returns the Combo back to the main screen.
+
+        val rtNavigationContext = TestRTNavigationContext(listOf(
+            ParsedScreen.TemporaryBasalRatePercentageScreen(100, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(110, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(120, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(130, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(140, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(150, remainingDurationInMinutes = 30),
+            // No 160 quantity here, on purpose, to test overshoot handling.
+            // During the screens below, short button presses will be used
+            // to fix the overshoot, so we place the W6 in between these
+            // to test that the AlertScreenException is correctly thrown
+            // while short-pressing the button.
+            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6)),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
+            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
+        ))
+
+        val e = assertFailsWith<AlertScreenException> {
+            runBlockingWithWatchdog(6000) {
+                adjustQuantityOnScreen(
+                    rtNavigationContext,
+                    targetQuantity = 160,
+                    cyclicQuantityRange = null,
+                    incrementSteps = arrayOf(Pair(0, 10))
+                ) { parsedScreen ->
+                    parsedScreen as ParsedScreen.TemporaryBasalRatePercentageScreen
+                    parsedScreen.percentage
+                }
+            }
+        }
+        assertIs<AlertScreenContent.Warning>(e.alertScreenContent)
+        assertEquals(6, (e.alertScreenContent as AlertScreenContent.Warning).code)
+    }
+
+    @Test
     fun checkCyclicAdjustQuantityOnScreen() {
         // Similar to checkAdjustQuantityOnScreen(), except that we
         // test a "cyclic" quantity here, meaning that there is a maximum
@@ -776,7 +865,9 @@ class RTNavigationTest {
             ParsedScreen.TimeAndDateSettingsMinuteScreen(1),
             // No 2 quantity here, on purpose, to test overshoot handling
             ParsedScreen.TimeAndDateSettingsMinuteScreen(3),
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(2)
+            ParsedScreen.TimeAndDateSettingsMinuteScreen(2),
+            // This is a dummy screen to avoid an exception due to the next() call in TestRTNavigationContext.shortButtonPress()
+            ParsedScreen.TimeAndDateSettingsMinuteScreen(0)
         ))
 
         runBlockingWithWatchdog(6000) {
