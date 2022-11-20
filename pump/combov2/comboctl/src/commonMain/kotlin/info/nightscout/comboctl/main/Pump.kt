@@ -899,6 +899,7 @@ class Pump(
      */
     suspend fun connect(maxNumAttempts: Int? = DEFAULT_MAX_NUM_REGULAR_CONNECT_ATTEMPTS) {
         check(stateFlow.value == State.Disconnected) { "Attempted to connect to pump in the ${stateFlow.value} state" }
+        check((maxNumAttempts == null) || (maxNumAttempts > 0))
 
         val actualMaxNumAttempts = maxNumAttempts ?: Int.MAX_VALUE
 
