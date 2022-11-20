@@ -459,6 +459,7 @@ class ComboV2Plugin @Inject constructor (
                             )
 
                             pumpStatus = newPumpStatus
+                            updateLevels()
 
                             // Send the EventRefreshOverview to keep the overview fragment's content
                             // up to date. Other actions like a CommandQueue.readStatus() call trigger
@@ -725,19 +726,28 @@ class ComboV2Plugin @Inject constructor (
             return activeBasalProfile?.get(currentHour)?.cctlBasalToIU() ?: 0.0
         }
 
-    override val reservoirLevel: Double
-        get() = pumpStatus?.availableUnitsInReservoir?.toDouble() ?: 0.0
+    // Store the levels as plain properties. That way, the last reported
+    // levels are shown on the UI even when the driver connects to the
+    // pump again and resets the current pump state.
 
-    override val batteryLevel: Int
-        // The Combo does not provide any numeric battery
-        // level, so we have to use some reasonable values
-        // based on the indicated battery state.
-        get() = when (pumpStatus?.batteryState) {
-            null,
-            BatteryState.NO_BATTERY -> 5
-            BatteryState.LOW_BATTERY -> 25
-            BatteryState.FULL_BATTERY -> 100
+    override var reservoirLevel: Double = 0.0
+        private set
+    override var batteryLevel: Int = 0
+        private set
+
+    private fun updateLevels() {
+        pumpStatus?.availableUnitsInReservoir?.let {
+            reservoirLevel = it.toDouble()
         }
+
+        pumpStatus?.batteryState?.let {
+            batteryLevel = when (it) {
+                BatteryState.NO_BATTERY -> 5
+                BatteryState.LOW_BATTERY -> 25
+                BatteryState.FULL_BATTERY -> 100
+            }
+        }
+    }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         val oldInsulinAmount = detailedBolusInfo.insulin
