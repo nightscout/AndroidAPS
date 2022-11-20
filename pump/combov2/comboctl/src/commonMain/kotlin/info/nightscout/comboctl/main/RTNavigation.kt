@@ -986,12 +986,23 @@ suspend fun navigateToRTScreen(
     var cycleCount = 0
     val pathIt = path.iterator()
     var nextPathItem = pathIt.next()
+    var previousScreenType: KClassifier? = null
     while (true) {
         if (cycleCount >= rtNavigationContext.maxNumCycleAttempts)
             throw CouldNotFindRTScreenException(targetScreenType)
 
         val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true) ?: continue
         val parsedScreen = parsedDisplayFrame.parsedScreen
+
+        // Check if we got the same screen with different content, for example
+        // when remaining TBR duration is shown on the main screen and the
+        // duration happens to change during this loop. If this occurs,
+        // skip the redundant screen.
+        if ((previousScreenType != null) && (previousScreenType == parsedScreen::class)) {
+            logger(LogLevel.DEBUG) { "Got a screen of the same type ${parsedScreen::class}; skipping" }
+            continue
+        }
+        previousScreenType = parsedScreen::class
 
         // A path item's targetNodeValue is the screen type we are trying
         // to reach, and the edgeValue is the RT button to press to reach it.

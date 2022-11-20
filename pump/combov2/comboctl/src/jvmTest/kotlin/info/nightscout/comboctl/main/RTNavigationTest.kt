@@ -598,6 +598,50 @@ class RTNavigationTest {
     }
 
     @Test
+    fun checkRTNavigationFromMainToQuickinfoWithChangingRemainingTbrDuration() {
+        // Check that RT screen navigation skips a newly received screen
+        // if it is of the same type as the previously observed screen.
+        // This typically happens because a quantity like the remaining
+        // TBR duration changes on screen. The navigation code has to
+        // check that the _type_ of the screen changed, and if not, it
+        // must skip the screen. Here, we simulate a main TBR screen
+        // whose remaining TBR duration changes. We expect the navigation
+        // code to detect this and press CHECK just _once_ (because the
+        // second TBR main screen is skipped by the detection). Without
+        // the screen type check, it would press CHECK _twice_.
+
+        val rtNavigationContext = TestRTNavigationContext(listOf(
+            ParsedScreen.MainScreen(MainScreenContent.Tbr(
+                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                remainingTbrDurationInMinutes = 28,
+                tbrPercentage = 110,
+                activeBasalProfileNumber = 1,
+                currentBasalRateFactor = 300,
+                batteryState = BatteryState.FULL_BATTERY
+            )),
+            ParsedScreen.MainScreen(MainScreenContent.Tbr(
+                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                remainingTbrDurationInMinutes = 27,
+                tbrPercentage = 110,
+                activeBasalProfileNumber = 1,
+                currentBasalRateFactor = 300,
+                batteryState = BatteryState.FULL_BATTERY
+            )),
+            ParsedScreen.QuickinfoMainScreen(Quickinfo(availableUnits = 105, reservoirState = ReservoirState.FULL))
+        ))
+
+        runBlockingWithWatchdog(6000) {
+            navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, isComboStopped = false)
+        }
+
+        val expectedShortRTButtonPressSequence = listOf(
+            RTNavigationButton.CHECK
+        )
+
+        assertContentEquals(expectedShortRTButtonPressSequence, rtNavigationContext.shortPressedRTButtons)
+    }
+
+    @Test
     fun checkLongPressRTButtonUntil() {
         // Test long RT button presses by simulating transitions
         // between screens that happen due to the long button
