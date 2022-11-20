@@ -706,6 +706,8 @@ suspend fun adjustQuantityOnScreen(
         return
     }
 
+    val currentQuantity: Int
+
     if (longRTButtonPressPredicate(targetQuantity, initialQuantity)) {
         val needToIncrement = checkIfNeedsToIncrement(initialQuantity)
         logger(LogLevel.DEBUG) {
@@ -815,17 +817,17 @@ suspend fun adjustQuantityOnScreen(
             "Second phase: last seen quantity $lastQuantity is not the target quantity; " +
                 "short-pressing RT button(s) to finetune it"
         }
-    }
 
-    val currentQuantity: Int
-
-    while (true) {
-        val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true) ?: continue
-        val parsedScreen = parsedDisplayFrame.parsedScreen
-        val quantity = getQuantity(parsedScreen)
-        if (quantity != null) {
-            currentQuantity = quantity
-            break
+        currentQuantity = lastQuantity!!
+    } else {
+        while (true) {
+            val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true) ?: continue
+            val parsedScreen = parsedDisplayFrame.parsedScreen
+            val quantity = getQuantity(parsedScreen)
+            if (quantity != null) {
+                currentQuantity = quantity
+                break
+            }
         }
     }
 
