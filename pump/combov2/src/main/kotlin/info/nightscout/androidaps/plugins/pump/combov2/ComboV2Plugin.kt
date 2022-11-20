@@ -498,7 +498,10 @@ class ComboV2Plugin @Inject constructor (
                 var forciblyDisconnectDueToError = false
 
                 try {
-                    pump?.connect()
+                    // Set maxNumAttempts to null to turn off the connection attempt limit inside the connect() call.
+                    // The AAPS queue thread will anyway cause the connectionSetupJob to be canceled when its
+                    // connection timeout expires, so the Pump class' own connection attempt limiter is redundant.
+                    pump?.connect(maxNumAttempts = null)
 
                     // No need to set the driver state here, since the pump's stateFlow will announce that.
 
