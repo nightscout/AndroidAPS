@@ -123,4 +123,10 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_short_status_battery_state_low">low</string>
     <string name="combov2_short_status_battery_state_full">full</string>
     <string name="combov2_short_status_battery_state">Batt: %s</string>
+    <string name="key_combov2_automatic_reservoir_entry" translatable="false">combov2_automatic_reservoir_entry</string>
+    <string name="key_combov2_automatic_battery_entry" translatable="false">combov2_automatic_battery_entry</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetect and automatically enter insulin reservoir change</string>
+    <string name="combov2_automatic_battery_entry">Autodetect and automatically enter battery change</string>
+    <string name="combov2_note_reservoir_change">Insulin reservoir change inserted automatically by combov2 driver</string>
+    <string name="combov2_note_battery_change">Battery change inserted automatically by combov2 driver</string>
 </resources>

@@ -32,6 +32,16 @@
             android:defaultValue="300" />
 
         <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_combov2_automatic_reservoir_entry"
+            android:title="@string/combov2_automatic_reservoir_entry" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_combov2_automatic_battery_entry"
+            android:title="@string/combov2_automatic_battery_entry" />
+
+        <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_combov2_verbose_logging"
             android:title="@string/combov2_verbose_logging" />

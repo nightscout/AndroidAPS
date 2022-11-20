@@ -730,22 +730,57 @@ class ComboV2Plugin @Inject constructor (
     // levels are shown on the UI even when the driver connects to the
     // pump again and resets the current pump state.
 
-    override var reservoirLevel: Double = 0.0
-        private set
-    override var batteryLevel: Int = 0
-        private set
+    private var _reservoirLevel: Double? = null
+    override val reservoirLevel: Double
+        get() = _reservoirLevel ?: 0.0
+
+    private var _batteryLevel: Int? = null
+    override val batteryLevel: Int
+        get() = _batteryLevel ?: 0
 
     private fun updateLevels() {
-        pumpStatus?.availableUnitsInReservoir?.let {
-            reservoirLevel = it.toDouble()
+        pumpStatus?.availableUnitsInReservoir?.let { newLevel ->
+            _reservoirLevel?.let { currentLevel ->
+                aapsLogger.debug(LTag.PUMP, "Current/new reservoir levels: $currentLevel / $newLevel")
+                if (sp.getBoolean(R.string.key_combov2_automatic_reservoir_entry, true) && (newLevel > currentLevel)) {
+                    aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(
+                        timestamp = System.currentTimeMillis(),
+                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                        note = rh.gs(R.string.combov2_note_reservoir_change),
+                        pumpId = null,
+                        pumpType = PumpType.ACCU_CHEK_COMBO,
+                        pumpSerial = serialNumber()
+                    )
+                }
+            }
+
+            _reservoirLevel = newLevel.toDouble()
         }
 
-        pumpStatus?.batteryState?.let {
-            batteryLevel = when (it) {
+        pumpStatus?.batteryState?.let { newState ->
+            val newLevel = when (newState) {
                 BatteryState.NO_BATTERY -> 5
                 BatteryState.LOW_BATTERY -> 25
                 BatteryState.FULL_BATTERY -> 100
             }
+
+            _batteryLevel?.let { currentLevel ->
+                aapsLogger.debug(LTag.PUMP, "Current/new battery levels: $currentLevel / $newLevel")
+                if (sp.getBoolean(R.string.key_combov2_automatic_battery_entry, true) && (newLevel > currentLevel)) {
+                    aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(
+                        timestamp = System.currentTimeMillis(),
+                        type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
+                        note = rh.gs(R.string.combov2_note_battery_change),
+                        pumpId = null,
+                        pumpType = PumpType.ACCU_CHEK_COMBO,
+                        pumpSerial = serialNumber()
+                    )
+                }
+            }
+
+            _batteryLevel = newLevel
         }
     }
 
@@ -1134,7 +1169,7 @@ class ComboV2Plugin @Inject constructor (
         get() = _pumpDescription
 
     override fun shortStatus(veryShort: Boolean): String {
-        var lines = mutableListOf<String>()
+        val lines = mutableListOf<String>()
 
         if (lastConnectionTimestamp != 0L) {
             val agoMsec: Long = System.currentTimeMillis() - lastConnectionTimestamp
