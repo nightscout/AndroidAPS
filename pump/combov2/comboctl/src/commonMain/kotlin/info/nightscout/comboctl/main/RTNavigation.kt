@@ -845,12 +845,33 @@ suspend fun adjustQuantityOnScreen(
         incrementButton = incrementButton,
         decrementButton = decrementButton
     )
-    logger(LogLevel.DEBUG) {
-        "Need to short-press the $shortRTButtonToPress " +
-        "RT button $numNeededShortRTButtonPresses time(s)"
-    }
-    repeat(numNeededShortRTButtonPresses) {
-        rtNavigationContext.shortPressButton(shortRTButtonToPress)
+    if (numNeededShortRTButtonPresses != 0) {
+        logger(LogLevel.DEBUG) {
+            "Need to short-press the $shortRTButtonToPress " +
+                    "RT button $numNeededShortRTButtonPresses time(s)"
+        }
+        repeat(numNeededShortRTButtonPresses) {
+            // Get display frames. We don't actually do anything with the frame
+            // (other than check for a blinked-out screen); this here is done
+            // just to avoid missing alert screens while we short-press the button.
+            // If an alert screen appears,  getParsedDisplayFrame() throws an
+            // AlertScreenException, the caller handles the exception, and if the
+            // operation that was being performed before the alert screen appeared
+            // can be retried, the caller can attempt to do so.
+            while (true) {
+                val displayFrame = rtNavigationContext.getParsedDisplayFrame(processAlertScreens = true, filterDuplicates = true)
+                if ((displayFrame != null) && displayFrame.parsedScreen.isBlinkedOut) {
+                    logger(LogLevel.DEBUG) { "Screen is blinked out (contents: ${displayFrame.parsedScreen}); skipping" }
+                    continue
+                }
+                break
+            }
+            rtNavigationContext.shortPressButton(shortRTButtonToPress)
+        }
+    } else {
+        logger(LogLevel.DEBUG) {
+            "Quantity on screen is already equal to target quantity; no need to press any button"
+        }
     }
 }
 
