@@ -315,6 +315,7 @@
     <string name="no_action_selected">Nije odabrana radnja, ništa se neće dogoditi</string>
     <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dan</item>
         <item quantity="few">%1$d dana</item>
