@@ -4,8 +4,6 @@ plugins {
 }
 
 apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
-//apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
-//apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 android {
     namespace 'info.nightscout.core.ui'

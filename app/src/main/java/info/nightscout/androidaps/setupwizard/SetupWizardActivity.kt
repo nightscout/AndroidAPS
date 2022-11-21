@@ -9,7 +9,6 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -35,7 +34,6 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
