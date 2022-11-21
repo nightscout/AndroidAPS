@@ -152,15 +152,6 @@
     <string name="maxvalueinpreferences">valore max nelle preferenze</string>
     <string name="hardlimit">limite fisso</string>
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
-    <string name="patientage_summary">Seleziona il tipo di paziente per configurare i limiti di sicurezza</string>
-    <string name="child">Bambino</string>
-    <string name="teenage">Adolescente</string>
-    <string name="adult">Adulto</string>
-    <string name="resistantadult">Adulto insulino-resistente</string>
-    <string name="pregnant">Gravidanza</string>
-    <string name="treatmentssafety_maxbolus_title">Max bolo consentito [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max CHO consentiti [g]</string>
-    <string name="patientage">Tipo paziente</string>
     <!-- Overview -->
     <string name="snooze">Posticipa</string>
     <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
@@ -337,4 +328,5 @@
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
