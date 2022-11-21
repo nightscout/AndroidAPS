@@ -300,7 +300,6 @@
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="chartmenu">Chart menu</string>
-    <string name="databroadcaster" translatable="false">Data Broadcaster</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
     <string name="overview_show_deviationslope">Deviation slope</string>

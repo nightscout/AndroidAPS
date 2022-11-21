@@ -594,4 +594,7 @@
     <string name="loop_open_mode_min_change">Minimal request change [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
 
+    <!--    DataBroadcast-->
+    <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
+
 </resources>

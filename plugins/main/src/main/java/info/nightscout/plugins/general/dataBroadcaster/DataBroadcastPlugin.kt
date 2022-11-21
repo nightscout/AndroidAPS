@@ -1,15 +1,13 @@
-package info.nightscout.androidaps.plugins.general.dataBroadcaster
+package info.nightscout.plugins.general.dataBroadcaster
 
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.fabric.FabricPrivacy
@@ -22,6 +20,9 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.receivers.Intents
+import info.nightscout.plugins.R
+import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -60,7 +61,7 @@ class DataBroadcastPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .pluginName(R.string.databroadcaster)
+        .pluginName(R.string.data_broadcaster)
         .alwaysEnabled(true)
         .neverVisible(true)
         .showInList(false),
@@ -71,7 +72,7 @@ class DataBroadcastPlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         disposable += rxBus
-            .toObservable(info.nightscout.plugins.aps.events.EventOpenAPSUpdateGui::class.java)
+            .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ sendData(it) }, fabricPrivacy::logException)
         disposable += rxBus

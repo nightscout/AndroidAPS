@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.buildHelper
+package info.nightscout.androidaps.implementations
 
 import android.os.Build
 import info.nightscout.androidaps.BuildConfig
