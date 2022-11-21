@@ -27,14 +27,14 @@
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Ajustes de AAPS</string>
     <string name="objectives2_label">Ajustes de AAPS</string>
-    <string name="objectives_howtosave">¿Cuáles son las mejores prácticas para hacer copias de seguridad de su configuración?</string>
-    <string name="objectives_notesettings">No necesita exportar sus ajustes siempre que haga una nota de ellos.</string>
+    <string name="objectives_howtosave">¿Cuáles son las mejores prácticas para hacer copias de seguridad de sus configuraciones?</string>
+    <string name="objectives_notesettings">No necesita exportar sus configuraciones siempre que haga una nota de ellos.</string>
     <string name="objectives_afterobjective">Exporta tu configuración después de completar un objetivo.</string>
     <string name="objectives_afterchange">Exportar la configuración después de cambiar cualquiera de sus ajustes.</string>
     <string name="objectives_afterinitialsetup">Exportar la configuración una vez finalizada la configuración inicial y haber establecido sus preferencias.</string>
     <string name="objectives2_maintenance">Exportar la configuración localmente usando el menú de mantenimiento.</string>
     <string name="objectives2_internalstorage">El archivo de configuración se encuentra en la carpeta Almacenamiento/AAPS/preferencias en el teléfono.</string>
-    <string name="objectives2_cloud">Copie el archivo de preferencias a una ubicación segura fuera de su teléfono (p.e. mediante el uso de una nube, conectando un cable a una computadora, correo electrónico, etc.)</string>
+    <string name="objectives2_cloud">Copie el archivo de preferencias a una ubicación segura fuera de su teléfono (p.e. mediante el uso del alamacenamiento en la nube, conectándose con un cable a una computadora, correo electrónico, etc.)</string>
     <string name="objectives2_easyrestore">Si su teléfono está dañado o perdido, hay formas fáciles de recuperar remotamente su configuración sin hacer una copia de seguridad.</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
