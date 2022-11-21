@@ -72,15 +72,6 @@
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sert sınır</string>
     <string name="treatmentssafety_title">Tedavi güvenliği</string>
-    <string name="patientage_summary">Güvenlik limitlerini ayarlamak için lütfen hasta tipini seçin</string>
-    <string name="child">Çocuk</string>
-    <string name="teenage">Ergen</string>
-    <string name="adult">Yetişkin</string>
-    <string name="resistantadult">Yetişkin İnsülin direnci</string>
-    <string name="pregnant">Hamile</string>
-    <string name="treatmentssafety_maxbolus_title">Maks izin verilen bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maks izin verilen karbonhidrat [g]</string>
-    <string name="patientage">Hasta tipi</string>
     <!-- Overview -->
     <string name="snooze">Ertele</string>
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
@@ -224,4 +215,5 @@
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Görünüm</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
