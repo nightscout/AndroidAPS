@@ -540,6 +540,15 @@
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
     <!--    Preferences-->
+    <string name="child">Menor de edad</string>
+    <string name="teenage">Adolescente</string>
+    <string name="adult">Adulto</string>
+    <string name="resistant_adult">Adulto resistente a la insulina</string>
+    <string name="pregnant">Embarazada</string>
+    <string name="patient_age_summary">Por favor, selecciona el tipo de paciente para establecer los límites de seguridad</string>
+    <string name="max_bolus_title">Máximo bolo permitido [U]</string>
+    <string name="max_carbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="patient_type">Tipo de paciente</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>
