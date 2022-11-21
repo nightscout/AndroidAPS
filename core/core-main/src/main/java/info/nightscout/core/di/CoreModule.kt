@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.di
+package info.nightscout.core.di
 
 import android.content.Context
 import android.os.Build
@@ -11,7 +11,8 @@ import dagger.Provides
         CoreReceiversModule::class,
         CoreFragmentsModule::class,
         CoreDataClassesModule::class,
-        ValidatorsModule::class
+        ValidatorsModule::class,
+        PreferencesModule::class
     ]
 )
 open class CoreModule {
