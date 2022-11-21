@@ -526,6 +526,7 @@
     <string name="wizard_explain_tt">AlvoTemporário: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s para %2$s</string>
     <string name="wizard_pump_not_available">Nenhuma bomba disponível!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
