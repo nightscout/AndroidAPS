@@ -232,6 +232,7 @@
     <string name="smscommunicator_missingsmspermission">Vermiste SMS toestemming</string>
     <!-- BolusWizard -->
     <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
