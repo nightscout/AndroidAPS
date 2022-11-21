@@ -417,6 +417,7 @@
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
