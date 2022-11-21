@@ -232,7 +232,6 @@
     <string name="limitingiob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
-    <string name="uamdisabledoref1notselected">UAM zakázáno, protože není povolen Oref1 plugin</string>
     <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
     <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
     <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>
