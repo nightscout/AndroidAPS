@@ -144,7 +144,6 @@
     <string name="limitingiob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
     <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
-    <string name="uamdisabledoref1notselected">UAM disabilitato perché il plugin di sensibilità Oref1, dal quale UAM dipende, non è abilitato</string>
     <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
     <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
     <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
