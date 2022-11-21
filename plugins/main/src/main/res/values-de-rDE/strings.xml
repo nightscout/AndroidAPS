@@ -64,15 +64,6 @@
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
-    <string name="patientage_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
-    <string name="child">Kind</string>
-    <string name="teenage">Teenager</string>
-    <string name="adult">Erwachsener</string>
-    <string name="resistantadult">Insulinresistenter Erwachsener</string>
-    <string name="pregnant">Schwangerschaft</string>
-    <string name="treatmentssafety_maxbolus_title">Max. erlaubter Bolus [IE]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max. erlaubte Kohlenhydrate [g]</string>
-    <string name="patientage">Patiententyp</string>
     <!-- Overview -->
     <string name="snooze">Schlummern</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
@@ -202,4 +193,5 @@
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
