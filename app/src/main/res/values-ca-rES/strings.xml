@@ -12,10 +12,6 @@
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
-    <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
-    <string name="description_sensitivity_oref1">Sensibilitat calculada amb dades de 8 o 24 hores en el passat (s\'agafa el cas més \"sensible\"). Els carbohidrats (els no absorbits), es desestimen un cop passat el temps indicat a la configuració. El plugin també calcula les UAM.</string>
-    <string name="description_sensitivity_weighted_average">Sensibilitat calculada com una mitja ponderada a partir de les desviacions. Les noves desviacions tenen un pes més gran. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració. Aquest algoritme és el més ràpid en seguir els canvis de sensibilitat.</string>
-    <string name="description_treatments">Desa tots els tractaments realitzats</string>
     <string name="delta">Delta</string>
     <string name="configbuilder">Configurador</string>
     <string name="overview">Inici</string>
