@@ -54,15 +54,6 @@
     <string name="maxvalueinpreferences">在参数选项里的最大值</string>
     <string name="hardlimit">硬限制</string>
     <string name="treatmentssafety_title">治疗安全</string>
-    <string name="patientage_summary">请选择患者类型，以设置安全限制</string>
-    <string name="child">儿童</string>
-    <string name="teenage">青少年</string>
-    <string name="adult">成人</string>
-    <string name="resistantadult">胰岛素抵抗成人</string>
-    <string name="pregnant">孕妇</string>
-    <string name="treatmentssafety_maxbolus_title">允许的最大大剂量值[U]</string>
-    <string name="treatmentssafety_maxcarbs_title">最大允许碳水化合物 [g]</string>
-    <string name="patientage">患者类型</string>
     <!-- Overview -->
     <string name="snooze">稍后再响</string>
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
@@ -185,4 +176,5 @@
     <string name="largedisplay_description">大显示屏</string>
     <string name="skin">皮肤</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
