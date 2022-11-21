@@ -186,4 +186,5 @@ Eversense-appen.</string>
     <string name="buttonson_description">Knappar visas alltid längst ned på skärmen</string>
     <string name="largedisplay_description">Stor skärm</string>
     <string name="skin">Tema</string>
+    <!--    Loop -->
 </resources>

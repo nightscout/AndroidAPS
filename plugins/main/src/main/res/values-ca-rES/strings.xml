@@ -175,4 +175,5 @@
     <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
+    <!--    Loop -->
 </resources>

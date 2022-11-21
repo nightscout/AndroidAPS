@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="nav_exit">Avsluta</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
-    <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">Synkronisering</string>
     <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">Efter begränsningar</string>
-    <string name="loop_tbrsetbypump_label">Temp basal satt i pump</string>
-    <string name="noapsselected">INGEN APS VALD</string>
     <string name="constraints_violation">Begränsning nådd</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
-    <string name="openloop_newsuggestion">Ny rekommendation tillgänglig</string>
-    <string name="carbssuggestion">KH-förslag</string>
     <string name="profile_label">Profil</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
     <string name="exported">Inställningar exporterade</string>
@@ -78,7 +71,6 @@
     <string name="correctionbous">Korrektion</string>
     <string name="ns_upload_only">(INAKTIVERAD KAN MEDFÖRA FARA) NS-Endast uppladdning</string>
     <string name="ns_upload_only_summary">NS-endast uppladdning (inaktiverad synkronisering). Påverkar inte uppladdning av BG om inte en lokal källa som xDrip+ är vald. NS-profiler kan också användas.\nVARNING! Att inaktivera detta alternativ och därmed tillåta att NS påverkar AAPS kan orsaka fel och t. o. m. insulinöverdos om någon av dina komponenter (AAPS, NS, xDrip+) inte är helt rätt konfigurerade. Övervaka noga att data som visas av AAPS överensstämmer med verkligheten!</string>
-    <string name="pumpNotInitialized">Pump inte initierad</string>
     <string name="units">Enheter</string>
     <string name="prefs_range_title">Gränsvärden för visualisering</string>
     <string name="prefs_range_summary">Högt och lågt värde för grafen i Översikt och i klockan</string>
@@ -90,7 +82,6 @@
     <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
     <string name="old_data">Aktuellt BG saknas!</string>
     <string name="configbuilder_shortname">Konf</string>
-    <string name="loop_shortname">Loop</string>
     <string name="overview_shortname">Hem</string>
     <string name="treatments_shortname">Beh</string>
     <string name="wear_shortname">Wear</string>
@@ -170,9 +161,6 @@
     <string name="carb_increment_button_message">Mängd kolhydrater att lägga till när man trycker på knappen</string>
     <string name="insulin_increment_button_message">Mängd insulin att lägga till när man trycker på knappen</string>
     <string name="error_starting_cgm">Kunde inte starta CGM-appen. Kontrollera att den är installerad.</string>
-    <string name="ignore5m">Ignorera 5 min</string>
-    <string name="ignore15m">Ignorera 15 min</string>
-    <string name="ignore30m">Ignorera 30 min</string>
     <string name="wear_notifysmb_title">Skicka notis vid SMB</string>
     <string name="wear_notifysmb_summary">Visa SMB på klockan som en standardbolus.</string>
     <string name="wear_predictions_summary">Visa BG-prognos på klockan.</string>
@@ -182,7 +170,6 @@
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
     <string name="g5appnotdetected">Vänligen uppdatera din Dexcom-app till en supportad version</string>
     <string name="dexcom_app_not_installed">Dexcom-appen är inte installerad.</string>
-    <string name="loop_smbsetbypump_label">SMB satt i pump</string>
     <string name="overview_show_activity">Insulinaktivitet (5m)</string>
     <string name="overview_show_bgi">Blodglukospåverkan</string>
     <string name="overview_show_sensitivity">Känslighet (Sens)</string>
@@ -191,8 +178,6 @@
     <string name="overview_show_iob">Aktivt insulin (IOB)</string>
     <string name="overview_show_basals">Basaler</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
-    <string name="smb_frequency_exceeded">En bolus gavs för mindre än 3 min sedan. Hoppar över SMB</string>
-    <string name="basal_set_correctly">Basal justerad korrekt</string>
     <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
     <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Anteckning i behandlingsdialoger</string>
@@ -242,8 +227,6 @@
     <string name="resettodefaults">Återställ standardinställningar</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
-    <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
     <string name="unitsnosemicolon">Enheter</string>
@@ -253,10 +236,6 @@
     <string name="show_removed">Visa borttagna</string>
     <string name="clearqueueconfirm">Allt data som inte synkats kommer att kastas bort. Är du säker på att du vill tömma kön?</string>
     <string name="chartmenu">Diagrammeny</string>
-    <string name="loop_smbrequest_time_label">SMB begärd</string>
-    <string name="loop_smbexecution_time_label">SMB utförd</string>
-    <string name="loop_tbrrequest_time_label">Basalförändring begärd</string>
-    <string name="loop_tbrexecution_time_label">Basalförändring utförd</string>
     <string name="overview_show_predictions">BG-prognos</string>
     <string name="overview_show_deviationslope">Avvikelsekurva</string>
     <string name="authorizationfailed">Behörighetskontroll misslyckades</string>

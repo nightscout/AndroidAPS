@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="nav_exit">退出</string>
     <string name="description_config_builder">用于配置活动插件</string>
-    <string name="description_loop">激活或停用这个工具触发闭环。</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
@@ -30,15 +29,9 @@
     <string name="configbuilder_sync">同步</string>
     <string name="configbuilder_constraints_description">应用了哪些约束条件？</string>
     <string name="configbuilder_loop">闭环</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_constraintsprocessed_label">通过约束条件之后</string>
-    <string name="loop_tbrsetbypump_label">通过泵设置临时基础率</string>
-    <string name="noapsselected">APS没有被选择或者提供结果</string>
     <string name="constraints_violation">违反约束条件</string>
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
-    <string name="openloop_newsuggestion">新的建议可用</string>
-    <string name="carbssuggestion">碳水建议</string>
     <string name="profile_label">配置文件</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
     <string name="exported">参数选项导出了</string>
@@ -78,7 +71,6 @@
     <string name="correctionbous">矫正</string>
     <string name="ns_upload_only">(禁用很危险) NS仅上传</string>
     <string name="ns_upload_only_summary">NS只上传数据(禁用同步)。除非选择本地血糖数据如xDrip+否则此功能无效。使用NS网站配置文件时此功能无效。\n！！！警告！！！如果您的任何组件(AAPS，NS，xDrip+) 配置错误，禁用此选项可能导致故障和胰岛素过量。请仔细观察AAPS显示的数据是否与泵状态匹配！</string>
-    <string name="pumpNotInitialized">泵未初始化!</string>
     <string name="units">单位</string>
     <string name="prefs_range_title">可视化范围</string>
     <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>
@@ -90,7 +82,6 @@
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
     <string name="configbuilder_shortname">配置</string>
-    <string name="loop_shortname">闭环</string>
     <string name="overview_shortname">主页</string>
     <string name="treatments_shortname">治疗</string>
     <string name="wear_shortname">手表</string>
@@ -170,9 +161,6 @@
     <string name="carb_increment_button_message">按下按钮时添加的碳水化合物数量</string>
     <string name="insulin_increment_button_message">按下按钮时添加的胰岛素量</string>
     <string name="error_starting_cgm">无法启动 CGM 应用程序。 请确保已安装。</string>
-    <string name="ignore5m">忽略5分钟</string>
-    <string name="ignore15m">忽略 15分钟</string>
-    <string name="ignore30m">忽略30分钟</string>
     <string name="wear_notifysmb_title">在 SMB 上通知</string>
     <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
     <string name="wear_predictions_summary">在手表的表盘上显示预测</string>
@@ -182,7 +170,6 @@
     <string name="allow_automated_crash_reporting">允许通过fabric.io服务将自动崩溃报告和功能使用数据发送给开发人员。</string>
     <string name="g5appnotdetected">请将您的 dexcom app 更新为支持的版本</string>
     <string name="dexcom_app_not_installed">未安装德康app。</string>
-    <string name="loop_smbsetbypump_label">通过泵设置SMB微型大剂量</string>
     <string name="overview_show_activity">活动</string>
     <string name="overview_show_bgi">血糖影响</string>
     <string name="overview_show_sensitivity">灵敏度</string>
@@ -191,8 +178,6 @@
     <string name="overview_show_iob">活性胰岛素</string>
     <string name="overview_show_basals">基础率</string>
     <string name="engineering_mode_enabled">已启用工程模式</string>
-    <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
-    <string name="basal_set_correctly">正确地设置基础率</string>
     <string name="absorption_cutoff_title">膳食最大吸收时间 [h]</string>
     <string name="absorption_cutoff_summary">任何膳食被认为完全吸收的时间。 剩余的碳水化合物将被忽略</string>
     <string name="overview_show_notes_field_in_dialogs_title">在治疗对话框中显示备注字段</string>
@@ -244,8 +229,6 @@
     <string name="resettodefaults">重置为默认值</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="sendlogfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
-    <string name="loop_openmode_min_change">最小请求更改[%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">大剂量向导执行计算，但只有这部分计算结果的胰岛素被输注。适用于SMB算法。</string>
     <string name="unitsnosemicolon">单位</string>
@@ -255,10 +238,6 @@
     <string name="show_removed">显示已删除</string>
     <string name="clearqueueconfirm">清除队列? 队列中的所有数据都将丢失!</string>
     <string name="chartmenu">图表菜单</string>
-    <string name="loop_smbrequest_time_label">SMB 请求时间</string>
-    <string name="loop_smbexecution_time_label">SMB持续时长</string>
-    <string name="loop_tbrrequest_time_label">临时基础率请求时间</string>
-    <string name="loop_tbrexecution_time_label">临时基础率持续时长</string>
     <string name="overview_show_predictions">预测</string>
     <string name="overview_show_treatments">治疗</string>
     <string name="overview_show_deviationslope">斜度偏差</string>

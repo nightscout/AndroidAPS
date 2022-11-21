@@ -173,4 +173,5 @@
     <string name="buttonson_description">Os botões são sempre exibidos na parte inferior do ecrã</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema gráfico</string>
+    <!--    Loop -->
 </resources>

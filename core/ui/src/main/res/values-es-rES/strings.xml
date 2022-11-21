@@ -9,9 +9,14 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Se te solicitará la contraseña maestra, ya que es necesaria para descifrar las perferencias importadas</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">decremento %1$s por %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s por %2$s</string>
+    <string name="you_are_on_allowed_limit">Límite permitido alcanzado</string>
     <string name="format_hour_minute">%1$dhoras %2$dmin</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Hora del evento</string>
     <!-- BluetoothDevicePreference -->
+    <string name="needconnectpermission">La aplicación necesita permisos de bluetooth</string>
 </resources>

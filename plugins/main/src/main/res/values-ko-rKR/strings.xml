@@ -167,4 +167,5 @@
     <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
     <string name="largedisplay_description">큰 화면</string>
     <string name="skin">스킨</string>
+    <!--    Loop -->
 </resources>

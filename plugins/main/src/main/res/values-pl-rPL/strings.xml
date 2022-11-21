@@ -179,4 +179,5 @@
     <string name="buttonson_description">Przyciski są zawsze wyświetlane na dole ekranu</string>
     <string name="largedisplay_description">Duży ekran</string>
     <string name="skin">Motyw</string>
+    <!--    Loop -->
 </resources>

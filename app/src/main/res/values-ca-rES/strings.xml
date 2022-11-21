@@ -10,7 +10,6 @@
     <string name="reset_db_confirm">Esteu segurs que voleu restablir les bases de dades?</string>
     <string name="nav_exit">Sortir</string>
     <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
-    <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
     <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
     <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
@@ -30,14 +29,9 @@
     <string name="configbuilder_sync">Sincronització</string>
     <string name="configbuilder_constraints_description">Quines restriccions s\'estan aplicant?</string>
     <string name="configbuilder_loop">Llaços</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="loop_tbrsetbypump_label">Basal temporal definida per la bomba</string>
-    <string name="noapsselected">CAP APS SELECCIONAT O RESULTAT ENTREGAT</string>
     <string name="constraints_violation">Violació de restriccions</string>
     <string name="changeyourinput">Modifiqueu les dades!</string>
     <string name="configbuilder_bgsource">Origen glucèmia</string>
-    <string name="openloop_newsuggestion">Nova proposta disponible</string>
-    <string name="carbssuggestion">Proposta de carbs</string>
     <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
     <string name="exported">Configuració exportada</string>
     <string name="ue_exported">Entrades d\'usuari exportades</string>
@@ -77,7 +71,6 @@
     <string name="ongoingnotificaction">Avís en curs</string>
     <string name="old_data">DADES ANTIGUES</string>
     <string name="configbuilder_shortname">CONF</string>
-    <string name="loop_shortname">LLAÇ</string>
     <string name="overview_shortname">INICI</string>
     <string name="treatments_shortname">TRACT</string>
     <string name="wear_shortname">WEAR</string>

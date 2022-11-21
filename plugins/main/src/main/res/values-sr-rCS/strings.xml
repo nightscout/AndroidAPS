@@ -44,4 +44,5 @@
     <!-- NSClient -->
     <string name="description_ns_client">Sinhronizuje vaše podatke sa Nightscout-om</string>
     <!-- Skins -->
+    <!--    Loop -->
 </resources>

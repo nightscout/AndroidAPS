@@ -34,6 +34,8 @@
     <string name="stoppressed">нажат стоп</string>
     <string name="stop">стоп</string>
     <string name="carbs">Углеводы</string>
+    <string name="invalid_profile">Недопустимый профиль!</string>
+    <string name="no_profile_set">ПРОФИЛЬ НЕ ЗАДАН</string>
     <string name="active"><![CDATA[Активен]]></string>
     <string name="date">дата</string>
     <string name="units_label">единицы</string>
@@ -150,6 +152,7 @@
     <string name="paused">на паузе</string>
     <string name="invalid">НЕВЕРНО</string>
     <string name="login">Логин</string>
+    <string name="prime_fill">Прайм/заполнение</string>
     <string name="overview_insulin_label">Инсулин</string>
     <string name="stoptemptarget">Остановить врем цель</string>
     <string name="closedloop">Замкнутый цикл</string>
@@ -187,6 +190,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Начать профиль %1$d%% на %2$d мин</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Отменить врем базал</string>
     <string name="let_temp_basal_run">Оставить временный базал работающим</string>
     <string name="rate">Скорость</string>
     <string name="duration">Продолжительность</string>
@@ -208,9 +212,12 @@
     <string name="careportal_note_message">Примечание: %1$s</string>
     <string name="careportal_question_message">Вопрос: %1$s</string>
     <string name="careportal_exercise_message">Нагрузка: %1$s</string>
+    <string name="careportal_pump_site_change">Смена места катетера помпы</string>
+    <string name="cgm_sensor_insert">Установка сенсора мониторинга глюкозы</string>
     <string name="careportal_cgmsensorstart">Сарт сенсора</string>
     <string name="careportal_cgm_sensor_stop">Останов сенсора мониторинга</string>
     <string name="careportal_dad_alert">Сигнал служебной собаки</string>
+    <string name="careportal_insulin_cartridge_change">Замена картриджа инсулина</string>
     <string name="careportal_profileswitch">Смена профиля</string>
     <string name="careportal_snackbolus">Болюс на перекус</string>
     <string name="careportal_mealbolus">Болюс на еду</string>
@@ -220,6 +227,8 @@
     <string name="careportal_tempbasalend">Оконч действия врем базала</string>
     <string name="careportal_carbscorrection">Коррекция углеводов</string>
     <string name="careportal_openapsoffline">OpenAPS в автономном режиме</string>
+    <string name="pump_battery_change">Замена батареи помпы</string>
+    <string name="temporary_target">Временная цель</string>
     <string name="careportal_temporarytargetvalue">Временное целевое значение</string>
     <string name="careportal_temporarytargetcancel">Отмена временной цели</string>
     <string name="boluswizard">Мастер Болюса</string>
@@ -510,6 +519,8 @@
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
     <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
+    <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
+    <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
     <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
     <string name="wizard_no_actual_bg">Нет данных ГК для основы расчета!</string>
