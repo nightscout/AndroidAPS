@@ -69,4 +69,5 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Seleccionat:</string>
     <!-- Other dialogs -->
+    <!--    PrefImport-->
 </resources>
