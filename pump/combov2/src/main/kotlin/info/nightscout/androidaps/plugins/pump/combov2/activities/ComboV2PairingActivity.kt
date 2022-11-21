@@ -14,10 +14,10 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.combov2.R
 import info.nightscout.androidaps.combov2.databinding.Combov2PairingActivityBinding
 import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.shared.logging.LTag
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PairingPIN
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.rx.logging.LTag
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch

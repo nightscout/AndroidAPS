@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.combov2
 
 import info.nightscout.comboctl.main.BasalProfile
 import info.nightscout.comboctl.main.NUM_COMBO_BASAL_PROFILE_FACTORS
-import info.nightscout.androidaps.interfaces.Profile as AAPSProfile
+import info.nightscout.interfaces.profile.Profile as AAPSProfile
 
 // Utility extension functions for clearer conversion between
 // ComboCtl units and AAPS units. ComboCtl uses integer-encoded

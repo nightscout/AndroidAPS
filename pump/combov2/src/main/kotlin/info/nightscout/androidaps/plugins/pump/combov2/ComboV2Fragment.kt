@@ -10,8 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.combov2.R
 import info.nightscout.androidaps.combov2.databinding.Combov2FragmentBinding
 import info.nightscout.comboctl.base.NullDisplayFrame
@@ -19,13 +17,15 @@ import info.nightscout.comboctl.main.Pump as ComboCtlPump
 import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.shared.interfaces.ResourceHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.max
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.math.max
 
 class ComboV2Fragment : DaggerFragment() {
     @Inject lateinit var combov2Plugin: ComboV2Plugin
@@ -235,7 +235,7 @@ class ComboV2Fragment : DaggerFragment() {
             }
 
             in 60..(30 * 60) -> {
-                binding.combov2LastConnection.text = rh.gs(info.nightscout.androidaps.core.R.string.minago, secondsPassed / 60)
+                binding.combov2LastConnection.text = rh.gs(R.string.minago, secondsPassed / 60)
                 binding.combov2LastConnection.setTextColor(Color.WHITE)
             }
 
@@ -262,7 +262,7 @@ class ComboV2Fragment : DaggerFragment() {
                 rh.gs(R.string.combov2_less_than_one_minute_ago)
 
             else ->
-                rh.gs(info.nightscout.androidaps.core.R.string.minago, secondsPassed / 60)
+                rh.gs(R.string.minago, secondsPassed / 60)
         }
 
         binding.combov2LastBolus.text =

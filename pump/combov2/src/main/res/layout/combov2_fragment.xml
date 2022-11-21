@@ -313,7 +313,7 @@
                             android:layout_weight="1.5"
                             android:gravity="end"
                             android:paddingRight="5dp"
-                            android:text="@string/basebasalrate_label"
+                            android:text="@string/base_basal_rate_label"
                             android:textSize="14sp" />
 
                         <TextView
@@ -437,7 +437,7 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
-                <info.nightscout.androidaps.utils.ui.SingleClickButton
+                <info.nightscout.core.ui.elements.SingleClickButton
                     android:id="@+id/combov2_refresh_button"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
