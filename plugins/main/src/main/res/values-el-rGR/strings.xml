@@ -46,15 +46,6 @@
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
-    <string name="patientage_summary">Παρακαλώ επιλέξτε τύπο ασθενούς για να ορισθούν όρια ασφαλείας</string>
-    <string name="child">Παιδί</string>
-    <string name="teenage">Έφηβος</string>
-    <string name="adult">Ενήλικας</string>
-    <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
-    <string name="pregnant">Κύηση</string>
-    <string name="treatmentssafety_maxbolus_title">Μέγιστο Επιτρεπτό bolus[U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Μέγιστο Επιτρεπτό υδατανθράκων [g]</string>
-    <string name="patientage">Τύπος ασθενή</string>
     <!-- Overview -->
     <string name="snooze">Αναβολή</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
@@ -120,4 +111,5 @@
     <string name="uploader_short">UPLD</string>
     <!-- Skins -->
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
