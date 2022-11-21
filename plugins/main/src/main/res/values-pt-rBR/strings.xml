@@ -59,15 +59,6 @@
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <string name="treatmentssafety_title">Segurança do Tratamento</string>
-    <string name="patientage_summary">Selecione o tipo de paciente para configurar os limites de segurança</string>
-    <string name="child">Criança</string>
-    <string name="teenage">Adolescente</string>
-    <string name="adult">Adulto</string>
-    <string name="resistantadult">Adulto resistente à insulina</string>
-    <string name="pregnant">Grávida</string>
-    <string name="treatmentssafety_maxbolus_title">Máximo bolus permitido [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Máximo de carbs permitidos [g]</string>
-    <string name="patientage">Tipo de paciente</string>
     <!-- Overview -->
     <string name="snooze">Silenciar</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
@@ -196,4 +187,5 @@
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
