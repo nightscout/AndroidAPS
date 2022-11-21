@@ -88,4 +88,5 @@
     <string name="profile2">配置文件 2</string>
     <string name="selected_profile">已选择:</string>
     <!-- Other dialogs -->
+    <!--    PrefImport-->
 </resources>
