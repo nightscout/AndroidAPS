@@ -21,8 +21,8 @@
     <string name="pumpdisconnect_label">Razones para aplicar \"Desconectar bomba\" en AAPS</string>
     <string name="pumpdisconnect_whattodo">¿Qué se debe hacer al desconectar la bomba?</string>
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
-    <string name="pumpdisconnect_missinginsulin">Evita que AAPS tenga en cuenta la insulina que no se entregó cuando la bomba estaba físicamente desconectada.</string>
-    <string name="pumpdisconnect_notstop">Si la bomba permanece conectada, no se detendrá la entrega de insulina.</string>
+    <string name="pumpdisconnect_missinginsulin">Evita que AAPS tenga en cuenta la insulina que no se administró cuando la bomba estaba físicamente desconectada</string>
+    <string name="pumpdisconnect_notstop">Si la bomba permanece conectada, no se detendrá el suministro de insulina.</string>
     <string name="pumpdisconnect_openloop">Pasará AAPS a modo de lazo abierto</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Ajustes de AAPS</string>
