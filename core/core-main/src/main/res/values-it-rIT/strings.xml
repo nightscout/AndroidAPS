@@ -526,6 +526,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
