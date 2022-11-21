@@ -10,7 +10,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -42,10 +41,9 @@ class NSClientAddUpdateWorker(
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
@@ -140,14 +138,14 @@ class NSClientAddUpdateWorker(
                     }
 
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
+                    if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         extendedBolusFromJson(json)?.let { extendedBolus ->
                             storeDataForDb.extendedBoluses.add(extendedBolus)
                         } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                     }
 
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text                         ->
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
+                    if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
                         temporaryBasalFromJson(json)?.let { temporaryBasal ->
                             storeDataForDb.temporaryBasals.add(temporaryBasal)
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
@@ -161,7 +159,7 @@ class NSClientAddUpdateWorker(
                     }
 
                 eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
-                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT) {
+                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT) {
                         offlineEventFromJson(json)?.let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         } ?: aapsLogger.error("Error parsing OfflineEvent json $json")

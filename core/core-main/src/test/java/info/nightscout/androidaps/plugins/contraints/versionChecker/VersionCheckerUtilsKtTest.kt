@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.plugins.contraints.versionChecker
 
-import android.content.Context
+import dagger.Lazy
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.Config
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -27,9 +27,8 @@ import org.mockito.Mockito.`when`
 
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var context: Context
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
-    @Mock lateinit var config: Config
+    @Mock lateinit var config: Lazy<Config>
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var rxBus: RxBus
 

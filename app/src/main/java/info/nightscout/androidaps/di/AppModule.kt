@@ -15,11 +15,8 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
-import info.nightscout.implementation.resources.IconsProviderImplementation
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.AndroidPermissionImpl
@@ -32,12 +29,12 @@ import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.pump.PumpSyncImplementation
 import info.nightscout.implementation.queue.CommandQueueImplementation
+import info.nightscout.implementation.resources.IconsProviderImplementation
 import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
 import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BolusTimer
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
@@ -85,7 +82,7 @@ open class AppModule {
 
     @Provides
     fun providesPlugins(
-        config: Config, buildHelper: BuildHelper,
+        config: Config,
         @PluginsListModule.AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
         @PluginsListModule.PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
         @PluginsListModule.NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
@@ -97,17 +94,13 @@ open class AppModule {
         if (config.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (config.APS) plugins += aps.get()
         if (!config.NSCLIENT) plugins += notNsClient.get()
-        if (buildHelper.isUnfinishedMode()) plugins += unfinished.get()
+        if (config.isUnfinishedMode()) plugins += unfinished.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }
 
     @Provides
     @Singleton
     fun provideStorage(): Storage = FileStorage()
-
-    @Provides
-    @Singleton
-    fun provideBuildHelper(config: Config, fileListProvider: PrefFileListProvider): BuildHelper = BuildHelperImpl(config, fileListProvider)
 
     @Provides
     @Singleton

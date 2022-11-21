@@ -41,14 +41,12 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.ui.tabs.TabPageAdapter
-import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraints
@@ -70,6 +68,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.activities.ProfileHelperActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.TreatmentsActivity
+import info.nightscout.ui.tabs.TabPageAdapter
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -87,14 +86,13 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var loop: Loop
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
-    @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var passwordCheck: PasswordCheck
@@ -351,7 +349,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${rh.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.getVersion()}"
-                if (buildHelper.isEngineeringMode()) message += "\n${rh.gs(R.string.engineering_mode_enabled)}"
+                if (config.isEngineeringMode()) message += "\n${rh.gs(R.string.engineering_mode_enabled)}"
                 if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(R.string.fabric_upload_disabled)}"
                 message += rh.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)

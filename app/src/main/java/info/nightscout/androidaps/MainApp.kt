@@ -32,7 +32,6 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.LocalAlertUtils
@@ -68,7 +67,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
@@ -118,7 +116,7 @@ class MainApp : DaggerApplication() {
         handler.postDelayed(
             {
                 // check if identification is set
-                if (buildHelper.isDev() && sp.getStringOrNull(R.string.key_email_for_crash_report, null).isNullOrBlank())
+                if (config.isDev() && sp.getStringOrNull(R.string.key_email_for_crash_report, null).isNullOrBlank())
                     notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                 // log version
                 disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()

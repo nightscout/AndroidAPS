@@ -41,7 +41,6 @@ import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -89,11 +88,10 @@ class CommandQueueImplementation @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val context: Context,
     private val sp: SP,
-    private val buildHelper: BuildHelper,
+    private val config: Config,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
-    private val config: Config,
     private val androidPermission: AndroidPermission,
     private val activityNames: ActivityNames
 ) : CommandQueue {
@@ -233,7 +231,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()

@@ -34,7 +34,7 @@ import info.nightscout.database.impl.transactions.CutCarbsTransaction
 import info.nightscout.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import info.nightscout.database.impl.transactions.InvalidateBolusTransaction
 import info.nightscout.database.impl.transactions.InvalidateCarbsTransaction
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
@@ -68,7 +68,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -306,7 +306,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_carbs_bolus, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !config.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
         val hasItems = (binding.recyclerview.adapter?.itemCount ?: 0) > 0
         menu.findItem(R.id.nav_delete_future)?.isVisible = hasItems

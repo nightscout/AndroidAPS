@@ -17,7 +17,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginFragment
@@ -48,7 +48,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
 
     companion object {
 
@@ -97,7 +97,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        if (buildHelper.isUnfinishedMode())
+        if (config.isUnfinishedMode())
             menu.add(Menu.FIRST, ID_MENU_TEST, 0, "Test").setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_CLEAR_LOG, 0, rh.gs(R.string.clear_log)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_RESTART, 0, rh.gs(R.string.restart)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)

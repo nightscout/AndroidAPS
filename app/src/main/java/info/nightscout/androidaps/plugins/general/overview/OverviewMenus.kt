@@ -13,7 +13,6 @@ import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
 import info.nightscout.androidaps.R
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.rx.bus.RxBus
@@ -31,9 +30,8 @@ class OverviewMenus @Inject constructor(
     private val rh: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
-    private val buildHelper: BuildHelper,
-    private val loop: Loop,
     private val config: Config,
+    private val loop: Loop,
     private val fabricPrivacy: FabricPrivacy
 ) {
 
@@ -127,7 +125,7 @@ class OverviewMenus @Inject constructor(
                     if (g > 0 && !m.secondary) return@forEach
                     var insert = true
                     if (m == CharType.PRE) insert = predictionsAvailable
-                    if (m == CharType.DEVSLOPE) insert = buildHelper.isDev()
+                    if (m == CharType.DEVSLOPE) insert = config.isDev()
                     if (used.contains(m.ordinal)) insert = false
                     for (g2 in g + 1 until numOfGraphs) {
                         if (settingsCopy[g2][m.ordinal]) insert = false

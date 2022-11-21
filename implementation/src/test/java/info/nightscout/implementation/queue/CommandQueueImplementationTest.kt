@@ -18,7 +18,6 @@ import info.nightscout.implementation.queue.commands.CommandExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandLoadHistory
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -56,7 +55,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var activityNames: ActivityNames
-    @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
 
     class CommandQueueMocked(
@@ -70,16 +68,16 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         activePlugin: ActivePlugin,
         context: Context,
         sp: SP,
-        buildHelper: BuildHelper,
+        config: Config,
         dateUtil: DateUtil,
         repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
-        config: Config,
         androidPermission: AndroidPermission,
         activityNames: ActivityNames
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
+        activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
+        androidPermission, activityNames
     ) {
 
         override fun notifyAboutNewCommand() : Boolean = true
@@ -122,9 +120,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue = CommandQueueMocked(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil,
-            repository,
-            fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository,
+            fabricPrivacy, androidPermission, activityNames
         )
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -151,7 +148,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
         val percentageConstraint = Constraint(0)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
-        val thenReturn = `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
+        `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
         `when`(rh.gs(R.string.formatinsulinunits)).thenReturn("%1\$.2f U")
         `when`(rh.gs(R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
     }
@@ -161,9 +158,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper,
-            dateUtil, repository,
-            fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames
         )
         val handler = mock(Handler::class.java)
         `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->

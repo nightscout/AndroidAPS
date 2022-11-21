@@ -8,7 +8,7 @@ import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -39,7 +39,7 @@ class RandomBgPlugin @Inject constructor(
     private val repository: AppRepository,
     private val xDripBroadcast: XDripBroadcast,
     private val virtualPumpPlugin: VirtualPumpPlugin,
-    private val buildHelper: BuildHelper
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
@@ -95,7 +95,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || buildHelper.isUnfinishedMode() || virtualPumpPlugin.isEnabled() && buildHelper.isEngineeringMode()
+        return isRunningTest() || config.isUnfinishedMode() || virtualPumpPlugin.isEnabled() && config.isEngineeringMode()
     }
 
     private fun handleNewData() {

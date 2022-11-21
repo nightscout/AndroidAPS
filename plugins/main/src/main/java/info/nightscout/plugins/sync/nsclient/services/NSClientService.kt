@@ -21,7 +21,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.sync.DataSyncSelector
@@ -87,7 +86,6 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsClientPlugin: NSClientPlugin
-    @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
@@ -253,7 +251,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         } else if (!nsEnabled) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "disabled", NsClient.Version.V1))
             rxBus.send(EventNSClientStatus("Disabled", NsClient.Version.V1))
-        } else if (nsURL != "" && (buildHelper.isEngineeringMode() || nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
+        } else if (nsURL != "" && (config.isEngineeringMode() || nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
                 rxBus.send(EventNSClientStatus("Connecting ...", NsClient.Version.V1))
                 val opt = IO.Options()

@@ -7,7 +7,6 @@ import androidx.core.content.FileProvider
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.plugin.PluginBase
@@ -37,7 +36,6 @@ class MaintenancePlugin @Inject constructor(
     private val sp: SP,
     private val nsSettingsStatus: NSSettingsStatus,
     aapsLogger: AAPSLogger,
-    private val buildHelper: BuildHelper,
     private val config: Config,
     private val fileListProvider: PrefFileListProvider,
     private val loggerUtils: LoggerUtils
@@ -192,7 +190,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("Remote: " + BuildConfig.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator())
         builder.append(rh.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getVersion() + System.lineSeparator())
-        if (buildHelper.isEngineeringMode()) builder.append(rh.gs(R.string.engineering_mode_enabled))
+        if (config.isEngineeringMode()) builder.append(rh.gs(R.string.engineering_mode_enabled))
         return sendMail(attachmentUri, recipient, subject, builder.toString())
     }
 

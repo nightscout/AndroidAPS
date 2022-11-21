@@ -6,7 +6,6 @@ import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -33,7 +32,6 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var profiler: Profiler
@@ -75,7 +73,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(config.APS).thenReturn(true)
         hardLimits = HardLimitsMock(sp, rh)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, activePlugin, hardLimits, buildHelper, iobCobCalculator, config, dateUtil)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, activePlugin, hardLimits, config, iobCobCalculator, dateUtil)
         openAPSAMAPlugin = OpenAPSAMAPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy,
             dateUtil, repository, glucoseStatusProvider, sp
@@ -98,7 +96,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Test
     fun disabledEngineeringModeShouldLimitClosedLoop() {
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
-        `when`(buildHelper.isEngineeringModeOrRelease()).thenReturn(false)
+        `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
         Assert.assertTrue(c.getReasons(aapsLogger).contains("Running dev version. Closed loop is disabled."))

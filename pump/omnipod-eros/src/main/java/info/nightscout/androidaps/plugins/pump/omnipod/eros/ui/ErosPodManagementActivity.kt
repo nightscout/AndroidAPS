@@ -24,10 +24,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
-import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
@@ -53,7 +52,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var activityNames: ActivityNames
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -172,7 +171,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
         // Otherwise, users should use the Deactivate Pod Wizard. In case proper deactivation fails,
         // they will get an option to discard the Pod state there
         // Milos Kozak: allow to show button by activating engineering mode
-        val discardButtonEnabled = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || buildHelper.isEngineeringMode())
+        val discardButtonEnabled = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || config.isEngineeringMode())
         binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
 
         val pulseLogButtonEnabled = aapsOmnipodManager.isPulseLogButtonEnabled

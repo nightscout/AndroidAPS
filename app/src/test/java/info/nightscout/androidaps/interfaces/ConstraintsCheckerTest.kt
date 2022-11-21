@@ -17,11 +17,9 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
@@ -58,14 +56,12 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var glimpPlugin: GlimpPlugin
-    @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var fileListProvider: PrefFileListProvider
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
-    @Mock lateinit var buildHelper: BuildHelper
 
     private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
@@ -193,7 +189,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 dateUtil,
                 repository,
                 glucoseStatusProvider,
-                buildHelper
+                config
             )
         openAPSAMAPlugin =
             info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin(
@@ -224,9 +220,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 constraintChecker,
                 activePlugin,
                 hardLimits,
-                BuildHelperImpl(config, fileListProvider),
+                ConfigImpl(fileListProvider),
                 iobCobCalculator,
-                config,
                 dateUtil
             )
         val constraintsPluginsList = ArrayList<PluginBase>()

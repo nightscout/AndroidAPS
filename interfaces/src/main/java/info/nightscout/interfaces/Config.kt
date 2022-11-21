@@ -13,4 +13,9 @@ interface Config {
     val DEBUG: Boolean
     val currentDeviceModelString : String
     val appName: Int
+
+    fun isEngineeringModeOrRelease(): Boolean
+    fun isEngineeringMode(): Boolean
+    fun isUnfinishedMode(): Boolean
+    fun isDev(): Boolean
 }

@@ -19,7 +19,7 @@ import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.SMBDefaults
@@ -59,7 +59,7 @@ class IobCobOref1Worker(
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil

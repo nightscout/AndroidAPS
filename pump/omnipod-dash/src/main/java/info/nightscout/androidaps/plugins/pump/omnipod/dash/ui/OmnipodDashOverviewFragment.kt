@@ -26,10 +26,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.queue.Callback
@@ -67,7 +67,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var activityNames: ActivityNames
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
 
     companion object {
 
@@ -175,7 +175,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_time_on_pod_updated))
             )
         }
-        if (buildHelper.isEngineeringMode()) {
+        if (config.isEngineeringMode()) {
             bluetoothStatusBinding.deliveryStatus.visibility = View.VISIBLE
             bluetoothStatusBinding.connectionQuality.visibility = View.VISIBLE
         }

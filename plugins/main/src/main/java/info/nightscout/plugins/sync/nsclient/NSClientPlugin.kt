@@ -15,7 +15,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.toast.showToastAdNotification
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
@@ -62,7 +61,6 @@ class NSClientPlugin @Inject constructor(
     private val sp: SP,
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
-    private val buildHelper: BuildHelper,
     private val dataSyncSelector: DataSyncSelector
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
@@ -145,7 +143,7 @@ class NSClientPlugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = buildHelper.isEngineeringMode()
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false

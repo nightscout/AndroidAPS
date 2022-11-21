@@ -8,7 +8,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
@@ -50,10 +49,9 @@ class ProcessTreatmentsWorker(
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var config: Config
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
@@ -104,7 +102,7 @@ class ProcessTreatmentsWorker(
                     }
 
                 is NSTemporaryBasal         ->
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
+                    if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
                         storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
 
                 is NSEffectiveProfileSwitch ->
@@ -133,13 +131,13 @@ class ProcessTreatmentsWorker(
                         }
 
                 is NSOfflineEvent           ->
-                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && buildHelper.isEngineeringMode() || config.NSCLIENT)
+                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
                         treatment.toOfflineEvent().let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         }
 
                 is NSExtendedBolus          ->
-                    if (buildHelper.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
+                    if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
                         treatment.toExtendedBolus().let { extendedBolus ->
                             storeDataForDb.extendedBoluses.add(extendedBolus)
                         }

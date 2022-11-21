@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.content.Context
 import android.os.Environment
+import dagger.Lazy
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
@@ -30,13 +31,12 @@ import kotlin.math.abs
 @Singleton
 class PrefFileListProvider @Inject constructor(
     private val rh: ResourceHelper,
-    private val config: Config,
+    private val config: Lazy<Config>,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
     context: Context
 ) {
-    @Suppress("DEPRECATION")
     private val path = File(Environment.getExternalStorageDirectory().toString())
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
@@ -120,7 +120,7 @@ class PrefFileListProvider @Inject constructor(
 
     fun newExportFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return File(aapsPath, timeLocal + "_" + config.FLAVOR + ".json")
+        return File(aapsPath, timeLocal + "_" + config.get().FLAVOR + ".json")
     }
 
     fun newExportCsvFile(): File {
@@ -134,14 +134,14 @@ class PrefFileListProvider @Inject constructor(
 
         meta[PrefsMetadataKey.AAPS_FLAVOUR]?.let { flavour ->
             val flavourOfPrefs = flavour.value
-            if (flavour.value != config.FLAVOR) {
+            if (flavour.value != config.get().FLAVOR) {
                 flavour.status = PrefsStatus.WARN
-                flavour.info = rh.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config.FLAVOR)
+                flavour.info = rh.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config.get().FLAVOR)
             }
         }
 
         meta[PrefsMetadataKey.DEVICE_MODEL]?.let { model ->
-            if (model.value != config.currentDeviceModelString) {
+            if (model.value != config.get().currentDeviceModelString) {
                 model.status = PrefsStatus.WARN
                 model.info = rh.gs(R.string.metadata_warning_different_device)
             }
@@ -165,7 +165,7 @@ class PrefFileListProvider @Inject constructor(
         }
 
         meta[PrefsMetadataKey.AAPS_VERSION]?.let { version ->
-            val currentAppVer = versionCheckerUtils.versionDigits(config.VERSION_NAME)
+            val currentAppVer = versionCheckerUtils.versionDigits(config.get().VERSION_NAME)
             val metadataVer = versionCheckerUtils.versionDigits(version.value)
 
             if ((currentAppVer.size >= 2) && (metadataVer.size >= 2) && (abs(currentAppVer[1] - metadataVer[1]) > 1)) {

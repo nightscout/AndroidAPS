@@ -1,19 +1,20 @@
 package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import android.os.Build
+import dagger.Lazy
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.Config
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -26,7 +27,7 @@ class VersionCheckerUtils @Inject constructor(
     private val sp: SP,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
-    private val config: Config,
+    private val config: Lazy<Config>,
     private val receiverStatusStore: ReceiverStatusStore,
     private val dateUtil: DateUtil
 ) {
@@ -52,17 +53,17 @@ class VersionCheckerUtils @Inject constructor(
                 try {
                     val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
                     val version: String? = AllowedVersions().findByApi(definition, Build.VERSION.SDK_INT)?.optString("supported")
-                    compareWithCurrentVersion(version, config.VERSION_NAME)
+                    compareWithCurrentVersion(version, config.get().VERSION_NAME)
 
                     // App expiration
-                    var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
-                    AllowedVersions().findByVersion(definition, config.VERSION_NAME)?.let { expirationJson ->
+                    var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, 0)
+                    AllowedVersions().findByVersion(definition, config.get().VERSION_NAME)?.let { expirationJson ->
                         AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
                             endDate = ed + T.days(1).msecs()
-                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, endDate)
+                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, endDate)
                         }
                     }
-                    if (endDate != 0L) onExpireDateDetected(config.VERSION_NAME, dateUtil.dateString(endDate))
+                    if (endDate != 0L) onExpireDateDetected(config.get().VERSION_NAME, dateUtil.dateString(endDate))
 
                 } catch (e: IOException) {
                     aapsLogger.error(LTag.CORE, "Github master version check error: $e")
@@ -77,12 +78,12 @@ class VersionCheckerUtils @Inject constructor(
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
 
-        if (newVersionElements == null || newVersionElements.isEmpty()) {
+        if (newVersionElements.isNullOrEmpty()) {
             onVersionNotDetectable()
             return
         }
 
-        if (currentVersionElements == null || currentVersionElements.isEmpty()) {
+        if (currentVersionElements.isNullOrEmpty()) {
             // current version scrambled?!
             onNewVersionDetected(currentVersion, newVersion)
             return
@@ -94,9 +95,9 @@ class VersionCheckerUtils @Inject constructor(
 
             (newElem - currElem).let {
                 when {
-                    it > 0  -> return onNewVersionDetected(currentVersion, newVersion)
-                    it < 0  -> return onOlderVersionDetected()
-                    it == 0 -> Unit
+                    it > 0 -> return onNewVersionDetected(currentVersion, newVersion)
+                    it < 0 -> return onOlderVersionDetected()
+                    else   -> Unit
                 }
             }
         }
@@ -147,8 +148,7 @@ class VersionCheckerUtils @Inject constructor(
 
     fun findVersion(file: String?): String? {
         val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
-        return file?.lines()?.filter { regex.matches(it) }
-            ?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
+        return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
     }
 
     companion object {
@@ -164,6 +164,5 @@ fun String.numericVersionPart(): String =
 
 @Suppress("unused") fun findVersion(file: String?): String? {
     val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
-    return file?.lines()?.filter { regex.matches(it) }
-        ?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
+    return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
 }

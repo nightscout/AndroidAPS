@@ -9,7 +9,6 @@ import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -44,9 +43,8 @@ class SafetyPlugin @Inject constructor(
     private val constraintChecker: Constraints,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
-    private val buildHelper: BuildHelper,
-    private val iobCobCalculator: IobCobCalculator,
     private val config: Config,
+    private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil
 ) : PluginBase(
     PluginDescription()
@@ -70,7 +68,7 @@ class SafetyPlugin @Inject constructor(
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val mode = sp.getString(R.string.key_aps_mode, "open")
         if (mode == "open") value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
-        if (!buildHelper.isEngineeringModeOrRelease()) {
+        if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 val n = Notification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
                 rxBus.send(EventNewNotification(n))
