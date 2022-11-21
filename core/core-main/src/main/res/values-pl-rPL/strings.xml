@@ -438,6 +438,7 @@
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>
