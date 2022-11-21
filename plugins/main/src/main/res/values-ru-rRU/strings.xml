@@ -71,7 +71,6 @@
     <string name="limitingiob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
     <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
-    <string name="uamdisabledoref1notselected">Незапланированный прием пищи UAM отключен, поскольку он основывается на модуле чувствительности из Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
