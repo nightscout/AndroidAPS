@@ -9,9 +9,14 @@
     <string name="yes">Áno</string>
     <string name="no">Nie</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">zníženie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zvýšenie %1$s o %2$s</string>
+    <string name="you_are_on_allowed_limit">Dosiahnutý povolený limit</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Čas udalosti</string>
     <!-- BluetoothDevicePreference -->
+    <string name="needconnectpermission">Aplikácia vyžaduje povolenie Bluetooth</string>
 </resources>
