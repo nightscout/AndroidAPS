@@ -305,6 +305,7 @@
     <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
     <string name="advisoralarm">Алармата, когато е време за хранене.</string>
     <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
