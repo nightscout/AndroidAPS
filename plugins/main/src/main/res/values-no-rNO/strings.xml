@@ -231,7 +231,6 @@
     <string name="limitingiob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
     <string name="closedmodedisabledinpreferences">Lukket Loop er eaktivert i innstillinger</string>
-    <string name="uamdisabledoref1notselected">UAM deaktivert fordi den trenger Oref1 sensitivitetsplugin</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
     <string name="smbalwaysdisabled">SMB Alltid På og SMB Etter Karbohydrater er deaktivert fordi BS kilden ikke støtter avansert filtrering</string>
