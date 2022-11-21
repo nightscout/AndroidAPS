@@ -521,6 +521,7 @@
     <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
