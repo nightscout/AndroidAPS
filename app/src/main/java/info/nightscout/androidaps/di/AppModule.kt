@@ -11,14 +11,12 @@ import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
 import info.nightscout.androidaps.interfaces.stats.TddCalculator
 import info.nightscout.androidaps.interfaces.stats.TirCalculator
-import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
 import info.nightscout.androidaps.utils.buildHelper.BuildHelperImpl
 import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
@@ -30,6 +28,7 @@ import info.nightscout.implementation.CarbTimerImpl
 import info.nightscout.implementation.LocalAlertUtilsImpl
 import info.nightscout.implementation.TrendCalculatorImpl
 import info.nightscout.implementation.XDripBroadcastImpl
+import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.pump.PumpSyncImplementation
 import info.nightscout.implementation.queue.CommandQueueImplementation
@@ -63,6 +62,7 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.sync.nsclient.DataSyncSelectorImplementation
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData

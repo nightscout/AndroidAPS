@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.utils.wizard
+package info.nightscout.core.wizard
 
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
@@ -18,7 +18,6 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
@@ -41,7 +40,6 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop
     @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStoreObject
 
@@ -63,6 +61,8 @@ class BolusWizardTest : TestBase() {
         }
     }
 
+    val testPumpPlugin = TestPumpPlugin(injector)
+
     @Suppress("SameParameterValue")
     private fun setupProfile(targetLow: Double, targetHigh: Double, insulinSensitivityFactor: Double, insulinToCarbRatio: Double): Profile {
         val profile = Mockito.mock(Profile::class.java)
@@ -74,10 +74,10 @@ class BolusWizardTest : TestBase() {
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
-        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        val pumpDescription = PumpDescription()
-        pumpDescription.bolusStep = pumpBolusStep
-        `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
+        `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
+        testPumpPlugin.pumpDescription = PumpDescription().also {
+            it.bolusStep = pumpBolusStep
+        }
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
 
         Mockito.doAnswer { invocation: InvocationOnMock ->
