@@ -10,9 +10,9 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.configuration.R
 import info.nightscout.configuration.setupwizard.SWTextValidator
+import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.shared.extensions.toVisibility
 
 class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUtil: CryptoUtil) : SWItem(injector, Type.STRING) {

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.core.utils
 
 import android.util.SparseArray
 import android.view.ActionMode
@@ -7,8 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.core.main.R
-
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?, val fragment: Fragment?) {

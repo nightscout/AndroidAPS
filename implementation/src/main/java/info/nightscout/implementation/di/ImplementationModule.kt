@@ -1,19 +1,25 @@
 package info.nightscout.implementation.di
 
 import android.content.Context
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
+import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.HardLimitsImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
+import info.nightscout.implementation.maintenance.PrefFileListProviderImpl
 import info.nightscout.implementation.profiling.ProfilerImpl
 import info.nightscout.implementation.pump.WarnColorsImpl
 import info.nightscout.implementation.resources.ResourceHelperImpl
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.LoggerUtils
+import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.pump.WarnColors
+import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -51,4 +57,15 @@ open class ImplementationModule {
     @Provides
     @Singleton
     fun provideLoggerUtils(prefFileListProvider: PrefFileListProvider): LoggerUtils = LoggerUtilsImpl(prefFileListProvider)
+
+    @Provides
+    @Singleton
+    fun providePrefFileListProvider(
+        rh: ResourceHelper,
+        config: Lazy<Config>,
+        encryptedPrefsFormat: EncryptedPrefsFormat,
+        storage: Storage,
+        versionCheckerUtils: VersionCheckerUtils,
+        context: Context
+    ): PrefFileListProvider = PrefFileListProviderImpl(rh, config, encryptedPrefsFormat, storage, versionCheckerUtils, context)
 }

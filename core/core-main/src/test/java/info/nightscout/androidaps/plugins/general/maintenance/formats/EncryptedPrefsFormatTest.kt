@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.utils.CryptoUtil
+import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.interfaces.maintenance.PrefFormatError
 import info.nightscout.interfaces.maintenance.PrefMetadata
 import info.nightscout.interfaces.maintenance.Prefs

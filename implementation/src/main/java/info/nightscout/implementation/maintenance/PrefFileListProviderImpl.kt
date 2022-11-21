@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.maintenance
+package info.nightscout.implementation.maintenance
 
 import android.content.Context
 import android.os.Environment
@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefMetadata
 import info.nightscout.interfaces.maintenance.PrefMetadataMap
 import info.nightscout.interfaces.maintenance.PrefsFile
@@ -29,20 +30,20 @@ import kotlin.math.abs
 @Suppress("SpellCheckingInspection")
 @OpenForTesting
 @Singleton
-class PrefFileListProvider @Inject constructor(
+class PrefFileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val config: Lazy<Config>,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
     context: Context
-) {
+) : PrefFileListProvider {
     private val path = File(Environment.getExternalStorageDirectory().toString())
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
-    val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
+    override val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
 
     companion object {
 
@@ -56,7 +57,7 @@ class PrefFileListProvider @Inject constructor(
      *  - file name and extension
      *  - predicted file contents
      */
-    fun listPreferenceFiles(loadMetadata: Boolean = false): MutableList<PrefsFile> {
+    override fun listPreferenceFiles(loadMetadata: Boolean): MutableList<PrefsFile> {
         val prefFiles = mutableListOf<PrefsFile>()
 
         // searching rood dir for legacy files
@@ -94,7 +95,7 @@ class PrefFileListProvider @Inject constructor(
         return checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
     }
 
-    fun ensureExportDirExists(): File {
+    override fun ensureExportDirExists(): File {
         if (!aapsPath.exists()) {
             aapsPath.mkdirs()
         }
@@ -104,32 +105,32 @@ class PrefFileListProvider @Inject constructor(
         return exportsPath
     }
 
-    fun ensureTempDirExists(): File {
+    override fun ensureTempDirExists(): File {
         if (!tempPath.exists()) {
             tempPath.mkdirs()
         }
         return tempPath
     }
 
-    fun ensureExtraDirExists(): File {
+    override fun ensureExtraDirExists(): File {
         if (!extraPath.exists()) {
             extraPath.mkdirs()
         }
         return extraPath
     }
 
-    fun newExportFile(): File {
+    override fun newExportFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(aapsPath, timeLocal + "_" + config.get().FLAVOR + ".json")
     }
 
-    fun newExportCsvFile(): File {
+    override fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
     }
 
     // check metadata for known issues, change their status and add info with explanations
-    fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata> {
+    override fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata> {
         val meta = metadata.toMutableMap()
 
         meta[PrefsMetadataKey.AAPS_FLAVOUR]?.let { flavour ->
@@ -182,7 +183,7 @@ class PrefFileListProvider @Inject constructor(
         return meta
     }
 
-    fun formatExportedAgo(utcTime: String): String {
+    override fun formatExportedAgo(utcTime: String): String {
         val refTime = DateTime.now()
         val itTime = DateTime.parse(utcTime)
         val days = Days.daysBetween(itTime, refTime).days

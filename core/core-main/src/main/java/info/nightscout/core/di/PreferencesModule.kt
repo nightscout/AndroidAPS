@@ -2,9 +2,9 @@ package info.nightscout.core.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
-import info.nightscout.androidaps.utils.CryptoUtil
+import info.nightscout.core.utils.CryptoUtil
+import info.nightscout.interfaces.maintenance.PrefFileListProvider
 
 @Module
 @Suppress("unused")

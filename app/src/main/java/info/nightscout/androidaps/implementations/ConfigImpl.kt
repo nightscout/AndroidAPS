@@ -3,8 +3,8 @@ package info.nightscout.androidaps.implementations
 import android.os.Build
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

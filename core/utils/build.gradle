@@ -31,6 +31,10 @@ dependencies {
     //    api 'com.google.firebase:firebase-auth-ktx'
     //    api 'com.google.firebase:firebase-database-ktx'
 
+    //CryptoUtil
+    api 'com.madgag.spongycastle:core:1.58.0.0'
+    api "com.google.crypto.tink:tink-android:$tink_version"
+
     //WorkManager
     api "androidx.work:work-runtime:$work_version" // DataWorkerStorage
 }

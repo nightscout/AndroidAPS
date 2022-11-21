@@ -20,8 +20,8 @@ import info.nightscout.androidaps.databinding.OverviewQuickwizardlistActivityBin
 import info.nightscout.androidaps.databinding.OverviewQuickwizardlistItemBinding
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
-import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry

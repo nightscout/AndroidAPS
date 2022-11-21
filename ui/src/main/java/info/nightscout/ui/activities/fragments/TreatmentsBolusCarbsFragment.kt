@@ -19,9 +19,9 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.ActionModeHelper
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
