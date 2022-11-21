@@ -75,4 +75,5 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Избрано:</string>
     <!-- Other dialogs -->
+    <!--    PrefImport-->
 </resources>
