@@ -240,15 +240,6 @@
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
     <string name="hardlimit">límite estricto</string>
     <string name="treatmentssafety_title">Seguridad de tratamientos</string>
-    <string name="patientage_summary">Por favor, selecciona el tipo de paciente para establecer los límites de seguridad</string>
-    <string name="child">Niño</string>
-    <string name="teenage">Adolescente</string>
-    <string name="adult">Adulto</string>
-    <string name="resistantadult">Adulto resistente a la insulina</string>
-    <string name="pregnant">Embarazada</string>
-    <string name="treatmentssafety_maxbolus_title">Máximo bolo permitido [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
-    <string name="patientage">Tipo de paciente</string>
     <!-- Overview -->
     <string name="snooze">Silenciar</string>
     <string name="copy_existing_values">¿Deseas copiar los ajustes desde Nightscout, si existen?</string>
@@ -455,4 +446,5 @@
     <string name="loop_smb_set_by_pump_label">SMB administrado por la bomba</string>
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
+    <!--    DataBroadcast-->
 </resources>
