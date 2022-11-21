@@ -117,6 +117,7 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>
