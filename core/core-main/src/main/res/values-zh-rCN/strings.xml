@@ -517,6 +517,7 @@
     <string name="wizard_explain_tt">临时目标：%1$s</string>
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">没有可用的泵！</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>
