@@ -11,7 +11,6 @@
     <string name="stop_pump">Stop pump</string>
     <string name="started">Started</string>
     <string name="stopped">Stopped</string>
-    <string name="paused">Paused</string>
     <string name="operating_mode">Operating mode</string>
     <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
     <string name="not_inserted">Not inserted</string>
@@ -60,7 +59,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="confirm">Confirm</string>
     <string name="mute_alert">Mute</string>
     <string name="release_software_version">Release software version</string>
     <string name="ui_processor_software_version">UI processor software version</string>

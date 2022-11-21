@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class DanaRSPacketBolusGetCalculationInformation(

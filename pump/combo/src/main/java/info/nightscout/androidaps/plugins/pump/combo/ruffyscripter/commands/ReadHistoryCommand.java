@@ -16,8 +16,8 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpH
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tbr;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 
 public class ReadHistoryCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshButtonState
 import javax.inject.Inject
 
 class WakeAndTuneTask(injector: HasAndroidInjector) : PumpTask(injector) {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Confirmation</string>
+    <string name="message">Message</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
+    <string name="dismiss">REJETER</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
+    <!-- NumberPicker -->
+    <string name="a11y_min_button_description">réduire %1$s par %2$s</string>
+    <string name="a11y_plus_button_description">incrémenter %1$s par %2$s</string>
+    <string name="you_are_on_allowed_limit">Limite autorisée atteinte</string>
+    <string name="format_hour_minute">%1$dh%2$dm</string>
+    <!-- datetime layout -->
+    <string name="event_time_label">Heure de l\'événement</string>
+    <!-- BluetoothDevicePreference -->
+    <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
+</resources>

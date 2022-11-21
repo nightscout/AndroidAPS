@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.RawRes
 import info.nightscout.androidaps.activities.DialogAppCompatActivity
-import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.core.main.R
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.dialogs.ErrorDialog
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.shared.sharedPreferences.SP

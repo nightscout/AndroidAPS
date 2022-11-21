@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">确认</string>
+    <string name="message">消息</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="dismiss">忽略</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

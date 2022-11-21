@@ -1,17 +1,23 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.shared.logging.AAPSLoggerTest
+import info.nightscout.interfaces.Config
+import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Assert
 import org.junit.Test
+import org.mockito.Mock
 import org.spongycastle.util.encoders.Hex
 
-class MilenageTest {
+class MilenageTest : TestBase() {
+
+    @Mock lateinit var config: Config
 
     @Test fun testMilenage() {
         val aapsLogger = AAPSLoggerTest()
         val m = Milenage(
             aapsLogger = aapsLogger,
+            config = config,
             k = Hex.decode("c0772899720972a314f557de66d571dd"),
             sqn = byteArrayOf(0, 0, 0, 0, 0, 2),
             randParam = Hex.decode("c2cd1248451103bd77a6c7ef88c441ba")
@@ -25,6 +31,7 @@ class MilenageTest {
         val aapsLogger = AAPSLoggerTest()
         val m = Milenage(
             aapsLogger = aapsLogger,
+            config = config,
             k = Hex.decode("78411ccad0fd0fb6f381a47fb3335ecb"),
             sqn = byteArrayOf(0, 0, 0, 0, 0, 2), // 1 + 1
             randParam = Hex.decode("4fc01ac1a94376ae3e052339c07d9e1f")
@@ -38,6 +45,7 @@ class MilenageTest {
         val aapsLogger = AAPSLoggerTest()
         val m = Milenage(
             aapsLogger = aapsLogger,
+            config = config,
             k = Hex.decode("c0772899720972a314f557de66d571dd"),
             //  byteArrayOf(0,0,0,0,0x01,0x5d), this is in logs. SQN has to be incremented.
             sqn = byteArrayOf(0, 0, 0, 0, 0x01, 0x5e),
@@ -52,6 +60,7 @@ class MilenageTest {
         val aapsLogger = AAPSLoggerTest()
         val m = Milenage(
             aapsLogger = aapsLogger,
+            config = config,
             k = Hex.decode("689b860fde3331dd7e1671ad39985e3b"),
             sqn = byteArrayOf(0, 0, 0, 0, 0, 8), // 1 + 1
             auts = Hex.decode("84ff173947a67567985de71e4890"),

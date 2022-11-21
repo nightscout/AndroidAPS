@@ -6,13 +6,14 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.DexcomTIR
+import info.nightscout.core.profile.toCurrentUnitsString
+import info.nightscout.core.profile.toUnitsString
 import info.nightscout.implementation.R
-import java.util.*
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import java.util.Calendar
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -73,11 +74,11 @@ class DexcomTirImpl : DexcomTIR {
         return sqrt(standardDeviation / count)
     }
 
-    override fun toHbA1cView(context: Context, rh: ResourceHelper): TextView =
+    override fun toHbA1cView(context: Context): TextView =
         TextView(context).apply {
             text =
                 if (count == 0) ""
-                else rh.gs(R.string.hba1c) +
+                else context.getString(R.string.hba1c) +
                     (10 * (mean() + 46.7) / 28.7).roundToInt() / 10.0 + "%" +
                     " (" +
                     (((mean() + 46.7) / 28.7 - 2.15) * 10.929).roundToInt() +
@@ -87,20 +88,20 @@ class DexcomTirImpl : DexcomTIR {
         }
 
     @SuppressLint("SetTextI18n")
-    override fun toSDView(context: Context, rh: ResourceHelper, profileFunction: ProfileFunction): TextView =
+    override fun toSDView(context: Context, profileFunction: ProfileFunction): TextView =
         TextView(context).apply {
             val sd = calculateSD()
-            text = "\n" + rh.gs(R.string.std_deviation, Profile.toUnitsString(sd, sd * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()))
+            text = "\n" + context.getString(R.string.std_deviation, Profile.toUnitsString(sd, sd * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()))
             setTypeface(typeface, Typeface.NORMAL)
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
-    override fun toRangeHeaderView(context: Context, rh: ResourceHelper, profileFunction: ProfileFunction): TextView =
+    override fun toRangeHeaderView(context: Context, profileFunction: ProfileFunction): TextView =
         TextView(context).apply {
             text = StringBuilder()
-                .append(rh.gs(R.string.detailed_14_days))
+                .append(context.getString(R.string.detailed_14_days))
                 .append("\n")
-                .append(rh.gs(R.string.day_tir))
+                .append(context.getString(R.string.day_tir))
                 .append(" (")
                 .append(Profile.toUnitsString(0.0, 0.0, profileFunction.getUnits()))
                 .append("-")
@@ -112,7 +113,7 @@ class DexcomTirImpl : DexcomTIR {
                 .append("-")
                 .append(Profile.toCurrentUnitsString(profileFunction, veryHighTirMgdl))
                 .append("-∞)\n")
-                .append(rh.gs(R.string.night_tir))
+                .append(context.getString(R.string.night_tir))
                 .append(" (")
                 .append(Profile.toUnitsString(0.0, 0.0, profileFunction.getUnits()))
                 .append("-")
@@ -130,28 +131,28 @@ class DexcomTirImpl : DexcomTIR {
             setTextAppearance(android.R.style.TextAppearance_Material_Medium)
         }
 
-    override fun toTableRowHeader(context: Context, rh: ResourceHelper): TableRow =
+    override fun toTableRowHeader(context: Context): TableRow =
         TableRow(context).also { header ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
             header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
             header.gravity = Gravity.CENTER_HORIZONTAL
-            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0; weight = 1f }; text = rh.gs(R.string.veryLow) })
-            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1; weight = 1f }; text = rh.gs(R.string.low) })
-            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2; weight = 1f }; text = rh.gs(R.string.in_range) })
-            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3; weight = 1f }; text = rh.gs(R.string.high) })
-            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4; weight = 1f }; text = rh.gs(R.string.veryHigh) })
+            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0; weight = 1f }; text = context.getString(R.string.veryLow) })
+            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1; weight = 1f }; text = context.getString(R.string.low) })
+            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2; weight = 1f }; text = context.getString(R.string.in_range) })
+            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3; weight = 1f }; text = context.getString(R.string.high) })
+            header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4; weight = 1f }; text = context.getString(R.string.veryHigh) })
         }
 
     @SuppressLint("SetTextI18n")
-    override fun toTableRow(context: Context, rh: ResourceHelper): TableRow =
+    override fun toTableRow(context: Context): TableRow =
         TableRow(context).also { row ->
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
             row.gravity = Gravity.CENTER_HORIZONTAL
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = rh.gs(R.string.formatPercent, veryLowPct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = rh.gs(R.string.formatPercent, lowPct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = rh.gs(R.string.formatPercent, inRangePct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = rh.gs(R.string.formatPercent, highPct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text = rh.gs(R.string.formatPercent, veryHighPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = context.getString(R.string.formatPercent, veryLowPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = context.getString(R.string.formatPercent, lowPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = context.getString(R.string.formatPercent, inRangePct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = context.getString(R.string.formatPercent, highPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text = context.getString(R.string.formatPercent, veryHighPct()) })
         }
 }

@@ -1,18 +1,19 @@
 package info.nightscout.androidaps.dana
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.T
+import info.nightscout.core.profile.ProfileStoreObject
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
@@ -380,7 +381,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return ProfileStore(injector, json, dateUtil)
+            return ProfileStoreObject(injector, json, dateUtil)
         }
         return null
     }

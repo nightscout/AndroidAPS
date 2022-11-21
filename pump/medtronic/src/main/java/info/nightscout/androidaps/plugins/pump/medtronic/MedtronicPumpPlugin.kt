@@ -7,22 +7,11 @@ import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo
@@ -43,8 +32,13 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile.Companion.getProfilesByHourToString
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfileEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.*
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType.Companion.getSettings
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCustomActionType
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicStatusRefreshType
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
@@ -52,15 +46,38 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.isSame
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.TimeChangeType
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
+import info.nightscout.interfaces.pump.actions.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomActionType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.TimeChangeType
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshButtonState
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventSWRLStatus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.joda.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -142,6 +159,13 @@ class MedtronicPumpPlugin @Inject constructor(
                 }.start()
             }
         }
+        // Pass only to setup wizard
+        disposable.add(
+            rxBus
+                .toObservable(EventRileyLinkDeviceStatusChange::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({ event: EventRileyLinkDeviceStatusChange -> rxBus.send(EventSWRLStatus(event.getStatus(context))) }, fabricPrivacy::logException)
+        )
         super.onStart()
     }
 

@@ -9,10 +9,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Connection.Companion.STOP_CONNECTING_CHECK_INTERVAL_MS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.ConnectionWaitCondition
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import java.math.BigInteger
-import java.util.*
+import java.util.UUID
 
 class ServiceDiscoverer(
     private val logger: AAPSLogger,

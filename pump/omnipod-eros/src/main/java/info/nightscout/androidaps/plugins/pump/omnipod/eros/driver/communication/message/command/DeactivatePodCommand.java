@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import androidx.annotation.NonNull;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class DeactivatePodCommand extends NonceResyncableMessageBlock {
     private int nonce;

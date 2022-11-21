@@ -9,7 +9,6 @@ import android.os.HandlerThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import dagger.android.DaggerBroadcastReceiver
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
@@ -19,8 +18,9 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Communicator</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <!-- Insulin -->
+    <string name="insulin_shortname">INS</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Voltooi, baie mooi gedoen!</string>
+    <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
+    <string name="hasbgdata">BG beskikbaar vanaf geselekteerde bron</string>
+    <string name="loopenabled">Lus geaktiveer</string>
+    <string name="apsselected">APS gekies</string>
+    <string name="closedmodeenabled">Geslote modus geaktiveer</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Onderrig program</string>
+    <!-- Actions -->
+    <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Verlengde bolus is beperk tot %1$.1f U as gevolg van %2$s</string>
+    <string name="limitingcarbs">Beperk koolhidrate tot %1$d g agv %2$s</string>
+    <string name="limitingiob">Beperk IAB tot %1$.1f U agv %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
+    <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
+    <string name="uamdisabledoref1notselected">UAM versper omdat dit staatmaak op Oref1 sensitiwiteit plugin</string>
+    <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
+    <string name="smbalwaysdisabled">SMB is altyd na koolhidrate versper omdat aktiewe BG bron nie gevorderde filter ondersteun nie</string>
+    <string name="smbnotallowedinopenloopmode">SMB nie toegelaat in open lus modus</string>
+    <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
+    <string name="hardlimit">harde limiet</string>
+    <string name="treatmentssafety_title">Behandelings veiligheid</string>
+    <string name="child">Kind</string>
+    <string name="teenage">Tiener</string>
+    <string name="adult">Volwassene</string>
+    <string name="resistantadult">Insulien weerstandige volwasse</string>
+    <string name="max_bolus_title">Maks toelaatbare Bolus [U]</string>
+    <string name="max_carbs_title">Maks Toelaatbare karbs [g]</string>
+    <!-- Overview -->
+    <string name="snooze">Sluimer</string>
+    <string name="show_statuslights">Wys status vlae op tuisskerm</string>
+    <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
+    <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
+    <string name="apsmode_title">APS modus</string>
+    <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">SlimNutsman</string>
+    <!-- NSClient -->
+    <string name="restart">Herbegin</string>
+    <string name="deliver_now">Lewer nou</string>
+    <string name="clear_queue">Vee tou uit</string>
+    <string name="show_queue">Wys tou</string>
+    <string name="queue">Tou:</string>
+    <string name="status">Status:</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
+    <string name="title_tidepool_username">Login Gebruiker Naam</string>
+    <string name="summary_tidepool_password">Jou Tidepool login kode</string>
+    <string name="title_tidepool_password">Login wagwoord</string>
+    <string name="title_tidepool_test_login">Toets Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">As ge-aktiveer sal data oplaai na https://int-app.tidepool.org instede van die gewone https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Gebruik Integrasie (toets) bedieners</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laai data op na Tidepool</string>
+    <string name="tidepool_upload_cgm">Laai CGM data op</string>
+    <string name="tidepool_upload_bolus">Laai behandelings op (insulien, karbs)</string>
+    <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
+    <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
+    <string name="tidepool_upload_bg">Laai BG toetse op</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
+    <string name="virtualpump_settings">Virtuele pomp instellings</string>
+    <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
+    <string name="eversense">Eversense App (bygewerk)</string>
+    <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
+    <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
+    <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
+    <string name="bgsource_upload">BG oplaai instellings</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_create_announcements_from_errors_title">Skep aankondigings vanaf foute</string>
+    <string name="ns_create_announcements_from_errors_summary">Skep Nightscout aankondiging vir foutdialoë en plaaslike waarskuwings (ook vertoonbaar in Careportal onder behandelings)</string>
+    <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
+    <!--    Loop -->
+</resources>

@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import org.junit.Test;
 
 import java.util.EnumSet;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;
-
-import static org.junit.Assert.assertArrayEquals;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class CancelDeliveryCommandTest {
 

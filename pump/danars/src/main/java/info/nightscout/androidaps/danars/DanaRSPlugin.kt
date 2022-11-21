@@ -13,30 +13,44 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.Dana
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpPluginBase
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.Round
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException
@@ -110,9 +124,9 @@ class DanaRSPlugin @Inject constructor(
             .toObservable(EventDanaRSDeviceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                pumpSync.connectNewPump()
-                changePump()
-            }, fabricPrivacy::logException)
+                           pumpSync.connectNewPump()
+                           changePump()
+                       }, fabricPrivacy::logException)
         changePump() // load device name
     }
 
@@ -324,7 +338,6 @@ class DanaRSPlugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        var result = PumpEnactResult(injector)
         val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
         var doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
@@ -349,13 +362,13 @@ class DanaRSPlugin @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping temp basal (doTempOff)")
                 return cancelTempBasal(false)
             }
-            result.success = true
-            result.enacted = false
-            result.percent = 100
-            result.isPercent = true
-            result.isTempCancel = true
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK")
-            return result
+            return PumpEnactResult(injector)
+                .success(true)
+                .enacted(false)
+                .percent(100)
+                .isPercent(true)
+                .isTempCancel(true)
         }
         if (doLowTemp || doHighTemp) {
             // Check if some temp is already in progress
@@ -364,21 +377,21 @@ class DanaRSPlugin @Inject constructor(
                 // Correct basal already set ?
                 if (danaPump.tempBasalPercent == percentRate && danaPump.tempBasalRemainingMin > 4) {
                     if (!enforceNew) {
-                        result.success = true
-                        result.percent = percentRate
-                        result.enacted = false
-                        result.duration = danaPump.tempBasalRemainingMin
-                        result.isPercent = true
-                        result.isTempCancel = false
                         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)")
-                        return result
+                        return PumpEnactResult(injector)
+                            .success(true)
+                            .percent(percentRate)
+                            .enacted(false)
+                            .duration(danaPump.tempBasalRemainingMin)
+                            .isPercent(true)
+                            .isTempCancel(false)
                     }
                 }
             }
             temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), percentRate.toDouble(), false, tbrType, 0L, 0L))
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $percentRate% for $durationInMinutes minutes (doLowTemp || doHighTemp)")
-            result = if (percentRate == 0 && durationInMinutes > 30) {
+            val result = if (percentRate == 0 && durationInMinutes > 30) {
                 setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew, tbrType)
             } else {
                 // use special APS temp basal call ... 100+/15min .... 100-/30min
@@ -393,9 +406,9 @@ class DanaRSPlugin @Inject constructor(
         }
         // We should never end here
         aapsLogger.error("setTempBasalAbsolute: Internal error")
-        result.success = false
-        result.comment = "Internal error"
-        return result
+        return PumpEnactResult(injector)
+            .success(false)
+            .comment("Internal error")
     }
 
     @Synchronized

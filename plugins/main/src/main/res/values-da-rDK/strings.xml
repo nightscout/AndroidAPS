@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <string name="filter">Filter</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Fuldført, godt klaret!</string>
+    <string name="maxiobset">Maksimal IOB sat korrekt</string>
+    <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
+    <string name="loopenabled">Loop aktiveret</string>
+    <string name="apsselected">APS valgt</string>
+    <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Oplæringsprogram</string>
+    <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
+    <string name="objectives_button_unfinish">Ryd færdigt</string>
+    <string name="objectives_button_unstart">Ryd startet</string>
+    <!-- Actions -->
+    <string name="description_actions">Nogle knapper til hurtigt at få adgang til almindelige funktioner</string>
+    <string name="actions_shortname">AKT</string>
+    <string name="tools">Værktøjer</string>
+    <string name="cannula">Kanyle</string>
+    <string name="ebstopsloop">Brug af funktionen til forlænget bolus vil stoppe lukket loop mode i det tidsrum, hvor der køres forlænget bolus. Vil du virkelig gøre det?</string>
+    <string name="extendedbolusdeliveryerror">Forlænget bolus leveringsfejl</string>
+    <string name="statuslights_cannula_age">Indstik alder</string>
+    <string name="statuslights_patch_pump_age">patch pumpe alder</string>
+    <string name="patch_pump">Patch pumpe</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Begrænser udvidet bolus til %1$.1f IE på grund af %2$s</string>
+    <string name="limitingcarbs">Begrænser kulhydrater til %1$d g på grund af %2$s</string>
+    <string name="limitingiob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
+    <string name="closedmodedisabledinpreferences">Lukket loop tilstand deaktiveret i præferencer</string>
+    <string name="uamdisabledoref1notselected">UAM deaktiveret, fordi det er afhængig af Oref1 følsomheds pluginnet</string>
+    <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
+    <string name="closed_loop_disabled_with_eb">Lukket loop deaktiveret på grund af kørsel af forlænget bolus</string>
+    <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
+    <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
+    <string name="maxvalueinpreferences">max værdi i præferencer</string>
+    <string name="hardlimit">hård grænse</string>
+    <string name="treatmentssafety_title">Behandlings sikkerhed</string>
+    <string name="patient_age_summary">Vælg venligst patienttype til opsætning af sikkerhedsgrænser</string>
+    <string name="child">Barn</string>
+    <string name="teenage">Teeanger</string>
+    <string name="adult">Voksen</string>
+    <string name="resistantadult">Insulinresistent voksen</string>
+    <string name="pregnant">Graviditet</string>
+    <string name="max_bolus_title">Maks tilladt bolus [IE]</string>
+    <string name="max_carbs_title">Maks tilladte kulhydrater [g]</string>
+    <string name="patient_type">Patienttype</string>
+    <!-- Overview -->
+    <string name="snooze">Udsæt</string>
+    <string name="show_statuslights">Vis statuslys på startskærm</string>
+    <string name="statuslights_iage_warning">Grænseværdi for insulin-alder [h]</string>
+    <string name="statuslights_iage_critical">Grænseværdi for kritisk insulin-alder [h]</string>
+    <string name="statuslights_sage_warning">Grænseværdi advarsel for sensoralder [h]</string>
+    <string name="statuslights_sage_critical">Grænseværdi for kritisk sensoralder [h]</string>
+    <string name="statuslights_sbat_warning">Grænseværdi advarsel sensor batteriniveau [%]</string>
+    <string name="statuslights_sbat_critical">Grænseværdi kritisk sensor batteriniveau [%]</string>
+    <string name="statuslights_bage_warning">Grænseværdi for advarsel på pumpens batterialder [h]</string>
+    <string name="statuslights_bage_critical">Grænseværdi for kritisk advarsel på batterialder [h]</string>
+    <string name="statuslights_res_warning">Grænseværdi for advarsel på reservoirniveau [U]</string>
+    <string name="statuslights_res_critical">Grænseværdi for kritisk reservoirniveau [U]</string>
+    <string name="statuslights_bat_warning">Grænseværdi for advarsel på pumpens batteri [%]</string>
+    <string name="statuslights_bat_critical">Grænseværdi for kritisk advarsel på batteri [%]</string>
+    <string name="statuslights">Status lys</string>
+    <string name="statuslights_copy_ns">Kopier indstillinger fra NS</string>
+    <string name="a11y_graph">graf</string>
+    <string name="a11y_insulin_label">insulin</string>
+    <string name="chart_menu">Diagrammenu</string>
+    <string name="a11y_bg_quality">blodglukose kvalitet</string>
+    <string name="a11y_blood_glucose">blodglucose</string>
+    <string name="a11y_bg_outdated">forældet</string>
+    <string name="apsmode_title">APS Tilstand</string>
+    <string name="setbasalquestion">Acceptér ny midlertidig basal:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">Lynguide</string>
+    <!-- NSClient -->
+    <string name="restart">Genstart</string>
+    <string name="deliver_now">Afgiver nu</string>
+    <string name="clear_queue">Ryd kø</string>
+    <string name="show_queue">Vis kø</string>
+    <string name="queue">Kø:</string>
+    <string name="status">Status:</string>
+    <string name="full_sync">Fuld synkronisering</string>
+    <string name="full_sync_comment">Fuld synkronisering? Det kan tage mange timer, og indtil du er færdig, vil du ikke se nye data i NS.</string>
+    <string name="ns_sync_options">Synkronisering</string>
+    <string name="ns_upload_summary">Profiler, bolusser, kulhydrater, midlertidige basaler uploades til NS</string>
+    <string name="ns_upload">Upload data til NS</string>
+    <string name="ns_receive_profile_store">Modtag profil lager</string>
+    <string name="ns_receive_profile_store_summary">Synkronisér profiler fra NS</string>
+    <string name="ns_receive_temp_target">Modtag midlertidige mål</string>
+    <string name="ns_receive_temp_target_summary">Accepter midlertidige mål indtastet gennem NS eller NSClient</string>
+    <string name="ns_receive_profile_switch">Modtag profil skift</string>
+    <string name="ns_receive_profile_switch_summary">Accepter profil skift indtastet gennem NS eller NSClient</string>
+    <string name="ns_receive_offline_event">Modtag APS offline begivenheder</string>
+    <string name="ns_receive_offline_event_summary">Accepter APS Offline begivenheder indtastet gennem NS eller NSClient</string>
+    <string name="ns_receive_tbr_eb">Modtag TBR og EB</string>
+    <string name="ns_receive_tbr_eb_summary">Accepter TBR og EB indtastet gennem en anden instans</string>
+    <string name="ns_receive_insulin">Modtag insulin</string>
+    <string name="ns_receive_insulin_summary">Accepter insulin via NS eller NSClient (det er ikke afgivet, kun beregnet til IOB)</string>
+    <string name="ns_receive_carbs">Modtag kulhydrater</string>
+    <string name="ns_receive_carbs_summary">Accepter kulhydrater indtastet gennem NS eller NSClient</string>
+    <string name="ns_receive_therapy_events">Modtag behandlingshændelser</string>
+    <string name="ns_receive_therapy_events_summary">Accepter terapihændelser (Kanyle, insulin, batteriskift osv.), der indtastes gennem NS eller NSClient</string>
+    <string name="ns_receive_cgm">Modtag/tilbagefyld CGM-data</string>
+    <string name="ns_receive_cgm_summary">Accepter CGM-data fra NS</string>
+    <string name="run_question">Kør %s?</string>
+    <string name="ns_sync_slow">Reducer upload hastighed</string>
+    <string name="ns_alarms">Opret notifikationer fra NS-alarmer</string>
+    <string name="ns_announcements">Opret notifikationer fra NS-meddelelser</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Dit brugernavn til Tidepool, normalt din e-mailadresse</string>
+    <string name="title_tidepool_username">Login Brugernavn</string>
+    <string name="summary_tidepool_password">Din Tidepool login adgangskode</string>
+    <string name="title_tidepool_password">Login Adgangskode</string>
+    <string name="title_tidepool_test_login">Test Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">Hvis aktiveret, vil uploads gå til https://int-app.tidepool.org i stedet for den almindelige https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Brug Integration (test) servere</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Uploader data til Tidepool</string>
+    <string name="tidepool_upload_cgm">Upload CGM data</string>
+    <string name="tidepool_upload_bolus">Upload behandlinger (insulin, kulhydrater)</string>
+    <string name="tidepool_upload_tbr">Upload midlertidige basaler</string>
+    <string name="tidepool_upload_profile">Upload profilskift, midlertidige mål</string>
+    <string name="tidepool_upload_bg">Upload BS test</string>
+    <string name="remove_all">Fjern alle</string>
+    <string name="reset_start">Nulstil start</string>
+    <string name="upload_now">Upload nu</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
+    <string name="virtualpump_settings">Indstillinger for virtuel pumpe</string>
+    <string name="virtualpump_uploadstatus_title">Upload status til NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Modtag BG-værdier fra xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
+    <string name="eversense">Eversense App (patched)</string>
+    <string name="description_source_eversense">Modtag BG værdier fra den patchede Eversense app.</string>
+    <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
+    <string name="description_source_mm640g">Modtag BG-værdier fra 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Modtag BS-værdier fra Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Modtag værdier fra Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Modtag værdier fra Intelligo-appen</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Modtag BS-værdier fra Tomato-appen (MiaoMiao enhed)</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Modtag BG-værdier fra GlucoRx Aidex CGMS.</string>
+    <string name="bgsource_upload">BS upload indstillinger</string>
+    <!-- NSClient -->
+    <string name="ns_cellular">Brug mobilforbindelse</string>
+    <string name="ns_wifi">Brug Wi-Fi-forbindelse</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Under opladning</string>
+    <string name="ns_battery">På batteri</string>
+    <string name="ns_create_announcements_from_errors_title">Opret annonceringer fra fejl</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Opret meddelelser fra kulhydrat krævet advarsler</string>
+    <string name="ns_create_announcements_from_errors_summary">Opret Nightscout meddelelse for fejldialoger og lokale advarsler (kan også ses i Careportal under Behandlinger)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Opret Nightscout meddelelser fra kulhydrat krævet advarsler</string>
+    <string name="description_ns_client">Synkroniserer dine data med NightScout</string>
+    <string name="blocked_by_charging">Blokeret af opladningsmuligheder</string>
+    <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
+    <string name="classic_description">Original udseende</string>
+    <string name="lowres_description">Lav kvalitets udseende</string>
+    <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
+    <string name="largedisplay_description">Stort display</string>
+    <string name="skin">Udseende</string>
+    <!--    Loop -->
+</resources>

@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database
 
 import androidx.room.TypeConverter
 import com.google.gson.GsonBuilder
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
+import info.nightscout.interfaces.profile.Profile
 
 class Converters {
 

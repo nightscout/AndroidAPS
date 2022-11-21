@@ -2,7 +2,8 @@ package info.nightscout.androidaps.danaRv2.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.LTag
+
 
 @Suppress("UNUSED_PARAMETER")
 class MsgSetAPSTempBasalStart_v2(

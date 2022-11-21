@@ -1,26 +1,26 @@
 package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.isPSEvent5minBack
-import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.plugins.utils.Percentile
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensDataStore
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.aps.Sensitivity.SensitivityType
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.plugins.sync.nsclient.extensions.isTherapyEventEvent5minBack
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Arrays
@@ -116,7 +116,7 @@ class SensitivityAAPSPlugin @Inject constructor(
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
         Arrays.sort(deviations)
-        val percentile = Percentile.percentile(deviations, 0.50)
+        val percentile = info.nightscout.plugins.aps.utils.Percentile.percentile(deviations, 0.50)
         val basalOff = percentile * (60.0 / 5.0) / sens
         val ratio = 1 + basalOff / profile.getMaxDailyBasal()
         sensResult = when {

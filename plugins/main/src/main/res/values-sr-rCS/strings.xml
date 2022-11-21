@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="description_objectives">Program učenja</string>
+    <!-- Actions -->
+    <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
+    <!-- Safety -->
+    <string name="treatmentssafety_title">Sigurnost tretmana</string>
+    <string name="max_bolus_title">Maks. dozvoljen bolus [U]</string>
+    <string name="max_carbs_title">Maks. dozvoljeni ugljeni hidrati [g]</string>
+    <!-- Overview -->
+    <string name="apsmode_title">APS režim</string>
+    <string name="setbasalquestion">Prihvatite novi privremeni bazal:</string>
+    <string name="quickwizard">Brzi Čarobnjak</string>
+    <!-- NSClient -->
+    <!-- Tidepool -->
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još uvek nemaju upravljački program (Open Loop)</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Preuzimajte vrijednosti GUK od xDrip+.</string>
+    <string name="description_source_eversense">Preuzimajte vrednosti GUK iz zakrpljene aplikacije Eversense.</string>
+    <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
+    <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
+    <!-- NSClient -->
+    <string name="description_ns_client">Sinhronizuje vaše podatke sa Nightscout-om</string>
+    <!-- Skins -->
+    <!--    Loop -->
+</resources>

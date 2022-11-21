@@ -1,0 +1,33 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+
+android {
+
+    namespace 'info.nightscout.database.entities'
+
+    buildFeatures {
+        buildConfig = false
+    }
+}
+
+dependencies {
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    api "androidx.core:core-ktx:$core_version"
+
+    kapt "androidx.room:room-compiler:$room_version"
+    api "androidx.room:room-ktx:$room_version"
+
+}
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'info.nightscout.database.annotations.DbOpenForTesting'
+}

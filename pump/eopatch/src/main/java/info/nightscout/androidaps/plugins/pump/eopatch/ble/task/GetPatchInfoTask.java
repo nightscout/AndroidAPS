@@ -1,6 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.shared.logging.LTag;
+import java.util.Arrays;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetLOT;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetModelName;
@@ -15,12 +19,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.response.ModelNameRe
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PumpDurationResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.SerialNumberResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.WakeUpTimeResponse;
-
-import java.util.Arrays;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 

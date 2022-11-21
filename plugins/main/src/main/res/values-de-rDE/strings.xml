@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <string name="filter">Filter</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
+    <string name="maxiobset">Maximales IOB richtig gesetzt</string>
+    <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
+    <string name="loopenabled">Loop aktiviert</string>
+    <string name="apsselected">APS ausgewählt</string>
+    <string name="closedmodeenabled">Closed mode aktiviert</string>
+    <string name="objectives_shortname">ZIEL</string>
+    <string name="description_objectives">Das Programm kennenlernen</string>
+    <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
+    <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
+    <string name="objectives_button_unstart">Ziel neu starten</string>
+    <!-- Actions -->
+    <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
+    <string name="actions_shortname">AKT</string>
+    <string name="tools">Tools</string>
+    <string name="cannula">Kanüle</string>
+    <string name="ebstopsloop">Die Verwendung eines Verzögerungsbolus unterbricht dem Closed Loop Modus für die Dauer des Verzögerungsbolus. Willst Du das wirklich?</string>
+    <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
+    <string name="statuslights_cannula_age">Kanülenalter</string>
+    <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
+    <string name="patch_pump">Patch-Pumpe</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
+    <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
+    <string name="limitingiob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
+    <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
+    <string name="uamdisabledoref1notselected">UAM deaktiviert, da diese auf die Oref1 Empfindlichkeitserkennung angewiesen sind.</string>
+    <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
+    <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
+    <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>
+    <string name="smbnotallowedinopenloopmode">SMB sind im Open Loop Modus nicht erlaubt</string>
+    <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
+    <string name="hardlimit">festem Grenzwert</string>
+    <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
+    <string name="patient_age_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
+    <string name="child">Kind</string>
+    <string name="teenage">Teenager</string>
+    <string name="adult">Erwachsener</string>
+    <string name="resistantadult">Insulinresistenter Erwachsener</string>
+    <string name="pregnant">Schwangerschaft</string>
+    <string name="max_bolus_title">Max. erlaubter Bolus [IE]</string>
+    <string name="max_carbs_title">Max. erlaubte Kohlenhydrate [g]</string>
+    <string name="patient_type">Patiententyp</string>
+    <!-- Overview -->
+    <string name="snooze">Schlummern</string>
+    <string name="show_statuslights">Statusanzeige auf Homescreen</string>
+    <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
+    <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
+    <string name="statuslights_sage_warning">Warnschwelle Sensoralter [h]</string>
+    <string name="statuslights_sage_critical">Warnschwelle kritisches Sensoralter [h]</string>
+    <string name="statuslights_sbat_warning">Warnschwelle Sensor-Akkustand [%]</string>
+    <string name="statuslights_sbat_critical">Warnschwelle kritischer Sensor-Akkustand [%]</string>
+    <string name="statuslights_bage_warning">Warnschwelle Pumpenbatterie-Alter [h]</string>
+    <string name="statuslights_bage_critical">Warnschwelle kritisches Pumpenbatterie-Alter [h]</string>
+    <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
+    <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Pumpenbatterie-Stand [%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Pumpenbatterie-Stand [%]</string>
+    <string name="statuslights">Statusanzeige</string>
+    <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
+    <string name="a11y_graph">Diagramm</string>
+    <string name="a11y_insulin_label">Insulin</string>
+    <string name="chart_menu">Diagrammmenü</string>
+    <string name="a11y_bg_quality">BZ-Qualität</string>
+    <string name="a11y_blood_glucose">Blutzucker</string>
+    <string name="a11y_bg_outdated">veraltet</string>
+    <string name="apsmode_title">APS-Modus</string>
+    <string name="setbasalquestion">Akzeptiere neue TBR:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">QuickWizard</string>
+    <!-- NSClient -->
+    <string name="restart">Neustart</string>
+    <string name="deliver_now">Jetzt abgeben</string>
+    <string name="clear_queue">Warteschlange leeren</string>
+    <string name="show_queue">Zeige Warteschlange</string>
+    <string name="queue">Warteschlange:</string>
+    <string name="status">Status:</string>
+    <string name="full_sync">Vollständige Synchronisierung</string>
+    <string name="full_sync_comment">Vollständige Synchronisierung? Es kann viele Stunden dauern und bis zur Fertigstellung wirst du keine neuen Daten in NS sehen.</string>
+    <string name="ns_sync_options">Synchronisierung</string>
+    <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
+    <string name="ns_upload">Daten zu NS hochladen</string>
+    <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
+    <string name="ns_receive_profile_store_summary">Profile mit NS Profil-Editor synchronisieren</string>
+    <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
+    <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
+    <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
+    <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_tbr_eb">TBR und EB empfangen</string>
+    <string name="ns_receive_tbr_eb_summary">Akzeptiere TBR und EB, die von einer anderen Instanz eingegeben wurden</string>
+    <string name="ns_receive_insulin">Insulin abrufen</string>
+    <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
+    <string name="ns_receive_carbs_summary">Kohlenhydrate akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_therapy_events">Ereignisse abrufen</string>
+    <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
+    <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
+    <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
+    <string name="run_question">%s ausführen?</string>
+    <string name="ns_sync_slow">Hochladen verlangsamen</string>
+    <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
+    <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
+    <string name="title_tidepool_username">Login-Benutzername</string>
+    <string name="summary_tidepool_password">Dein Tidepool Anmeldekennwort</string>
+    <string name="title_tidepool_password">Anmeldekennwort</string>
+    <string name="title_tidepool_test_login">Teste den Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">Wenn diese Option aktiviert ist, werden die Uploads an https://int-app.tidepool.org statt an die reguläre https://app.tidepool.org/ weitergeleitet</string>
+    <string name="title_tidepool_dev_servers">Integrations (Test) Server verwenden</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Daten zu Tidepool hochladen</string>
+    <string name="tidepool_upload_cgm">CGM Daten hochladen</string>
+    <string name="tidepool_upload_bolus">Behandlungen (Insulin, Kohlenhydrate) hochladen</string>
+    <string name="tidepool_upload_tbr">Temporäre Basalrate hochladen</string>
+    <string name="tidepool_upload_profile">Profilwechsel und temporäre Ziele hochladen</string>
+    <string name="tidepool_upload_bg">BZ-Werte (blutig) hochladen</string>
+    <string name="remove_all">Alle entfernen</string>
+    <string name="reset_start">Start zurücksetzen</string>
+    <string name="upload_now">Jetzt hochladen</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
+    <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
+    <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
+    <string name="eversense">Eversense App (gepatcht)</string>
+    <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense-App.</string>
+    <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
+    <string name="description_source_mm640g">Empfange Blutzuckerwerte vom 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Empfange Werte von der Intelligo App</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
+    <string name="bgsource_upload">BZ Upload Einstellungen</string>
+    <!-- NSClient -->
+    <string name="ns_cellular">Mobilfunkverbindung verwenden</string>
+    <string name="ns_wifi">WLAN Verbindung verwenden</string>
+    <string name="ns_wifi_ssids">WLAN SSID</string>
+    <string name="ns_charging">Während des Ladevorgangs</string>
+    <string name="ns_battery">Bei Batteriebetrieb</string>
+    <string name="ns_create_announcements_from_errors_title">Ankündigungen aus Fehlern generieren</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
+    <string name="ns_create_announcements_from_errors_summary">Erstelle Nightscout-Ankündigungen für Fehler-Dialoge und lokale Alarme (auch einsehbar im Careportal unter \"Behandlungen\").</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Nightscout-Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
+    <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
+    <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
+    <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
+    <string name="classic_description">Ursprüngliches Erscheinungsbild</string>
+    <string name="lowres_description">Darstellung niedrige Auflösung</string>
+    <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
+    <string name="largedisplay_description">Großer Bildschirm</string>
+    <string name="skin">Erscheinungsbild</string>
+    <!--    Loop -->
+</resources>

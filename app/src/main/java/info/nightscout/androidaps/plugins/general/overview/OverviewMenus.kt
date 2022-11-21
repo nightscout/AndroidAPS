@@ -12,15 +12,14 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.events.EventScale
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventScale
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,9 +30,8 @@ class OverviewMenus @Inject constructor(
     private val rh: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
-    private val buildHelper: BuildHelper,
-    private val loop: Loop,
     private val config: Config,
+    private val loop: Loop,
     private val fabricPrivacy: FabricPrivacy
 ) {
 
@@ -127,7 +125,7 @@ class OverviewMenus @Inject constructor(
                     if (g > 0 && !m.secondary) return@forEach
                     var insert = true
                     if (m == CharType.PRE) insert = predictionsAvailable
-                    if (m == CharType.DEVSLOPE) insert = buildHelper.isDev()
+                    if (m == CharType.DEVSLOPE) insert = config.isDev()
                     if (used.contains(m.ordinal)) insert = false
                     for (g2 in g + 1 until numOfGraphs) {
                         if (settingsCopy[g2][m.ordinal]) insert = false

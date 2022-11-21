@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Apenas dígitos numéricos são permitidos.</string>
+    <string name="error_only_numeric_digits_range_allowed">Apenas dígitos numéricos dentro de um intervalo de %1$s - %2$s são permitidos.</string>
+    <string name="error_this_field_cannot_contain_special_character">Este campo não pode conter qualquer carácter especial</string>
+    <string name="error_only_standard_letters_are_allowed">Apenas letras padrão são permitidas</string>
+    <string name="error_field_must_not_be_empty">Este campo não deve estar vazio</string>
+    <string name="error_email_address_not_valid">Endereço de e-mail inválido</string>
+    <string name="error_creditcard_number_not_valid">Número de cartão de crédito inválido</string>
+    <string name="error_phone_not_valid">Número de telefone inválido</string>
+    <string name="error_domain_not_valid">Nome de domínio inválido</string>
+    <string name="error_ip_not_valid">Endereço IP inválido</string>
+    <string name="error_url_not_valid">Url do site não é válido</string>
+    <string name="error_notvalid_personname">Não é um nome ou sobrenome válido.</string>
+    <string name="error_notvalid_personfullname">Nome completo inválido.</string>
+    <string name="error_date_not_valid">Formato inválido</string>
+    <string name="error_mustbe4digitnumber">Deve ser número de 4 dígitos</string>
+    <string name="error_mustbe6digitnumber">Deve ser número de 6 dígitos</string>
+    <string name="error_mustbe12hexadidits">Deve conter 12 caracteres entre ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Deve conter 8 caracteres entre ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Deve conter 4 caracteres entre ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Não de comprimento mínimo</string>
+    <string name="error_pin_not_valid">Pin deve ser de 3 a 6 dígitos, não o mesmo ou em série</string>
+</resources>

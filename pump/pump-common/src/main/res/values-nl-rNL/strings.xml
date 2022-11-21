@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Serienummer van de pomp</string>
     <string name="bolus_delivered">%1$.2f E / %2$.2f E toegediend</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nooit verbonden</string>
-    <string name="pump_status_waking_up">Actief worden</string>
-    <string name="pump_status_error_comm">Communicatiefout</string>
-    <string name="pump_status_timeout_comm">Time-out bij communicatie</string>
-    <string name="pump_status_pump_unreachable">Pomp niet beschikbaar</string>
-    <string name="pump_status_invalid_config">Ongeldige configuratie</string>
-    <string name="pump_status_active">Actief</string>
-    <string name="pump_status_sleeping">Slapen</string>
     <string name="pump_status_not_initialized">Niet geïnitialiseerd</string>
     <string name="pump_status_initialized">Geïnitialiseerd</string>
     <string name="pump_status_encrypt">Communicatie wordt versleutelen</string>

@@ -14,28 +14,27 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.services.DanaRExecutionService;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.Constraints;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.interfaces.constraints.Constraint;
+import info.nightscout.interfaces.constraints.Constraints;
+import info.nightscout.interfaces.plugin.ActivePlugin;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.utils.Round;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventAppExit;
+import info.nightscout.rx.events.EventOverviewBolusProgress;
+import info.nightscout.rx.events.EventPreferenceChange;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
@@ -84,7 +83,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (isEnabled(PluginType.PUMP)) {
+                    if (isEnabled()) {
                         boolean previousValue = useExtendedBoluses;
                         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
 

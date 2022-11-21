@@ -55,7 +55,7 @@
                     android:padding="10dip"
                     app:columnCount="2">
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/nav_logsettings"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -70,7 +70,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/log_send"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -85,7 +85,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/log_delete"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -133,7 +133,7 @@
                     android:padding="10dip"
                     app:columnCount="2">
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/nav_export"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -148,7 +148,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/nav_import"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -156,7 +156,7 @@
                         android:drawableTop="@drawable/ic_import_settings"
                         android:paddingStart="0dp"
                         android:paddingEnd="0dp"
-                        android:text="@string/nav_import"
+                        android:text="@string/import_setting"
                         android:textSize="11sp"
                         app:layout_column="1"
                         app:layout_columnWeight="1"
@@ -196,7 +196,7 @@
                     android:padding="10dip"
                     app:columnCount="2">
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/export_csv"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -211,7 +211,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="0" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/cleanup_db"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -226,7 +226,7 @@
                         app:layout_gravity="fill"
                         app:layout_row="1" />
 
-                    <info.nightscout.androidaps.utils.ui.SingleClickButton
+                    <info.nightscout.core.ui.elements.SingleClickButton
                         android:id="@+id/nav_resetdb"
                         style="@style/GrayButton"
                         android:layout_width="0dp"

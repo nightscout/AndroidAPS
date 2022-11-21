@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="apsselected">APS kiválasztva</string>
+    <!-- Actions -->
+    <string name="tools">Eszközök</string>
+    <string name="cannula">Kanül</string>
+    <!-- Safety -->
+    <string name="child">Gyerek</string>
+    <string name="teenage">Tinédzser</string>
+    <string name="adult">Felnőtt</string>
+    <string name="resistantadult">Inzulinrezisztens felnőtt</string>
+    <string name="pregnant">Várandós</string>
+    <string name="patient_type">Betegkategória</string>
+    <!-- Overview -->
+    <string name="snooze">Szundi</string>
+    <string name="overview_cgm">CGM</string>
+    <!-- NSClient -->
+    <string name="status">Állapot:</string>
+    <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
+    <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="upload_now">Feltöltés most</string>
+    <!-- VirtualPump -->
+    <!-- Source -->
+    <string name="poctech">Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">FELT</string>
+    <!-- Skins -->
+    <string name="classic_description">Eredeti megjelenés</string>
+    <string name="lowres_description">Alacsony felbontás</string>
+    <string name="skin">Megjelenés</string>
+    <!--    Loop -->
+</resources>

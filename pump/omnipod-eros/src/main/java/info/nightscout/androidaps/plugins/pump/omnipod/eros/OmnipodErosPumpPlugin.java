@@ -34,31 +34,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.events.EventAppInitialized;
-import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.ActivityNames;
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.Pump;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpPluginBase;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -92,7 +69,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog;
@@ -100,19 +76,45 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.Ri
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.services.AlarmSoundService;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.TimeChangeType;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
+import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.ActivePlugin;
+import info.nightscout.interfaces.plugin.PluginDescription;
+import info.nightscout.interfaces.plugin.PluginType;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.profile.ProfileFunction;
+import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.OmnipodEros;
+import info.nightscout.interfaces.pump.Pump;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpPluginBase;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.actions.CustomActionType;
+import info.nightscout.interfaces.pump.defs.ManufacturerType;
+import info.nightscout.interfaces.pump.defs.PumpDescription;
+import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.interfaces.queue.Callback;
+import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.queue.CustomCommand;
+import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.utils.Round;
+import info.nightscout.interfaces.utils.TimeChangeType;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventAppExit;
+import info.nightscout.rx.events.EventAppInitialized;
+import info.nightscout.rx.events.EventPreferenceChange;
+import info.nightscout.rx.events.EventRefreshOverview;
+import info.nightscout.rx.events.EventSWRLStatus;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
+import info.nightscout.shared.utils.T;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -121,7 +123,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice {
+public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice, OmnipodEros {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
@@ -325,29 +327,36 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handlePodFaultEvent(), fabricPrivacy::logException)
         );
+        // Pass only to setup wizard
+        disposable.add(rxBus
+                .toObservable(EventRileyLinkDeviceStatusChange.class)
+                .observeOn(aapsSchedulers.getIo())
+                .subscribe(event -> rxBus.send(new EventSWRLStatus(event.getStatus(context))),
+                        fabricPrivacy::logException)
+        );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED)) {
+                    if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BASAL_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BOLUS_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TBR_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SMB_BEEPS_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_BOLUS_SOUND_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.AUTOMATICALLY_ACKNOWLEDGE_ALERTS_ENABLED))) {
                         aapsOmnipodErosManager.reloadSettings();
-                    } else if (event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED) ||
-                            event.isChanged(getRh(), OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS)) {
+                    } else if (event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.EXPIRATION_REMINDER_HOURS_BEFORE_SHUTDOWN)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_ENABLED)) ||
+                            event.isChanged(getRh().gs(OmnipodErosStorageKeys.Preferences.LOW_RESERVOIR_ALERT_UNITS))) {
                         if (!verifyPodAlertConfiguration()) {
                             getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                         }
@@ -366,7 +375,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                         String activeBolusString = sp.getString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, "");
                         aapsLogger.warn(LTag.PUMP, "Found active bolus in SP: {}. Adding Treatment.", activeBolusString);
                         try {
-                            aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo.Companion.fromJsonString(activeBolusString));
+                            aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfoExtensionKt.fromJsonString(new DetailedBolusInfo(), activeBolusString));
                         } catch (Exception ex) {
                             aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex);
                         }
@@ -661,7 +670,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
             return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                    .comment(info.nightscout.androidaps.core.R.string.invalidinput);
+                    .comment(R.string.invalidinput);
         } else if (detailedBolusInfo.insulin > 0) {
             // bolus needed, ask pump to deliver it
             return deliverBolus(detailedBolusInfo);
@@ -1086,6 +1095,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
+    @Override
     public boolean isUseRileyLinkBatteryLevel() {
         return aapsOmnipodErosManager.isShowRileyLinkBatteryLevel();
     }

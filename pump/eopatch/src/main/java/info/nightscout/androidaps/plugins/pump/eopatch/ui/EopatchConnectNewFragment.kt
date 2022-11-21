@@ -3,12 +3,16 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.*
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchConnectNewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.ACTIVATION_FAILED
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.BONDING_FAILED
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.GET_PATCH_INFO_FAILED
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.SCAN_FAILED
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.SELF_TEST_FAILED
+import info.nightscout.core.ui.toast.ToastUtils
 
 class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBinding>() {
 

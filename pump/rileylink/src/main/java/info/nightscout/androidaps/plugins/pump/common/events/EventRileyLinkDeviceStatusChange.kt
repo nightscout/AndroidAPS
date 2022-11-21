@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.common.events
 
-import info.nightscout.androidaps.events.EventStatus
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
+import android.content.Context
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.rx.events.EventStatus
 
 open class EventRileyLinkDeviceStatusChange : EventStatus {
 
@@ -33,16 +33,16 @@ open class EventRileyLinkDeviceStatusChange : EventStatus {
         this.errorDescription = errorDescription
     }
 
-    override fun getStatus(rh: ResourceHelper): String {
+    override fun getStatus(context: Context): String {
         val rileyLinkServiceState = this.rileyLinkServiceState ?: return ""
         val resourceId = rileyLinkServiceState.resourceId
         val rileyLinkError = this.rileyLinkError
 
         if (rileyLinkServiceState.isError && rileyLinkError != null) {
             val rileyLinkTargetDevice = this.rileyLinkTargetDevice ?: return ""
-            return rh.gs(rileyLinkError.getResourceId(rileyLinkTargetDevice))
+            return context.getString(rileyLinkError.getResourceId(rileyLinkTargetDevice))
         }
 
-        return rh.gs(resourceId)
+        return context.getString(resourceId)
     }
 }

@@ -10,8 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.core.main.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmProcess
@@ -20,9 +19,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.shared.utils.T
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 

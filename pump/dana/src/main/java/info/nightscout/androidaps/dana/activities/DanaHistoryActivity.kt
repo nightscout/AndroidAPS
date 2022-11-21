@@ -8,7 +8,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.comm.RecordTypes
@@ -16,24 +15,24 @@ import info.nightscout.androidaps.dana.database.DanaHistoryRecord
 import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
 import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
-import info.nightscout.androidaps.events.EventDanaRSyncStatus
-import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.profile.toUnitsString
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventDanaRSyncStatus
+import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
 import javax.inject.Inject
 
 class DanaHistoryActivity : NoSplashAppCompatActivity() {
@@ -62,7 +61,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ binding.status.text = it.getStatus(rh) }, fabricPrivacy::logException)
+            .subscribe({ binding.status.text = it.getStatus(this@DanaHistoryActivity) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)

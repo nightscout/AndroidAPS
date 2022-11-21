@@ -1,19 +1,20 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.SmsCommunicator
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.Command
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 
 class CommandSetProfile constructor(
@@ -28,6 +29,7 @@ class CommandSetProfile constructor(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
+    @Inject lateinit var repository: AppRepository
 
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
@@ -49,4 +51,8 @@ class CommandSetProfile constructor(
     override fun status(): String = rh.gs(R.string.set_profile)
 
     override fun log(): String = "SET PROFILE"
+    override fun cancel() {
+        aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+    }
 }

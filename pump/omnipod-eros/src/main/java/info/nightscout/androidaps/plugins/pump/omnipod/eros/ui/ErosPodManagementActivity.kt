@@ -7,10 +7,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
@@ -28,12 +24,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.events.EventQueueChanged
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.ui.UIRunnable
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventQueueChanged
+import info.nightscout.shared.extensions.toVisibility
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -53,7 +52,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var activityNames: ActivityNames
 
     private var disposables: CompositeDisposable = CompositeDisposable()
@@ -87,7 +86,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
         binding.buttonDiscardPod.setOnClickListener {
             OKDialog.showConfirmation(this,
-                                      rh.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
+                                                                      rh.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
                     aapsOmnipodManager.discardPodState()
                 })
         }
@@ -172,7 +171,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
         // Otherwise, users should use the Deactivate Pod Wizard. In case proper deactivation fails,
         // they will get an option to discard the Pod state there
         // Milos Kozak: allow to show button by activating engineering mode
-        val discardButtonEnabled = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || buildHelper.isEngineeringMode())
+        val discardButtonEnabled = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || config.isEngineeringMode())
         binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
 
         val pulseLogButtonEnabled = aapsOmnipodManager.isPulseLogButtonEnabled
@@ -239,7 +238,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
     private fun displayNotConfiguredDialog() {
         context.let {
-            UIRunnable {
+            info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(
                     it, rh.gs(R.string.omnipod_common_warning),
                     rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null

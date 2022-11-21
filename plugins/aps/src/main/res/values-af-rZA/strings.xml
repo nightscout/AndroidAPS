@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="high_temptarget_raises_sensitivity_title">Hoë tydelike doelwitte verhoog sensitiwiteit</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhoog sensitiwiteit vir tydelike doelwitte > = 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Lae tydelike doelwitte verlaag sensitiwiteit</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Laer sensitiwiteit vir tydelike doelwitte < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openapsma_disabled">Plugin is gedeaktiveer</string>
+    <string name="executing">Besig met uitvoering</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Matriks van %1$d elemente. \nWerklike waarde:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Status van die algoritme in 2017</string>
+    <string name="description_smb">Mees onlangse algoritme vir gevorderde gebruikers</string>
+    <string name="openapsma_run">Begin nou</string>
+    <string name="openapsma_profile_label">Profiel</string>
+    <string name="result">Uitslag</string>
+    <string name="openapsma_request_label">Versoek</string>
+    <string name="constraints">Beperkings</string>
+    <string name="openapsma_autosensdata_label">Autosens data</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Verstek waarde: 3 dit is \'n sleutel OpenAPS veiligheidsdrumpels. Wat dit doen is om jou basale te berk tot 3 x (in hierdie mense) jou grootste basale koers. Jy sal waarskynlik nooit dit hoef te verander, maar jy moet bewus wees wat bespreek is oor \"3 x max daaglikse; 4 x huidige\"vir veiligheidsdrumpels.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Verstek waarde: 4 dit is die helfte van die sleutel OpenAPS veiligheid limiete, en die ander helfte van \"3 x maks daaglikse; 4 x huidige\"van die veiligheid limiet. Dit beteken jou basale, ongeag max basale stel op jou pomp, kan enige hoër wees as hierdie nommer tye die huidige vlak van jou basale. Dit is om te verhoed dat mense in gevaarlike gebied deur instelling buitensporig hoë max basals voor om te verstaan hoe die algoritme werk. Weer, die verstek is 4 x; die meeste mense sal nooit moet dit aanpas en is eerder meer geneig om te moet aanpas ander instellings as hulle voel hulle \"loop in\" hierdie veiligheid limiet.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Maks daaglikse veiligheids vermenigvuldiger</string>
+    <string name="openapsama_current_basal_safety_multiplier">Huidige basale veiligheids vermenigvuldiger</string>
+    <string name="openapsama_autosens_max_summary">Verstek waarde: 1.2\nThis is \'n vermenigvuldiger plafon vir autosens (en gou autotune) stel \'n 20%% max limiet op hoe hoog die autosens verhouding kan wees, wat op sy beurt bepaal hoe hoog autosens basale kan aanpas, hoe laag dit ISF kan aanpas, en hoe laag dit die BG teiken kan stel.</string>
+    <string name="openapsama_autosens_min_summary">Verstek waarde: 0.7\nDie ander kant van die autosens veiligheidsperke, sit \'n limiet op hoe laag autosens basals kan aanpas, en hoe hoog dit ISF en BG teikens kan verstel.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
+    <string name="hardlimit">harde limiet</string>
+    <!--    Autotune   -->
+</resources>

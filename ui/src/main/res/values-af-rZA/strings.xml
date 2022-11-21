@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
+    <string name="constraint_applied">Beperking toegepas!</string>
+    <string name="bolus_constraint_applied">Bolus beperking toegepas</string>
+    <string name="carbs_constraint_applied">Karbs beperking toegepas</string>
+    <string name="temp_target_short">TT</string>
     <string name="start_activity_tt">Begin aktiwiteit TT</string>
     <string name="start_eating_soon_tt">Begin eet gou TT</string>
     <string name="start_hypo_tt">Begin hipo TT</string>
@@ -9,5 +12,46 @@
     <!--    Widget-->
     <!--     Activities-->
     <string name="statistics">Statistiek</string>
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Totaal</string>
+    <!-- FillDialog -->
+    <string name="button1">Knoppie 1</string>
+    <string name="button2">Knoppie 2</string>
+    <string name="button3">Knoppie 3</string>
+    <string name="record_pump_site_change">Rekord pomp ligging verandering</string>
+    <string name="record_insulin_cartridge_change">Rekord insulien kasset verandering</string>
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Skort lus vir 2h</string>
+    <string name="suspendloopfor3h">Skort lus vir 3h</string>
+    <string name="suspendloopfor10h">Skort lus vir 10 h</string>
+    <string name="disconnectpumpfor15m">Ontkoppel pomp vir 15 min</string>
+    <string name="disconnectpumpfor30m">Ontkoppel pomp vir 30 min</string>
+    <string name="disconnectpumpfor1h">Ontkoppel pomp vir 1 h</string>
+    <string name="disconnectpumpfor2h">Ontkoppel pomp vir 2 h</string>
+    <string name="disconnectpumpfor3h">Ontkoppel pomp vir 3 h</string>
+    <string name="resume">Hervat</string>
+    <string name="reconnect">Herverbind Pomp</string>
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
+    <!-- Treatments -->
+    <string name="calculation_short">Bereken</string>
+    <string name="treatments_iob_label_string">IAB:</string>
+    <string name="treatments_insulin_label_string">Insulien:</string>
+    <string name="treatments_carbs_label_string">Karbs:</string>
+    <string name="treatments_iobtotal_label_string">Totale IAB:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Verhouding:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IAB:</string>
+    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="prime">Prima</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>

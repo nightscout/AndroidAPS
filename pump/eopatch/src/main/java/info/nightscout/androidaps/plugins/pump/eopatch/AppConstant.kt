@@ -25,6 +25,5 @@ interface AppConstant {
         const val DAY_START_MINUTE = 0 * 60
         const val DAY_END_MINUTE = 24 * 60
         const val INSULIN_DURATION_MIN = 2.0f
-        const val MAX_RESERVOIR_READING = 50.0
     }
 }

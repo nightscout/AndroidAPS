@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="high_temptarget_raises_sensitivity_title">Високите временни цели да вдигат ли чувствителността?</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Да вдигам ли чувствителността при цели над 5.6]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Ниските цели да свалят ли чувствителността ?</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Да се понижава ли чувствителността при цели < 5.6 ммол/л?]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Динамично ISF</string>
+    <string name="resistance_lowers_target_title">Съпротивление намалява целта</string>
+    <string name="resistance_lowers_target_summary">Когато се установи резистентност, намалява целевата глюкоза.</string>
+    <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
+    <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
+    <string name="openapsma_disabled">Модула е изключен</string>
+    <string name="dynisf_shortname">Динамичен ISF</string>
+    <string name="executing">Изпълнява</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Общо %1$d елемента.\nАктуална стойност:</string>
+    <string name="oaps_shortname">APS</string>
+    <string name="description_ama">Алгоритъма, какъвто е бил през 2017</string>
+    <string name="description_smb">Най-новият алгоритъм (само за напреднали потребители)</string>
+    <string name="description_smb_dynamic_isf">Най-новия алгоритм за напреднали потребители с динамичен/автоматичен ISF</string>
+    <string name="openapsma_run">Старт сега</string>
+    <string name="openapsma_profile_label">Профил</string>
+    <string name="result">Резултат</string>
+    <string name="openapsma_request_label">Искане</string>
+    <string name="constraints">Ограничения</string>
+    <string name="openapsma_autosensdata_label">Autosens данни</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от \"3x от най-високия дневен; 4x от текущия\". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Макс. множител за най-големия базал за денонощието</string>
+    <string name="openapsama_current_basal_safety_multiplier">Макс. множител за настоящ базал</string>
+    <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максималният множител на autosens (а скоро autotune), за да позволи 20%% максимален лимит на autosens коефициента, който от своя страна настройва базалите, колко може да намали инсулиновата чувствителност, и колко ниско може да свали целевата КЗ.</string>
+    <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДругата част от сигурността на autosens, слагайки ограничение на колко ниско може да ограничи базалите, колко да повиши чувствителността (ISF) и целевите КЗ.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
+    <string name="hardlimit">твърд лимит</string>
+    <!--    Autotune   -->
+</resources>

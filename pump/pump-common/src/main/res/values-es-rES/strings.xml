@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Número de serie de la bomba</string>
     <string name="bolus_delivered">%1$.2f U / %2$.2f U entregado</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Nunca contactado</string>
-    <string name="pump_status_waking_up">En fase de inicio</string>
-    <string name="pump_status_error_comm">Error con la comunicación</string>
-    <string name="pump_status_timeout_comm">Tiempo de espera en la comunicación</string>
-    <string name="pump_status_pump_unreachable">Bomba no alcanzable</string>
-    <string name="pump_status_invalid_config">Configuración inválida</string>
-    <string name="pump_status_active">Activo</string>
-    <string name="pump_status_sleeping">Suspendida</string>
     <string name="pump_status_not_initialized">No Inicializado</string>
     <string name="pump_status_initialized">Inicializado</string>
     <string name="pump_status_encrypt">Encriptando comunicación</string>

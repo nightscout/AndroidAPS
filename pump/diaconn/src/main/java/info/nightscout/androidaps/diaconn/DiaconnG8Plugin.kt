@@ -9,33 +9,48 @@ import android.text.format.DateFormat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.diaconn.service.DiaconnG8Service
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Diaconn
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpPluginBase
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.actions.CustomAction
+import info.nightscout.interfaces.pump.actions.CustomActionType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.Round
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
 import org.json.JSONObject
@@ -62,14 +77,15 @@ class DiaconnG8Plugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val aapsSchedulers: AapsSchedulers
-) : PumpPluginBase(PluginDescription()
-    .mainType(PluginType.PUMP)
-    .fragmentClass(DiaconnG8Fragment::class.java.name)
-    .pluginIcon(R.drawable.ic_diaconn_g8)
-    .pluginName(R.string.diaconn_g8_pump)
-    .shortName(R.string.diaconn_g8_pump_shortname)
-    .preferencesId(R.xml.pref_diaconn)
-    .description(R.string.description_pump_diaconn_g8),
+) : PumpPluginBase(
+    PluginDescription()
+        .mainType(PluginType.PUMP)
+        .fragmentClass(DiaconnG8Fragment::class.java.name)
+        .pluginIcon(R.drawable.ic_diaconn_g8)
+        .pluginName(R.string.diaconn_g8_pump)
+        .shortName(R.string.diaconn_g8_pump_shortname)
+        .preferencesId(R.xml.pref_diaconn)
+        .description(R.string.description_pump_diaconn_g8),
     injector, aapsLogger, rh, commandQueue
 ), Pump, Diaconn, Constraints {
 
@@ -84,19 +100,19 @@ class DiaconnG8Plugin @Inject constructor(
         val intent = Intent(context, DiaconnG8Service::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable.add(rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
+                           .toObservable(EventAppExit::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
-            .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe { diaconnG8Pump.reset() }
+                           .toObservable(EventConfigBuilderChange::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe { diaconnG8Pump.reset() }
         )
         disposable.add(rxBus
-            .toObservable(EventDiaconnG8DeviceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ changePump() }) { fabricPrivacy.logException(it) }
+                           .toObservable(EventDiaconnG8DeviceChange::class.java)
+                           .observeOn(aapsSchedulers.io)
+                           .subscribe({ changePump() }) { fabricPrivacy.logException(it) }
         )
         changePump() // load device name
     }
@@ -129,9 +145,9 @@ class DiaconnG8Plugin @Inject constructor(
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 connect from: $reason")
-        if(diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
+        if (diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = diaconnG8Service?.connect(reason, mDeviceAddress) ?: false
-            if(!success) ToastUtils.errorToast(context, R.string.ble_not_supported)
+            if (!success) ToastUtils.errorToast(context, R.string.ble_not_supported)
         }
     }
 
@@ -186,7 +202,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     // Pump interface
-    override fun isInitialized(): Boolean  =
+    override fun isInitialized(): Boolean =
         diaconnG8Pump.lastConnection > 0 && diaconnG8Pump.maxBasal > 0
 
     override fun isSuspended(): Boolean =
@@ -226,7 +242,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (!isInitialized()) return true
         if (diaconnG8Pump.pumpProfiles == null) return true
         val basalValues = 24
-        val basalIncrement =  60 * 60
+        val basalIncrement = 60 * 60
         for (h in 0 until basalValues) {
             val pumpValue = diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][h]
             val profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement)
@@ -265,7 +281,7 @@ class DiaconnG8Plugin @Inject constructor(
             result.bolusDelivered = t.insulin
             result.carbsDelivered = detailedBolusInfo.carbs
 
-            if(result.success) result.enacted = true
+            if (result.success) result.enacted = true
             if (!result.success) {
                 setErrorMsg(diaconnG8Pump.resultErrorCode, result)
             } else result.comment = rh.gs(R.string.ok)
@@ -366,7 +382,10 @@ class DiaconnG8Plugin @Inject constructor(
         } else {
             var absoluteValue = profile.getBasal() * (percent / 100.0)
             absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue)
-            aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [DiaconnG8Plugin] - You are trying to use setTempBasalPercent with percent other then 0% ($percent). This will start setTempBasalAbsolute, with calculated value ($absoluteValue). Result might not be 100% correct.")
+            aapsLogger.warn(
+                LTag.PUMP,
+                "setTempBasalPercent [DiaconnG8Plugin] - You are trying to use setTempBasalPercent with percent other then 0% ($percent). This will start setTempBasalAbsolute, with calculated value ($absoluteValue). Result might not be 100% correct."
+            )
             setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType)
         }
 
@@ -421,7 +440,7 @@ class DiaconnG8Plugin @Inject constructor(
             result.success = !diaconnG8Pump.isTempBasalInProgress
             result.enacted = true
             result.isTempCancel = true
-            if(!result.success) setErrorMsg(diaconnG8Pump.resultErrorCode, result)
+            if (!result.success) setErrorMsg(diaconnG8Pump.resultErrorCode, result)
         } else {
             result.success = true
             result.enacted = false
@@ -438,12 +457,12 @@ class DiaconnG8Plugin @Inject constructor(
             diaconnG8Service?.extendedBolusStop()
             result.success = !diaconnG8Pump.isExtendedInProgress
             result.enacted = true
-            if(!result.success) {
+            if (!result.success) {
                 setErrorMsg(diaconnG8Pump.resultErrorCode, result)
                 diaconnG8Service?.readPumpStatus()
             }
 
-       } else {
+        } else {
             result.success = true
             result.enacted = false
             result.comment = rh.gs(R.string.ok)
@@ -534,42 +553,43 @@ class DiaconnG8Plugin @Inject constructor(
         ret += "Batt: ${diaconnG8Pump.systemRemainBattery}"
         return ret
     }
+
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override fun loadTDDs(): PumpEnactResult = loadHistory()
     override fun getCustomActions(): List<CustomAction>? = null
     override fun executeCustomAction(customActionType: CustomActionType) {}
     override fun canHandleDST(): Boolean = false
 
-    override fun isBatteryChangeLoggingEnabled():Boolean {
+    override fun isBatteryChangeLoggingEnabled(): Boolean {
         return sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, false)
     }
 
-    fun isInsulinChangeLoggingEnabled():Boolean {
+    fun isInsulinChangeLoggingEnabled(): Boolean {
         return sp.getBoolean(R.string.key_diaconn_g8_loginsulinchange, false)
     }
 
     @Synchronized
     fun setErrorMsg(errorCode: Int, result: PumpEnactResult) {
         when (errorCode) {
-            1 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_1)
-            2 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_2)
-            3 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_3)
-            4 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_4)
-            6 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_6)
-            7 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_7)
-            8 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_8)
-            9 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_9)
-            10 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_10)
-            11 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_11)
-            12 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_12)
-            13 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_13)
-            14 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_14)
-            15 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_15)
-            32 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_32)
-            33 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_33)
-            34 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_34)
-            35 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_35)
-            36 -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_36)
+            1    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_1)
+            2    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_2)
+            3    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_3)
+            4    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_4)
+            6    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_6)
+            7    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_7)
+            8    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_8)
+            9    -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_9)
+            10   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_10)
+            11   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_11)
+            12   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_12)
+            13   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_13)
+            14   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_14)
+            15   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_15)
+            32   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_32)
+            33   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_33)
+            34   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_34)
+            35   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_35)
+            36   -> result.comment = rh.gs(R.string.diaconn_g8_errorcode_36)
             else -> result.comment = "not defined Error code: $errorCode"
         }
     }

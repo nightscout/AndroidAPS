@@ -7,8 +7,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchStateManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalScheduleSetBig;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton

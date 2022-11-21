@@ -5,9 +5,9 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.interfaces.ResourceHelper
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.interfaces.stats.TIR
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.implementation.R
 
 class TirImpl(override val date: Long, override val lowThreshold: Double, override val highThreshold: Double) : TIR {

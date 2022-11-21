@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="ultra_rapid_oref">Сверхбыстрый Oref</string>
+    <string name="fast_acting_insulin_comment">Новорапид, Хумалог</string>
+    <string name="ultra_fast_acting_insulin_comment">Фиасп</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <string name="xdrip_status_shortname">Статус xDrip</string>
+    <string name="xdrip_status_detailed_iob_title">Показать IOB подробно</string>
+    <string name="disabled_loop">Зцикл не работает</string>
+    <string name="xdrip_status_show_bgi_title">Показать BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Добавить BGI в строку состояния</string>
+    <string name="xdrip_status_settings">Cтрока состояния xDrip (часы)</string>
+    <!-- Food-->
+    <string name="food_short">Еда</string>
+    <string name="description_food">Показывает заданные в Nightscout настройки для приема пищи</string>
+    <string name="calculator_label">Калькулятор</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Выберите темную, светлую или системную тему</string>
+    <!-- Profile -->
+    <string name="localprofile">Профиль</string>
+    <string name="do_you_want_switch_profile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Завершено, отлично!</string>
+    <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
+    <string name="hasbgdata">ГК доступна из выбранного источника</string>
+    <string name="synchaswritepermission">Служба синхронизации имеет разрешение на запись</string>
+    <string name="loopenabled">Цикл активирован</string>
+    <string name="apsselected">Выбран APS</string>
+    <string name="closedmodeenabled">Режим замкнутого цикла включен</string>
+    <string name="objectives_shortname">ЦЕЛИ</string>
+    <string name="description_objectives">Обучающая программа</string>
+    <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять достигнутое.</string>
+    <string name="objectives_next_button">Далее</string>
+    <string name="objectives_previous_button">Назад</string>
+    <string name="objectives_button_unfinish">Очистить завершенные</string>
+    <string name="objectives_button_unstart">Очистить начатые</string>
+    <!-- Actions -->
+    <string name="actions">Действия</string>
+    <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
+    <string name="actions_shortname">ДЕЙСТВ</string>
+    <string name="tempbasal_button">ВремБазал</string>
+    <string name="extended_bolus_button">Пролонгированный болюс</string>
+    <string name="extended_bolus_cancel_button">Отменить пролонгированный болюс</string>
+    <string name="tools">Инструменты</string>
+    <string name="nav_history_browser">Просмотр журнала</string>
+    <string name="sensor_label">Сенсор</string>
+    <string name="age_label">возраст:</string>
+    <string name="level_label">уровень:</string>
+    <string name="insulin_label">Инсулин</string>
+    <string name="pb_label">Батарея помпы</string>
+    <string name="cannula">Катетер помпы</string>
+    <string name="ebstopsloop">Функция Пролонгированный Болюс остановит режим замкнутого цикла на время действия пролонгированного болюса. Подтверждаете выбор?</string>
+    <string name="extendedbolusdeliveryerror">Ошибка подачи пролонгированного болюса</string>
+    <string name="statuslights_cannula_age">время, отработанное катетером помпы</string>
+    <string name="statuslights_patch_pump_age">время отработанное разовой помпой</string>
+    <string name="patch_pump">Разовая помпа</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Ограничение пролонгированного болюса до %1$.1f ед. из-за %2$s</string>
+    <string name="limitingcarbs">Ограничение углеводов до %1$d г. из-за %2$s</string>
+    <string name="limitingiob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
+    <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
+    <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
+    <string name="uamdisabledoref1notselected">Незапланированный прием пищи UAM отключен, поскольку он основывается на модуле чувствительности из Oref1</string>
+    <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
+    <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
+    <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
+    <string name="smbnotallowedinopenloopmode">В режиме незамкнутого цикла open loop супер микро болюс SMB не допускается</string>
+    <string name="maxvalueinpreferences">максимальное значение в настройках</string>
+    <string name="hardlimit">жесткий предел</string>
+    <string name="treatmentssafety_title">Безопасность терапии</string>
+    <string name="patient_age_summary">Выберите возраст пациента для установки ограничителей безопасности</string>
+    <string name="child">Ребенок</string>
+    <string name="teenage">Подросток</string>
+    <string name="adult">Взрослый</string>
+    <string name="resistantadult">Инсулинорезистентный взрослый</string>
+    <string name="pregnant">Беременность</string>
+    <string name="max_bolus_title">Макс разрешенный болюс [U]</string>
+    <string name="max_carbs_title">Макс разрешенные углеводы [g]</string>
+    <string name="patient_type">Тип пациента</string>
+    <!-- Overview -->
+    <string name="snooze">Отложить</string>
+    <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>
+    <string name="statuslights_cage_warning">Порог предупреждения о времени, отработанном катетером [h]</string>
+    <string name="statuslights_cage_critical">Критический порог предупреждения о времени, отработанном катетером [h]</string>
+    <string name="statuslights_iage_warning">Порог предупреждения о времени, отработанном инсулином [h]</string>
+    <string name="statuslights_iage_critical">Критический порог предупреждения о времени, отработанном инсулином [h]</string>
+    <string name="statuslights_sage_warning">Порог предупреждения о времени, отработанном сенсором [h]</string>
+    <string name="statuslights_sage_critical">Критический порог предупреждения о времени, отработанном сенсором [h]</string>
+    <string name="statuslights_sbat_warning">Порог предупреждения о разрядке батареи [%]</string>
+    <string name="statuslights_sbat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
+    <string name="statuslights_bage_warning">Порог предупреждения о разрядке батареи [h]</string>
+    <string name="statuslights_bage_critical">Порог предупреждения о критическом уровне разрядки батареи [h]</string>
+    <string name="statuslights_res_warning">Порог уровня наполненности резервуара для оповещения [ед.]</string>
+    <string name="statuslights_res_critical">Порог критического уровня наполненности резервуара [U]</string>
+    <string name="statuslights_bat_warning">Порог предупреждения о разрядке батареи [%]</string>
+    <string name="statuslights_bat_critical">Порог предупреждения о критическом уровне разрядки батареи [%]</string>
+    <string name="statuslights">Индикаторы состояния</string>
+    <string name="statuslights_copy_ns">Копировать параметры из NS</string>
+    <string name="a11y_graph">график</string>
+    <string name="a11y_insulin_label">инсулин</string>
+    <string name="chart_menu">Меню графика</string>
+    <string name="a11y_bg_quality">качество ГК</string>
+    <string name="a11y_blood_glucose">уровень глюкозы в крови ГК</string>
+    <string name="a11y_bg_outdated">устаревшие данные</string>
+    <string name="apsmode_title">Режим APS</string>
+    <string name="setbasalquestion">Принять новый врем базал:</string>
+    <string name="overview_cgm">Непрерывный мониторинг ГК</string>
+    <string name="quickwizard">Мастер Быстрого доступа</string>
+    <!-- NSClient -->
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
+    <string name="restart">перезапуск</string>
+    <string name="nsclient_token_title">Атрибут защиты доступа в NS</string>
+    <string name="nsclient_token_dialog_title">Атрибут защиты доступа в NS</string>
+    <string name="nsclient_token_dialog_message">Атрибут защиты доступа в NS, созданный на странице администратора NS (минимум 17 символов)</string>
+    <string name="deliver_now">Подать сейчас</string>
+    <string name="clear_queue">очистка очереди</string>
+    <string name="show_queue">показать очередь</string>
+    <string name="queue">очередь</string>
+    <string name="status">состояние:</string>
+    <string name="full_sync">Полная синхронизация</string>
+    <string name="full_sync_comment">Полная синхронизация? Это может занять много часов и до завершения вы не увидите новые данные в NS.</string>
+    <string name="ns_sync_options">Синхронизация</string>
+    <string name="ns_upload_summary">Профили, болюсы, углеводы, временные базалы закачиваются в NS</string>
+    <string name="ns_upload">Передать данные в NS</string>
+    <string name="ns_receive_profile_store">Принимать хранилище профилей</string>
+    <string name="ns_receive_profile_store_summary">Синхронизировать профили из редактора NS профиля в локальный профиль</string>
+    <string name="ns_receive_temp_target">Получить временные цели</string>
+    <string name="ns_receive_temp_target_summary">Принимать временные цели, установленные через NS или NSClient</string>
+    <string name="ns_receive_profile_switch">Получать переключения профиля</string>
+    <string name="ns_receive_profile_switch_summary">Принимать переключения профиля, введенные через NS или NSClient</string>
+    <string name="ns_receive_offline_event">Принимать события APS автономно</string>
+    <string name="ns_receive_offline_event_summary">Принимать события APS введенные через NS или клиент NS автономно</string>
+    <string name="ns_receive_tbr_eb">Получать временную базальную скорость TBR и пролонгированный болюс EB</string>
+    <string name="ns_receive_tbr_eb_summary">Принять TBR и EB введеные с другого устройства</string>
+    <string name="ns_receive_insulin">Принимать инсулин</string>
+    <string name="ns_receive_insulin_summary">Принимать инсулин, введенный через NS или NSClient (не подается, только рассчитывается как активный IOB)</string>
+    <string name="ns_receive_carbs">Принимать углеводы</string>
+    <string name="ns_receive_carbs_summary">Принимать углеводы, введенные через NS или NSClient</string>
+    <string name="ns_receive_therapy_events">Принимать события терапии</string>
+    <string name="ns_receive_therapy_events_summary">Принимать события терапии (катетер, инсулин, изменение батареи и т. д.) через NS или NSClient</string>
+    <string name="ns_receive_cgm">Получать/заполнять данные мониторинга CGM</string>
+    <string name="ns_receive_cgm_summary">Принимать данные мониторинга CGM из NS</string>
+    <string name="run_question">Запустить %s?</string>
+    <string name="ns_sync_slow">Замедлить выгрузку</string>
+    <string name="ns_alarms">Создать уведомления из оповещений NS</string>
+    <string name="ns_announcements">Создать уведомления из оповещений NS</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Имя пользователя Tidepool, обычно ваш адрес электронной почты</string>
+    <string name="title_tidepool_username">Имя пользователя</string>
+    <string name="summary_tidepool_password">Ваш пароль для входа в Tidepool</string>
+    <string name="title_tidepool_password">Пароль для входа</string>
+    <string name="title_tidepool_test_login">Тест входа в Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Если активировано, загрузки перейдут на https://int-app.tidepool.org вместо обычного https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Использовать серверы интеграции (тест)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Загружает данные в Tidepool</string>
+    <string name="tidepool_upload_cgm">Загрузить данные мониторинга</string>
+    <string name="tidepool_upload_bolus">Загрузить лечение (инсулин, углеводы)</string>
+    <string name="tidepool_upload_tbr">Загрузить временные базалы</string>
+    <string name="tidepool_upload_profile">Загрузить переключения профиля, временные цели</string>
+    <string name="tidepool_upload_bg">Загрузить тесты ГК</string>
+    <string name="remove_all">Удалить всё</string>
+    <string name="reset_start">Перезапустить старт</string>
+    <string name="upload_now">Выгрузить (передать данные) сейчас</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
+    <string name="virtualpump_settings">настройки вирт помпы</string>
+    <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
+    <string name="xdrip">xDrip +</string>
+    <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
+    <string name="dexcom_app_patched">Самост собран прилож Dexcom</string>
+    <string name="dexcom_short">ССП DEXCOM</string>
+    <string name="description_source_dexcom">Получать данные ГК от \'Самостоятельно собранного приложения Dexcom\'.</string>
+    <string name="eversense">Приложение Eversense (пропатченное)</string>
+    <string name="description_source_eversense">Получать данные гликемии от пропатченного приложения Eversense.</string>
+    <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
+    <string name="description_source_mm640g">Получать данные гликемии от 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Получать данные гликемии от приложения Poctech</string>
+    <string name="glunovo">Приложение Glunovo</string>
+    <string name="description_source_glunovo">Получать данные гликемии от приложения Glunovo</string>
+    <string name="intelligo">Приложение Intelligo</string>
+    <string name="description_source_intelligo">Получать данные гликемии от приложения Intelligo</string>
+    <string name="tomato">Томато (MiaoMiao)</string>
+    <string name="tomato_short">Томато</string>
+    <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
+    <string name="aidex_short">Aidex </string>
+    <string name="description_source_aidex">Получить значения ГК от GlucoRx Aidex</string>
+    <string name="random_bg">Случайные значения ГК</string>
+    <string name="description_source_random_bg">Генерировать случайные данные ГК (только демо-режим)</string>
+    <string name="random_bg_short">ГК</string>
+    <string name="do_xdrip_upload_title">Отправлять данные СК на xDrip+</string>
+    <string name="do_xdrip_upload_summary">В xDrip + выберите источник данных 640g/Eversense</string>
+    <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
+    <string name="bgsource_upload">Параметры загрузки СК</string>
+    <string name="dexcom_log_ns_sensor_change_title">Вносить запись о замене сенсора в NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Автоматически создать событие \"Замена сенсора\" в NS при запуске сенсора</string>
+    <!-- NSClient -->
+    <string name="ns_cellular">Использовать мобильное подключение</string>
+    <string name="ns_wifi">Использовать WiFi соединение</string>
+    <string name="ns_wifi_ssids">SSID для Wi-Fi</string>
+    <string name="ns_charging">Во время зарядки</string>
+    <string name="ns_battery">От батареи</string>
+    <string name="ns_create_announcements_from_errors_title">Создавать оповещение на основе названия ошибки</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Создавать оповещения из напоминаний о необходимых углеводах</string>
+    <string name="ns_create_announcements_from_errors_summary">Создать оповещение NS с диалогом об ошибке и оповещения на месте (также видимые в портале назначений в разделе лечение)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Создавать оповещения Nightscout из напоминаний о необходимых углеводах</string>
+    <string name="description_ns_client">Синхронизирует данные с Nightscout</string>
+    <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
+    <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
+    <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">ЗАГРУЗ</string>
+    <!-- Skins -->
+    <string name="classic_description">Исходная тема оформления</string>
+    <string name="lowres_description">Тема для низкого разрешения</string>
+    <string name="buttonson_description">Кнопки всегда отображаются в нижней части экрана</string>
+    <string name="largedisplay_description">Большой экран</string>
+    <string name="skin">Тема оформления</string>
+    <!--    Loop -->
+</resources>

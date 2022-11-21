@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -16,16 +14,18 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import java.util.*
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.max
@@ -218,14 +218,14 @@ class EopatchOverviewViewModel @Inject constructor(
             .subscribe({ response ->
                 if (response.isSuccess) {
                     var result = pumpSync.syncTemporaryBasalWithPumpId(
-                                       timestamp = dateUtil.now(),
-                                       rate = 0.0,
-                                       duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
-                                       isAbsolute = true,
-                                       type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                                       pumpId = dateUtil.now(),
-                                       pumpType = PumpType.EOFLOW_EOPATCH2,
-                                       pumpSerial = patchManager.patchConfig.patchSerialNumber
+                        timestamp = dateUtil.now(),
+                        rate = 0.0,
+                        duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
+                        isAbsolute = true,
+                        type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        pumpId = dateUtil.now(),
+                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                        pumpSerial = patchManager.patchConfig.patchSerialNumber
                                    )
                     aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
 

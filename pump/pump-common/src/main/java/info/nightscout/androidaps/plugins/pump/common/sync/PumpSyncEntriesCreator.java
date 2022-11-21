@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.sync;
 
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.interfaces.pump.defs.PumpType;
 
 public interface PumpSyncEntriesCreator {
 

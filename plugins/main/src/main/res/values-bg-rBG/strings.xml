@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="sms_iob">IOB:</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="dia_short">DIA</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Приключихме, Браво!</string>
+    <string name="maxiobset">Максимален IOB е зададен правилно</string>
+    <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
+    <string name="loopenabled">APS разрешен</string>
+    <string name="apsselected">Избран APS</string>
+    <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
+    <string name="objectives_shortname">Цел</string>
+    <string name="description_objectives">Разучаване на програмата</string>
+    <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
+    <string name="objectives_button_unfinish">Изчисти приключение</string>
+    <string name="objectives_button_unstart">Изчисти стартираните</string>
+    <!-- Actions -->
+    <string name="description_actions">Бутони за бърз достъп до основни функции</string>
+    <string name="actions_shortname">ДЕЙСТВ</string>
+    <string name="tools">Инструменти</string>
+    <string name="cannula">Канюла</string>
+    <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
+    <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Ограничение на удължен болус до %1$.1f Е поради %2$s</string>
+    <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
+    <string name="limitingiob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
+    <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
+    <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
+    <string name="uamdisabledoref1notselected">UAM изключен, защото му трябва Oref1 плъгин за чувствителност </string>
+    <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
+    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
+    <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
+    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
+    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
+    <string name="hardlimit">твърд лимит</string>
+    <string name="treatmentssafety_title">Настройки на сигурността</string>
+    <string name="patient_age_summary">Моля, изберете тип на пациента за настройка на границите за безопастност</string>
+    <string name="child">Дете</string>
+    <string name="teenage">Тийнейджър</string>
+    <string name="adult">Възрастен</string>
+    <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
+    <string name="pregnant">Бременност</string>
+    <string name="max_bolus_title">Максимален инсулин при болус [единици]</string>
+    <string name="max_carbs_title">Максимални въглехидрати [гр]</string>
+    <string name="patient_type">Тип пациент</string>
+    <!-- Overview -->
+    <string name="snooze">Отложи</string>
+    <string name="show_statuslights">Покажи статус светлини на началния екран</string>
+    <string name="statuslights_iage_warning">Праг за инсулинова възраст [часа]</string>
+    <string name="statuslights_iage_critical">Праг за критична инсулинова възраст [часа]</string>
+    <string name="statuslights_sage_warning">Праг за възраст на сензор [часа]</string>
+    <string name="statuslights_sage_critical">Праг за критична възраст на сензор [часа]</string>
+    <string name="statuslights_sbat_warning">Аларма при заряд на батерия под [%]</string>
+    <string name="statuslights_sbat_critical">Критично ниво на сензорната батерия под [%]</string>
+    <string name="statuslights_bage_warning">Висока възраст на батерия над [часа]</string>
+    <string name="statuslights_bage_critical">Критична възраст на батерията над [часа]</string>
+    <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
+    <string name="statuslights_res_critical">Предупреждение за критично ниво на останал инсулин в резервоар [Е]</string>
+    <string name="statuslights_bat_warning">Нисък заряд на батерия под [%]</string>
+    <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
+    <string name="statuslights">Индикатори</string>
+    <string name="statuslights_copy_ns">Копиране на настройки от NS</string>
+    <string name="a11y_graph">графика</string>
+    <string name="a11y_insulin_label">инсулин</string>
+    <string name="chart_menu">Меню на графиката</string>
+    <string name="apsmode_title">APS режим</string>
+    <string name="setbasalquestion">Приложи нов временен базал:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">Бърз болус</string>
+    <!-- NSClient -->
+    <string name="restart">Рестарт</string>
+    <string name="deliver_now">Изпрати сега</string>
+    <string name="clear_queue">Изчисти опашка</string>
+    <string name="show_queue">Покажи опашка</string>
+    <string name="queue">Опашка:</string>
+    <string name="status">Статус:</string>
+    <string name="full_sync">Пълна синхронизация</string>
+    <string name="full_sync_comment">Пълна синхронизация? Може да отнеме много часове и докато не приключи вие няма да виждате нови данни в NS.</string>
+    <string name="ns_sync_options">Синхронизация</string>
+    <string name="ns_upload_summary">Профили, болуси, въглехидрати, и временни базали се изпращат към NS</string>
+    <string name="ns_upload">Изпратете данните към NS</string>
+    <string name="ns_receive_profile_store_summary">Синхорнизирай профили от NS профилния едитор</string>
+    <string name="ns_receive_temp_target">Получаване на временни цели</string>
+    <string name="ns_receive_temp_target_summary">Приеми временни цели зададени през NS или NS клиент</string>
+    <string name="ns_receive_profile_switch">Получаване на смяна на профили</string>
+    <string name="ns_receive_profile_switch_summary">Приеми смяна на профили от NS или NS клиент</string>
+    <string name="ns_receive_offline_event">Приеми изключване на APS</string>
+    <string name="ns_receive_offline_event_summary">Приеми изключвания на APS през NS или NS Клиент</string>
+    <string name="ns_receive_insulin">Получавай инсулин</string>
+    <string name="ns_receive_insulin_summary">Приеми инсулин зададен през NS или NS Клиент (не се инжектира, само се калкулира във формулата за IOB)</string>
+    <string name="ns_receive_carbs">Приемай въглехидрати</string>
+    <string name="ns_receive_carbs_summary">Приемай въглехидрати зададени през NS или NS Клиент</string>
+    <string name="ns_receive_therapy_events">Приемай смени (канула, инсулин, батерия и др.)</string>
+    <string name="ns_receive_therapy_events_summary">Приемай смени (канула, инсулин, батерия и др.) зададени от NS или NS Клиент</string>
+    <string name="ns_receive_cgm">Приеми история от данни от сензора</string>
+    <string name="ns_receive_cgm_summary">Приемай постояни данни от сензора идващи от NS</string>
+    <string name="run_question">Пусни %s?</string>
+    <string name="ns_sync_slow">Забавени качвания на данни</string>
+    <string name="ns_alarms">Известяване при NS аларми</string>
+    <string name="ns_announcements">Създаване на известия от NS съобщения</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>
+    <string name="title_tidepool_username">Потребителско име</string>
+    <string name="summary_tidepool_password">Tidepool парола</string>
+    <string name="title_tidepool_password">Парола </string>
+    <string name="title_tidepool_test_login">Тест на Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Когато е активирано, данните ще отиват към https://int-app.tidepool.org вместо към стандартния адрес https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Използвай тестовите сървъри</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Качване на данни в Tidepool</string>
+    <string name="tidepool_upload_cgm">Качвай данни за КЗ</string>
+    <string name="tidepool_upload_bolus">Качвай лечения (инсулин, въглехидрати)</string>
+    <string name="tidepool_upload_tbr">Качвай временни базали</string>
+    <string name="tidepool_upload_profile">Качвай смени на профил и временни цели</string>
+    <string name="tidepool_upload_bg">Качвай ръчните измервания на КЗ</string>
+    <string name="upload_now">Качи сега</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
+    <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
+    <string name="virtualpump_uploadstatus_title">Качва статуса в NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="eversense">Eversense приложение(модифицирано)</string>
+    <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
+    <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
+    <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
+    <string name="glunovo">Глуново</string>
+    <string name="description_source_glunovo">Получавай данните от Glunowo апликацията</string>
+    <string name="tomato">Tomato(MяоМяо)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
+    <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi име</string>
+    <string name="ns_create_announcements_from_errors_title">Създаване на известие при грешки</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Създаване на известия при предупреждения за необходими въглехидрати</string>
+    <string name="ns_create_announcements_from_errors_summary">Създаване на Nightscout известие при грешки и локални аларми (също видими в Careportal - Treatments)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Създаване на Nightscout известия при предупреждения за необходими въглехидрати</string>
+    <string name="description_ns_client">Синхронизира локалните данни с Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">КАЧВ</string>
+    <!-- Skins -->
+    <string name="classic_description">Оригинален изглед</string>
+    <string name="lowres_description">Скин за ниска резолюция</string>
+    <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
+    <string name="largedisplay_description">Голям екран</string>
+    <string name="skin">Тема</string>
+    <!--    Loop -->
+</resources>

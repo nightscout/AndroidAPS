@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
     <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
@@ -9,5 +8,53 @@
     <!--    Widget-->
     <!--     Activities-->
     <string name="statistics">Στατιστικά</string>
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="treatments_wizard_total_label">Σύνολο</string>
+    <!-- FillDialog -->
+    <string name="button1">Πλήκτρο 1</string>
+    <string name="button2">Πλήκτρο 2</string>
+    <string name="button3">Πλήκτρο 3</string>
+    <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
+    <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <string name="suspendloopfor2h">Κύκλωμα σε αναστολή για 2h</string>
+    <string name="suspendloopfor3h">Κύκλωμα σε αναστολή για 3h</string>
+    <string name="suspendloopfor10h">Κύκλωμα σε αναστολή για 10h</string>
+    <string name="disconnectpumpfor15m">Αποσύνδεση αντλίας για 15 λεπτά</string>
+    <string name="disconnectpumpfor30m">Αποσύνδεση αντλίας για 30 λεπτά</string>
+    <string name="disconnectpumpfor1h">Αποσύνδεση αντλίας για 1h</string>
+    <string name="disconnectpumpfor2h">Αποσύνδεση αντλίας για 2h</string>
+    <string name="disconnectpumpfor3h">Αποσύνδεση αντλίας για 3h</string>
+    <string name="resume">Επαναφορά</string>
+    <string name="reconnect">Επανασύνδεση αντλίας</string>
+    <string name="duration15m">15 λεπτά</string>
+    <string name="duration30m">30 λεπτά</string>
+    <string name="duration1h">1 ώρα</string>
+    <string name="duration2h">2 ώρες</string>
+    <string name="duration3h">3 ώρες</string>
+    <string name="duration10h">10 ώρες</string>
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
+    <string name="missing_carbs">Που υπολείπεται%1$d</string>
+    <!-- Treatments -->
+    <string name="calculation_short">Υπολογ</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
+    <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
+    <string name="treatments_iobtotal_label_string">Συνολική IOB:</string>
+    <string name="tempbasals_realduration_label_string">Διάρκεια:</string>
+    <string name="tempbasals_netratio_label_string">Αναλογία:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Διόρθωση</string>
+    <string name="refresheventsfromnightscout">Ανανέωση από NS</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>

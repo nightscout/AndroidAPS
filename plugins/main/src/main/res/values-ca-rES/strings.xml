@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="insulin_shortname">INS</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="errors">Errors</string>
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">Enllestit, ben fet!</string>
+    <string name="maxiobset">Màx IOB correctament configurada</string>
+    <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
+    <string name="loopenabled">Llaç activat</string>
+    <string name="apsselected">APS seleccionat</string>
+    <string name="closedmodeenabled">Llaç tancat activat</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa d\'aprenentatge</string>
+    <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
+    <string name="objectives_button_unfinish">Cancel·lar finalització</string>
+    <string name="objectives_button_unstart">Cancel·lar inici</string>
+    <!-- Actions -->
+    <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
+    <string name="actions_shortname">ACC</string>
+    <string name="tools">Eines</string>
+    <string name="cannula">Cànula</string>
+    <string name="ebstopsloop">L\'ús d\'un bolus estès aturarà el mode llaç tancat mentre duri el bolus. Esteu segurs que voleu això?</string>
+    <string name="extendedbolusdeliveryerror">Error en lliurar bolus estès</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Limitant bolus estès a %1$.1f U a causa de %2$s</string>
+    <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
+    <string name="limitingiob">Limitant IOB a %1$.1f U a causa de %2$s</string>
+    <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
+    <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
+    <string name="uamdisabledoref1notselected">UAM desactivat perquè es basa en el plugin de sensibilitat Oref1</string>
+    <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
+    <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
+    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
+    <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
+    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
+    <string name="hardlimit">límit estricte</string>
+    <string name="treatmentssafety_title">Seguretat tractaments</string>
+    <string name="patient_age_summary">Si us plau, seleccioneu el tipus de pacient per configurar els límits de seguretat</string>
+    <string name="child">Nen</string>
+    <string name="teenage">Adolescent</string>
+    <string name="adult">Adult</string>
+    <string name="resistantadult">Adult resistent a l\'insulina</string>
+    <string name="pregnant">Embaraç</string>
+    <string name="max_bolus_title">Max bolus permès [U]</string>
+    <string name="max_carbs_title">Max carbs permesos [g]</string>
+    <string name="patient_type">Tipus de pacient</string>
+    <!-- Overview -->
+    <string name="snooze">Postposar</string>
+    <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
+    <string name="statuslights_iage_warning">Llindar per avís d\'edat de l\'insulina [h]</string>
+    <string name="statuslights_iage_critical">Llindar avís crític per edat de l\'insulina [h]</string>
+    <string name="statuslights_sage_warning">Llindar per avís d\'edat del sensor [h]</string>
+    <string name="statuslights_sage_critical">Llindar avís crític per edat del sensor [h]</string>
+    <string name="statuslights_sbat_warning">Llindar per avís del nivell de bateria del sensor [%]</string>
+    <string name="statuslights_sbat_critical">Llindar avís crític pel nivell de bateria del sensor [%]</string>
+    <string name="statuslights_bage_warning">Llindar per avís d\'edat de la pila [h]</string>
+    <string name="statuslights_bage_critical">Llindar avís crític per edat de la pila [h]</string>
+    <string name="statuslights_res_warning">Llindar per avís del nivell del reservori [U]</string>
+    <string name="statuslights_res_critical">Llindar avís crític pel nivell del reservori [U]</string>
+    <string name="statuslights_bat_warning">Llindar per avís del nivell de bateria de la bomba [%]</string>
+    <string name="statuslights_bat_critical">Llindar avís crític pel nivell de bateria de la bomba [%]</string>
+    <string name="statuslights">Llums d\'estat</string>
+    <string name="statuslights_copy_ns">Copiar configuració d\'NS</string>
+    <string name="chart_menu">Menú gràfica</string>
+    <string name="apsmode_title">Mode APS</string>
+    <string name="setbasalquestion">Acceptar nova basal temporal:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">Assistent</string>
+    <!-- NSClient -->
+    <string name="restart">Reiniciar</string>
+    <string name="deliver_now">Lliurar ara</string>
+    <string name="clear_queue">Buidar la cua</string>
+    <string name="show_queue">Mostrar la cua</string>
+    <string name="queue">Cua:</string>
+    <string name="status">Estat:</string>
+    <string name="full_sync">Sincronització completa</string>
+    <string name="full_sync_comment">Sincronització completa? Pot tardar hores i fins que no es completi, no veuràs dades noves a NS.</string>
+    <string name="ns_sync_options">Sincronització</string>
+    <string name="ns_upload_summary">Perfils, bolus, carbohidrats i basals temporals s\'envien a NS</string>
+    <string name="ns_upload">Enviar dades a NS</string>
+    <string name="ns_receive_profile_store">Rebre perfils</string>
+    <string name="ns_receive_profile_store_summary">Sincronitzar perfils locals amb l\'editor de perfils de NS</string>
+    <string name="ns_receive_temp_target">Rebre objectius temporals</string>
+    <string name="ns_receive_temp_target_summary">Acceptar objectius temporals introduïts a NS o NSClient</string>
+    <string name="ns_receive_profile_switch">Rebre canvis de perfil</string>
+    <string name="ns_receive_profile_switch_summary">Acceptar canvis de perfil introduïts a NS o NSClient</string>
+    <string name="ns_receive_offline_event">Rebre events APS fora de línia</string>
+    <string name="ns_receive_offline_event_summary">Acceptar events APS fora de línia introduïts a NS o NSClient</string>
+    <string name="ns_receive_insulin">Rebre insulina</string>
+    <string name="ns_receive_insulin_summary">Acceptar insulina introduïda a NS o NSClient (no es lliura, només es té en compte per calcular l\'IOB)</string>
+    <string name="ns_receive_carbs">Rebre carbohidrats</string>
+    <string name="ns_receive_carbs_summary">Acceptar carbohidrats introduïts a NS o NSClient</string>
+    <string name="ns_receive_therapy_events">Rebre events de teràpia</string>
+    <string name="ns_receive_therapy_events_summary">Acceptar events de teràpia (cànula, insulina, canvi de bateria, etc) introduïts a NS o NSClient</string>
+    <string name="ns_receive_cgm">Rebre/emplenar dades CGM</string>
+    <string name="ns_receive_cgm_summary">Acceptar dades CGM de NS</string>
+    <string name="run_question">Executa %s?</string>
+    <string name="ns_sync_slow">Retardar les càrregues</string>
+    <string name="ns_alarms">Crear avisos a partir d\'alarmes NS</string>
+    <string name="ns_announcements">Crear avisos a partir d\'avisos d\'NS</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">El vostre nom d\'usuari de Tidepool, normalment és un email</string>
+    <string name="title_tidepool_username">Nom d\'usuari</string>
+    <string name="summary_tidepool_password">Clau d\'accés a Tidepool</string>
+    <string name="title_tidepool_password">Clau d\'accés</string>
+    <string name="title_tidepool_test_login">Prova d\'accés a Tidepool</string>
+    <string name="summary_tidepool_dev_servers">En cas d\'estar activat, les dades s\'enviaran a https://int-app.tidepool.org enlloc de a l\'habitual https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Utilitzar servidors d\'integració (test)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Envia dades a Tidepool</string>
+    <string name="tidepool_upload_cgm">Enviar dades CGM</string>
+    <string name="tidepool_upload_bolus">Enviar tractaments (insulina, carbs)</string>
+    <string name="tidepool_upload_tbr">Enviar basals temporals</string>
+    <string name="tidepool_upload_profile">Enviar canvis de perfil, objectius temporals</string>
+    <string name="tidepool_upload_bg">Enviar tests glucèmia</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
+    <string name="virtualpump_settings">Configuració bomba virtual</string>
+    <string name="virtualpump_uploadstatus_title">Enviar estat a NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
+    <string name="dexcom_app_patched">Dexcom (BYODA)</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Rebre els valors de glucosa de l\'aplicació Dexcom \'Build Your Own Device\'.</string>
+    <string name="eversense">App Eversense (\"parxejada\")</string>
+    <string name="description_source_eversense">Rebre valors de glucèmia de l\'app Eversense \"parxejada\".</string>
+    <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
+    <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Rebre valors de glucèmia de l\'app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Rebre valors de l\'app Glunovo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
+    <string name="bgsource_upload">Configuració enviament dades glucèmia</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="ns_create_announcements_from_errors_title">Crear avisos d\'errors</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Crear avisos d\'alertes de calen carbohidrats</string>
+    <string name="ns_create_announcements_from_errors_summary">Crear avís de Nightscout per alertes locals i finestres d\'error (també visibles al Portal de cures, sota Tractaments)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Crear avís de Nightscout per alertes de calen carbohidrats</string>
+    <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
+    <string name="classic_description">Tema original</string>
+    <string name="lowres_description">Tema baixa resolució</string>
+    <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
+    <string name="largedisplay_description">Pantalla grossa</string>
+    <string name="skin">Tema</string>
+    <!--    Loop -->
+</resources>

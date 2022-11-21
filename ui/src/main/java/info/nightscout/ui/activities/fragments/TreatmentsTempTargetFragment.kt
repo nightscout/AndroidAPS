@@ -3,43 +3,53 @@ package info.nightscout.ui.activities.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.util.forEach
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.database.interfaces.end
-import info.nightscout.androidaps.database.transactions.InvalidateTemporaryTargetTransaction
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.events.EventNSClientRestart
 import info.nightscout.androidaps.events.EventNewHistoryData
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
-import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.androidaps.utils.ActionModeHelper
+import info.nightscout.androidaps.utils.Translator
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.database.impl.transactions.InvalidateTemporaryTargetTransaction
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.events.EventTempTargetChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
+import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import info.nightscout.ui.databinding.TreatmentsTemptargetFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsTemptargetItemBinding
 import io.reactivex.rxjava3.core.Completable
@@ -59,7 +69,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -209,7 +219,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_temp_target, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_temp_target, false) || !config.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 
@@ -249,7 +259,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<TemporaryTarget>): String {
         if (selectedItems.size() == 1) {
             val tempTarget = selectedItems.valueAt(0)
-            return "${rh.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
+            return "${rh.gs(R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
                 dateUtil.dateAndTimeString(tempTarget.timestamp)
         }
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())

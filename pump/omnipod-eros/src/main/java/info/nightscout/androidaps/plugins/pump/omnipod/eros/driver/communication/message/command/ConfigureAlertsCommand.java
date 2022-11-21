@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class ConfigureAlertsCommand extends NonceResyncableMessageBlock {
     private final List<AlertConfiguration> configurations;

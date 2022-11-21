@@ -2,48 +2,26 @@ package info.nightscout.implementation.queue
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
-import info.nightscout.androidaps.database.entities.ProfileSwitch
-import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.events.EventMobileToWear
-import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.getCustomizedName
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.queue.commands.Command.CommandType
-import info.nightscout.androidaps.queue.commands.CustomCommand
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.pump.insertCarbsTransaction
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
@@ -62,10 +40,33 @@ import info.nightscout.implementation.queue.commands.CommandStartPump
 import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.Command
+import info.nightscout.interfaces.queue.Command.CommandType
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.queue.CustomCommand
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventProfileSwitchChanged
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -87,16 +88,16 @@ class CommandQueueImplementation @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val context: Context,
     private val sp: SP,
-    private val buildHelper: BuildHelper,
+    private val config: Config,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
-    private val config: Config,
     private val androidPermission: AndroidPermission,
     private val activityNames: ActivityNames
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
+    internal var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val queue = LinkedList<Command>()
     @Volatile private var thread: QueueThread? = null
@@ -189,6 +190,7 @@ class CommandQueueImplementation @Inject constructor(
         synchronized(queue) {
             for (i in queue.indices) {
                 queue[i].cancel()
+
             }
             queue.clear()
         }
@@ -204,7 +206,7 @@ class CommandQueueImplementation @Inject constructor(
 
     // After new command added to the queue
     // start thread again if not already running
-    @Synchronized fun notifyAboutNewCommand() {
+    @Synchronized fun notifyAboutNewCommand() = handler.post {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
             thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
@@ -229,7 +231,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -325,7 +327,7 @@ class CommandQueueImplementation @Inject constructor(
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo)
                 // Notify Wear about upcoming bolus
-                rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 0, status = rh.gs(R.string.goingtodeliver, detailedBolusInfo.insulin))))
+                rxBus.send(EventMobileToWear(info.nightscout.rx.weardata.EventData.BolusProgress(percent = 0, status = rh.gs(R.string.goingtodeliver, detailedBolusInfo.insulin))))
             }
         }
         notifyAboutNewCommand()

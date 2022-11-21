@@ -10,33 +10,33 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.dana.database.DanaHistoryDatabase
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryDatabase
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.insight.database.InsightDatabase
-import info.nightscout.androidaps.interfaces.DataSyncSelector
-import info.nightscout.androidaps.interfaces.ImportExportPrefs
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PREFERENCES
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.maintenance.ImportExportPrefs
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -110,7 +110,7 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeOn(aapsSchedulers.io)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
-                                onComplete = { rxBus.send(EventPreferenceChange(rh, R.string.key_units)) }
+                                onComplete = { rxBus.send(EventPreferenceChange(rh.gs(R.string.key_units))) }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })

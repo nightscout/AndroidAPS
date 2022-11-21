@@ -2,47 +2,56 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.MealData
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.database.interfaces.end
-import info.nightscout.androidaps.events.Event
-import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventNewHistoryData
-import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.workflow.CalculationWorkflow
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.combine
+import info.nightscout.core.iob.copy
+import info.nightscout.core.iob.determineBasalJson
+import info.nightscout.core.iob.plus
+import info.nightscout.core.iob.round
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.aps.AutosensData
+import info.nightscout.interfaces.aps.AutosensDataStore
+import info.nightscout.interfaces.aps.AutosensResult
+import info.nightscout.interfaces.aps.BasalData
+import info.nightscout.interfaces.iob.CobInfo
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.iob.MealData
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.Event
+import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
@@ -85,7 +94,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
 
-    override var ads: AutosensDataStore = AutosensDataStore()
+    override var ads: AutosensDataStore = AutosensDataStoreObject()
 
     private val dataLock = Any()
     private var thread: Thread? = null
@@ -111,14 +120,14 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh, R.string.key_openapsama_autosens_period) ||
-                               event.isChanged(rh, R.string.key_age) ||
-                               event.isChanged(rh, R.string.key_absorption_maxtime) ||
-                               event.isChanged(rh, R.string.key_openapsama_min_5m_carbimpact) ||
-                               event.isChanged(rh, R.string.key_absorption_cutoff) ||
-                               event.isChanged(rh, R.string.key_openapsama_autosens_max) ||
-                               event.isChanged(rh, R.string.key_openapsama_autosens_min) ||
-                               event.isChanged(rh, R.string.key_insulin_oref_peak)
+                           if (event.isChanged(rh.gs(R.string.key_openapsama_autosens_period)) ||
+                               event.isChanged(rh.gs(R.string.key_age)) ||
+                               event.isChanged(rh.gs(R.string.key_absorption_maxtime)) ||
+                               event.isChanged(rh.gs(R.string.key_openapsama_min_5m_carbimpact)) ||
+                               event.isChanged(rh.gs(R.string.key_absorption_cutoff)) ||
+                               event.isChanged(rh.gs(R.string.key_openapsama_autosens_max)) ||
+                               event.isChanged(rh.gs(R.string.key_openapsama_autosens_min)) ||
+                               event.isChanged(rh.gs(R.string.key_insulin_oref_peak))
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
@@ -471,7 +480,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val total = IobTotal(toTime)
         val profile = profileFunction.getProfile() ?: return total
         val dia = profile.dia
-        val divisor = sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)
+        val divisor = sp.getDouble(R.string.key_openapsama_bolus_snooze_dia_divisor, 2.0)
         assert(divisor > 0)
 
         val boluses = repository.getBolusesDataFromTime(toTime - range(), true).blockingGet()

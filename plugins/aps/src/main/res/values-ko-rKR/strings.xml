@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[임시목표 100이상을 위해 민감도를 올립니다.]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">낮은 임시목표는 민감도를 내립니다.</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[임시목표 100미만을 위해 민감도를 낮춥니다.]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="resistance_lowers_target_title">저항성이 목표 낮추기</string>
+    <string name="resistance_lowers_target_summary">저항성이 감지되면, 목표 혈당을 낮춥니다.</string>
+    <string name="sensitivity_raises_target_title">민감성이 목표 올리기</string>
+    <string name="sensitivity_raises_target_summary">민감성이 감지되면, 목표 혈당을 높입니다.</string>
+    <string name="openapsma_disabled">플러그인이 사용불가능 합니다</string>
+    <string name="executing">실행중</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">2017년의 알고리즘</string>
+    <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
+    <string name="openapsma_run">지금 실행</string>
+    <string name="openapsma_profile_label">프로파일</string>
+    <string name="result">결과</string>
+    <string name="openapsma_request_label">요청</string>
+    <string name="constraints">제한</string>
+    <string name="openapsma_autosensdata_label">Autosens 정보</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
+    <string name="openapsama_max_daily_safety_multiplier">최대 일 안전 승수</string>
+    <string name="openapsama_current_basal_safety_multiplier">현재 Basal 안전 승수</string>
+    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
+    <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">설정에서의 최대값</string>
+    <string name="hardlimit">하드한계</string>
+    <!--    Autotune   -->
+</resources>

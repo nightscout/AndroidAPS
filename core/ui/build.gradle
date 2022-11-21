@@ -1,0 +1,23 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+
+android {
+    namespace 'info.nightscout.core.ui'
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    api "androidx.core:core-ktx:$core_version"
+    api "androidx.appcompat:appcompat:$appcompat_version"
+    api "androidx.preference:preference-ktx:$preferencektx_version"
+
+    api "com.google.android.material:material:$material_version"
+}

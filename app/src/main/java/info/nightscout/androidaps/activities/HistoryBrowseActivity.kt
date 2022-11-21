@@ -13,28 +13,29 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.events.EventCustomCalculationFinished
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.events.EventScale
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.extensions.toVisibilityKeepSpace
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.workflow.CalculationWorkflow
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.events.EventCustomCalculationFinished
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventScale
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -45,7 +46,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var dateUtil: DateUtil
@@ -290,7 +291,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val menuChartSettings = overviewMenus.setting
         graphData.addInRangeArea(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
-        if (buildHelper.isDev()) graphData.addBucketedData()
+        if (config.isDev()) graphData.addBucketedData()
         graphData.addTreatments(context)
         graphData.addEps(context, 0.95)
         if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
@@ -339,7 +340,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(useDSForScale, 1.0)
+            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && config.isDev()) secondGraphData.addDeviationSlope(useDSForScale, 1.0)
 
             // set manual x bounds to have nice steps
             secondGraphData.formatAxis(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime)

@@ -14,33 +14,32 @@ import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
 import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.events.EventExtendedBolusChange
-import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Pump
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.queue.events.EventQueueChanged
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
-import info.nightscout.androidaps.utils.WarnColors
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.Dana
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.pump.Dana
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.WarnColors
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.userEntry.UserEntryMapper.Action
+import info.nightscout.interfaces.userEntry.UserEntryMapper.Sources
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventExtendedBolusChange
+import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventQueueChanged
+import info.nightscout.rx.events.EventTempBasalChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -98,15 +97,13 @@ class DanaFragment : DaggerFragment() {
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
-            ProfileViewerDialog().also { pvd ->
-                pvd.arguments = Bundle().also { args ->
-                    args.putLong("time", dateUtil.now())
-                    args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-                    args.putString("customProfile", profile.toString())
-                    args.putString("customProfileName", profileName)
-                }
-
-            }.show(childFragmentManager, "ProfileViewDialog")
+            activityNames.runProfileViewerDialog(
+                fragmentManager = childFragmentManager,
+                time = dateUtil.now(),
+                mode = ActivityNames.Mode.CUSTOM_PROFILE,
+                customProfile = profile.toString(),
+                customProfileName = profileName
+            )
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
@@ -160,8 +157,10 @@ class DanaFragment : DaggerFragment() {
                            pumpStatusIcon = when (it.status) {
                                EventPumpStatusChanged.Status.CONNECTING   ->
                                    "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+
                                EventPumpStatusChanged.Status.CONNECTED    ->
                                    "{fa-bluetooth}"
+
                                EventPumpStatusChanged.Status.DISCONNECTED ->
                                    "{fa-bluetooth-b}"
 
@@ -169,7 +168,7 @@ class DanaFragment : DaggerFragment() {
                                    "{fa-bluetooth-b}"
                            }
                            binding.btConnection.text = pumpStatusIcon
-                           pumpStatus = it.getStatus(rh)
+                           pumpStatus = it.getStatus(requireContext())
                            binding.pumpStatus.text = pumpStatus
                            binding.pumpStatusLayout.visibility = (pumpStatus != "").toVisibility()
                        }, fabricPrivacy::logException)

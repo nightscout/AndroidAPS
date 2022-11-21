@@ -1,48 +1,50 @@
 package info.nightscout.implementation.queue
 
 import android.content.Context
+import android.os.Handler
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.AndroidPermission
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.queue.commands.CustomCommand
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCustomCommand
 import info.nightscout.implementation.queue.commands.CommandExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandLoadHistory
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.Command
+import info.nightscout.interfaces.queue.CustomCommand
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyLong
+import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.invocation.InvocationOnMock
 import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
@@ -53,7 +55,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var activityNames: ActivityNames
-    @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
 
     class CommandQueueMocked(
@@ -67,19 +68,19 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         activePlugin: ActivePlugin,
         context: Context,
         sp: SP,
-        buildHelper: BuildHelper,
+        config: Config,
         dateUtil: DateUtil,
         repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
-        config: Config,
         androidPermission: AndroidPermission,
         activityNames: ActivityNames
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
+        activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
+        androidPermission, activityNames
     ) {
 
-        override fun notifyAboutNewCommand() {}
+        override fun notifyAboutNewCommand() : Boolean = true
 
     }
 
@@ -106,7 +107,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.activePlugin = activePlugin
             }
             if (it is PumpEnactResult) {
-                it.rh = rh
+                it.context = context
             }
         }
     }
@@ -119,9 +120,8 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue = CommandQueueMocked(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil,
-            repository,
-            fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository,
+            fabricPrivacy, androidPermission, activityNames
         )
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -148,7 +148,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
         val percentageConstraint = Constraint(0)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
-        val thenReturn = `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
+        `when`(rh.gs(R.string.connectiontimedout)).thenReturn("Connection timed out")
         `when`(rh.gs(R.string.formatinsulinunits)).thenReturn("%1\$.2f U")
         `when`(rh.gs(R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
     }
@@ -158,10 +158,15 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper,
-            dateUtil, repository,
-            fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames
         )
+        val handler = mock(Handler::class.java)
+        `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->
+            (invocation.arguments[0] as Runnable).run()
+            true
+        }
+        commandQueue.handler = handler
+
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 
@@ -255,7 +260,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assert.assertEquals(2, commandQueue.size())
 
         // when
-        commandQueue.cancelAllBoluses(anyLong())
+        commandQueue.cancelAllBoluses(null)
 
         // then
         Assert.assertEquals(0, commandQueue.size())

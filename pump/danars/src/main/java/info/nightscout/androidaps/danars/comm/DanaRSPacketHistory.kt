@@ -5,13 +5,14 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.database.DanaHistoryRecord
 import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
-import info.nightscout.androidaps.events.EventDanaRSyncStatus
-import info.nightscout.androidaps.interfaces.PumpSync
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.utils.T
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDanaRSyncStatus
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.T
 import org.joda.time.DateTime
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 
 abstract class DanaRSPacketHistory(

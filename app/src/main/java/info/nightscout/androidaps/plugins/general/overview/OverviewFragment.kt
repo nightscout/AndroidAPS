@@ -27,87 +27,90 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.interfaces.end
-import info.nightscout.androidaps.databinding.OverviewFragmentBinding
-import info.nightscout.androidaps.dialogs.InsulinDialog
-import info.nightscout.androidaps.dialogs.LoopDialog
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.dialogs.TempTargetDialog
-import info.nightscout.androidaps.dialogs.TreatmentDialog
-import info.nightscout.androidaps.dialogs.WizardDialog
-import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.events.EventExtendedBolusChange
-import info.nightscout.androidaps.events.EventMobileToWear
 import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.events.EventScale
-import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.runOnUiThread
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
-import info.nightscout.androidaps.interfaces.CommandQueue
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.TrendCalculator
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewIobCob
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewSensitivity
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.androidaps.plugins.source.DexcomPlugin
-import info.nightscout.androidaps.plugins.source.XdripPlugin
-import info.nightscout.androidaps.skins.SkinProvider
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.ui.SingleClickButton
-import info.nightscout.androidaps.utils.ui.UIRunnable
-import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.displayText
+import info.nightscout.core.profile.toSignedUnitsString
+import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.profile.toUnits
+import info.nightscout.core.ui.UIRunnable
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.elements.SingleClickButton
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.wizard.QuickWizard
+import info.nightscout.database.entities.UserEntry.Action
+import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.plugins.databinding.OverviewFragmentBinding
+import info.nightscout.plugins.general.overview.notifications.NotificationStore
+import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.plugins.skins.SkinProvider
+import info.nightscout.plugins.source.DexcomPlugin
+import info.nightscout.plugins.source.XdripPlugin
+import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
+import info.nightscout.plugins.ui.StatusLightHandler
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAcceptOpenLoopChange
+import info.nightscout.rx.events.EventExtendedBolusChange
+import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.events.EventScale
+import info.nightscout.rx.events.EventTempBasalChange
+import info.nightscout.rx.events.EventTempTargetChange
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.weardata.EventData
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
+import info.nightscout.ui.dialogs.InsulinDialog
+import info.nightscout.ui.dialogs.LoopDialog
+import info.nightscout.ui.dialogs.ProfileSwitchDialog
+import info.nightscout.ui.dialogs.TempTargetDialog
+import info.nightscout.ui.dialogs.TreatmentDialog
+import info.nightscout.ui.dialogs.WizardDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -128,7 +131,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var statusLightHandler: StatusLightHandler
-    @Inject lateinit var nsDeviceStatus: NSDeviceStatus
+    @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
+    @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var loop: Loop
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -137,14 +141,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var quickWizard: QuickWizard
-    @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var config: Config
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var skinProvider: SkinProvider
     @Inject lateinit var trendCalculator: TrendCalculator
-    @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -152,6 +154,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var bgQualityCheckPlugin: BgQualityCheckPlugin
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
 
@@ -214,7 +217,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay += 6
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
-            rxBus.send(EventPreferenceChange(rh, R.string.key_rangetodisplay))
+            rxBus.send(EventPreferenceChange(rh.gs(R.string.key_rangetodisplay)))
             sp.putBoolean(R.string.key_objectiveusescale, true)
             false
         }
@@ -278,7 +281,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
                            sp.putInt(R.string.key_rangetodisplay, it.hours)
-                           rxBus.send(EventPreferenceChange(rh, R.string.key_rangetodisplay))
+                           rxBus.send(EventPreferenceChange(rh.gs(R.string.key_rangetodisplay)))
                            sp.putBoolean(R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -310,7 +313,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.main)
             .delay(30, TimeUnit.MILLISECONDS, aapsSchedulers.main)
             .subscribe({
-                           overviewData.pumpStatus = it.getStatus(rh)
+                           overviewData.pumpStatus = it.getStatus(requireContext())
                            updatePumpStatus()
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -398,12 +401,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
 
                 R.id.active_profile      -> {
-                    ProfileViewerDialog().also { pvd ->
-                        pvd.arguments = Bundle().also {
-                            it.putLong("time", dateUtil.now())
-                            it.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
-                        }
-                    }.show(childFragmentManager, "ProfileViewDialog")
+                    activityNames.runProfileViewerDialog(
+                        childFragmentManager,
+                        dateUtil.now(),
+                        ActivityNames.Mode.RUNNING_PROFILE
+                    )
                 }
 
                 R.id.cgm_button          -> {
@@ -503,7 +505,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             R.id.temp_target         -> v.performClick()
             R.id.active_profile      -> activity?.let { activity ->
-                if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pumpdisconnected))
+                if (loop.isDisconnected) OKDialog.show(activity, rh.gs(R.string.not_available_full), rh.gs(R.string.smscommunicator_pump_disconnected))
                 else
                     protectionCheck.queryProtection(
                         activity,
@@ -722,16 +724,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             }
 
             // pump status from ns
-            binding.pump.text = nsDeviceStatus.pumpStatus
-            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), nsDeviceStatus.extendedPumpStatus) } }
+            binding.pump.text = processedDeviceStatusData.pumpStatus(nsSettingsStatus)
+            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), processedDeviceStatusData.extendedPumpStatus) } }
 
             // OpenAPS status from ns
-            binding.openaps.text = nsDeviceStatus.openApsStatus
-            binding.openaps.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.openaps), nsDeviceStatus.extendedOpenApsStatus) } }
+            binding.openaps.text = processedDeviceStatusData.openApsStatus
+            binding.openaps.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.openaps), processedDeviceStatusData.extendedOpenApsStatus) } }
 
             // Uploader status from ns
-            binding.uploader.text = nsDeviceStatus.uploaderStatusSpanned
-            binding.uploader.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
+            binding.uploader.text = processedDeviceStatusData.uploaderStatusSpanned
+            binding.uploader.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.uploader), processedDeviceStatusData.extendedUploaderStatus) } }
         }
     }
 
@@ -935,7 +937,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateIobCob() {
         val iobText = overviewData.iobText(iobCobCalculator)
         val iobDialogText = overviewData.iobDialogText(iobCobCalculator)
-        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh, dateUtil, buildHelper.isEngineeringMode())
+        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh, dateUtil, config.isEngineeringMode())
         val lastCarbsTime = overviewData.lastCarbsTime
         runOnUiThread {
             _binding ?: return@runOnUiThread
@@ -1019,7 +1021,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (menuChartSettings.isEmpty()) return
         graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
-        if (buildHelper.isDev()) graphData.addBucketedData()
+        if (config.isDev()) graphData.addBucketedData()
         graphData.addTreatments(context)
         graphData.addEps(context, 0.95)
         if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
@@ -1068,7 +1070,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(useDevForScale, 1.0)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8)
             if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
-            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(
+            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && config.isDev()) secondGraphData.addDeviationSlope(
                 useDSForScale,
                 if (useDSForScale) 1.0 else 0.8,
                 useRatioForScale
@@ -1102,7 +1104,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateSensitivity() {
         _binding ?: return
-        if (constraintChecker.isAutosensModeEnabled().value()) {
+        if (constraintChecker.isAutosensModeEnabled().value() || !(config.NSCLIENT && overviewData.lastAutosensData(iobCobCalculator) == null)) {
             binding.infoLayout.sensitivityIcon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
         } else {
             binding.infoLayout.sensitivityIcon.setImageResource(R.drawable.ic_x_swap_vert)
@@ -1117,8 +1119,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
-            if (config.APS && request is DetermineBasalResultSMB) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(nsDeviceStatus.getAPSResult(injector).json, "variable_sens")
+            if (config.APS && request is info.nightscout.plugins.aps.openAPSSMB.DetermineBasalResultSMB) request.variableSens ?: 0.0
+            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
             else 0.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {

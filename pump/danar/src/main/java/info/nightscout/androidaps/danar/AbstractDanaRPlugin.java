@@ -10,35 +10,35 @@ import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.Constraints;
-import info.nightscout.androidaps.interfaces.Dana;
-import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.androidaps.interfaces.Pump;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpPluginBase;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.ResourceHelper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import info.nightscout.shared.logging.AAPSLogger;
-import info.nightscout.shared.logging.LTag;
+import info.nightscout.interfaces.constraints.Constraint;
+import info.nightscout.interfaces.constraints.Constraints;
+import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.ActivePlugin;
+import info.nightscout.interfaces.plugin.PluginDescription;
+import info.nightscout.interfaces.plugin.PluginType;
+import info.nightscout.interfaces.profile.Profile;
+import info.nightscout.interfaces.pump.Dana;
+import info.nightscout.interfaces.pump.Pump;
+import info.nightscout.interfaces.pump.PumpEnactResult;
+import info.nightscout.interfaces.pump.PumpPluginBase;
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.defs.ManufacturerType;
+import info.nightscout.interfaces.pump.defs.PumpDescription;
+import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.utils.Round;
+import info.nightscout.rx.AapsSchedulers;
+import info.nightscout.rx.bus.RxBus;
+import info.nightscout.rx.events.EventConfigBuilderChange;
+import info.nightscout.rx.events.EventPreferenceChange;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
+import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.shared.utils.DateUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -107,7 +107,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh(), R.string.key_danar_bt_name)) {
+                    if (event.isChanged(getRh().gs(R.string.key_danar_bt_name))) {
                         danaPump.reset();
                         pumpSync.connectNewPump(true);
                         getCommandQueue().readStatus(getRh().gs(R.string.device_changed), null);

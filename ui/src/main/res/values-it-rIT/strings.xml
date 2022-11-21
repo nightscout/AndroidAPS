@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
+    <string name="constraint_applied">Vincolo applicato!</string>
+    <string name="bolus_constraint_applied">Vincolo bolo applicato</string>
+    <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
+    <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Finestra di dialogo cancellata</string>
     <string name="start_activity_tt">Avvia TT Attività fisica</string>
     <string name="start_eating_soon_tt">Avvia TT Pasto a breve</string>
@@ -19,5 +22,74 @@
     <string name="age">Età</string>
     <string name="weight_label">Peso</string>
     <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati (in modo anonimo). Un ID è assegnato a questa installazione di AAPS. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
-    <!-- CareDialog -->
+    <string name="bg_other">Altro</string>
+    <string name="bg_sensor">Sensore</string>
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Superbolo</string>
+    <string name="treatments_wizard_total_label">Totale</string>
+    <!-- FillDialog -->
+    <string name="button1">Tasto 1</string>
+    <string name="button2">Tasto 2</string>
+    <string name="button3">Tasto 3</string>
+    <string name="record_pump_site_change">Registra cambio posizione cannula</string>
+    <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">No bolo, solo record</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="timeshift_label">Time shift</string>
+    <string name="percentage_label">Percentuale</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Sospendi loop per 1h</string>
+    <string name="suspendloopfor2h">Sospendi loop per 2h</string>
+    <string name="suspendloopfor3h">Sospendi loop per 3h</string>
+    <string name="suspendloopfor10h">Sospendi loop per 10h</string>
+    <string name="disconnectpump">Disconnetti micro</string>
+    <string name="disconnectpumpfor15m">Disconnetti micro per 15 min</string>
+    <string name="disconnectpumpfor30m">Disconnetti micro per 30 min</string>
+    <string name="disconnectpumpfor1h">Disconnetti micro per 1 h</string>
+    <string name="disconnectpumpfor2h">Disconnetti micro per 2 h</string>
+    <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
+    <string name="resume">Riprendi</string>
+    <string name="reconnect">Riconnetti micro</string>
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
+    <string name="missing_carbs">Mancanti %1$d g</string>
+    <string name="a11y_current_bg">glicemia corrente</string>
+    <string name="carb_time_label">Offset CHO</string>
+    <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
+    <string name="show_calculation">Mostra calcolo</string>
+    <!-- Treatments -->
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">CHO:</string>
+    <string name="treatments_iobtotal_label_string">IOB totale:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Rapporto:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
+    <string name="treatments_wizard_tt_label">TT</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="prime">Caricamento</string>
+    <string name="profile_changes">Modifiche al profilo</string>
+    <string name="tempt_targets">Target Temporanei</string>
+    <string name="carbs_and_bolus">CHO e boli</string>
+    <string name="show_invalidated_records">Mostra record non validi/rimossi</string>
+    <string name="hide_invalidated_records">Nascondi record non validi/rimossi</string>
+    <string name="refresh_from_nightscout">Aggiorna da Nightscout</string>
+    <string name="refresheventsfromnightscout">Aggiornamento da NS</string>
+    <string name="show_invalidated">Mostra invalidato</string>
+    <string name="hide_invalidated">Nascondi invalidato</string>
+    <string name="hide_loop">Nascondi loop</string>
+    <string name="show_loop">Mostra loop</string>
+    <string name="clone_label">Clona</string>
+    <string name="show_loop_records">Mostra record di loop</string>
+    <string name="show_hide_records">Nascondi record di loop</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile2">Profilo 2</string>
+    <string name="selected_profile">Selezionato:</string>
+    <!-- Other dialogs -->
 </resources>

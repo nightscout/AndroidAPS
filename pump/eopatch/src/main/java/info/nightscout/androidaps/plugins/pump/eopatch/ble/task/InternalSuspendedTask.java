@@ -2,22 +2,21 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
 import android.os.SystemClock;
 
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.logging.UserEntryLogger;
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper;
-import info.nightscout.shared.logging.LTag;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.interfaces.CommandQueue;
-import info.nightscout.shared.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetInternalSuspendTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchInternalSuspendTimeResponse;
-import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.commands.Command;
-
+import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.queue.Callback;
+import info.nightscout.interfaces.queue.Command;
+import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.userEntry.UserEntryMapper;
+import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;

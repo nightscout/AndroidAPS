@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import org.apache.commons.lang3.StringUtils
 
 /**
@@ -16,7 +16,8 @@ import org.apache.commons.lang3.StringUtils
  */
 abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogger: AAPSLogger,
                                                                    var medtronicUtil: MedtronicUtil,
-                                                                   var bitUtils: ByteUtil) : MedtronicHistoryDecoderInterface<T> {
+                                                                   var bitUtils: ByteUtil
+) : MedtronicHistoryDecoderInterface<T> {
 
     // STATISTICS (remove at later time or not)
     protected var statisticsEnabled = true
@@ -112,7 +113,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
     }
 
     fun getFormattedFloat(value: Float, decimals: Int): String {
-        return StringUtil.getFormatedValueUS(value, decimals)
+        return StringUtil.getFormattedValueUS(value, decimals)
     }
 
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
     <string name="constraint_applied">Sınırlaması uygulanır!</string>
     <string name="bolus_constraint_applied">Bolus kısıtlaması uygulandı</string>
     <string name="carbs_constraint_applied">Karbonhidrat kısıtlaması uygulandı</string>
@@ -24,5 +23,36 @@
     <string name="age">Yaş</string>
     <string name="weight_label">Ağırlık</string>
     <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
-    <!-- CareDialog -->
+    <!-- WizardDialog -->
+    <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="superbolus">Süperbolus</string>
+    <string name="treatments_wizard_total_label">Toplam</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
+    <!-- Treatments -->
+    <string name="calculation_short">Hesap</string>
+    <string name="treatments_iob_label_string">AİNS:</string>
+    <string name="treatments_insulin_label_string">İnsülin:</string>
+    <string name="treatments_carbs_label_string">Karbonhidrat:</string>
+    <string name="treatments_iobtotal_label_string">Toplam AİNS:</string>
+    <string name="tempbasals_realduration_label_string">Süre:</string>
+    <string name="tempbasals_netratio_label_string">Oran:</string>
+    <string name="profile_changes">Profil değişiklikleri</string>
+    <string name="show_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları göster</string>
+    <string name="hide_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları gizle</string>
+    <string name="refresh_from_nightscout">Nightscout\'tan Yenile</string>
+    <string name="refresheventsfromnightscout">NS\'tan yenile</string>
+    <string name="show_invalidated">Geçersiz olanları göster</string>
+    <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="hide_loop">Döngüyü gizle</string>
+    <string name="show_loop">Döngüyü göster</string>
+    <string name="clone_label">Klon</string>
+    <string name="show_loop_records">Döngü kayıtlarını göster</string>
+    <string name="show_hide_records">Döngü kayıtlarını gizle</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
 </resources>

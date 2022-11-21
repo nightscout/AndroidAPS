@@ -77,7 +77,7 @@ class RealPumpTest {
         configBuilderPlugin.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
 
         // Enable common
-        configBuilderPlugin.performPluginSwitch(actionsPlugin, true, PluginType.GENERAL)
+        configBuilderPlugin.performPluginSwitch(actionsPlugin, true, )
 
         // Disable unneeded
         MainApp.getPluginsList().remove(objectivesPlugin)

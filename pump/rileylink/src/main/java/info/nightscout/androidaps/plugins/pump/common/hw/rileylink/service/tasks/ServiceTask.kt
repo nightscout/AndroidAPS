@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+import info.nightscout.interfaces.plugin.ActivePlugin
 import javax.inject.Inject
 
 @Suppress("LeakingThis")

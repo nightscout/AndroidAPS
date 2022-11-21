@@ -3,7 +3,7 @@ package info.nightscout.androidaps.di
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 
 @Module
 @Suppress("unused")

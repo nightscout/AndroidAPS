@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.*
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton

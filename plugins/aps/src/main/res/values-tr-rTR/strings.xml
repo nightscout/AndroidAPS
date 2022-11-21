@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">Duyarlılığı ve KŞ\'ni ayarlayın</string>
+    <string name="DynISFAdjust_title" formatted="false">DinamikİDF Ayar Faktörü %</string>
+    <string name="DynISFAdjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Yüksek geçici hedefler duyarlılığı artırır</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Geçici Hedefler için duyarlılığı artırın >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Düşük geçici hedefler duyarlılığı azaltır</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Geçici Hedefler için düşük duyarlılık < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dinamik İDF</string>
+    <string name="resistance_lowers_target_title">Direnç hedefi düşürür</string>
+    <string name="resistance_lowers_target_summary">Direnç tespit edildiğinde KŞ hedefini düşürün</string>
+    <string name="sensitivity_raises_target_title">Duyarlılık hedefi yükseltir</string>
+    <string name="sensitivity_raises_target_summary">Hassasiyet tespit edildiğinde, KŞ hedefini yükseltin</string>
+    <string name="openapsma_disabled">Eklenti devre dışı</string>
+    <string name="dynisf_shortname">DYNISF</string>
+    <string name="executing">Yürütülüyor</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">2017\'da algoritmanın durumu</string>
+    <string name="description_smb">İleri düzey kullanıcılar için en yeni algoritma</string>
+    <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
+    <string name="openapsma_run">Şimdi Çalıştır</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="result">Sonuç</string>
+    <string name="openapsma_request_label">İstek</string>
+    <string name="constraints">Kısıtlamalar</string>
+    <string name="openapsma_autosensdata_label">Otoduyarlılık verileri</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Varsayılan değer: 3 Bu OpenAPS için önemli bir güvenlik ayarıdır. Maksimum bazal Iob\'u, en büyük bazal oranınızın üç katı (varsayılan olarak) ile sınırlar. Genel olarak, bu değeri değiştirmemelisiniz. Ama \"3x max günlük, 4x şuan\" ın bir güvenlik ayarı olarak ne anlama geldiğini bilmelisiniz.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Maks günlük güvenlik çarpanı</string>
+    <string name="openapsama_current_basal_safety_multiplier">Mevcut bazal güvenlik çarpanı</string>
+    <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nOtoduyarlılık (yakında otoayar) çarpanı. Varsayılan değere %20 maksimum limit atamak, otoduyarlılığın bazalları ne kadar yüksek ayarlayabileceğini, ISF ve KŞ hedefini de ne kadar düşük ayarlayabileceğini belirler.</string>
+    <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
+    <!--    Verify if needed in safety-->
+    <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
+    <string name="hardlimit">sert sınır</string>
+    <!--    Autotune   -->
+</resources>

@@ -13,30 +13,34 @@ import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ActivityNames
-import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.Constraints
-import info.nightscout.androidaps.interfaces.GlucoseUnit
-import info.nightscout.androidaps.interfaces.IobCobCalculator
-import info.nightscout.androidaps.interfaces.Loop
-import info.nightscout.androidaps.interfaces.Profile
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.interfaces.TrendCalculator
-import info.nightscout.androidaps.interfaces.VariableSensitivityResult
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.iob.displayText
+import info.nightscout.core.profile.toSignedUnitsString
+import info.nightscout.core.profile.toTargetRangeString
+import info.nightscout.core.profile.toUnits
+import info.nightscout.database.entities.interfaces.end
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.aps.VariableSensitivityResult
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
 import java.util.Locale
 import javax.inject.Inject
@@ -103,7 +107,7 @@ class Widget : AppWidgetProvider() {
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 
         // Create an Intent to launch MainActivity when clicked
-        val intent = Intent(context, activityNames.mainActivityClass).also { it.action = intentAction }
+        val intent = Intent(context, activityNames.mainActivity).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)

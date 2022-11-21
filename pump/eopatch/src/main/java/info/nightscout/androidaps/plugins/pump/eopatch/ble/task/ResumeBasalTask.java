@@ -1,19 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
-import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
-import info.nightscout.shared.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchStateManager;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalResume;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
-
-import java.sql.SQLException;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
+import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchStateManager;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalResume;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
-import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
+import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton

@@ -4,7 +4,6 @@
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Pumpa sorozatszáma</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_pump_unreachable">Pumpa nem elérhető</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bázis</string>
     <string name="history_group_statistic">Statisztikák</string>

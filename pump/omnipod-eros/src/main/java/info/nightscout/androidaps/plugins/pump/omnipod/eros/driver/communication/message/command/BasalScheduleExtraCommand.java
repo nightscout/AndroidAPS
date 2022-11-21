@@ -1,17 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
 import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.RateEntry;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class BasalScheduleExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;

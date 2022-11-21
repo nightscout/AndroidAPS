@@ -29,7 +29,7 @@ import info.nightscout.androidaps.diaconn.databinding.DiaconnG8BlescannerActivit
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.UUID
 import javax.inject.Inject
@@ -73,7 +73,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
                 startScan()
             }
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
         }
     }
 
@@ -112,7 +112,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.androidaps.core.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
             return
         }
         if (device == null || device.name == null || device.name == "") {

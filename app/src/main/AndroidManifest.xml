@@ -86,11 +86,6 @@
             android:name=".activities.HistoryBrowseActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ProfileHelperActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name=".receivers.DataReceiver"
@@ -126,7 +121,7 @@
         </receiver>
 
         <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver" />
+        <receiver android:name="info.nightscout.plugins.aps.loop.CarbSuggestionReceiver" />
 
         <!-- Auto start -->
         <receiver
@@ -172,25 +167,14 @@
             </intent-filter>
         </service>
         <service
-            android:name=".plugins.general.nsclient.services.NSClientService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
             android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".plugins.general.overview.notifications.DismissNotificationService"
+            android:name="info.nightscout.plugins.general.overview.notifications.DismissNotificationService"
             android:exported="false" />
 
         <service android:name=".plugins.general.persistentNotification.DummyService" />
-
-        <activity
-            android:name=".setupwizard.SetupWizardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_setup_wizard"
-            android:theme="@style/AppTheme" />
 
         <activity
             android:name=".activities.SingleFragmentActivity"
@@ -198,9 +182,6 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".plugins.general.maintenance.activities.LogSettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".plugins.source.activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
         <uses-library

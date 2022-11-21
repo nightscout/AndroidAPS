@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.logging.LTag
-import java.util.*
+import info.nightscout.rx.logging.LTag
+import java.util.Locale
 
 class MsgSettingBasal(
     injector: HasAndroidInjector

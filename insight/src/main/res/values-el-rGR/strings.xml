@@ -11,7 +11,6 @@
     <string name="stop_pump">Διακοπή αντλίας</string>
     <string name="started">Ξεκίνησε</string>
     <string name="stopped">Σταμάτησε</string>
-    <string name="paused">Παύση</string>
     <string name="operating_mode">Κατάσταση λειτουργίας</string>
     <string name="description_pump_insight_local">Ενσωμάτωση αντλίας για αντλίες Accu-Chek Insight</string>
     <string name="not_inserted">Δεν έχει εισαχθεί</string>
@@ -38,7 +37,6 @@
     <string name="short_status_multiwave">Συνδυαστικό: %1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_battery">Μπατ.:%1$d%%</string>
-    <string name="confirm">Επιβεβαίωση</string>
     <string name="mute_alert">Σίγαση</string>
     <string name="release_software_version">Απελευθέρωση έκδοση λογισμικού</string>
     <string name="ui_processor_software_version">Έκδοση λογισμικού επεξεργαστή UI</string>

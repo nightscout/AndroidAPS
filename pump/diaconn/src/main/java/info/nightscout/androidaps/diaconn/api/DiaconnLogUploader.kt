@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.diaconn.api
 
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject

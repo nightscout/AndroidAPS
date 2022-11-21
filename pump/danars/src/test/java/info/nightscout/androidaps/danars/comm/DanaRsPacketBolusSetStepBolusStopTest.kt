@@ -3,8 +3,8 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock

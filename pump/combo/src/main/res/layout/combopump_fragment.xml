@@ -317,7 +317,7 @@
                     android:layout_weight="1.5"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/basebasalrate_label"
+                    android:text="@string/base_basal_rate_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -613,7 +613,7 @@
         android:orientation="horizontal"
         android:paddingEnd="4dp">
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
+        <info.nightscout.core.ui.elements.SingleClickButton
             android:id="@+id/combo_refresh_button"
             style="@style/GrayButton"
             android:layout_width="0dp"

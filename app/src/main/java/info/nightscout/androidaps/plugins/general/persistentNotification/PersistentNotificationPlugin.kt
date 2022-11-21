@@ -7,22 +7,33 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.iob.generateCOBString
+import info.nightscout.core.iob.round
+import info.nightscout.core.profile.toSignedUnitsString
+import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.NotificationHolder
+import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.ui.IconsProvider
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventRefreshOverview
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -184,7 +195,7 @@ class PersistentNotificationPlugin @Inject constructor(
             unreadConversationBuilder.addMessage(line3aa)
             /// End Android Auto
         } else {
-            line1 = rh.gs(R.string.noprofileset)
+            line1 = rh.gs(R.string.no_profile_set)
         }
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)

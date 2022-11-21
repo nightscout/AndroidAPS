@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Numero seriale micro</string>
     <string name="bolus_delivered">%1$.2f U / %2$.2f U erogate</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Mai connesso</string>
-    <string name="pump_status_waking_up">Risveglio</string>
-    <string name="pump_status_error_comm">Errore nella comunicazione</string>
-    <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
-    <string name="pump_status_pump_unreachable">Micro irraggiungibile</string>
-    <string name="pump_status_invalid_config">Configurazione non valida</string>
-    <string name="pump_status_active">Attivo</string>
-    <string name="pump_status_sleeping">In sospensione</string>
     <string name="pump_status_not_initialized">Non inizializzato</string>
     <string name="pump_status_initialized">Inizializzato</string>
     <string name="pump_status_encrypt">Comunicazione crittata</string>

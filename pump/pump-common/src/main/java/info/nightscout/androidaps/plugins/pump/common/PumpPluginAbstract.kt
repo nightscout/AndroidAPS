@@ -6,32 +6,40 @@ import android.content.ServiceConnection
 import android.text.format.DateFormat
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.events.EventCustomActionsChanged
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.interfaces.PumpSync.TemporaryBasalType
-import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.interfaces.ResourceHelper
-import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.pump.PumpPluginBase
+import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventCustomActionsChanged
+import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.json.JSONException
 import org.json.JSONObject
@@ -58,7 +66,7 @@ abstract class PumpPluginAbstract protected constructor(
     var pumpSyncStorage: PumpSyncStorage
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, Constraints, info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator {
 
-    private val disposable = CompositeDisposable()
+    protected val disposable = CompositeDisposable()
 
     // Pump capabilities
     final override var pumpDescription = PumpDescription()

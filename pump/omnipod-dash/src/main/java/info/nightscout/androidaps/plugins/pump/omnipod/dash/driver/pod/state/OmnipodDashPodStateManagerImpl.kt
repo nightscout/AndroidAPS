@@ -2,21 +2,28 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import android.os.SystemClock
 import com.google.gson.Gson
-import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.SoftwareVersion
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
-import info.nightscout.androidaps.utils.Round
-import info.nightscout.shared.logging.AAPSLogger
-import info.nightscout.shared.logging.LTag
+import info.nightscout.interfaces.utils.Round
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -27,7 +34,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.EnumSet
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 

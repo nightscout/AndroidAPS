@@ -13,16 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.*
-import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.shared.logging.LTag
-import java.util.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BasalValuesRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
+import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.logging.LTag
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 
 class DashPodHistoryActivity : NoSplashAppCompatActivity() {

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Basal:</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="insulin_shortname">INS</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <!-- Food-->
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile_shortname">LP</string>
+    <string name="dia_short">DIA</string>
+    <string name="target_short">TARG</string>
+    <string name="basal_short">BAS</string>
+    <!-- BG Quality -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="completed_well_done">훌륭합니다. 완료되었습니다!</string>
+    <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
+    <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
+    <string name="loopenabled">Loop 활성화됨</string>
+    <string name="apsselected">APS 선택됨</string>
+    <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">프로그램 배우기</string>
+    <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
+    <string name="objectives_button_unfinish">완료 초기화</string>
+    <string name="objectives_button_unstart">시작 초기화</string>
+    <!-- Actions -->
+    <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="tools">도구</string>
+    <string name="cannula">캐뉼라</string>
+    <string name="ebstopsloop">확장 Bolus 기능을 사용하는 동안에는 Closed Loop 모드가 중지됩니다. 정말 원하십니까?</string>
+    <string name="extendedbolusdeliveryerror">확장Bolus 주입 에러</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">%2$s로 인해 확장Bolus가 %1$.1f U로 제한됩니다.</string>
+    <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
+    <string name="limitingiob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
+    <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
+    <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
+    <string name="uamdisabledoref1notselected">Oref1 민감도 플러그인이 필요하므로 UAM이 비활성화 되었습니다.</string>
+    <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
+    <string name="closed_loop_disabled_with_eb">확장 Bolus 사용으로 인해 Closed Loop가 비활성화됨</string>
+    <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>
+    <string name="smbnotallowedinopenloopmode">Open Loop모드에선 SMB가 허용되지 않습니다.</string>
+    <string name="maxvalueinpreferences">설정에서의 최대값</string>
+    <string name="hardlimit">하드한계</string>
+    <string name="treatmentssafety_title">관리 안전설정</string>
+    <string name="patient_age_summary">안전 제한 설정을 위해 환자 유형을 선택하십시오.</string>
+    <string name="child">어린이</string>
+    <string name="teenage">청소년</string>
+    <string name="adult">성인</string>
+    <string name="resistantadult">인슐린 저항성 높은 성인</string>
+    <string name="pregnant">임신 중</string>
+    <string name="max_bolus_title">최대 허용 Bolus [U]</string>
+    <string name="max_carbs_title">최대 허용 탄수화물 [g]</string>
+    <string name="patient_type">환자 유형</string>
+    <!-- Overview -->
+    <string name="snooze">스누즈</string>
+    <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
+    <string name="statuslights_iage_warning">인슐린 사용 기간 경고 기준 [h]</string>
+    <string name="statuslights_iage_critical">인슐린 사용 기간 위험 기준 [h]</string>
+    <string name="statuslights_sage_warning">센서 사용 기간 경고 기준 [h]</string>
+    <string name="statuslights_sage_critical">센서 사용 기간 위험 기준 [h]</string>
+    <string name="statuslights_sbat_warning">배터리 잔량 경고 기준 [%]</string>
+    <string name="statuslights_sbat_critical">배터리 잔량 위험 기준 [%]</string>
+    <string name="statuslights_bage_warning">펌프 배터리 사용 기간 경고 기준 [h]</string>
+    <string name="statuslights_bage_critical">펌프 배터리 사용 기간 위험 기준 [h]</string>
+    <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
+    <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
+    <string name="statuslights_bat_warning">펌프 배터리 잔량 경고 기준 [%]</string>
+    <string name="statuslights_bat_critical">펌프 배터리 잔량 위험 기준 [%]</string>
+    <string name="statuslights">상태 등</string>
+    <string name="statuslights_copy_ns">NS에서 설정을 복사해오기</string>
+    <string name="chart_menu">차트 메뉴</string>
+    <string name="apsmode_title">APS 모드</string>
+    <string name="setbasalquestion">새 임시Basal 적용:</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="quickwizard">빠른마법사</string>
+    <!-- NSClient -->
+    <string name="restart">재시작</string>
+    <string name="deliver_now">즉시전송</string>
+    <string name="clear_queue">대기열 지우기</string>
+    <string name="show_queue">대기열 보여주기</string>
+    <string name="queue">대기열:</string>
+    <string name="status">상태:</string>
+    <string name="ns_sync_options">동기화</string>
+    <string name="ns_upload_summary">프로파일, bolus, 탄수화물, 임시 basal이 NS에 업로드 됨</string>
+    <string name="ns_upload">NS에 데이터 업로드하기</string>
+    <string name="ns_receive_profile_store">프로파일 목록 받기</string>
+    <string name="ns_receive_temp_target">임시 목표들 받기</string>
+    <string name="ns_receive_temp_target_summary">NS 또는 NSClient에서 입력한 임시 목표 수락하기</string>
+    <string name="ns_receive_profile_switch">프로파일 변경 받기</string>
+    <string name="ns_receive_profile_switch_summary">NS 또는 NSClient에서 입력한 프로파일 변경 수락하기</string>
+    <string name="ns_receive_offline_event">APS 오프라인 이벤트 받기</string>
+    <string name="ns_receive_offline_event_summary">NS 또는 NSClient에서 입력한 APS 오프라인 이벤트 수락하기</string>
+    <string name="ns_receive_insulin">인슐린 받기</string>
+    <string name="ns_receive_insulin_summary">NS 또는 NSClient에서 입력한 인슐린 수락하기 (주입되지는 않음, IOB에 계산만 됨)</string>
+    <string name="ns_receive_carbs">탄수화물 받기</string>
+    <string name="ns_receive_carbs_summary">NS 또는 NSClient에서 입력한 탄수화물 수락하기</string>
+    <string name="ns_receive_therapy_events">처치 이벤트 받기</string>
+    <string name="ns_receive_therapy_events_summary">NS 또는 NSClient에서 입력한 처치 이벤트 (캐뉼라, 인슐린, 배터리 교체 등) 수락하기</string>
+    <string name="ns_receive_cgm">CGM 데이터 받기/다시 채우기</string>
+    <string name="ns_receive_cgm_summary">NS로부터 CGM 데이터 수락하기</string>
+    <string name="ns_alarms">NS 알람에서 알림 만들기</string>
+    <string name="ns_announcements">NS 안내에서 알림 만들기</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>
+    <string name="title_tidepool_username">로그인 사용자명</string>
+    <string name="summary_tidepool_password">Tidepool 로그인 비밀번호</string>
+    <string name="title_tidepool_password">로그인 비밀번호</string>
+    <string name="title_tidepool_test_login">Tidepool 로그인 테스트하기</string>
+    <string name="summary_tidepool_dev_servers">활성화하면 업로드 정보가 https://app.tidepool.org/이 아닌 https://int-app.tidepool.org/로 전송됩니다.</string>
+    <string name="title_tidepool_dev_servers">테스트 서버 사용</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">데이터를 Tidepool로 업로드</string>
+    <string name="tidepool_upload_cgm">CGM 데이터 업로드</string>
+    <string name="tidepool_upload_bolus">관리정보(인슐린, 탄수화물) 업로드</string>
+    <string name="tidepool_upload_tbr">임시 Basal 업로드</string>
+    <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
+    <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
+    <string name="upload_now">지금 업로드하기</string>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
+    <string name="virtualpump_settings">가상펌프 설정</string>
+    <string name="virtualpump_uploadstatus_title">NS에 상태 업로드하기</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
+    <string name="eversense">Eversense 앱(패치버전)</string>
+    <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
+    <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
+    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
+    <string name="bgsource_upload">혈당 업로드 설정</string>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="ns_create_announcements_from_errors_title">에러 발생시 알림 생성</string>
+    <string name="ns_create_announcements_from_carbs_req_title">\"필요 탄수화물 경고\"에서 알림 만들기</string>
+    <string name="ns_create_announcements_from_errors_summary">에러 발생에 대한 Nightscout 알림과 자체 경고를 생성합니다. (케어포털 관리에서도 표시됩니다.)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">\"필요한 탄수화물 경고\"를 위해 Nightscout 알림 만들기</string>
+    <string name="description_ns_client">Nightscout과 데이터 동기화하기</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <!-- Skins -->
+    <string name="classic_description">기본 스킨</string>
+    <string name="lowres_description">저해상도 스킨</string>
+    <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
+    <string name="largedisplay_description">큰 화면</string>
+    <string name="skin">스킨</string>
+    <!--    Loop -->
+</resources>

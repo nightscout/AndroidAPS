@@ -6,9 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsBolusCarbsFragment
 import info.nightscout.ui.activities.fragments.TreatmentsCareportalFragment
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class TreatmentsActivity : NoSplashAppCompatActivity() {
 
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var activePlugin: ActivePlugin
 
     private lateinit var binding: TreatmentsFragmentBinding

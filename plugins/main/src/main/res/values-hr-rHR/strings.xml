@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_temptarget_with_code">Za postavljanje privremenog cilja %1$s odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Da biste otkazali Temp Target, odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Da biste onemogućili uslugu SMS Remote Service, odgovorite s kodom %1$s.\n\nImajte na umu da ćete je moći ponovno aktivirati samo s AAPS glavnog pametnog telefona.</string>
+    <string name="smscommunicator_stopped_sms">Usluga SMS Remote Service zaustavljena. Za ponovno aktiviranje upotrijebite AAPS na glavnom pametnom telefonu.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Za slanje kalibracije %1$.2f odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolus nije uspio</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Najmanji broj minuta koji mora proći između jednog daljinskog bolusa i sljedećeg</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Koliko minuta mora proći najmanje između dva bolusa</string>
+    <string name="smscommunicator_remote_bolus_min_distance_caveat">Radi vaše sigurnosti, za uređivanje ove postavke morate dodati najmanje 2 telefonska broja.</string>
+    <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U uspješno isporučen</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bolus za obrok %1$.2f U uspješno isporučen</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Ciljajte %1$s na %2$d minute</string>
+    <string name="smscommunicator_remote_commands_allowed">Dopusti daljinske naredbe putem SMS-a</string>
+    <string name="smscommunicator_loop_has_been_disabled">Petlja je onemogućena</string>
+    <string name="smscommunicator_loop_has_been_enabled">Petlja je omogućena</string>
+    <string name="smscommunicator_loop_is_enabled">Petlja je omogućena</string>
+    <string name="smscommunicator_pump_connect_with_code">Za povezivanje pumpe odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Povezivanje s pumpom nije uspjelo</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Za odspajanje pumpe na %1$d minute odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
+    <string name="smscommunicator_remote_command_not_allowed">Daljinska naredba nije dopuštena</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Daljinski bolus nije dostupan. Pokušajte ponovno kasnije.</string>
+    <string name="smscommunicator_basal_reply_with_code">Za početak bazalnog %1$.2f U/h za %2$d min odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Za promjenu profila na %1$s %2$d%% odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Za početak produženog bolusa %1$.2f U za %2$d min odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Za unos %1$dg na %2$s odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Za početak bazalnog %1$d%% za %2$d min odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Da biste obustavili petlju na %1$d minute, odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Za nastavak petlje odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Da biste omogućili petlju odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Za onemogućavanje petlje odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_tempbasal_set">Temp bazal %1$.2fU/h za %2$d min uspješno je započeo</string>
+    <string name="smscommunicator_extended_set">Produženi bolus %1$.2fU za %2$d min uspješno je započeo</string>
+    <string name="smscommunicator_carbs_set">Ugljikohidrati %1$d g uspješno uneseni</string>
+    <string name="smscommunicator_carbs_failed">Unos %1$dg ugljikohidrata nije uspio</string>
+    <string name="smscommunicator_tempbasal_set_percent">Temp bazal %1$d%% za %2$d min uspješno je započeo</string>
+    <string name="smscommunicator_tempbasal_failed">Temp bazalni početak nije uspio</string>
+    <string name="smscommunicator_extended_failed">Početak produženog bolusa nije uspio</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Za zaustavljanje privremenog bazalnog odgovora s kodom %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Za zaustavljanje produljenog bolusa odgovorite kodom %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Temp bazal je otkazan</string>
+    <string name="smscommunicator_extended_canceled">Produženi bolus otkazan</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Otkazivanje privremenog bazala nije uspjelo</string>
+    <string name="smscommunicator_extended_cancel_failed">Otkazivanje produženog bolusa nije uspjelo</string>
+    <string name="smscommunicator_unknown_command">Nepoznata naredba ili pogrešan odgovor</string>
+    <string name="smscommunicator_wrong_duration">Pogrešno trajanje</string>
+    <string name="smscommunicator_loop_suspended">Petlja suspendirana</string>
+    <string name="sms_delta">Delta:</string>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Unaprijed podešen predložak za inzulin Humalog i NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Unaprijed podešen predložak za inzulin Fiasp</string>
+    <string name="description_insulin_lyumjev">Unaprijed podešen predložak za inzulin Lyumjev</string>
+    <string name="description_insulin_free_peak">Omogućuje definiranje vrhunca aktivnosti inzulina i trebaju ga koristiti samo napredni korisnici</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Vršno vrijeme IOB krivulje</string>
+    <string name="insulin_peak_time">Špica [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short">DIA od %1$f prekratak - umjesto njega koristite %2$f!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+    <!-- xDrip status line -->
+    <!-- StatusLine -->
+    <string name="xdrip_status_shortname">xds</string>
+    <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
+    <string name="disabled_loop">Petlja onemogućena</string>
+    <string name="xdrip_status_show_bgi_title">Prikaži BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Dodajte BGI u redak statusa</string>
+    <string name="xdrip_status_settings">xDrip+ status (sat)</string>
+    <!-- Food-->
+    <string name="food_short">Hrana</string>
+    <string name="filter">Filter</string>
+    <string name="food">Hrana</string>
+    <string name="category">Kategorija</string>
+    <string name="subcategory">Podkategorija</string>
+    <string name="calculator_label">Kalkulator</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Odaberite tamno, svijetlo ili slijedite temu sustava</string>
+    <string name="app_color_scheme">Shema boja aplikacije</string>
+    <string name="dark_theme">Tamna tema</string>
+    <string name="light_theme">Svijetla tema</string>
+    <string name="follow_system_theme">Koristite temu uređaja</string>
+    <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="localprofile_shortname">LP</string>
+    <string name="a11y_add_new_to_list">dodaj novi na popis</string>
+    <string name="do_you_want_switch_profile">Želite li promijeniti profil i odbaciti promjene napravljene na trenutnom profilu?</string>
+    <string name="save_or_reset_changes_first">Prvo spremite ili poništite trenutne promjene</string>
+    <string name="delete_current_profile">Izbrisati trenutni profil?</string>
+    <string name="units_colon">Jedinice:</string>
+    <string name="missing_profile_name">Nedostaje naziv profila</string>
+    <string name="error_in_ic_values">Pogreška u IC vrijednostima</string>
+    <string name="error_in_basal_values">Pogreška u bazalnim vrijednostima</string>
+    <string name="error_in_target_values">Pogreška u ciljanim vrijednostima</string>
+    <string name="error_in_isf_values">Pogreška u ISF vrijednostima</string>
+    <string name="profile_name_contains_dot">Naziv profila sadrži točke.\nNS to ne podržava.\nProfil nije učitan u NS.</string>
+    <string name="invalid_profile_not_accepted">Nevažeći profil %1$s nije prihvaćen od NS-a</string>
+    <string name="view">Pogled</string>
+    <string name="errors">Greške</string>
+    <string name="select_profile">Odaberite profil za uređivanje</string>
+    <string name="profile_name">Ime profila:</string>
+    <string name="a11y_add_new_profile">dodaj novi profil</string>
+    <string name="a11y_clone_profile">klonirajte trenutni profil</string>
+    <string name="a11y_delete_current_profile">brisanje trenutnog profila</string>
+    <string name="dia_short">DIA</string>
+    <string name="target_short">CILJ</string>
+    <string name="basal_short">BAZAL</string>
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Korišteni preračunati podaci</string>
+    <string name="bg_too_close">BG preblizu:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">preračunato</string>
+    <string name="a11y_bg_quality_doubles">dvostruki unosi</string>
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Promjena računanja vremena za 24 sata ili manje</string>
+    <string name="dst_loop_disabled_warning">Promjena računanja vremena prije manje od 3 sata - zatvorena petlja onemogućena</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Oslobodite najmanje %1$d MB iz interne pohrane! Petlja onemogućena!</string>
+    <!-- Signature verifier -->
+    <!-- Version Checker -->
+    <string name="old_version">stara verzija</string>
+    <string name="very_old_version">vrlo stara verzija</string>
+    <string name="application_expired">Aplikacija je istekla</string>
+    <string name="new_version_warning">Nova verzija dostupna najmanje %1$d dana! Vraćanje na LGS nakon %2$d dana, petlja će biti onemogućena nakon %3$d dana</string>
+    <!-- PhoneChecker -->
+    <!-- Objectives -->
+    <string name="not_completed_yet">Nije još dovršeno</string>
+    <string name="time_elapsed">Prošlo vrijeme</string>
+    <string name="description_objectives">Program učenja</string>
+    <!-- Actions -->
+    <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
+    <!-- Safety -->
+    <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
+    <string name="max_bolus_title">Max dozvoljen bolus [U]</string>
+    <string name="max_carbs_title">Max dozvoljeni Uh [g]</string>
+    <!-- Overview -->
+    <!-- NSClient -->
+    <string name="ns_upload_summary">Profili, bolusi, ugljikohidrati, privremeni bazali učitavaju se u NS</string>
+    <string name="ns_upload">Upload podataka u NS</string>
+    <string name="ns_receive_profile_store">Primite pohranu profila</string>
+    <string name="ns_receive_profile_store_summary">Sinkronizirajte profile iz NS uređivača profila</string>
+    <string name="ns_receive_temp_target">Primanje privremenih ciljeva</string>
+    <string name="ns_receive_temp_target_summary">Prihvatite privremene ciljeve unesene putem NS ili NSClient</string>
+    <string name="ns_receive_profile_switch">Primite promjene profila</string>
+    <string name="ns_receive_profile_switch_summary">Prihvatite promjene profila unesene putem NS ili NSClient</string>
+    <string name="ns_receive_offline_event">Primajte izvanmrežne APS događaje</string>
+    <string name="ns_receive_offline_event_summary">Prihvatite APS Offline događaje unesene putem NS ili NSClient</string>
+    <string name="ns_receive_tbr_eb">Primi TBR i EB</string>
+    <string name="ns_receive_tbr_eb_summary">Prihvatite TBR i EB unesene kroz drugu instancu</string>
+    <string name="ns_receive_insulin">Primiti inzulin</string>
+    <string name="ns_receive_insulin_summary">Prihvatite inzulin unesen putem NS ili NSClijenta (ne isporučuje se, samo se obračunava prema IOB-u)</string>
+    <string name="ns_receive_carbs">Primajte ugljikohidrate</string>
+    <string name="ns_receive_carbs_summary">Prihvatite ugljikohidrate unesene putem NS ili NSClijenta</string>
+    <string name="ns_receive_therapy_events">Primajte terapijske događaje</string>
+    <string name="ns_receive_therapy_events_summary">Prihvati terapijske događaje (kanila, inzulin, promjena baterije itd.) unesene putem NS ili NSClijenta</string>
+    <string name="ns_receive_cgm">Primanje/ispunjavanje CGM podataka</string>
+    <string name="ns_receive_cgm_summary">Prihvati CGM podatke iz NS-a</string>
+    <string name="run_question">Pokrenuti %s?</string>
+    <string name="ns_sync_slow">Usporite prijenose</string>
+    <string name="ns_alarm_options">Mogućnosti alarma</string>
+    <string name="ns_alarms">Kreirajte obavijesti iz NS alarma</string>
+    <string name="ns_announcements">Kreirajte obavijesti iz NS najava</string>
+    <string name="ns_alarm_stale_data_value_label">Prag zastarjelih podataka [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Hitan prag zastarjelih podataka [min]</string>
+    <string name="ns_log_app_started_event">Prijavite pokretanje aplikacije u NS</string>
+    <string name="ns_local_broadcasts_title">Omogući lokalne emisije.</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Vaše korisničko ime za prijavu na Tidepool, obično vaša adresa e-pošte</string>
+    <string name="title_tidepool_username">Korisničko ime za prijavu</string>
+    <string name="summary_tidepool_password">Vaša lozinka za prijavu na Tidepool</string>
+    <string name="title_tidepool_password">Vaša lozinka za prijavu</string>
+    <string name="title_tidepool_test_login">Testirajte Tidepool prijavu</string>
+    <string name="summary_tidepool_dev_servers">Ako je omogućeno, prijenosi će ići na https://int-app.tidepool.org umjesto na uobičajeni https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Koristite integracijske (testne) poslužitelje</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Učitava podatke u Tidepool</string>
+    <string name="tidepool_upload_cgm">Učitajte CGM podatke</string>
+    <string name="tidepool_upload_bolus">Prijenos tretmana (inzulin, ugljikohidrati)</string>
+    <string name="tidepool_upload_tbr">Učitajte privremene bazale</string>
+    <string name="tidepool_upload_profile">Učitajte prekidače profila, privremene ciljeve</string>
+    <string name="tidepool_upload_bg">Učitajte testove glukoze u krvi</string>
+    <string name="remove_all">Ukloniti sve</string>
+    <string name="reset_start">Poništi početak</string>
+    <string name="upload_now">Pošalji sada</string>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Vrsta virtualne pumpe</string>
+    <string name="virtual_pump_definition">Definicija pumpe</string>
+    <string name="virtual_pump_pump_def">Bolus: korak=%1$s\nProduženi bolus: [korak=%2$s, trajanje=%3$smin-%4$sh]\nBazal: korak=%5$s\nTBR: %6$s (do %7$s), Trajanje=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
+    <string name="virtualpump_settings">Postavke virtualne pumpe</string>
+    <string name="virtualpump_uploadstatus_title">Prijenos statusa u NS</string>
+    <!-- Source -->
+    <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
+    <string name="description_source_xdrip">Preuzima podatke o GUK-a s xDrip+.</string>
+    <string name="description_source_eversense">Primajte vrijednosti GUK-a iz zakrpane aplikacije Eversense.</string>
+    <string name="description_source_glimp">Primajte vrijednosti GUK-a od Glimpa.</string>
+    <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Primite vrijednosti GK od GlucoRx Aidex CGMS.</string>
+    <!-- NSClient -->
+    <string name="ns_cellular">Koristite mobilnu vezu</string>
+    <string name="ns_wifi">Koristite WiFi vezu</string>
+    <string name="ns_charging">Tijekom punjenja</string>
+    <string name="ns_battery">Na bateriji</string>
+    <string name="description_ns_client">Sinkroniziraj svoje podatke sa Nightscout</string>
+    <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
+    <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
+    <!-- Skins -->
+    <!--    Loop -->
+</resources>

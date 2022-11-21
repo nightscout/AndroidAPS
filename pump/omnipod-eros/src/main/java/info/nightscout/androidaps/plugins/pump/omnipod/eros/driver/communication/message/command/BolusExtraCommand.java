@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
+import info.nightscout.pump.core.utils.ByteUtil;
 
 public class BolusExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;
