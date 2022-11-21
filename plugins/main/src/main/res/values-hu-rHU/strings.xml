@@ -26,7 +26,7 @@
     <string name="adult">Felnőtt</string>
     <string name="resistantadult">Inzulinrezisztens felnőtt</string>
     <string name="pregnant">Várandós</string>
-    <string name="patientage">Betegkategória</string>
+    <string name="patient_type">Betegkategória</string>
     <!-- Overview -->
     <string name="snooze">Szundi</string>
     <string name="overview_cgm">CGM</string>

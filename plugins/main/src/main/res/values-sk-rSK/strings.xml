@@ -116,15 +116,15 @@
     <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
     <string name="hardlimit">pevný limit</string>
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
-    <string name="patientage_summary">Prosím vyberte typ pacienta pre nastavenie bezpečnostných limitov</string>
+    <string name="patient_age_summary">Prosím vyberte typ pacienta pre nastavenie bezpečnostných limitov</string>
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
     <string name="adult">Dospelý</string>
     <string name="resistantadult">Dospelý s nízkou citlivosťou</string>
     <string name="pregnant">Tehotenstvo</string>
-    <string name="treatmentssafety_maxbolus_title">Maximálny povolený bolus [JI]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max. povolené množstvo sacharidov [g]</string>
-    <string name="patientage">Typ pacienta</string>
+    <string name="max_bolus_title">Maximálny povolený bolus [JI]</string>
+    <string name="max_carbs_title">Max. povolené množstvo sacharidov [g]</string>
+    <string name="patient_type">Typ pacienta</string>
     <!-- Overview -->
     <string name="copy_existing_values">Skopírovať nastavenia NS (ak existujú)?</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>

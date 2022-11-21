@@ -29,7 +29,7 @@
     <string name="child">Páiste</string>
     <string name="teenage">Déagóirí</string>
     <string name="adult">Duine fásta</string>
-    <string name="patientage">Othar cineál</string>
+    <string name="patient_type">Othar cineál</string>
     <!-- Overview -->
     <string name="apsmode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>

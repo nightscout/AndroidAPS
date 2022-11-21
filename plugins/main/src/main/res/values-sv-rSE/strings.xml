@@ -62,15 +62,15 @@
     <string name="maxvalueinpreferences">maxvärde i Inställningar</string>
     <string name="hardlimit">hård begränsning</string>
     <string name="treatmentssafety_title">Säkerhetsbegränsningar</string>
-    <string name="patientage_summary">Välj en patienttyp för att ställa in säkerhetsgränser</string>
+    <string name="patient_age_summary">Välj en patienttyp för att ställa in säkerhetsgränser</string>
     <string name="child">Barn</string>
     <string name="teenage">Tonåring</string>
     <string name="adult">Vuxen</string>
     <string name="resistantadult">Insulinresistent vuxen</string>
     <string name="pregnant">Gravid</string>
-    <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH [g]</string>
-    <string name="patientage">Patienttyp</string>
+    <string name="max_bolus_title">Max tillåten bolus [U]</string>
+    <string name="max_carbs_title">Max tillåtna KH [g]</string>
+    <string name="patient_type">Patienttyp</string>
     <!-- Overview -->
     <string name="snooze">Snooze</string>
     <string name="show_statuslights">Visa \"statuslampor\" på hemskärmen</string>

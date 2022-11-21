@@ -190,7 +190,7 @@ class ConfigBuilderPlugin @Inject constructor(
         logPluginStatus()
     }
 
-    fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
+    override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
             PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_i_understand" translatable="false">I_understand</string>
+
+    <string name="units">Units</string>
+    <string name="setupwizard_units_prompt">Select units you want to display values in</string>
+    <string name="title_activity_setup_wizard" translatable="false">SetupWizardActivity</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Prev</string>
+    <string name="nav_setupwizard">Setup Wizard</string>
+    <string name="setupwizard_finish">FINISH</string>
+    <string name="welcometosetupwizard">Welcome to setup wizard. It will guide you through the setup process\n</string>
+    <string name="end_user_license_agreement">End User License Agreement</string>
+    <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
+    <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
+    <string name="display_settings">Display Settings</string>
+    <string name="low_mark">LOW mark</string>
+    <string name="high_mark">HIGH mark</string>
+    <string name="low_mark_comment">Lower value of in range area (display only)</string>
+    <string name="high_mark_comment">Higher value of in range area (display only)</string>
+    <string name="permission">Permission</string>
+    <string name="need_system_window_permission">Application needs system window permission for notifications</string>
+    <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
+    <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
+    <string name="askforpermission">Ask for permission</string>
+    <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
+    <string name="import_setting">Import settings</string>
+    <string name="storedsettingsfound">Stored settings found</string>
+    <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
+    <string name="current_master_password">Current master password</string>
+    <string name="common_values">Use values of your largest food you usually eat\n</string>
+    <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set it up.</string>
+    <string name="status">Status:</string>
+    <string name="patient_name">Patient name</string>
+    <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
+    <string name="privacy_settings">Privacy setting</string>
+    <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
+    <string name="diawarning">Please remember: new insulin profiles require DIA at least 5h. DIA 5–6h on new profile is equal to DIA 3h on old insulin profiles.</string>
+    <string name="profile">Profile</string>
+    <string name="doprofileswitch">Do Profile Switch</string>
+    <string name="exitwizard">Skip setup wizard</string>
+    <string name="setupwizard_loop_description">Press the button below to enable AAPS to suggest/make basal changes</string>
+    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
+    <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
+    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
+    <string name="startobjective">Start your first objective</string>
+    <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
+    <string name="readstatus">Read status</string>
+    <string name="data_choices">Data Choices</string>
+    <string name="fabric_upload">Fabric Upload</string>
+    <string name="allow_automated_crash_reporting">Allow automated crash reporting and feature usage data to be sent to the developers via the fabric.io service.</string>
+    <string name="summary_email_for_crash_report">This identification will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
+    <string name="identification">Identification (email, FB or Discord nick etc)</string>
+
+    <string name="configbuilder_pump">Pump</string>
+    <string name="configbuilder_pump_description">Which pump would you like to use with AAPS?</string>
+    <string name="configbuilder_profile">Profile</string>
+    <string name="configbuilder_profile_description">Which profile should AAPS use?</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps_description">Which APS algorithm should make therapy adjustments?</string>
+    <string name="configbuilder_general">General</string>
+    <string name="configbuilder_general_description">These are some general plugins you might find useful.</string>
+    <string name="configbuilder_sync">Synchronization</string>
+    <string name="configbuilder_sync_description">Data upload and synchronization plugins.</string>
+    <string name="configbuilder_constraints_description">Which constraints are applied?</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Use this to activate AAPS\' loop integration.</string>
+    <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
+    <string name="configbuilder_bgsource">BG Source</string>
+    <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
+    <string name="apsmode_title">APS Mode</string>
+    <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
+    <string name="configbuilder_sensitivity">Sensitivity detection</string>
+    <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
+
+</resources>

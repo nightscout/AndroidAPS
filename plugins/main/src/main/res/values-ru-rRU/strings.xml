@@ -79,15 +79,15 @@
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>
-    <string name="patientage_summary">Выберите возраст пациента для установки ограничителей безопасности</string>
+    <string name="patient_age_summary">Выберите возраст пациента для установки ограничителей безопасности</string>
     <string name="child">Ребенок</string>
     <string name="teenage">Подросток</string>
     <string name="adult">Взрослый</string>
     <string name="resistantadult">Инсулинорезистентный взрослый</string>
     <string name="pregnant">Беременность</string>
-    <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Макс разрешенные углеводы [g]</string>
-    <string name="patientage">Тип пациента</string>
+    <string name="max_bolus_title">Макс разрешенный болюс [U]</string>
+    <string name="max_carbs_title">Макс разрешенные углеводы [g]</string>
+    <string name="patient_type">Тип пациента</string>
     <!-- Overview -->
     <string name="snooze">Отложить</string>
     <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>

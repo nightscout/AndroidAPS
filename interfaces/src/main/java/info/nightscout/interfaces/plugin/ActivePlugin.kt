@@ -105,4 +105,9 @@ interface ActivePlugin {
      *  Pre-process all plugin types and validate active plugins (ie. only only one plugin for type is selected)
      */
     fun verifySelectionInCategories()
+
+    /**
+     *  List of all plugins of type
+     */
+    fun getSpecificPluginsList(type: PluginType): ArrayList<PluginBase>
 }

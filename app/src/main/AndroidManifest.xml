@@ -177,13 +177,6 @@
         <service android:name=".plugins.general.persistentNotification.DummyService" />
 
         <activity
-            android:name=".setupwizard.SetupWizardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_setup_wizard"
-            android:theme="@style/AppTheme" />
-
-        <activity
             android:name=".activities.SingleFragmentActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />

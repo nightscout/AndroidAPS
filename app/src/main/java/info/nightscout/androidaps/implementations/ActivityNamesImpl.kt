@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
+import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.interfaces.ui.ActivityNames
@@ -32,6 +33,7 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
     override val errorHelperActivity: Class<*> = ErrorHelperActivity::class.java
     override val bolusProgressHelperActivity: Class<*> = BolusProgressHelperActivity::class.java
     override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
+    override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
 
     override fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(ctx, errorHelperActivity)

@@ -98,6 +98,10 @@
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
+    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="key_patient_name" translatable="false">patient_name</string>
+    <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
+
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -679,6 +683,18 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s to %2$s</string>
     <string name="wizard_pump_not_available">No pump available!</string>
+
+
+    <!--    Preferences-->
+    <string name="child">Child</string>
+    <string name="teenage">Teenage</string>
+    <string name="adult">Adult</string>
+    <string name="resistant_adult">Insulin resistant adult</string>
+    <string name="pregnant">Pregnancy</string>
+    <string name="patient_age_summary">Please select patient type to setup safety limits</string>
+    <string name="max_bolus_title">Max allowed bolus [U]</string>
+    <string name="max_carbs_title">Max allowed carbs [g]</string>
+    <string name="patient_type">Patient type</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

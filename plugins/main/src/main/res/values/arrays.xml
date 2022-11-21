@@ -44,30 +44,4 @@
         <item>YpsoPump</item>
     </string-array>
 
-    <string-array name="ageArray">
-        <item>@string/child</item>
-        <item>@string/teenage</item>
-        <item>@string/adult</item>
-        <item>@string/resistantadult</item>
-        <item>@string/pregnant</item>
-    </string-array>
-    <string-array name="ageValues" translatable="false">
-        <item>@string/key_child</item>
-        <item>@string/key_teenage</item>
-        <item>@string/key_adult</item>
-        <item>@string/key_resistantadult</item>
-        <item>@string/key_pregnant</item>
-    </string-array>
-
-    <string-array name="aps_modeArray">
-        <item>@string/closedloop</item>
-        <item>@string/openloop</item>
-        <item>@string/lowglucosesuspend</item>
-    </string-array>
-    <string-array name="aps_modeValues" translatable="false">
-        <item>closed</item>
-        <item>open</item>
-        <item>lgs</item>
-    </string-array>
-
 </resources>

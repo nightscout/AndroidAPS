@@ -54,15 +54,15 @@
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="hardlimit">limită fizică</string>
     <string name="treatmentssafety_title">Setări siguranță tratament</string>
-    <string name="patientage_summary">Te rog confirmă tipul de pacient pentru a stabilii limitele de siguranță</string>
+    <string name="patient_age_summary">Te rog confirmă tipul de pacient pentru a stabilii limitele de siguranță</string>
     <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
     <string name="resistantadult">Adult rezistent la insulină</string>
     <string name="pregnant">Sarcină</string>
-    <string name="treatmentssafety_maxbolus_title">Bolus maxim admis [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Carbohidrați admiși maxim [g]</string>
-    <string name="patientage">Tip de pacient</string>
+    <string name="max_bolus_title">Bolus maxim admis [U]</string>
+    <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
+    <string name="patient_type">Tip de pacient</string>
     <!-- Overview -->
     <string name="snooze">Amână</string>
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>

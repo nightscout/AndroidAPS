@@ -59,15 +59,15 @@
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
     <string name="treatmentssafety_title">관리 안전설정</string>
-    <string name="patientage_summary">안전 제한 설정을 위해 환자 유형을 선택하십시오.</string>
+    <string name="patient_age_summary">안전 제한 설정을 위해 환자 유형을 선택하십시오.</string>
     <string name="child">어린이</string>
     <string name="teenage">청소년</string>
     <string name="adult">성인</string>
     <string name="resistantadult">인슐린 저항성 높은 성인</string>
     <string name="pregnant">임신 중</string>
-    <string name="treatmentssafety_maxbolus_title">최대 허용 Bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">최대 허용 탄수화물 [g]</string>
-    <string name="patientage">환자 유형</string>
+    <string name="max_bolus_title">최대 허용 Bolus [U]</string>
+    <string name="max_carbs_title">최대 허용 탄수화물 [g]</string>
+    <string name="patient_type">환자 유형</string>
     <!-- Overview -->
     <string name="snooze">스누즈</string>
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>

@@ -52,15 +52,15 @@
     <string name="maxvalueinpreferences">макс. стойност в настройките</string>
     <string name="hardlimit">твърд лимит</string>
     <string name="treatmentssafety_title">Настройки на сигурността</string>
-    <string name="patientage_summary">Моля, изберете тип на пациента за настройка на границите за безопастност</string>
+    <string name="patient_age_summary">Моля, изберете тип на пациента за настройка на границите за безопастност</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
     <string name="adult">Възрастен</string>
     <string name="resistantadult">Възрастни с голяма инсулинова резистентност</string>
     <string name="pregnant">Бременност</string>
-    <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
-    <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
-    <string name="patientage">Тип пациент</string>
+    <string name="max_bolus_title">Максимален инсулин при болус [единици]</string>
+    <string name="max_carbs_title">Максимални въглехидрати [гр]</string>
+    <string name="patient_type">Тип пациент</string>
     <!-- Overview -->
     <string name="snooze">Отложи</string>
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>

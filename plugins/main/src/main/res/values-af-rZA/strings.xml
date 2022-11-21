@@ -51,8 +51,8 @@
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
     <string name="resistantadult">Insulien weerstandige volwasse</string>
-    <string name="treatmentssafety_maxbolus_title">Maks toelaatbare Bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maks Toelaatbare karbs [g]</string>
+    <string name="max_bolus_title">Maks toelaatbare Bolus [U]</string>
+    <string name="max_carbs_title">Maks Toelaatbare karbs [g]</string>
     <!-- Overview -->
     <string name="snooze">Sluimer</string>
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>

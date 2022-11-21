@@ -136,8 +136,8 @@
     <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
     <!-- Safety -->
     <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
-    <string name="treatmentssafety_maxbolus_title">Max dozvoljen bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max dozvoljeni Uh [g]</string>
+    <string name="max_bolus_title">Max dozvoljen bolus [U]</string>
+    <string name="max_carbs_title">Max dozvoljeni Uh [g]</string>
     <!-- Overview -->
     <!-- NSClient -->
     <string name="ns_upload_summary">Profili, bolusi, ugljikohidrati, privremeni bazali učitavaju se u NS</string>

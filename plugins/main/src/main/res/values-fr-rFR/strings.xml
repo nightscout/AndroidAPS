@@ -240,15 +240,15 @@
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
     <string name="hardlimit">limite fixée</string>
     <string name="treatmentssafety_title">Traitements de sécurité</string>
-    <string name="patientage_summary">Veuillez sélectionner le type de patient pour définir les limites de sécurité</string>
+    <string name="patient_age_summary">Veuillez sélectionner le type de patient pour définir les limites de sécurité</string>
     <string name="child"> Enfant</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adulte</string>
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
     <string name="pregnant">Grossesse</string>
-    <string name="treatmentssafety_maxbolus_title">Maximum Bolus autorisé [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maximum de Glucides autorisé [g]</string>
-    <string name="patientage">Type de patient</string>
+    <string name="max_bolus_title">Maximum Bolus autorisé [U]</string>
+    <string name="max_carbs_title">Maximum de Glucides autorisé [g]</string>
+    <string name="patient_type">Type de patient</string>
     <!-- Overview -->
     <string name="snooze">Masquer</string>
     <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>

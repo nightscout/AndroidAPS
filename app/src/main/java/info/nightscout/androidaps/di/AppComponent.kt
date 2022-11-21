@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
+import info.nightscout.configuration.di.ConfigurationModule
 import info.nightscout.core.di.CoreModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
@@ -42,22 +43,22 @@ import javax.inject.Singleton
         FragmentsModule::class,
         ReceiversModule::class,
         ServicesModule::class,
-        WizardModule::class,
-        ApsModule::class,
         WorkflowModule::class,
         OverviewModule::class,
         WorkersModule::class,
 
         // Gradle modules
         AutomationModule::class,
+        ApsModule::class,
+        ConfigurationModule::class,
         CoreModule::class,
         DatabaseModule::class,
         ImplementationModule::class,
+        OpenHumansModule::class,
         PluginsModule::class,
         RxModule::class,
         SharedModule::class,
         SharedImplModule::class,
-        OpenHumansModule::class,
         UiModule::class,
 
         // pumps

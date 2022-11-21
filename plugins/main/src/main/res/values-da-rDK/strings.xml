@@ -63,15 +63,15 @@
     <string name="maxvalueinpreferences">max værdi i præferencer</string>
     <string name="hardlimit">hård grænse</string>
     <string name="treatmentssafety_title">Behandlings sikkerhed</string>
-    <string name="patientage_summary">Vælg venligst patienttype til opsætning af sikkerhedsgrænser</string>
+    <string name="patient_age_summary">Vælg venligst patienttype til opsætning af sikkerhedsgrænser</string>
     <string name="child">Barn</string>
     <string name="teenage">Teeanger</string>
     <string name="adult">Voksen</string>
     <string name="resistantadult">Insulinresistent voksen</string>
     <string name="pregnant">Graviditet</string>
-    <string name="treatmentssafety_maxbolus_title">Maks tilladt bolus [IE]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maks tilladte kulhydrater [g]</string>
-    <string name="patientage">Patienttype</string>
+    <string name="max_bolus_title">Maks tilladt bolus [IE]</string>
+    <string name="max_carbs_title">Maks tilladte kulhydrater [g]</string>
+    <string name="patient_type">Patienttype</string>
     <!-- Overview -->
     <string name="snooze">Udsæt</string>
     <string name="show_statuslights">Vis statuslys på startskærm</string>

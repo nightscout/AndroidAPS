@@ -124,15 +124,15 @@
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
     <string name="hardlimit">max limiet (SC)</string>
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
-    <string name="patientage_summary">Selecteer het type patiënt om de veiligheidslimieten in te stellen</string>
+    <string name="patient_age_summary">Selecteer het type patiënt om de veiligheidslimieten in te stellen</string>
     <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
     <string name="resistantadult">insuline resistente volwassene</string>
     <string name="pregnant">Zwangerschap</string>
-    <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
-    <string name="patientage">Type patiënt</string>
+    <string name="max_bolus_title">Max toegestane bolus [E]</string>
+    <string name="max_carbs_title">Max toegestane koolhydraten [g]</string>
+    <string name="patient_type">Type patiënt</string>
     <!-- Overview -->
     <string name="copy_existing_values">NS instellingen kopiëren (indien aanwezig)?</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>

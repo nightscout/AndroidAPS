@@ -46,7 +46,7 @@ class PluginStore @Inject constructor(
         throw IllegalStateException("Default plugin not found")
     }
 
-    fun getSpecificPluginsList(type: PluginType): ArrayList<PluginBase> {
+    override fun getSpecificPluginsList(type: PluginType): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
             if (p.getType() == type) newList.add(p)

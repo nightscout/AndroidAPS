@@ -75,15 +75,15 @@
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <string name="treatmentssafety_title">Terapijos saugumas</string>
-    <string name="patientage_summary">Pasirinkite paciento tipą saugumo riboms nustatyti</string>
+    <string name="patient_age_summary">Pasirinkite paciento tipą saugumo riboms nustatyti</string>
     <string name="child">Vaikas</string>
     <string name="teenage">Paauglys</string>
     <string name="adult">Suaugęs</string>
     <string name="resistantadult">Insulinui rezistentiškas suaugęs</string>
     <string name="pregnant">Nėštumas</string>
-    <string name="treatmentssafety_maxbolus_title">Maksimalus leistinas bolusas [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maks. leistini angliavandeniai [g]</string>
-    <string name="patientage">Paciento tipas</string>
+    <string name="max_bolus_title">Maksimalus leistinas bolusas [U]</string>
+    <string name="max_carbs_title">Maks. leistini angliavandeniai [g]</string>
+    <string name="patient_type">Paciento tipas</string>
     <!-- Overview -->
     <string name="snooze">Snausti</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>

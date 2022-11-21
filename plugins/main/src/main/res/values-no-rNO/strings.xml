@@ -239,15 +239,15 @@
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
     <string name="hardlimit">hard begrensning</string>
     <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
-    <string name="patientage_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
+    <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
     <string name="adult">Voksen</string>
     <string name="resistantadult">Insulinresistent voksen</string>
     <string name="pregnant">Graviditet</string>
-    <string name="treatmentssafety_maxbolus_title">Maks tillat bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maks tillat karbo [g]</string>
-    <string name="patientage">Pasienttype</string>
+    <string name="max_bolus_title">Maks tillat bolus [U]</string>
+    <string name="max_carbs_title">Maks tillat karbo [g]</string>
+    <string name="patient_type">Pasienttype</string>
     <!-- Overview -->
     <string name="snooze">Slumre</string>
     <string name="copy_existing_values">Kopiere NS innstillinger (hvis de eksisterer)?</string>
