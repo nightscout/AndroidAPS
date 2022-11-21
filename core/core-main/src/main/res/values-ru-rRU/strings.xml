@@ -539,6 +539,7 @@
     <string name="wizard_explain_tt">ВремЦ: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s до %2$s</string>
     <string name="wizard_pump_not_available">Нет помпы!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
