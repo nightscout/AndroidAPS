@@ -141,6 +141,7 @@
     <!-- Alerts -->
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d lá</item>
         <item quantity="two">%1$d lá</item>
