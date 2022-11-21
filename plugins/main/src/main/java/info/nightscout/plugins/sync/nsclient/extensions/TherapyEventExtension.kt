@@ -81,11 +81,3 @@ fun TherapyEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (type == TherapyEvent.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
         }
 
-fun List<TherapyEvent>.isTherapyEventEvent5minBack(time: Long): Boolean {
-    for (event in this) {
-        if (event.timestamp <= time && event.timestamp > time - T.mins(5).msecs()) {
-            return true
-        }
-    }
-    return false
-}

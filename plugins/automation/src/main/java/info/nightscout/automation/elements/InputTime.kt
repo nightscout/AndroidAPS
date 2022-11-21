@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.automation.R
-import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -60,7 +60,7 @@ class InputTime(private val rh: ResourceHelper, private val dateUtil: DateUtil) 
 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcPlusMinutes(minutesSinceMidnight)
 
-    private fun getMinSinceMidnight(time: Long): Int = Profile.secondsFromMidnight(time) / 60
+    private fun getMinSinceMidnight(time: Long): Int = MidnightUtils.secondsFromMidnight(time) / 60
 
     private fun getFragmentManager(context: Context?): FragmentManager? {
         return when (context) {

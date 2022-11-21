@@ -15,6 +15,8 @@ files:
     translation: /plugins/automation/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/openhumans/src/main/res/values/strings.xml
     translation: /plugins/openhumans/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/sensitivity/src/main/res/values/strings.xml
+    translation: /plugins/sensitivity/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/configuration/src/main/res/values/strings.xml
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
   - source: /core/core-main/src/main/res/values/protection.xml
@@ -23,8 +25,8 @@ files:
     translation: /core/core-main/src/main/res/values-%android_code%/validator.xml
   - source: /core/core-main/src/main/res/values/strings.xml
     translation: /core/core-main/src/main/res/values-%android_code%/strings.xml
-  - source: /core/fabric/src/main/res/values/strings.xml
-    translation: /core/fabric/src/main/res/values-%android_code%/strings.xml
+  - source: /core/utils/src/main/res/values/strings.xml
+    translation: /core/utils/src/main/res/values-%android_code%/strings.xml
   - source: /core/ui/src/main/res/values/strings.xml
     translation: /core/ui/src/main/res/values-%android_code%/strings.xml
   - source: /app-wear-shared/shared/src/main/res/values/strings.xml

@@ -8,8 +8,8 @@ import info.nightscout.androidaps.extensions.shiftTargetBlock
 import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.secondsFromMidnight
 import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.data.Block
@@ -228,17 +228,17 @@ sealed class ProfileSealed(
     override val percentage: Int
         get() = pct
 
-    override fun getBasal(): Double = basalBlocks.blockValueBySeconds(Profile.secondsFromMidnight(), percentage / 100.0, timeshift)
-    override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(Profile.secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
-    override fun getIc(): Double = icBlocks.blockValueBySeconds(Profile.secondsFromMidnight(), 100.0 / percentage, timeshift)
-    override fun getIc(timestamp: Long): Double = icBlocks.blockValueBySeconds(Profile.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
-    override fun getIsfMgdl(): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(Profile.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
-    override fun getIsfMgdl(timestamp: Long): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(Profile.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
-    override fun getTargetMgdl(): Double = Profile.toMgdl(targetBlocks.targetBlockValueBySeconds(Profile.secondsFromMidnight(), timeshift), units)
-    override fun getTargetLowMgdl(): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(Profile.secondsFromMidnight(), timeshift), units)
-    override fun getTargetLowMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(Profile.secondsFromMidnight(timestamp), timeshift), units)
-    override fun getTargetHighMgdl(): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(Profile.secondsFromMidnight(), timeshift), units)
-    override fun getTargetHighMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(Profile.secondsFromMidnight(timestamp), timeshift), units)
+    override fun getBasal(): Double = basalBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), percentage / 100.0, timeshift)
+    override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
+    override fun getIc(): Double = icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
+    override fun getIc(timestamp: Long): Double = icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
+    override fun getIsfMgdl(): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+    override fun getIsfMgdl(timestamp: Long): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
+    override fun getTargetMgdl(): Double = Profile.toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
+    override fun getTargetLowMgdl(): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
+    override fun getTargetLowMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)
+    override fun getTargetHighMgdl(): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
+    override fun getTargetHighMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)
     override fun getBasalTimeFromMidnight(timeAsSeconds: Int): Double = basalBlocks.blockValueBySeconds(timeAsSeconds, percentage / 100.0, timeshift)
     override fun getIcTimeFromMidnight(timeAsSeconds: Int): Double = icBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift)
     fun getIsfTimeFromMidnight(timeAsSeconds: Int): Double = isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift)

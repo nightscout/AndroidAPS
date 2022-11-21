@@ -30,7 +30,7 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':libraries')
     implementation project(':interfaces')
-    implementation project(':core:fabric')
+    implementation project(':core:utils')
     implementation project(':core:core-main')
 
     api "androidx.room:room-ktx:$room_version"

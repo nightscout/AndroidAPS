@@ -5,24 +5,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import org.joda.time.DateTime
 
-/*
- * Midnight time conversion
- */
-fun Profile.Companion.secondsFromMidnight(): Int {
-    val passed = DateTime().millisOfDay.toLong()
-    return (passed / 1000).toInt()
-}
-
-fun Profile.Companion.secondsFromMidnight(date: Long): Int {
-    val passed = DateTime(date).millisOfDay.toLong()
-    return (passed / 1000).toInt()
-}
-
-fun Profile.Companion.milliSecFromMidnight(date: Long): Long {
-    return DateTime(date).millisOfDay.toLong()
-}
 /*
  * Units conversion
  */

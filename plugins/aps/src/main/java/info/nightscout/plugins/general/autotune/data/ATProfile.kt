@@ -7,7 +7,7 @@ import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.data.Block
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
@@ -65,7 +65,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     val avgIC: Double
         get() = if (profile.getIcsValues().size == 1) profile.getIcsValues().get(0).value else Round.roundTo(averageProfileValue(profile.getIcsValues()), 0.01)
 
-    fun getBasal(timestamp: Long): Double = basal[Profile.secondsFromMidnight(timestamp) / 3600]
+    fun getBasal(timestamp: Long): Double = basal[MidnightUtils.secondsFromMidnight(timestamp) / 3600]
 
     // for localProfilePlugin Synchronisation
     fun basal() = jsonArray(basal)

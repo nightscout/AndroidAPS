@@ -8,6 +8,7 @@ import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.Sensitivity
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.sensitivity.AbstractSensitivityPlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject

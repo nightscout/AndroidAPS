@@ -6,7 +6,7 @@ import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
@@ -39,7 +39,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     // for mock
     @OpenForTesting
     class Time {
-        fun secondsFromMidnight(): Int = Profile.secondsFromMidnight()
+        fun secondsFromMidnight(): Int = MidnightUtils.secondsFromMidnight()
 
     }
     var time = Time()
