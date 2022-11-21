@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.tabs
+package info.nightscout.ui.tabs
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

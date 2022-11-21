@@ -41,7 +41,7 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.tabs.TabPageAdapter
+import info.nightscout.ui.tabs.TabPageAdapter
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
