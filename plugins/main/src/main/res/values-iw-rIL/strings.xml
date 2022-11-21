@@ -55,15 +55,6 @@
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
-    <string name="patientage_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
-    <string name="child">ילד\\ה</string>
-    <string name="teenage">מתבגר\\ת</string>
-    <string name="adult">מבוגר\\ת</string>
-    <string name="resistantadult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
-    <string name="pregnant">הריון</string>
-    <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [g]</string>
-    <string name="patientage">סוג המטופל\\ת</string>
     <!-- Overview -->
     <string name="snooze">נודניק</string>
     <string name="show_statuslights">הצגת אורות חיווי במסך הבית</string>
@@ -193,4 +184,5 @@
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
