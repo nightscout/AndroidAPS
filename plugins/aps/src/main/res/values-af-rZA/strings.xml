@@ -22,8 +22,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Verstek waarde: 4 dit is die helfte van die sleutel OpenAPS veiligheid limiete, en die ander helfte van \"3 x maks daaglikse; 4 x huidige\"van die veiligheid limiet. Dit beteken jou basale, ongeag max basale stel op jou pomp, kan enige hoër wees as hierdie nommer tye die huidige vlak van jou basale. Dit is om te verhoed dat mense in gevaarlike gebied deur instelling buitensporig hoë max basals voor om te verstaan hoe die algoritme werk. Weer, die verstek is 4 x; die meeste mense sal nooit moet dit aanpas en is eerder meer geneig om te moet aanpas ander instellings as hulle voel hulle \"loop in\" hierdie veiligheid limiet.</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks daaglikse veiligheids vermenigvuldiger</string>
     <string name="openapsama_current_basal_safety_multiplier">Huidige basale veiligheids vermenigvuldiger</string>
-    <string name="openapsama_autosens_max_summary">Verstek waarde: 1.2\nThis is \'n vermenigvuldiger plafon vir autosens (en gou autotune) stel \'n 20%% max limiet op hoe hoog die autosens verhouding kan wees, wat op sy beurt bepaal hoe hoog autosens basale kan aanpas, hoe laag dit ISF kan aanpas, en hoe laag dit die BG teiken kan stel.</string>
-    <string name="openapsama_autosens_min_summary">Verstek waarde: 0.7\nDie ander kant van die autosens veiligheidsperke, sit \'n limiet op hoe laag autosens basals kan aanpas, en hoe hoog dit ISF en BG teikens kan verstel.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
     <string name="hardlimit">harde limiet</string>
