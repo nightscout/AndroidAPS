@@ -88,4 +88,5 @@
     <string name="profile2">פרופיל 2</string>
     <string name="selected_profile">נבחר:</string>
     <!-- Other dialogs -->
+    <!--    PrefImport-->
 </resources>
