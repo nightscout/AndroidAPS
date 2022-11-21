@@ -723,15 +723,15 @@ suspend fun adjustQuantityOnScreen(
             rtNavigationContext,
             if (needToIncrement) incrementButton else decrementButton
         ) { parsedScreen ->
-            val currentQuantity = getQuantity(parsedScreen)
-            logger(LogLevel.VERBOSE) { "Current quantity in first phase: $currentQuantity; need to increment: $needToIncrement" }
-            if (currentQuantity == null) {
+            val currentQuantityOnScreen = getQuantity(parsedScreen)
+            logger(LogLevel.VERBOSE) { "Current quantity in first phase: $currentQuantityOnScreen; need to increment: $needToIncrement" }
+            if (currentQuantityOnScreen == null) {
                 LongPressRTButtonsCommand.ContinuePressingButton
             } else {
-                if (currentQuantity != targetQuantity) {
-                    if (checkIfQuantityUnexpectedlyNotChanging(currentQuantity)) {
+                if (currentQuantityOnScreen != targetQuantity) {
+                    if (checkIfQuantityUnexpectedlyNotChanging(currentQuantityOnScreen)) {
                         logger(LogLevel.ERROR) { "Quantity unexpectedly not changing" }
-                        throw QuantityNotChangingException(targetQuantity = targetQuantity, hitLimitAt = currentQuantity)
+                        throw QuantityNotChangingException(targetQuantity = targetQuantity, hitLimitAt = currentQuantityOnScreen)
                     }
                 }
 
@@ -749,12 +749,12 @@ suspend fun adjustQuantityOnScreen(
                 // will be set to false, indicating that the long RT
                 // button press needs to stop.
                 val keepPressing =
-                    if (currentQuantity == targetQuantity)
+                    if (currentQuantityOnScreen == targetQuantity)
                         false
                     else if (needToIncrement)
-                        checkIfNeedsToIncrement(currentQuantity)
+                        checkIfNeedsToIncrement(currentQuantityOnScreen)
                     else
-                        !checkIfNeedsToIncrement(currentQuantity)
+                        !checkIfNeedsToIncrement(currentQuantityOnScreen)
 
                 if (keepPressing)
                     LongPressRTButtonsCommand.ContinuePressingButton
@@ -789,20 +789,20 @@ suspend fun adjustQuantityOnScreen(
             // is pretty much what we are waiting for.
             val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = false) ?: continue
             val parsedScreen = parsedDisplayFrame.parsedScreen
-            val currentQuantity = getQuantity(parsedScreen)
+            val currentQuantityOnScreen = getQuantity(parsedScreen)
 
             logger(LogLevel.DEBUG) {
                 "Observed quantity after long-pressing RT button: " +
-                    "last / current quantity: $lastQuantity / $currentQuantity"
+                    "last / current quantity: $lastQuantity / $currentQuantityOnScreen"
             }
 
-            if (currentQuantity != null) {
-                if (currentQuantity == lastQuantity) {
+            if (currentQuantityOnScreen != null) {
+                if (currentQuantityOnScreen == lastQuantity) {
                     sameQuantityObservedCount++
                     if (sameQuantityObservedCount >= 3)
                         break
                 } else {
-                    lastQuantity = currentQuantity
+                    lastQuantity = currentQuantityOnScreen
                     sameQuantityObservedCount = 0
                 }
             }
