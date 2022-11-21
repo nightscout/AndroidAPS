@@ -14,12 +14,11 @@
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
     <string name="request">Request</string>
     <string name="permission">Permission</string>
-    <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
-    <string name="need_system_window_permission">Application needs system window permission for notifications</string>
-    <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
-    <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
     <string name="error_asking_for_permissions">Error asking for permissions</string>
     <string name="alert_dialog_permission_battery_optimization_failed">This device does not appear to support battery optimization whitelisting - you may experience performance issues.</string>
+    <string name="need_whitelisting">%1$s needs battery optimization whitelisting for proper performance</string>
+    <string name="need_location_permission">Application needs location permission for BT scan and WiFi identification</string>
+    <string name="need_storage_permission">Application needs storage permission to be able store log files and export settings</string>
 
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Very low</string>
