@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.db
+package info.nightscout.implementation.db
 
 import android.content.Context
 import info.nightscout.database.impl.AppRepository
