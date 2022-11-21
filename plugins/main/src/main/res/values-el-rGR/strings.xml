@@ -39,7 +39,6 @@
     <string name="limitingiob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
     <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
-    <string name="uamdisabledoref1notselected">Το UAM απενεργοποιήθηκε επειδή είναι ενεργοποιημένο στην προσθήκη ευαισθησία στο Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
     <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
     <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
