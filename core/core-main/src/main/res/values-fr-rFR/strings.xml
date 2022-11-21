@@ -539,6 +539,7 @@
     <string name="wizard_explain_tt">Cible Temp: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s vers %2$s</string>
     <string name="wizard_pump_not_available">Aucune pompe disponible!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
