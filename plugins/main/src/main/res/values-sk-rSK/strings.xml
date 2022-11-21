@@ -232,7 +232,6 @@
     <string name="limitingiob">IOB obmedzený na %1$.1f JI: %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
-    <string name="uamdisabledoref1notselected">UAM zakázané, pretože nie je povolený plug-in Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
     <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu predĺženému bolusu</string>
     <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jedle\" zakázané pretože zdroj glykémie nepodporuje rozšírené filtrovánie</string>
