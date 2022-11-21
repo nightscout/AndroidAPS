@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry

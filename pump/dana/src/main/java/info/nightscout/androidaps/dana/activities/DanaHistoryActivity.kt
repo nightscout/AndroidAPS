@@ -16,8 +16,8 @@ import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
 import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile

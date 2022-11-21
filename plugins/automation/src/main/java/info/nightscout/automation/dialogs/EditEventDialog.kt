@@ -21,8 +21,8 @@ import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateAction
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.events.EventAutomationUpdateTrigger
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility

@@ -6,7 +6,7 @@
 
     <PreferenceCategory
         android:key="@string/key_absorption_category_settings"
-        android:title="@string/absorptionsettings_title"
+        android:title="@string/absorption_settings_title"
         app:initialExpandedChildrenCount="0">
 
     <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference

@@ -1,4 +1,4 @@
-package info.nightscout.core.fabric
+package info.nightscout.core.utils.fabric
 
 import com.google.firebase.installations.FirebaseInstallations
 

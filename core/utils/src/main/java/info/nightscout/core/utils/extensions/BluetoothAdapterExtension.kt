@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.core.utils.extensions
 
 import android.bluetooth.BluetoothAdapter
 import android.os.SystemClock

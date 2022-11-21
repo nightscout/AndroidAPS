@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
-import info.nightscout.androidaps.extensions.hexStringToByteArray
-import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.core.main.R
+import info.nightscout.core.utils.hexStringToByteArray
+import info.nightscout.core.utils.toHex
 import info.nightscout.interfaces.maintenance.PrefFileNotFoundError
 import info.nightscout.interfaces.maintenance.PrefFormatError
 import info.nightscout.interfaces.maintenance.PrefIOError

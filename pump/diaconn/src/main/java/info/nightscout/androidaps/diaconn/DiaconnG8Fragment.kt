@@ -13,7 +13,7 @@ import info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity
 import info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivity
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8FragmentBinding
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8NewStatus
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.WarnColors

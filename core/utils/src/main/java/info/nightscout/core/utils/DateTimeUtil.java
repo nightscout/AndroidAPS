@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.common.utils;
+package info.nightscout.core.utils;
 
-/**
+/*
  * Created by andy on 10/25/18.
  */
 
@@ -119,7 +119,7 @@ public class DateTimeUtil {
         return toATechDate(gc);
     }
 
-
+/*
     public static boolean isSameDay(LocalDateTime ldt1, LocalDateTime ldt2) {
 
         return (ldt1.getYear() == ldt2.getYear() && //
@@ -127,7 +127,7 @@ public class DateTimeUtil {
                 ldt1.getDayOfMonth() == ldt2.getDayOfMonth());
 
     }
-
+*/
 
     public static boolean isSameDay(long ldt1, long ldt2) {
 
@@ -226,6 +226,7 @@ public class DateTimeUtil {
     }
 
 
+/*
     public static boolean isSameDayATDAndMillis(long atechDateTime, long timeInMillis) {
 
         GregorianCalendar dt = new GregorianCalendar();
@@ -235,6 +236,7 @@ public class DateTimeUtil {
 
         return (isSameDay(atechDateTime, entryDate));
     }
+*/
 
 
     public static long toMillisFromATD(long atechDateTime) {
@@ -245,13 +247,13 @@ public class DateTimeUtil {
     }
 
 
-    public static int getATechDateDiferenceAsMinutes(Long date1, Long date2) {
+    public static int getATechDateDifferenceAsMinutes(Long date1, Long date2) {
         Minutes minutes = Minutes.minutesBetween(toLocalDateTime(date1), toLocalDateTime(date2));
         return minutes.getMinutes();
     }
 
 
-    public static int getATechDateDiferenceAsSeconds(Long date1, Long date2) {
+    public static int getATechDateDifferenceAsSeconds(Long date1, Long date2) {
         Seconds seconds = Seconds.secondsBetween(toLocalDateTime(date1), toLocalDateTime(date2));
         return seconds.getSeconds();
     }
@@ -273,12 +275,14 @@ public class DateTimeUtil {
     }
 
 
+/*
     public static long getATDWithAddedMinutes(Long atd, int minutesDiff) {
         GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(atd);
         oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
 
         return toATechDate(oldestEntryTime);
     }
+*/
 
     public static long getATDWithAddedMinutes(GregorianCalendar oldestEntryTime, int minutesDiff) {
         oldestEntryTime.add(Calendar.MINUTE, minutesDiff);
@@ -286,9 +290,11 @@ public class DateTimeUtil {
         return toATechDate(oldestEntryTime);
     }
 
+/*
     public static long getTimeInFutureFromMinutes(long startTime, int minutes) {
         return startTime + getTimeInMs(minutes);
     }
+*/
 
     public static long getTimeInFutureFromMinutes(int minutes) {
         return System.currentTimeMillis() + getTimeInMs(minutes);

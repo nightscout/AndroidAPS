@@ -4,7 +4,6 @@ import android.content.Context
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -14,6 +13,7 @@ import info.nightscout.core.main.R
 import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget

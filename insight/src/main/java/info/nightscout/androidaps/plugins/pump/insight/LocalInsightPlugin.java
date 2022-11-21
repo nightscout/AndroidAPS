@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+import static info.nightscout.core.pump.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.core.pump.PumpStateExtensionKt.getPlannedRemainingMinutes;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

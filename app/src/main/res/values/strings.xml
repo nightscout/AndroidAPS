@@ -30,7 +30,6 @@
     <string name="tr_lang" translatable="false">Turkish</string>
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
     <string name="key_protection_settings" translatable="false">protection</string>
-    <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="nav_preferences">Preferences</string>
@@ -114,13 +113,8 @@
     <string name="ns_announcements">Create notifications from NS announcements</string>
     <string name="ns_alarm_stale_data_value_label">Stale data threshold [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
-    <string name="openapsama_autosens_period">Interval for autosens [h]</string>
-    <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
-    <string name="absorptionsettings_title">Absorption settings</string>
-    <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
-    <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="keep_screen_on_title">Keep screen on</string>
     <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
@@ -181,8 +175,6 @@
     <string name="overview_show_basals">Basals</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
-    <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
-    <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="firstinsulinincrement">First insulin increment</string>
     <string name="secondinsulinincrement">Second insulin increment</string>
@@ -191,8 +183,6 @@
     <string name="secondcarbsincrement">Second carbs increment</string>
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
-    <string name="openapsama_autosens_max">Max autosens ratio</string>
-    <string name="openapsama_autosens_min">Min autosens ratio</string>
     <string name="key_wearwizard_bg" translatable="false">wearwizard_bg</string>
     <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
     <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>

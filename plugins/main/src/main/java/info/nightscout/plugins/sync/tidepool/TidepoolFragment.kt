@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.TidepoolFragmentBinding
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader

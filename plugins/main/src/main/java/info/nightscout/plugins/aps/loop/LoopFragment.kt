@@ -12,8 +12,8 @@ import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.pump.toHtml
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.HtmlHelper

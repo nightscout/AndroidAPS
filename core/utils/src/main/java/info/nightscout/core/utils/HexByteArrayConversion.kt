@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.core.utils
 
-import java.util.*
+import java.util.Locale
 
 private val HEX_CHARS = "0123456789abcdef".toCharArray()
 

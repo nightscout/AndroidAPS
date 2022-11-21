@@ -19,12 +19,12 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.toCurrentUnits
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action

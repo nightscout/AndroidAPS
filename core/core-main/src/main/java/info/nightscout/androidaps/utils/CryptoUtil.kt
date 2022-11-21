@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils
 
-import info.nightscout.androidaps.extensions.toHex
+import info.nightscout.core.utils.toHex
 import info.nightscout.rx.logging.AAPSLogger
 import org.spongycastle.util.encoders.Base64
 import java.nio.ByteBuffer

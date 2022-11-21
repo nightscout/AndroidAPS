@@ -6,12 +6,12 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.extensions.safeGetParcelableExtra
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.events.EventPumpConnectionParametersChanged
+import info.nightscout.core.utils.extensions.safeGetParcelableExtra
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
+import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import java.util.Collections

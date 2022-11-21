@@ -45,7 +45,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.automation.AutomationPlugin
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.toSignedUnitsString
 import info.nightscout.core.profile.toTargetRangeString
@@ -54,6 +53,7 @@ import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources

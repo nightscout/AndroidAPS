@@ -27,9 +27,9 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8BlescannerActivityBinding
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
-import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.extensions.safeEnable
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.UUID
 import javax.inject.Inject

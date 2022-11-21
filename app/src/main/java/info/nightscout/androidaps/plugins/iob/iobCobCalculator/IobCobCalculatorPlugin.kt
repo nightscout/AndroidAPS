@@ -13,12 +13,12 @@ import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.workflow.CalculationWorkflow
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
 import info.nightscout.core.iob.determineBasalJson
 import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal

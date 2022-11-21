@@ -19,7 +19,7 @@ import info.nightscout.androidaps.danars.R;
 import info.nightscout.androidaps.danars.activities.PairingHelperActivity;
 import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialogBinding;
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess;
-import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.shared.interfaces.ResourceHelper;

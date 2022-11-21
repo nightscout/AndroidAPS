@@ -1,4 +1,4 @@
-package info.nightscout.core.fabric
+package info.nightscout.core.utils.fabric
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -36,6 +36,7 @@ class FabricPrivacy @Inject constructor(
     }
 
     // Analytics logCustom
+    @Suppress("unused")
     fun logCustom(name: String, event: Bundle) {
         try {
             if (fabricEnabled()) {
@@ -51,6 +52,7 @@ class FabricPrivacy @Inject constructor(
     }
 
     // Analytics logCustom
+    @Suppress("unused")
     fun logCustom(event: Bundle) {
         try {
             if (fabricEnabled()) {

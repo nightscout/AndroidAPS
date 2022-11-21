@@ -1,7 +1,9 @@
-import info.nightscout.rx.events.EventBucketedDataCreated
+package info.nightscout.core.aps
+
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventBucketedDataCreated
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil

@@ -6,18 +6,18 @@
 
     <PreferenceCategory
         android:key="@string/key_absorption_settings"
-        android:title="@string/absorptionsettings_title"
+        android:title="@string/absorption_settings_title"
         app:initialExpandedChildrenCount="0">
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="6"
-            android:dialogMessage="@string/absorption_maxtime_summary"
+            android:dialogMessage="@string/absorption_max_time_summary"
             android:digits="0123456789.,"
             android:inputType="number"
             android:key="@string/key_absorption_maxtime"
             android:maxLines="20"
             android:selectAllOnFocus="true"
-            android:title="@string/absorption_maxtime_title"
+            android:title="@string/absorption_max_time_title"
             validate:maxNumber="10"
             validate:minNumber="4"
             validate:testType="numericRange" />

@@ -14,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
@@ -65,6 +64,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
+import info.nightscout.core.pump.PumpStateExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;

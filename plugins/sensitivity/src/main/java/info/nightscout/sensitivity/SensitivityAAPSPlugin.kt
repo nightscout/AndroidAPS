@@ -12,7 +12,6 @@ import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.Sensitivity.SensitivityType
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

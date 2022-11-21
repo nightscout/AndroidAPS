@@ -5,9 +5,9 @@ import android.content.Context
 import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
-import info.nightscout.androidaps.extensions.safeDisable
-import info.nightscout.androidaps.extensions.safeEnable
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
+import info.nightscout.core.utils.extensions.safeDisable
+import info.nightscout.core.utils.extensions.safeEnable
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config

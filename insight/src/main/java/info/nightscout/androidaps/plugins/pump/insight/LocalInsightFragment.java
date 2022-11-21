@@ -30,7 +30,7 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.rx.AapsSchedulers;

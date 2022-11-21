@@ -1,7 +1,7 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator

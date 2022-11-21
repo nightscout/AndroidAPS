@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.HardLimitsImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl

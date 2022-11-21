@@ -14,7 +14,7 @@ import info.nightscout.automation.events.EventTriggerRemove
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDummy
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import io.reactivex.rxjava3.disposables.CompositeDisposable

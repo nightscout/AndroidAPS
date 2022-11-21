@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
-import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
 import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+import static info.nightscout.core.pump.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.core.pump.PumpStateExtensionKt.getPlannedRemainingMinutes;
+import static info.nightscout.core.pump.PumpStateExtensionKt.toStringFull;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -43,7 +43,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange;
@@ -78,8 +77,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.services.AlarmSoundService;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.core.fabric.FabricPrivacy;
 import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
+import info.nightscout.core.utils.DateTimeUtil;
+import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;

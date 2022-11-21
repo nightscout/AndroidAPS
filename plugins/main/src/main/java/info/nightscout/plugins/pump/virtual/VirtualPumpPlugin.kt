@@ -8,7 +8,8 @@ import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
@@ -383,7 +384,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun model(): PumpType = pumpDescription.pumpType
 
-    override fun serialNumber(): String = info.nightscout.core.fabric.InstanceId.instanceId
+    override fun serialNumber(): String = InstanceId.instanceId
 
     override fun shortStatus(veryShort: Boolean): String = "Virtual Pump"
 

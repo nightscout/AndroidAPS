@@ -2,7 +2,7 @@ package info.nightscout.plugins.pump.virtual
 
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction

@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.core.utils.isRunningTest
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction

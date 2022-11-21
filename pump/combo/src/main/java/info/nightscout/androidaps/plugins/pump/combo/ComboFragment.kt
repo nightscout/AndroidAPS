@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil
 import info.nightscout.androidaps.plugins.pump.combo.data.ComboErrorUtil.DisplayType
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers

@@ -30,4 +30,7 @@ dependencies {
     //    api "com.google.firebase:firebase-messaging-ktx"
     //    api 'com.google.firebase:firebase-auth-ktx'
     //    api 'com.google.firebase:firebase-database-ktx'
+
+    //WorkManager
+    api "androidx.work:work-runtime:$work_version" // DataWorkerStorage
 }

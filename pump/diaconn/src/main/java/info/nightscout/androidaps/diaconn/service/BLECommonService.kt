@@ -25,9 +25,9 @@ import info.nightscout.androidaps.diaconn.packet.DiaconnG8ResponseMessageHashTab
 import info.nightscout.androidaps.diaconn.packet.DiaconnG8SettingResponseMessageHashTable
 import info.nightscout.androidaps.diaconn.packet.InjectionBlockReportPacket
 import info.nightscout.androidaps.diaconn.packet.InsulinLackReportPacket
-import info.nightscout.androidaps.extensions.notify
-import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.notify
+import info.nightscout.core.utils.waitMillis
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged

@@ -9,8 +9,8 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.configuration.R
 import info.nightscout.configuration.databinding.ActivitySetupwizardBinding
 import info.nightscout.configuration.setupwizard.elements.SWItem
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.locale.LocaleHelper.update
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers

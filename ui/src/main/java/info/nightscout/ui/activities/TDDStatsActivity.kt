@@ -16,8 +16,8 @@ import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.extensions.total
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin

@@ -11,12 +11,10 @@ import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.workflow.CalculationWorkflow
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
@@ -33,6 +31,8 @@ import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.sensitivity.SensitivityAAPSPlugin
+import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil

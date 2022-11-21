@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces.stats
+package info.nightscout.interfaces.stats
 
 import android.content.Context
 import android.widget.TableLayout
