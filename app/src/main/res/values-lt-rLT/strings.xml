@@ -41,7 +41,7 @@
     <string name="setting_imported">Nustatymai importuoti</string>
     <string name="filenotfound">Failas nerastas</string>
     <string name="nav_export">Eksportuoti nustatymus</string>
-    <string name="nav_import">Importuoti nustatymus</string>
+    <string name="import_setting">Importuoti nustatymus</string>
     <string name="password_preferences_encrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
     <string name="preferences_export_canceled">Eksportas nutrauktas! Nustatymai NE eksportuoti!</string>
     <string name="preferences_import_canceled">Importas nutrauktas! Nustatymai NE importuoti!</string>

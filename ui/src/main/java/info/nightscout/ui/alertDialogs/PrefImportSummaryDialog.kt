@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.alertDialogs
+package info.nightscout.ui.alertDialogs
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,11 +17,11 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.androidaps.R
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.maintenance.Prefs
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.shared.extensions.runOnUiThread
+import info.nightscout.ui.R
 import java.util.LinkedList
 
 object PrefImportSummaryDialog {
@@ -111,7 +111,7 @@ object PrefImportSummaryDialog {
 
         val builder = MaterialAlertDialogBuilder(context, theme)
             .setMessage(context.getString(messageRes))
-            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.nav_import), headerIcon, theme))
+            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.import_setting), headerIcon, theme))
             .setView(innerLayout)
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()

@@ -47,7 +47,7 @@
     <string name="setting_imported">Nastavení importováno</string>
     <string name="filenotfound">Soubor nenalezen</string>
     <string name="nav_export">Exportovat nastavení</string>
-    <string name="nav_import">Importovat nastavení</string>
+    <string name="import_setting">Importovat nastavení</string>
     <string name="password_preferences_encrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k šifrování exportovaných předvoleb.</string>
     <string name="preferences_export_canceled">Export zrušen! Předvolby NEBYLY exportovány!</string>
     <string name="preferences_import_canceled">Import zrušen! Předvolby NEBYLY importovány!</string>

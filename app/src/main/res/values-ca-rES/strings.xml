@@ -40,7 +40,7 @@
     <string name="setting_imported">Configuració importada</string>
     <string name="filenotfound">Arxiu no trobat</string>
     <string name="nav_export">Exportar configuració</string>
-    <string name="nav_import">Importar configuració</string>
+    <string name="import_setting">Importar configuració</string>
     <string name="password_preferences_encrypt_prompt">Se us demanarà una clau mestra, es farà servir per encriptar la configuració exportada.</string>
     <string name="preferences_export_canceled">Exportació cancel·lada! Configuració NO exportada!</string>
     <string name="preferences_import_canceled">Importació cancel·lada! Configuració NO importada!</string>

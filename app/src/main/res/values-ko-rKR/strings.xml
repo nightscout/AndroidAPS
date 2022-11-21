@@ -40,7 +40,7 @@
     <string name="setting_imported">설정을 불러왔습니다</string>
     <string name="filenotfound">파일을 찾을 수 없습니다</string>
     <string name="nav_export">설정 저장하기</string>
-    <string name="nav_import">설정 불러오기</string>
+    <string name="import_setting">설정 불러오기</string>
     <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
     <string name="preferences_export_canceled">내보내기 취소됩니다! 환경 설정을 내보내지 않았습니다!</string>
     <string name="preferences_import_canceled">가져오고 취소됩니다! 환경설정을 가져오지 않았습니다.</string>

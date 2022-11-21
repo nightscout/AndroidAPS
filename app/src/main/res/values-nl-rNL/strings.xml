@@ -47,7 +47,7 @@
     <string name="setting_imported">Instellingen geïmporteerd</string>
     <string name="filenotfound">Bestand niet gevonden</string>
     <string name="nav_export">Exporteer instellingen</string>
-    <string name="nav_import">Importeer instellingen</string>
+    <string name="import_setting">Importeer instellingen</string>
     <string name="password_preferences_encrypt_prompt">Je wordt gevraagd om een masterwachtwoord. Daarmee worden geëxporteerde instellingen versleuteld.</string>
     <string name="preferences_export_canceled">Exporteren geannuleerd! Instellingen zijn NIET geëxporteerd!</string>
     <string name="preferences_import_canceled">Importeren geannuleerd! Instellingen zijn NIET geïmporteerd!</string>

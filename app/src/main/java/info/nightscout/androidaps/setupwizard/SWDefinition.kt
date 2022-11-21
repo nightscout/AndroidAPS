@@ -193,14 +193,14 @@ class SWDefinition @Inject constructor(
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
 
-    private val screenImport get() = SWScreen(injector, R.string.nav_import)
+    private val screenImport get() = SWScreen(injector, R.string.import_setting)
         .add(
             SWInfoText(injector)
                 .label(R.string.storedsettingsfound)
         )
         .add(SWBreak(injector))
         .add(SWButton(injector)
-                 .text(R.string.nav_import)
+                 .text(R.string.import_setting)
                  .action { importExportPrefs.importSharedPreferences(activity) })
         .visibility { importExportPrefs.prefsFileExists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
 

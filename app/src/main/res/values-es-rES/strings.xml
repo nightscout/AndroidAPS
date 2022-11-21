@@ -47,7 +47,7 @@
     <string name="setting_imported">Ajustes importados</string>
     <string name="filenotfound">Archivo no encontrado</string>
     <string name="nav_export">Exportar ajustes</string>
-    <string name="nav_import">Importar ajustes</string>
+    <string name="import_setting">Importar ajustes</string>
     <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
     <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
     <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>

@@ -27,7 +27,7 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
-import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog
+import info.nightscout.ui.alertDialogs.PrefImportSummaryDialog
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -199,9 +199,9 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askToConfirmImport(activity: FragmentActivity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
-        if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
+        if (!assureMasterPasswordSet(activity, R.string.import_setting)) return
         TwoMessagesAlertDialog.showAlert(
-            activity, rh.gs(R.string.nav_import),
+            activity, rh.gs(R.string.import_setting),
             rh.gs(R.string.import_from) + " " + fileToImport.name + " ?",
             rh.gs(R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)

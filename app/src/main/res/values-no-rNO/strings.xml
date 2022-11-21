@@ -47,7 +47,7 @@
     <string name="setting_imported">Innstillinger importert</string>
     <string name="filenotfound">Fil ikke funnet</string>
     <string name="nav_export">Eksporter innstillinger</string>
-    <string name="nav_import">Importer innstillinger</string>
+    <string name="import_setting">Importer innstillinger</string>
     <string name="password_preferences_encrypt_prompt">Du må angi et hovedpassord som vil bli brukt til å kryptere dine eksporterte innstillinger.</string>
     <string name="preferences_export_canceled">Eksport kansellert! Innstillinger ble IKKE lagret!</string>
     <string name="preferences_import_canceled">Innlesing avbrutt! Innstillinger ble IKKE lest inn!</string>

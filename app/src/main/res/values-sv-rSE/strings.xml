@@ -41,7 +41,7 @@
     <string name="setting_imported">Inställningar importerade</string>
     <string name="filenotfound">Hittade inte filen</string>
     <string name="nav_export">Exportera inställningar</string>
-    <string name="nav_import">Importera inställningar</string>
+    <string name="import_setting">Importera inställningar</string>
     <string name="password_preferences_encrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att kryptera exporterade inställningar.</string>
     <string name="preferences_export_canceled">Exporten avbröts. Inställningarna har INTE exporterats!</string>
     <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>

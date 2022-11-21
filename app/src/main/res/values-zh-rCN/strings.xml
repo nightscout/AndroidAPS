@@ -41,7 +41,7 @@
     <string name="setting_imported">配置导入了</string>
     <string name="filenotfound">找不到文件</string>
     <string name="nav_export">导出配置</string>
-    <string name="nav_import">导入配置</string>
+    <string name="import_setting">导入配置</string>
     <string name="password_preferences_encrypt_prompt">请您输入主密码，该密码将用于加密导出的首选项配置。</string>
     <string name="preferences_export_canceled">导出已取消！首选项未导出！</string>
     <string name="preferences_import_canceled">导入已取消! 未导入首选项 !</string>

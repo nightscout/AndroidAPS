@@ -47,7 +47,7 @@
     <string name="setting_imported">настройки импортированы</string>
     <string name="filenotfound">файл не найден</string>
     <string name="nav_export">экспорт настроек</string>
-    <string name="nav_import">импорт настроек</string>
+    <string name="import_setting">импорт настроек</string>
     <string name="password_preferences_encrypt_prompt">Будет предложено ввести главный пароль, который будет использоваться для шифрования экспортированных параметров.</string>
     <string name="preferences_export_canceled">Экспорт отменен! Настройки НЕ экспортированы!</string>
     <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>

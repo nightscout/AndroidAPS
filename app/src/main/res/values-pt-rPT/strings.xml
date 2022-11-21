@@ -41,7 +41,7 @@
     <string name="setting_imported">Definições importadas</string>
     <string name="filenotfound">Ficheiro não encontrado</string>
     <string name="nav_export">Exportar definições</string>
-    <string name="nav_import">Importar definições</string>
+    <string name="import_setting">Importar definições</string>
     <string name="password_preferences_encrypt_prompt">Ser-lhe-á pedida a senha mestra, que será usada para encriptar preferências exportadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>

@@ -41,7 +41,7 @@
     <string name="setting_imported">הגדרות מיובאות</string>
     <string name="filenotfound">הקובץ לא נמצא</string>
     <string name="nav_export">ייצא הגדרות</string>
-    <string name="nav_import">ייבוא הגדרות</string>
+    <string name="import_setting">ייבוא הגדרות</string>
     <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
     <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
     <string name="preferences_import_canceled">ייבוא בוטל! ההעדפות לא הובאו!</string>

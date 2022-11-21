@@ -47,7 +47,7 @@
     <string name="setting_imported">Paramètres importés</string>
     <string name="filenotfound">Fichier introuvable</string>
     <string name="nav_export">Exporter les paramètres</string>
-    <string name="nav_import">Importer les paramètres</string>
+    <string name="import_setting">Importer les paramètres</string>
     <string name="password_preferences_encrypt_prompt">Le mot de passe principal vous sera demandé pour crypter les préférences exportées.</string>
     <string name="preferences_export_canceled">Export annulé ! Les préférences n\'ont PAS été exportées !</string>
     <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>

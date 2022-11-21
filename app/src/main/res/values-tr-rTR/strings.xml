@@ -45,7 +45,7 @@
     <string name="setting_imported">Ayarlar içe aktarıldı</string>
     <string name="filenotfound">Dosya bulunamadı</string>
     <string name="nav_export">Dışarı aktarma ayarları</string>
-    <string name="nav_import">İçe aktarma ayarları</string>
+    <string name="import_setting">İçe aktarma ayarları</string>
     <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
     <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
     <string name="preferences_import_canceled">Aktarım iptal edildi! Tercihler içe aktarılmadı!</string>

@@ -77,7 +77,6 @@
     <string name="setting_imported">Settings imported</string>
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
-    <string name="nav_import">Import settings</string>
     <string name="language" translatable="false">Language</string>
     <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
     <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
@@ -87,13 +86,6 @@
     <string name="old_master_password">Old Master Password</string>
     <string name="different_password_used">This file was exported and encrypted with different master password. Provide old master password to decrypt file.</string>
     <string name="master_password_will_be_replaced">As a result of successful import current master password WILL BE REPLACED with that old master password!</string>
-    <string name="check_preferences_before_import">Please check preferences before importing:</string>
-    <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
-    <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
-    <string name="check_preferences_details_btn">Explain import issues…</string>
-    <string name="check_preferences_details_title">Import issues details</string>
-    <string name="check_preferences_import_btn">Import</string>
-    <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>

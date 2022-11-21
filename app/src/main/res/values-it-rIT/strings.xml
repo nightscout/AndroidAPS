@@ -46,7 +46,7 @@
     <string name="setting_imported">Impostazioni importate</string>
     <string name="filenotfound">File non trovato</string>
     <string name="nav_export">Esporta impostazioni</string>
-    <string name="nav_import">Importa impostazioni</string>
+    <string name="import_setting">Importa impostazioni</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password master, che verrà usata per crittografare le preferenze esportate.</string>
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
     <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
