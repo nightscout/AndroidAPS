@@ -1,6 +1,6 @@
-package info.nightscout.androidaps.utils.resources
+package info.nightscout.implementation.resources
 
-import info.nightscout.androidaps.R
+import info.nightscout.implementation.R
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ui.IconsProvider
 import javax.inject.Inject

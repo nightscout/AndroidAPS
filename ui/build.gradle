@@ -25,5 +25,5 @@ dependencies {
     implementation project(':core:core-main')
     implementation project(':core:fabric')
     implementation project(':interfaces')
-    implementation project(path: ':core:ui')
+    implementation project(':core:ui')
 }
