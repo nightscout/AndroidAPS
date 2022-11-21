@@ -240,15 +240,6 @@
     <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
     <string name="hardlimit">pevný limit</string>
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
-    <string name="patientage_summary">Prosím vyberte typ pacienta pro nastavení bezpečnostních limitů</string>
-    <string name="child">Dítě</string>
-    <string name="teenage">Dospívající</string>
-    <string name="adult">Dospělý</string>
-    <string name="resistantadult">Dospělý s nízkou citlivostí</string>
-    <string name="pregnant">Těhotenství</string>
-    <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maximální počet sacharidů [g]</string>
-    <string name="patientage">Typ pacienta</string>
     <!-- Overview -->
     <string name="snooze">Odložit</string>
     <string name="copy_existing_values">Zkopírovat nastavení NS (existuje-li)?</string>
@@ -429,4 +420,5 @@
     <string name="largedisplay_description">Velký displej</string>
     <string name="skin">Vzhled</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
