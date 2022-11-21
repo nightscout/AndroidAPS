@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
+
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensitivity Oref1</string>
+    <string name="sensitivity_aaps">Sensitivity AAPS</string>
+    <string name="sensitivity_weighted_average">Sensitivity WeightedAverage</string>
+    <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
+    <string name="description_sensitivity_oref1">Sensitivity is calculated from 8h or 24h data in the past (using either which is more sensitive). Carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM disabled because it rely on Oref1 sensitivity plugin</string>
+
+    <string name="absorption_settings_title">Absorption settings</string>
+    <string name="absorption_max_time_title">Meal max absorption time [h]</string>
+    <string name="absorption_max_time_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
+    <string name="openapsama_autosens_period">Interval for autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
+    <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
+    <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
+    <string name="openapsama_autosens_max">Max autosens ratio</string>
+    <string name="openapsama_autosens_min">Min autosens ratio</string>
+    <string name="openapsama_min_5m_carb_impact" translatable="false">min_5m_carbimpact</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
+    <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
+
+</resources>
