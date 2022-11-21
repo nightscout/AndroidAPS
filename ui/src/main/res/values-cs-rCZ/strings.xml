@@ -132,4 +132,5 @@
     <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Bazál</string>
+    <!--    PrefImport-->
 </resources>
