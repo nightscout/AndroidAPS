@@ -57,15 +57,6 @@
     <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
     <string name="hardlimit">twarde ograniczenie</string>
     <string name="treatmentssafety_title">Bezpieczeństwo terapii</string>
-    <string name="patientage_summary">Wybierz typ pacjenta, aby ustawić limity bezpieczeństwa</string>
-    <string name="child">Dziecko</string>
-    <string name="teenage">Nastolatek</string>
-    <string name="adult">Osoba dorosła</string>
-    <string name="resistantadult">Osoba dorosła insulinooporna</string>
-    <string name="pregnant">Ciąża</string>
-    <string name="treatmentssafety_maxbolus_title">Maks. dopuszczalny bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Maks. dopuszczalne węglowodany [g]</string>
-    <string name="patientage">Typ pacjenta</string>
     <!-- Overview -->
     <string name="snooze">Wycisz</string>
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
@@ -180,4 +171,5 @@
     <string name="largedisplay_description">Duży ekran</string>
     <string name="skin">Motyw</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
