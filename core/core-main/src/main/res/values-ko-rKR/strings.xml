@@ -396,6 +396,7 @@
     <string name="partialboluswizard">Bolus 마법사 결과의 이 부분 주입[%]</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>
