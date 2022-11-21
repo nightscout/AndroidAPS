@@ -412,6 +412,7 @@
     <string name="partialboluswizard">Lliurar aquesta part del resultat del càlcul [%]</string>
     <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
     <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dies</item>
