@@ -44,7 +44,6 @@
     <string name="limitingiob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
     <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
-    <string name="uamdisabledoref1notselected">UAM изключен, защото му трябва Oref1 плъгин за чувствителност </string>
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
     <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
     <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
