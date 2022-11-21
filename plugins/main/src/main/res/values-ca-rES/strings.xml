@@ -58,15 +58,6 @@
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
     <string name="treatmentssafety_title">Seguretat tractaments</string>
-    <string name="patientage_summary">Si us plau, seleccioneu el tipus de pacient per configurar els límits de seguretat</string>
-    <string name="child">Nen</string>
-    <string name="teenage">Adolescent</string>
-    <string name="adult">Adult</string>
-    <string name="resistantadult">Adult resistent a l\'insulina</string>
-    <string name="pregnant">Embaraç</string>
-    <string name="treatmentssafety_maxbolus_title">Max bolus permès [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max carbs permesos [g]</string>
-    <string name="patientage">Tipus de pacient</string>
     <!-- Overview -->
     <string name="snooze">Postposar</string>
     <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
@@ -176,4 +167,5 @@
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
