@@ -73,4 +73,5 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Valt:</string>
     <!-- Other dialogs -->
+    <!--    PrefImport-->
 </resources>
