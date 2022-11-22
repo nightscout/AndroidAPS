@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.alertDialogs
 
 import android.content.Context
 import android.content.res.Resources
@@ -15,11 +15,11 @@ import info.nightscout.androidaps.activities.DialogAppCompatActivity
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.core.main.R
-import info.nightscout.core.main.databinding.DialogErrorBinding
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.T
+import info.nightscout.ui.databinding.DialogErrorBinding
 import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {

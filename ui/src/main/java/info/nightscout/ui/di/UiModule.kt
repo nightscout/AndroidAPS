@@ -16,6 +16,7 @@ import info.nightscout.ui.activities.fragments.TreatmentsProfileSwitchFragment
 import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment
 import info.nightscout.ui.activities.fragments.TreatmentsTemporaryBasalsFragment
 import info.nightscout.ui.activities.fragments.TreatmentsUserEntryFragment
+import info.nightscout.ui.alertDialogs.ErrorDialog
 import info.nightscout.ui.dialogs.BolusProgressDialog
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
@@ -56,6 +57,7 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
     @ContributesAndroidInjector abstract fun contributesBolusProgressDialog(): BolusProgressDialog
+    @ContributesAndroidInjector abstract fun contributesErrorDialog(): ErrorDialog
 
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
