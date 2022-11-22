@@ -231,7 +231,6 @@
     <string name="limitingiob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
     <string name="closedmodedisabledinpreferences">Lukket Loop er eaktivert i innstillinger</string>
-    <string name="uamdisabledoref1notselected">UAM deaktivert fordi den trenger Oref1 sensitivitetsplugin</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
     <string name="smbalwaysdisabled">SMB Alltid På og SMB Etter Karbohydrater er deaktivert fordi BS kilden ikke støtter avansert filtrering</string>
@@ -239,15 +238,6 @@
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
     <string name="hardlimit">hard begrensning</string>
     <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
-    <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
-    <string name="child">Barn</string>
-    <string name="teenage">Tenåring</string>
-    <string name="adult">Voksen</string>
-    <string name="resistantadult">Insulinresistent voksen</string>
-    <string name="pregnant">Graviditet</string>
-    <string name="max_bolus_title">Maks tillat bolus [U]</string>
-    <string name="max_carbs_title">Maks tillat karbo [g]</string>
-    <string name="patient_type">Pasienttype</string>
     <!-- Overview -->
     <string name="snooze">Slumre</string>
     <string name="copy_existing_values">Kopiere NS innstillinger (hvis de eksisterer)?</string>
@@ -420,4 +410,5 @@
     <string name="largedisplay_description">Stor skjerm</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
