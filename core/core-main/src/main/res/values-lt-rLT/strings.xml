@@ -14,8 +14,6 @@
     <string name="bolusdelivering">Leidžiama %1$.2f vv</string>
     <string name="connecting">Jungiamasi</string>
     <string name="disconnected">Atsijungta</string>
-    <string name="formatinsulinunits1">%1$.1f vv</string>
-    <string name="formatinsulinunits">%1$.2f vv</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$dg</string>
     <string name="reservoirvalue">%1$.0f / %2$d vv</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">Pompa šiuo metu veikia</string>
     <string name="connectionerror">Pompos prisijungimo klaida</string>
     <string name="objectives">Tikslai</string>
-    <string name="close">Uždaryti</string>
     <string name="please_wait">Palaukite…</string>
     <string name="mute">Nutildyti</string>
     <string name="reload">Atnaujinti</string>
