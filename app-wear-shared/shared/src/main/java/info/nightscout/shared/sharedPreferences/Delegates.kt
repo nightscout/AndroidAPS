@@ -1,4 +1,4 @@
-package info.nightscout.shared.impl.sharedPreferences
+package info.nightscout.shared.sharedPreferences
 
 import info.nightscout.shared.sharedPreferences.SP
 import kotlin.properties.ReadWriteProperty
