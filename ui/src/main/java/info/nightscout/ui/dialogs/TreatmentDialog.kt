@@ -11,7 +11,6 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.pump.insertBolusTransaction
 import info.nightscout.core.pump.insertCarbsTransaction
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -24,6 +23,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue

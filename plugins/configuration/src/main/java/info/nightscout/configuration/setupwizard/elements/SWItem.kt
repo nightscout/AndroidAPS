@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.protection.PasswordCheck
+import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWUpdate

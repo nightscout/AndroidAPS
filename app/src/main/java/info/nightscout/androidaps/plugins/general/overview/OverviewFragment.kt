@@ -43,7 +43,6 @@ import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.toSignedUnitsString
@@ -70,6 +69,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.JsonHelper

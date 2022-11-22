@@ -1,6 +1,8 @@
 package info.nightscout.plugins.aps.di
 
 import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import info.nightscout.plugins.aps.OpenAPSFragment
 import info.nightscout.plugins.di.AutotuneModule
 
 @Module(
@@ -11,4 +13,6 @@ import info.nightscout.plugins.di.AutotuneModule
 )
 
 @Suppress("unused")
-abstract class ApsModule
+abstract class ApsModule {
+    @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
+}

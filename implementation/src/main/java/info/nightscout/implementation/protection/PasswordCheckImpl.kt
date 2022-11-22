@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.protection
+package info.nightscout.implementation.protection
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,29 +15,26 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.CryptoUtil
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
-import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.shared.sharedPreferences.SP
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// since androidx.autofill.HintConstants are not available
-const val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
-
 @Singleton
-class PasswordCheck @Inject constructor(
+class PasswordCheckImpl @Inject constructor(
     private val sp: SP,
-    private val cryptoUtil: CryptoUtil,
-    private val fileListProvider: PrefFileListProvider,
-    private val activePlugin: ActivePlugin
-) {
+    private val cryptoUtil: CryptoUtil
+) : PasswordCheck {
+
+    // since androidx.autofill.HintConstants are not available
+    @Suppress("PrivatePropertyName")
+    private val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
 
     /**
     Asks for "managed" kind of password, checking if it is valid.
      */
     @SuppressLint("InflateParams")
-    fun queryPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null, fail: (() -> Unit)? = null, pinInput: Boolean = false) {
+    override fun queryPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)?, cancel: (() -> Unit)?, fail: (() -> Unit)?, pinInput: Boolean) {
         val password = sp.getString(preference, "")
         if (password == "") {
             ok?.invoke("")
@@ -99,7 +96,7 @@ class PasswordCheck @Inject constructor(
     }
 
     @SuppressLint("InflateParams")
-    fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)? = null, cancel: (() -> Unit)? = null, clear: (() -> Unit)? = null, pinInput: Boolean = false) {
+    override fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)?, cancel: (() -> Unit)?, clear: (() -> Unit)?, pinInput: Boolean) {
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
         val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
@@ -161,8 +158,10 @@ class PasswordCheck @Inject constructor(
     since this query does NOT check validity of password.
      */
     @SuppressLint("InflateParams")
-    fun queryAnyPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, @StringRes passwordExplanation: Int?,
-                         @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null) {
+    override fun queryAnyPassword(
+        context: Context, @StringRes labelId: Int, @StringRes preference: Int, @StringRes passwordExplanation: Int?,
+        @StringRes passwordWarning: Int?, ok: ((String) -> Unit)?, cancel: (() -> Unit)?
+    ) {
 
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
         val alertDialogBuilder = MaterialAlertDialogBuilder(context, R.style.DialogTheme)
@@ -212,20 +211,6 @@ class PasswordCheck @Inject constructor(
             } else {
                 false
             }
-        }
-    }
-
-    /**
-     * Check for existing PasswordReset file and
-     * reset password to SN of active pump if file exists
-     */
-    fun passwordResetCheck(context: Context) {
-        val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
-        if (passwordReset.exists()) {
-            val sn = activePlugin.activePump.serialNumber()
-            sp.putString(R.string.key_master_password, cryptoUtil.hashPassword(sn))
-            passwordReset.delete()
-            ToastUtils.okToast(context, context.getString(R.string.password_set))
         }
     }
 }

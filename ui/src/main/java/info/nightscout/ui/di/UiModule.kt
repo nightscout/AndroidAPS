@@ -28,6 +28,7 @@ import info.nightscout.ui.dialogs.ProfileViewerDialog
 import info.nightscout.ui.dialogs.TempBasalDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
+import info.nightscout.ui.dialogs.WizardDialog
 import info.nightscout.ui.dialogs.WizardInfoDialog
 import info.nightscout.ui.widget.Widget
 import info.nightscout.ui.widget.WidgetConfigureActivity
@@ -39,6 +40,7 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
 
+    @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog

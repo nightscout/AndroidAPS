@@ -6,18 +6,23 @@ import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
+import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.HardLimitsImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
 import info.nightscout.implementation.maintenance.PrefFileListProviderImpl
 import info.nightscout.implementation.profiling.ProfilerImpl
+import info.nightscout.implementation.protection.PasswordCheckImpl
+import info.nightscout.implementation.protection.ProtectionCheckImpl
 import info.nightscout.implementation.pump.WarnColorsImpl
 import info.nightscout.implementation.resources.ResourceHelperImpl
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.profiling.Profiler
+import info.nightscout.interfaces.protection.PasswordCheck
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.utils.HardLimits
@@ -25,6 +30,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import javax.inject.Singleton
 
 @Module(
@@ -57,6 +63,14 @@ open class ImplementationModule {
     @Provides
     @Singleton
     fun provideLoggerUtils(prefFileListProvider: PrefFileListProvider): LoggerUtils = LoggerUtilsImpl(prefFileListProvider)
+
+    @Provides
+    @Singleton
+    fun providePasswordCheck(sp: SP, cryptoUtil: CryptoUtil): PasswordCheck = PasswordCheckImpl(sp, cryptoUtil)
+
+    @Provides
+    @Singleton
+    fun provideProtectionCheck(sp: SP, passwordCheck: PasswordCheck, dateUtil: DateUtil): ProtectionCheck = ProtectionCheckImpl(sp, passwordCheck, dateUtil)
 
     @Provides
     @Singleton

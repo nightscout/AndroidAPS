@@ -37,11 +37,11 @@ import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.androidaps.utils.protection.PasswordCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.configuration.setupwizard.SetupWizardActivity
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.isRunningRealPumpTest
 import info.nightscout.database.entities.UserEntry.Action
@@ -51,9 +51,11 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
@@ -71,6 +73,7 @@ import info.nightscout.ui.activities.TreatmentsActivity
 import info.nightscout.ui.tabs.TabPageAdapter
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.io.File
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -95,7 +98,8 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var passwordCheck: PasswordCheck
+    @Inject lateinit var fileListProvider: PrefFileListProvider
+    @Inject lateinit var cryptoUtil: CryptoUtil
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -150,9 +154,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           passwordCheck.passwordResetCheck(this)
-                       }, fabricPrivacy::logException)
+            .subscribe({ passwordResetCheck(this) }, fabricPrivacy::logException)
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -467,4 +469,17 @@ class MainActivity : NoSplashAppCompatActivity() {
         FirebaseCrashlytics.getInstance().setCustomKey("Email", sp.getString(R.string.key_email_for_crash_report, ""))
     }
 
+    /**
+     * Check for existing PasswordReset file and
+     * reset password to SN of active pump if file exists
+     */
+    fun passwordResetCheck(context: Context) {
+        val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
+        if (passwordReset.exists()) {
+            val sn = activePlugin.activePump.serialNumber()
+            sp.putString(info.nightscout.core.main.R.string.key_master_password, cryptoUtil.hashPassword(sn))
+            passwordReset.delete()
+            ToastUtils.okToast(context, context.getString(info.nightscout.core.main.R.string.password_set))
+        }
+    }
 }

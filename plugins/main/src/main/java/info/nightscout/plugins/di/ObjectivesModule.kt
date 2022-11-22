@@ -2,6 +2,9 @@ package info.nightscout.plugins.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.plugins.constraints.objectives.ObjectivesFragment
+import info.nightscout.plugins.constraints.objectives.activities.ObjectivesExamDialog
+import info.nightscout.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.plugins.constraints.objectives.objectives.Objective1
@@ -18,6 +21,10 @@ import info.nightscout.plugins.constraints.objectives.objectives.Objective9
 @Suppress("unused")
 abstract class ObjectivesModule {
 
+    @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
+    @ContributesAndroidInjector abstract fun contributesObjectivesExamDialog(): ObjectivesExamDialog
+    @ContributesAndroidInjector abstract fun contributesNtpProgressDialog(): NtpProgressDialog
+
     @ContributesAndroidInjector abstract fun objectiveInjector(): Objective
     @ContributesAndroidInjector abstract fun objective0Injector(): Objective0
     @ContributesAndroidInjector abstract fun objective1Injector(): Objective1
@@ -29,5 +36,4 @@ abstract class ObjectivesModule {
     @ContributesAndroidInjector abstract fun objective7Injector(): Objective7
     @ContributesAndroidInjector abstract fun objective9Injector(): Objective9
     @ContributesAndroidInjector abstract fun objective10Injector(): Objective10
-
 }

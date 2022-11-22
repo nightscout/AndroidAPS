@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.protection
+package info.nightscout.implementation.protection
 
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.AuthenticationResult
@@ -19,6 +19,7 @@ import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.shared.extensions.runOnUiThread
 import java.util.concurrent.Executors
 

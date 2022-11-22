@@ -21,7 +21,6 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.profile.toUnitsString
@@ -39,6 +38,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers

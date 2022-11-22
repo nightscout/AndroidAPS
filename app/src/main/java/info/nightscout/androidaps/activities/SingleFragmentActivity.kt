@@ -7,9 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.interfaces.locale.LocaleHelper
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.protection.ProtectionCheck
 import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {

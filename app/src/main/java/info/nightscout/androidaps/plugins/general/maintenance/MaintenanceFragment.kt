@@ -18,8 +18,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSett
 import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
@@ -27,6 +25,8 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
+import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.utils.HtmlHelper

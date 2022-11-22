@@ -12,7 +12,6 @@ import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -31,6 +30,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue

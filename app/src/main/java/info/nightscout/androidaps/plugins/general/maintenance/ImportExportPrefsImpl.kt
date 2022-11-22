@@ -27,7 +27,6 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
-import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
@@ -48,6 +47,7 @@ import info.nightscout.interfaces.maintenance.PrefsFile
 import info.nightscout.interfaces.maintenance.PrefsFormat
 import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.bus.RxBus
