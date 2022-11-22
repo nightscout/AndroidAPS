@@ -39,22 +39,12 @@
     <string name="limitingiob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
     <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
-    <string name="uamdisabledoref1notselected">Το UAM απενεργοποιήθηκε επειδή είναι ενεργοποιημένο στην προσθήκη ευαισθησία στο Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
     <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
     <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
-    <string name="patient_age_summary">Παρακαλώ επιλέξτε τύπο ασθενούς για να ορισθούν όρια ασφαλείας</string>
-    <string name="child">Παιδί</string>
-    <string name="teenage">Έφηβος</string>
-    <string name="adult">Ενήλικας</string>
-    <string name="resistantadult">Αντίσταση ινσουλίνης ενηλίκων</string>
-    <string name="pregnant">Κύηση</string>
-    <string name="max_bolus_title">Μέγιστο Επιτρεπτό bolus[U]</string>
-    <string name="max_carbs_title">Μέγιστο Επιτρεπτό υδατανθράκων [g]</string>
-    <string name="patient_type">Τύπος ασθενή</string>
     <!-- Overview -->
     <string name="snooze">Αναβολή</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
@@ -120,4 +110,5 @@
     <string name="uploader_short">UPLD</string>
     <!-- Skins -->
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
