@@ -14,8 +14,6 @@
     <string name="bolusdelivering">Livrare %1$.2f U</string>
     <string name="connecting">Se conectează</string>
     <string name="disconnected">Deconectat</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">Pompa face altă acțiune</string>
     <string name="connectionerror">Eroare de conexiune cu pompa</string>
     <string name="objectives">Obiective</string>
-    <string name="close">Închide</string>
     <string name="please_wait">Așteptați…</string>
     <string name="mute">Liniște</string>
     <string name="reload">Reîncărcare</string>
