@@ -12,12 +12,11 @@
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <string name="request">Požadavek</string>
     <string name="permission">Povolení</string>
-    <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
-    <string name="need_system_window_permission">Pro oznámení vyžaduje aplikace oprávnění systémového okna</string>
-    <string name="need_location_permission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
-    <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
     <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
+    <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
+    <string name="need_location_permission">Aplikace potřebuje oprávnění k přístupu k poloze kvůli skenování BT a WiFi identifikaci</string>
+    <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Velmi nízká</string>
     <string name="low" comment="3.1-3.9">Nízká</string>
