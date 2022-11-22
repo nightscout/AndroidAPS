@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Aonaid</string>
+    <string name="next_button">Ar Aghaidh</string>
+    <string name="previous_button">Roimhe seo</string>
+    <string name="status">Stádas:</string>
+    <string name="patient_name">Ainm cineál</string>
+    <string name="profile">Próifíl</string>
+    <string name="configbuilder_pump">Caidéil</string>
+    <string name="configbuilder_profile">Próifíl</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_general">Ginearálta</string>
+    <string name="configbuilder_loop">Lúb</string>
+    <string name="configbuilder_bgsource">Foinse BG</string>
+    <string name="apsmode_title">APS mód</string>
+</resources>
