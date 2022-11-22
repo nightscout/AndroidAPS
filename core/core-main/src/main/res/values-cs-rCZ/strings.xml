@@ -533,6 +533,15 @@
     <string name="wizard_explain_tt_to">%1$s – %2$s</string>
     <string name="wizard_pump_not_available">Pumpa není k dispozici!</string>
     <!--    Preferences-->
+    <string name="child">Dítě</string>
+    <string name="teenage">Dospívající</string>
+    <string name="adult">Dospělý</string>
+    <string name="resistant_adult">Dospělý s nízkou citlivostí</string>
+    <string name="pregnant">Těhotenství</string>
+    <string name="patient_age_summary">Prosím vyberte typ pacienta pro nastavení bezpečnostních limitů</string>
+    <string name="max_bolus_title">Maximální povolený bolus [U]</string>
+    <string name="max_carbs_title">Maximální počet sacharidů [g]</string>
+    <string name="patient_type">Typ pacienta</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
