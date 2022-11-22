@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="constraint_applied">מגבלה הוחלה!</string>
+    <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
+    <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
+    <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">דו-שיח בוטל</string>
     <string name="start_activity_tt">התחל פעילות TT</string>
     <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
@@ -88,4 +92,12 @@
     <string name="profile2">פרופיל 2</string>
     <string name="selected_profile">נבחר:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
+    <string name="check_preferences_import_btn">ייבוא</string>
+    <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
+    <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
+    <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
+    <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
 </resources>
