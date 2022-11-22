@@ -18,7 +18,7 @@ import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository

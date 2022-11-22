@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy

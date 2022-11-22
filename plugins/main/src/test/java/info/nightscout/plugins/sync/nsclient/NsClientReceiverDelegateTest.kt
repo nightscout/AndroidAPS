@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclient
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState

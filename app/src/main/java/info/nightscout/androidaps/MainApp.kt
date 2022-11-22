@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.core.utils.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.ProcessLifecycleListener

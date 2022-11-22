@@ -8,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.durationInMinutes
 import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy

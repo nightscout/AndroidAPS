@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import android.os.Build
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.core.iob.json
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.interfaces.aps.Loop

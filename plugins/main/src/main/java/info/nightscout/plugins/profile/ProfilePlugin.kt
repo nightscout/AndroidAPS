@@ -10,7 +10,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.profile.toMgdl

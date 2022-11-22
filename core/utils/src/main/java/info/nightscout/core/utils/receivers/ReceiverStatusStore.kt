@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.receivers
+package info.nightscout.core.utils.receivers
 
 import android.content.Context
 import android.content.Intent

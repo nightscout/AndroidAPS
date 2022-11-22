@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Exten
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TherapyEventDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.core.profile.fromMgdlToUnits

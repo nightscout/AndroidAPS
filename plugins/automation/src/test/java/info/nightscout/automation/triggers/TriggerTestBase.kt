@@ -7,7 +7,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.services.LastLocationDataContainer
 import info.nightscout.interfaces.iob.IobCobCalculator

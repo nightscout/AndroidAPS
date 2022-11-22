@@ -15,8 +15,8 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Worker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOrefWorker
-import info.nightscout.androidaps.receivers.DataWorkerStorage
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.AapsSchedulers

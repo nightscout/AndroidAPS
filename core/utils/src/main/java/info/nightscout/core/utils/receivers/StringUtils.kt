@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.utils
+package info.nightscout.core.utils.receivers
 
 /**
  * class contains useful String functions

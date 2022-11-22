@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.foodFromJson
-import info.nightscout.androidaps.receivers.DataWorkerStorage
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.Food
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.SyncNsFoodTransaction

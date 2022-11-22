@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.receivers
+package info.nightscout.core.utils.receivers
 
 import android.content.Context
 import android.content.Intent
@@ -10,7 +10,6 @@ import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.interfaces.utils.StringUtils
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.logging.AAPSLogger
