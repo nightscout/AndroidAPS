@@ -55,5 +55,6 @@
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
