@@ -15,8 +15,6 @@
     <string name="connecting">Verbining maken</string>
     <string name="disconnected">Verbinding verbroken</string>
     <string name="androidaps_start">AAPS gestart</string>
-    <string name="formatinsulinunits1">%1$.1f E</string>
-    <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pomp is bezig</string>
     <string name="connectionerror">Pomp verbindingsstoring</string>
     <string name="objectives">Doelen</string>
-    <string name="close">Sluiten</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
     <string name="mute">Geluid dempen</string>
     <string name="reload">Vernieuw</string>
