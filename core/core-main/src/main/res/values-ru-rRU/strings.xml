@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Обновить</string>
     <string name="error">Ошибка</string>
@@ -16,8 +15,6 @@
     <string name="connecting">соединение устанавливается</string>
     <string name="disconnected">Разъединено</string>
     <string name="androidaps_start">AAPS запущен</string>
-    <string name="formatinsulinunits1">%1$.1f ед</string>
-    <string name="formatinsulinunits">%1$.2f ед</string>
     <string name="formatsignedinsulinunits">%1$+.2f ед</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f/%2$d ед</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">помпа занята</string>
     <string name="connectionerror">ошибка соединения</string>
     <string name="objectives">Цели</string>
-    <string name="close">Закрыть</string>
     <string name="please_wait">Подождите…</string>
     <string name="mute">Отключить звук</string>
     <string name="reload">Перезагрузка истории</string>
-    <string name="stoppressed">нажат стоп</string>
     <string name="stop">стоп</string>
     <string name="carbs">Углеводы</string>
     <string name="invalid_profile">Недопустимый профиль!</string>
@@ -452,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
-    <string name="count_selected">%1$d выбрано</string>
-    <string name="sort_label">Сортировать</string>
-    <string name="remove_items">Удалить элементы</string>
-    <string name="sort_items">Сортировать элементы</string>
-    <string name="remove_selected_items">Удалить выбранные элементы</string>
     <string name="a11y_file">файл</string>
     <string name="a11y_user">пользователь</string>
     <!-- Autotune -->
@@ -539,6 +529,16 @@
     <string name="wizard_explain_tt">ВремЦ: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s до %2$s</string>
     <string name="wizard_pump_not_available">Нет помпы!</string>
+    <!--    Preferences-->
+    <string name="child">Ребенок</string>
+    <string name="teenage">Подросток</string>
+    <string name="adult">Взрослый</string>
+    <string name="resistant_adult">Инсулинорезистентный взрослый</string>
+    <string name="pregnant">Беременность</string>
+    <string name="patient_age_summary">Выберите тип пациента для установки ограничителей безопасности</string>
+    <string name="max_bolus_title">Макс разрешенный болюс [U]</string>
+    <string name="max_carbs_title">Макс разрешенные углеводы [g]</string>
+    <string name="patient_type">Тип пациента</string>
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
