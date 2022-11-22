@@ -14,8 +14,6 @@
     <string name="bolusdelivering">Пускам %1$.2fЕ</string>
     <string name="connecting">Свързване</string>
     <string name="disconnected">Не е сврзана</string>
-    <string name="formatinsulinunits1">%1$.1fЕ</string>
-    <string name="formatinsulinunits">%1$.2fЕ</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">Помпата е заета</string>
     <string name="connectionerror">Грешка при връзка с помпата</string>
     <string name="objectives">Цели</string>
-    <string name="close">Затвори</string>
     <string name="please_wait">Моля изчакайте...</string>
     <string name="mute">Заглушаване</string>
     <string name="reload">Презареди</string>
