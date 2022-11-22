@@ -73,5 +73,6 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Valt:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
