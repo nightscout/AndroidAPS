@@ -12,8 +12,6 @@
     <string name="waitingforpump">Αναμονή για αντλία</string>
     <string name="connecting">Συνδέεται</string>
     <string name="disconnected">Αποσυνδέθηκε</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
@@ -21,7 +19,6 @@
     <string name="pumpbusy">Αντλία απασχολημένη</string>
     <string name="connectionerror">Λάθος σύνδεσης αντλίας</string>
     <string name="objectives">Βήματα</string>
-    <string name="close">Κλείσιμο</string>
     <string name="please_wait">Περιμένετε…</string>
     <string name="mute">Σίγαση</string>
     <string name="reload">Γέμισμα</string>
