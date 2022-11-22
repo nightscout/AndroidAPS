@@ -47,7 +47,6 @@
     <string name="limitingiob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
     <string name="closedmodedisabledinpreferences">מצב לולאה סגור מושבת בהעדפות</string>
-    <string name="uamdisabledoref1notselected">UAM מושבת מפני שהוא מסתמך על תוסף רגישות של Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
     <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
     <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
@@ -55,15 +54,6 @@
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
     <string name="hardlimit">מגבלה קשיחה</string>
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
-    <string name="patient_age_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
-    <string name="child">ילד\\ה</string>
-    <string name="teenage">מתבגר\\ת</string>
-    <string name="adult">מבוגר\\ת</string>
-    <string name="resistantadult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
-    <string name="pregnant">הריון</string>
-    <string name="max_bolus_title">בולוס מקסימלי מותר [U]</string>
-    <string name="max_carbs_title">מקסימום פחמימות מותר [g]</string>
-    <string name="patient_type">סוג המטופל\\ת</string>
     <!-- Overview -->
     <string name="snooze">נודניק</string>
     <string name="show_statuslights">הצגת אורות חיווי במסך הבית</string>
@@ -193,4 +183,5 @@
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
