@@ -65,5 +65,6 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">선택:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
