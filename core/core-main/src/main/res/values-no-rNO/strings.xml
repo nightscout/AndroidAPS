@@ -15,8 +15,6 @@
     <string name="connecting">Tilkobler</string>
     <string name="disconnected">Frakoblet</string>
     <string name="androidaps_start">AAPS startet</string>
-    <string name="formatinsulinunits1">%1$.1f E</string>
-    <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pumpen er opptatt</string>
     <string name="connectionerror">Tilkoblingsfeil til pumpe</string>
     <string name="objectives">Opplæringsmål</string>
-    <string name="close">Lukk</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="mute">Lyd av</string>
     <string name="reload">Last på nytt</string>
