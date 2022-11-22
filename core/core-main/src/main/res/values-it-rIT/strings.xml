@@ -442,11 +442,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
-    <string name="count_selected">%1$d selezionato</string>
-    <string name="sort_label">Ordina</string>
-    <string name="remove_items">Rimuovi elementi</string>
-    <string name="sort_items">Ordina elementi</string>
-    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">utente</string>
     <!-- Autotune -->
