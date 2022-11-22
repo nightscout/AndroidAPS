@@ -14,8 +14,6 @@
     <string name="bolusdelivering">A administrar %1$.2f U</string>
     <string name="connecting">A ligar</string>
     <string name="disconnected">Desconectada</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">A bomba está ocupada</string>
     <string name="connectionerror">Erro de ligação da bomba</string>
     <string name="objectives">Objectivos</string>
-    <string name="close">Fechar</string>
     <string name="please_wait">Por favor aguarde…</string>
     <string name="mute">Silêncio</string>
     <string name="reload">Recarregar</string>
