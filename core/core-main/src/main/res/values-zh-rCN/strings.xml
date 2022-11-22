@@ -14,8 +14,6 @@
     <string name="bolusdelivering">正在输注 %1$.2f U</string>
     <string name="connecting">正在连接</string>
     <string name="disconnected">已断开连接</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d 克</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">胰岛素泵忙碌中</string>
     <string name="connectionerror">泵连接错误</string>
     <string name="objectives">目标</string>
-    <string name="close">关闭</string>
     <string name="please_wait">请稍等...</string>
     <string name="mute">静音</string>
     <string name="reload">重新加载</string>
