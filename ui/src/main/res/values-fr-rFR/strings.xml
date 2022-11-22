@@ -132,4 +132,6 @@
     <string name="invalid_pct">% saisi invalide</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Débit de Basal</string>
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
 </resources>
