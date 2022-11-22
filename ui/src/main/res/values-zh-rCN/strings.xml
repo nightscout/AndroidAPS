@@ -88,4 +88,12 @@
     <string name="profile2">配置文件 2</string>
     <string name="selected_profile">已选择:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">导入问题详细信息</string>
+    <string name="check_preferences_import_btn">导入</string>
+    <string name="check_preferences_import_anyway_btn">继续导入（危险！）</string>
+    <string name="check_preferences_before_import">请在导入之前检查首选项：</string>
+    <string name="check_preferences_cannot_import">无法导入首选项！</string>
+    <string name="check_preferences_dangerous_import">不应导入首选项 !</string>
 </resources>
