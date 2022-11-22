@@ -51,7 +51,6 @@
     <string name="limitingiob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
     <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
-    <string name="uamdisabledoref1notselected">Oref1 민감도 플러그인이 필요하므로 UAM이 비활성화 되었습니다.</string>
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
     <string name="closed_loop_disabled_with_eb">확장 Bolus 사용으로 인해 Closed Loop가 비활성화됨</string>
     <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>
@@ -59,15 +58,6 @@
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
     <string name="treatmentssafety_title">관리 안전설정</string>
-    <string name="patient_age_summary">안전 제한 설정을 위해 환자 유형을 선택하십시오.</string>
-    <string name="child">어린이</string>
-    <string name="teenage">청소년</string>
-    <string name="adult">성인</string>
-    <string name="resistantadult">인슐린 저항성 높은 성인</string>
-    <string name="pregnant">임신 중</string>
-    <string name="max_bolus_title">최대 허용 Bolus [U]</string>
-    <string name="max_carbs_title">최대 허용 탄수화물 [g]</string>
-    <string name="patient_type">환자 유형</string>
     <!-- Overview -->
     <string name="snooze">스누즈</string>
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
@@ -168,4 +158,5 @@
     <string name="largedisplay_description">큰 화면</string>
     <string name="skin">스킨</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
