@@ -127,6 +127,8 @@
     <string name="invalid_pct">Некорректное значение</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Базальная скорость</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">НАЖАТ СТОП</string>
     <!--    PrefImport-->
     <string name="check_preferences_details_btn">Объяснить проблемы импорта…</string>
     <string name="check_preferences_details_title">Сведения о проблемах импорта</string>
