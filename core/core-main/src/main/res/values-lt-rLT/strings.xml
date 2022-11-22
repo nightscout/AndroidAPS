@@ -418,7 +418,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
-    <string name="sort_label">Rūšiuoti</string>
     <string name="a11y_user">vartotojas</string>
     <!-- Autotune -->
     <string name="autotune_result">Rezultatas: %1$s</string>
