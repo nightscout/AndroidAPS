@@ -8,6 +8,7 @@
     <string name="dismiss">ODMÍTNOUT</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="close">Zavřít</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k dešifrování importovaných předvoleb.</string>
     <!-- NumberPicker -->
