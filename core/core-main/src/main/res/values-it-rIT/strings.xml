@@ -15,8 +15,6 @@
     <string name="connecting">Connessione</string>
     <string name="disconnected">Disconnesso</string>
     <string name="androidaps_start">AAPS avviato</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
     <string name="objectives">Obiettivi</string>
-    <string name="close">Chiudi</string>
     <string name="please_wait">Attendi…</string>
     <string name="mute">Muto</string>
     <string name="reload">Ricarica</string>
