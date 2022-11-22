@@ -49,7 +49,6 @@
     <string name="limitingiob">Ograniczam IOB do %1$.1f U z uwagi na %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
     <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
-    <string name="uamdisabledoref1notselected">UAM jest wyłączone ponieważ zależy od wtyczki wrażliwości Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
     <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
     <string name="smbalwaysdisabled">SMB zawsze i po węglow. wyłączone z uwagi na brak źródła BG z zaawansowanym filtrowaniem</string>
@@ -57,15 +56,6 @@
     <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
     <string name="hardlimit">twarde ograniczenie</string>
     <string name="treatmentssafety_title">Bezpieczeństwo terapii</string>
-    <string name="patient_age_summary">Wybierz typ pacjenta, aby ustawić limity bezpieczeństwa</string>
-    <string name="child">Dziecko</string>
-    <string name="teenage">Nastolatek</string>
-    <string name="adult">Osoba dorosła</string>
-    <string name="resistantadult">Osoba dorosła insulinooporna</string>
-    <string name="pregnant">Ciąża</string>
-    <string name="max_bolus_title">Maks. dopuszczalny bolus [U]</string>
-    <string name="max_carbs_title">Maks. dopuszczalne węglowodany [g]</string>
-    <string name="patient_type">Typ pacjenta</string>
     <!-- Overview -->
     <string name="snooze">Wycisz</string>
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
@@ -180,4 +170,5 @@
     <string name="largedisplay_description">Duży ekran</string>
     <string name="skin">Motyw</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
