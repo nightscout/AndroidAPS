@@ -14,8 +14,6 @@
     <string name="bolusdelivering">Podaję %1$.2f U</string>
     <string name="connecting">Łączę</string>
     <string name="disconnected">Rozłączono</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">Pompa jest zajęta</string>
     <string name="connectionerror">Błąd połączenia z pompą</string>
     <string name="objectives">Zadania</string>
-    <string name="close">Zamknij</string>
     <string name="please_wait">Proszę czekać…</string>
     <string name="mute">Wycisz</string>
     <string name="reload">Załaduj ponownie</string>
