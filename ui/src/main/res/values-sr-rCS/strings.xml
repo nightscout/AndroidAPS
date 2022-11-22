@@ -25,5 +25,6 @@
     <string name="treatments_wizard_correction_label">Korekcija</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
