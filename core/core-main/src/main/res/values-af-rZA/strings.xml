@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Verfris</string>
     <string name="save">Stoor</string>
@@ -12,8 +11,6 @@
     <string name="waitingforpump">Wag vir pomp</string>
     <string name="connecting">Koppel</string>
     <string name="disconnected">Ontkoppel</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
@@ -21,11 +18,9 @@
     <string name="pumpbusy">Pomp is besig</string>
     <string name="connectionerror">Pomp verbindingsfout</string>
     <string name="objectives">Doelstellings</string>
-    <string name="close">Maak toe</string>
     <string name="please_wait">Wag asseblief…</string>
     <string name="mute">Demp</string>
     <string name="reload">Herlaai</string>
-    <string name="stoppressed">STAAK GEDRUK</string>
     <string name="stop">Staak</string>
     <string name="carbs">Karbs</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -232,6 +227,7 @@
     <string name="smscommunicator_missingsmspermission">Vermiste SMS toestemming</string>
     <!-- BolusWizard -->
     <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
