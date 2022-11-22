@@ -57,5 +57,6 @@
     <string name="refresheventsfromnightscout">Ανανέωση από NS</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
