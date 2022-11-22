@@ -14,8 +14,6 @@
     <string name="bolusdelivering">Gebe %1$.2fIE ab</string>
     <string name="connecting">Verbinden</string>
     <string name="disconnected">Getrennt</string>
-    <string name="formatinsulinunits1">%1$.1f IE</string>
-    <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">Pumpe ist beschäftigt</string>
     <string name="connectionerror">Pumpen-Verbindungsfehler</string>
     <string name="objectives">Objectives (Ziele)</string>
-    <string name="close">Schließen</string>
     <string name="please_wait">Bitte warten…</string>
     <string name="mute">Alarm stoppen</string>
     <string name="reload">Neu laden</string>
