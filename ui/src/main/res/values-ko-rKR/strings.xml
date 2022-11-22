@@ -65,4 +65,12 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">선택:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">환경설정 가져오기 문제의 상세정보</string>
+    <string name="check_preferences_import_btn">가져오기</string>
+    <string name="check_preferences_import_anyway_btn">무시하고 가져오기 (위험!)</string>
+    <string name="check_preferences_before_import">가져오기 전에 환경설정을 확인하세요.</string>
+    <string name="check_preferences_cannot_import">환경 설정을 가져올 수가 없습니다.</string>
+    <string name="check_preferences_dangerous_import">환경 설정을 가져오면 안됩니다.</string>
 </resources>
