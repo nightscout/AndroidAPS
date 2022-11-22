@@ -40,19 +40,12 @@
     <string name="limitingiob">Beperk IAB tot %1$.1f U agv %2$s</string>
     <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
     <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
-    <string name="uamdisabledoref1notselected">UAM versper omdat dit staatmaak op Oref1 sensitiwiteit plugin</string>
     <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
     <string name="smbalwaysdisabled">SMB is altyd na koolhidrate versper omdat aktiewe BG bron nie gevorderde filter ondersteun nie</string>
     <string name="smbnotallowedinopenloopmode">SMB nie toegelaat in open lus modus</string>
     <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
     <string name="hardlimit">harde limiet</string>
     <string name="treatmentssafety_title">Behandelings veiligheid</string>
-    <string name="child">Kind</string>
-    <string name="teenage">Tiener</string>
-    <string name="adult">Volwassene</string>
-    <string name="resistantadult">Insulien weerstandige volwasse</string>
-    <string name="max_bolus_title">Maks toelaatbare Bolus [U]</string>
-    <string name="max_carbs_title">Maks Toelaatbare karbs [g]</string>
     <!-- Overview -->
     <string name="snooze">Sluimer</string>
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
@@ -110,4 +103,5 @@
     <string name="uploader_short">UPLD</string>
     <!-- Skins -->
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
