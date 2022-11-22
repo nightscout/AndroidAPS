@@ -29,7 +29,6 @@
     <string name="please_wait">잠시 기다려 주세요...</string>
     <string name="mute">음소거</string>
     <string name="reload">새로고침</string>
-    <string name="stoppressed">정지 누름</string>
     <string name="stop">정지</string>
     <string name="carbs">탄수화물</string>
     <string name="active"><![CDATA[<Active>]]></string>
