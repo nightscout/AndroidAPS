@@ -32,7 +32,7 @@ class VersionCheckerUtils @Inject constructor(
     private val dateUtil: DateUtil
 ) {
 
-    fun isConnected(): Boolean = receiverStatusStore.isConnected
+    private fun isConnected(): Boolean = receiverStatusStore.isConnected
 
     fun triggerCheckVersion() {
 
@@ -73,7 +73,7 @@ class VersionCheckerUtils @Inject constructor(
             aapsLogger.debug(LTag.CORE, "Github master version not checked. No connectivity")
 
     @Suppress("SameParameterValue")
-    fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
+    internal fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
 
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
@@ -146,7 +146,7 @@ class VersionCheckerUtils @Inject constructor(
         return digits.toIntArray()
     }
 
-    fun findVersion(file: String?): String? {
+    internal fun findVersion(file: String?): String? {
         val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
         return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
     }
@@ -161,8 +161,9 @@ class VersionCheckerUtils @Inject constructor(
 fun String.numericVersionPart(): String =
     "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
         ?: ""
-
+/*
 @Suppress("unused") fun findVersion(file: String?): String? {
     val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
     return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
 }
+*/

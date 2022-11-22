@@ -1,10 +1,10 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
@@ -27,7 +27,7 @@ class CommandBolus(
     override fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         if (r.success) carbsRunnable.run()
-        BolusProgressDialog.bolusEnded = true
+        BolusProgressData.bolusEnded = true
         rxBus.send(EventDismissBolusProgressIfRunning(r, detailedBolusInfo.id))
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()

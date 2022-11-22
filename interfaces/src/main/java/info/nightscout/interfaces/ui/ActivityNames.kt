@@ -33,7 +33,7 @@ interface ActivityNames {
     fun runTempTargetDialog(fragmentManager: FragmentManager)
     fun runExtendedBolusDialog(fragmentManager: FragmentManager)
     fun runFillDialog(fragmentManager: FragmentManager)
-
+    fun runBolusProgressDialog(fragmentManager: FragmentManager, insulin: Double, id: Long)
     enum class Mode(val i: Int) {
         RUNNING_PROFILE(1),
         CUSTOM_PROFILE(2),

@@ -4,7 +4,6 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -17,6 +16,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -191,11 +191,11 @@ open class VirtualPumpPlugin @Inject constructor(
             bolusingEvent.percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
             rxBus.send(bolusingEvent)
             delivering += 0.1
-            if (BolusProgressDialog.stopPressed)
+            if (BolusProgressData.stopPressed)
                 return PumpEnactResult(injector)
                     .success(false)
                     .enacted(false)
-                    .comment(rh.gs(R.string.stoppressed))
+                    .comment(rh.gs(R.string.stop))
         }
         SystemClock.sleep(200)
         bolusingEvent.status = rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)

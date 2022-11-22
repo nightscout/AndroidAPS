@@ -26,4 +26,8 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:ui')
     implementation project(':ui')
+
+    // Protection
+    api 'androidx.biometric:biometric:1.1.0'
+
 }

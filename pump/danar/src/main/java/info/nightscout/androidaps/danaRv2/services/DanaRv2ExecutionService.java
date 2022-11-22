@@ -48,13 +48,13 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.interfaces.Constants;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.profile.ProfileFunction;
+import info.nightscout.interfaces.pump.BolusProgressData;
 import info.nightscout.interfaces.pump.Pump;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
@@ -330,7 +330,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public boolean bolus(final double amount, int carbs, long carbtime, final EventOverviewBolusProgress.Treatment t) {
         if (!isConnected()) return false;
-        if (BolusProgressDialog.Companion.getStopPressed()) return false;
+        if (BolusProgressData.INSTANCE.getStopPressed()) return false;
 
         rxBus.send(new EventPumpStatusChanged(rh.gs(R.string.startingbolus)));
         danaPump.setBolusingTreatment(t);

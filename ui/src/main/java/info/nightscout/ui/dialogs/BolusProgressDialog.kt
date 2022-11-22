@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.os.Bundle
 import android.os.SystemClock
@@ -12,9 +12,9 @@ import info.nightscout.androidaps.activities.DialogAppCompatActivity
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.core.main.R
-import info.nightscout.core.main.databinding.DialogBolusprogressBinding
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -23,6 +23,7 @@ import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.ui.databinding.DialogBolusprogressBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -38,15 +39,9 @@ class BolusProgressDialog : DaggerDialogFragment() {
 
     private val disposable = CompositeDisposable()
 
-    companion object {
-
-        var bolusEnded = false
-        var stopPressed = false
-    }
-
     private var running = true
     private var amount = 0.0
-    var id: Long = 0L
+    private var id: Long = 0L
     private var state: String? = null
     private var helpActivity: DialogAppCompatActivity? = null
 
@@ -57,7 +52,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
 
     fun setInsulin(amount: Double): BolusProgressDialog {
         this.amount = amount
-        bolusEnded = false
+        BolusProgressData.bolusEnded = false
         return this
     }
 
@@ -92,15 +87,15 @@ class BolusProgressDialog : DaggerDialogFragment() {
         binding.title.text = rh.gs(R.string.goingtodeliver, amount)
         binding.stop.setOnClickListener {
             aapsLogger.debug(LTag.UI, "Stop bolus delivery button pressed")
-            stopPressed = true
-            binding.stoppressed.visibility = View.VISIBLE
+            BolusProgressData.stopPressed = true
+            binding.stopPressed.visibility = View.VISIBLE
             binding.stop.visibility = View.INVISIBLE
             uel.log(Action.CANCEL_BOLUS, Sources.Overview, state)
             commandQueue.cancelAllBoluses(id)
         }
         binding.progressbar.max = 100
         binding.status.text = state
-        stopPressed = false
+        BolusProgressData.stopPressed = false
     }
 
     override fun onStart() {
@@ -112,9 +107,9 @@ class BolusProgressDialog : DaggerDialogFragment() {
         super.onResume()
         aapsLogger.debug(LTag.UI, "onResume")
         if (!commandQueue.bolusInQueue())
-            bolusEnded = true
+            BolusProgressData.bolusEnded = true
 
-        if (bolusEnded) dismiss()
+        if (BolusProgressData.bolusEnded) dismiss()
         else running = true
 
         disposable += rxBus
@@ -153,7 +148,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         } catch (e: IllegalStateException) {
             // dialog not running yet. onResume will try again. Set bolusEnded to make extra
             // sure onResume will catch this
-            bolusEnded = true
+            BolusProgressData.bolusEnded = true
             aapsLogger.error("Unhandled exception", e)
         }
         helpActivity?.finish()
@@ -183,7 +178,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         aapsLogger.debug(LTag.UI, "scheduleDismiss")
         Thread {
             SystemClock.sleep(5000)
-            bolusEnded = true
+            BolusProgressData.bolusEnded = true
             activity?.runOnUiThread {
                 if (running) {
                     aapsLogger.debug(LTag.UI, "executing")

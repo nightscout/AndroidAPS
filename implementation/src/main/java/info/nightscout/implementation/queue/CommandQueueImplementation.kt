@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -625,10 +624,11 @@ class CommandQueueImplementation @Inject constructor(
 
     private fun showBolusProgressDialog(detailedBolusInfo: DetailedBolusInfo) {
         if (detailedBolusInfo.context != null) {
-            val bolusProgressDialog = BolusProgressDialog()
-            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin)
-            bolusProgressDialog.setId(detailedBolusInfo.id)
-            bolusProgressDialog.show((detailedBolusInfo.context as AppCompatActivity).supportFragmentManager, "BolusProgress")
+            activityNames.runBolusProgressDialog(
+                (detailedBolusInfo.context as AppCompatActivity).supportFragmentManager,
+                detailedBolusInfo.insulin,
+                detailedBolusInfo.id
+            )
         } else {
             val i = Intent()
             i.putExtra("insulin", detailedBolusInfo.insulin)

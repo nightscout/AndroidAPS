@@ -15,6 +15,7 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.TDDStatsActivity
+import info.nightscout.ui.dialogs.BolusProgressDialog
 import info.nightscout.ui.dialogs.CareDialog
 import info.nightscout.ui.dialogs.ExtendedBolusDialog
 import info.nightscout.ui.dialogs.FillDialog
@@ -103,5 +104,12 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
                 }
             }
             .show(fragmentManager, "CareDialog")
+    }
+    override fun runBolusProgressDialog(fragmentManager: FragmentManager, insulin: Double, id: Long) {
+        BolusProgressDialog().also {
+            it.setInsulin(insulin)
+            it.setId(id)
+            it.show(fragmentManager, "BolusProgress")
+        }
     }
 }
