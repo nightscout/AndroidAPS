@@ -67,7 +67,6 @@
     <string name="limitingiob">Ribojamas AIO iki %1$.1f V dėl %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
-    <string name="uamdisabledoref1notselected">NDM neveikia, nes priklauso nuo Oref1 jautrumo įskiepio</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
     <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes kraujo gliukozės duomenų šaltinis neturi reikalingo filtravimo</string>
@@ -75,15 +74,6 @@
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <string name="treatmentssafety_title">Terapijos saugumas</string>
-    <string name="patient_age_summary">Pasirinkite paciento tipą saugumo riboms nustatyti</string>
-    <string name="child">Vaikas</string>
-    <string name="teenage">Paauglys</string>
-    <string name="adult">Suaugęs</string>
-    <string name="resistantadult">Insulinui rezistentiškas suaugęs</string>
-    <string name="pregnant">Nėštumas</string>
-    <string name="max_bolus_title">Maksimalus leistinas bolusas [U]</string>
-    <string name="max_carbs_title">Maks. leistini angliavandeniai [g]</string>
-    <string name="patient_type">Paciento tipas</string>
     <!-- Overview -->
     <string name="snooze">Snausti</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
@@ -218,4 +208,5 @@
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
