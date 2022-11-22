@@ -25,4 +25,12 @@
     <string name="treatments_wizard_correction_label">Korekcija</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Detalji o problemima sa uvozom</string>
+    <string name="check_preferences_import_btn">Uvoz</string>
+    <string name="check_preferences_import_anyway_btn">Uvezi svejedno (OPASNO!)</string>
+    <string name="check_preferences_before_import">Proverite postavke pre uvoza:</string>
+    <string name="check_preferences_cannot_import">Postavke se ne mogu uvesti!</string>
+    <string name="check_preferences_dangerous_import">Postavke ne treba da se uvoze!</string>
 </resources>
