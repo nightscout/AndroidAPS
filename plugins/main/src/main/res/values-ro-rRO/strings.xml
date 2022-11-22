@@ -46,7 +46,6 @@
     <string name="limitingiob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
     <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
-    <string name="uamdisabledoref1notselected">UAM dezactivat deoarece este bazat pe plugin-ul Oref1 pentru sensibilitate</string>
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
     <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
     <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
@@ -54,15 +53,6 @@
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="hardlimit">limită fizică</string>
     <string name="treatmentssafety_title">Setări siguranță tratament</string>
-    <string name="patient_age_summary">Te rog confirmă tipul de pacient pentru a stabilii limitele de siguranță</string>
-    <string name="child">Copil</string>
-    <string name="teenage">Adolescent</string>
-    <string name="adult">Adult</string>
-    <string name="resistantadult">Adult rezistent la insulină</string>
-    <string name="pregnant">Sarcină</string>
-    <string name="max_bolus_title">Bolus maxim admis [U]</string>
-    <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
-    <string name="patient_type">Tip de pacient</string>
     <!-- Overview -->
     <string name="snooze">Amână</string>
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
@@ -173,4 +163,5 @@
     <string name="largedisplay_description">Display mare</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
