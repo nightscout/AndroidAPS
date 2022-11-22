@@ -24,8 +24,6 @@
     <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
     <!-- Safety -->
     <string name="treatmentssafety_title">Sigurnost tretmana</string>
-    <string name="max_bolus_title">Maks. dozvoljen bolus [U]</string>
-    <string name="max_carbs_title">Maks. dozvoljeni ugljeni hidrati [g]</string>
     <!-- Overview -->
     <string name="apsmode_title">APS režim</string>
     <string name="setbasalquestion">Prihvatite novi privremeni bazal:</string>
@@ -45,4 +43,5 @@
     <string name="description_ns_client">Sinhronizuje vaše podatke sa Nightscout-om</string>
     <!-- Skins -->
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
