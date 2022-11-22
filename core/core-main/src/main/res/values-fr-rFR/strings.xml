@@ -15,8 +15,6 @@
     <string name="connecting">Connexion en cours</string>
     <string name="disconnected">Déconnectée</string>
     <string name="androidaps_start">AAPS démarré</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pompe occupée</string>
     <string name="connectionerror">Erreur connection pompe</string>
     <string name="objectives">Objectifs</string>
-    <string name="close">Fermer</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="mute">Muet</string>
     <string name="reload">Actualiser</string>
