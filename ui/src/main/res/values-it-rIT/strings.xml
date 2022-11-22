@@ -92,4 +92,12 @@
     <string name="profile2">Profilo 2</string>
     <string name="selected_profile">Selezionato:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Dettagli dei problemi di importazione</string>
+    <string name="check_preferences_import_btn">Importa</string>
+    <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
+    <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
+    <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
+    <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
 </resources>

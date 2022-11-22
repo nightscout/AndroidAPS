@@ -71,7 +71,6 @@
     <string name="limitingiob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
     <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
-    <string name="uamdisabledoref1notselected">Незапланированный прием пищи UAM отключен, поскольку он основывается на модуле чувствительности из Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
@@ -79,15 +78,6 @@
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>
-    <string name="patient_age_summary">Выберите возраст пациента для установки ограничителей безопасности</string>
-    <string name="child">Ребенок</string>
-    <string name="teenage">Подросток</string>
-    <string name="adult">Взрослый</string>
-    <string name="resistantadult">Инсулинорезистентный взрослый</string>
-    <string name="pregnant">Беременность</string>
-    <string name="max_bolus_title">Макс разрешенный болюс [U]</string>
-    <string name="max_carbs_title">Макс разрешенные углеводы [g]</string>
-    <string name="patient_type">Тип пациента</string>
     <!-- Overview -->
     <string name="snooze">Отложить</string>
     <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>
@@ -233,4 +223,5 @@
     <string name="largedisplay_description">Большой экран</string>
     <string name="skin">Тема оформления</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>

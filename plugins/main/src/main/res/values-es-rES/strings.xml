@@ -232,7 +232,6 @@
     <string name="limitingiob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
     <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
-    <string name="uamdisabledoref1notselected">UAM deshabilitado al usar el plugin de sensibilidad Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
     <string name="smbalwaysdisabled">SMB siempre y después de carbohidratos desactivados porque la fuente activa de BG no soporta filtrado avanzado</string>
@@ -240,15 +239,6 @@
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
     <string name="hardlimit">límite estricto</string>
     <string name="treatmentssafety_title">Seguridad de tratamientos</string>
-    <string name="patient_age_summary">Por favor, selecciona el tipo de paciente para establecer los límites de seguridad</string>
-    <string name="child">Niño</string>
-    <string name="teenage">Adolescente</string>
-    <string name="adult">Adulto</string>
-    <string name="resistantadult">Adulto resistente a la insulina</string>
-    <string name="pregnant">Embarazada</string>
-    <string name="max_bolus_title">Máximo bolo permitido [U]</string>
-    <string name="max_carbs_title">Máximos carbohidratos permitidos [g]</string>
-    <string name="patient_type">Tipo de paciente</string>
     <!-- Overview -->
     <string name="snooze">Silenciar</string>
     <string name="copy_existing_values">¿Deseas copiar los ajustes desde Nightscout, si existen?</string>
@@ -455,4 +445,5 @@
     <string name="loop_smb_set_by_pump_label">SMB administrado por la bomba</string>
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
+    <!--    DataBroadcast-->
 </resources>

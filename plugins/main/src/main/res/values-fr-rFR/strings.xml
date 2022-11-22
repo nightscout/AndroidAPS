@@ -232,7 +232,6 @@
     <string name="limitingiob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
     <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
-    <string name="uamdisabledoref1notselected">Repas Non Signalé (UAM) désactivé car il utilise le plugin Sensibilité de Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
     <string name="closed_loop_disabled_with_eb">Boucle fermée désactivée à cause du bolus étendu</string>
     <string name="smbalwaysdisabled">SMB toujours et post-ingestion de glucides désactivé car la source de glycémies actuelle ne supporte pas de filtrage avancé</string>
@@ -240,15 +239,6 @@
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
     <string name="hardlimit">limite fixée</string>
     <string name="treatmentssafety_title">Traitements de sécurité</string>
-    <string name="patient_age_summary">Veuillez sélectionner le type de patient pour définir les limites de sécurité</string>
-    <string name="child"> Enfant</string>
-    <string name="teenage">Adolescent</string>
-    <string name="adult">Adulte</string>
-    <string name="resistantadult">Adulte résistant à l\'insuline</string>
-    <string name="pregnant">Grossesse</string>
-    <string name="max_bolus_title">Maximum Bolus autorisé [U]</string>
-    <string name="max_carbs_title">Maximum de Glucides autorisé [g]</string>
-    <string name="patient_type">Type de patient</string>
     <!-- Overview -->
     <string name="snooze">Masquer</string>
     <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>
@@ -455,4 +445,5 @@
     <string name="loop_smb_set_by_pump_label">SMB défini par la pompe</string>
     <string name="loop_open_mode_min_change">Changement minimum [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
+    <!--    DataBroadcast-->
 </resources>

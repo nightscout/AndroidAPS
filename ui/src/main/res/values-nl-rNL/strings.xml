@@ -110,4 +110,12 @@
     <string name="profile2">Profiel 2</string>
     <string name="selected_profile">Geselecteerd:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Importeer problemen - details</string>
+    <string name="check_preferences_import_btn">Importeren</string>
+    <string name="check_preferences_import_anyway_btn">Toch importeren (GEVAARLIJK!)</string>
+    <string name="check_preferences_before_import">Controleer instellingen voor het importeren:</string>
+    <string name="check_preferences_cannot_import">Instellingen kunnen niet worden geïmporteerd!</string>
+    <string name="check_preferences_dangerous_import">Instellingen zouden niet moeten worden geïmporteerd!</string>
 </resources>

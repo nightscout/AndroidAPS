@@ -32,8 +32,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
     <string name="openapsama_max_daily_safety_multiplier">Sicherheitsmultiplikator des Basalhöchstwertes</string>
     <string name="openapsama_current_basal_safety_multiplier">Sicherheitsmultiplikator der aktuellen Basalrate</string>
-    <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie stark Autosens Basalraten erhöhen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
-    <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>

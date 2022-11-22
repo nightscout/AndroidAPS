@@ -132,4 +132,14 @@
     <string name="invalid_pct">Entrada % inválida</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Tasa basal</string>
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_btn">Explicar problemas de importación…</string>
+    <string name="check_preferences_details_title">Importar detalles del problema</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
+    <string name="import_setting">Importar ajustes</string>
+    <string name="check_preferences_before_import">Por favor, comprueba los ajustes antes de importar:</string>
+    <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
+    <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
 </resources>

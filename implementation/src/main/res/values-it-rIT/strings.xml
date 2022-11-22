@@ -11,12 +11,11 @@
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
     <string name="request">Richiesta</string>
     <string name="permission">Autorizzazione</string>
-    <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
-    <string name="need_system_window_permission">L\'applicazione richiede l\'autorizzazione \"finestra di sistema\" per le notifiche</string>
-    <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
-    <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
     <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
+    <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
+    <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
+    <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
     <!--       Stats -->
     <string name="veryLow" comment="below 3.1">Molto basso</string>
     <string name="low" comment="3.1-3.9">Basso</string>

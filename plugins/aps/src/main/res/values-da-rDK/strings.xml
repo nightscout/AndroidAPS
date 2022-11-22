@@ -32,8 +32,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardværdi: 4 Dette er den anden halvdel af de vigtigste OpenAPS-sikkerhedsforanstaltninger, og den anden halvdel af \"3x maks. daglig, 4x aktuel\" i sikkerhedsforanstaltningerme. Det betyder, at din basal, uanset maks. basalrate på din pumpe, ikke kan være højere end dette antal gange det aktuelle niveau af din basal. Det er for at forhindre folk i at komme ind på et farligt område ved at opstille for høje maks basaler, før man forstår, hvordan algoritmen fungerer. Igen er standardværdien 4x; de fleste mennesker behøver aldrig at rette dette og i stedet være mere tilbøjelige til at tilpasse andre indstillinger, hvis de føler, at de er \"ved at løbe ind i\" denne sikkerhedsforanstaltning.</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks daglig basal multiplikator</string>
     <string name="openapsama_current_basal_safety_multiplier">Nuværende basal sikkerheds multiplikator</string>
-    <string name="openapsama_autosens_max_summary">Standardværdi: 1.2\nDette er en multiplikator top for autosens (og snart autotune) for at angive en 20%% maks. grænse for, hvor høj autosens kan være, hvilket til gengæld bestemmer, hvor høj autosens kan tilpasse sig, hvor lav den kan justere ISF, og hvor lav den kan angive BG-målet.</string>
-    <string name="openapsama_autosens_min_summary">Standardværdi: 0,7\nDen anden side af autosens sikkerhedsgrænser, idet den sætter en begrænsning på, hvor lavt autosen kan justere basalerne, og hvor høj den kan justere ISF-og BG-målene.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">max værdi i præferencer</string>
     <string name="hardlimit">hård grænse</string>

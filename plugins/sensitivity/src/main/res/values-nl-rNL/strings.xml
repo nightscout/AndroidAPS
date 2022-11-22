@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
+    <string name="description_sensitivity_oref1">Gevoeligheid wordt berekend met gegevens van de afgelopen 8 of 24 uur (de meest gevoelige van die twee) en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de instellingen. Berekent ook UAM.</string>
+    <string name="description_sensitivity_weighted_average">Gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. Minimale koolhydraat absorptie is berekend op basis van de max koolhydraat absorptie tijd uit jouw instellingen. Dit algoritme is de snelste in het volgen van wijzigingen van de gevoeligheid.</string>
+    <string name="openapsama_autosens_period">Interval voor autosens [uur]</string>
+    <string name="openapsama_autosens_period_summary">Aantal uren in het verleden voor gevoeligheids detectie (koolhy. absorbtie tijd niet meegerekend)</string>
+    <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor voor autosense (en binnenkort autotune) die zorgt dat de autosens ratio maximaal 20%% kan zijn. Dit maximum bepaalt in hoeverre je basaal kan worden verhoogd, en hoeveel je ISF en BG doel verlaagd kunnen worden.</string>
+    <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
+    <string name="openapsama_autosens_max">Max autosens ratio</string>
+    <string name="openapsama_autosens_min">Min autosens ratio</string>
+    <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
+    <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd volledig is opgenomen. Resterende KH worden niet mee gerekend.</string>
+</resources>

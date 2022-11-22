@@ -47,7 +47,6 @@
     <string name="limitingiob">A limitar IA para %1$.1f U porque %2$s</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
     <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
-    <string name="uamdisabledoref1notselected">RNA desactivada porque confia no plugin de sensibilidade Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
     <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
@@ -55,15 +54,6 @@
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <string name="treatmentssafety_title">Segurança de Tratamentos</string>
-    <string name="patient_age_summary">Por favor seleccione o tipo de paciente para configurar limites de segurança</string>
-    <string name="child">Criança</string>
-    <string name="teenage">Adolescente</string>
-    <string name="adult">Adulto</string>
-    <string name="resistantadult">Adulto resistente insulina</string>
-    <string name="pregnant">Gravidez</string>
-    <string name="max_bolus_title">Máx bólus permitido [U]</string>
-    <string name="max_carbs_title">Máx hidratos permitidos [g]</string>
-    <string name="patient_type">Tipo de Paciente</string>
     <!-- Overview -->
     <string name="snooze">Silenciar</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
@@ -174,4 +164,5 @@
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema gráfico</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>

@@ -73,8 +73,6 @@
     <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er aktive temp targets (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maks minutter</string>
-    <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDetta er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISK kan reduseres og hvor lavt BS målverdi kan settes.</string>
-    <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for autosens sikkerhet. Den begrenser autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS mål med ikke mer enn enn 30%.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
     <string name="hardlimit">hard begrensning</string>

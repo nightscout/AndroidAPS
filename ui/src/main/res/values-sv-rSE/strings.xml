@@ -73,4 +73,12 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Valt:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Detaljer kring importproblem</string>
+    <string name="check_preferences_import_btn">Importera</string>
+    <string name="check_preferences_import_anyway_btn">Importera ändå (FARLIGT!)</string>
+    <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
+    <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
+    <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
 </resources>

@@ -70,4 +70,12 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Parinkta:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Importo sutrikimų detalės</string>
+    <string name="check_preferences_import_btn">Importas</string>
+    <string name="check_preferences_import_anyway_btn">Importuoti vistiek (PAVOJINGA!)</string>
+    <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
+    <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
+    <string name="check_preferences_dangerous_import">Nustatymai neturėtų būti importuoti!</string>
 </resources>

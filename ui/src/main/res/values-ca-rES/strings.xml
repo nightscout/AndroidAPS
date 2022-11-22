@@ -69,4 +69,12 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Seleccionat:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Detall problemes d\'importació</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar en qualsevol cas (PERILLÓS!)</string>
+    <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
+    <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
+    <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
 </resources>

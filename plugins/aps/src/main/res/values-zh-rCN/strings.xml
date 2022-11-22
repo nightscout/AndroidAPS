@@ -31,8 +31,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值: 4 这是另一个的关键 OpenAPS 安全阀值, 日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值。这意味着你的基础率, 无论你的泵上的最大基础率设置的多少，也 不能超过你的当前基础率的4倍。这是为了防止人们在了解该算法的工作原理之前进入危险的领域 。同样, 默认值为 4倍; 大多数人将永远不需要调整, 而是更有可能需要调整其他设置,</string>
     <string name="openapsama_max_daily_safety_multiplier">最大日基础率安全倍数</string>
     <string name="openapsama_current_basal_safety_multiplier">当前基础率安全倍数</string>
-    <string name="openapsama_autosens_max_summary">默认值: 1.2 \n 这是 autosens 的安全阀值 对 autosens ( 很快autotune) 比率的高值设置最大增加20%% 最大限制, 这反过来决定了 autosens 可以调整的基础率的上限值, 可以调整的胰岛素敏感系数的下限值, 以及它可以设置血糖目标的下限值。</string>
-    <string name="openapsama_autosens_min_summary">默认值: 0.7 \n 　这是autosens 的另一个安全阈值, 。这个值决定了 autosens 可以调整的基础率的下限值, 可以调整的胰岛素敏感系数的上限值, 以及它可以设置血糖目标的上限值。</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">在参数选项里的最大值</string>
     <string name="hardlimit">硬限制</string>

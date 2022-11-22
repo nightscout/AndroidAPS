@@ -21,12 +21,6 @@
     <string name="tools">Eszközök</string>
     <string name="cannula">Kanül</string>
     <!-- Safety -->
-    <string name="child">Gyerek</string>
-    <string name="teenage">Tinédzser</string>
-    <string name="adult">Felnőtt</string>
-    <string name="resistantadult">Inzulinrezisztens felnőtt</string>
-    <string name="pregnant">Várandós</string>
-    <string name="patient_type">Betegkategória</string>
     <!-- Overview -->
     <string name="snooze">Szundi</string>
     <string name="overview_cgm">CGM</string>
@@ -51,4 +45,5 @@
     <string name="lowres_description">Alacsony felbontás</string>
     <string name="skin">Megjelenés</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>

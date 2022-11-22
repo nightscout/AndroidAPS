@@ -132,4 +132,15 @@
     <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Bazál</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STISKNUTO STOP</string>
+    <!--    PrefImport-->
+    <string name="check_preferences_details_btn">Vysvětlení problémů při importu…</string>
+    <string name="check_preferences_details_title">Detaily problémů importu</string>
+    <string name="check_preferences_import_btn">Import</string>
+    <string name="check_preferences_import_anyway_btn">Přesto importovat (NEBEZPEČNÉ!)</string>
+    <string name="import_setting">Importovat nastavení</string>
+    <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
+    <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
+    <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
 </resources>

@@ -26,8 +26,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor per defecte: 4. Valor clau de seguretat per OpenAPS, per quan parlem de \"3x max diari; 4x actual\". Significa que la vostra basal, independentment de la max. basal configurada a la bomba, no pot ser més gran que aquest valor multiplicat per la vostra basal en un moment determinat. Pretén evitar basals màximes excessivament altes abans de dominar l\'algoritme. Normalment no cal modificar el valor per defecte i, en cas de conflicte amb el valor màxim de basal, sol ser més habitual haver de modificar altres paràmetres que no pas aquest.</string>
     <string name="openapsama_max_daily_safety_multiplier">Màxim multiplicador diari de seguretat</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicador actual basal de seguretat</string>
-    <string name="openapsama_autosens_max_summary">Valor per defecte: 1.2\nMultiplicador de seguretat per autosens (aviat autotune), per fixar un límit màxim del 20%% per la màxima ràtio d\'autosens, que a la seva vegada determina com d\'alta pot ajustar la basal, com de baix l\'ISF i com de baix l\'objectiu de glucèmia.</string>
-    <string name="openapsama_autosens_min_summary">Valor per defecte: 0.7\nL\'altra cara dels límits de seguretat d\'autosens: com de baixa pot ajustar la basal i com d\'alts pot ajustar l\'ISF i l\'objectiu de glucèmia.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>

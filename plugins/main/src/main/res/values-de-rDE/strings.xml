@@ -56,7 +56,6 @@
     <string name="limitingiob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
     <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
-    <string name="uamdisabledoref1notselected">UAM deaktiviert, da diese auf die Oref1 Empfindlichkeitserkennung angewiesen sind.</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
     <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
     <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>
@@ -64,15 +63,6 @@
     <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
     <string name="hardlimit">festem Grenzwert</string>
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
-    <string name="patient_age_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
-    <string name="child">Kind</string>
-    <string name="teenage">Teenager</string>
-    <string name="adult">Erwachsener</string>
-    <string name="resistantadult">Insulinresistenter Erwachsener</string>
-    <string name="pregnant">Schwangerschaft</string>
-    <string name="max_bolus_title">Max. erlaubter Bolus [IE]</string>
-    <string name="max_carbs_title">Max. erlaubte Kohlenhydrate [g]</string>
-    <string name="patient_type">Patiententyp</string>
     <!-- Overview -->
     <string name="snooze">Schlummern</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
@@ -202,4 +192,5 @@
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>

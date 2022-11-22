@@ -26,8 +26,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
     <string name="openapsama_max_daily_safety_multiplier">최대 일 안전 승수</string>
     <string name="openapsama_current_basal_safety_multiplier">현재 Basal 안전 승수</string>
-    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
-    <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
