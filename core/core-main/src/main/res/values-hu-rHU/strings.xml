@@ -5,8 +5,6 @@
     <string name="error">Hiba</string>
     <string name="not_set_short">Nincs beállítva</string>
     <string name="waitingforpump">Várakozás pumpára</string>
-    <string name="formatinsulinunits1">%1$.1f E</string>
-    <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="please_wait">Kérem várjon…</string>
     <string name="mute">Némít</string>
