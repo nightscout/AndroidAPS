@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="constraint_applied">מגבלה הוחלה!</string>
+    <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
+    <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
+    <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">דו-שיח בוטל</string>
     <string name="start_activity_tt">התחל פעילות TT</string>
     <string name="start_eating_soon_tt">התחל TT אוכלים בקרוב</string>
