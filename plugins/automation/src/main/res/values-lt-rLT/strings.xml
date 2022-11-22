@@ -110,7 +110,6 @@
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Vartotojo veiksmas</string>
-    <string name="sort_label">Rūšiuoti</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">A</string>
