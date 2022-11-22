@@ -534,6 +534,15 @@
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
     <!--    Preferences-->
+    <string name="child">Barn</string>
+    <string name="teenage">Tenåring</string>
+    <string name="adult">Voksen</string>
+    <string name="resistant_adult">Insulinresistent voksen</string>
+    <string name="pregnant">Graviditet</string>
+    <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
+    <string name="max_bolus_title">Maks tillat bolus [U]</string>
+    <string name="max_carbs_title">Maks tillat karbo [g]</string>
+    <string name="patient_type">Pasienttype</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
