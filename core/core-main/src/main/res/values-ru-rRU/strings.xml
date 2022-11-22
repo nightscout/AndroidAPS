@@ -15,8 +15,6 @@
     <string name="connecting">соединение устанавливается</string>
     <string name="disconnected">Разъединено</string>
     <string name="androidaps_start">AAPS запущен</string>
-    <string name="formatinsulinunits1">%1$.1f ед</string>
-    <string name="formatinsulinunits">%1$.2f ед</string>
     <string name="formatsignedinsulinunits">%1$+.2f ед</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f/%2$d ед</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">помпа занята</string>
     <string name="connectionerror">ошибка соединения</string>
     <string name="objectives">Цели</string>
-    <string name="close">Закрыть</string>
     <string name="please_wait">Подождите…</string>
     <string name="mute">Отключить звук</string>
     <string name="reload">Перезагрузка истории</string>
