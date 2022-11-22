@@ -26,10 +26,6 @@
     <!-- Actions -->
     <string name="actions_shortname">GNÍ</string>
     <!-- Safety -->
-    <string name="child">Páiste</string>
-    <string name="teenage">Déagóirí</string>
-    <string name="adult">Duine fásta</string>
-    <string name="patient_type">Othar cineál</string>
     <!-- Overview -->
     <string name="apsmode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>
@@ -54,4 +50,5 @@
     <string name="openaps_short">OAPS</string>
     <!-- Skins -->
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
