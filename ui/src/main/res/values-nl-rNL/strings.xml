@@ -110,5 +110,6 @@
     <string name="profile2">Profiel 2</string>
     <string name="selected_profile">Geselecteerd:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
