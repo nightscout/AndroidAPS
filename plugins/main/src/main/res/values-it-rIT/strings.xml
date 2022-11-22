@@ -144,7 +144,6 @@
     <string name="limitingiob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
     <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
-    <string name="uamdisabledoref1notselected">UAM disabilitato perché il plugin di sensibilità Oref1, dal quale UAM dipende, non è abilitato</string>
     <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
     <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
     <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
@@ -152,15 +151,6 @@
     <string name="maxvalueinpreferences">valore max nelle preferenze</string>
     <string name="hardlimit">limite fisso</string>
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
-    <string name="patient_age_summary">Seleziona il tipo di paziente per configurare i limiti di sicurezza</string>
-    <string name="child">Bambino</string>
-    <string name="teenage">Adolescente</string>
-    <string name="adult">Adulto</string>
-    <string name="resistantadult">Adulto insulino-resistente</string>
-    <string name="pregnant">Gravidanza</string>
-    <string name="max_bolus_title">Max bolo consentito [U]</string>
-    <string name="max_carbs_title">Max CHO consentiti [g]</string>
-    <string name="patient_type">Tipo paziente</string>
     <!-- Overview -->
     <string name="snooze">Posticipa</string>
     <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
@@ -337,4 +327,5 @@
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
