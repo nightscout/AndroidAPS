@@ -29,7 +29,6 @@
     <string name="please_wait">请稍等...</string>
     <string name="mute">静音</string>
     <string name="reload">重新加载</string>
-    <string name="stoppressed">停止键按下了</string>
     <string name="stop">停止</string>
     <string name="carbs">碳水化合物</string>
     <string name="active"><![CDATA[<Active>]]></string>
