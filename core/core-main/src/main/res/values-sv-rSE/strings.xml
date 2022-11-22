@@ -14,8 +14,6 @@
     <string name="bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="connecting">Ansluter</string>
     <string name="disconnected">Frånkopplad</string>
-    <string name="formatinsulinunits1">%1$.1fU</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$dg</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -25,7 +23,6 @@
     <string name="pumpbusy">Pump upptagen</string>
     <string name="connectionerror">Anslutningsfel</string>
     <string name="objectives">Mål</string>
-    <string name="close">Stäng</string>
     <string name="please_wait">Var god vänta…</string>
     <string name="mute">Tysta</string>
     <string name="reload">Hämta</string>
