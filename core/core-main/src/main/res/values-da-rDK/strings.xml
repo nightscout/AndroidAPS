@@ -441,11 +441,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d valgt</string>
-    <string name="sort_label">Sortér</string>
-    <string name="remove_items">Fjern Emner</string>
-    <string name="sort_items">Sortér Emner</string>
-    <string name="remove_selected_items">Fjern valgte emner</string>
     <string name="a11y_file">fil</string>
     <string name="a11y_user">bruger</string>
     <!-- Autotune -->
