@@ -78,8 +78,6 @@
     <string name="carbs_req_threshold_summary">Gramos mínimos de carbohidratos para mostrar una alerta de sugerencia de carbohitratos: las sugerencias de carbohidratos debajo de este número no iniciarán una notificación.</string>
     <string name="lgs_threshold_summary">Valor de glucosa por debajo del cual se suspende la administración de insulina. El valor predeterminado utiliza el modelo de objetivo estándar. El usuario puede establecer un valor entre 60mg/dl (3. mmol/l) y 100mg/dl (5.5mmol/l). Valores por debajo de 65/3.6 usan el modelo predeterminado</string>
     <string name="lgs_threshold_title">Nivel de glucosa por debajo de valor LGS (Suspensión por glucosa baja)</string>
-    <string name="openapsama_autosens_max_summary">Valor predeterminado: 1.2\nEste parámetro establece un límite de seguridad máximo por defecto del 20% en autosens (y pronto en Autotune), que limita los valores máximos que puede: aumentar las basales, disminuir el factor de sensibilidad (ISF) y disminuir el objetivo de glucosa</string>
-    <string name="openapsama_autosens_min_summary">Valor predeterminado: 0.7\nEste parámetro establece un límite de seguridad mínimo por defecto del 30% en autosens, que limita los valores que puede: disminuir las basales, aumentar el factor de sensibilidad (ISF) y aumentar el objetivo de glucosa</string>
     <string name="increasing_max_basal">Incrementando el valor basal máximo porque la configuración es menor que la base máxima en el perfil</string>
     <string name="max_basal_multiplier">multiplicador basal máximo</string>
     <string name="max_daily_basal_multiplier">multiplicador basal diario máximo</string>
