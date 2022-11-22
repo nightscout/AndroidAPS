@@ -439,11 +439,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
-    <string name="count_selected">%1$d נבחרו</string>
-    <string name="sort_label">מיין</string>
-    <string name="remove_items">פריטים שהוסרו</string>
-    <string name="sort_items">מיין פריטים</string>
-    <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <string name="a11y_file">קובץ</string>
     <string name="a11y_user">משתמש</string>
     <!-- Autotune -->
