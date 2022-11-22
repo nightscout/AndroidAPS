@@ -54,4 +54,6 @@
     <string name="prime">Prima</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
 </resources>
