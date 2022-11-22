@@ -50,7 +50,6 @@
     <string name="limitingiob">Limitant IOB a %1$.1f U a causa de %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
     <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
-    <string name="uamdisabledoref1notselected">UAM desactivat perquè es basa en el plugin de sensibilitat Oref1</string>
     <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
     <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
     <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
@@ -58,15 +57,6 @@
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
     <string name="treatmentssafety_title">Seguretat tractaments</string>
-    <string name="patient_age_summary">Si us plau, seleccioneu el tipus de pacient per configurar els límits de seguretat</string>
-    <string name="child">Nen</string>
-    <string name="teenage">Adolescent</string>
-    <string name="adult">Adult</string>
-    <string name="resistantadult">Adult resistent a l\'insulina</string>
-    <string name="pregnant">Embaraç</string>
-    <string name="max_bolus_title">Max bolus permès [U]</string>
-    <string name="max_carbs_title">Max carbs permesos [g]</string>
-    <string name="patient_type">Tipus de pacient</string>
     <!-- Overview -->
     <string name="snooze">Postposar</string>
     <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
@@ -176,4 +166,5 @@
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
