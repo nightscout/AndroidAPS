@@ -55,7 +55,6 @@
     <string name="limitingiob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
     <string name="closedmodedisabledinpreferences">Lukket loop tilstand deaktiveret i præferencer</string>
-    <string name="uamdisabledoref1notselected">UAM deaktiveret, fordi det er afhængig af Oref1 følsomheds pluginnet</string>
     <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
     <string name="closed_loop_disabled_with_eb">Lukket loop deaktiveret på grund af kørsel af forlænget bolus</string>
     <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
@@ -63,15 +62,6 @@
     <string name="maxvalueinpreferences">max værdi i præferencer</string>
     <string name="hardlimit">hård grænse</string>
     <string name="treatmentssafety_title">Behandlings sikkerhed</string>
-    <string name="patient_age_summary">Vælg venligst patienttype til opsætning af sikkerhedsgrænser</string>
-    <string name="child">Barn</string>
-    <string name="teenage">Teeanger</string>
-    <string name="adult">Voksen</string>
-    <string name="resistantadult">Insulinresistent voksen</string>
-    <string name="pregnant">Graviditet</string>
-    <string name="max_bolus_title">Maks tilladt bolus [IE]</string>
-    <string name="max_carbs_title">Maks tilladte kulhydrater [g]</string>
-    <string name="patient_type">Patienttype</string>
     <!-- Overview -->
     <string name="snooze">Udsæt</string>
     <string name="show_statuslights">Vis statuslys på startskærm</string>
@@ -201,4 +191,5 @@
     <string name="largedisplay_description">Stort display</string>
     <string name="skin">Udseende</string>
     <!--    Loop -->
+    <!--    DataBroadcast-->
 </resources>
