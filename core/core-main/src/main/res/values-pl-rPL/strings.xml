@@ -418,8 +418,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Baza</string>
     <string name="basalpct">Baza %</string>
-    <string name="count_selected">Wybrany %1$d</string>
-    <string name="sort_label">Sortuj</string>
     <string name="a11y_user">użytkownik</string>
     <!-- Autotune -->
     <string name="autotune_result">Wynik: %1$s</string>
