@@ -70,5 +70,6 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Parinkta:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
