@@ -11,7 +11,6 @@ import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -26,6 +25,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished

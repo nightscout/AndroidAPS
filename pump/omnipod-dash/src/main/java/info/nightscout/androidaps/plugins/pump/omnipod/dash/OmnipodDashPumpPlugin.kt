@@ -35,8 +35,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBas
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
-import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
-import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.core.pump.convertedToAbsolute
 import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.pump.toStringFull
@@ -62,6 +60,8 @@ import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.utils.DecimalFormatter.to0Decimal
+import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers

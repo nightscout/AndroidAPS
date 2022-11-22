@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils.textValidator.validators
 
 import android.widget.EditText
-import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 

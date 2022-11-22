@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.pump.convertedToAbsolute
 import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.ui.toast.ToastUtils
@@ -39,6 +38,7 @@ import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

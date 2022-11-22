@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
@@ -8,6 +7,7 @@ import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlin.math.ceil

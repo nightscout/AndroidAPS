@@ -9,8 +9,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toCurrentUnitsString
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources

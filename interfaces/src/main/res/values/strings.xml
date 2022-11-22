@@ -21,4 +21,8 @@
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pump driver changed.</string>
 
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+
 </resources>

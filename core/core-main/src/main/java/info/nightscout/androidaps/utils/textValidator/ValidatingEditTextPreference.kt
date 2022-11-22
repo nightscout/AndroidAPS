@@ -6,8 +6,6 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.SafeParse

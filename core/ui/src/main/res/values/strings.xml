@@ -8,6 +8,7 @@
     <string name="dismiss">DISMISS</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="close">Close</string>
 
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>

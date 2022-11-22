@@ -8,7 +8,6 @@ import info.nightscout.androidaps.extensions.storeDouble
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -21,6 +20,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R

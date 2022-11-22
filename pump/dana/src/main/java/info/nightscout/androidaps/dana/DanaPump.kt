@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.dana
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

@@ -5,10 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
-import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -17,6 +15,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

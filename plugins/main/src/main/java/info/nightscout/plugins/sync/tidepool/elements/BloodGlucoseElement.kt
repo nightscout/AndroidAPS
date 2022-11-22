@@ -1,7 +1,6 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.plugins.sync.nsclient.extensions.toMainUnit

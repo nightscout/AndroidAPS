@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.diaconn
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

@@ -12,8 +12,6 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.TemporaryTarget
@@ -24,6 +22,7 @@ import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporar
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck

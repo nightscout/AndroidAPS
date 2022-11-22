@@ -15,12 +15,12 @@ import info.nightscout.androidaps.diaconn.common.RecordTypes
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecord
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8HistoryActivityBinding
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.shared.utils.DateUtil
@@ -149,9 +149,9 @@ class DiaconnG8HistoryActivity : NoSplashAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY     -> {
-                    holder.dailyBasal.text = rh.gs(R.string.formatinsulinunits, record.dailyBasal)
-                    holder.dailyBolus.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus)
-                    holder.dailyTotal.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
+                    holder.dailyBasal.text = rh.gs(R.string.format_insulin_units, record.dailyBasal)
+                    holder.dailyBolus.text = rh.gs(R.string.format_insulin_units, record.dailyBolus)
+                    holder.dailyTotal.text = rh.gs(R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
                     holder.time.text = dateUtil.dateString(record.timestamp)
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE

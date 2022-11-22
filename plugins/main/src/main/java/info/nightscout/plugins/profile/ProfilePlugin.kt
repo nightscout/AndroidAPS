@@ -10,12 +10,10 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.profile.ProfileStoreObject
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -30,6 +28,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R

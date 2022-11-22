@@ -1,7 +1,7 @@
 package info.nightscout.ui.extensions
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.utils.DecimalFormatter
 
 fun Double.toSignedString(pump: Pump): String {
     val formatted = DecimalFormatter.toPumpSupportedBolus(this, pump)

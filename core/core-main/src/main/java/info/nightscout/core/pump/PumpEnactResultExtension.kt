@@ -1,7 +1,7 @@
 package info.nightscout.core.pump
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
 
 fun PumpEnactResult.toHtml(rh: ResourceHelper): String {

@@ -35,7 +35,6 @@ import info.nightscout.androidaps.utils.textValidator.validators.RegexpValidator
 import info.nightscout.androidaps.utils.textValidator.validators.Validator
 import info.nightscout.androidaps.utils.textValidator.validators.WebUrlValidator
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import javax.inject.Inject

@@ -12,7 +12,6 @@ import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources

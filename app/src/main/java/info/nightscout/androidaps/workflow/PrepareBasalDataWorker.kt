@@ -9,9 +9,9 @@ import androidx.work.workDataOf
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
+import info.nightscout.core.graph.OverviewData
+import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -28,7 +28,7 @@ class PrepareBasalDataWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
-    var ctx: Context
+    private var ctx: Context
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         ctx =  rh.getThemedCtx(context)

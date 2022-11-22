@@ -10,8 +10,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.BolusCalculatorResult
@@ -327,7 +325,7 @@ class BolusWizard @Inject constructor(
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(context, rh, R.attr.bolusColor) + pct)
+            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.format_insulin_units, insulinAfterConstraints).formatColor(context, rh, R.attr.bolusColor) + pct)
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""

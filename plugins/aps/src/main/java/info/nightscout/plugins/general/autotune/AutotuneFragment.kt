@@ -22,7 +22,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.core.profile.ProfileStoreObject
-import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry

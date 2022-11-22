@@ -76,7 +76,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.services.AlarmSoundService;
-import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.core.utils.DateTimeUtil;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
@@ -100,6 +99,7 @@ import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.interfaces.queue.CustomCommand;
 import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.utils.DecimalFormatter;
 import info.nightscout.interfaces.utils.Round;
 import info.nightscout.interfaces.utils.TimeChangeType;
 import info.nightscout.rx.AapsSchedulers;

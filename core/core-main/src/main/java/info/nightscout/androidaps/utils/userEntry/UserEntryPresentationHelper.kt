@@ -2,10 +2,7 @@ package info.nightscout.androidaps.utils.userEntry
 
 import android.text.Spanned
 import dagger.Reusable
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.Translator
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.toUnitsString
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.ColorGroup
@@ -13,8 +10,10 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil

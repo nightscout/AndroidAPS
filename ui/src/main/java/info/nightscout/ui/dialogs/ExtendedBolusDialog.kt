@@ -96,7 +96,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val durationInMinutes = binding.duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
         val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
-        actions.add(rh.gs(R.string.formatinsulinunits, insulinAfterConstraint))
+        actions.add(rh.gs(R.string.format_insulin_units, insulinAfterConstraint))
         actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
             actions.add(rh.gs(R.string.constraint_applied).formatColor(context, rh, R.attr.warningColor))

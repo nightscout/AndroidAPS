@@ -9,16 +9,14 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.BolusDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.EffectiveProfileSwitchDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TimeAsXAxisLabelFormatter
-import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.core.graph.OverviewData
+import info.nightscout.core.graph.data.BolusDataPoint
+import info.nightscout.core.graph.data.EffectiveProfileSwitchDataPoint
+import info.nightscout.core.graph.data.GlucoseValueDataPoint
+import info.nightscout.core.graph.data.TimeAsXAxisLabelFormatter
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.logging.AAPSLogger
@@ -66,10 +64,10 @@ class GraphData(
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaDataPoints = arrayOf(
-            DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
-            DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
+            info.nightscout.core.graph.data.DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
+            info.nightscout.core.graph.data.DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
         )
-        addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
+        addSeries(info.nightscout.core.graph.data.AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
             it.backgroundColor = rh.gac(graph.context, R.attr.inRangeBackground)

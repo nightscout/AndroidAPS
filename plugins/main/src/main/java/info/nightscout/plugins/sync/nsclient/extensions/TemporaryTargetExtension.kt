@@ -1,7 +1,5 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit

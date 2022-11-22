@@ -8,7 +8,6 @@ import info.nightscout.androidaps.extensions.shiftTargetBlock
 import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch

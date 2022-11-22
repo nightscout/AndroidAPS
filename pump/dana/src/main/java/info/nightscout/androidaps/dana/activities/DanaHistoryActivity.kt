@@ -15,8 +15,6 @@ import info.nightscout.androidaps.dana.database.DanaHistoryRecord
 import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
 import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.core.profile.toUnitsString
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -25,6 +23,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -170,9 +169,9 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
-                    holder.binding.dailyBasal.text = rh.gs(R.string.formatinsulinunits, record.dailyBasal)
-                    holder.binding.dailyBolus.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus)
-                    holder.binding.dailyTotal.text = rh.gs(R.string.formatinsulinunits, record.dailyBolus + record.dailyBasal)
+                    holder.binding.dailyBasal.text = rh.gs(R.string.format_insulin_units, record.dailyBasal)
+                    holder.binding.dailyBolus.text = rh.gs(R.string.format_insulin_units, record.dailyBolus)
+                    holder.binding.dailyTotal.text = rh.gs(R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
                     holder.binding.time.text = dateUtil.dateString(record.timestamp)
                     holder.binding.time.visibility = View.VISIBLE
                     holder.binding.value.visibility = View.GONE

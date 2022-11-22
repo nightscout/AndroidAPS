@@ -96,7 +96,7 @@ class VirtualPumpFragment : DaggerFragment() {
         binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
             ?: ""
         binding.battery.text = rh.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
-        binding.reservoir.text = rh.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
+        binding.reservoir.text = rh.gs(R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())
 
         virtualPumpPlugin.refreshConfiguration()
         val pumpType = virtualPumpPlugin.pumpType

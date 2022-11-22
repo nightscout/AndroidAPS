@@ -10,9 +10,8 @@ import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.workflow.CalculationWorkflow
+import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
 import info.nightscout.core.iob.determineBasalJson
@@ -40,6 +39,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

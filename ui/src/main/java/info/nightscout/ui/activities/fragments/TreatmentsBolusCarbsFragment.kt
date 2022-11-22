@@ -216,18 +216,18 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || showInvalidated)).toVisibility()
             ml.bolus?.let { bolus ->
                 holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
-                holder.binding.insulin.text = rh.gs(R.string.formatinsulinunits, bolus.amount)
+                holder.binding.insulin.text = rh.gs(R.string.format_insulin_units, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
                     holder.binding.iob.setTextColor(rh.gac(context, R.attr.activeColor))
-                    holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iobContrib)
+                    holder.binding.iob.text = rh.gs(R.string.format_insulin_units, iob.iobContrib)
                     holder.binding.iobLabel.visibility = View.VISIBLE
                     holder.binding.iob.visibility = View.VISIBLE
                 } else {
-                    holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, 0.0)
+                    holder.binding.iob.text = rh.gs(R.string.format_insulin_units, 0.0)
                     holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
                     holder.binding.iobLabel.visibility = View.GONE
                     holder.binding.iob.visibility = View.GONE
@@ -434,7 +434,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             val mealLink = selectedItems.valueAt(0)
             val bolus = mealLink.bolus
             if (bolus != null)
-                return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
+                return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.format_insulin_units, bolus.amount) + "\n" +
                     rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
             val carbs = mealLink.carbs
             if (carbs != null)

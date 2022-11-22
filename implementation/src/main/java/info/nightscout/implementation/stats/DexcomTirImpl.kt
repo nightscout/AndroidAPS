@@ -6,8 +6,6 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.core.profile.toCurrentUnitsString
-import info.nightscout.core.profile.toUnitsString
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile

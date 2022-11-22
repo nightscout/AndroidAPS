@@ -1,8 +1,8 @@
 package info.nightscout.plugins.general.overview.notifications
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclient.data.NSAlarm

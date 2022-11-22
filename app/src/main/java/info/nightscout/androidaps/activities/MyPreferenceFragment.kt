@@ -31,7 +31,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.automation.AutomationPlugin
-import info.nightscout.core.profile.toCurrentUnits
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase

@@ -5,12 +5,12 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus

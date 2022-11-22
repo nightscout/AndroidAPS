@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
-import info.nightscout.core.profile.toCurrentUnitsString
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.Constants

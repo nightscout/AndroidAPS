@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.setupwizard.SWNumberValidator
-import info.nightscout.core.profile.toCurrentUnits
 import info.nightscout.core.ui.elements.NumberPicker
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile

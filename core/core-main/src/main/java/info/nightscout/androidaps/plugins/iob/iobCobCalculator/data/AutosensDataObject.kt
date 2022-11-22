@@ -1,10 +1,6 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data
 
-import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Scale
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.AutosensData
@@ -19,7 +15,7 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.min
 
-class AutosensDataObject(injector: HasAndroidInjector) : DataPointWithLabelInterface, AutosensData {
+class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -29,7 +25,6 @@ class AutosensDataObject(injector: HasAndroidInjector) : DataPointWithLabelInter
 
     override var time = 0L
     override var bg = 0.0 // mgdl
-    var chartTime: Long = 0
     override var pastSensitivity = ""
     override var deviation = 0.0
     override var validDeviation = false
@@ -121,22 +116,6 @@ class AutosensDataObject(injector: HasAndroidInjector) : DataPointWithLabelInter
             i++
         }
     }
-
-    // ------- DataPointWithLabelInterface ------
-    var scale: Scale? = null
-
-    override fun getX(): Double = chartTime.toDouble()
-    override fun getY(): Double = scale!!.transform(cob)
-
-    override fun setY(y: Double) {}
-    override val label: String = ""
-    override val duration = 0L
-    override val shape = PointsWithLabelGraphSeries.Shape.COB_FAIL_OVER
-    override val size = 0.5f
-    override fun color(context: Context?): Int {
-        return rh.gac(context,R.attr.cobColor)
-    }
-
     init {
         injector.androidInjector().inject(this)
     }

@@ -1,7 +1,7 @@
 package info.nightscout.core.iob
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.interfaces.iob.GlucoseStatus
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
 
 fun GlucoseStatus.log(): String = "Glucose: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl " +

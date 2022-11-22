@@ -10,8 +10,6 @@ import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
-import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
 import info.nightscout.core.pump.convertedToAbsolute
 import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.pump.toStringFull
@@ -30,6 +28,8 @@ import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.DecimalFormatter.to0Decimal
+import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit

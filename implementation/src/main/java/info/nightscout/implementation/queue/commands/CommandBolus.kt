@@ -39,7 +39,7 @@ class CommandBolus(
     }
 
     override fun log(): String {
-        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin) else "") +
+        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
             if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 

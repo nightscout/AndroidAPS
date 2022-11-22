@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.extensions
 
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 

@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
