@@ -69,5 +69,6 @@
     <!-- ProfileHelperActivity -->
     <string name="selected_profile">Wybrany:</string>
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
