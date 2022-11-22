@@ -15,8 +15,6 @@
     <string name="connecting">Povezivanje</string>
     <string name="disconnected">Odspojen</string>
     <string name="androidaps_start">AAPS je počeo</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pumpa je zauzeta</string>
     <string name="connectionerror">Greška u spajanju pumpe</string>
     <string name="objectives">Ciljevi</string>
-    <string name="close">Zatvori</string>
     <string name="please_wait">Molimo pričekajte…</string>
     <string name="mute">Isključi zvuk</string>
     <string name="reload">Ponovno učitaj</string>
