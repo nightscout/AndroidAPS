@@ -451,11 +451,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Базал</string>
     <string name="basalpct">Базал %</string>
-    <string name="count_selected">%1$d выбрано</string>
-    <string name="sort_label">Сортировать</string>
-    <string name="remove_items">Удалить элементы</string>
-    <string name="sort_items">Сортировать элементы</string>
-    <string name="remove_selected_items">Удалить выбранные элементы</string>
     <string name="a11y_file">файл</string>
     <string name="a11y_user">пользователь</string>
     <!-- Autotune -->
