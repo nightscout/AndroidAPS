@@ -15,8 +15,6 @@
     <string name="connecting">Pripájanie</string>
     <string name="disconnected">Odpojené</string>
     <string name="androidaps_start">AAPS spustený</string>
-    <string name="formatinsulinunits1">%1$.1f JI</string>
-    <string name="formatinsulinunits">%1$.2f JI</string>
     <string name="formatsignedinsulinunits">%1$+.2f JI</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d JI</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pumpa je zaneprázdnená</string>
     <string name="connectionerror">Chyba pripájania pumpy</string>
     <string name="objectives">Ciele</string>
-    <string name="close">Zavrieť</string>
     <string name="please_wait">Čakajte prosím...</string>
     <string name="mute">Stíšiť</string>
     <string name="reload">Znova načítať</string>
