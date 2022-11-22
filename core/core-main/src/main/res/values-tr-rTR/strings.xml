@@ -15,8 +15,6 @@
     <string name="connecting">Bağlanıyor</string>
     <string name="disconnected">Bağlantı kesildi</string>
     <string name="androidaps_start">AAPS başladı</string>
-    <string name="formatinsulinunits1">%1$.1f Ü</string>
-    <string name="formatinsulinunits">%1$.2f Ü</string>
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d Ü</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pompa meşgul</string>
     <string name="connectionerror">Pompa bağlantı hatası</string>
     <string name="objectives">Görevler</string>
-    <string name="close">Kapat</string>
     <string name="please_wait">Lütfen bekleyin…</string>
     <string name="mute">Sessiz</string>
     <string name="reload">Yeniden yükle</string>
