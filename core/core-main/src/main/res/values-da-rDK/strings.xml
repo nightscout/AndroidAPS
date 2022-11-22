@@ -15,8 +15,6 @@
     <string name="connecting">Forbinder</string>
     <string name="disconnected">Forbindelse afbrudt</string>
     <string name="androidaps_start">AAPS startet</string>
-    <string name="formatinsulinunits1">%1$.1f IE</string>
-    <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
@@ -26,7 +24,6 @@
     <string name="pumpbusy">Pumpe er optaget</string>
     <string name="connectionerror">Forbindelsesfejl til pumpe</string>
     <string name="objectives">Mål</string>
-    <string name="close">Luk</string>
     <string name="please_wait">Vent venligst…</string>
     <string name="mute">Lydløs</string>
     <string name="reload">Genindlæs</string>
