@@ -46,5 +46,6 @@
     <string name="treatments_wizard_correction_label">Cear</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
     <!--    PrefImport-->
 </resources>
