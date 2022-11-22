@@ -57,4 +57,12 @@
     <string name="refresheventsfromnightscout">Ανανέωση από NS</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--    PrefImport-->
+    <string name="check_preferences_details_title">Λεπτομέρειες προβλημάτων εισαγωγής</string>
+    <string name="check_preferences_import_btn">Εισαγωγή</string>
+    <string name="check_preferences_import_anyway_btn">Εισαγωγή οπωσδήποτε(ΕΠΙΚΙΝΔΥΝΟ)</string>
+    <string name="check_preferences_before_import">Ελέγξτε τις προτιμήσεις πριν την εισαγωγή:</string>
+    <string name="check_preferences_cannot_import">Δεν είναι δυνατή η εισαγωγή προτιμήσεων!</string>
+    <string name="check_preferences_dangerous_import">Δεν πρέπει να εισαχθούν προτιμήσεις!</string>
 </resources>
