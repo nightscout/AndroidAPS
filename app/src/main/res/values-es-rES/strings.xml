@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Configuración general</string>
     <string name="open_navigation">Abrir navegación</string>
     <string name="close_navigation">Cerrar navegación</string>
-    <string name="nav_plugin_preferences">Preferencias del complemento</string>
     <string name="remove_items">Eliminar elementos</string>
     <string name="sort_items">Ordenar elementos</string>
     <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Misceláneo</string>
     <string name="nav_logsettings">Ajustes de registros</string>
     <string name="resettodefaults">Restablecer valores predeterminados</string>
-    <string name="sendlogfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <string name="profile_total">== ∑%1$s U</string>
     <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
     <string name="unitsnosemicolon">Unidades</string>
