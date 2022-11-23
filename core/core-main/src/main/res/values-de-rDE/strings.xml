@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Aktualisieren</string>
-    <string name="error">Fehler</string>
     <string name="save">Speichern</string>
     <string name="not_set_short">Nicht angegeben</string>
     <string name="failedupdatebasalprofile">Fehler beim Aktualisieren des Basalprofils</string>
-    <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
-    <string name="invalidinput">Ungültige Eingabedaten</string>
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
-    <string name="bolusdelivering">Gebe %1$.2fIE ab</string>
     <string name="connecting">Verbinden</string>
     <string name="disconnected">Getrennt</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
