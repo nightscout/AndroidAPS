@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">רענן</string>
-    <string name="error">שגיאה</string>
     <string name="save">שמור</string>
     <string name="not_set_short">לא הוגדר</string>
     <string name="failedupdatebasalprofile">עדכון הפרופיל הבזאלי נכשל</string>
-    <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
-    <string name="invalidinput">קלט לא חוקי</string>
     <string name="tempbasaldeliveryerror">שגיאת אספקה של בזאלי זמני</string>
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
-    <string name="bolusdelivering">מזריק %1$.2f יח\'</string>
     <string name="connecting">מתחבר</string>
     <string name="disconnected">מנותק</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
