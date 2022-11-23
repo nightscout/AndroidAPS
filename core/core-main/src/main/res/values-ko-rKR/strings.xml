@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">새로고침</string>
-    <string name="error">에러</string>
     <string name="save">저장</string>
     <string name="not_set_short">설정되지 않음</string>
     <string name="failedupdatebasalprofile">Basal 프로파일 갱신 실패</string>
-    <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
-    <string name="invalidinput">사용할수 없는 입력 데이터</string>
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
-    <string name="bolusdelivering">%1$.2f U 주입 중</string>
     <string name="connecting">연결중</string>
     <string name="disconnected">연결 끊김</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
