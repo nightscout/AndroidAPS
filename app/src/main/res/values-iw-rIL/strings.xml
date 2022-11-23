@@ -147,7 +147,6 @@
     <string name="wear_general_settings">הגדרות כלליות</string>
     <string name="open_navigation">פתח ניווט</string>
     <string name="close_navigation">סגור ניווט</string>
-    <string name="nav_plugin_preferences">העדפות תוסף</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
@@ -165,7 +164,6 @@
     <string name="miscellaneous">שונות</string>
     <string name="nav_logsettings">הגדרות יומן רישום</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
-    <string name="sendlogfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>
     <string name="profile_total">== ∑  %1$s יח\'</string>
     <string name="deliverpartofboluswizard">אשף הבולוס מבצע חישוב אך רק חלק זה של האינסולין המחושב מוזרק. שימושי בשימוש עם אלגוריתם SMB.</string>
     <string name="unitsnosemicolon">יחידות</string>
