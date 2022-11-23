@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Obecné nastavení</string>
     <string name="open_navigation">Otevřít menu</string>
     <string name="close_navigation">Zavřít menu</string>
-    <string name="nav_plugin_preferences">Nastavení pluginu</string>
     <string name="remove_items">Odstranit položky</string>
     <string name="sort_items">Seřadit položky</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Různé</string>
     <string name="nav_logsettings">Nastavení logování</string>
     <string name="resettodefaults">Obnovit výchozí</string>
-    <string name="sendlogfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Kalkulátor provede výpočet, ale dodána je pouze tato část inzulínu. Výhodné při používání SMB algoritmu.</string>
     <string name="unitsnosemicolon">Jednotky</string>
