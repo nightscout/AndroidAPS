@@ -5,6 +5,9 @@
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
     <string name="bolus_delivering">Delivering %1$.2f U</string>
+    <string name="constraint_applied">Constraint applied!</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="tt_label">TT</string>
 
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>

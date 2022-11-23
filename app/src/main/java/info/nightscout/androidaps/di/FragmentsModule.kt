@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
-import info.nightscout.androidaps.plugins.general.wear.WearFragment
+import info.nightscout.plugins.general.wear.WearFragment
 
 @Module
 @Suppress("unused")

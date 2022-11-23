@@ -1,15 +1,15 @@
-package info.nightscout.androidaps.plugins.general.wear
+package info.nightscout.plugins.general.wear
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataHandlerMobile
-import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
+import info.nightscout.plugins.general.wear.wearintegration.DataHandlerMobile
+import info.nightscout.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished
@@ -37,7 +37,7 @@ class WearPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     private val dataHandlerMobile: DataHandlerMobile,
-    val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
+    private val dataLayerListenerServiceMobileHelper: DataLayerListenerServiceMobileHelper
 
 ) : PluginBase(
     PluginDescription()
@@ -65,7 +65,7 @@ class WearPlugin @Inject constructor(
                            event.resultSuccess?.let {
                                val status =
                                    if (it) rh.gs(R.string.success)
-                                   else rh.gs(R.string.nosuccess)
+                                   else rh.gs(R.string.no_success)
                                if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = status)))
                            }
                        }, fabricPrivacy::logException)

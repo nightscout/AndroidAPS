@@ -229,8 +229,6 @@ dependencies {
     // MainApp
     api "com.uber.rxdogtag2:rxdogtag:2.0.1"
 
-    // DataLayerListenerService
-    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
 }
 
 apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.wear.wearintegration
+package info.nightscout.plugins.general.wear.wearintegration
 
 import android.content.ComponentName
 import android.content.Context

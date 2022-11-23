@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="2dp"
-    tools:context=".plugins.general.wear.WearFragment">
+    tools:context="info.nightscout.plugins.general.wear.WearFragment">
 
     <TextView
         android:id="@+id/connected_device"

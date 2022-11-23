@@ -1,14 +1,12 @@
-package info.nightscout.androidaps.plugins.general.wear.wearintegration
+package info.nightscout.plugins.general.wear.wearintegration
 
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.core.graph.data.GlucoseValueDataPoint
@@ -39,6 +37,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -50,6 +49,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -61,8 +61,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.ui.dialogs.CarbsDialog
-import info.nightscout.ui.dialogs.InsulinDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
@@ -149,7 +147,7 @@ class DataHandlerMobile @Inject constructor(
                            rxBus.send(
                                EventMobileToWear(
                                    EventData.ConfirmAction(
-                                       rh.gs(R.string.medtronic_pump_status).uppercase(),
+                                       rh.gs(R.string.pump_status).uppercase(),
                                        activePlugin.activePump.shortStatus(false),
                                        returnCommand = null
                                    )
@@ -730,10 +728,10 @@ class DataHandlerMobile @Inject constructor(
                     bolusPercentage = sp.getInt(R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48),
                     maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0),
-                    insulinButtonIncrement1 = sp.getDouble(R.string.key_insulin_button_increment_1, InsulinDialog.PLUS1_DEFAULT),
-                    insulinButtonIncrement2 = sp.getDouble(R.string.key_insulin_button_increment_2, InsulinDialog.PLUS2_DEFAULT),
-                    carbsButtonIncrement1 = sp.getInt(R.string.key_carbs_button_increment_1, CarbsDialog.FAV1_DEFAULT),
-                    carbsButtonIncrement2 = sp.getInt(R.string.key_carbs_button_increment_2, CarbsDialog.FAV2_DEFAULT)
+                    insulinButtonIncrement1 = sp.getDouble(R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
+                    insulinButtonIncrement2 = sp.getDouble(R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
+                    carbsButtonIncrement1 = sp.getInt(R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
+                    carbsButtonIncrement2 = sp.getInt(R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
                 )
             )
         )

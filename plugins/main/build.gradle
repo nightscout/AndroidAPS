@@ -59,4 +59,7 @@ dependencies {
     // Food
     api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
+
+    // DataLayerListenerService
+    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
 }
