@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">확인</string>
     <string name="message">메시지</string>
