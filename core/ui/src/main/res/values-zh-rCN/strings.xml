@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">确认</string>
     <string name="message">消息</string>
