@@ -147,7 +147,6 @@
     <string name="wear_general_settings">常规设置</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="close_navigation">关闭导航栏</string>
-    <string name="nav_plugin_preferences">插件选项</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
@@ -163,7 +162,6 @@
     <string name="generated_ecarbs_note">eCarbs: %1$d 克 (%2$d h), 延迟: %3$d 分钟</string>
     <string name="nav_logsettings">日志设置</string>
     <string name="resettodefaults">重置为默认值</string>
-    <string name="sendlogfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">大剂量向导执行计算，但只有这部分计算结果的胰岛素被输注。适用于SMB算法。</string>
     <string name="unitsnosemicolon">单位</string>
