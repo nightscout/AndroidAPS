@@ -16,28 +16,9 @@ import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsI
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.AndroidPermissionImpl
-import info.nightscout.implementation.BolusTimerImpl
-import info.nightscout.implementation.CarbTimerImpl
-import info.nightscout.implementation.LocalAlertUtilsImpl
-import info.nightscout.implementation.TrendCalculatorImpl
-import info.nightscout.implementation.XDripBroadcastImpl
-import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
-import info.nightscout.implementation.pump.PumpSyncImplementation
-import info.nightscout.implementation.queue.CommandQueueImplementation
-import info.nightscout.implementation.resources.IconsProviderImplementation
-import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
-import info.nightscout.implementation.stats.TddCalculatorImpl
-import info.nightscout.implementation.stats.TirCalculatorImpl
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.BolusTimer
-import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.interfaces.constraints.Constraints
@@ -46,19 +27,12 @@ import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
-import info.nightscout.interfaces.stats.DexcomTirCalculator
-import info.nightscout.interfaces.stats.TddCalculator
-import info.nightscout.interfaces.stats.TirCalculator
 import info.nightscout.interfaces.storage.FileStorage
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.ui.ActivityNames
-import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
@@ -125,29 +99,16 @@ open class AppModule {
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
-        @Binds fun bindCommandQueue(commandQueue: CommandQueueImplementation): CommandQueue
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
-        @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefsImpl): ImportExportPrefs
-        @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindLoopInterface(loopPlugin: LoopPlugin): Loop
         @Binds fun bindAutotuneInterface(autotunePlugin: AutotunePlugin): Autotune
         @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindDataSyncSelectorInterface(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
-        @Binds fun bindPumpSyncInterface(pumpSyncImplementation: PumpSyncImplementation): PumpSync
-        @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
-        @Binds fun bindCarbTimerInterface(carbTimer: CarbTimerImpl): CarbTimer
-        @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
-        @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
-        @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
-        @Binds fun bindTrendCalculatorInterface(trendCalculator: TrendCalculatorImpl): TrendCalculator
-        @Binds fun bindTddCalculatorInterface(tddCalculator: TddCalculatorImpl): TddCalculator
-        @Binds fun bindTirCalculatorInterface(tirCalculator: TirCalculatorImpl): TirCalculator
-        @Binds fun bindDexcomTirCalculatorInterface(dexcomTirCalculator: DexcomTirCalculatorImpl): DexcomTirCalculator
     }
 }
 

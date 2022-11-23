@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.implementation.stats
 
 import android.annotation.SuppressLint
 import android.content.Context

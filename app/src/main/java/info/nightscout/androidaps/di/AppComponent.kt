@@ -55,6 +55,7 @@ import javax.inject.Singleton
         CoreModule::class,
         DatabaseModule::class,
         ImplementationModule::class,
+        ImplementationModule.Bindings::class,
         OpenHumansModule::class,
         PluginsModule::class,
         RxModule::class,

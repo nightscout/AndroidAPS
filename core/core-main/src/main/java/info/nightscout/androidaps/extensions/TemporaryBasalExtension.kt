@@ -30,7 +30,7 @@ fun TemporaryBasal.convertedToPercent(time: Long, profile: Profile): Int =
     if (!isAbsolute) rate.toInt()
     else (rate / profile.getBasal(time) * 100).toInt()
 
-fun TemporaryBasal.netExtendedRate(profile: Profile) = rate - profile.getBasal(timestamp)
+private fun TemporaryBasal.netExtendedRate(profile: Profile) = rate - profile.getBasal(timestamp)
 val TemporaryBasal.durationInMinutes
     get() = T.msecs(duration).mins()
 

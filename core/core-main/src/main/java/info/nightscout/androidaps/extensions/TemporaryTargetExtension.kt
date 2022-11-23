@@ -10,9 +10,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.TimeUnit
 
-fun TemporaryTarget.isInProgress(dateUtil: DateUtil): Boolean =
-    dateUtil.now() in timestamp..timestamp + duration
-
 fun TemporaryTarget.lowValueToUnitsToString(units: GlucoseUnit): String =
     if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(this.lowTarget)
     else DecimalFormatter.to1Decimal(this.lowTarget * Constants.MGDL_TO_MMOLL)

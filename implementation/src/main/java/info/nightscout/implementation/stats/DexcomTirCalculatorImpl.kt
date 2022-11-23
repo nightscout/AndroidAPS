@@ -9,7 +9,6 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.stats.DexcomTIR
 import info.nightscout.interfaces.stats.DexcomTirCalculator
 import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
@@ -17,7 +16,6 @@ import javax.inject.Singleton
 
 @Singleton
 class DexcomTirCalculatorImpl @Inject constructor(
-    private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val repository: AppRepository

@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.extensions.toTableRow
-import info.nightscout.androidaps.extensions.toTableRowHeader
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.entities.embedments.InterfaceIDs

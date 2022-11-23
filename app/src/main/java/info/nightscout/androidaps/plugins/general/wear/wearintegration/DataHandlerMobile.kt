@@ -6,7 +6,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -1055,6 +1054,9 @@ class DataHandlerMobile @Inject constructor(
         historyList.sortWith { lhs, rhs -> (rhs.timestamp - lhs.timestamp).toInt() }
         return historyList
     }
+
+    private val TotalDailyDose.total
+        get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
     private fun generateTDDMessage(historyList: MutableList<TotalDailyDose>, dummies: MutableList<TotalDailyDose>): String {
         val profile = profileFunction.getProfile() ?: return "No profile loaded :("
