@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>
-    <string name="nav_plugin_preferences">Plugin innstillinger</string>
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret i pumpen. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Annet</string>
     <string name="nav_logsettings">Logginnstillinger</string>
     <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
-    <string name="sendlogfiles">Send dagens loggfiler til utviklere og med dette tidspunktet. Uventet situasjon.</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="deliverpartofboluswizard">Bolus veiviser utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB algoritmen.</string>
     <string name="unitsnosemicolon">Enheter</string>
