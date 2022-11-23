@@ -146,7 +146,6 @@
     <string name="wear_general_settings">Bendrieji nustatymai</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="close_navigation">Uždaryti meniu</string>
-    <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
     <string name="maintenance_email">Gavėjo el. paštas</string>
@@ -160,7 +159,6 @@
     <string name="generated_ecarbs_note">iAV.: %1$d g (%2$d h), atidėjimas: %3$d m</string>
     <string name="nav_logsettings">Įrašų nustatymai</string>
     <string name="resettodefaults">Atkurti numatytuosius</string>
-    <string name="sendlogfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <string name="profile_total">== ∑  %1$s vv</string>
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
     <string name="unitsnosemicolon">Vienetai</string>
