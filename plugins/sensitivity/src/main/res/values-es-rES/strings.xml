@@ -1,2 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilidad Oref1</string>
+    <string name="sensitivity_aaps">Sensibilidad AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilidad promedio ponderada</string>
+    <string name="description_sensitivity_aaps">La sensibilidad se calcula de la misma manera que en Oref0, pero puede especificarse el rango de tiempo. La absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias</string>
+    <string name="description_sensitivity_oref1">La sensibilidad es calculada a partir de las últimas 8h o 24  de datos (se escoge el valor más sensible). Los carbohidratos (si no se absorben) son eliminados después del tiempo especificado en las preferencias. El complemento también calcula UAM (comidas no anunciadas).</string>
+    <string name="description_sensitivity_weighted_average">Sensibilidad es calculada como promedio ponderado a partir de las desviaciones. Las desviaciones más recientes tienen un mayor impacto. La absorción mínima de carbohidratos es calculada a partir del tiempo de absorción máximo definido en las preferencias. Este algoritmo es el más rápido para detectar cambios en la sensibilidad.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM (comidas no anunciadas) deshabilitado porque depende del complemento de sensibilidad Oref1</string>
+    <string name="absorption_settings_title">Ajustes de absorción</string>
+    <string name="absorption_max_time_title">Tiempo máximo de absorción de la comida [h]</string>
+    <string name="absorption_max_time_summary">Tiempo en horas en el que se espera que todos los carbohidratos sean absorbidos</string>
+    <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Número de horas para detectar la sensibilidad (se excluye tiempo de absorción de carbohidratos)</string>
+    <string name="openapsama_autosens_max_summary">Valor predeterminado: 1.2\nEste parámetro establece un límite de seguridad máximo por defecto del 20% en autosens (y pronto en Autotune), que limita los valores máximos que puede: aumentar las basales, disminuir el factor de sensibilidad (ISF) y disminuir el objetivo de glucosa</string>
+    <string name="openapsama_autosens_min_summary">Valor predeterminado: 0.7\nEste parámetro establece un límite de seguridad mínimo por defecto del 30% en autosens, que limita los valores que puede: disminuir las basales, aumentar el factor de sensibilidad (ISF) y aumentar el objetivo de glucosa</string>
+    <string name="openapsama_autosens_max">Ratio máximo de autosens</string>
+    <string name="openapsama_autosens_min">Ratio mínimo de autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valores predeterminados: 3.0 (AMA) y 8.0 (SMB)\nEsta configuración establece cómo se absorben los carbohidratos cada 5 minutos. Por defecto se espera que se absorban 3mg/dl cada 5 minutos. Esto afecta a la rapidez con la que los carbohidratos (COB) decaen, y cómo se calcula la predicción de la absorción de carbohidratos futuros, cuando la glucosa está cayendo más de lo esperado, o no aumenta tanto como se esperaba</string>
+    <string name="absorption_cutoff_title">Tiempo máximo de absorción de la comida [h]</string>
+    <string name="absorption_cutoff_summary">Tiempo en el que cualquier comida se considera absorbida. Los carbohidratos restantes serán cortados.</string>
+</resources>
