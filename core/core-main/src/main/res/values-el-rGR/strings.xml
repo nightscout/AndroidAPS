@@ -5,8 +5,6 @@
     <string name="save">Αποθήκευση</string>
     <string name="not_set_short">Μη ορισμένο</string>
     <string name="failedupdatebasalprofile">Αποτυχία αναβάθμισης βασικού προφίλ</string>
-    <string name="profile_set_ok">Το Βασικό προφίλ στην αντλία ενημερώθηκε</string>
-    <string name="invalidinput">Μη έγκυρα δεδομένα</string>
     <string name="tempbasaldeliveryerror">Σφάλμα παράδοσης Προσ Ρυθμού</string>
     <string name="goingtodeliver">Πρόκειται να εγχυθούν %1$.2f μονάδες</string>
     <string name="waitingforpump">Αναμονή για αντλία</string>
