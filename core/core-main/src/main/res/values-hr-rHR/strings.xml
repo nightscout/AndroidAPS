@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Osvježi</string>
-    <string name="error">Greška</string>
     <string name="save">Spremi</string>
     <string name="not_set_short">Nije postavljeno</string>
     <string name="failedupdatebasalprofile">Ažuriranje bazalnog profila nije uspjelo</string>
-    <string name="profile_set_ok">Ažuriran bazalni profil u pumpi</string>
-    <string name="invalidinput">Nevažeći ulazni podaci</string>
     <string name="tempbasaldeliveryerror">Pogreška isporuke temp bazala</string>
     <string name="goingtodeliver">Isporučit ću %1$.2f U</string>
     <string name="waitingforpump">Čekanje pumpe</string>
-    <string name="bolusdelivering">Isporuka %1$.2f U</string>
     <string name="connecting">Povezivanje</string>
     <string name="disconnected">Odspojen</string>
     <string name="androidaps_start">AAPS je počeo</string>
