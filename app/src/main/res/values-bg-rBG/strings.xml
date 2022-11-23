@@ -147,7 +147,6 @@
     <string name="wear_general_settings">Основни настройки</string>
     <string name="open_navigation">Отвори меню</string>
     <string name="close_navigation">Затвори меню</string>
-    <string name="nav_plugin_preferences">Настройки на модул</string>
     <string name="remove_items">Премахни артикули</string>
     <string name="sort_items">Подреди артикули</string>
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
@@ -163,7 +162,6 @@
     <string name="generated_ecarbs_note">eCarbs: %1$d г (за %2$d ч), след: %3$d м</string>
     <string name="nav_logsettings">Настройки на логовете</string>
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
-    <string name="sendlogfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
     <string name="profile_total">Общо  %1$s Е</string>
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
     <string name="unitsnosemicolon">Единици</string>
