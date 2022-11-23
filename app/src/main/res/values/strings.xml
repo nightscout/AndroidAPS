@@ -174,7 +174,6 @@
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="firstinsulinincrement">First insulin increment</string>
     <string name="secondinsulinincrement">Second insulin increment</string>
@@ -193,7 +192,6 @@
     <string name="wear_general_settings">General Settings</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
-    <string name="nav_plugin_preferences">Plugin preferences</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
@@ -216,7 +214,6 @@
     <string name="miscellaneous">Miscellaneous</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
-    <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
