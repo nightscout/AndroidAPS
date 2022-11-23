@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Odśwież</string>
-    <string name="error">Błąd</string>
     <string name="save">ZACHOWAJ</string>
     <string name="not_set_short">Nie ustawiono</string>
     <string name="failedupdatebasalprofile">Nieudane uaktualnienie profilu bazy</string>
-    <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
-    <string name="invalidinput">Błędne dane wejściowe</string>
     <string name="tempbasaldeliveryerror">Błąd podania bazy tymczasowej</string>
     <string name="goingtodeliver">Zamierzam podać %1$.2f U</string>
     <string name="waitingforpump">Czekam na pompę</string>
-    <string name="bolusdelivering">Podaję %1$.2f U</string>
     <string name="connecting">Łączę</string>
     <string name="disconnected">Rozłączono</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
