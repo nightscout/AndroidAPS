@@ -83,4 +83,5 @@
     <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
     <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
     <string name="check_preferences_dangerous_import">Настройите не трябва да бъдат импортирани! (опасни)</string>
+    <!--    Preferences -->
 </resources>
