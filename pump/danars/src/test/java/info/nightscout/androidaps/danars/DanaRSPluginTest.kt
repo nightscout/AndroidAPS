@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danars
 import android.content.Context
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints

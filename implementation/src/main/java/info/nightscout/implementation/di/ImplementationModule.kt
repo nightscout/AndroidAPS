@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.CryptoUtil
@@ -29,6 +30,7 @@ import info.nightscout.implementation.profiling.ProfilerImpl
 import info.nightscout.implementation.protection.PasswordCheckImpl
 import info.nightscout.implementation.protection.ProtectionCheckImpl
 import info.nightscout.implementation.pump.PumpSyncImplementation
+import info.nightscout.implementation.pump.TemporaryBasalStorageImpl
 import info.nightscout.implementation.pump.WarnColorsImpl
 import info.nightscout.implementation.queue.CommandQueueImplementation
 import info.nightscout.implementation.resources.IconsProviderImplementation
@@ -54,6 +56,7 @@ import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.stats.DexcomTirCalculator
@@ -95,7 +98,7 @@ open class ImplementationModule {
     fun provideWarnColors(rh: ResourceHelper): WarnColors = WarnColorsImpl(rh)
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideProfiler(aapsLogger: AAPSLogger): Profiler = ProfilerImpl(aapsLogger)
 
     @Provides
@@ -103,23 +106,27 @@ open class ImplementationModule {
     fun provideLoggerUtils(prefFileListProvider: PrefFileListProvider): LoggerUtils = LoggerUtilsImpl(prefFileListProvider)
 
     @Provides
-    @Singleton
+    @Reusable
     fun providePasswordCheck(sp: SP, cryptoUtil: CryptoUtil): PasswordCheck = PasswordCheckImpl(sp, cryptoUtil)
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideProtectionCheck(sp: SP, passwordCheck: PasswordCheck, dateUtil: DateUtil): ProtectionCheck = ProtectionCheckImpl(sp, passwordCheck, dateUtil)
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideDefaultValueHelper(sp: SP, profileFunction: ProfileFunction): DefaultValueHelper = DefaultValueHelperImpl(sp, profileFunction)
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideTranslator(rh: ResourceHelper): Translator = TranslatorImpl(rh)
 
     @Provides
     @Singleton
+    fun provideTemporaryBasalStorage(aapsLogger: AAPSLogger): TemporaryBasalStorage = TemporaryBasalStorageImpl(aapsLogger)
+
+    @Provides
+    @Reusable
     fun provideUserEntryLogger(
         aapsLogger: AAPSLogger,
         repository: AppRepository,
@@ -141,7 +148,7 @@ open class ImplementationModule {
     ): OverviewData = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, repository)
 
     @Provides
-    @Singleton
+    @Reusable
     fun providePrefFileListProvider(
         rh: ResourceHelper,
         config: Lazy<Config>,

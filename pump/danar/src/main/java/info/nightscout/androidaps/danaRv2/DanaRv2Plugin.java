@@ -17,7 +17,7 @@ import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage;
+import info.nightscout.interfaces.pump.TemporaryBasalStorage;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.constraints.Constraint;
 import info.nightscout.interfaces.constraints.Constraints;

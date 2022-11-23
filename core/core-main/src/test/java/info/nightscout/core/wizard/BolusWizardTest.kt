@@ -5,9 +5,9 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -41,7 +41,7 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var autosensDataStore: AutosensDataStoreObject
+    @Mock lateinit var autosensDataStore: AutosensDataStore
 
     val injector = HasAndroidInjector {
         AndroidInjector {

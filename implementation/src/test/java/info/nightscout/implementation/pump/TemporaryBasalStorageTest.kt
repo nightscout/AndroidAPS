@@ -1,7 +1,7 @@
-package info.nightscout.androidaps.pump.bolusInfo
+package info.nightscout.implementation.pump
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.PumpSync
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -14,11 +14,11 @@ class TemporaryBasalStorageTest : TestBase() {
     private val info2 = PumpSync.PumpState.TemporaryBasal(1000001, 1000, 4.0, false, PumpSync.TemporaryBasalType.NORMAL, 0L, 0L)
     private val info3 = PumpSync.PumpState.TemporaryBasal(2000000, 1000, 5.0, false, PumpSync.TemporaryBasalType.NORMAL, 0L, 0L)
 
-    private lateinit var temporaryBasalStorage: TemporaryBasalStorage
+    private lateinit var temporaryBasalStorage: TemporaryBasalStorageImpl
 
     @Before
     fun prepare() {
-        temporaryBasalStorage = TemporaryBasalStorage(aapsLogger)
+        temporaryBasalStorage = TemporaryBasalStorageImpl(aapsLogger)
     }
 
     private fun setUp() {

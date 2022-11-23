@@ -1,6 +1,7 @@
-package info.nightscout.androidaps.plugins.pump.common.bolusInfo
+package info.nightscout.implementation.pump
 
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -11,20 +12,20 @@ import kotlin.math.abs
 
 @OpenForTesting
 @Singleton
-class TemporaryBasalStorage @Inject constructor(
+class TemporaryBasalStorageImpl @Inject constructor(
     val aapsLogger: AAPSLogger
-) {
+) : TemporaryBasalStorage {
 
     val store = ArrayList<PumpSync.PumpState.TemporaryBasal>()
 
     @Synchronized
-    fun add(temporaryBasal: PumpSync.PumpState.TemporaryBasal) {
+    override fun add(temporaryBasal: PumpSync.PumpState.TemporaryBasal) {
         aapsLogger.debug("Stored temporary basal info: $temporaryBasal")
         store.add(temporaryBasal)
     }
 
     @Synchronized
-    fun findTemporaryBasal(time: Long, rate: Double): PumpSync.PumpState.TemporaryBasal? {
+    override fun findTemporaryBasal(time: Long, rate: Double): PumpSync.PumpState.TemporaryBasal? {
         // Look for info with temporary basal
         for (i in store.indices) {
             val d = store[i]
