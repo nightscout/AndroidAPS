@@ -2,7 +2,6 @@
 <resources>
     <!--    General-->
     <string name="refresh">Frissítés</string>
-    <string name="error">Hiba</string>
     <string name="not_set_short">Nincs beállítva</string>
     <string name="waitingforpump">Várakozás pumpára</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
