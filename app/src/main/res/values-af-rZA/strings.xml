@@ -119,7 +119,6 @@
     <string name="wear_general_settings">Algemene instellings</string>
     <string name="open_navigation">Open navigasie</string>
     <string name="close_navigation">Sluit navigasie</string>
-    <string name="nav_plugin_preferences">Plugin voorkeure</string>
     <string name="error_adding_treatment_title">Behandeling data onvolledig</string>
     <string name="maintenance_settings">Onderhoud instellings</string>
     <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
@@ -132,7 +131,6 @@
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), vertraag: %3$d m</string>
     <string name="nav_logsettings">Logboekinstellings</string>
     <string name="resettodefaults">Herstel na verstek</string>
-    <string name="sendlogfiles">Stuur vandag se loglêers aan ontwikkelaars saam met hierdie tyd. Onverwagte situasie.</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="overview_show_predictions">Projeksies</string>
     <!-- WEAR OS-->
