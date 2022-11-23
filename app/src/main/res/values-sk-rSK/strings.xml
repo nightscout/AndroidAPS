@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Všeobecné nastavenia</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>
-    <string name="nav_plugin_preferences">Nastavenie modulu</string>
     <string name="remove_items">Odstrániť položky</string>
     <string name="sort_items">Zoradiť položky</string>
     <string name="allow_hardware_pump_text">POZOR: Pokiaľ aktivujete a pripojíte skutočnú pumpu, AndroidAPS nakopíruje nastavenie bazálu z aktívneho profilu do pumpy. Overte si, že máte v AAPS korektný bazálny profil. Pokiaľ si nieste istí, alebo nechcete prepísať bazály v pumpe, stlačte Zrušiť a opakujte prepnutie na inú pumpu neskôr.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Rôzne</string>
     <string name="nav_logsettings">Nastavenie logovania</string>
     <string name="resettodefaults">Obnoviť predvolené</string>
-    <string name="sendlogfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
     <string name="profile_total">== ∑  %1$s JI</string>
     <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
     <string name="unitsnosemicolon">Jednotky</string>
