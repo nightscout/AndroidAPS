@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Общие настройки wear</string>
     <string name="open_navigation">Показать панель навигации</string>
     <string name="close_navigation">Cкрыть панель навигации</string>
-    <string name="nav_plugin_preferences">Настройки расширений</string>
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Разное</string>
     <string name="nav_logsettings">Настройки журнала</string>
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
-    <string name="sendlogfiles">Отправьте файлы сегодняшнего лога разработчикам наряду с этим. Непредвиденная ситуация.</string>
     <string name="profile_total">== ∑  %1$s ед</string>
     <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подана только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
     <string name="unitsnosemicolon">Единицы</string>
