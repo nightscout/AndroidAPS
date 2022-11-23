@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="open_navigation">Open navigatie</string>
     <string name="close_navigation">Sluit navigatie</string>
-    <string name="nav_plugin_preferences">Plugin instellingen</string>
     <string name="remove_items">Items verwijderen</string>
     <string name="sort_items">Sorteer items</string>
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die in de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Overige</string>
     <string name="nav_logsettings">Log instellingen</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
-    <string name="sendlogfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="unitsnosemicolon">Eenheden</string>
