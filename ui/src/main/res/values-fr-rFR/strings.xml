@@ -134,4 +134,5 @@
     <string name="basal_rate">Débit de Basal</string>
     <!--    BolusProgressDialog-->
     <!--    PrefImport-->
+    <!--    Preferences -->
 </resources>
