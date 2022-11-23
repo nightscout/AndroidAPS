@@ -119,6 +119,7 @@
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">xDrip+ statuslinje (klokke)</string>
     <string name="xdrip_status_shortname">xds</string>
     <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
@@ -381,7 +382,15 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Motta BS verdier fra GlucoRx Aidex CGM.</string>
+    <string name="random_bg">Vilkårlig BS</string>
+    <string name="description_source_random_bg">Generer vilkårlige BS data (kun demo formål)</string>
+    <string name="random_bg_short">BS</string>
+    <string name="do_xdrip_upload_title">Send BS data til xDrip+</string>
+    <string name="do_xdrip_upload_summary">I xDrip+, velg 640G/Eversens som datakilde</string>
+    <string name="do_ns_upload_title">Last opp BS data til NS</string>
     <string name="bgsource_upload">Innstillinger for opplasting av BS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Logg sensor bytte til NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensor bytte\" automatisk i NS ved start av sensoren</string>
     <!-- NSClient -->
     <string name="ns_cellular">Bruk mobildata</string>
     <string name="ns_wifi">Bruk Wi-Fi-tilkobling</string>
@@ -410,5 +419,31 @@
     <string name="largedisplay_description">Stor skjerm</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <string name="executing">Utfører</string>
+    <string name="run_now">Kjør nå</string>
+    <string name="smb_frequency_exceeded">En bolus er gitt i løpet av de siste 3 minuttene, dropper SMB</string>
+    <string name="pump_not_initialized">Pumpen er ikke initialisert!</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Aktiver eller deaktiver hendelsen som starter kjøring av loop.</string>
+    <string name="no_aps_selected">INGEN APS ER VALGT ELLER HAR LEVERT RESULTAT</string>
+    <string name="ignore5m">Ignorer 5m</string>
+    <string name="ignore15m">Ignorer 15m</string>
+    <string name="ignore30m">Ignorer 30m</string>
+    <string name="carbs_suggestion">Karbo forslag</string>
+    <string name="open_loop_new_suggestion">Ny anbefaling tilgjengelig</string>
+    <string name="basal_set_correctly">Basal er satt riktig</string>
+    <string name="last_run_label">Siste beregning</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Forespørsel</string>
+    <string name="loop_constraints_processed_label">Etter behandling av begrensninger</string>
+    <string name="constraints">Begrensninger</string>
+    <string name="loop_tbr_request_time_label">Temp basal endring forespurt</string>
+    <string name="loop_tbr_execution_time_label">Temp basal utført</string>
+    <string name="loop_tbr_set_by_pump_label">Temp basal satt av pumpen</string>
+    <string name="loop_smb_request_time_label">SMB forespurt</string>
+    <string name="loop_smb_execution_time_label">SMB utført</string>
+    <string name="loop_smb_set_by_pump_label">SMB satt med pumpe</string>
+    <string name="loop_open_mode_min_change">Minste endrings forespørsel [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be deg utføre en hendelse hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <!--    DataBroadcast-->
 </resources>
