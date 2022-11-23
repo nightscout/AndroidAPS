@@ -146,7 +146,6 @@
     <string name="wear_general_settings">Setări generale</string>
     <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>
-    <string name="nav_plugin_preferences">Preferințe plugin</string>
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="maintenance_settings">Setări de întreținere</string>
     <string name="maintenance_email">Destinatar email</string>
@@ -160,7 +159,6 @@
     <string name="generated_ecarbs_note">eCarbohidrați: %1$d g (%2$d h), întârziere: %3$d m</string>
     <string name="nav_logsettings">Setări loguri</string>
     <string name="resettodefaults">Resetare la setările implicite</string>
-    <string name="sendlogfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Wizard bolus face un calcul, dar numai o parte din insulina calculată este și livrată. Este mai eficient când se folosește cu algoritmul SMB.</string>
     <string name="unitsnosemicolon">Unități</string>
