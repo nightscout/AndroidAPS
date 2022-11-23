@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <string name="message">Pranešimas</string>
