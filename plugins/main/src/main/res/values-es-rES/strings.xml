@@ -446,4 +446,6 @@
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
 </resources>
