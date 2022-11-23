@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Обновить</string>
-    <string name="error">Ошибка</string>
     <string name="save">Сохранить</string>
     <string name="not_set_short">Не выбрано</string>
     <string name="failedupdatebasalprofile">не удалось обновить базальный профиль</string>
-    <string name="profile_set_ok">базальный профиль помпы обновлен</string>
-    <string name="invalidinput">введенные данные неверны</string>
     <string name="tempbasaldeliveryerror">Ошибка подачи врем базала</string>
     <string name="goingtodeliver">Будет подано %1$.2f ед инс</string>
     <string name="waitingforpump">ожидание помпы</string>
-    <string name="bolusdelivering">Подается болюс %1$.2fед</string>
     <string name="connecting">соединение устанавливается</string>
     <string name="disconnected">Разъединено</string>
     <string name="androidaps_start">AAPS запущен</string>
