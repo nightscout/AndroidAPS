@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionDummy
 import info.nightscout.automation.databinding.AutomationDialogActionBinding
@@ -14,7 +13,7 @@ import info.nightscout.rx.bus.RxBus
 import org.json.JSONObject
 import javax.inject.Inject
 
-class EditActionDialog : DialogFragmentWithDate() {
+class EditActionDialog : BaseDialog() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var injector: HasAndroidInjector

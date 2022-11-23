@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dialogs
+package info.nightscout.ui.dialogs
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -14,12 +14,11 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.main.R
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import java.util.Calendar
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -53,7 +52,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        aapsLogger.debug(LTag.APS, "Dialog opened: ${this.javaClass.simpleName}")
+        aapsLogger.debug(LTag.UI, "Dialog opened: ${this.javaClass.simpleName}")
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -128,10 +127,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 } else {
                     okClicked.set(true)
                     if (submit()) {
-                        aapsLogger.debug(LTag.APS, "Submit pressed for Dialog: ${this.javaClass.simpleName}")
+                        aapsLogger.debug(LTag.UI, "Submit pressed for Dialog: ${this.javaClass.simpleName}")
                         dismiss()
                     } else {
-                        aapsLogger.debug(LTag.APS, "Submit returned false for Dialog: ${this.javaClass.simpleName}")
+                        aapsLogger.debug(LTag.UI, "Submit returned false for Dialog: ${this.javaClass.simpleName}")
                         okClicked.set(false)
                     }
                 }

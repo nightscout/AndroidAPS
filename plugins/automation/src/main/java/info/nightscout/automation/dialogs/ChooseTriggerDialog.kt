@@ -6,14 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.databinding.AutomationDialogChooseTriggerBinding
 import info.nightscout.automation.triggers.Trigger
 import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor
 
-class ChooseTriggerDialog : DialogFragmentWithDate() {
+class ChooseTriggerDialog : BaseDialog() {
 
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var injector: HasAndroidInjector
