@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Обнови</string>
-    <string name="error">Грешка</string>
     <string name="save">Съхрани</string>
     <string name="not_set_short">Не е зададен</string>
     <string name="failedupdatebasalprofile">Неуспешно обновяване на базалния профил</string>
-    <string name="profile_set_ok">Профила на помпата е обновен</string>
-    <string name="invalidinput">Грешни данни</string>
     <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
     <string name="goingtodeliver">Ще стартира %1$.2fЕ болус</string>
     <string name="waitingforpump">Чакаме помпата</string>
-    <string name="bolusdelivering">Пускам %1$.2fЕ</string>
     <string name="connecting">Свързване</string>
     <string name="disconnected">Не е сврзана</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
