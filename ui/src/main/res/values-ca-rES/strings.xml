@@ -77,4 +77,5 @@
     <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
     <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
     <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
+    <!--    Preferences -->
 </resources>
