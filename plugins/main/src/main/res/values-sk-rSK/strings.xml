@@ -446,4 +446,5 @@
     <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
 </resources>
