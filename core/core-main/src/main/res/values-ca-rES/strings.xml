@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Actualitzar</string>
-    <string name="error">Error</string>
     <string name="save">Desar</string>
     <string name="not_set_short">No configurat</string>
     <string name="failedupdatebasalprofile">Error en actualitzar el perfil de basal</string>
-    <string name="profile_set_ok">Perfil de basal actualitzat a la bomba</string>
-    <string name="invalidinput">Dades no vàlides</string>
     <string name="tempbasaldeliveryerror">Error en lliurar basal temporal</string>
     <string name="goingtodeliver">A punt de lliurar %1$.2f U</string>
     <string name="waitingforpump">Esperant bomba</string>
-    <string name="bolusdelivering">Lliurant %1$.2f U</string>
     <string name="connecting">Connectant</string>
     <string name="disconnected">Desconnectat</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
