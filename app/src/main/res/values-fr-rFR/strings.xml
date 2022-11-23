@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="open_navigation">Ouvrir navigation</string>
     <string name="close_navigation">Fermer navigation</string>
-    <string name="nav_plugin_preferences">Préférences du plugin</string>
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Divers</string>
     <string name="nav_logsettings">Paramètres journal</string>
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
-    <string name="sendlogfiles">Envoi des fichiers logs d\'aujourd\'hui aux développeurs avec l\'heure. Cas imprévu.</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">L\'assistant bolus effectue le calcul mais seulement ce pourcentage de l\'insuline calculée est délivré. Utile avec l\'algorithme SMB.</string>
     <string name="unitsnosemicolon">Unités</string>
