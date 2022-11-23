@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.plugins.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
@@ -38,6 +38,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
@@ -82,7 +83,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .pluginName(R.string.iobcobcalculator)
+        .pluginName(R.string.iob_cob_calculator)
         .showInList(false)
         .neverVisible(true)
         .alwaysEnabled(true),

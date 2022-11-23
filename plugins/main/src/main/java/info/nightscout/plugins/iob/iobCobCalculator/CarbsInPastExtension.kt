@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.plugins.iob.iobCobCalculator
 
 import info.nightscout.database.entities.Carbs
 import info.nightscout.interfaces.Constants

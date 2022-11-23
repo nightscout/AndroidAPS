@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.plugins.iob.iobCobCalculator
 
 import android.content.Context
 import android.os.SystemClock
@@ -6,14 +6,14 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.AutosensData
@@ -24,6 +24,8 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.utils.DecimalFormatter
+import info.nightscout.plugins.R
+import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
@@ -33,13 +35,15 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import java.util.Calendar
+import java.util.GregorianCalendar
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToLong
 
-class IobCobOrefWorker @Inject internal constructor(
+class IobCobOref1Worker(
     context: Context,
     params: WorkerParameters
 ) : Worker(context, params) {
@@ -62,9 +66,9 @@ class IobCobOrefWorker @Inject internal constructor(
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 
-    class IobCobOrefWorkerData(
+    class IobCobOref1WorkerData(
         val injector: HasAndroidInjector,
-        val iobCobCalculatorPlugin: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
+        val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
         val from: String,
         val end: Long,
         val limitDataToOldestAvailable: Boolean,
@@ -72,7 +76,8 @@ class IobCobOrefWorker @Inject internal constructor(
     )
 
     override fun doWork(): Result {
-        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as IobCobOrefWorkerData?
+
+        val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as IobCobOref1WorkerData?
             ?: return Result.success(workDataOf("Error" to "missing input data"))
 
         val start = dateUtil.now()
@@ -83,17 +88,17 @@ class IobCobOrefWorker @Inject internal constructor(
                 return Result.success(workDataOf("Error" to "app still initializing"))
             }
             //log.debug("Locking calculateSensitivityData");
-            val oldestTimeWithData = data.iobCobCalculatorPlugin.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
+            val oldestTimeWithData = data.iobCobCalculator.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
             // work on local copy and set back when finished
-            val ads = data.iobCobCalculatorPlugin.ads.clone()
+            val ads = data.iobCobCalculator.ads.clone()
             val bucketedData = ads.bucketedData
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
-                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): ${data.from}")
+                aapsLogger.debug(LTag.AUTOSENS,  {"Aborting calculation thread (No bucketed data available): ${data.from}"})
                 return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.from}"))
             }
             val prevDataTime = ads.roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
-            aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime))
+            aapsLogger.debug(LTag.AUTOSENS, {"Prev data time: " + dateUtil.dateAndTimeString(prevDataTime)})
             var previous = autosensDataTable[prevDataTime]
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
@@ -133,7 +138,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].value
                 avgDelta = (bg - bucketedData[i + 3].value) / 3
-                val iob = data.iobCobCalculatorPlugin.calculateFromTreatmentsAndTemps(bgTime, profile)
+                val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
                 val avgDeviation = ((avgDelta - bgi) * 1000).roundToLong() / 1000.0
@@ -148,17 +153,17 @@ class IobCobOrefWorker @Inject internal constructor(
                     val hourAgoData = ads.getAutosensDataAtTime(hourAgo)
                     if (hourAgoData != null) {
                         val initialIndex = autosensDataTable.indexOfKey(hourAgoData.time)
-                        aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + hourAgoData.toString())
+                        aapsLogger.debug(LTag.AUTOSENS, { ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + hourAgoData.toString() })
                         var past = 1
                         try {
                             while (past < 12) {
                                 val ad = autosensDataTable.valueAt(initialIndex + past)
-                                aapsLogger.debug(LTag.AUTOSENS, ">>>>> past=" + past + " ad=" + ad?.toString())
+                                aapsLogger.debug(LTag.AUTOSENS, { ">>>>> past=" + past + " ad=" + ad?.toString() })
                                 if (ad == null) {
-                                    aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
-                                    aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
-                                    //aapsLogger.debug(LTag.AUTOSENS, data.iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                                    val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.sendlogfiles), Notification.LOW)
+                                    aapsLogger.debug(LTag.AUTOSENS, {autosensDataTable.toString()})
+                                    aapsLogger.debug(LTag.AUTOSENS, {bucketedData.toString()})
+                                    //aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
+                                    val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
                                     rxBus.send(EventNewNotification(notification))
                                     sp.putBoolean("log_AUTOSENS", true)
                                     break
@@ -180,8 +185,8 @@ class IobCobOrefWorker @Inject internal constructor(
                             fabricPrivacy.logException(e)
                             aapsLogger.debug(autosensDataTable.toString())
                             aapsLogger.debug(bucketedData.toString())
-                            //aapsLogger.debug(data.iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                            val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.sendlogfiles), Notification.LOW)
+                            //aapsLogger.debug(iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
+                            val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
                             rxBus.send(EventNewNotification(notification))
                             sp.putBoolean("log_AUTOSENS", true)
                             break
@@ -201,17 +206,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 // if we are absorbing carbs
                 if (previous != null && previous.cob > 0) {
                     // calculate sum of min carb impact from all active treatments
-                    var totalMinCarbsImpact = 0.0
-                    if (activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic) {
-                        //when the impact depends on a max time, sum them up as smaller carb sizes make them smaller
-                        for (ii in autosensData.activeCarbsList.indices) {
-                            val c = autosensData.activeCarbsList[ii]
-                            totalMinCarbsImpact += c.min5minCarbImpact
-                        }
-                    } else {
-                        //Oref sensitivity
-                        totalMinCarbsImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
-                    }
+                    val totalMinCarbsImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
 
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
@@ -220,12 +215,18 @@ class IobCobOrefWorker @Inject internal constructor(
                     autosensData.absorbed = ci * profile.getIc(bgTime) / sens
                     // and add that to the running total carbsAbsorbed
                     autosensData.cob = max(previous.cob - autosensData.absorbed, 0.0)
+                    autosensData.mealCarbs = previous.mealCarbs
                     autosensData.deductAbsorbedCarbs()
                     autosensData.usedMinCarbsImpact = totalMinCarbsImpact
+                    autosensData.absorbing = previous.absorbing
+                    autosensData.mealStartCounter = previous.mealStartCounter
+                    autosensData.type = previous.type
+                    autosensData.uam = previous.uam
                 }
                 val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                 autosensData.removeOldCarbs(bgTime, isAAPSOrWeighted)
                 autosensData.cob += autosensData.carbsFromBolus
+                autosensData.mealCarbs += autosensData.carbsFromBolus
                 autosensData.deviation = deviation
                 autosensData.bgi = bgi
                 autosensData.delta = delta
@@ -234,49 +235,103 @@ class IobCobOrefWorker @Inject internal constructor(
                 autosensData.slopeFromMaxDeviation = slopeFromMaxDeviation
                 autosensData.slopeFromMinDeviation = slopeFromMinDeviation
 
-                // calculate autosens only without COB
-                if (autosensData.cob <= 0) {
-                    when {
-                        abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL -> {
-                            autosensData.pastSensitivity += "="
-                            autosensData.validDeviation = true
-                        }
+                // If mealCOB is zero but all deviations since hitting COB=0 are positive, exclude from autosens
+                if (autosensData.cob > 0 || autosensData.absorbing || autosensData.mealCarbs > 0) {
+                    autosensData.absorbing = deviation > 0
+                    // stop excluding positive deviations as soon as mealCOB=0 if meal has been absorbing for >5h
+                    if (autosensData.mealStartCounter > 60 && autosensData.cob < 0.5) {
+                        autosensData.absorbing = false
+                    }
+                    if (!autosensData.absorbing && autosensData.cob < 0.5) {
+                        autosensData.mealCarbs = 0.0
+                    }
+                    // check previous "type" value, and if it wasn't csf, set a mealAbsorption start flag
+                    if (autosensData.type != "csf") {
+//                                process.stderr.write("(");
+                        autosensData.mealStartCounter = 0
+                    }
+                    autosensData.mealStartCounter++
+                    autosensData.type = "csf"
+                } else {
+                    // check previous "type" value, and if it was csf, set a mealAbsorption end flag
+                    val currentBasal = profile.getBasal(bgTime)
+                    // always exclude the first 45m after each carb entry
+                    //if (iob.iob > currentBasal || uam ) {
+                    if (iob.iob > 2 * currentBasal || autosensData.uam || autosensData.mealStartCounter < 9) {
+                        autosensData.mealStartCounter++
+                        autosensData.uam = deviation > 0
+                        autosensData.type = "uam"
+                    } else {
+                        autosensData.type = "non-meal"
+                    }
+                }
 
-                        deviation > 0                                    -> {
-                            autosensData.pastSensitivity += "+"
-                            autosensData.validDeviation = true
-                        }
+                // Exclude meal-related deviations (carb absorption) from autosens
+                when (autosensData.type) {
+                    "non-meal" -> {
+                        when {
+                            abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL -> {
+                                autosensData.pastSensitivity += "="
+                                autosensData.validDeviation = true
+                            }
 
-                        else                                             -> {
-                            autosensData.pastSensitivity += "-"
-                            autosensData.validDeviation = true
+                            deviation > 0                                    -> {
+                                autosensData.pastSensitivity += "+"
+                                autosensData.validDeviation = true
+                            }
+
+                            else                                             -> {
+                                autosensData.pastSensitivity += "-"
+                                autosensData.validDeviation = true
+                            }
                         }
                     }
-                } else {
-                    autosensData.pastSensitivity += "C"
+
+                    "uam"      -> {
+                        autosensData.pastSensitivity += "u"
+                    }
+
+                    else       -> {
+                        autosensData.pastSensitivity += "x"
+                    }
                 }
+
+                // add an extra negative deviation if a high temp target is running and exercise mode is set
+                // TODO AS-FIX
+                @Suppress("SimplifyBooleanWithConstants")
+                if (false && sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                    val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+                    if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
+                        autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
+                    }
+                }
+
+                // add one neutral deviation every 2 hours to help decay over long exclusion periods
+                val calendar = GregorianCalendar()
+                calendar.timeInMillis = bgTime
+                val min = calendar[Calendar.MINUTE]
+                val hours = calendar[Calendar.HOUR_OF_DAY]
+                if (min in 0..4 && hours % 2 == 0) autosensData.extraDeviation.add(0.0)
                 previous = autosensData
                 if (bgTime < dateUtil.now()) autosensDataTable.put(bgTime, autosensData)
                 aapsLogger.debug(
                     LTag.AUTOSENS,
-                    "Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + ads.lastDataTime(
-                        dateUtil
-                    )
+                    {"Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + ads.lastDataTime(dateUtil)}
                 )
                 val sensitivity = activePlugin.activeSensitivity.detectSensitivity(ads, oldestTimeWithData, bgTime)
                 aapsLogger.debug(LTag.AUTOSENS, "Sensitivity result: $sensitivity")
                 autosensData.autosensResult = sensitivity
-                aapsLogger.debug(LTag.AUTOSENS, autosensData.toString())
+                aapsLogger.debug(LTag.AUTOSENS, {autosensData.toString()})
             }
-            data.iobCobCalculatorPlugin.ads = ads
+            data.iobCobCalculator.ads = ads
             Thread {
                 SystemClock.sleep(1000)
                 rxBus.send(EventAutosensCalculationFinished(data.cause))
             }.start()
         } finally {
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: ${data.from}")
-            profiler.log(LTag.AUTOSENS, "IobCobThread", start)
+            aapsLogger.debug(LTag.AUTOSENS, {"AUTOSENSDATA thread ended: ${data.from}"})
+            profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start)
         }
         return Result.success()
     }

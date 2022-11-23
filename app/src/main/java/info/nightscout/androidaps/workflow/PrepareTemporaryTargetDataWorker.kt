@@ -9,7 +9,6 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.target
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.workflow.CalculationWorkflow
@@ -18,6 +17,7 @@ import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject

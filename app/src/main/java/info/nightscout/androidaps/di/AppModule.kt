@@ -12,7 +12,6 @@ import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.workflow.CalculationWorkflowImpl
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.workflow.CalculationWorkflow
@@ -37,6 +36,7 @@ import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.sync.nsclient.DataSyncSelectorImplementation
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
