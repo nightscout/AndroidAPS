@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">刷新</string>
-    <string name="error">错误</string>
     <string name="save">保存</string>
     <string name="not_set_short">未设置</string>
     <string name="failedupdatebasalprofile">更新基础率配置文件失败</string>
-    <string name="profile_set_ok">泵基础率配置文件更新了</string>
-    <string name="invalidinput">无效的输入数据</string>
     <string name="tempbasaldeliveryerror">临时基础输注错误</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
     <string name="waitingforpump">正在等待泵</string>
-    <string name="bolusdelivering">正在输注 %1$.2f U</string>
     <string name="connecting">正在连接</string>
     <string name="disconnected">已断开连接</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
