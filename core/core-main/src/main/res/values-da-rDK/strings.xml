@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Opdatér</string>
-    <string name="error">Fejl</string>
     <string name="save">Gem</string>
     <string name="not_set_short">Ikke angivet</string>
     <string name="failedupdatebasalprofile">Opdatering af basal profil mislykkedes</string>
-    <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
-    <string name="invalidinput">Ugyldigt input</string>
     <string name="tempbasaldeliveryerror">Midlertidig basal leveringsfejl</string>
     <string name="goingtodeliver">Leverer %1$.2f IE</string>
     <string name="waitingforpump">Venter på pumpe</string>
-    <string name="bolusdelivering">Leverer %1$.2f IE</string>
     <string name="connecting">Forbinder</string>
     <string name="disconnected">Forbindelse afbrudt</string>
     <string name="androidaps_start">AAPS startet</string>
