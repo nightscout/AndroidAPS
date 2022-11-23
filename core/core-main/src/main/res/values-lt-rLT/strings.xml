@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Atnaujinti</string>
-    <string name="error">Klaida</string>
     <string name="save">Išsaugoti</string>
     <string name="not_set_short">Nenustatyta</string>
     <string name="failedupdatebasalprofile">Nepavyko atnaujinti bazės profilio</string>
-    <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
-    <string name="invalidinput">Neteisingai įvesti duomenys</string>
     <string name="tempbasaldeliveryerror">Laikinos bazės suleidimo klaida</string>
     <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
     <string name="waitingforpump">Laukiama ryšio su pompa</string>
-    <string name="bolusdelivering">Leidžiama %1$.2f vv</string>
     <string name="connecting">Jungiamasi</string>
     <string name="disconnected">Atsijungta</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
