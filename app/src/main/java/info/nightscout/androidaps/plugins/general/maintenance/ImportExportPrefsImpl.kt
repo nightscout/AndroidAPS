@@ -24,7 +24,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.core.activities.DaggerAppCompatActivityWithResult

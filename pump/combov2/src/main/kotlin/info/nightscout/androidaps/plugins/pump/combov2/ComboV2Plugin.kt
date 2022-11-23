@@ -834,7 +834,7 @@ class ComboV2Plugin @Inject constructor (
                         is RTCommandProgressStage.DeliveringBolus -> {
                             val bolusingEvent = EventOverviewBolusProgress
                             bolusingEvent.percent = (progressReport.overallProgress * 100.0).toInt()
-                            bolusingEvent.status = rh.gs(R.string.bolusdelivering, detailedBolusInfo.insulin)
+                            bolusingEvent.status = rh.gs(R.string.bolus_delivering, detailedBolusInfo.insulin)
                             rxBus.send(bolusingEvent)
                         }
                         BasicProgressStage.Finished -> {

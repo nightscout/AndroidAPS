@@ -1,11 +1,13 @@
-package info.nightscout.androidaps.logging
+package info.nightscout.implementation
 
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.UserEntryTransaction
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.userEntry.UserEntryMapper
 import info.nightscout.interfaces.userEntry.ValueWithUnitMapper
 import info.nightscout.rx.AapsSchedulers
@@ -18,25 +20,35 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
-class UserEntryLogger @Inject constructor(
+class UserEntryLoggerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,
     private val aapsSchedulers: AapsSchedulers,
     private val dateUtil: DateUtil
-) {
+) : UserEntryLogger {
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun log(action: Action, source: Sources, note: String? = "", vararg listValues: ValueWithUnit?) = log(action, source, note, listValues.toList())
+    override fun log(action: Action, source: Sources, note: String?, vararg listValues: ValueWithUnit?) = log(action, source, note, listValues.toList())
 
-    fun log(action: Action, source: Sources, vararg listValues: ValueWithUnit?) = log(action, source, "", listValues.toList())
+    override fun log(action: Action, source: Sources, vararg listValues: ValueWithUnit?) = log(action, source, "", listValues.toList())
 
-    fun log(action: Action, source: Sources, note: String? = "", listValues: List<ValueWithUnit?> = listOf()) {
+    override fun log(action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {
         val filteredValues = listValues.toList().filterNotNull()
-        log(listOf(UserEntryTransaction.Entry(dateUtil.now(), action, source, note ?: "", filteredValues)))
+        log(
+            listOf(
+                UserEntry(
+                    timestamp = dateUtil.now(),
+                    action = action,
+                    source = source,
+                    note = note ?: "",
+                    values = filteredValues
+                )
+            )
+        )
     }
 
-    fun log(entries: List<UserEntryTransaction.Entry>) {
+    override fun log(entries: List<UserEntry>) {
         compositeDisposable += repository.runTransactionForResult(UserEntryTransaction(entries))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
@@ -46,12 +58,12 @@ class UserEntryLogger @Inject constructor(
             )
     }
 
-    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? = "", vararg listValues: ValueWithUnitMapper?) =
+    override fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String?, vararg listValues: ValueWithUnitMapper?) =
         log(action.db, source.db, note, listValues.toList().map { it?.db() })
 
-    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, vararg listValues: ValueWithUnitMapper?) = log(action.db, source.db, "", listValues.toList().map { it?.db() })
+    override fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, vararg listValues: ValueWithUnitMapper?) = log(action.db, source.db, "", listValues.toList().map { it?.db() })
 
-    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? = "", listValues: List<ValueWithUnitMapper?> = listOf()) =
+    override fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String?, listValues: List<ValueWithUnitMapper?>) =
         log(action.db, source.db, note, listValues.map { it?.db() })
 
 }

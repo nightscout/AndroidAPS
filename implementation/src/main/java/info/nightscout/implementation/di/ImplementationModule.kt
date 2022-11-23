@@ -19,6 +19,7 @@ import info.nightscout.implementation.HardLimitsImpl
 import info.nightscout.implementation.LocalAlertUtilsImpl
 import info.nightscout.implementation.TranslatorImpl
 import info.nightscout.implementation.TrendCalculatorImpl
+import info.nightscout.implementation.UserEntryLoggerImpl
 import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
@@ -44,6 +45,7 @@ import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.LoggerUtils
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -61,6 +63,7 @@ import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -114,6 +117,15 @@ open class ImplementationModule {
     @Provides
     @Singleton
     fun provideTranslator(rh: ResourceHelper): Translator = TranslatorImpl(rh)
+
+    @Provides
+    @Singleton
+    fun provideUserEntryLogger(
+        aapsLogger: AAPSLogger,
+        repository: AppRepository,
+        aapsSchedulers: AapsSchedulers,
+        dateUtil: DateUtil
+    ): UserEntryLogger = UserEntryLoggerImpl(aapsLogger, repository, aapsSchedulers, dateUtil)
 
     @Provides
     @Singleton

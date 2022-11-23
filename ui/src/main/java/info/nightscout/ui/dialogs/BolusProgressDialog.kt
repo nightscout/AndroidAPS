@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.activities.DialogAppCompatActivity
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.UserEntry.Action

@@ -325,7 +325,7 @@ class DanaRSPlugin @Inject constructor(
             result.success = false
             result.bolusDelivered = 0.0
             result.carbsDelivered = 0.0
-            result.comment = rh.gs(R.string.invalidinput)
+            result.comment = rh.gs(R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }
@@ -419,7 +419,7 @@ class DanaRSPlugin @Inject constructor(
             result.isTempCancel = false
             result.enacted = false
             result.success = false
-            result.comment = rh.gs(R.string.invalidinput)
+            result.comment = rh.gs(R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
             return result
         }

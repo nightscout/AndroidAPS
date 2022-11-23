@@ -6,7 +6,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
@@ -49,7 +49,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var repository: AppRepository
-    @Mock lateinit var uel:UserEntryLogger
+    @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var config: Config

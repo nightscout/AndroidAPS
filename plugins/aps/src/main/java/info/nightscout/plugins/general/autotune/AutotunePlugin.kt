@@ -3,7 +3,7 @@ package info.nightscout.plugins.general.autotune
 import android.view.View
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.entities.UserEntry

@@ -218,7 +218,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
-            result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
+            result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalid_input);
             getAapsLogger().error("setTempBasalPercent: Invalid input");
             return result;
         }

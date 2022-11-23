@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry

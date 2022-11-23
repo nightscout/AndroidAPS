@@ -477,7 +477,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 event.setStatus(getRh().gs(R.string.combo_programming_bolus));
                 break;
             case DELIVERING:
-                event.setStatus(getRh().gs(R.string.bolusdelivering, delivered));
+                event.setStatus(getRh().gs(R.string.bolus_delivering, delivered));
                 break;
             case DELIVERED:
                 event.setStatus(getRh().gs(R.string.bolusdelivered, delivered));

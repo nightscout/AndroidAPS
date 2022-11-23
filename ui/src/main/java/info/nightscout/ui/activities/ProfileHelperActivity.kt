@@ -234,7 +234,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                     return@setOnClickListener
                 }
             }
-            ToastUtils.warnToast(this, R.string.invalidinput)
+            ToastUtils.warnToast(this, R.string.invalid_input)
         }
         binding.ageLabel.labelFor = binding.age.editTextId
         binding.tddLabel.labelFor = binding.tdd.editTextId

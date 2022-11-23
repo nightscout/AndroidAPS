@@ -193,7 +193,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
+            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }

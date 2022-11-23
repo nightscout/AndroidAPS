@@ -1,6 +1,6 @@
 package info.nightscout.implementation.pump
 
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
 import info.nightscout.core.pump.fromDbPumpType

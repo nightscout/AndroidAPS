@@ -1,7 +1,7 @@
 package info.nightscout.automation.actions
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources

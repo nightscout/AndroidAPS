@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="error">Error</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
+    <string name="invalid_input">Invalid input data</string>
+    <string name="bolus_delivering">Delivering %1$.2f U</string>
+
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>

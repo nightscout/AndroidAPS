@@ -54,7 +54,7 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()
-                } else OKDialog.show(this, rh.gs(R.string.error), rh.gs(R.string.invalidinput))
+                } else OKDialog.show(this, rh.gs(R.string.error), rh.gs(R.string.invalid_input))
             }
         }
         binding.okcancel.cancel.setOnClickListener { finish() }

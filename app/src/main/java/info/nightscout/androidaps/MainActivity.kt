@@ -34,7 +34,7 @@ import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.configuration.setupwizard.SetupWizardActivity
 import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.UIRunnable

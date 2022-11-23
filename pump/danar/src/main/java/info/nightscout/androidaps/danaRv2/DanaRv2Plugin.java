@@ -203,7 +203,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
+            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -292,7 +292,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
-            result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
+            result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalid_input);
             aapsLogger.error("setTempBasalPercent: Invalid input");
             return result;
         }

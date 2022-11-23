@@ -5,7 +5,6 @@ import android.os.SystemClock
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
@@ -32,10 +31,10 @@ import info.nightscout.database.impl.transactions.SyncNsProfileSwitchTransaction
 import info.nightscout.database.impl.transactions.SyncNsTemporaryBasalTransaction
 import info.nightscout.database.impl.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.database.impl.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.database.impl.transactions.UserEntryTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.sync.NsClient
@@ -90,7 +89,7 @@ class StoreDataForDb @Inject constructor(
     val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
 
-    private val userEntries: MutableList<UserEntryTransaction.Entry> = mutableListOf()
+    private val userEntries: MutableList<UserEntry> = mutableListOf()
 
     private val inserted = HashMap<String, Long>()
     private val updated = HashMap<String, Long>()
@@ -171,10 +170,12 @@ class StoreDataForDb @Inject constructor(
                     boluses.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.BOLUS, UserEntry.Sources.NSClient, it.notes ?: "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.BOLUS,
+                                source = UserEntry.Sources.NSClient,
+                                note = it.notes ?: "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
@@ -182,10 +183,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.BOLUS_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.BOLUS_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
@@ -214,10 +217,12 @@ class StoreDataForDb @Inject constructor(
                     carbs.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes ?: "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CARBS,
+                                source = UserEntry.Sources.NSClient,
+                                note = it.notes ?: "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
@@ -225,10 +230,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CARBS_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CARBS_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
@@ -236,10 +243,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.updated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CARBS, UserEntry.Sources.NSClient, it.notes ?: "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CARBS,
+                                source = UserEntry.Sources.NSClient,
+                                note = it.notes ?: "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
@@ -265,10 +274,12 @@ class StoreDataForDb @Inject constructor(
                     temporaryTargets.clear()
                     result.inserted.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.TT, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.TT,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.TherapyEventTTReason(tt.reason),
                                     ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
                                     ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
@@ -281,10 +292,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.TT_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.TT_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.TherapyEventTTReason(tt.reason),
                                     ValueWithUnit.Mgdl(tt.lowTarget),
                                     ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
@@ -297,10 +310,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.ended.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CANCEL_TT, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CANCEL_TT,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.TherapyEventTTReason(tt.reason),
                                     ValueWithUnit.Mgdl(tt.lowTarget),
                                     ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
@@ -334,10 +349,12 @@ class StoreDataForDb @Inject constructor(
                     temporaryBasals.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.TEMP_BASAL, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.TEMP_BASAL,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
@@ -349,10 +366,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.TEMP_BASAL_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.TEMP_BASAL_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
@@ -364,10 +383,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.ended.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CANCEL_TEMP_BASAL, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CANCEL_TEMP_BASAL,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
@@ -400,10 +421,12 @@ class StoreDataForDb @Inject constructor(
                     effectiveProfileSwitches.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient, "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.PROFILE_SWITCH,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
@@ -411,10 +434,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.PROFILE_SWITCH_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
@@ -439,10 +464,12 @@ class StoreDataForDb @Inject constructor(
                     profileSwitches.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.NSClient, "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.PROFILE_SWITCH,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
@@ -450,10 +477,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.PROFILE_SWITCH_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(ValueWithUnit.Timestamp(it.timestamp))
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.PROFILE_SWITCH_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
@@ -518,10 +547,12 @@ class StoreDataForDb @Inject constructor(
                             else                             -> UserEntry.Action.CAREPORTAL
                         }
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                action, UserEntry.Sources.NSClient, therapyEvent.note ?: "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = action,
+                                source = UserEntry.Sources.NSClient,
+                                note = therapyEvent.note ?: "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(therapyEvent.timestamp),
                                     ValueWithUnit.TherapyEventType(therapyEvent.type),
                                     ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
@@ -532,10 +563,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach { therapyEvent ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CAREPORTAL_REMOVED, UserEntry.Sources.NSClient, therapyEvent.note ?: "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CAREPORTAL_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = therapyEvent.note ?: "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(therapyEvent.timestamp),
                                     ValueWithUnit.TherapyEventType(therapyEvent.type),
                                     ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
@@ -566,10 +599,12 @@ class StoreDataForDb @Inject constructor(
                 .also { result ->
                     result.inserted.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.LOOP_CHANGE, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.LOOP_CHANGE,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.OfflineEventReason(oe.reason),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                                 )
@@ -580,10 +615,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.LOOP_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.LOOP_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.OfflineEventReason(oe.reason),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                                 )
@@ -594,10 +631,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.ended.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.LOOP_CHANGE, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.LOOP_CHANGE,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.OfflineEventReason(oe.reason),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                                 )
@@ -628,10 +667,12 @@ class StoreDataForDb @Inject constructor(
                 .also { result ->
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.EXTENDED_BOLUS, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.EXTENDED_BOLUS,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Insulin(it.amount),
                                     ValueWithUnit.UnitPerHour(it.rate),
@@ -645,10 +686,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.EXTENDED_BOLUS_REMOVED, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.EXTENDED_BOLUS_REMOVED,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Insulin(it.amount),
                                     ValueWithUnit.UnitPerHour(it.rate),
@@ -661,10 +704,12 @@ class StoreDataForDb @Inject constructor(
                     }
                     result.ended.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntryTransaction.Entry(
-                                dateUtil.now(),
-                                UserEntry.Action.CANCEL_EXTENDED_BOLUS, UserEntry.Sources.NSClient, "",
-                                listOf(
+                            UserEntry(
+                                timestamp = dateUtil.now(),
+                                action = UserEntry.Action.CANCEL_EXTENDED_BOLUS,
+                                source = UserEntry.Sources.NSClient,
+                                note = "",
+                                values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Insulin(it.amount),
                                     ValueWithUnit.UnitPerHour(it.rate),
