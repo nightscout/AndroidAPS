@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Yenile</string>
-    <string name="error">Hata</string>
     <string name="save">Kaydet</string>
     <string name="not_set_short">Ayarlanmadı</string>
     <string name="failedupdatebasalprofile">Bazal profiliniz güncellenemedi</string>
-    <string name="profile_set_ok">Pompadaki Bazal profil güncellendi</string>
-    <string name="invalidinput">Geçersiz bilgi girişi</string>
     <string name="tempbasaldeliveryerror">Geçici Bazal teslimat hatası</string>
     <string name="goingtodeliver">%1$.2f Ü gönderilecek</string>
     <string name="waitingforpump">Pompa bekleniyor</string>
-    <string name="bolusdelivering">%1$.2f Ü gönderiliyor</string>
     <string name="connecting">Bağlanıyor</string>
     <string name="disconnected">Bağlantı kesildi</string>
     <string name="androidaps_start">AAPS başladı</string>
