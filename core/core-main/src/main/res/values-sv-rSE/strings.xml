@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Uppdatera</string>
-    <string name="error">Fel</string>
     <string name="save">Spara</string>
     <string name="not_set_short">Ej vald</string>
     <string name="failedupdatebasalprofile">Lyckades inte uppdatera basalprofilen</string>
-    <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
-    <string name="invalidinput">Fel på inmatning</string>
     <string name="tempbasaldeliveryerror">Fel vid justering av temp basal</string>
     <string name="goingtodeliver">Kommer att leverera %1$.2f enheter</string>
     <string name="waitingforpump">Väntar på pump</string>
-    <string name="bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="connecting">Ansluter</string>
     <string name="disconnected">Frånkopplad</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
