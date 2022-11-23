@@ -147,7 +147,6 @@
     <string name="wear_general_settings">Allgemeine Einstellungen</string>
     <string name="open_navigation">Menü öffnen</string>
     <string name="close_navigation">Menü schließen</string>
-    <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <string name="remove_items">Objekte entfernen</string>
     <string name="sort_items">Einträge sortieren</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
@@ -165,8 +164,6 @@
     <string name="miscellaneous">Verschiedenes</string>
     <string name="nav_logsettings">Log-Einstellungen</string>
     <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
-    <string name="sendlogfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
-Unerwartetes Verhalten.</string>
     <string name="profile_total">== ∑  %1$s IE</string>
     <string name="deliverpartofboluswizard">Der Bolus-Rechner führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
     <string name="unitsnosemicolon">Einheiten</string>
