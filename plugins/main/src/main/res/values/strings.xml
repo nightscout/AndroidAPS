@@ -584,4 +584,8 @@
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
 
+    <!--    Iob-->
+    <string name="send_logfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
+    <string name="iob_cob_calculator" translatable="false">IobCobCalculator</string>
+
 </resources>
