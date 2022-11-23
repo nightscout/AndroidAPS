@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Obnoviť</string>
-    <string name="error">Chyba</string>
     <string name="save">Uložiť</string>
     <string name="not_set_short">Nenastavené</string>
     <string name="failedupdatebasalprofile">Chyba pri aktualizovaní bazálneho profilu</string>
-    <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
-    <string name="invalidinput">Chybné vstupné dáta</string>
     <string name="tempbasaldeliveryerror">Chyba podávania dočasného bazálu</string>
     <string name="goingtodeliver">Podávanie %1$.2f J inzulínu</string>
     <string name="waitingforpump">Čakám na pumpu</string>
-    <string name="bolusdelivering">Podávanie %1$.2f JI</string>
     <string name="connecting">Pripájanie</string>
     <string name="disconnected">Odpojené</string>
     <string name="androidaps_start">AAPS spustený</string>
