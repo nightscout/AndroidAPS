@@ -38,11 +38,11 @@ import info.nightscout.androidaps.diaconn.pumplog.LOG_SUSPEND_V2
 import info.nightscout.androidaps.diaconn.pumplog.LOG_TB_START_V3
 import info.nightscout.androidaps.diaconn.pumplog.LOG_TB_STOP_V3
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.bus.RxBus

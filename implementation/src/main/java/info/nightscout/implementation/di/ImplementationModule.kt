@@ -29,6 +29,7 @@ import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.implementation.profiling.ProfilerImpl
 import info.nightscout.implementation.protection.PasswordCheckImpl
 import info.nightscout.implementation.protection.ProtectionCheckImpl
+import info.nightscout.implementation.pump.DetailedBolusInfoStorageImpl
 import info.nightscout.implementation.pump.PumpSyncImplementation
 import info.nightscout.implementation.pump.TemporaryBasalStorageImpl
 import info.nightscout.implementation.pump.WarnColorsImpl
@@ -55,6 +56,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.WarnColors
@@ -124,6 +126,10 @@ open class ImplementationModule {
     @Provides
     @Singleton
     fun provideTemporaryBasalStorage(aapsLogger: AAPSLogger): TemporaryBasalStorage = TemporaryBasalStorageImpl(aapsLogger)
+
+    @Provides
+    @Singleton
+    fun provideDetailedBolusInfoStorage(aapsLogger: AAPSLogger): DetailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger)
 
     @Provides
     @Reusable

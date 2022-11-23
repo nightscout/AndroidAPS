@@ -1,31 +1,32 @@
-package info.nightscout.androidaps.plugins.pump.common.bolusInfo
+package info.nightscout.implementation.pump
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.pump.toJsonString
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.shared.utils.T
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
 @OpenForTesting
 @Singleton
-class DetailedBolusInfoStorage @Inject constructor(
+class DetailedBolusInfoStorageImpl @Inject constructor(
     val aapsLogger: AAPSLogger
-) {
+) : DetailedBolusInfoStorage {
 
     val store = ArrayList<DetailedBolusInfo>()
 
     @Synchronized
-    fun add(detailedBolusInfo: DetailedBolusInfo) {
+    override fun add(detailedBolusInfo: DetailedBolusInfo) {
         aapsLogger.debug("Stored bolus info: ${detailedBolusInfo.toJsonString()}")
         store.add(detailedBolusInfo)
     }
 
     @Synchronized
-    fun findDetailedBolusInfo(bolusTime: Long, bolus: Double): DetailedBolusInfo? {
+    override fun findDetailedBolusInfo(bolusTime: Long, bolus: Double): DetailedBolusInfo? {
         // Look for info with bolus
         for (i in store.indices) {
             val d = store[i]
