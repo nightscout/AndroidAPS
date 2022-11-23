@@ -15,8 +15,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
@@ -38,7 +36,9 @@ import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.logging.AAPSLogger

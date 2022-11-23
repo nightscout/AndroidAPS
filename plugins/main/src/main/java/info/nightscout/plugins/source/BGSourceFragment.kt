@@ -14,7 +14,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -35,6 +34,7 @@ import info.nightscout.plugins.databinding.SourceFragmentBinding
 import info.nightscout.plugins.databinding.SourceItemBinding
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility

@@ -5,11 +5,10 @@ import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.core.toast.showToastAdNotification
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -27,6 +26,7 @@ import info.nightscout.plugins.sync.tidepool.utils.RateLimit
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -94,11 +94,11 @@ class TidepoolPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)
-            .filter { it.glucoseValue != null } // better would be optional in API level >24
-            .map { it.glucoseValue!! }
-            .subscribe({ bgReading ->
-                           if (bgReading!!.timestamp < uploadChunk.getLastEnd())
-                               uploadChunk.setLastEnd(bgReading.timestamp)
+            .filter { it.glucoseValueTimestamp != null } // better would be optional in API level >24
+            .map { it.glucoseValueTimestamp!! }
+            .subscribe({ bgReadingTimestamp ->
+                           if (bgReadingTimestamp < uploadChunk.getLastEnd())
+                               uploadChunk.setLastEnd(bgReadingTimestamp)
                            if (isEnabled()
                                && (!sp.getBoolean(R.string.key_tidepool_only_while_charging, false) || receiverStatusStore.isCharging)
                                && (!sp.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || receiverStatusStore.isWifiConnected)

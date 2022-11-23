@@ -33,4 +33,6 @@ dependencies {
 
     api "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
+
+    api "net.danlew:android.joda:$joda_version"
 }

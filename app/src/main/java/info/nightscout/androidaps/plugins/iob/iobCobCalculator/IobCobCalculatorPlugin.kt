@@ -4,9 +4,6 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.events.EventNewBG
-import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
@@ -45,6 +42,9 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
+import info.nightscout.rx.events.EventNewBG
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -399,7 +399,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                         newHistoryData(
                             event.oldDataTimestamp,
                             event.reloadBgData,
-                            if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event
+                            if (event.newestGlucoseValueTimestamp != null) EventNewBG(event.newestGlucoseValueTimestamp) else event
                         )
                         scheduledEvent = null
                         scheduledHistoryPost = null
@@ -412,8 +412,8 @@ class IobCobCalculatorPlugin @Inject constructor(
                 // set reload bg data if was not set
                 if (!it.reloadBgData) it.reloadBgData = event.reloadBgData
                 // set Glucose value if newer
-                event.newestGlucoseValue?.let { gv ->
-                    if (gv.timestamp > (it.newestGlucoseValue?.timestamp ?: 0L)) it.newestGlucoseValue = gv
+                event.newestGlucoseValueTimestamp?.let { timestamp ->
+                    if (timestamp > (it.newestGlucoseValueTimestamp ?: 0L)) it.newestGlucoseValueTimestamp = timestamp
                 }
             }
         }

@@ -10,7 +10,6 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Worker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOrefWorker
@@ -23,6 +22,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAppInitialized
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventOfflineChange
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventTherapyEventChange
