@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Actualizează</string>
-    <string name="error">Eroare</string>
     <string name="save">Salvează</string>
     <string name="not_set_short">Nesetată</string>
     <string name="failedupdatebasalprofile">Actualizarea profilului bazalei a eșuat</string>
-    <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
-    <string name="invalidinput">Date de intrare incorecte</string>
     <string name="tempbasaldeliveryerror">Eroare la livrare bazală temporară</string>
     <string name="goingtodeliver">Se vor livra %1$.2fU</string>
     <string name="waitingforpump">Se așteaptă pompa</string>
-    <string name="bolusdelivering">Livrare %1$.2f U</string>
     <string name="connecting">Se conectează</string>
     <string name="disconnected">Deconectat</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
