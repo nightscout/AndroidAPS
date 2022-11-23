@@ -13,7 +13,9 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.androidaps.workflow.CalculationWorkflowImpl
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.interfaces.Config
@@ -107,6 +109,7 @@ open class AppModule {
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindDataSyncSelectorInterface(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
         @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
+        @Binds fun bindCalculationWorkflowInterface(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
     }
 }
 

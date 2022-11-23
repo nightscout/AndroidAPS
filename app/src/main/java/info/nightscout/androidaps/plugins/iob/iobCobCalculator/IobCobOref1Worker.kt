@@ -10,10 +10,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
@@ -31,8 +31,6 @@ import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -56,8 +54,6 @@ class IobCobOref1Worker(
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var context: Context
-    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var profiler: Profiler
@@ -202,7 +198,7 @@ class IobCobOref1Worker(
                 val recentCarbTreatments = repository.getCarbsDataFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
-                    val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()
+                    val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                     autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, sp))
                     autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
@@ -227,7 +223,7 @@ class IobCobOref1Worker(
                     autosensData.type = previous.type
                     autosensData.uam = previous.uam
                 }
-                val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()
+                val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                 autosensData.removeOldCarbs(bgTime, isAAPSOrWeighted)
                 autosensData.cob += autosensData.carbsFromBolus
                 autosensData.mealCarbs += autosensData.carbsFromBolus

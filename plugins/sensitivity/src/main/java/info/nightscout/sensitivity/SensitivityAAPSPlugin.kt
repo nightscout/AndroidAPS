@@ -140,6 +140,8 @@ class SensitivityAAPSPlugin @Inject constructor(
     }
 
     override fun maxAbsorptionHours(): Double = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+    override val isMinCarbsAbsorptionDynamic: Boolean = true
+    override val isOref1: Boolean = false
 
     override val id: SensitivityType
         get() = SensitivityType.SENSITIVITY_AAPS

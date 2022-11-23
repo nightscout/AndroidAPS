@@ -2,9 +2,9 @@ package info.nightscout.androidaps.activities
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.interfaces.plugin.ActivePlugin

@@ -21,6 +21,8 @@ interface Sensitivity : ConfigExportImport {
     fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
     fun maxAbsorptionHours(): Double
 
+    val isMinCarbsAbsorptionDynamic: Boolean
+    val isOref1: Boolean
     companion object {
 
         const val MIN_HOURS = 1.0

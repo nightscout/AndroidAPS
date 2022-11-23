@@ -32,6 +32,8 @@ class AbstractSensitivityPluginTest : TestBase() {
             get() = Sensitivity.SensitivityType.UNKNOWN
 
         override fun maxAbsorptionHours(): Double = 8.0
+        override val isMinCarbsAbsorptionDynamic: Boolean = true
+        override val isOref1: Boolean = true
 
         override fun configuration(): JSONObject = JSONObject()
 

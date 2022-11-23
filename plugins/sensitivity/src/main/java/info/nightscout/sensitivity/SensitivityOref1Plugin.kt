@@ -205,6 +205,8 @@ class SensitivityOref1Plugin @Inject constructor(
     }
 
     override fun maxAbsorptionHours(): Double = sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+    override val isMinCarbsAbsorptionDynamic: Boolean = false
+    override val isOref1: Boolean = true
 
     override fun configuration(): JSONObject {
         val c = JSONObject()

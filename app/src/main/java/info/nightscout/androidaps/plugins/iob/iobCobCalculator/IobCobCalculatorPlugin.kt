@@ -7,7 +7,6 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.workflow.CalculationWorkflow
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
@@ -15,6 +14,7 @@ import info.nightscout.core.iob.determineBasalJson
 import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
