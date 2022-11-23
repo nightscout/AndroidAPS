@@ -100,4 +100,5 @@
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
+    <!--    Preferences -->
 </resources>
