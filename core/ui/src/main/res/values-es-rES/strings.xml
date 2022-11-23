@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="error">Error</string>
+    <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
+    <string name="invalid_input">Datos inválidos</string>
+    <string name="bolus_delivering">Entregando %1$.2f U</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
@@ -10,6 +14,7 @@
     <string name="dismiss">DESCARTAR</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
+    <string name="close">Cerrar</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Se te solicitará la contraseña maestra, ya que es necesaria para descifrar las perferencias importadas</string>
     <!-- NumberPicker -->
