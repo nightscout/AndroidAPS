@@ -143,4 +143,5 @@
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
     <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">Preferencias del complemento</string>
 </resources>
