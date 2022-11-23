@@ -8,10 +8,16 @@
     <string name="dismiss">Avvis</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
+    <string name="close">Lukk</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Du må angi et hovedpassord som vil bli brukt for å lese inn og dekryptere innstillinger.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
+    <string name="you_are_on_allowed_limit">Tillatt grense nådd</string>
     <string name="format_hour_minute">%1$dt %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Tidspunkt for hendelse</string>
     <!-- BluetoothDevicePreference -->
+    <string name="needconnectpermission">Appen trenger bluetooth-tillatelse</string>
 </resources>
