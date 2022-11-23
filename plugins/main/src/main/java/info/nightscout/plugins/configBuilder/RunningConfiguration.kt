@@ -1,6 +1,6 @@
 package info.nightscout.plugins.configBuilder
 
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder

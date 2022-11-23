@@ -1,8 +1,8 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.plugin.ActivePlugin

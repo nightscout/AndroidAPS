@@ -1,7 +1,7 @@
 package info.nightscout.ui.defaultProfile
 
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.GlucoseUnit
 import org.junit.Assert.assertEquals
 import org.junit.Test

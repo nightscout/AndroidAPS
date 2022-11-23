@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config

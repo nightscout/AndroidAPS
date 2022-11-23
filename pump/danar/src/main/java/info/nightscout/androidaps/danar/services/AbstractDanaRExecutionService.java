@@ -39,7 +39,7 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.core.events.EventNewNotification;
 import info.nightscout.core.ui.toast.ToastUtils;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.notifications.Notification;

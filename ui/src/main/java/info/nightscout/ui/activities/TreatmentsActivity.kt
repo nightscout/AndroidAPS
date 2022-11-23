@@ -5,7 +5,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.shared.extensions.toVisibility

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.core.activities
 
 import android.content.Context
 import dagger.android.support.DaggerAppCompatActivity

@@ -6,7 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs

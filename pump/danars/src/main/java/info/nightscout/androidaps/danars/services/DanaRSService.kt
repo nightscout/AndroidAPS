@@ -54,7 +54,7 @@ import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionGetUserOption
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpTime
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetPumpUTCAndTimeZone
 import info.nightscout.androidaps.danars.comm.DanaRSPacketOptionSetUserOption
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraints

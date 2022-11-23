@@ -7,10 +7,10 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.workflow.CalculationWorkflow
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.impl.AppRepository

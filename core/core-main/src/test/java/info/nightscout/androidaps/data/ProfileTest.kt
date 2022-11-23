@@ -7,6 +7,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.plugin.ActivePlugin

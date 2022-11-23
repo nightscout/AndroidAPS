@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
+import info.nightscout.core.aps.APSResultObject
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.aps.SMBDefaults

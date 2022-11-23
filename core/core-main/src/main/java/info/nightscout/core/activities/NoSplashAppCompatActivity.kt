@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.core.activities
 import android.content.Context
 import android.os.Bundle
 import info.nightscout.core.main.R

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.core.main.R
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.impl.AppRepository

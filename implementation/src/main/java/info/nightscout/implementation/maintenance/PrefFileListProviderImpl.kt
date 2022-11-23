@@ -4,9 +4,9 @@ import android.content.Context
 import android.os.Environment
 import dagger.Lazy
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.main.R
+import info.nightscout.core.versionChecker.VersionCheckerUtils
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefMetadata

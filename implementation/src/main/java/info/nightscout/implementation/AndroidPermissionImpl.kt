@@ -13,7 +13,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
+import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.AndroidPermission

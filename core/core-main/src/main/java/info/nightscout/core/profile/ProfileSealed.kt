@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.data
+package info.nightscout.core.profile
 
 import info.nightscout.androidaps.extensions.blockValueBySeconds
 import info.nightscout.androidaps.extensions.highTargetBlockValueBySeconds
@@ -6,7 +6,7 @@ import info.nightscout.androidaps.extensions.lowTargetBlockValueBySeconds
 import info.nightscout.androidaps.extensions.shiftBlock
 import info.nightscout.androidaps.extensions.shiftTargetBlock
 import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.EffectiveProfileSwitch

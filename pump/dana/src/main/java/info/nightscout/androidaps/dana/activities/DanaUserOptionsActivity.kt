@@ -2,10 +2,10 @@ package info.nightscout.androidaps.dana.activities
 
 import android.content.Context
 import android.os.Bundle
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin

@@ -17,10 +17,9 @@ import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -62,6 +61,7 @@ import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.logging.AAPSLogger

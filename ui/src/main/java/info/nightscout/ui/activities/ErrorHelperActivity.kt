@@ -1,13 +1,13 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
-import info.nightscout.androidaps.activities.DialogAppCompatActivity
+import info.nightscout.androidaps.services.AlarmSoundService
+import info.nightscout.core.activities.DialogAppCompatActivity
 import info.nightscout.core.main.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.ui.alertDialogs.ErrorDialog
-import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.ui.alertDialogs.ErrorDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

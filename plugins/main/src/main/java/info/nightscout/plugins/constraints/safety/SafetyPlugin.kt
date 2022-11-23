@@ -7,7 +7,7 @@ import info.nightscout.androidaps.extensions.putString
 import info.nightscout.androidaps.extensions.storeDouble
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints

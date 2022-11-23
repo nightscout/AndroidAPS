@@ -9,12 +9,12 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.common.RecordTypes
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecord
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryRecordDao
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8HistoryActivityBinding
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction

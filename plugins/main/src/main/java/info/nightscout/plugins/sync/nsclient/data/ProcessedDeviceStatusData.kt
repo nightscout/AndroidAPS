@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
+import info.nightscout.core.aps.APSResultObject
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.Round

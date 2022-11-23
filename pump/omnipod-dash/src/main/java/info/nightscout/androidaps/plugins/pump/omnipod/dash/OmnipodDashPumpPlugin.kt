@@ -5,8 +5,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
@@ -35,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBas
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.pump.convertedToAbsolute
 import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.pump.toStringFull
@@ -66,6 +65,7 @@ import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventProfileSwitchChanged

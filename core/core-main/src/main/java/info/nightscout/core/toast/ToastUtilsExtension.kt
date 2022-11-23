@@ -1,7 +1,7 @@
 package info.nightscout.core.toast
 
 import android.content.Context
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.bus.RxBus

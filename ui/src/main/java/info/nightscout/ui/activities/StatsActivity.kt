@@ -3,8 +3,8 @@ package info.nightscout.ui.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action

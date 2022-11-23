@@ -28,7 +28,6 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -43,6 +42,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton

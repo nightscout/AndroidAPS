@@ -2,39 +2,29 @@ package info.nightscout.androidaps.plugins.pump.combov2
 
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.combov2.R
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.plannedRemainingMinutes
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
-import info.nightscout.comboctl.base.BluetoothAddress as ComboCtlBluetoothAddress
 import info.nightscout.comboctl.base.BluetoothException
 import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.DisplayFrame
-import info.nightscout.comboctl.base.Logger as ComboCtlLogger
-import info.nightscout.comboctl.base.LogLevel as ComboCtlLogLevel
 import info.nightscout.comboctl.base.NullDisplayFrame
 import info.nightscout.comboctl.base.PairingPIN
-import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.BasalProfile
-import info.nightscout.comboctl.main.Pump as ComboCtlPump
-import info.nightscout.comboctl.main.PumpManager as ComboCtlPumpManager
 import info.nightscout.comboctl.main.QuantityNotChangingException
 import info.nightscout.comboctl.main.RTCommandProgressStage
 import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.pump.convertedToAbsolute
 import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.pump.toStringFull
@@ -47,18 +37,19 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpPluginBase
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.ManufacturerType
+import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventOverviewBolusProgress.Treatment
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -68,38 +59,44 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.math.roundToInt
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.joda.time.DateTime
 import org.json.JSONException
 import org.json.JSONObject
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
+import info.nightscout.comboctl.base.BluetoothAddress as ComboCtlBluetoothAddress
+import info.nightscout.comboctl.base.LogLevel as ComboCtlLogLevel
+import info.nightscout.comboctl.base.Logger as ComboCtlLogger
+import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
+import info.nightscout.comboctl.main.Pump as ComboCtlPump
+import info.nightscout.comboctl.main.PumpManager as ComboCtlPumpManager
 
 @Singleton
 class ComboV2Plugin @Inject constructor (

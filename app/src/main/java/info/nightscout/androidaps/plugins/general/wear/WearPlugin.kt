@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.wear
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataHandlerMobile
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -14,6 +13,7 @@ import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
@@ -62,9 +62,9 @@ class WearPlugin @Inject constructor(
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventDismissBolusProgressIfRunning ->
-                           event.result?.let {
+                           event.resultSuccess?.let {
                                val status =
-                                   if (it.success) rh.gs(R.string.success)
+                                   if (it) rh.gs(R.string.success)
                                    else rh.gs(R.string.nosuccess)
                                if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = status)))
                            }

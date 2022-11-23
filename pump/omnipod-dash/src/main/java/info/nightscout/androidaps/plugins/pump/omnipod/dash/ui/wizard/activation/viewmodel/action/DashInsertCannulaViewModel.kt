@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -24,6 +23,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

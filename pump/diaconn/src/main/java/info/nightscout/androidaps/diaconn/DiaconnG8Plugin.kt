@@ -11,10 +11,9 @@ import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.diaconn.service.DiaconnG8Service
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.pump.convertedToAbsolute
 import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.ui.toast.ToastUtils
@@ -44,6 +43,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

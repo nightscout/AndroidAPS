@@ -5,7 +5,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
@@ -22,6 +21,7 @@ import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsShared.StoreDataForDb
 import info.nightscout.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.localmodel.entry.NSSgvV3

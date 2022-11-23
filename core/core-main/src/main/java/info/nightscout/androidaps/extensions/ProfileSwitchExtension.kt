@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit

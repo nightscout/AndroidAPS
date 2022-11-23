@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.dialogs.PairingProgressDialog
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 
 class PairingHelperActivity : NoSplashAppCompatActivity() {
     var dialog: PairingProgressDialog? = null

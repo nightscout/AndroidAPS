@@ -2,8 +2,8 @@ package info.nightscout.core.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
+import info.nightscout.core.aps.APSResultObject
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizardEntry

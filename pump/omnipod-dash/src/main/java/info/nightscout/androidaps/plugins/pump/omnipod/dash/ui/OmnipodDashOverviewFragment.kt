@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
@@ -37,6 +36,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventQueueChanged

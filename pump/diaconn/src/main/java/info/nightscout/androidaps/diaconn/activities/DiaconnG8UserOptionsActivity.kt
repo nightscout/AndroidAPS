@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.diaconn.DiaconnG8Pump
 import info.nightscout.androidaps.diaconn.R
 import info.nightscout.androidaps.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin

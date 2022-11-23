@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.core.activities
 
 import android.Manifest
 import android.content.pm.PackageManager

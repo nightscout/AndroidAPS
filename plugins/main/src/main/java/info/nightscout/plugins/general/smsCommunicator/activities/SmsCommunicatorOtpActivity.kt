@@ -12,8 +12,8 @@ import android.view.View
 import android.view.WindowManager
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy

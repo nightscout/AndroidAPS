@@ -9,10 +9,10 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config

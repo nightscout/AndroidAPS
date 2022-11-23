@@ -44,8 +44,8 @@ import info.nightscout.androidaps.diaconn.packet.TempBasalSettingPacket
 import info.nightscout.androidaps.diaconn.packet.TimeInquirePacket
 import info.nightscout.androidaps.diaconn.packet.TimeSettingPacket
 import info.nightscout.androidaps.diaconn.pumplog.PumplogUtil
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraints

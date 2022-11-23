@@ -36,7 +36,7 @@ import info.nightscout.androidaps.danar.comm.MsgSettingShippingInfo;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
+import info.nightscout.core.events.EventNewNotification;
 import info.nightscout.interfaces.Constants;
 import info.nightscout.interfaces.constraints.Constraints;
 import info.nightscout.interfaces.notifications.Notification;

@@ -10,12 +10,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.combov2.R
 import info.nightscout.androidaps.combov2.databinding.Combov2PairingActivityBinding
 import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PairingPIN
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.rx.logging.LTag
 import kotlinx.coroutines.flow.launchIn

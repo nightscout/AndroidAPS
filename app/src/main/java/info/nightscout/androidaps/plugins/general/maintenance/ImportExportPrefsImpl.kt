@@ -22,12 +22,12 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
+import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
 import info.nightscout.core.ui.toast.ToastUtils

@@ -1,10 +1,10 @@
-package info.nightscout.androidaps.plugins.constraints.versionChecker
+package info.nightscout.core.versionChecker
 
 import android.os.Build
 import dagger.Lazy
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
+import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
 import info.nightscout.interfaces.notifications.Notification

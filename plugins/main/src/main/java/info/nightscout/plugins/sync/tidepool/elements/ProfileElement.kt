@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader

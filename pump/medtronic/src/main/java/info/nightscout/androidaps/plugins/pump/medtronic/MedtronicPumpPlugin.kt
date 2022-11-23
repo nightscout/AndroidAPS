@@ -7,7 +7,6 @@ import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
@@ -45,6 +44,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.isSame
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification

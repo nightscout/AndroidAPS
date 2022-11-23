@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 
 abstract class OmnipodWizardActivityBase : NoSplashAppCompatActivity() {
 

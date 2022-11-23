@@ -2,7 +2,7 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.plugin.ActivePlugin

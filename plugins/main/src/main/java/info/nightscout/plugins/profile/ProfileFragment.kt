@@ -10,8 +10,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry

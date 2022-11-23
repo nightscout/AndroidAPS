@@ -6,8 +6,8 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivityLogsettingBinding
+import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.rx.interfaces.L
 import info.nightscout.rx.interfaces.LogElement
 import javax.inject.Inject

@@ -16,10 +16,9 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
@@ -53,6 +52,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventConfigBuilderChange
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventNSClientRestart
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger

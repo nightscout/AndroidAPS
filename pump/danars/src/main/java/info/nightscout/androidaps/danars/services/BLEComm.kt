@@ -30,14 +30,14 @@ import info.nightscout.androidaps.danars.comm.DanaRSPacketEtcKeepConnection
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.danars.encryption.EncryptionType
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.notify
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

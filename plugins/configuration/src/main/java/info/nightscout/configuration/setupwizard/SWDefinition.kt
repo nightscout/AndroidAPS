@@ -7,7 +7,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.configuration.R
 import info.nightscout.configuration.setupwizard.elements.SWBreak
 import info.nightscout.configuration.setupwizard.elements.SWButton
@@ -22,6 +21,7 @@ import info.nightscout.configuration.setupwizard.elements.SWInfoText
 import info.nightscout.configuration.setupwizard.elements.SWPlugin
 import info.nightscout.configuration.setupwizard.elements.SWPreference
 import info.nightscout.configuration.setupwizard.elements.SWRadioButton
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.isRunningTest
 import info.nightscout.interfaces.AndroidPermission

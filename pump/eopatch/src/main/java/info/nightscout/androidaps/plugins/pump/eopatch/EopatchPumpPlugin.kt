@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -10,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription

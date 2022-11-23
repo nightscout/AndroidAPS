@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification

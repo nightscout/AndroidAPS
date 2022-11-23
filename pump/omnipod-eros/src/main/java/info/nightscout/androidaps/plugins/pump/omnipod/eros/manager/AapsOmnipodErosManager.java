@@ -14,8 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
@@ -63,6 +61,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
+import info.nightscout.core.events.EventNewNotification;
 import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.core.pump.PumpStateExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
@@ -76,6 +75,7 @@ import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.Event;
+import info.nightscout.rx.events.EventDismissNotification;
 import info.nightscout.rx.events.EventOverviewBolusProgress;
 import info.nightscout.rx.events.EventRefreshOverview;
 import info.nightscout.rx.logging.AAPSLogger;

@@ -5,11 +5,11 @@ import dagger.Binds
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.versionChecker.VersionCheckerUtils
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.AndroidPermissionImpl
 import info.nightscout.implementation.BolusTimerImpl

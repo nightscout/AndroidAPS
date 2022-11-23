@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.loop
+package info.nightscout.core.aps
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector

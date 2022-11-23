@@ -1,8 +1,8 @@
 package info.nightscout.plugins.constraints.versionChecker
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.versionChecker.VersionCheckerUtils
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints

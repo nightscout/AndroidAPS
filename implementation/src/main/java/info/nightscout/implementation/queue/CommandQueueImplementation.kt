@@ -9,11 +9,9 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.getCustomizedName
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.pump.insertCarbsTransaction
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
@@ -59,6 +57,8 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.AAPSLogger
@@ -351,7 +351,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized
     override fun cancelAllBoluses(id: Long?) {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
+            rxBus.send(EventDismissBolusProgressIfRunning(true, id))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)

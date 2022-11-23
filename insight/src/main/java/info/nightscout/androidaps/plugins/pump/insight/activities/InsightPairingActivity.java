@@ -32,12 +32,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
+import info.nightscout.core.activities.NoSplashAppCompatActivity;
 import info.nightscout.core.utils.extensions.BluetoothAdapterExtensionKt;
 import info.nightscout.core.utils.extensions.IntentExtensionKt;
 import info.nightscout.interfaces.pump.PumpSync;
