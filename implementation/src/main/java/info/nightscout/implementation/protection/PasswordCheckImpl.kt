@@ -12,15 +12,15 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.Reusable
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class PasswordCheckImpl @Inject constructor(
     private val sp: SP,
     private val cryptoUtil: CryptoUtil

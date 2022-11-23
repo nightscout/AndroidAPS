@@ -1,5 +1,6 @@
 package info.nightscout.implementation
 
+import dagger.Reusable
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
@@ -16,10 +17,9 @@ import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @OpenForTesting
-@Singleton
+@Reusable
 class UserEntryLoggerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,

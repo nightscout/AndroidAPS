@@ -1,6 +1,7 @@
 package info.nightscout.implementation.protection
 
 import androidx.fragment.app.FragmentActivity
+import dagger.Reusable
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.protection.ProtectionCheck
@@ -8,9 +9,8 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class ProtectionCheckImpl @Inject constructor(
     private val sp: SP,
     private val passwordCheck: PasswordCheck,

@@ -1,5 +1,6 @@
 package info.nightscout.implementation
 
+import dagger.Reusable
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
@@ -10,9 +11,8 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Translator
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class TranslatorImpl @Inject internal constructor(
     private val rh: ResourceHelper
 ) : Translator {

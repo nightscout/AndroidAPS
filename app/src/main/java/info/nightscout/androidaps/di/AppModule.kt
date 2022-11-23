@@ -10,7 +10,6 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -98,7 +97,6 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-        @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder

@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.locale.LocaleHelper
+import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.protection.ProtectionCheck
 import javax.inject.Inject
