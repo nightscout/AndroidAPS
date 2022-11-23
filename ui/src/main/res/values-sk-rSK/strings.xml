@@ -141,4 +141,5 @@
     <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
     <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
     <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
+    <!--    Preferences -->
 </resources>
