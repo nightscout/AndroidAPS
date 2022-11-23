@@ -98,4 +98,5 @@
     <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
     <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
     <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
+    <!--    Preferences -->
 </resources>
