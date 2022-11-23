@@ -100,4 +100,5 @@
     <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
+    <!--    Preferences -->
 </resources>
