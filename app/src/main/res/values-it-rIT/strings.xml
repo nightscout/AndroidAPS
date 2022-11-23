@@ -148,7 +148,6 @@
     <string name="wear_general_settings">Impostazioni generali</string>
     <string name="open_navigation">Apri navigazione</string>
     <string name="close_navigation">Chiudi navigazione</string>
-    <string name="nav_plugin_preferences">Preferenze plugin</string>
     <string name="remove_items">Rimuovi elementi</string>
     <string name="sort_items">Ordina elementi</string>
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
@@ -167,7 +166,6 @@
     <string name="miscellaneous">Miscellanea</string>
     <string name="nav_logsettings">Impostazioni Log</string>
     <string name="resettodefaults">Ripristina valori predefiniti</string>
-    <string name="sendlogfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Il calcolatore esegue il calcolo, ma solo questa parte dell\'insulina calcolata è erogata. Utile con algoritmo SMB.</string>
     <string name="unitsnosemicolon">Unità</string>
