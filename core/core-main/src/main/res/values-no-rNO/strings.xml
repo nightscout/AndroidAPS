@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Oppdater</string>
-    <string name="error">Feil</string>
     <string name="save">Lagre</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="failedupdatebasalprofile">Kunne ikke oppdatere basalprofil</string>
-    <string name="profile_set_ok">Basalprofil i pumpen er oppdatert</string>
-    <string name="invalidinput">Ugyldig inndata</string>
     <string name="tempbasaldeliveryerror">Feil ved justering av Temp Basal</string>
     <string name="goingtodeliver">Kommer til å levere %1$.2f enheter</string>
     <string name="waitingforpump">Venter på pumpen</string>
-    <string name="bolusdelivering">Leverer %1$.2f enheter</string>
     <string name="connecting">Tilkobler</string>
     <string name="disconnected">Frakoblet</string>
     <string name="androidaps_start">AAPS startet</string>
