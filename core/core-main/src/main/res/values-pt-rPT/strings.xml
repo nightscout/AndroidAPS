@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Actualizar</string>
-    <string name="error">Erro</string>
     <string name="save">Guardar</string>
     <string name="not_set_short">Não definido</string>
     <string name="failedupdatebasalprofile">Falha a actualizar perfil da basal</string>
-    <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
-    <string name="invalidinput">Entrada Inválida</string>
     <string name="tempbasaldeliveryerror">Erro na administração da Basal Temp</string>
     <string name="goingtodeliver">A ser administrado %1$.2f U</string>
     <string name="waitingforpump">À espera da bomba</string>
-    <string name="bolusdelivering">A administrar %1$.2f U</string>
     <string name="connecting">A ligar</string>
     <string name="disconnected">Desconectada</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
