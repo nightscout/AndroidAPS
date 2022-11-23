@@ -143,4 +143,5 @@
     <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
     <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
     <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
+    <!--    Preferences -->
 </resources>
