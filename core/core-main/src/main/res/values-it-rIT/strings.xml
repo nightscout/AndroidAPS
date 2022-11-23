@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Aggiorna</string>
-    <string name="error">Errore</string>
     <string name="save">Salva</string>
     <string name="not_set_short">Non impostato</string>
     <string name="failedupdatebasalprofile">Impossibile aggiornare il profilo basale</string>
-    <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
-    <string name="invalidinput">Dati di input non validi</string>
     <string name="tempbasaldeliveryerror">Errore erogazione basale temporanea</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
     <string name="waitingforpump">In attesa del micro</string>
-    <string name="bolusdelivering">Erogazione di %1$.2f U</string>
     <string name="connecting">Connessione</string>
     <string name="disconnected">Disconnesso</string>
     <string name="androidaps_start">AAPS avviato</string>
