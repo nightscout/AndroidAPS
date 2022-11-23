@@ -20,13 +20,10 @@
     <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
-    <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
-    <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>
     <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
     <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
     <string name="key_openapsama_use_autosens" translatable="false">openapsama_useautosens</string>
-    <string name="key_openapsama_bolus_snooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
 
     <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
