@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Refresh</string>
-    <string name="error">Error</string>
     <string name="save">Save</string>
     <string name="not_set_short">Not set</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
-    <string name="profile_set_ok">Basal profile in pump updated</string>
-    <string name="invalidinput">Invalid input data</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
-    <string name="bolusdelivering">Delivering %1$.2f U</string>
     <string name="connecting">Connecting</string>
     <string name="disconnected">Disconnected</string>
     <string name="androidaps_start">AAPS started</string>
