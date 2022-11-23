@@ -147,7 +147,6 @@
     <string name="wear_general_settings">Generella inställningar</string>
     <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>
-    <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
     <string name="maintenance_email">e-postmottagare</string>
@@ -161,7 +160,6 @@
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), fördröjd i %3$d m</string>
     <string name="nav_logsettings">Loggningsinställningar</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
-    <string name="sendlogfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
     <string name="unitsnosemicolon">Enheter</string>
