@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Vernieuwen</string>
-    <string name="error">Fout</string>
     <string name="save">Opslaan</string>
     <string name="not_set_short">Niet ingesteld</string>
     <string name="failedupdatebasalprofile">Update basaal profiel mislukt</string>
-    <string name="profile_set_ok">Basaal profiel in pomp bijgewerkt</string>
-    <string name="invalidinput">Ongeldige invoer</string>
     <string name="tempbasaldeliveryerror">Storing toedienen tijdelijk basaal</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="waitingforpump">Wacht op pomp</string>
-    <string name="bolusdelivering">%1$.2f E worden toegediend</string>
     <string name="connecting">Verbining maken</string>
     <string name="disconnected">Verbinding verbroken</string>
     <string name="androidaps_start">AAPS gestart</string>
