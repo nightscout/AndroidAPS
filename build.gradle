@@ -45,7 +45,7 @@ buildscript {
         replayshare_version = '2.2.0'
 
         wearable_version = '2.9.0'
-        play_services_wearable_version = '17.1.0'
+        play_services_wearable_version = '18.0.0'
         play_services_location_version = '21.0.1'
 
         kotlinx_datetime_version = '0.3.2'
