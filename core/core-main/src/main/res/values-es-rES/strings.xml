@@ -2,16 +2,12 @@
 <resources>
     <!--    General-->
     <string name="refresh">Actualizar</string>
-    <string name="error">Error</string>
     <string name="save">Guardar</string>
     <string name="not_set_short">No configurado</string>
     <string name="failedupdatebasalprofile">Error al actualizar el perfil basal</string>
-    <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
-    <string name="invalidinput">Datos inválidos</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
     <string name="waitingforpump">Esperando bomba</string>
-    <string name="bolusdelivering">Entregando %1$.2f U</string>
     <string name="connecting">Conectando</string>
     <string name="disconnected">Desconectado</string>
     <string name="androidaps_start">AAPS iniciado</string>
