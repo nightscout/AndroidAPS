@@ -193,7 +193,6 @@
     <string name="wear_general_settings">General Settings</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
-    <string name="nav_plugin_preferences">Plugin preferences</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>

@@ -165,4 +165,6 @@
     <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
     <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
 
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Plugin preferences</string>
 </resources>

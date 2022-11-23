@@ -32,13 +32,12 @@ import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.activities.SingleFragmentActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.configuration.setupwizard.SetupWizardActivity
 import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -50,7 +49,7 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraints
-import info.nightscout.core.ui.locale.LocaleHelper
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -68,6 +67,7 @@ import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.activities.ProfileHelperActivity
+import info.nightscout.ui.activities.SingleFragmentActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.TreatmentsActivity
 import info.nightscout.ui.tabs.TabPageAdapter

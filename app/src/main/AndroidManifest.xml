@@ -177,10 +177,6 @@
         <service android:name=".plugins.general.persistentNotification.DummyService" />
 
         <activity
-            android:name=".activities.SingleFragmentActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".plugins.general.maintenance.activities.LogSettingActivity"
             android:exported="false" />
 
