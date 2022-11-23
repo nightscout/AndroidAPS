@@ -2,10 +2,8 @@
 <resources>
     <!--    General-->
     <string name="refresh">Athnuachan</string>
-    <string name="error">Earráid</string>
     <string name="save">Sábháil</string>
     <string name="waitingforpump">Ag fanacht do caidéil</string>
-    <string name="bolusdelivering">Ag seachadadh %1$.2f A</string>
     <string name="connecting">Ag nascadh</string>
     <string name="disconnected">Dínasctha</string>
     <string name="formatsignedinsulinunits">%1$+.2f A</string>
