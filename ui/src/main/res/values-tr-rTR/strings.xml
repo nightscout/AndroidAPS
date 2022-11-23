@@ -63,4 +63,5 @@
     <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
     <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
     <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
+    <!--    Preferences -->
 </resources>
