@@ -583,5 +583,6 @@
 
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
+    <string name="cannula_usage">usage:</string>
 
 </resources>

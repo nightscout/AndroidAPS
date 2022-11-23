@@ -289,12 +289,14 @@ class ActionsFragment : DaggerFragment() {
             val imageResource = if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
             cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
+            cannulaUsageLabel.visibility = isPatchPump.not().toVisibility()
+            cannulaUsage.visibility = isPatchPump.not().toVisibility()
 
             if (!config.NSCLIENT) {
-                statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
+                statusLightHandler.updateStatusLights(cannulaAge, cannulaUsage, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
                 sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.level_label)
             } else {
-                statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
+                statusLightHandler.updateStatusLights(cannulaAge, cannulaUsage, insulinAge, null, sensorAge, null, pbAge, null)
                 sensorLevelLabel.text = ""
                 insulinLevelLabel.text = ""
                 pbLevelLabel.text = ""

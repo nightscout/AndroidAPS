@@ -923,6 +923,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         statusLightHandler.updateStatusLights(
             binding.statusLightsLayout.cannulaAge,
+            null,
             binding.statusLightsLayout.insulinAge,
             binding.statusLightsLayout.reservoirLevel,
             binding.statusLightsLayout.sensorAge,
