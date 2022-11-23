@@ -35,7 +35,7 @@ import info.nightscout.implementation.db.CompatDBHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.general.overview.notifications.NotificationStore

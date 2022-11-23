@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.core.main.R
 import info.nightscout.core.main.databinding.MaintenanceImportListActivityBinding
 import info.nightscout.core.main.databinding.MaintenanceImportListItemBinding
-import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefsFile
 import info.nightscout.interfaces.maintenance.PrefsMetadataKey

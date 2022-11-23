@@ -11,7 +11,7 @@ import info.nightscout.configuration.setupwizard.elements.SWItem
 import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.locale.LocaleHelper.update
+import info.nightscout.core.ui.locale.LocaleHelper.update
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged

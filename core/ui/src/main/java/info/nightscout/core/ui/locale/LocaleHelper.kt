@@ -1,10 +1,10 @@
-package info.nightscout.interfaces.locale
+package info.nightscout.core.ui.locale
 
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.LocaleList
 import androidx.preference.PreferenceManager
-import info.nightscout.interfaces.R
+import info.nightscout.core.ui.R
 import java.util.Locale
 
 object LocaleHelper {

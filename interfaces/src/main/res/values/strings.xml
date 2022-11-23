@@ -12,9 +12,6 @@
     <string name="metadata_format_debug">New debug format (unencrypted)</string>
     <string name="metadata_format_other">Unknown export format</string>
 
-    <!-- Locale -->
-    <string name="key_language" translatable="false">language</string>
-
     <!--    PumpType-->
     <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
 
