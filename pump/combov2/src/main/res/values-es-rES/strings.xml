@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bluetooth_address">Dirección Bluetooth</string>
+    <string name="combov2_pin_entry_hint">0123456789</string>
+    <string name="combov2_enter_pin">Introducir PIN</string>
+    <string name="combov2_cancel_pairing">Emparejamiento cancelado</string>
+    <string name="combov2_pin_hint">PIN de 10 dígitos</string>
+    <string name="combov2_pairing_finished_successfully">Vinculado correctamente con Combo</string>
+    <string name="combov2_pairing_cancelled">Emparejamiento con Combo cancelado por el usuario</string>
+    <string name="combov2_pairing_finishing">Finalizando emparejamiento</string>
+    <string name="combov2_ready">Listo</string>
+    <string name="combov2_suspended">Suspendido</string>
 </resources>
