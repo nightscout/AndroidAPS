@@ -215,6 +215,33 @@
     <string name="skin">Görünüm</string>
     <!--    Loop -->
     <!--    DataBroadcast-->
+    <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
+    <string name="no_watch_connected">(Saat Bağlı Değil)</string>
+    <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
+    <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
+    <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
+    <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
+    <string name="wear_action_tempt_zero_message">Sıfır-Geçici-Hedef - Çalışan Geçici-Hedefler iptal edilsin mi?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-KŞ aralık dışında!</string>
+    <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
+    <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\nMin: %1$s\nMaks: %2$s\nSüre: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Geçici Hedef:\nHedef: %1$s\nSüre: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Geçici Hedef:\nNeden: %1$s\nHedef: %2$s\nSüre: %3$s</string>
+    <string name="no_success">başarısız - lütfen telefonu kontrol edin</string>
+    <string name="wear_settings">Wear ayarları</string>
+    <string name="wearcontrol_title">Saat tarafından kontrol</string>
+    <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
+    <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
+    <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
+    <string name="wear_detailed_delta_summary">Deltayı bir ondalık basamak daha göster</string>
+    <string name="wear_notifysmb_title">SMB\'yi bildir</string>
+    <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
+    <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
+    <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
 </resources>
