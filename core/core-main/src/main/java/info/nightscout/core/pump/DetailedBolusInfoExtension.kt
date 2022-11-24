@@ -1,19 +1,7 @@
 package info.nightscout.core.pump
 
 import com.google.gson.Gson
-import info.nightscout.database.impl.transactions.InsertOrUpdateBolusTransaction
-import info.nightscout.database.impl.transactions.InsertOrUpdateCarbsTransaction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-
-fun DetailedBolusInfo.insertCarbsTransaction(): InsertOrUpdateCarbsTransaction {
-    if (carbs == 0.0) throw IllegalStateException("carbs == 0.0")
-    return InsertOrUpdateCarbsTransaction(createCarbs()!!)
-}
-
-fun DetailedBolusInfo.insertBolusTransaction(): InsertOrUpdateBolusTransaction {
-    if (insulin == 0.0) throw IllegalStateException("insulin == 0.0")
-    return InsertOrUpdateBolusTransaction(createBolus()!!)
-}
 
 fun DetailedBolusInfo.toJsonString(): String = Gson().toJson(this)
 

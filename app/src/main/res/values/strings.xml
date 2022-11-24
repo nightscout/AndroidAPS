@@ -40,7 +40,6 @@
     <string name="description_config_builder">Used for configuring the active plugins</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
-    <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
     <string name="delta">Delta</string>
     <string name="configbuilder">Config Builder</string>
     <string name="overview">Overview</string>
@@ -81,17 +80,12 @@
     <string name="low_mark">LOW mark</string>
     <string name="high_mark">HIGH mark</string>
     <string name="wear">Wear</string>
-    <string name="resend_all_data">Resend All Data</string>
-    <string name="open_settings_on_wear">Open Settings on Wear</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="overview_shortname">HOME</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="wear_shortname">WEAR</string>
     <string name="short_tabtitles">Shorten tab titles</string>
-    <string name="wear_settings">Wear settings</string>
-    <string name="nosuccess">not successful - please check phone</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
@@ -128,16 +122,12 @@
     <string name="activity_target">activity target</string>
     <string name="hypo_duration">hypo duration</string>
     <string name="hypo_target">hypo target</string>
-    <string name="wearcontrol_title">Controls from Watch</string>
-    <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <string name="gradually_increase_notification_volume">Gradually increase the volume for alerts and notifications</string>
     <string name="localalertsettings_title">Local alerts</string>
     <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
     <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
     <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
     <string name="enable_carbs_req_alert">Alert if carbs are required</string>
-    <string name="wear_detailed_delta_title">Show detailed delta</string>
-    <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
     <string name="overview_editquickwizard_usebg">BG calculation</string>
     <string name="overview_editquickwizard_usebolusiob">Bolus IOB calculation</string>
     <string name="overview_editquickwizard_usebasaliob">Basal IOB calculation</string>
@@ -160,10 +150,6 @@
     <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
     <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
     <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
-    <string name="wear_notifysmb_title">Notify on SMB</string>
-    <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
-    <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
-    <string name="wear_predictions_title">Predictions</string>
     <string name="g5appnotdetected">Please update your Dexcom app to supported version</string>
     <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
     <string name="overview_show_activity">Activity</string>
@@ -174,7 +160,6 @@
     <string name="overview_show_iob">Insulin On Board</string>
     <string name="overview_show_basals">Basals</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
-    <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="firstinsulinincrement">First insulin increment</string>
     <string name="secondinsulinincrement">Second insulin increment</string>
@@ -183,17 +168,8 @@
     <string name="secondcarbsincrement">Second carbs increment</string>
     <string name="thirdcarbsincrement">Third carbs increment</string>
     <string name="cgm">CGM</string>
-    <string name="key_wearwizard_bg" translatable="false">wearwizard_bg</string>
-    <string name="key_wearwizard_tt" translatable="false">wearwizard_tt</string>
-    <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
-    <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
-    <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
-    <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
-    <string name="wear_display_settings">Display Settings</string>
-    <string name="wear_general_settings">General Settings</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
-    <string name="nav_plugin_preferences">Plugin preferences</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
@@ -216,16 +192,12 @@
     <string name="miscellaneous">Miscellaneous</string>
     <string name="nav_logsettings">Log settings</string>
     <string name="resettodefaults">Reset to defaults</string>
-    <string name="sendlogfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
     <string name="unitsnosemicolon">Units</string>
-    <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
-    <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
     <string name="show_removed">Show removed</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
-    <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="chartmenu">Chart menu</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
@@ -249,26 +221,13 @@
     <string name="a11y_dialog">dialog</string>
     <string name="not_available_full">Not available</string>
     <!-- WEAR OS-->
-    <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
-    <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
-    <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>
-    <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
-    <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
-    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temptarget:\nReason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
-    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="overview_editquickwizard_show_on_device">Show entry on device:</string>
-    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
     <string name="wear_unknown_action_string">Unknown action command:</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="app_default">Application default</string>
     <string name="remove_selected_items">Remove selected items</string>
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
-    <string name="loop_status">Loop status</string>
     <string name="graph_scale">Graph scale</string>
     <string name="a11y_open_settings">open settings</string>
     <string name="device_all">All</string>
@@ -279,7 +238,6 @@
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
     <string name="search">Search</string>
 
-    <string name="no_watch_connected">(No Watch Connected)</string>
     <string name="database_cleanup">Database cleanup</string>
     <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
     <string name="cleared_entries">Cleared entries</string>

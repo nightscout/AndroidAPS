@@ -100,4 +100,15 @@ object Constants {
      * so we add leeway to still accept given amount of older tokens
      */
     const val OTP_ACCEPT_OLD_TOKENS_COUNT = 1
+
+    /**
+     * Button increments
+     */
+    const val INSULIN_PLUS1_DEFAULT = 0.5
+    const val INSULIN_PLUS2_DEFAULT = 1.0
+    const val INSULIN_PLUS3_DEFAULT = 2.0
+    const val CARBS_FAV1_DEFAULT = 5
+    const val CARBS_FAV2_DEFAULT = 10
+    const val CARBS_FAV3_DEFAULT = 20
+
 }

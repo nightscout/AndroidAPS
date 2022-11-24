@@ -3,14 +3,13 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.ValueWrapper
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorExists
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.database.ValueWrapper
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
-
 import org.json.JSONObject
 
 class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {

@@ -12,13 +12,12 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.core.pump.insertCarbsTransaction
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
@@ -41,6 +40,7 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
@@ -68,7 +68,6 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -92,7 +91,8 @@ class CommandQueueImplementation @Inject constructor(
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
     private val androidPermission: AndroidPermission,
-    private val activityNames: ActivityNames
+    private val activityNames: ActivityNames,
+    private val persistenceLayer: PersistenceLayer
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
@@ -230,7 +230,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames, persistenceLayer
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -266,18 +266,7 @@ class CommandQueueImplementation @Inject constructor(
             carbsRunnable = Runnable {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
                 detailedBolusInfo.carbs = originalCarbs
-                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                    .subscribeBy(
-                        onSuccess = { result ->
-                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
-
-                        },
-                        onError = {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
-                        }
-                    )
+                persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs(), callback, injector)
             }
             // Do not process carbs anymore
             detailedBolusInfo.carbs = 0.0

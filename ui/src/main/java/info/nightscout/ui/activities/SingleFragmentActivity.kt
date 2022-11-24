@@ -1,29 +1,31 @@
-package info.nightscout.androidaps.activities
+package info.nightscout.ui.activities
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.locale.LocaleHelper
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.ui.R
 import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
 
-    @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var activityNames: ActivityNames
 
     private var plugin: PluginBase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_fragment)
-        plugin = pluginStore.plugins[intent.getIntExtra("plugin", -1)]
+        plugin = activePlugin.getPluginsList()[intent.getIntExtra("plugin", -1)]
         title = plugin?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -44,7 +46,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
 
             R.id.nav_plugin_preferences -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    val i = Intent(this, PreferencesActivity::class.java)
+                    val i = Intent(this, activityNames.preferencesActivity)
                     i.putExtra("id", plugin?.preferencesId)
                     startActivity(i)
                 }, null)

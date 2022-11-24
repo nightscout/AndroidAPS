@@ -13,8 +13,8 @@ import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin

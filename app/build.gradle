@@ -7,6 +7,8 @@ plugins {
     id 'kotlinx-serialization'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.vanniktech.dependency.graph.generator'
+
 }
 
 apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
@@ -229,8 +231,6 @@ dependencies {
     // MainApp
     api "com.uber.rxdogtag2:rxdogtag:2.0.1"
 
-    // DataLayerListenerService
-    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
 }
 
 apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"

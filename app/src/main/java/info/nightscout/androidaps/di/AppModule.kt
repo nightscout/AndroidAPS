@@ -10,11 +10,11 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImpl
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefsImpl
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.androidaps.workflow.CalculationWorkflowImpl
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.interfaces.Config
@@ -36,6 +36,7 @@ import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.sync.nsclient.DataSyncSelectorImplementation
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
@@ -98,7 +99,6 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-        @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
@@ -109,6 +109,7 @@ open class AppModule {
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicator
         @Binds fun bindDataSyncSelectorInterface(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
         @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
+        @Binds fun bindCalculationWorkflowInterface(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
     }
 }
 

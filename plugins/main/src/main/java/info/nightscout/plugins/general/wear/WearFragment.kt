@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.plugins.general.wear
+package info.nightscout.plugins.general.wear
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.databinding.WearFragmentBinding
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.plugins.databinding.WearFragmentBinding
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

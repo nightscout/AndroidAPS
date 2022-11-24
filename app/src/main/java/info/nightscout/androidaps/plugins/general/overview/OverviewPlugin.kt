@@ -13,7 +13,6 @@ import info.nightscout.androidaps.extensions.storeDouble
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -26,6 +25,7 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification

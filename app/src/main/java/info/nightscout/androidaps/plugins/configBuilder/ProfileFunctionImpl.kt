@@ -4,9 +4,9 @@ import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.database.impl.transactions.InsertOrUpdateProfileSwitch
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants

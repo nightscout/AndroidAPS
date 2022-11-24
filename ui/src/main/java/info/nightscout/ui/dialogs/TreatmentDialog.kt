@@ -8,9 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.core.pump.insertBolusTransaction
-import info.nightscout.core.pump.insertCarbsTransaction
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.formatColor
@@ -20,6 +17,8 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfo
@@ -34,7 +33,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogTreatmentBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -52,6 +50,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -167,17 +166,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                         if (detailedBolusInfo.insulin > 0)
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
-                                .subscribe(
-                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
-                                )
+                            persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                         if (detailedBolusInfo.carbs > 0)
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                                .subscribe(
-                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-                                )
+                            persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs())
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
                             uel.log(action, UserEntry.Sources.TreatmentDialog,
@@ -193,13 +184,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         } else {
                             uel.log(action, UserEntry.Sources.TreatmentDialog,
                                     ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
-                            if (detailedBolusInfo.carbs > 0) {
-                                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                                    .subscribe(
-                                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-                                    )
-                            }
+                            if (detailedBolusInfo.carbs > 0)
+                                persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs())
                         }
                     }
                 })

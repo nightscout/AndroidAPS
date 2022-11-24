@@ -1,13 +1,12 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.plugins.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.extensions.convertedToAbsolute
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.workflow.CalculationWorkflow
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
@@ -15,12 +14,13 @@ import info.nightscout.core.iob.determineBasalJson
 import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.workflow.CalculationWorkflow
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.AutosensDataStore
@@ -38,6 +38,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
@@ -82,7 +83,7 @@ class IobCobCalculatorPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .pluginName(R.string.iobcobcalculator)
+        .pluginName(R.string.iob_cob_calculator)
         .showInList(false)
         .neverVisible(true)
         .alwaysEnabled(true),

@@ -15,7 +15,8 @@ import dagger.Module
         SkinsModule::class,
         SkinsUiModule::class,
         LoopModule::class,
-        ActionsModule::class
+        ActionsModule::class,
+        WearModule::class
     ]
 )
 

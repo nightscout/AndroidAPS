@@ -6,7 +6,6 @@ import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.highValueToUnitsToString
 import info.nightscout.androidaps.extensions.lowValueToUnitsToString
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
@@ -18,16 +17,16 @@ import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
@@ -48,8 +47,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
@@ -76,10 +73,9 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
-    private val disposable = CompositeDisposable()
 
     var timeStamp : Long
 
@@ -495,12 +491,7 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     }
-                    disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult!!))
-                        .subscribe(
-                            { result -> result.inserted.forEach { inserted -> aapsLogger.debug(LTag.DATABASE, "Inserted bolusCalculatorResult $inserted") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while saving bolusCalculatorResult", it) }
-                        )
-
+                    bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
                     carbTimer.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())

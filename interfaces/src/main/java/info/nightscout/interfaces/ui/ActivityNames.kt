@@ -17,6 +17,7 @@ interface ActivityNames {
     val errorHelperActivity: Class<*>
     val bolusProgressHelperActivity: Class<*>
     val singleFragmentActivity: Class<*>
+    val preferencesActivity: Class<*>
     val myPreferenceFragment: Class<*>
 
     /**

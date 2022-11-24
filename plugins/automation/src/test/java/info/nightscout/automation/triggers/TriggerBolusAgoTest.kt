@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.automation.elements.Comparator
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONException

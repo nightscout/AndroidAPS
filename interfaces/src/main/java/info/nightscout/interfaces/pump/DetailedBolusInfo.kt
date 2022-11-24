@@ -97,7 +97,7 @@ class DetailedBolusInfo {
             glucoseType = glucoseType?.toDbMeterType()
         )
 
-    fun createBolus(): Bolus? =
+    fun createBolus(): Bolus =
         if (insulin != 0.0)
             Bolus(
                 timestamp = bolusTimestamp ?: timestamp,
@@ -105,9 +105,9 @@ class DetailedBolusInfo {
                 type = bolusType.toDBbBolusType(),
                 notes = notes,
             )
-        else null
+        else throw IllegalStateException("insulin == 0.0")
 
-    fun createCarbs(): Carbs? =
+    fun createCarbs(): Carbs =
         if (carbs != 0.0)
             Carbs(
                 timestamp = carbsTimestamp ?: timestamp,
@@ -115,7 +115,7 @@ class DetailedBolusInfo {
                 duration = carbsDuration,
                 notes = notes,
             )
-        else null
+        else throw IllegalStateException("carbs == 0.0")
 
     fun copy(): DetailedBolusInfo {
         val n = DetailedBolusInfo()

@@ -1,6 +1,7 @@
-package info.nightscout.androidaps.plugins.configBuilder
+package info.nightscout.implementation.plugin
 
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.aps.APS
 import info.nightscout.interfaces.aps.Sensitivity
@@ -57,7 +58,7 @@ class PluginStore @Inject constructor(
     override fun getSpecificPluginsListByInterface(interfaceClass: Class<*>): ArrayList<PluginBase> {
         val newList = ArrayList<PluginBase>()
         for (p in plugins) {
-            if (p.javaClass != ConfigBuilderPlugin::class.java && interfaceClass.isAssignableFrom(p.javaClass)) newList.add(p)
+            if (!interfaceClass.isAssignableFrom(ConfigBuilder::class.java) && interfaceClass.isAssignableFrom(p.javaClass)) newList.add(p)
         }
         return newList
     }

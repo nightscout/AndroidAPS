@@ -10,14 +10,11 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
@@ -25,11 +22,9 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.sensitivity.SensitivityOref1Plugin
-import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
@@ -42,6 +37,7 @@ import info.nightscout.plugins.constraints.storage.StorageConstraintPlugin
 import info.nightscout.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.plugins.general.actions.ActionsPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
+import info.nightscout.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
@@ -50,6 +46,7 @@ import info.nightscout.plugins.insulin.InsulinLyumjevPlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.plugins.insulin.InsulinOrefUltraRapidActingPlugin
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.AidexPlugin
@@ -66,6 +63,9 @@ import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
+import info.nightscout.sensitivity.SensitivityAAPSPlugin
+import info.nightscout.sensitivity.SensitivityOref1Plugin
+import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")

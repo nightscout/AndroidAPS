@@ -44,11 +44,15 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="info.nightscout.ui.activities.TreatmentsActivity"
+            android:name=".activities.TreatmentsActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="info.nightscout.ui.activities.ProfileHelperActivity"
+            android:name=".activities.ProfileHelperActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.SingleFragmentActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
 

@@ -10,14 +10,17 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Worker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOrefWorker
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.workflow.CalculationWorkflow
+import info.nightscout.core.workflow.CalculationWorkflow.Companion.JOB
+import info.nightscout.core.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobOref1Worker
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobOrefWorker
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
@@ -28,7 +31,6 @@ import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -37,7 +39,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CalculationWorkflow @Inject constructor(
+class CalculationWorkflowImpl @Inject constructor(
     aapsSchedulers: AapsSchedulers,
     rh: ResourceHelper,
     rxBus: RxBus,
@@ -46,17 +48,9 @@ class CalculationWorkflow @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val sensitivityOref1Plugin: SensitivityOref1Plugin,
     private val dataWorkerStorage: DataWorkerStorage,
     private val activePlugin: ActivePlugin
-) {
-
-    companion object {
-
-        const val MAIN_CALCULATION = "calculation"
-        const val HISTORY_CALCULATION = "history_calculation"
-        const val JOB = "job"
-    }
+) : CalculationWorkflow {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -65,26 +59,10 @@ class CalculationWorkflow @Inject constructor(
     private val overviewData: OverviewData
         get() = (iobCobCalculator as IobCobCalculatorPlugin).overviewData
 
-    enum class ProgressData(private val pass: Int, val percentOfTotal: Int) {
-        PREPARE_BASAL_DATA(0, 5),
-        PREPARE_TEMPORARY_TARGET_DATA(1, 5),
-        PREPARE_TREATMENTS_DATA(2, 5),
-        IOB_COB_OREF(3, 74),
-        PREPARE_IOB_AUTOSENS_DATA(4, 10),
-        DRAW(5, 1);
-
-        fun finalPercent(progress: Int): Int {
-            var total = 0
-            for (i in values()) if (i.pass < pass) total += i.percentOfTotal
-            total += (percentOfTotal.toDouble() * progress / 100.0).toInt()
-            return total
-        }
-    }
-
     init {
         // Verify definition
         var sumPercent = 0
-        for (pass in ProgressData.values()) sumPercent += pass.percentOfTotal
+        for (pass in CalculationWorkflow.ProgressData.values()) sumPercent += pass.percentOfTotal
         require(sumPercent == 100)
 
         disposable += rxBus
@@ -131,7 +109,7 @@ class CalculationWorkflow @Inject constructor(
 
     }
 
-    fun stopCalculation(job: String, from: String) {
+    override fun stopCalculation(job: String, from: String) {
         aapsLogger.debug(LTag.AUTOSENS, "Stopping calculation thread: $from")
         WorkManager.getInstance(context).cancelUniqueWork(job)
         val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(job).get()
@@ -140,7 +118,7 @@ class CalculationWorkflow @Inject constructor(
         aapsLogger.debug(LTag.AUTOSENS, "Calculation thread stopped: $from")
     }
 
-    fun runCalculation(
+    override fun runCalculation(
         job: String,
         iobCobCalculator: IobCobCalculator,
         overviewData: OverviewData,
@@ -195,7 +173,7 @@ class CalculationWorkflow @Inject constructor(
                     .build()
             )
             .then(
-                if (sensitivityOref1Plugin.isEnabled())
+                if (activePlugin.activeSensitivity.isOref1)
                     OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
                         .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(injector, iobCobCalculator, from, end, limitDataToOldestAvailable, cause)))
                         .build()
