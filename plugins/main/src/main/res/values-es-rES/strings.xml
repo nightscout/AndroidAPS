@@ -448,4 +448,5 @@
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
+    <!--    Wear-->
 </resources>
