@@ -21,10 +21,10 @@ import info.nightscout.core.graph.data.Scale
 import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.iob.CobInfo
 import info.nightscout.interfaces.iob.IobCobCalculator

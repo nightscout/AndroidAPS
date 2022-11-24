@@ -1,8 +1,8 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin

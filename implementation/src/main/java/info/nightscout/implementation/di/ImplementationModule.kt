@@ -14,6 +14,7 @@ import info.nightscout.implementation.TrendCalculatorImpl
 import info.nightscout.implementation.UserEntryLoggerImpl
 import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.androidNotification.NotificationHolderImpl
+import info.nightscout.implementation.db.PersistenceLayerImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
 import info.nightscout.implementation.maintenance.PrefFileListProviderImpl
 import info.nightscout.implementation.overview.OverviewDataImpl
@@ -38,6 +39,7 @@ import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
@@ -70,6 +72,7 @@ open class ImplementationModule {
 
     @Module
     interface Bindings {
+        @Binds fun bindPersistenceLayer(persistenceLayerImpl: PersistenceLayerImpl): PersistenceLayer
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindPrefFileListProvider(prefFileListProviderImpl: PrefFileListProviderImpl): PrefFileListProvider
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData

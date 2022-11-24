@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.core.pump.insertBolusTransaction
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.formatColor
@@ -25,6 +24,7 @@ import info.nightscout.interfaces.Constants.INSULIN_PLUS3_DEFAULT
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -69,6 +69,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -253,11 +254,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.record)),
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
                                     ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
-                                .subscribe(
-                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
-                                )
+                            persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                             if (timeOffset == 0)
                                 bolusTimer.removeAutomationEventBolusReminder()
                         } else {
