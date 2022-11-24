@@ -21,6 +21,7 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
@@ -56,6 +57,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var activityNames: ActivityNames
     @Mock lateinit var androidPermission: AndroidPermission
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     class CommandQueueMocked(
         injector: HasAndroidInjector,
@@ -73,11 +75,12 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
         androidPermission: AndroidPermission,
-        activityNames: ActivityNames
+        activityNames: ActivityNames,
+        persistenceLayer: PersistenceLayer
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
         activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
-        androidPermission, activityNames
+        androidPermission, activityNames, persistenceLayer
     ) {
 
         override fun notifyAboutNewCommand() : Boolean = true
@@ -121,7 +124,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
             config, dateUtil, repository,
-            fabricPrivacy, androidPermission, activityNames
+            fabricPrivacy, androidPermission, activityNames, persistenceLayer
         )
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -158,7 +161,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames, persistenceLayer
         )
         val handler = mock(Handler::class.java)
         `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->

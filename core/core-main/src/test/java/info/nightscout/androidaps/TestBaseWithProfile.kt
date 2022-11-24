@@ -6,7 +6,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.profile.ProfileStoreObject
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -34,7 +33,6 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
-    @Mock lateinit var repository: AppRepository
 
     private lateinit var hardLimits: HardLimits
     lateinit var testPumpPlugin: TestPumpPlugin
