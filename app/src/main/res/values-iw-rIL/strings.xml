@@ -51,17 +51,12 @@
     <string name="low_mark">סימון נמוך</string>
     <string name="high_mark">סימון גבוה</string>
     <string name="wear">Wear</string>
-    <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
-    <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="overview_shortname">בית</string>
     <string name="treatments_shortname">TREAT</string>
-    <string name="wear_shortname">WEAR</string>
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
-    <string name="wear_settings">הגדרות Wear</string>
-    <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="enablesuperbolus">אפשר סופר בולוס באשף</string>
     <string name="enablesuperbolus_summary">אפשר פונקציית סופר בולוס באשף. אין להפעיל לפני שאתם יודעים להשתמש בה, שימוש לא נכון עלול לגרום למתן מינון יתר של אינסולין!</string>
@@ -94,16 +89,12 @@
     <string name="activity_target">ערך מטרת פעילות</string>
     <string name="hypo_duration">משך היפו</string>
     <string name="hypo_target">ערך מטרת היפו</string>
-    <string name="wearcontrol_title">שליטה מהשעון</string>
-    <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
     <string name="gradually_increase_notification_volume">הגבר את עוצמת הקול בהדרגה להתראות ולהודעות</string>
     <string name="localalertsettings_title">התראות מקומיות</string>
     <string name="enable_missed_bg_readings_alert">התראה אם לא התקבלו נתוני סוכר בדם</string>
     <string name="enable_pump_unreachable_alert">התראה אם המשאבה בלתי נגישה</string>
     <string name="pump_unreachable_threshold">סף משאבה בלתי נגישה [min]</string>
     <string name="enable_carbs_req_alert">התראה אם יש צורך בפחמימות</string>
-    <string name="wear_detailed_delta_title">הצגת דלתא מפורטת</string>
-    <string name="wear_detailed_delta_summary">הצגת דלתא עם עוד נק\' עשרונית אחת</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
     <string name="overview_editquickwizard_usebolusiob">חישוב IOB של בולוס</string>
     <string name="overview_editquickwizard_usebasaliob">חישוב IOB של בזאלי</string>
@@ -120,10 +111,6 @@
     <string name="carb_increment_button_message">מספר פחמימות להוספה כאשר לוחצים על הלחצן</string>
     <string name="insulin_increment_button_message">כמות האינסולין להוספה כאשר לוחצים על הלחצן</string>
     <string name="error_starting_cgm">לא ניתן היה להפעיל את יישום סנסור. וודא שהוא מותקן.</string>
-    <string name="wear_notifysmb_title">דיווח על SMB</string>
-    <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
-    <string name="wear_predictions_summary">הראה את התחזיות על לוח השעון.</string>
-    <string name="wear_predictions_title">חיזוי</string>
     <string name="g5appnotdetected">עדכנו את יישום ה-Dexcom שלכם לגרסה נתמכת</string>
     <string name="dexcom_app_not_installed">אפליקציית Dexcom אינה מותקנת.</string>
     <string name="overview_show_activity">פעילות</string>
@@ -142,9 +129,6 @@
     <string name="secondcarbsincrement">תוספת פחמימות שניה</string>
     <string name="thirdcarbsincrement">תוספת פחמימות שלישית</string>
     <string name="cgm">סנסור</string>
-    <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
-    <string name="wear_display_settings">הגדרות תצוגה</string>
-    <string name="wear_general_settings">הגדרות כלליות</string>
     <string name="open_navigation">פתח ניווט</string>
     <string name="close_navigation">סגור ניווט</string>
     <string name="remove_items">הסר פריטים</string>
@@ -190,24 +174,13 @@
     <string name="a11y_dialog">תיבת דו-שיח</string>
     <string name="not_available_full">לא זמין</string>
     <!-- WEAR OS-->
-    <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
-    <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
-    <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
-    <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
-    <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
-    <string name="wear_action_tempt_manual_message">ע\' מטרה זמני:\nמטרה: %1$s\n משך: %2$s</string>
-    <string name="wear_action_tempt_preset_message">ע\' מטרה זמני:\nסיבה: %1$s\nמטרה: %2$s\nמשך: %3$s</string>
-    <string name="quick_wizard_message">אשף מהיר: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
-    <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="overview_editquickwizard_show_on_device">הצג רשומה על המכשיר:</string>
-    <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
     <string name="wear_unknown_action_string">פקודה לא ידועה:</string>
     <string name="overview_editquickwizard_percentage">אחוזים</string>
     <string name="app_default">ברירת המחדל של היישום</string>
     <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <string name="count_selected">%1$d נבחרו</string>
     <string name="sort_label">מיין</string>
-    <string name="loop_status">סטטוס הלולאה</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="a11y_open_settings">פתח הגדרות</string>
     <string name="device_all">הכול</string>
@@ -217,5 +190,4 @@
     <string name="a11y_only_on_phone">על הטלפון בלבד</string>
     <string name="a11y_drag_and_drop_handle">ידית גרירה</string>
     <string name="search">חיפוש</string>
-    <string name="no_watch_connected">(השעון לא מחובר)</string>
 </resources>
