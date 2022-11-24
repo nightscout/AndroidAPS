@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">מגבלה הוחלה!</string>
     <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
     <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
     <string name="temp_target_short">TT</string>
@@ -70,8 +69,6 @@
     <string name="tempbasals_netratio_label_string">יחס:</string>
     <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
     <string name="prime">תיחול</string>
     <string name="profile_changes">שינויים בפרופיל</string>
