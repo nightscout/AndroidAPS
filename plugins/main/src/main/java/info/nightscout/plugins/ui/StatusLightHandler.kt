@@ -2,7 +2,6 @@ package info.nightscout.plugins.ui
 
 import android.widget.TextView
 import androidx.annotation.StringRes
-import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.ValueWrapper
@@ -10,6 +9,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsclient.extensions.age
@@ -27,7 +27,8 @@ class StatusLightHandler @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val warnColors: WarnColors,
     private val config: Config,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val tddCalculator: TddCalculator
 ) {
 
     /**
@@ -105,8 +106,7 @@ class StatusLightHandler @Inject constructor(
     private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
-        @Suppress("SetTextI18n")
-        view?.text = " " + DecimalFormatter.to0Decimal(level) + units
+        view?.text = " " + DecimalFormatter.to0Decimal(level, units)
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
     }
 
@@ -117,8 +117,7 @@ class StatusLightHandler @Inject constructor(
         warnDefaultValue: Double, level: Double, units: String, maxReading: Double
     ) {
         if (level >= maxReading) {
-            @Suppress("SetTextI18n")
-            view?.text = " ${maxReading.toInt()}+$units"
+            view?.text = DecimalFormatter.to0Decimal(maxReading, units)
             view?.setTextColor(rh.gac(view.context, R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
@@ -129,11 +128,9 @@ class StatusLightHandler @Inject constructor(
         val therapyEvent = repository.getLastTherapyRecordUpToNow(type).blockingGet()
         var usage = 0.0
         if (therapyEvent is ValueWrapper.Existing) {
-            val startTime = therapyEvent.value.timestamp
-            usage = repository.getBolusesDataFromTime(startTime, true).blockingGet()
-                .filter { it.type != Bolus.Type.PRIMING }
-                .sumOf { t -> t.amount }
+            val tdd = tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now())
+            usage = tdd.totalAmount
         }
-        view?.text = " " + DecimalFormatter.to0Decimal(usage) + units
+        view?.text = DecimalFormatter.to0Decimal(usage, units)
     }
 }
