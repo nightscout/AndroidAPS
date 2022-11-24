@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">применено ограничение!</string>
     <string name="bolus_constraint_applied">применено ограничение болюса</string>
     <string name="carbs_constraint_applied">применено ограничение углеводов</string>
     <string name="temp_target_short">TT</string>
@@ -93,8 +92,6 @@
     <string name="tempbasals_netratio_label_string">Процент:</string>
     <string name="tempbasals_netinsulin_label_string">Инсулин:</string>
     <string name="tempbasals_iob_label_string">IOB акт инс:</string>
-    <string name="tempbasals_iobtotal_label_string">Общий IOB:</string>
-    <string name="treatments_wizard_tt_label">Врем цель (TT)</string>
     <string name="treatments_wizard_correction_label">Коррекция</string>
     <string name="meal_bolus">На еду</string>
     <string name="prime">Заполн инфуз системы</string>
