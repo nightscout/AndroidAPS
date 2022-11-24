@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Aplikováno omezení!</string>
     <string name="bolus_constraint_applied">Aplikováno omezení bolusu</string>
     <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
     <string name="temp_target_short">DC</string>
@@ -93,8 +92,6 @@
     <string name="tempbasals_netratio_label_string">Poměr:</string>
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
-    <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
     <string name="meal_bolus">Jídlo</string>
     <string name="prime">Doplňování</string>
