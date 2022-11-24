@@ -25,6 +25,7 @@
     <string name="description_ama">Состояние алгоритма в 2017 году</string>
     <string name="description_smb">Самый новый алгоритм для опытных пользователей</string>
     <string name="description_smb_dynamic_isf">Последний алгоритм для опытных пользователей с динамическим/автоматическим ISF</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Делитель продолжительности действия инсулина при болюсе</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_last_run_label">Предыдущее выполнение</string>
     <string name="openapsma_input_parameters_label">Параметры ввода</string>
@@ -41,6 +42,8 @@
     <string name="openapsama_use_autosens">Пользоваться функцией Autosens</string>
     <string name="openapsma_max_basal_title">Максимальное значение ед./ч для скорости временного базала</string>
     <string name="openapsma_max_basal_summary">В контексте OpenAPS эта величина называется макс базал</string>
+    <string name="openapsma_max_iob_title">Максимальный активный базальный инсулин IOB, разрешенный в OpenAPS [U]</string>
+    <string name="openapsma_max_iob_summary">Эта величина называется Max IOB (макс активн инс) в OpenAPS\n. Это макс кол-во инсулина в ед. [U] которое APS может подать единовременно.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
     <string name="openapsama_max_daily_safety_multiplier">Множитель безопасности макс суточного базала</string>
