@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="constraint_applied">Sınırlaması uygulanır!</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
