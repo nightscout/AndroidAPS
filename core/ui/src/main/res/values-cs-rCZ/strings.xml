@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="error">Chyba</string>
+    <string name="profile_set_ok">Bazální profil aktualizován</string>
+    <string name="invalid_input">Chybná vstupní data</string>
+    <string name="bolus_delivering">Podávání %1$.2f U</string>
+    <string name="constraint_applied">Aplikováno omezení!</string>
+    <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
+    <string name="tt_label">DC</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrzení</string>
