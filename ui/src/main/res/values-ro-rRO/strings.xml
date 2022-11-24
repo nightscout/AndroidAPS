@@ -58,8 +58,6 @@
     <string name="tempbasals_netratio_label_string">Raport:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
     <string name="prime">Amorsare</string>
     <string name="refresheventsfromnightscout">Actualizează din NS</string>
