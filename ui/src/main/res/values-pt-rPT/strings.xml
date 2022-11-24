@@ -58,8 +58,6 @@
     <string name="tempbasals_netratio_label_string">Rácio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
-    <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
-    <string name="treatments_wizard_tt_label">AT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="prime">Purgar</string>
     <string name="refresheventsfromnightscout">Atualizar a partir do NS</string>
