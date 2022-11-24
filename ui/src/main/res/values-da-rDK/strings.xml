@@ -68,8 +68,6 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_tt_label">Midlertidig Mål</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
     <string name="prime">Klargør</string>
     <string name="profile_changes">Profil ændringer</string>
