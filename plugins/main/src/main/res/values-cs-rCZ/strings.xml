@@ -447,4 +447,5 @@
     <string name="loop_open_mode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
+    <!--    Wear-->
 </resources>
