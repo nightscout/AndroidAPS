@@ -583,6 +583,7 @@
 
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
+    <string name="cannula_usage">usage:</string>
 
     <!--    Iob-->
     <string name="send_logfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
