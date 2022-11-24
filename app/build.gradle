@@ -7,6 +7,8 @@ plugins {
     id 'kotlinx-serialization'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.vanniktech.dependency.graph.generator'
+
 }
 
 apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
