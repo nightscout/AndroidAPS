@@ -447,4 +447,5 @@
     <string name="loop_open_mode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be deg utføre en hendelse hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
+    <!--    Wear-->
 </resources>
