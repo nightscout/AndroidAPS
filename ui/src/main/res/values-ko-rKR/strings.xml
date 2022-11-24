@@ -56,8 +56,6 @@
     <string name="tempbasals_netratio_label_string">비율:</string>
     <string name="tempbasals_netinsulin_label_string">인슐린:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
-    <string name="treatments_wizard_tt_label">임시목표</string>
     <string name="treatments_wizard_correction_label">교정</string>
     <string name="prime">교체</string>
     <string name="refresheventsfromnightscout">NS로부터 최신 정보로 업데이트 함.</string>
