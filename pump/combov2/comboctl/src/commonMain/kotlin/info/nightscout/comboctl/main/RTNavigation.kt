@@ -20,7 +20,14 @@ import kotlin.reflect.KClassifier
 
 private val logger = Logger.get("RTNavigation")
 
-private const val WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 110L
+// There are _two_ waiting periods during RT button presses. The minimum one is there
+// in case a new RT arrives very quickly; it is then necessary to wait a bit before
+// sending the next button press packet to the Combo to avoid overflow. The maximum
+// one is there if there is no screen update until we send the next button press
+// packet to the Combo. Without the maximum period, we'd then end up in a deadlock.
+// In other words, the maximum waiting period functions as a timeout.
+private const val MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 110L
+private const val MAXIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 600L
 private const val MAX_NUM_SAME_QUANTITY_OBSERVATIONS = 10
 
 /**
@@ -390,7 +397,7 @@ suspend fun longPressRTButtonUntil(
         // both cases), keep pressing the button.
         val parsedDisplayFrame = try {
             withTimeout(
-                timeMillis = WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS
+                timeMillis = MAXIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS
             ) {
                 rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true)
             }
@@ -414,8 +421,8 @@ suspend fun longPressRTButtonUntil(
         // to be a phenomenon that is separate to the packet overflow
         // that is documented in TransportLayer.IO.sendInternal().)
         val elapsedTime = getElapsedTimeInMs() - timestampBeforeDisplayFrameRetrieval
-        if (elapsedTime < WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS) {
-            val waitingPeriodInMs =  WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
+        if (elapsedTime < MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS) {
+            val waitingPeriodInMs =  MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
             logger(LogLevel.VERBOSE) { "Waiting $waitingPeriodInMs milliseconds before continuing button long-press" }
             delay(timeMillis = waitingPeriodInMs)
         }
