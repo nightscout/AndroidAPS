@@ -447,5 +447,38 @@
     <string name="loop_open_mode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
+    <string name="send_logfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Zobrazování stavu a řízení AAPS z hodinek s WearOS.</string>
+    <string name="no_watch_connected">(Žádné hodinky nejsou připojeny)</string>
+    <string name="pump_status">Stav pumpy</string>
+    <string name="loop_status">Stav smyčky</string>
+    <string name="wizard_result">Kalkulátor: \nInzulín: %1$.2fU\nSacharidy: %2$dg</string>
+    <string name="quick_wizard_not_available">Vybraný rychlý bolus již není k dispozici, obnovte prosím dlaždici</string>
+    <string name="quick_wizard_message">Rychlý bolus: %1$s\nInzulín: %2$.2fU\nSacharidy: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Dočasný cíl neznámá předvolba: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Zrušení běžícího dočasného cíle?</string>
+    <string name="wear_action_tempt_unit_error">Různé jednotky používané na hodinkách a telefonu!</string>
+    <string name="wear_action_tempt_zero_message">Nulový dočasný cíl - zrušení běžícího dočasného cíle?</string>
+    <string name="wear_action_tempt_min_bg_error">Minimální glykémie mimo rozsah!</string>
+    <string name="wear_action_tempt_max_bg_error">Maximální glykémie mimo rozsah!</string>
+    <string name="wear_action_tempt_manual_range_message">Doč. cíl:\nMin: %1$s\nMax: %2$s\nTrvání: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Doč. cíl:\nCíl: %1$s\nTrvání: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Doč. cíl:\nDůvod: %1$s\nCíl: %2$s\nTrvání: %3$s</string>
+    <string name="no_success">neúspěšně - zkontrolujte mobil</string>
+    <string name="wear_settings">Nastavení hodinek</string>
+    <string name="wearcontrol_title">Řízení z hodinek Wear</string>
+    <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear.</string>
+    <string name="wear_wizard_settings_summary">Kalkulace použité ve výsledku wizardu:</string>
+    <string name="wear_display_settings">Nastavení zobrazení</string>
+    <string name="wear_general_settings">Základní nastavení</string>
+    <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
+    <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
+    <string name="wear_notifysmb_title">Oznámení při SMB</string>
+    <string name="wear_notifysmb_summary">Ukazovat SMB na hodinkách jako normální bolus.</string>
+    <string name="wear_predictions_summary">Zobrazovat predikce na hodinkách.</string>
+    <string name="wear_predictions_title">Predikce</string>
+    <string name="resend_all_data">Znovu poslat všechna data</string>
+    <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
 </resources>
