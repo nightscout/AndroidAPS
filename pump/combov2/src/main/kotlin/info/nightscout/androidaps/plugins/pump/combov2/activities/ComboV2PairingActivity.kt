@@ -217,6 +217,7 @@ class ComboV2PairingActivity : NoSplashAppCompatActivity() {
     override fun onBackPressed() {
         aapsLogger.info(LTag.PUMP, "User pressed the back button; cancelling any ongoing pairing")
         combov2Plugin.cancelPairing()
+        @Suppress("DEPRECATION")
         super.onBackPressed()
     }
 
