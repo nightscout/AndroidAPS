@@ -44,10 +44,26 @@
     <string name="openapsma_max_basal_summary">В контексте OpenAPS эта величина называется макс базал</string>
     <string name="openapsma_max_iob_title">Максимальный активный базальный инсулин IOB, разрешенный в OpenAPS [U]</string>
     <string name="openapsma_max_iob_summary">Эта величина называется Max IOB (макс активн инс) в OpenAPS\n. Это макс кол-во инсулина в ед. [U] которое APS может подать единовременно.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">Значение по умолчанию: верно\n используется чтобы разрешить autosens\'у юстировку целевой ГК, наряду с ISF и базалом.</string>
+    <string name="openapsama_autosens_adjust_targets">Autosense также подстраивает цели</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Эта настройка на усвоение углеводов за 5 мин. По умолчанию ожидается 3мг/дл/5мин. Влияет на скорость учета поглощения углеводов COB и усвоения в расчетах прогнозируемой гликемии, когда ГК падает быстрее или не растет так как ожидается.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Значение по умолчанию: 2\n Bolus snoose активируется после введения болюса на еду чтобы цикл не взаимодействовал с временными низкими целевыми значениями ГК сразу после еды. Так, трехчасовой DIA при величине 2 означает постепенное затихание болюсов после 1.5 часов (3DIA/2).</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Внимание!\n Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин.</string>
+    <string name="always_use_short_avg">Всегда использовать укороченное среднее приращение вместо простого</string>
+    <string name="always_use_short_avg_summary">Полезно когда данные из нефильтрованных источников вроде xDrip+ начинают \"шуметь\".</string>
     <string name="openapsama_max_daily_safety_multiplier">Множитель безопасности макс суточного базала</string>
     <string name="openapsama_current_basal_safety_multiplier">Текущий множитель безопасности базала</string>
+    <string name="openapssmb_max_iob_title">Предел суммарного активного инсулина IOB для OpenAPS [U]</string>
+    <string name="openapssmb_max_iob_summary">Эта величина называется Max IOB в контексте OpenAPS\n OpenAPS не будет добавлять инсулин если текущий активный инсулин IOB ее превысит</string>
+    <string name="enable_uam">Включить непредвиденный прием пищи UAM</string>
+    <string name="enable_smb">Включить супер микро болюсы SMB</string>
+    <string name="enable_smb_summary">Для ускорения действия использовать супер микро болюсы SMB вместо временного базала</string>
+    <string name="enable_uam_summary">Обнаружение незапланированного приема пищи</string>
+    <string name="enable_smb_always">Всегда включать супер микро болюс SMB</string>
+    <string name="enable_smb_always_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников ГК с хорошей фильтрацией данных вроде G5</string>
+    <string name="enable_smb_after_carbs">Включать супер микро болюс SMB после углеводов</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
