@@ -136,4 +136,5 @@
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
     <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">Настройки расширений</string>
 </resources>
