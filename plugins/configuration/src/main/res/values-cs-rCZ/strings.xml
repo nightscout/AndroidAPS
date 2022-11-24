@@ -10,6 +10,7 @@
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
+    <string name="display_settings">Nastavení zobrazení</string>
     <string name="low_mark">Dolní značka</string>
     <string name="high_mark">Horní značka</string>
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
@@ -20,6 +21,7 @@
     <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
     <string name="askforpermission">Získat povolení</string>
     <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
+    <string name="import_setting">Importovat nastavení</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
     <string name="current_master_password">Aktuální hlavní heslo</string>
