@@ -9,6 +9,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsclient.extensions.age
@@ -26,34 +27,36 @@ class StatusLightHandler @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val warnColors: WarnColors,
     private val config: Config,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val tddCalculator: TddCalculator
 ) {
 
     /**
      * applies the extended statusLight subview on the overview fragment
      */
     fun updateStatusLights(
-        careportal_cannula_age: TextView?,
-        careportal_insulin_age: TextView?,
-        careportal_reservoir_level: TextView?,
-        careportal_sensor_age: TextView?,
-        careportal_sensor_battery_level: TextView?,
-        careportal_pb_age: TextView?,
-        careportal_battery_level: TextView?
+        cannulaAge: TextView?,
+        cannulaUsage: TextView?,
+        insulinAge: TextView?,
+        reservoirLevel: TextView?,
+        sensorAge: TextView?,
+        sensorBatteryLevel: TextView?,
+        batteryAge: TextView?,
+        batteryLevel: TextView?
     ) {
         val pump = activePlugin.activePump
         val bgSource = activePlugin.activeBgSource
-        handleAge(careportal_cannula_age, TherapyEvent.Type.CANNULA_CHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0)
-        handleAge(careportal_insulin_age, TherapyEvent.Type.INSULIN_CHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
-        handleAge(careportal_sensor_age, TherapyEvent.Type.SENSOR_CHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
+        handleAge(cannulaAge, TherapyEvent.Type.CANNULA_CHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0)
+        handleAge(insulinAge, TherapyEvent.Type.INSULIN_CHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
+        handleAge(sensorAge, TherapyEvent.Type.SENSOR_CHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
-            handleAge(careportal_pb_age, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
+            handleAge(batteryAge, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
         }
 
         val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
-        if (pump.pumpDescription.isPatchPump)
+        if (pump.pumpDescription.isPatchPump) {
             handlePatchReservoirLevel(
-                careportal_reservoir_level,
+                reservoirLevel,
                 R.string.key_statuslights_res_critical,
                 10.0,
                 R.string.key_statuslights_res_warning,
@@ -62,14 +65,15 @@ class StatusLightHandler @Inject constructor(
                 insulinUnit,
                 pump.pumpDescription.maxResorvoirReading.toDouble()
             )
-        else
-            handleLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
-
+        } else {
+            handleUsage(cannulaUsage, TherapyEvent.Type.CANNULA_CHANGE, insulinUnit)
+            handleLevel(reservoirLevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
+        }
         if (!config.NSCLIENT) {
             if (bgSource.sensorBatteryLevel != -1)
-                handleLevel(careportal_sensor_battery_level, R.string.key_statuslights_sbat_critical, 5.0, R.string.key_statuslights_sbat_warning, 20.0, bgSource.sensorBatteryLevel.toDouble(), "%")
+                handleLevel(sensorBatteryLevel, R.string.key_statuslights_sbat_critical, 5.0, R.string.key_statuslights_sbat_warning, 20.0, bgSource.sensorBatteryLevel.toDouble(), "%")
             else
-                careportal_sensor_battery_level?.text = ""
+                sensorBatteryLevel?.text = ""
         }
 
         if (!config.NSCLIENT) {
@@ -79,10 +83,10 @@ class StatusLightHandler @Inject constructor(
             val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
 
             if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
-                handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
+                handleLevel(batteryLevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
             } else {
-                careportal_battery_level?.text = rh.gs(R.string.value_unavailable_short)
-                careportal_battery_level?.setTextColor(rh.gac(careportal_battery_level.context, R.attr.defaultTextColor))
+                batteryLevel?.text = rh.gs(R.string.value_unavailable_short)
+                batteryLevel?.setTextColor(rh.gac(batteryLevel.context, R.attr.defaultTextColor))
             }
         }
     }
@@ -102,8 +106,7 @@ class StatusLightHandler @Inject constructor(
     private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
-        @Suppress("SetTextI18n")
-        view?.text = " " + DecimalFormatter.to0Decimal(level) + units
+        view?.text = " " + DecimalFormatter.to0Decimal(level, units)
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
     }
 
@@ -114,11 +117,20 @@ class StatusLightHandler @Inject constructor(
         warnDefaultValue: Double, level: Double, units: String, maxReading: Double
     ) {
         if (level >= maxReading) {
-            @Suppress("SetTextI18n")
-            view?.text = " ${maxReading.toInt()}+$units"
+            view?.text = DecimalFormatter.to0Decimal(maxReading, units)
             view?.setTextColor(rh.gac(view.context, R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
         }
+    }
+
+    private fun handleUsage(view: TextView?, type: TherapyEvent.Type, units: String) {
+        val therapyEvent = repository.getLastTherapyRecordUpToNow(type).blockingGet()
+        var usage = 0.0
+        if (therapyEvent is ValueWrapper.Existing) {
+            val tdd = tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now())
+            usage = tdd.totalAmount
+        }
+        view?.text = DecimalFormatter.to0Decimal(usage, units)
     }
 }

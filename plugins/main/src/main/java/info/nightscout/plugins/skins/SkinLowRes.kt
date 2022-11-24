@@ -30,7 +30,7 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
                 insulinAgeLabel.visibility = GONE
                 insulinLevelLabel.visibility = GONE
                 cannulaAgeLabel.visibility = GONE
-                cannulaPlaceholder.visibility = GONE
+                cannulaUsageLabel.visibility = GONE
                 pbAgeLabel.visibility = GONE
                 pbLevelLabel.visibility = GONE
             }
