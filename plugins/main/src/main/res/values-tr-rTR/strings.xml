@@ -61,7 +61,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">%2$s\'den dolayı yayma bolus %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
-    <string name="limitingiob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="pumpisnottempbasalcapable">Pompa geçici bazal özellikli değil</string>
     <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
