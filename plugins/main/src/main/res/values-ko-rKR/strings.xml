@@ -48,7 +48,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">%2$s로 인해 확장Bolus가 %1$.1f U로 제한됩니다.</string>
     <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
-    <string name="limitingiob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
     <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
     <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
