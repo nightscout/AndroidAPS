@@ -1,5 +1,8 @@
 package info.nightscout.plugins.ui
 
+import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.HandlerThread
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.database.ValueWrapper
@@ -13,6 +16,7 @@ import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsclient.extensions.age
+import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -30,6 +34,7 @@ class StatusLightHandler @Inject constructor(
     private val repository: AppRepository,
     private val tddCalculator: TddCalculator
 ) {
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     /**
      * applies the extended statusLight subview on the overview fragment
@@ -66,7 +71,7 @@ class StatusLightHandler @Inject constructor(
                 pump.pumpDescription.maxResorvoirReading.toDouble()
             )
         } else {
-            handleUsage(cannulaUsage, TherapyEvent.Type.CANNULA_CHANGE, insulinUnit)
+            if (cannulaUsage != null) handleUsage(cannulaUsage, insulinUnit)
             handleLevel(reservoirLevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
         }
         if (!config.NSCLIENT) {
@@ -103,6 +108,7 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
@@ -124,13 +130,17 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    private fun handleUsage(view: TextView?, type: TherapyEvent.Type, units: String) {
-        val therapyEvent = repository.getLastTherapyRecordUpToNow(type).blockingGet()
-        var usage = 0.0
-        if (therapyEvent is ValueWrapper.Existing) {
-            val tdd = tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now())
-            usage = tdd.totalAmount
+    private fun handleUsage(view: TextView?, units: String) {
+        handler.post {
+            val therapyEvent = repository.getLastTherapyRecordUpToNow(TherapyEvent.Type.CANNULA_CHANGE).blockingGet()
+            var usage = 0.0
+            if (therapyEvent is ValueWrapper.Existing) {
+                val tdd = tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now())
+                usage = tdd.totalAmount
+            }
+            runOnUiThread {
+                view?.text = DecimalFormatter.to0Decimal(usage, units)
+            }
         }
-        view?.text = DecimalFormatter.to0Decimal(usage, units)
     }
 }

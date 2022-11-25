@@ -205,7 +205,7 @@
             android:paddingStart="4dp"
             android:paddingEnd="0dp"
             android:textSize="14sp"
-            tools:text="22U" />
+            tools:text="..." />
 
     </TableRow>
 
