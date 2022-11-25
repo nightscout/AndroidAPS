@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Actualitzar</string>
     <string name="save">Desar</string>
     <string name="not_set_short">No configurat</string>
-    <string name="failedupdatebasalprofile">Error en actualitzar el perfil de basal</string>
     <string name="tempbasaldeliveryerror">Error en lliurar basal temporal</string>
     <string name="goingtodeliver">A punt de lliurar %1$.2f U</string>
     <string name="waitingforpump">Esperant bomba</string>
-    <string name="connecting">Connectant</string>
-    <string name="disconnected">Desconnectat</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Bomba ocupada</string>
@@ -34,15 +29,7 @@
     <string name="target_label">Objectiu</string>
     <string name="basal_long_label">Ràtio de basal</string>
     <string name="initializing">Inicialitzant...</string>
-    <string name="serialnumber">Nr. de sèrie</string>
-    <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Última connexió</string>
-    <string name="lastbolus_label">Darrer bolus</string>
     <string name="dailyunits">Unitats diàries</string>
-    <string name="base_basal_rate_label">Ràtio de basal base</string>
-    <string name="tempbasal_label">Basal temporal</string>
-    <string name="extended_bolus_label">Bolus estès</string>
-    <string name="reservoir_label">Reservori</string>
     <string name="pumphistory">Historial de la bomba</string>
     <string name="viewprofile">Veure perfil</string>
     <string name="eventtype">Tipus d\'esdeveniment</string>
@@ -55,13 +42,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Apaga el bluetooth del telèfon un segon si no és possible connectar amb la bomba. Pot ajudar amb certs telèfons a on la connexió bluetooth es bloqueja.</string>
     <string name="pairing">Sincronitzant</string>
-    <string name="loopdisabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
-    <string name="bolusdelivered">Bolus %1$.2f U lliurat correctament</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">No s\'ha pogut llegir de la bomba cap ràtio vàlida de basal</string>
-    <string name="limitingmaxiob">Limitant IOB màx a %1$.1f U a causa de %2$s</string>
-    <string name="unsafeusage">ús no segur</string>
-    <string name="pump_unreachable">Bomba no accessible</string>
     <string name="extended_bolus">Bolus estès</string>
     <string name="pump_time_updated">Actualitzada hora de la bomba</string>
     <string name="exit">Sortir</string>
@@ -138,7 +119,6 @@
     <string name="limitingpercentrate">Limitant percentatge màx a %1$d%% a causa de %2$s</string>
     <string name="itmustbepositivevalue">ha de ser un valor positiu</string>
     <string name="limitingbolus">Limitant bolus a %1$.1f U a causa de %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Bomba no iniciada, perfil no establert!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
@@ -218,7 +198,6 @@
     <string name="percent">Percentage</string>
     <string name="absolute">Absolut</string>
     <string name="configbuilder_insulin">Insulina</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Esperant resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
