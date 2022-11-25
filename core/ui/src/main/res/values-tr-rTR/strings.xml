@@ -2,7 +2,8 @@
 <resources>
     <!--    General-->
     <string name="constraint_applied">Sınırlaması uygulanır!</string>
-    <!--    PumpFragments-->
+    <!--    Pumps -->
+    <!--    Constraints-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
