@@ -7,7 +7,7 @@ android {
     namespace 'info.nightscout.comboctl'
     sourceSets {
         main {
-            kotlin.srcDirs += ['src/commonMain', 'src/androidMain']
+            kotlin.srcDirs += ['src/commonMain/kotlin', 'src/androidMain/kotlin']
             manifest.srcFile 'src/androidMain/AndroidManifest.xml'
         }
     }
