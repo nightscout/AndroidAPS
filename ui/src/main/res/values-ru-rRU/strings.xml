@@ -118,8 +118,6 @@
     <string name="motol_default_profile">Профиль по умолчанию</string>
     <string name="current_profile">Текущий профиль</string>
     <string name="available_profile">Доступный профиль</string>
-    <string name="format_with_tdd_and_pct">Возраст: %1$.0f Суточная Потребность: %2$.0f ед %3$d%%</string>
-    <string name="format_with_weight">Возраст: %1$.0f Вес: %2$.0f кг</string>
     <string name="dpv_default_profile">Значение для профиля по умолчанию</string>
     <string name="invalid_pct">Некорректное значение</string>
     <!-- Other dialogs -->
