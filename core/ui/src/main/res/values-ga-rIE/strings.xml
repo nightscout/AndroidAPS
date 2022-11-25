@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <!--    PumpFragments-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Deimhniú</string>
@@ -14,4 +15,5 @@
     <string name="format_hour_minute">%1$du %2$dn</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
 </resources>
