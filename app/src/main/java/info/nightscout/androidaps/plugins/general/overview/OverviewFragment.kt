@@ -30,7 +30,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
@@ -60,6 +59,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -621,7 +621,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                 it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
                                     l.setMargins(0, 0, rh.dpToPx(-4), 0)
                                 }
-                                it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_danar_useropt), null, null)
+                                it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_user_options), null, null)
                                 it.text = event.title
 
                                 it.setOnClickListener {

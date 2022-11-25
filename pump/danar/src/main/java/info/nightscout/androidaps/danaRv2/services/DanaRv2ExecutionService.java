@@ -10,8 +10,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaPump;
-import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danaRv2.comm.MessageHashTableRv2;
@@ -63,6 +61,8 @@ import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.Command;
 import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.pump.dana.DanaPump;
+import info.nightscout.pump.dana.events.EventDanaRNewStatus;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventInitializationChanged;
 import info.nightscout.rx.events.EventOverviewBolusProgress;

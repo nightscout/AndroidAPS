@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.pump.dana.DanaPump
 import info.nightscout.rx.logging.LTag
-
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import javax.inject.Inject

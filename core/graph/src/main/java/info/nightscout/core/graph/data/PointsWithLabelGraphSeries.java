@@ -95,6 +95,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
      * @param canvas        canvas to draw on
      * @param isSecondScale whether it is the second scale
      */
+    @SuppressWarnings({"deprecation"})
     @Override
     public void draw(GraphView graphView, Canvas canvas, boolean isSecondScale) {
         // Convert the sp to pixels

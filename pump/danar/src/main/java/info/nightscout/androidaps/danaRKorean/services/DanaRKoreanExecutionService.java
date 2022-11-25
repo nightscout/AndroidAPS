@@ -8,8 +8,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.dana.DanaPump;
-import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRKorean.comm.MessageHashTableRKorean;
 import info.nightscout.androidaps.danaRKorean.comm.MsgCheckValue_k;
@@ -49,6 +47,8 @@ import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.Command;
 import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.pump.dana.DanaPump;
+import info.nightscout.pump.dana.events.EventDanaRNewStatus;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventInitializationChanged;
 import info.nightscout.rx.events.EventOverviewBolusProgress;

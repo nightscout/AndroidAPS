@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.dana.comm.RecordTypes
-import info.nightscout.androidaps.dana.database.DanaHistoryRecord
-import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.comm.RecordTypes
+import info.nightscout.pump.dana.database.DanaHistoryRecord
+import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.logging.LTag

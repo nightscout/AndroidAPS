@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dana.events
+package info.nightscout.pump.dana.events
 
 import info.nightscout.rx.events.Event
 

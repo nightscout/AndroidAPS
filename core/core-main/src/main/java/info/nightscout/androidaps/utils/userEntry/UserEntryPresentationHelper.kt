@@ -157,7 +157,7 @@ class UserEntryPresentationHelper @Inject constructor(
                                        csvString(R.string.date),
                                        csvString(R.string.ue_utc_offset),
                                        csvString(R.string.ue_action),
-                                       csvString(R.string.eventtype),
+                                       csvString(R.string.event_type),
                                        csvString(R.string.ue_source),
                                        csvString(R.string.careportal_note),
                                        csvString(R.string.ue_string),

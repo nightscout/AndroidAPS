@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dana.database
+package info.nightscout.pump.dana.database
 
 import androidx.room.Dao
 import androidx.room.Insert

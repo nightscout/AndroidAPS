@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.pump.dana.DanaPump
 import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 class DanaRSPacketBolusGet24CIRCFArray(

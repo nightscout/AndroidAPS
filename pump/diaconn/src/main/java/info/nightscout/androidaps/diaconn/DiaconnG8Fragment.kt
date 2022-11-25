@@ -175,13 +175,13 @@ class DiaconnG8Fragment : DaggerFragment() {
 
         val todayInsulinAmount = (pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount)
         val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
-        binding.dailyunits.text = rh.gs(R.string.reservoirvalue, todayInsulinAmount, todayInsulinLimitAmount)
+        binding.dailyunits.text = rh.gs(R.string.reservoir_value, todayInsulinAmount, todayInsulinLimitAmount)
         warnColors.setColor(binding.dailyunits, todayInsulinAmount, todayInsulinLimitAmount * 0.75, todayInsulinLimitAmount * 0.9)
         binding.basabasalrate.text = pump.baseInjAmount.toString() + " / " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate)
 
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
-        binding.reservoir.text = rh.gs(R.string.reservoirvalue, pump.systemRemainInsulin, 307)
+        binding.reservoir.text = rh.gs(R.string.reservoir_value, pump.systemRemainInsulin, 307)
         warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25 + "}" + " (" + pump.systemRemainBattery + " %)"
         warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)

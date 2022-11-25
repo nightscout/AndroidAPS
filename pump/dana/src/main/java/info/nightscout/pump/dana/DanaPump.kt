@@ -1,9 +1,8 @@
-package info.nightscout.androidaps.dana
+package info.nightscout.pump.dana
 
-import dagger.android.HasAndroidInjector
-import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
@@ -34,7 +33,7 @@ class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val injector: HasAndroidInjector
+    private val profileInstantiator: ProfileInstantiator
 ) {
 
     @Suppress("unused")
@@ -381,7 +380,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return ProfileStoreObject(injector, json, dateUtil)
+            return profileInstantiator.storeInstance(json)
         }
         return null
     }

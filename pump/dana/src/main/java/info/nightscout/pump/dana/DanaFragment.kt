@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dana
+package info.nightscout.pump.dana
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,10 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
-import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
-import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
-import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -26,6 +22,10 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.userEntry.UserEntryMapper.Action
 import info.nightscout.interfaces.userEntry.UserEntryMapper.Sources
+import info.nightscout.pump.dana.activities.DanaHistoryActivity
+import info.nightscout.pump.dana.activities.DanaUserOptionsActivity
+import info.nightscout.pump.dana.databinding.DanarFragmentBinding
+import info.nightscout.pump.dana.events.EventDanaRNewStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange
@@ -207,26 +207,26 @@ class DanaFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(R.string.minago, agoMin) + ")"
-            warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
+            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(R.string.minago, agoMin) + ")"
+            warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastBolusTime
             val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(R.string.format_insulin_units, pump.lastBolusAmount)
+                binding.lastBolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(R.string.format_insulin_units, pump.lastBolusAmount)
             else
-                binding.lastbolus.text = ""
+                binding.lastBolus.text = ""
         }
 
-        binding.dailyunits.text = rh.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
-        warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
-        binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate)
+        binding.dailyUnits.text = rh.gs(R.string.reservoir_value, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
+        warnColors.setColor(binding.dailyUnits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
+        binding.baseBasalRate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()
-        binding.reservoir.text = rh.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
+        binding.reservoir.text = rh.gs(R.string.reservoir_value, pump.reservoirRemainingUnits, 300)
         warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
         warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)

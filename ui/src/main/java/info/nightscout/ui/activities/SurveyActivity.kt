@@ -37,7 +37,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
         binding.profile.setOnClickListener {
-            val age = SafeParse.stringToDouble(binding.age.text.toString())
+            val age = SafeParse.stringToInt(binding.age.text.toString())
             val weight = SafeParse.stringToDouble(binding.weight.text.toString())
             val tdd = SafeParse.stringToDouble(binding.tdd.text.toString())
             if (age < 1 || age > 120) {

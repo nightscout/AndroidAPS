@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.dana.database
+package info.nightscout.pump.dana.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
 const val TABLE_DANA_HISTORY = "danaHistory"
 

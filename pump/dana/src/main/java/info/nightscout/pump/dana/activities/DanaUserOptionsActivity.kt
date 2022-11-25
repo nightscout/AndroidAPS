@@ -1,11 +1,8 @@
-package info.nightscout.androidaps.dana.activities
+package info.nightscout.pump.dana.activities
 
 import android.content.Context
 import android.os.Bundle
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.dana.R
-import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
-import info.nightscout.core.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -13,9 +10,15 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.R
+import info.nightscout.pump.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventInitializationChanged
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -23,8 +26,11 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
+class DanaUserOptionsActivity : DaggerAppCompatActivity() {
 
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
@@ -40,7 +46,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_R
     private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RV2
 
-    var minBacklight = 1
+    private var minBacklight = 1
 
     private lateinit var binding: DanarUserOptionsActivityBinding
 
@@ -80,27 +86,27 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
                 + "\nlowReservoir:" + danaPump.lowReservoirRate
         )
 
-        binding.screentimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, binding.saveUserOptions)
+        binding.screenTimeout.setParams(danaPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, binding.saveUserOptions)
         binding.backlight.setParams(danaPump.backlightOnTimeSec.toDouble(), minBacklight.toDouble(), 60.0, 1.0, DecimalFormat("1"), false, binding.saveUserOptions)
         binding.shutdown.setParams(danaPump.shutdownHour.toDouble(), 0.0, 24.0, 1.0, DecimalFormat("1"), true, binding.saveUserOptions)
-        binding.lowreservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, binding.saveUserOptions)
+        binding.lowReservoir.setParams(danaPump.lowReservoirRate.toDouble(), 10.0, 50.0, 10.0, DecimalFormat("10"), false, binding.saveUserOptions)
         when (danaPump.beepAndAlarm) {
-            0b01  -> binding.pumpalarmSound.isChecked = true
-            0b10  -> binding.pumpalarmVibrate.isChecked = true
-            0b11  -> binding.pumpalarmBoth.isChecked = true
+            0b01  -> binding.pumpAlarmSound.isChecked = true
+            0b10  -> binding.pumpAlarmVibrate.isChecked = true
+            0b11  -> binding.pumpAlarmBoth.isChecked = true
 
             0b101 -> {
-                binding.pumpalarmSound.isChecked = true
+                binding.pumpAlarmSound.isChecked = true
                 binding.beep.isChecked = true
             }
 
             0b110 -> {
-                binding.pumpalarmVibrate.isChecked = true
+                binding.pumpAlarmVibrate.isChecked = true
                 binding.beep.isChecked = true
             }
 
             0b111 -> {
-                binding.pumpalarmBoth.isChecked = true
+                binding.pumpAlarmBoth.isChecked = true
                 binding.beep.isChecked = true
             }
         }
@@ -110,35 +116,35 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
             setData()
     }
 
-    fun setData() {
+    private fun setData() {
         // in DanaRS timeDisplay values are reversed
-        binding.timeformat.isChecked = danaPump.timeDisplayType24
-        binding.buttonscroll.isChecked = danaPump.buttonScrollOnOff
+        binding.timeFormat.isChecked = danaPump.timeDisplayType24
+        binding.buttonScroll.isChecked = danaPump.buttonScrollOnOff
         binding.beep.isChecked = danaPump.beepAndAlarm > 4
-        binding.screentimeout.value = danaPump.lcdOnTimeSec.toDouble()
+        binding.screenTimeout.value = danaPump.lcdOnTimeSec.toDouble()
         binding.backlight.value = danaPump.backlightOnTimeSec.toDouble()
         binding.units.isChecked = danaPump.getUnits() == Constants.MMOL
         binding.shutdown.value = danaPump.shutdownHour.toDouble()
-        binding.lowreservoir.value = danaPump.lowReservoirRate.toDouble()
+        binding.lowReservoir.value = danaPump.lowReservoirRate.toDouble()
     }
 
     private fun onSaveClick() {
         //exit if pump is not DanaRS, DanaR, or DanaR with upgraded firmware
         if (!isRS() && !isDanaR() && !isDanaRv2()) return
 
-        danaPump.timeDisplayType24 = binding.timeformat.isChecked
+        danaPump.timeDisplayType24 = binding.timeFormat.isChecked
 
-        danaPump.buttonScrollOnOff = binding.buttonscroll.isChecked
+        danaPump.buttonScrollOnOff = binding.buttonScroll.isChecked
         danaPump.beepAndAlarm = when {
-            binding.pumpalarmSound.isChecked   -> 1
-            binding.pumpalarmVibrate.isChecked -> 2
-            binding.pumpalarmBoth.isChecked    -> 3
+            binding.pumpAlarmSound.isChecked   -> 1
+            binding.pumpAlarmVibrate.isChecked -> 2
+            binding.pumpAlarmBoth.isChecked    -> 3
             else                               -> 1
         }
         if (binding.beep.isChecked) danaPump.beepAndAlarm += 4
 
         // step is 5 seconds, 5 to 240
-        danaPump.lcdOnTimeSec = min(max(binding.screentimeout.value.toInt() / 5 * 5, 5), 240)
+        danaPump.lcdOnTimeSec = min(max(binding.screenTimeout.value.toInt() / 5 * 5, 5), 240)
         // 1 to 60
         danaPump.backlightOnTimeSec = min(max(binding.backlight.value.toInt(), minBacklight), 60)
 
@@ -147,7 +153,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         danaPump.shutdownHour = min(binding.shutdown.value.toInt(), 24)
 
         // 10 to 50
-        danaPump.lowReservoirRate = min(max(binding.lowreservoir.value.toInt() * 10 / 10, 10), 50)
+        danaPump.lowReservoirRate = min(max(binding.lowReservoir.value.toInt() * 10 / 10, 10), 50)
 
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {

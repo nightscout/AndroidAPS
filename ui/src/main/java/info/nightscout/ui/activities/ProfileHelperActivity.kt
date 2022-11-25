@@ -59,7 +59,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     private var tabSelected = 0
     private val typeSelected = arrayOf(ProfileType.MOTOL_DEFAULT, ProfileType.CURRENT)
 
-    private val ageUsed = arrayOf(15.0, 15.0)
+    private val ageUsed = arrayOf(15, 15)
     private val weightUsed = arrayOf(0.0, 0.0)
     private val tddUsed = arrayOf(0.0, 0.0)
     private val pctUsed = arrayOf(32.0, 32.0)
@@ -244,7 +244,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         switchTab(0, typeSelected[0], false)
     }
 
-    private fun getProfile(age: Double, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =
+    private fun getProfile(age: Int, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =
         try { // Profile must not exist
             when (typeSelected[tab]) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
@@ -257,7 +257,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             null
         }
 
-    private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
+    private fun getProfileName(age: Int, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {
             ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight)
             ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalSumPct * 100).toInt())
@@ -267,7 +267,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
     private fun storeValues() {
-        ageUsed[tabSelected] = binding.age.value
+        ageUsed[tabSelected] = binding.age.value.toInt()
         weightUsed[tabSelected] = binding.weight.value
         tddUsed[tabSelected] = binding.tdd.value
         pctUsed[tabSelected] = binding.basalPctFromTdd.value
@@ -297,7 +297,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
         // Restore selected values
-        binding.age.value = ageUsed[tabSelected]
+        binding.age.value = ageUsed[tabSelected].toDouble()
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
         binding.basalPctFromTdd.value = pctUsed[tabSelected]

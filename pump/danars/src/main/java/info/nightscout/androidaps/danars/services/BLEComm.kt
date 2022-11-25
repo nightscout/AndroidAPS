@@ -19,7 +19,6 @@ import android.os.SystemClock
 import android.util.Base64
 import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.activities.EnterPinActivity
@@ -36,6 +35,7 @@ import info.nightscout.core.utils.notify
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.pump.dana.DanaPump
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPumpStatusChanged

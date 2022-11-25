@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.dana.activities
+package info.nightscout.pump.dana.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.dana.R
-import info.nightscout.androidaps.dana.comm.RecordTypes
-import info.nightscout.androidaps.dana.database.DanaHistoryRecord
-import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
-import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
-import info.nightscout.androidaps.dana.databinding.DanarHistoryItemBinding
-import info.nightscout.core.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -24,18 +18,30 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.DecimalFormatter
+import info.nightscout.pump.dana.R
+import info.nightscout.pump.dana.comm.RecordTypes
+import info.nightscout.pump.dana.database.DanaHistoryRecord
+import info.nightscout.pump.dana.database.DanaHistoryRecordDao
+import info.nightscout.pump.dana.databinding.DanarHistoryActivityBinding
+import info.nightscout.pump.dana.databinding.DanarHistoryItemBinding
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class DanaHistoryActivity : NoSplashAppCompatActivity() {
+class DanaHistoryActivity : DaggerAppCompatActivity() {
 
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
@@ -80,7 +86,6 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DanarHistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setTheme(R.style.AppTheme)
 
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this)

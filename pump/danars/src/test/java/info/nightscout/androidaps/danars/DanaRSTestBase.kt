@@ -3,8 +3,9 @@ package info.nightscout.androidaps.danars
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.comm.DanaRSPacket
+import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.pump.dana.DanaPump
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.ArgumentMatchers
@@ -14,6 +15,7 @@ import org.mockito.Mockito
 open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
+    @Mock lateinit var profileInstantiator: ProfileInstantiator
 
     val injector = HasAndroidInjector { AndroidInjector { } }
 
@@ -54,6 +56,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Before
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
     }
 }

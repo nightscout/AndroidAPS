@@ -14,7 +14,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.ActionModeHelper
@@ -28,6 +27,7 @@ import info.nightscout.database.impl.transactions.InvalidateAAPSStartedTherapyEv
 import info.nightscout.database.impl.transactions.InvalidateTherapyEventTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Translator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientRestart
@@ -245,7 +245,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<TherapyEvent>): String {
         if (selectedItems.size() == 1) {
             val therapyEvent = selectedItems.valueAt(0)
-            return rh.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
+            return rh.gs(R.string.event_type) + ": " + translator.translate(therapyEvent.type) + "\n" +
                 rh.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
                 rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
         }

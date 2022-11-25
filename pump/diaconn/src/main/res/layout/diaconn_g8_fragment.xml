@@ -300,7 +300,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/dailyunits"
+                    android:text="@string/daily_units"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -699,7 +699,7 @@
             android:drawableTop="@drawable/ic_pump_history"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/pumphistory" />
+            android:text="@string/pump_history" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
@@ -707,7 +707,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danarstats"
+            android:drawableTop="@drawable/ic_stats"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:text="@string/stats" />
@@ -718,7 +718,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danar_useropt"
+            android:drawableTop="@drawable/ic_user_options"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:text="@string/diagonn_g8_useroptions" />

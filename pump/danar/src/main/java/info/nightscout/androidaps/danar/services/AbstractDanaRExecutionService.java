@@ -22,8 +22,6 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaPump;
-import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.danar.SerialIOThread;
 import info.nightscout.androidaps.danar.comm.MessageBase;
@@ -47,6 +45,8 @@ import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.pump.dana.DanaPump;
+import info.nightscout.pump.dana.comm.RecordTypes;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventAppExit;

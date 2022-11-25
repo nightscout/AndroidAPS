@@ -8,9 +8,6 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaFragment
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.core.events.EventNewNotification
@@ -37,6 +34,9 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
+import info.nightscout.pump.dana.DanaFragment
+import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.comm.RecordTypes
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit

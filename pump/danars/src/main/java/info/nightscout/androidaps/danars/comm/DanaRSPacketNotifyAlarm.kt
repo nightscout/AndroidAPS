@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.pump.dana.DanaPump
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper

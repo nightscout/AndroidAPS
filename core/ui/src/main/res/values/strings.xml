@@ -18,6 +18,10 @@
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="event_type">Event type</string>
+    <string name="reload">Reload</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
 
     <!--    PumpFragments-->
     <string name="battery_label">Battery</string>
@@ -30,6 +34,13 @@
     <string name="serial_number">Serial number</string>
     <string name="disconnected">Disconnected</string>
     <string name="connecting">Connecting</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicked connect to pump</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Daily units</string>
+    <string name="pump_icon">Pump icon</string>
+    <string name="view_profile">View profile</string>
+    <string name="pump_history">Pump history</string>
+    <string name="stats">Stats</string>
 
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>

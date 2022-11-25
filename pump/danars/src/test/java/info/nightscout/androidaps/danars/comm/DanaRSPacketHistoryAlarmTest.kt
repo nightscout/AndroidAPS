@@ -2,13 +2,13 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.comm.RecordTypes
-import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.danars.DanaRSTestBase
+import info.nightscout.pump.dana.comm.RecordTypes
+import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mock
-import java.util.*
+import java.util.GregorianCalendar
 
 class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
 

@@ -6,7 +6,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="info.nightscout.androidaps.dana.activities.DanaHistoryActivity">
+    tools:context="info.nightscout.pump.dana.activities.DanaHistoryActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
@@ -39,7 +39,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/pumphistory"
+            android:text="@string/pump_history"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="@string/eventtype"
+        android:hint="@string/event_type"
         app:layout_constraintBottom_toTopOf="@+id/status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

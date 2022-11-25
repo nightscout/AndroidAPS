@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.text.toSpanned
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.dana.database.DanaHistoryDatabase
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabase
@@ -29,6 +28,7 @@ import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFEREN
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange

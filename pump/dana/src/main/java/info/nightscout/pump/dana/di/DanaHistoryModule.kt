@@ -1,10 +1,10 @@
-package info.nightscout.androidaps.dana.di
+package info.nightscout.pump.dana.di
 
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import info.nightscout.androidaps.dana.database.DanaHistoryDatabase
-import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import javax.inject.Singleton
 
 @Module

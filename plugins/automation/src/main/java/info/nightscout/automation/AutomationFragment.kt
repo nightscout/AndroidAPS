@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.databinding.AutomationEventItemBinding
 import info.nightscout.automation.databinding.AutomationFragmentBinding
 import info.nightscout.automation.dialogs.EditEventDialog
@@ -38,6 +37,7 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.interfaces.dragHelpers.OnStartDragListener
 import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -212,7 +212,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
             holder.binding.iconLayout.removeAllViews()
             // trigger icons
             val triggerIcons = HashSet<Int>()
-            if (automation.userAction) triggerIcons.add(R.drawable.ic_danar_useropt)
+            if (automation.userAction) triggerIcons.add(R.drawable.ic_user_options)
             fillIconSet(automation.trigger, triggerIcons)
             for (res in triggerIcons) {
                 addImage(res, holder.context, holder.binding.iconLayout)
