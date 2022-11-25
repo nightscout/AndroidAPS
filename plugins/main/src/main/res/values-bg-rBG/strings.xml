@@ -41,7 +41,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ограничение на удължен болус до %1$.1f Е поради %2$s</string>
     <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
-    <string name="limitingiob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
     <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
     <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
