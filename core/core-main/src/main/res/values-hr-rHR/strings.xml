@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Osvježi</string>
     <string name="save">Spremi</string>
     <string name="not_set_short">Nije postavljeno</string>
-    <string name="failedupdatebasalprofile">Ažuriranje bazalnog profila nije uspjelo</string>
     <string name="tempbasaldeliveryerror">Pogreška isporuke temp bazala</string>
     <string name="goingtodeliver">Isporučit ću %1$.2f U</string>
     <string name="waitingforpump">Čekanje pumpe</string>
-    <string name="connecting">Povezivanje</string>
-    <string name="disconnected">Odspojen</string>
     <string name="androidaps_start">AAPS je počeo</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
     <string name="pumpbusy">Pumpa je zauzeta</string>
@@ -39,12 +34,7 @@
     <string name="basal_long_label">Bazalna stopa</string>
     <string name="target_long_label">Ciljana razina glukoze u krvi</string>
     <string name="initializing">Pokretanje...</string>
-    <string name="serialnumber">Serijski broj</string>
-    <string name="battery_label">Baterija</string>
-    <string name="lastconnection_label">Zadnja uspostava veze</string>
-    <string name="lastbolus_label">Zadnji bolus</string>
     <string name="shortgram">g</string>
-    <string name="pump_unreachable">Pumpa nedostupna</string>
     <string name="exit">Izlaz</string>
     <string name="iob">Aktivni inzulin</string>
     <string name="cob">Aktivni UGH</string>
@@ -103,7 +93,6 @@
     <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
     <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
     <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pumpa nije pokrenuta, profil nije postavljen!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
@@ -141,7 +130,6 @@
     <string name="percent">Postotak</string>
     <string name="absolute">Apsolutna</string>
     <string name="configbuilder_insulin">Inzulin</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Čekanje rezultata</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
