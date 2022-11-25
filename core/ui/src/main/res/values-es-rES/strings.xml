@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Actualizar</string>
     <string name="error">Error</string>
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalid_input">Datos inválidos</string>
     <string name="bolus_delivering">Entregando %1$.2f U</string>
+    <string name="constraint_applied">¡Restricción aplicada!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
+    <string name="tt_label">OT</string>
+    <string name="pump_unreachable">Bomba no alcanzable</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Bomba no inicializada, ¡perfil no establecido!</string>
+    <string name="failed_update_basal_profile">Error al actualizar el perfil basal</string>
+    <string name="bolus_delivered">Bolo %1$.2fU entregado correctamente</string>
+    <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
+    <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
+    <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
     <!--    PumpFragments-->
+    <string name="battery_label">Batería</string>
+    <string name="reservoir_label">Reservorio</string>
+    <string name="last_connection_label">Última conexión</string>
+    <string name="last_bolus_label">Último bolo</string>
+    <string name="base_basal_rate_label">Dosis basal base</string>
+    <string name="tempbasal_label">Basal temporal</string>
+    <string name="extended_bolus_label">Bolo extendido</string>
+    <string name="serial_number">Número de serie</string>
+    <string name="disconnected">Desconectado</string>
+    <string name="connecting">Conectando</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
@@ -26,5 +49,8 @@
     <!-- datetime layout -->
     <string name="event_time_label">Hora del evento</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">La aplicación necesita permisos de bluetooth</string>
     <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
+    <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
 </resources>
