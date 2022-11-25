@@ -229,7 +229,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limiter les bolus prolongé à %1$.1f U à cause de %2$s</string>
     <string name="limitingcarbs">Limiter les glucides %1$d g à cause de %2$s</string>
-    <string name="limitingiob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
     <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
