@@ -47,7 +47,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitant bolus estès a %1$.1f U a causa de %2$s</string>
     <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
-    <string name="limitingiob">Limitant IOB a %1$.1f U a causa de %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
     <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
     <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
