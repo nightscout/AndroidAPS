@@ -368,7 +368,7 @@ class DiaconnG8Plugin @Inject constructor(
 
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(R.string.tempbasaldeliveryerror)
+        result.comment = rh.gs(R.string.temp_basal_delivery_error)
         aapsLogger.error("setTempBasalAbsolute: Failed to set temp basal")
         return result
     }

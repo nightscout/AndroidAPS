@@ -16,6 +16,7 @@ import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.rx.bus.RxBus
@@ -46,6 +47,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Mock lateinit var profileInstantiator: ProfileInstantiator
+    @Mock lateinit var activityNames: ActivityNames
 
     private lateinit var testPumpPlugin: TestPumpPlugin
 
@@ -77,6 +79,7 @@ open class DanaRTestBase : TestBase() {
                 it.commandQueue = commandQueue
                 it.pumpSync = pumpSync
                 it.danaHistoryRecordDao = danaHistoryRecordDao
+                it.activityNames = activityNames
             }
         }
     }

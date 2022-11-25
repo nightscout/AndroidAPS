@@ -23,7 +23,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
 
-    <!--    PumpFragments-->
+    <!--    Pumps -->
     <string name="battery_label">Battery</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="last_connection_label">Last connection</string>
@@ -41,6 +41,17 @@
     <string name="view_profile">View profile</string>
     <string name="pump_history">Pump history</string>
     <string name="stats">Stats</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pump driver change.</string>
+    <string name="device_changed" comment="26 characters max for translation">Device changed</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Tempbasal delivery error</string>
+
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
+    <string name="pumplimit">pump limit</string>
+    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="itmustbepositivevalue">it must be positive value</string>
+    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
 
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>

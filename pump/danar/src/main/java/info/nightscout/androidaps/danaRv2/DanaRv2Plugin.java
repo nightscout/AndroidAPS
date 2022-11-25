@@ -27,6 +27,7 @@ import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.TemporaryBasalStorage;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.ui.ActivityNames;
 import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.rx.AapsSchedulers;
@@ -72,9 +73,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             TemporaryBasalStorage temporaryBasalStorage,
             DateUtil dateUtil,
             FabricPrivacy fabricPrivacy,
-            PumpSync pumpSync
+            PumpSync pumpSync,
+            ActivityNames activityNames
     ) {
-        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
+        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, activityNames);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;
@@ -316,7 +318,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK");
             return result;
         }
-        result.enacted(false).success(false).comment(R.string.tempbasaldeliveryerror);
+        result.enacted(false).success(false).comment(R.string.temp_basal_delivery_error);
         aapsLogger.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }

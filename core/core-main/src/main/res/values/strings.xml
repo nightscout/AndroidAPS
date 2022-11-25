@@ -3,7 +3,6 @@
     <!--    General-->
     <string name="save">Save</string>
     <string name="not_set_short">Not set</string>
-    <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="androidaps_start">AAPS started</string>
@@ -127,13 +126,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-
-    <!--    Constraints-->
-    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
-    <string name="pumplimit">pump limit</string>
-    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
-    <string name="itmustbepositivevalue">it must be positive value</string>
-    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
@@ -426,13 +418,10 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Status outdated.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal outdated.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Pump driver change.</string>
-    <string name="device_changed" comment="26 characters max for translation">Device changed</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Clicked refresh</string>
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
-    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
