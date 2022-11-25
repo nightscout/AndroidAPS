@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Opdatér</string>
     <string name="save">Gem</string>
     <string name="not_set_short">Ikke angivet</string>
-    <string name="failedupdatebasalprofile">Opdatering af basal profil mislykkedes</string>
     <string name="tempbasaldeliveryerror">Midlertidig basal leveringsfejl</string>
     <string name="goingtodeliver">Leverer %1$.2f IE</string>
     <string name="waitingforpump">Venter på pumpe</string>
-    <string name="connecting">Forbinder</string>
-    <string name="disconnected">Forbindelse afbrudt</string>
     <string name="androidaps_start">AAPS startet</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
-    <string name="pump_basebasalrate">%1$.2f E/t</string>
     <string name="format_hours">%1$.2f t</string>
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpe er optaget</string>
@@ -39,15 +34,7 @@
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">Blodsukker mål</string>
     <string name="initializing">Initialiserer ...</string>
-    <string name="serialnumber">Serienummer</string>
-    <string name="battery_label">Batteri</string>
-    <string name="lastconnection_label">Seneste forbindelse</string>
-    <string name="lastbolus_label">Seneste Bolus</string>
     <string name="dailyunits">Daglige enheder</string>
-    <string name="base_basal_rate_label">Standard basal rate</string>
-    <string name="tempbasal_label">Midlertidig basal</string>
-    <string name="extended_bolus_label">Forlænget bolus</string>
-    <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Pumpe historik</string>
     <string name="viewprofile">Se profil</string>
     <string name="eventtype">Hændelsestype</string>
@@ -60,13 +47,7 @@
     <string name="btwatchdog_title">BT Vagthund</string>
     <string name="btwatchdog_summary">Slår telefonens bluetooth fra i et sekund, hvis der ikke er mulighed for tilslutning til pumpen. Dette kan hjælpe på nogle telefoner, hvis bluetooth stakken fryser.</string>
     <string name="pairing">Parring</string>
-    <string name="loopdisabled">LOOP DEAKTIVERET AF BEGRÆNSNINGER</string>
-    <string name="bolusdelivered">Bolus %1$.2fE leveret uden fejl</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Ingen gyldig basal rate læst fra pumpen</string>
-    <string name="limitingmaxiob">Begrænser max IOB til %1$.1f IE på grund af %2$s</string>
-    <string name="unsafeusage">usikker brug</string>
-    <string name="pump_unreachable">Pumpe utilgængelig</string>
     <string name="extended_bolus">Forlænget bolus</string>
     <string name="pump_time_updated">Pumpe tid opdateret</string>
     <string name="exit">Afslut</string>
@@ -156,7 +137,6 @@
     <string name="limitingpercentrate">Begrænser maks. procent til %1$d%% på grund af %2$s</string>
     <string name="itmustbepositivevalue">det skal være en positiv værdi</string>
     <string name="limitingbolus">Begrænser bolus til %1$.1f IE på grund af %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pumpe ikke initialiseret, profil ikke angivet!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy understøttes ikke eller enheden er ikke parret.</string>
@@ -239,7 +219,6 @@
     <string name="percent">Procent</string>
     <string name="absolute">Absolut</string>
     <string name="configbuilder_insulin">Insulin</string>
-    <string name="insulin_unit_shortname">IE</string>
     <string name="waitingforpumpresult">Venter på resultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -426,9 +405,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt Status Opdatering</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Ubekræftet kommando</string>
     <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
-    <string name="user_request" comment="26 characters max for translation">Bruger anmodning</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Opdater-knap</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
