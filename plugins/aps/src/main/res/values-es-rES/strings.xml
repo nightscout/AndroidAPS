@@ -85,7 +85,6 @@
     <string name="uam_disabled_in_preferences">UAM deshabilitado en las preferencias</string>
     <string name="autosens_disabled_in_preferences">Autosens deshabilitado en preferencias</string>
     <!--    Verify if needed in safety-->
-    <string name="limitingiob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
     <string name="hardlimit">límite estricto</string>
     <!--    Autotune   -->
