@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Обнови</string>
     <string name="save">Съхрани</string>
     <string name="not_set_short">Не е зададен</string>
-    <string name="failedupdatebasalprofile">Неуспешно обновяване на базалния профил</string>
     <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
     <string name="goingtodeliver">Ще стартира %1$.2fЕ болус</string>
     <string name="waitingforpump">Чакаме помпата</string>
-    <string name="connecting">Свързване</string>
-    <string name="disconnected">Не е сврзана</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
-    <string name="pump_basebasalrate">%1$.2f Е/ч</string>
     <string name="format_hours">%1$.2f ч</string>
     <string name="format_mins">%1$d мин</string>
     <string name="pumpbusy">Помпата е заета</string>
@@ -34,15 +29,7 @@
     <string name="target_label">Целeва КЗ:</string>
     <string name="basal_long_label">Базал</string>
     <string name="initializing">Инициализация ...</string>
-    <string name="serialnumber">Сериен номер</string>
-    <string name="battery_label">Батерия</string>
-    <string name="lastconnection_label">Последна връзка</string>
-    <string name="lastbolus_label">Последен болус:</string>
     <string name="dailyunits">Инсулин за деня</string>
-    <string name="base_basal_rate_label">Базова базална стойност</string>
-    <string name="tempbasal_label">Временен базал</string>
-    <string name="extended_bolus_label">Удължен болус</string>
-    <string name="reservoir_label">Резервоар</string>
     <string name="pumphistory">История</string>
     <string name="viewprofile">Виж профил</string>
     <string name="eventtype">Тип събитие</string>
@@ -55,13 +42,7 @@
     <string name="btwatchdog_title">BT ограничения</string>
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="pairing">Сдвояване</string>
-    <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
-    <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="virtualpump_resultok">ОК</string>
-    <string name="novalidbasalrate">Няма валиден базал в помпата</string>
-    <string name="limitingmaxiob">Ограничаване на макс. IOB до %1$.1f Е поради %2$s</string>
-    <string name="unsafeusage">опасно използване</string>
-    <string name="pump_unreachable">Помпата е недостъпна</string>
     <string name="extended_bolus">Удължен болус</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="exit">Изход</string>
@@ -139,7 +120,6 @@
     <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
     <string name="itmustbepositivevalue">трябва да бъде положително число</string>
     <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Помпата не е инициализирана, профила не е зададен!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
     <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
@@ -216,7 +196,6 @@
     <string name="percent">Процент</string>
     <string name="absolute">Абсолютна</string>
     <string name="configbuilder_insulin">Инсулин (ед.):</string>
-    <string name="insulin_unit_shortname">Ед.</string>
     <string name="waitingforpumpresult">Изчаква резултат от помпата</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
