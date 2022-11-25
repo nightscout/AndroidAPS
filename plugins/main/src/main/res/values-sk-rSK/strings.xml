@@ -229,7 +229,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Predĺžený bolus obmedzený na %1$.1f JI: %2$s</string>
     <string name="limitingcarbs">Sacharidy obmedzené na %1$d g: %2$s</string>
-    <string name="limitingiob">IOB obmedzený na %1$.1f JI: %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
     <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
