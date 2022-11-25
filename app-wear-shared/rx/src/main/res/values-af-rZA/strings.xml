@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Handskudding</string>
-    <string name="connected">Gekoppel</string>
-    <string name="disconnecting">Ontkoppel</string>
-</resources>

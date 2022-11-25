@@ -16,15 +16,14 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
-    implementation project(path: ':graphview')
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':plugins:automation')
-    implementation project(':interfaces')
     implementation project(':core:core-main')
     implementation project(':core:graph')
+    implementation project(':core:graphview')
+    implementation project(':core:interfaces')
     implementation project(':core:ui')
     implementation project(':core:utils')
     implementation project(':ui')

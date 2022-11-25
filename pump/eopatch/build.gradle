@@ -21,15 +21,14 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':pump:eopatch-core')
-    implementation project(':libraries')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:libraries')
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':core:core-main')
+    implementation project(':core:interfaces')
     implementation project(':core:utils')
     implementation project(':core:ui')
-    implementation project(':interfaces')
 
     //RxAndroidBle
     implementation "com.polidea.rxandroidble3:rxandroidble:1.17.0"

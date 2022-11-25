@@ -17,10 +17,9 @@ android {
 
 dependencies {
     implementation project(':core:core-main')
+    implementation project(':core:interfaces')
     implementation project(':core:utils')
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
-    implementation project(':interfaces')
 
     implementation('com.thoughtworks.xstream:xstream:1.4.19') {
         exclude group: 'xmlpull', module: 'xmlpull'

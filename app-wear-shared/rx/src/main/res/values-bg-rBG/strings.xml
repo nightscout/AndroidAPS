@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Сдвояване</string>
-    <string name="connected">Свързана</string>
-    <string name="disconnecting">Разкачане</string>
-    <string name="waiting_for_disconnection">Изчакване за разкачане</string>
-</resources>

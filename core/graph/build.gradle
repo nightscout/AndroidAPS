@@ -14,10 +14,10 @@ apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 dependencies {
-    implementation project(':graphview')
+    implementation project(':core:graphview')
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
-    implementation project(':interfaces')
+    implementation project(':core:interfaces')
     implementation project(':core:ui')
 
     api "com.google.android.material:material:$material_version"

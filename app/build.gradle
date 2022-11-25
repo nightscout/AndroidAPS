@@ -183,17 +183,16 @@ dependencies {
     // in order to use internet's versions you'd need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
-    implementation project(':graphview')
-    implementation project(':libraries')
-    implementation project(':ns-sdk')
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
     implementation project(':core:core-main')
     implementation project(':core:graph')
+    implementation project(':core:graphview')
+    implementation project(':core:interfaces')
+    implementation project(':core:libraries')
+    implementation project(':core:ns-sdk')
     implementation project(':core:utils')
     implementation project(':core:ui')
-    implementation project(':interfaces')
     implementation project(':ui')
     implementation project(':plugins:aps')
     implementation project(':plugins:automation')

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Подтверждение связи</string>
-    <string name="connected">соединение установлено</string>
-    <string name="disconnecting">разъединение</string>
-    <string name="waiting_for_disconnection">Ожидание разъединения</string>
-</resources>

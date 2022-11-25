@@ -19,8 +19,7 @@ android {
 dependencies {
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':interfaces')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:interfaces')
     implementation project(':app-wear-shared:shared')
 
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"

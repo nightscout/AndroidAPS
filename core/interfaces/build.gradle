@@ -22,7 +22,6 @@ dependencies {
     // database module is compiled longer anyway
     // (ResourceHelper, AAPSLogger interface)
     implementation project(':app-wear-shared:shared')
-    implementation project(':app-wear-shared:rx')
     implementation project(':database:entities')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
