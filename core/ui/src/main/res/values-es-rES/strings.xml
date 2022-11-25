@@ -5,6 +5,7 @@
     <string name="profile_set_ok">Perfil basal actualizado en la bomba</string>
     <string name="invalid_input">Datos inválidos</string>
     <string name="bolus_delivering">Entregando %1$.2f U</string>
+    <!--    PumpFragments-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
@@ -25,5 +26,5 @@
     <!-- datetime layout -->
     <string name="event_time_label">Hora del evento</string>
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">La aplicación necesita permisos de bluetooth</string>
+    <!--    Combo-->
 </resources>
