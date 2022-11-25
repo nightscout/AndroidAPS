@@ -8,7 +8,8 @@
     <string name="constraint_applied">Begrensning benyttet!</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">TT</string>
-    <!--    PumpFragments-->
+    <!--    Pumps -->
+    <!--    Constraints-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekreftelse</string>
