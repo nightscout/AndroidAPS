@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Obnovit</string>
     <string name="save">Uložit</string>
     <string name="not_set_short">Nenastaveno</string>
-    <string name="failedupdatebasalprofile">Chyba při nastavení bazálního profilu</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
     <string name="goingtodeliver">Podávání %1$.2f U inzulínu</string>
     <string name="waitingforpump">Čekání na pumpu</string>
-    <string name="connecting">Připojuji</string>
-    <string name="disconnected">Odpojeno</string>
     <string name="androidaps_start">AAPS spuštěno</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
@@ -41,15 +36,7 @@
     <string name="basal_long_label">Bazál</string>
     <string name="target_long_label">Cílová glykémie</string>
     <string name="initializing">Inicializuji ...</string>
-    <string name="serialnumber">Sériové číslo</string>
-    <string name="battery_label">Baterie</string>
-    <string name="lastconnection_label">Poslední spojení</string>
-    <string name="lastbolus_label">Poslední bolus</string>
     <string name="dailyunits">Jednotek za den</string>
-    <string name="base_basal_rate_label">Základní hodnota bazálu</string>
-    <string name="tempbasal_label">Dočasný bazál</string>
-    <string name="extended_bolus_label">Prodloužený bolus</string>
-    <string name="reservoir_label">Zásobník</string>
     <string name="pumphistory">Historie pumpy</string>
     <string name="viewprofile">Zobrazit profil</string>
     <string name="eventtype">Typ události</string>
@@ -62,13 +49,7 @@
     <string name="btwatchdog_title">Hlídač BT</string>
     <string name="btwatchdog_summary">Vypne na 1 sek bluetooth v telefonu, pokud se nedaří připojit k pumpě. Může to pomoci u telefonů, které mají problémy s BT</string>
     <string name="pairing">Párování</string>
-    <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
-    <string name="bolusdelivered">Bolus %1$.2f U aplikován úspěšně</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Z pumpy nepřečten žádný platný bazál</string>
-    <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
-    <string name="unsafeusage">nebezpečné použití</string>
-    <string name="pump_unreachable">Pumpa nedostupná</string>
     <string name="extended_bolus">Prodloužený bolus</string>
     <string name="pump_time_updated">Čas v pumpě aktualizován</string>
     <string name="exit">Konec</string>
@@ -159,7 +140,6 @@
     <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
     <string name="itmustbepositivevalue">požadována kladná hodnota</string>
     <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pumpa není inicializována, profil nenastaven!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepodporováno.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy není podporováno, nebo zařízení není spárováno.</string>
@@ -248,7 +228,6 @@
     <string name="percent">Procenta</string>
     <string name="absolute">Absolutní</string>
     <string name="configbuilder_insulin">Inzulín</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Čekání na výsledek</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -436,9 +415,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Naplánovaná aktualizace stavu</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrzený příkaz</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
-    <string name="user_request" comment="26 characters max for translation">Požadavek uživatele</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
