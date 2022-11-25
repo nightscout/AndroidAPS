@@ -43,7 +43,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U datorită %2$s</string>
     <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
-    <string name="limitingiob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
     <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
     <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
