@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Athnuachan</string>
     <string name="save">Sábháil</string>
     <string name="waitingforpump">Ag fanacht do caidéil</string>
-    <string name="connecting">Ag nascadh</string>
-    <string name="disconnected">Dínasctha</string>
     <string name="formatsignedinsulinunits">%1$+.2f A</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d A</string>
-    <string name="pump_basebasalrate">%1$.2f A/u</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="format_mins">%1$d nóim</string>
     <string name="mute">Balbh</string>
@@ -25,19 +21,12 @@
     <string name="target_label">Cuspóir</string>
     <string name="basal_long_label">Bunaidh ráta</string>
     <string name="initializing">Tosaithe ...</string>
-    <string name="serialnumber">Sraithuimhir</string>
-    <string name="battery_label">Ceallraí</string>
-    <string name="lastconnection_label">Nasc deiridh</string>
-    <string name="lastbolus_label">Bólas deiridh</string>
     <string name="dailyunits">Aonaid lá</string>
-    <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
-    <string name="reservoir_label">Taiscumar</string>
     <string name="pumphistory">Stair caidéil</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
     <string name="bluetooth">Bluetooth</string>
-    <string name="loopdisabled">LÚB DÍCHUMASAITHE LE SRIANTA</string>
     <string name="virtualpump_resultok">Ceart go leor</string>
     <string name="exit">Scoir</string>
     <string name="loopisdisabled">Is lúb díchumasaithe</string>
@@ -108,7 +97,6 @@
     <string name="percent">Faoin gcéad</string>
     <string name="absolute">Iomlán</string>
     <string name="configbuilder_insulin">Inslin</string>
-    <string name="insulin_unit_shortname">A</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
