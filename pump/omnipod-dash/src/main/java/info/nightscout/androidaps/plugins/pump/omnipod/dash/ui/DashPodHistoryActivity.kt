@@ -11,8 +11,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
@@ -25,6 +23,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBas
 import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.pump.common.utils.ProfileUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.LTag
 import java.util.Calendar

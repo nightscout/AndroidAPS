@@ -12,11 +12,10 @@ apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 android {
-    namespace 'info.nightscout.androidaps.plugins.pump.common'
+    namespace 'info.nightscout.pump.common'
 }
 
 dependencies {
-    implementation project(':core:core-main')
     implementation project(':core:interfaces')
     implementation project(':core:utils')
     implementation project(':app-wear-shared:shared')

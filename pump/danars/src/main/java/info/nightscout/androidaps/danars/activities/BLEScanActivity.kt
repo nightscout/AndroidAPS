@@ -23,10 +23,10 @@ import androidx.core.app.ActivityCompat
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
-import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable
+import info.nightscout.interfaces.pump.BlePreCheck
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.regex.Pattern
 import javax.inject.Inject

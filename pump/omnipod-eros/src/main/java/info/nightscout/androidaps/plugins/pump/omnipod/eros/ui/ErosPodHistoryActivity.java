@@ -22,9 +22,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
-import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory;
@@ -33,6 +30,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.core.activities.NoSplashAppCompatActivity;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.defs.PumpType;
+import info.nightscout.pump.common.defs.PumpHistoryEntryGroup;
+import info.nightscout.pump.common.defs.TempBasalPair;
+import info.nightscout.pump.common.utils.ProfileUtil;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.interfaces.ResourceHelper;

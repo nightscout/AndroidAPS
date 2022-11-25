@@ -25,6 +25,7 @@ import info.nightscout.implementation.profile.ProfileStoreObject
 import info.nightscout.implementation.profiling.ProfilerImpl
 import info.nightscout.implementation.protection.PasswordCheckImpl
 import info.nightscout.implementation.protection.ProtectionCheckImpl
+import info.nightscout.implementation.pump.BlePreCheckImpl
 import info.nightscout.implementation.pump.DetailedBolusInfoStorageImpl
 import info.nightscout.implementation.pump.PumpSyncImplementation
 import info.nightscout.implementation.pump.TemporaryBasalStorageImpl
@@ -52,6 +53,7 @@ import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.pump.BlePreCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
@@ -95,6 +97,7 @@ abstract class ImplementationModule {
         @Binds fun bindHardLimits(hardLimitsImpl: HardLimitsImpl): HardLimits
         @Binds fun bindResourceHelper(resourceHelperImpl: ResourceHelperImpl): ResourceHelper
         @Binds fun bindProfileStoreInstantiator(profileStoreInstantiatorImpl: ProfileInstantiatorImpl): ProfileInstantiator
+        @Binds fun bindBlePreCheck(blePreCheckImpl: BlePreCheckImpl): BlePreCheck
 
         @Binds fun bindTrendCalculatorInterface(trendCalculator: TrendCalculatorImpl): TrendCalculator
         @Binds fun bindTddCalculatorInterface(tddCalculator: TddCalculatorImpl): TddCalculator
