@@ -177,6 +177,12 @@ abstract class PluginsListModule {
     @Binds
     @PumpDriver
     @IntoMap
+    @IntKey(141)
+    abstract fun bindComboV2Plugin(plugin: ComboV2Plugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
     @IntKey(145)
     abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
 
@@ -431,12 +437,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(500)
     abstract fun bindThemeSwitcherPlugin(plugin: ThemeSwitcherPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(510)
-    abstract fun bindComboV2Plugin(plugin: ComboV2Plugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

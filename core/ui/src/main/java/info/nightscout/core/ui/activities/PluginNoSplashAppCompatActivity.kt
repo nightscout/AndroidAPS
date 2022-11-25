@@ -7,6 +7,6 @@ import info.nightscout.core.ui.R
 open class PluginNoSplashAppCompatActivity : DaggerAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme_NoActionBar)
+        setTheme(R.style.AppTheme)
     }
 }

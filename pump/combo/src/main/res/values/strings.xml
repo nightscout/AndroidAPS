@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="combopump" translatable="false">Accu-Chek Combo</string>
+    <string name="combopump" translatable="false">Accu-Chek Combo (Ruffy)</string>
     <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>

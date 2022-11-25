@@ -10,9 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PairingPIN
-import info.nightscout.core.ui.activities.PluginNoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
@@ -26,7 +26,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class ComboV2PairingActivity : PluginNoSplashAppCompatActivity() {
+class ComboV2PairingActivity : DaggerAppCompatActivity() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var combov2Plugin: ComboV2Plugin
@@ -196,7 +197,7 @@ class ComboV2PairingActivity : PluginNoSplashAppCompatActivity() {
                         if (stage == BasicProgressStage.ComboPairingKeyAndPinRequested) {
                             binding.combov2PinEntryUi.visibility = View.VISIBLE
                         } else
-                            binding.combov2PinEntryUi.visibility = View.INVISIBLE
+                            binding.combov2PinEntryUi.visibility = View.GONE
 
                         // Scanning for the pump can take a long time and happens at the
                         // beginning, so set the progress bar to indeterminate during that
@@ -211,7 +212,7 @@ class ComboV2PairingActivity : PluginNoSplashAppCompatActivity() {
                 combov2Plugin.previousPairingAttemptFailedFlow
                     .onEach { previousAttemptFailed ->
                         binding.combov2PinFailureIndicator.visibility =
-                            if (previousAttemptFailed) View.VISIBLE else View.INVISIBLE
+                            if (previousAttemptFailed) View.VISIBLE else View.GONE
                     }
                     .launchIn(this)
             }

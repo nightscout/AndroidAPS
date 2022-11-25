@@ -1,16 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <FrameLayout
+
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".plugins.pump.combov2.activities.ComboV2PairingActivity">
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/activity_title_backgroundColor"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                app:srcCompat="@drawable/ic_combo_128" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/combov2_pair_with_pump_title"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
         <ScrollView
-            android:visibility="visible"
             android:id="@+id/combov2_pairing_section_initial"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -44,10 +79,10 @@
         </ScrollView>
 
         <ScrollView
-            android:visibility="gone"
             android:id="@+id/combov2_pairing_section_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -91,13 +126,13 @@
                     android:id="@+id/combov2_current_pairing_step_desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/pumpStatusBackground"
                     android:gravity="center"
                     android:padding="16dp"
-                    android:background="@color/pumpStatusBackground"
                     android:text=""
                     android:textSize="16sp" />
 
@@ -106,27 +141,27 @@
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
+                    android:layout_marginBottom="20dp"
+                    android:max="100"
                     android:maxHeight="5dp"
-                    android:minHeight="3dp"
-                    android:max="100" />
+                    android:minHeight="3dp" />
 
                 <LinearLayout
                     android:id="@+id/combov2_pin_entry_ui"
-                    android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
                         android:layout_marginBottom="20dp"
+                        android:gravity="center_horizontal"
                         android:orientation="horizontal">
 
                         <TextView
@@ -140,12 +175,12 @@
                             android:id="@+id/combov2_pin_entry_edit"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
-                            android:maxLength="12"
-                            android:inputType="number"
-                            android:digits="0123456789 "
-                            android:minHeight="48dp"
-                            android:hint="@string/combov2_pin_hint"
                             android:autofillHints="@string/combov2_pin_entry_hint"
+                            android:digits="0123456789 "
+                            android:hint="@string/combov2_pin_hint"
+                            android:inputType="number"
+                            android:maxLength="12"
+                            android:minHeight="48dp"
                             android:text="" />
 
                         <Button
@@ -158,14 +193,14 @@
 
                     <TextView
                         android:id="@+id/combov2_pin_failure_indicator"
-                        android:visibility="invisible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp"
                         android:gravity="center"
                         android:text="@string/combov2_pairing_pin_failure"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -188,18 +223,18 @@
         </ScrollView>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/combov2_pairing_section_finished"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:gravity="center"
+                android:padding="16dp"
                 android:text="@string/combov2_pairing_finished_successfully"
                 android:textSize="16sp" />
 
@@ -220,19 +255,19 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/combov2_pairing_section_aborted"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/combov2_pairing_aborted_reason_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:gravity="center"
+                android:padding="16dp"
                 android:text=""
                 android:textSize="16sp" />
 
@@ -252,5 +287,5 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

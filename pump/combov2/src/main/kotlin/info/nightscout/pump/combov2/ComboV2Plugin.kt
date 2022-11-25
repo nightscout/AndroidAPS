@@ -175,7 +175,7 @@ class ComboV2Plugin @Inject constructor (
 
     /*** Public functions and base class & interface overrides ***/
 
-    sealed class DriverState(val label: String) {
+    sealed class DriverState(@Suppress("unused") val label: String) {
         // Initial state when the driver is created.
         object NotInitialized : DriverState("notInitialized")
         // Driver is disconnected from the pump, or no pump
@@ -211,7 +211,7 @@ class ComboV2Plugin @Inject constructor (
         object Error : DriverState("error")
     }
 
-    val driverStateFlow = _driverStateFlow.asStateFlow()
+    private val driverStateFlow = _driverStateFlow.asStateFlow()
 
     // Used by ComboV2PairingActivity to launch its own
     // custom activities that have a result.
@@ -228,30 +228,31 @@ class ComboV2Plugin @Inject constructor (
 
     override fun onStart() {
         super.onStart()
+        pumpCoroutineScope.launch {
+            aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
+            bluetoothInterface = AndroidBluetoothInterface(context)
 
-        aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
-        bluetoothInterface = AndroidBluetoothInterface(context)
+            aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
+            bluetoothInterface!!.setup()
 
-        aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
-        bluetoothInterface!!.setup()
+            aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
+            pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
+            pumpManager!!.setup {
+                _pairedStateUIFlow.value = false
+            }
 
-        aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
-        pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
-        pumpManager!!.setup {
-            _pairedStateUIFlow.value = false
+            // UI flows that must have defined values right
+            // at start are initialized here.
+
+            // The paired state UI flow is special in that it is also
+            // used as the backing store for the isPaired() function,
+            // so setting up that UI state flow equals updating that
+            // paired state.
+            val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
+            _pairedStateUIFlow.value = paired
+
+            setDriverState(DriverState.Disconnected)
         }
-
-        // UI flows that must have defined values right
-        // at start are initialized here.
-
-        // The paired state UI flow is special in that it is also
-        // used as the backing store for the isPaired() function,
-        // so setting up that UI state flow equals updating that
-        // paired state.
-        val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
-        _pairedStateUIFlow.value = paired
-
-        setDriverState(DriverState.Disconnected)
     }
 
     override fun onStop() {
