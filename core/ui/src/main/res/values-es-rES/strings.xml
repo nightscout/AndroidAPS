@@ -18,7 +18,7 @@
     <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
-    <!--    PumpFragments-->
+    <!--    Pumps -->
     <string name="battery_label">Batería</string>
     <string name="reservoir_label">Reservorio</string>
     <string name="last_connection_label">Última conexión</string>
@@ -29,6 +29,7 @@
     <string name="serial_number">Número de serie</string>
     <string name="disconnected">Desconectado</string>
     <string name="connecting">Conectando</string>
+    <!--    Constraints-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
