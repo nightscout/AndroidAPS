@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Actualiser</string>
     <string name="save">Enregistrer</string>
     <string name="not_set_short">Non configuré</string>
-    <string name="failedupdatebasalprofile">La mise à jour du profil basal a échouée</string>
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
-    <string name="connecting">Connexion en cours</string>
-    <string name="disconnected">Déconnectée</string>
     <string name="androidaps_start">AAPS démarré</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
     <string name="pumpbusy">Pompe occupée</string>
@@ -41,15 +36,7 @@
     <string name="basal_long_label">Débit de Basal</string>
     <string name="target_long_label">Glycémie cible</string>
     <string name="initializing">En cours d\'initialisation...</string>
-    <string name="serialnumber">Numéro de série</string>
-    <string name="battery_label">Niveau batterie</string>
-    <string name="lastconnection_label">Dernière connexion</string>
-    <string name="lastbolus_label">Dernier bolus</string>
     <string name="dailyunits">Unités quotidiennes</string>
-    <string name="base_basal_rate_label">Débit de Basal</string>
-    <string name="tempbasal_label">Basal temporaire</string>
-    <string name="extended_bolus_label">Bolus étendu</string>
-    <string name="reservoir_label">Réservoir</string>
     <string name="pumphistory">Historique pompe</string>
     <string name="viewprofile">Consulter le profil</string>
     <string name="eventtype">Type d\'évènement</string>
@@ -62,13 +49,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Coupe le Bluetooth du téléphone une seconde si la connexion pompe n’est pas possible. Cela peut aider pour les téléphones dont la connexion Bluetooth se bloque.</string>
     <string name="pairing">Appairage</string>
-    <string name="loopdisabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
-    <string name="bolusdelivered">Bolus de %1$.2f U délivré avec succès</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Aucun débit basal valide lu depuis la pompe</string>
-    <string name="limitingmaxiob">Limiter l’IA max à %1$.1f U en raison de %2$s</string>
-    <string name="unsafeusage">utilisation dangereuse</string>
-    <string name="pump_unreachable">Pompe hors de portée</string>
     <string name="extended_bolus">Bolus étendu</string>
     <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
     <string name="exit">Quitter</string>
@@ -159,7 +140,6 @@
     <string name="limitingpercentrate">Limiter le pourcentage max à %1$d%% à cause de %2$s</string>
     <string name="itmustbepositivevalue">la valeur doit être positive</string>
     <string name="limitingbolus">Bolus limité à %1$.1f U à cause de %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pompe non initialisée, profil non défini !</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non pris en charge.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non pris en charge ou appareil non appairé.</string>
@@ -248,7 +228,6 @@
     <string name="percent">Pourcentage</string>
     <string name="absolute">Absolu</string>
     <string name="configbuilder_insulin">Insuline</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Attente de résultat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -436,9 +415,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Actualisation état programmé</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Commande non confirmée</string>
     <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
-    <string name="user_request" comment="26 characters max for translation">Demande utilisateur</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
