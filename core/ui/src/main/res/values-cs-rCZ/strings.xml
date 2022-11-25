@@ -8,7 +8,8 @@
     <string name="constraint_applied">Aplikováno omezení!</string>
     <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
     <string name="tt_label">DC</string>
-    <!--    PumpFragments-->
+    <!--    Pumps -->
+    <!--    Constraints-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrzení</string>
