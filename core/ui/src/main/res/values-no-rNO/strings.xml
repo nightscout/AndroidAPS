@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="error">Feil</string>
+    <string name="profile_set_ok">Basalprofil i pumpen er oppdatert</string>
+    <string name="invalid_input">Ugyldig verdier</string>
+    <string name="bolus_delivering">Leverer %1$.2f E</string>
+    <string name="constraint_applied">Begrensning benyttet!</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="tt_label">TT</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekreftelse</string>
