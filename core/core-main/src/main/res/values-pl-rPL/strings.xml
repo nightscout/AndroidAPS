@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Odśwież</string>
     <string name="save">ZACHOWAJ</string>
     <string name="not_set_short">Nie ustawiono</string>
-    <string name="failedupdatebasalprofile">Nieudane uaktualnienie profilu bazy</string>
     <string name="tempbasaldeliveryerror">Błąd podania bazy tymczasowej</string>
     <string name="goingtodeliver">Zamierzam podać %1$.2f U</string>
     <string name="waitingforpump">Czekam na pompę</string>
-    <string name="connecting">Łączę</string>
-    <string name="disconnected">Rozłączono</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min.</string>
     <string name="pumpbusy">Pompa jest zajęta</string>
@@ -34,15 +29,7 @@
     <string name="target_label">Cel</string>
     <string name="basal_long_label">Dawka bazowa</string>
     <string name="initializing">Inicjuje ...</string>
-    <string name="serialnumber">Numer seryjny</string>
-    <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Ostatnie połączenie</string>
-    <string name="lastbolus_label">Ostatni bolus</string>
     <string name="dailyunits">Jednostki dzienne</string>
-    <string name="base_basal_rate_label">Podstawowa dawka bazowa</string>
-    <string name="tempbasal_label">Baza tymczasowa</string>
-    <string name="extended_bolus_label">Bolus Przedłużony</string>
-    <string name="reservoir_label">Zbiornik</string>
     <string name="pumphistory">Historia pompy</string>
     <string name="viewprofile">Zobacz profil</string>
     <string name="eventtype">Typ zdarzenia</string>
@@ -55,13 +42,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Wyłącza bluetooth telefonu na jedną sekundę, jeśli nie jest możliwe połączenie z pompą. Może to pomóc w niektórych telefonach, w których blokuje się bluetooth.</string>
     <string name="pairing">Parowanie</string>
-    <string name="loopdisabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>
-    <string name="bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Brak prawidłowej dawki bazowej odczytanej z pompy</string>
-    <string name="limitingmaxiob">Ograniczam max IOB do %1$.1f U z uwagi na %2$s</string>
-    <string name="unsafeusage">niebezpieczne użycie</string>
-    <string name="pump_unreachable">Pompa nieosiągalna</string>
     <string name="extended_bolus">Bolus Przedłużony</string>
     <string name="pump_time_updated">Czas pompy uaktualniony</string>
     <string name="exit">Wyjście</string>
@@ -141,7 +122,6 @@
     <string name="limitingpercentrate">Ograniczam maksymalną wartość w procentach do %1$d%% z uwagi na %2$s</string>
     <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
     <string name="limitingbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pompa nie zainicjowana, profil nie ustawiony!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nie jest obsługiwany.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie jest obsługiwany lub urządzenie nie jest sparowane.</string>
@@ -221,7 +201,6 @@
     <string name="percent">Procent</string>
     <string name="absolute">Całkowity</string>
     <string name="configbuilder_insulin">Insulina</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Oczekiwanie na wynik</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -403,9 +382,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Planowe odświeżenie statusu</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Niepotwierdzone polecenie</string>
     <string name="requested_by_user" comment="26 characters max for translation">Na życzenie użytkownika</string>
-    <string name="user_request" comment="26 characters max for translation">Żądanie użytkownika</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Baza</string>
