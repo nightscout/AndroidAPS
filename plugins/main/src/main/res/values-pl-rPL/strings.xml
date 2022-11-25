@@ -46,7 +46,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
     <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
-    <string name="limitingiob">Ograniczam IOB do %1$.1f U z uwagi na %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
     <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
     <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
