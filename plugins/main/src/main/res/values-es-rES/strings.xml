@@ -445,7 +445,40 @@
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">uso:</string>
     <!--    Iob-->
     <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <!--    Wear-->
+    <string name="wear_shortname">RELOJ</string>
+    <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
+    <string name="no_watch_connected">(Ningún reloj conectado)</string>
+    <string name="pump_status">Estado de la bomba de insulina</string>
+    <string name="loop_status">Estado del lazo</string>
+    <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
+    <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
+    <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
+    <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
+    <string name="wear_action_tempt_zero_message">Objetivo Temporal Zero - ¿Cancelar el Objetivo Temporal en ejecución?</string>
+    <string name="wear_action_tempt_min_bg_error">¡Glucosa mínima fuera de rango!</string>
+    <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
+    <string name="wear_action_tempt_manual_range_message">Objetivo temporal:\nMin: %1$s\nMax: %2$s\nDuración: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Objetivo temporal:\nObjetivo: %1$s\nDuración: %2$s</string>
+    <string name="wear_action_tempt_preset_message">ObjetivoTemporal:\nRazón: %1$s\nObjetivo: %2$s\nDuración: %3$s</string>
+    <string name="no_success">sin efecto - por favor verificar en teléfono</string>
+    <string name="wear_settings">Ajustes del reloj</string>
+    <string name="wearcontrol_title">Control desde el reloj</string>
+    <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
+    <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
+    <string name="wear_display_settings">Ajustes de pantalla</string>
+    <string name="wear_general_settings">Configuración general</string>
+    <string name="wear_detailed_delta_title">Mostrar deltas detallados</string>
+    <string name="wear_detailed_delta_summary">Mostrar el delta con un decimal más</string>
+    <string name="wear_notifysmb_title">Notificar los SMB</string>
+    <string name="wear_notifysmb_summary">Mostrar los SMB en el reloj como un bolo estándar</string>
+    <string name="wear_predictions_summary">Mostrar las predicciones en la esfera</string>
+    <string name="wear_predictions_title">Predicciones</string>
+    <string name="resend_all_data">Reenviar todos los datos</string>
+    <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
 </resources>
