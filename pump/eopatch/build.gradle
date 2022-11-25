@@ -32,6 +32,6 @@ dependencies {
     implementation project(':interfaces')
 
     //RxAndroidBle
-    implementation "com.polidea.rxandroidble3:rxandroidble:1.17.0"
+    implementation "com.polidea.rxandroidble3:rxandroidble:1.17.2"
     implementation "com.jakewharton.rx3:replaying-share:3.0.0"
 }
