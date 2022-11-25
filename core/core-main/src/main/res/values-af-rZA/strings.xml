@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Verfris</string>
     <string name="save">Stoor</string>
     <string name="not_set_short">Nie gestel nie</string>
-    <string name="failedupdatebasalprofile">Kon nie die basale profiel bywerk nie</string>
     <string name="tempbasaldeliveryerror">Tempbasal aflewering fout</string>
     <string name="waitingforpump">Wag vir pomp</string>
-    <string name="connecting">Koppel</string>
-    <string name="disconnected">Ontkoppel</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="pumpbusy">Pomp is besig</string>
     <string name="connectionerror">Pomp verbindingsfout</string>
@@ -31,15 +26,7 @@
     <string name="target_label">Doelwit</string>
     <string name="basal_long_label">Basale waarde</string>
     <string name="initializing">Inisialiseer tans...</string>
-    <string name="serialnumber">Reeksnommer</string>
-    <string name="battery_label">Battery</string>
-    <string name="lastconnection_label">Laaste verbinding</string>
-    <string name="lastbolus_label">Laaste bolus</string>
     <string name="dailyunits">Daaglikse eenhede</string>
-    <string name="base_basal_rate_label">Basis basale tempo</string>
-    <string name="tempbasal_label">Tydelike basaal</string>
-    <string name="extended_bolus_label">Verlengde Bolus</string>
-    <string name="reservoir_label">Stoor</string>
     <string name="viewprofile">Bekyk profiel</string>
     <string name="eventtype">Gebeurtenis tipe</string>
     <string name="mgdl">mg/dl</string>
@@ -50,12 +37,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Skakel asb die foon se bluetooth af vir een sekonde Indien geen verbinding met die pomp moontlik is nie. Dit mag help vir sommige selfone waar die bluetooth stapel vries.</string>
     <string name="pairing">Paring</string>
-    <string name="loopdisabled">LOOP UIT AKSIE GESTEL DEUR BEPERKINGS</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Geen geldige basale tempo gelees van pomp</string>
-    <string name="limitingmaxiob">Beperk maks IAB tot %1$.1f U agv %2$s</string>
-    <string name="unsafeusage">onveilige gebruik</string>
-    <string name="pump_unreachable">Pomp onbereikbaar</string>
     <string name="extended_bolus">Uitgebreide bolus</string>
     <string name="pump_time_updated">Pomp tyd opgedateer</string>
     <string name="exit">Uitgang</string>
@@ -118,7 +100,6 @@
     <string name="limitingpercentrate">Beperk maks persentasie koers tot %1$d%% agv %2$s</string>
     <string name="itmustbepositivevalue">dit moet \'n positiewe waarde wees</string>
     <string name="limitingbolus">Beperk bolus %1$.1f U as gevolg van %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pomp nie geïnisialiseer, profiel nie opgestel nie!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy word nie ondersteun.</string>
     <string name="ble_not_enabled">Bluetooth nie aan.</string>
@@ -183,7 +164,6 @@
     <string name="percent">Persentasie</string>
     <string name="absolute">Absolute</string>
     <string name="configbuilder_insulin">Insulien</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Wag vir uitslag</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
