@@ -43,7 +43,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">由于 %2$s, 将扩展大剂量限制为 %1$.1f U</string>
     <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
-    <string name="limitingiob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
     <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
     <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
