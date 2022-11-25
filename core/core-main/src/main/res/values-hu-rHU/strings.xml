@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Frissítés</string>
     <string name="not_set_short">Nincs beállítva</string>
     <string name="waitingforpump">Várakozás pumpára</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
@@ -14,14 +13,12 @@
     <string name="target_label">Cél</string>
     <string name="basal_long_label">Bázisütem</string>
     <string name="initializing">Inicializálás ...</string>
-    <string name="serialnumber">Sorozatszám</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="pairing">Párosítás</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="pump_unreachable">Pumpa nem elérhető</string>
     <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="exit">Kilép</string>
     <string name="alarm">Riasztás</string>
@@ -89,7 +86,6 @@
     <!--    Command-->
     <!--    PumpEnactResult-->
     <string name="configbuilder_insulin">Inzulin</string>
-    <string name="insulin_unit_shortname">Е</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <string name="basalrate">Bázis</string>
