@@ -122,9 +122,6 @@
     <string name="motol_default_profile">Perfil predeterminado</string>
     <string name="current_profile">Perfil actual</string>
     <string name="available_profile">Perfil disponible</string>
-    <string name="format_with_tdd">Edad: %1$.0f TDD: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Edad: %1$.0f TDD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Edad: %1$.0f Peso: %2$.0f kg</string>
     <string name="dpv_default_profile">Perfil DPV por defecto</string>
     <string name="invalid_pct">Entrada % inválida</string>
     <!-- Other dialogs -->
