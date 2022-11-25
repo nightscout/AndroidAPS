@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Vernieuwen</string>
     <string name="save">Opslaan</string>
     <string name="not_set_short">Niet ingesteld</string>
-    <string name="failedupdatebasalprofile">Update basaal profiel mislukt</string>
     <string name="tempbasaldeliveryerror">Storing toedienen tijdelijk basaal</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="waitingforpump">Wacht op pomp</string>
-    <string name="connecting">Verbining maken</string>
-    <string name="disconnected">Verbinding verbroken</string>
     <string name="androidaps_start">AAPS gestart</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
-    <string name="pump_basebasalrate">%1$.2f E/uur</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="format_mins">%1$d minuten</string>
     <string name="pumpbusy">Pomp is bezig</string>
@@ -41,15 +36,7 @@
     <string name="basal_long_label">Basaalstand</string>
     <string name="target_long_label">Bloedglucose doelwaarde</string>
     <string name="initializing">Initialiseren...</string>
-    <string name="serialnumber">Serie nummer</string>
-    <string name="battery_label">Batterij</string>
-    <string name="lastconnection_label">Laatste verbinding</string>
-    <string name="lastbolus_label">Laatste bolus</string>
     <string name="dailyunits">Dag totaal</string>
-    <string name="base_basal_rate_label">Basis basaalstand</string>
-    <string name="tempbasal_label">Tijdelijk basaal</string>
-    <string name="extended_bolus_label">Verlengde bolus</string>
-    <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Historiek</string>
     <string name="viewprofile">Profiel bekijken</string>
     <string name="eventtype">Gebeurtenis type</string>
@@ -62,13 +49,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Zet de bluetooth van de telefoon even kort uit en weer aan. Dit kan op sommige gsm\'s een vastgelopen bluetooth service verhelpen.</string>
     <string name="pairing">Koppelen</string>
-    <string name="loopdisabled">LOOP UITGESCHAKELD DOOR BEPERKINGEN</string>
-    <string name="bolusdelivered">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Geen correcte basale snelheid van pomp kunnen lezen</string>
-    <string name="limitingmaxiob">Max IOB wordt beperkt tot %1$.1f E doordat %2$s</string>
-    <string name="unsafeusage">onveilig gebruik</string>
-    <string name="pump_unreachable">Pomp niet beschikbaar</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="pump_time_updated">Pomp tijd bijgewerkt</string>
     <string name="exit">Afsluiten</string>
@@ -158,7 +139,6 @@
     <string name="limitingpercentrate">Begrezen van max procentuele wijzigen tot %1$d%% wegens de %2$s</string>
     <string name="itmustbepositivevalue">dit moet een positieve waarde zijn</string>
     <string name="limitingbolus">Bolus beperkt tot %1$.1f E doordat %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pomp niet geïnitialiseerd, profiel niet ingesteld!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy wordt niet ondersteund.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy wordt niet ondersteund of het apparaat is niet gekoppeld.</string>
@@ -246,7 +226,6 @@
     <string name="percent">Procent</string>
     <string name="absolute">Absoluut</string>
     <string name="configbuilder_insulin">Insuline</string>
-    <string name="insulin_unit_shortname">E</string>
     <string name="waitingforpumpresult">Wachtend op resultaat</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -434,9 +413,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Status gepland actualiseren</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Onbevestigde opdracht</string>
     <string name="requested_by_user" comment="26 characters max for translation">Aangevraagd door gebruiker</string>
-    <string name="user_request" comment="26 characters max for translation">Gebruikers verzoek</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pomp gekoppeld</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight actualiseren knop</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basaal</string>
