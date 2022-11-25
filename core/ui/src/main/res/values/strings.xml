@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Refresh</string>
     <string name="error">Error</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
     <string name="invalid_input">Invalid input data</string>
@@ -8,6 +9,27 @@
     <string name="constraint_applied">Constraint applied!</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pump not initialized, profile not set!</string>
+    <string name="failed_update_basal_profile">Failed to update basal profile</string>
+    <string name="bolus_delivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
+    <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
+    <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
+
+    <!--    PumpFragments-->
+    <string name="battery_label">Battery</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="last_connection_label">Last connection</string>
+    <string name="last_bolus_label">Last bolus</string>
+    <string name="base_basal_rate_label">Base basal rate</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="extended_bolus_label">Extended bolus</string>
+    <string name="serial_number">Serial number</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connecting">Connecting</string>
 
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>
@@ -35,6 +57,10 @@
     <string name="event_time_label">Event time</string>
 
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">Application needs bluetooth permission</string>
+    <string name="need_connect_permission">Application needs bluetooth permission</string>
+
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">User request</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
 </resources>
