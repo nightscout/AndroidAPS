@@ -229,7 +229,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Begrenser forlenget bolus til %1$.1f E på grunn av %2$s</string>
     <string name="limitingcarbs">Begrenser karbohydrater til %1$d g på grunn av %2$s</string>
-    <string name="limitingiob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
     <string name="closedmodedisabledinpreferences">Lukket Loop er eaktivert i innstillinger</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
