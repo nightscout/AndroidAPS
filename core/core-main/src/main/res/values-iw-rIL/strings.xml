@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">רענן</string>
     <string name="save">שמור</string>
     <string name="not_set_short">לא הוגדר</string>
-    <string name="failedupdatebasalprofile">עדכון הפרופיל הבזאלי נכשל</string>
     <string name="tempbasaldeliveryerror">שגיאת אספקה של בזאלי זמני</string>
     <string name="goingtodeliver">עומד להזריק %1$.2f יח\'</string>
     <string name="waitingforpump">ממתין למשאבה</string>
-    <string name="connecting">מתחבר</string>
-    <string name="disconnected">מנותק</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
     <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
     <string name="format_carbs">%1$d גר\'</string>
     <string name="reservoirvalue">%1$.0f / %2$d יח\'</string>
-    <string name="pump_basebasalrate">%1$.2f יח\' לשעה</string>
     <string name="format_hours">%1$.2f ש\'</string>
     <string name="format_mins">%1$d דק\'</string>
     <string name="pumpbusy">המשאבה אינה פנויה</string>
@@ -39,15 +34,7 @@
     <string name="basal_long_label">מינון בזאלי</string>
     <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
-    <string name="serialnumber">מספר סידורי</string>
-    <string name="battery_label">סוללה</string>
-    <string name="lastconnection_label">התחברות אחרונה</string>
-    <string name="lastbolus_label">בולוס אחרון</string>
     <string name="dailyunits">יחידות יומיות</string>
-    <string name="base_basal_rate_label">בזאלי בסיסי</string>
-    <string name="tempbasal_label">בזאלי זמני</string>
-    <string name="extended_bolus_label">בולוס ממושך</string>
-    <string name="reservoir_label">מכל</string>
     <string name="pumphistory">היסטוריית המשאבה</string>
     <string name="viewprofile">הצג פרופיל</string>
     <string name="eventtype">סוג האירוע</string>
@@ -60,13 +47,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">מכבה את הבלוטות\' של הטלפון לשנייה אחת אם לא ניתן לתקשר עם המשאבה. זה עשוי לעזור במס\' דגמי טלפונים שבהם מערכת הבלוטות\' קופאת.</string>
     <string name="pairing">מצמד</string>
-    <string name="loopdisabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
-    <string name="bolusdelivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
     <string name="virtualpump_resultok">אישור</string>
-    <string name="novalidbasalrate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
-    <string name="limitingmaxiob">הגבלת מקסימום אינסולין פעיל ל-%1$.1f יח\' בגלל %2$s</string>
-    <string name="unsafeusage">שימוש לא בטוח</string>
-    <string name="pump_unreachable">המשאבה אינה זמינה</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
     <string name="exit">יציאה</string>
@@ -156,7 +137,6 @@
     <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
     <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
     <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">משאבה לא אותחלה! לא נקבע פרופיל!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">בלוטות\' באנרגיה נמוכה לא נתמך.</string>
     <string name="ble_not_supported_or_not_paired">בלוטות\' באנרגיה נמוכה (BLE) לא נתמך או שהמכשיר אינו מזווג.</string>
@@ -239,7 +219,6 @@
     <string name="percent">אחוז</string>
     <string name="absolute">מוחלט</string>
     <string name="configbuilder_insulin">אינסולין</string>
-    <string name="insulin_unit_shortname">יחידות</string>
     <string name="waitingforpumpresult">ממתין לתוצאות</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -424,9 +403,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">רענון סטטוס מתוכנן</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">פקודה לא מאושרת</string>
     <string name="requested_by_user" comment="26 characters max for translation">התבקש ע\"י המשתמש</string>
-    <string name="user_request" comment="26 characters max for translation">בקשת משתמש</string>
     <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">לחצן ריענון Insight</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">בזאלי</string>
