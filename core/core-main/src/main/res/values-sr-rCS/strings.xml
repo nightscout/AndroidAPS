@@ -5,7 +5,6 @@
     <string name="goingtodeliver">Isporučujem %1$.2f U</string>
     <string name="carbs">Uglj. hidrati</string>
     <string name="basal_label">Basal</string>
-    <string name="bolusdelivered">Bolus %1$.2f U je uspešno isporučen</string>
     <string name="exit">Izađi</string>
     <string name="iob">IOB</string>
     <string name="bg_label">GUK</string>
