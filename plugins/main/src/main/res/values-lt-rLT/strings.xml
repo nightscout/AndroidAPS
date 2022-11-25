@@ -64,7 +64,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ištęstinis bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
     <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
-    <string name="limitingiob">Ribojamas AIO iki %1$.1f V dėl %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
