@@ -8,6 +8,7 @@
     <string name="constraint_applied">Aplikováno omezení!</string>
     <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
     <string name="tt_label">DC</string>
+    <!--    PumpFragments-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrzení</string>
@@ -28,5 +29,5 @@
     <!-- datetime layout -->
     <string name="event_time_label">Čas</string>
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">Aplikace potřebuje oprávnění bluetooth</string>
+    <!--    Combo-->
 </resources>
