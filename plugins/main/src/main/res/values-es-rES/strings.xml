@@ -229,7 +229,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
     <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
-    <string name="limitingiob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
     <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
