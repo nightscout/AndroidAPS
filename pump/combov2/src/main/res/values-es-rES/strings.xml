@@ -59,6 +59,14 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Obtener el historial TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Actualizando fecha de la bomba</string>
     <string name="combov2_updating_pump_status_cmddesc">Actualizando estado de la bomba</string>
+    <string name="combov2_discovery_duration">Duración del descubrimiento (en segundos)</string>
+    <string name="combov2_getting_basal_profile">Obteniendo perfil basal; %1$d factor(es) leídos</string>
+    <string name="combov2_setting_basal_profile">Configurando perfil basal; %1$d factor(es) escrito(s)</string>
+    <string name="combov2_delivering_bolus">Entregando bolo (%1$.1f de %2$.1f U entregado)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">No se puede entregar el tratamiento: la bomba está suspendida</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Inulina insuficiente en el reservorio</string>
     <string name="combov2_bolus_cancelled">Bolo cancelado</string>
     <string name="combov2_bolus_not_delivered">Bolo no entregado</string>
+    <string name="combov2_cannot_access_pump_data">No se puede acceder a los datos de la bomba; la bomba debe ser emparejada de nuevo</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Se han detectado entregas de bolos no comprobadas. Cancelando bolo por razones de seguridad.</string>
 </resources>
