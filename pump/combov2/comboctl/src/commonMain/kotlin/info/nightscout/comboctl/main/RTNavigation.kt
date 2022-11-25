@@ -20,7 +20,14 @@ import kotlin.reflect.KClassifier
 
 private val logger = Logger.get("RTNavigation")
 
-private const val WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 110L
+// There are _two_ waiting periods during RT button presses. The minimum one is there
+// in case a new RT arrives very quickly; it is then necessary to wait a bit before
+// sending the next button press packet to the Combo to avoid overflow. The maximum
+// one is there if there is no screen update until we send the next button press
+// packet to the Combo. Without the maximum period, we'd then end up in a deadlock.
+// In other words, the maximum waiting period functions as a timeout.
+private const val MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 110L
+private const val MAXIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS = 600L
 private const val MAX_NUM_SAME_QUANTITY_OBSERVATIONS = 10
 
 /**
@@ -390,7 +397,7 @@ suspend fun longPressRTButtonUntil(
         // both cases), keep pressing the button.
         val parsedDisplayFrame = try {
             withTimeout(
-                timeMillis = WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS
+                timeMillis = MAXIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS
             ) {
                 rtNavigationContext.getParsedDisplayFrame(filterDuplicates = true)
             }
@@ -414,8 +421,8 @@ suspend fun longPressRTButtonUntil(
         // to be a phenomenon that is separate to the packet overflow
         // that is documented in TransportLayer.IO.sendInternal().)
         val elapsedTime = getElapsedTimeInMs() - timestampBeforeDisplayFrameRetrieval
-        if (elapsedTime < WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS) {
-            val waitingPeriodInMs =  WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
+        if (elapsedTime < MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS) {
+            val waitingPeriodInMs =  MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
             logger(LogLevel.VERBOSE) { "Waiting $waitingPeriodInMs milliseconds before continuing button long-press" }
             delay(timeMillis = waitingPeriodInMs)
         }
@@ -723,15 +730,15 @@ suspend fun adjustQuantityOnScreen(
             rtNavigationContext,
             if (needToIncrement) incrementButton else decrementButton
         ) { parsedScreen ->
-            val currentQuantity = getQuantity(parsedScreen)
-            logger(LogLevel.VERBOSE) { "Current quantity in first phase: $currentQuantity; need to increment: $needToIncrement" }
-            if (currentQuantity == null) {
+            val currentQuantityOnScreen = getQuantity(parsedScreen)
+            logger(LogLevel.VERBOSE) { "Current quantity in first phase: $currentQuantityOnScreen; need to increment: $needToIncrement" }
+            if (currentQuantityOnScreen == null) {
                 LongPressRTButtonsCommand.ContinuePressingButton
             } else {
-                if (currentQuantity != targetQuantity) {
-                    if (checkIfQuantityUnexpectedlyNotChanging(currentQuantity)) {
+                if (currentQuantityOnScreen != targetQuantity) {
+                    if (checkIfQuantityUnexpectedlyNotChanging(currentQuantityOnScreen)) {
                         logger(LogLevel.ERROR) { "Quantity unexpectedly not changing" }
-                        throw QuantityNotChangingException(targetQuantity = targetQuantity, hitLimitAt = currentQuantity)
+                        throw QuantityNotChangingException(targetQuantity = targetQuantity, hitLimitAt = currentQuantityOnScreen)
                     }
                 }
 
@@ -749,12 +756,12 @@ suspend fun adjustQuantityOnScreen(
                 // will be set to false, indicating that the long RT
                 // button press needs to stop.
                 val keepPressing =
-                    if (currentQuantity == targetQuantity)
+                    if (currentQuantityOnScreen == targetQuantity)
                         false
                     else if (needToIncrement)
-                        checkIfNeedsToIncrement(currentQuantity)
+                        checkIfNeedsToIncrement(currentQuantityOnScreen)
                     else
-                        !checkIfNeedsToIncrement(currentQuantity)
+                        !checkIfNeedsToIncrement(currentQuantityOnScreen)
 
                 if (keepPressing)
                     LongPressRTButtonsCommand.ContinuePressingButton
@@ -789,20 +796,20 @@ suspend fun adjustQuantityOnScreen(
             // is pretty much what we are waiting for.
             val parsedDisplayFrame = rtNavigationContext.getParsedDisplayFrame(filterDuplicates = false) ?: continue
             val parsedScreen = parsedDisplayFrame.parsedScreen
-            val currentQuantity = getQuantity(parsedScreen)
+            val currentQuantityOnScreen = getQuantity(parsedScreen)
 
             logger(LogLevel.DEBUG) {
                 "Observed quantity after long-pressing RT button: " +
-                    "last / current quantity: $lastQuantity / $currentQuantity"
+                    "last / current quantity: $lastQuantity / $currentQuantityOnScreen"
             }
 
-            if (currentQuantity != null) {
-                if (currentQuantity == lastQuantity) {
+            if (currentQuantityOnScreen != null) {
+                if (currentQuantityOnScreen == lastQuantity) {
                     sameQuantityObservedCount++
                     if (sameQuantityObservedCount >= 3)
                         break
                 } else {
-                    lastQuantity = currentQuantity
+                    lastQuantity = currentQuantityOnScreen
                     sameQuantityObservedCount = 0
                 }
             }
