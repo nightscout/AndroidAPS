@@ -113,7 +113,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Beperken van extended bolus op %1$.1f E vanwege %2$s</string>
     <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
-    <string name="limitingiob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
     <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
