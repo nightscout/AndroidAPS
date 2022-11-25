@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">刷新</string>
     <string name="save">保存</string>
     <string name="not_set_short">未设置</string>
-    <string name="failedupdatebasalprofile">更新基础率配置文件失败</string>
     <string name="tempbasaldeliveryerror">临时基础输注错误</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
     <string name="waitingforpump">正在等待泵</string>
-    <string name="connecting">正在连接</string>
-    <string name="disconnected">已断开连接</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d 克</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f 小时</string>
     <string name="format_mins">%1$d 分钟</string>
     <string name="pumpbusy">胰岛素泵忙碌中</string>
@@ -38,15 +33,7 @@
     <string name="basal_long_label">基础率</string>
     <string name="target_long_label">血糖目标</string>
     <string name="initializing">正在初始化</string>
-    <string name="serialnumber">序列号</string>
-    <string name="battery_label">电池</string>
-    <string name="lastconnection_label">上次连接</string>
-    <string name="lastbolus_label">上次大剂量</string>
     <string name="dailyunits">每日单位数</string>
-    <string name="base_basal_rate_label">基础率</string>
-    <string name="tempbasal_label">临时基础率</string>
-    <string name="extended_bolus_label">扩展大剂量(方波)</string>
-    <string name="reservoir_label">储药器</string>
     <string name="pumphistory">泵历史记录</string>
     <string name="viewprofile">查看配置文件</string>
     <string name="eventtype">事件类型</string>
@@ -59,13 +46,7 @@
     <string name="btwatchdog_title">蓝牙看门狗</string>
     <string name="btwatchdog_summary">如果无法与泵连接，将关闭手机的蓝牙一秒钟后再自动打开。在一些蓝牙堆栈僵死的手机上是有帮助的。</string>
     <string name="pairing">配对中</string>
-    <string name="loopdisabled">按约束条件禁用循环</string>
-    <string name="bolusdelivered">成功输注大剂量 %1$.2f U</string>
     <string name="virtualpump_resultok">确定</string>
-    <string name="novalidbasalrate">从泵中无法读取有效的基础率</string>
-    <string name="limitingmaxiob">由于 %2$s 将最大 IOB活性胰岛素限制为 %1$.1f U</string>
-    <string name="unsafeusage">不安全的用法</string>
-    <string name="pump_unreachable">泵无法连接</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
     <string name="pump_time_updated">泵时间已经更新</string>
     <string name="exit">退出</string>
@@ -155,7 +136,6 @@
     <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
-    <string name="pumpNotInitializedProfileNotSet">泵未初始化, 配置文件未设置!</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">不支持蓝牙低能量。</string>
     <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
@@ -237,7 +217,6 @@
     <string name="percent">百分比</string>
     <string name="absolute">绝对值</string>
     <string name="configbuilder_insulin">胰岛素</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">正在等待结果</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
@@ -420,9 +399,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">计划状态刷新</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>
     <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
-    <string name="user_request" comment="26 characters max for translation">用户请求</string>
     <string name="bolus_ok" comment="26 characters max for translation">大剂量完成</string>
-    <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">基础率</string>
