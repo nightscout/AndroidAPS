@@ -2,6 +2,7 @@
 <resources>
     <!--    General-->
     <string name="constraint_applied">Sınırlaması uygulanır!</string>
+    <!--    PumpFragments-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
@@ -17,4 +18,5 @@
     <string name="format_hour_minute">%1$dsa %2$ddk</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
 </resources>
