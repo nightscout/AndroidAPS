@@ -1,9 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
 import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
-import static info.nightscout.core.pump.PumpStateExtensionKt.convertedToAbsolute;
-import static info.nightscout.core.pump.PumpStateExtensionKt.getPlannedRemainingMinutes;
-import static info.nightscout.core.pump.PumpStateExtensionKt.toStringFull;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -774,7 +771,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
             PumpSync.PumpState.TemporaryBasal tb = pumpSync.expectedPumpState().getTemporaryBasal();
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
+                extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
@@ -782,7 +779,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.getRate());
                 extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.getTimestamp()));
-                extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
+                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
 
             status.put("timestamp", dateUtil.toISOString(dateUtil.now()));
@@ -845,10 +842,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
         PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
         if (pumpState.getTemporaryBasal() != null && pumpState.getProfile() != null) {
-            ret += rh.gs(R.string.omnipod_common_short_status_temp_basal, toStringFull(pumpState.getTemporaryBasal(), dateUtil) + "\n");
+            ret += rh.gs(R.string.omnipod_common_short_status_temp_basal, pumpState.getTemporaryBasal().toStringFull(dateUtil) + "\n");
         }
         if (pumpState.getExtendedBolus() != null) {
-            ret += rh.gs(R.string.omnipod_common_short_status_extended_bolus, toStringFull(pumpState.getExtendedBolus(), dateUtil) + "\n");
+            ret += rh.gs(R.string.omnipod_common_short_status_extended_bolus, pumpState.getExtendedBolus().toStringFull(dateUtil) + "\n");
         }
         ret += rh.gs(R.string.omnipod_common_short_status_reservoir, (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+" : DecimalFormatter.INSTANCE.to0Decimal(getReservoirLevel()))) + "\n";
         if (isUseRileyLinkBatteryLevel()) {
@@ -1139,6 +1136,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return result;
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     private <T> T executeCommand(OmnipodCommandType commandType, Supplier<T> supplier) {
         try {
             aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);

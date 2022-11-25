@@ -10,9 +10,6 @@ import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
-import info.nightscout.core.pump.convertedToAbsolute
-import info.nightscout.core.pump.plannedRemainingMinutes
-import info.nightscout.core.pump.toStringFull
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin

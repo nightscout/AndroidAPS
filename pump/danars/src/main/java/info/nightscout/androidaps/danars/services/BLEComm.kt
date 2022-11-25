@@ -106,7 +106,7 @@ class BLEComm @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }

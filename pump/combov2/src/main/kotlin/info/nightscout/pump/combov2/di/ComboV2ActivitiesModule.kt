@@ -1,9 +1,9 @@
-package info.nightscout.androidaps.combov2.di
+package info.nightscout.pump.combov2.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Fragment
-import info.nightscout.androidaps.plugins.pump.combov2.activities.ComboV2PairingActivity
+import info.nightscout.pump.combov2.ComboV2Fragment
+import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
 
 @Module
 @Suppress("unused")

@@ -1,10 +1,10 @@
-package info.nightscout.androidaps.plugins.pump.combov2
+package info.nightscout.pump.combov2
 
 import android.util.Log
 import info.nightscout.comboctl.base.LogLevel
-import info.nightscout.comboctl.base.LoggerBackend as ComboCtlLoggerBackend
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.comboctl.base.LoggerBackend as ComboCtlLoggerBackend
 
 internal class AAPSComboCtlLogger(private val aapsLogger: AAPSLogger) : ComboCtlLoggerBackend {
     override fun log(tag: String, level: LogLevel, throwable: Throwable?, message: String?) {

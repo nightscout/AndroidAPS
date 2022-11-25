@@ -26,7 +26,7 @@ class BluetoothDevicePreference @JvmOverloads constructor(context: Context, attr
         } else {
             entries = emptyArray()
             entryValues = emptyArray()
-            ToastUtils.errorToast(context, context.getString(R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
         }
     }
 }

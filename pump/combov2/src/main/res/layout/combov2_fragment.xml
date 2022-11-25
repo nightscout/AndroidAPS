@@ -412,7 +412,7 @@
                         android:orientation="horizontal"
                         android:gravity="center">
 
-                        <info.nightscout.androidaps.plugins.pump.combov2.ComboV2RTDisplayFrameView
+                        <info.nightscout.pump.combov2.ComboV2RTDisplayFrameView
                             android:id="@+id/combov2_rt_display_frame"
                             android:layout_width="192dp"
                             android:layout_height="64dp"

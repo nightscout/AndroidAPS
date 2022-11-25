@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.combov2
+package info.nightscout.pump.combov2
 
 import android.content.Context
 import android.content.Intent
@@ -9,7 +9,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.combov2.R
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -24,9 +23,6 @@ import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.pump.convertedToAbsolute
-import info.nightscout.core.pump.toStringFull
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.constraints.Constraint
@@ -45,6 +41,7 @@ import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.bus.RxBus
@@ -109,7 +106,8 @@ class ComboV2Plugin @Inject constructor (
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     private val pumpSync: PumpSync,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val activityNames: ActivityNames
 ) :
     PumpPluginBase(
         PluginDescription()
@@ -337,7 +335,7 @@ class ComboV2Plugin @Inject constructor (
             DriverState.Connecting,
             DriverState.CheckingPump,
             is DriverState.ExecutingCommand -> true
-            else -> false
+            else                            -> false
         }
 
     override fun isConnected(): Boolean =
@@ -351,7 +349,7 @@ class ComboV2Plugin @Inject constructor (
             DriverState.Ready,
             DriverState.Suspended,
             is DriverState.ExecutingCommand -> true
-            else -> false
+            else                            -> false
         }
 
     override fun isConnecting(): Boolean =
@@ -515,12 +513,11 @@ class ComboV2Plugin @Inject constructor (
                             val activeBasalProfileNumber = it.statusFlow.value?.activeBasalProfileNumber
                             aapsLogger.debug(LTag.PUMP, "Active basal profile number: $activeBasalProfileNumber")
                             if ((activeBasalProfileNumber != null) && (activeBasalProfileNumber != 1)) {
-                                val notification = Notification(
+                                activityNames.addNotification(
                                     Notification.COMBO_PUMP_ALARM,
                                     text = rh.gs(R.string.combov2_incorrect_active_basal_profile, activeBasalProfileNumber),
                                     level = Notification.URGENT
                                 )
-                                rxBus.send(EventNewNotification(notification))
                             }
                             lastActiveBasalProfileNumber = activeBasalProfileNumber
                         }
@@ -550,12 +547,11 @@ class ComboV2Plugin @Inject constructor (
                     notifyAboutComboAlert(e.alertScreenContent)
                     forciblyDisconnectDueToError = true
                 } catch (e: Exception) {
-                    val notification = Notification(
+                    activityNames.addNotification(
                         Notification.COMBO_PUMP_ALARM,
                         text = rh.gs(R.string.combov2_connection_error, e.message),
                         level = Notification.URGENT
                     )
-                    rxBus.send(EventNewNotification(notification))
 
                     aapsLogger.error(LTag.PUMP, "Exception while connecting: ${e.stackTraceToString()}")
 
@@ -635,12 +631,11 @@ class ComboV2Plugin @Inject constructor (
         if (!isInitialized()) {
             aapsLogger.error(LTag.PUMP, "Cannot set profile since driver is not initialized")
 
-            val notification = Notification(
+            activityNames.addNotification(
                 Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
                 rh.gs(R.string.pump_not_initialized_profile_not_set),
                 Notification.URGENT
             )
-            rxBus.send(EventNewNotification(notification))
 
             return PumpEnactResult(injector).apply {
                 success = false
@@ -665,13 +660,12 @@ class ComboV2Plugin @Inject constructor (
                         activeBasalProfile = requestedBasalProfile
                         updateBaseBasalRateUI()
 
-                        val notification = Notification(
+                        activityNames.addNotificationValidFor(
                             Notification.PROFILE_SET_OK,
                             rh.gs(R.string.profile_set_ok),
                             Notification.INFO,
                             60
                         )
-                        rxBus.send(EventNewNotification(notification))
 
                         pumpEnactResult.apply {
                             success = true
@@ -696,12 +690,11 @@ class ComboV2Plugin @Inject constructor (
             } catch (e: Exception) {
                 aapsLogger.error("Exception thrown during basal profile update: $e")
 
-                val notification = Notification(
+                activityNames.addNotification(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.failed_update_basal_profile),
                     Notification.URGENT
                 )
-                rxBus.send(EventNewNotification(notification))
 
                 pumpEnactResult.apply {
                     success = false
@@ -1651,21 +1644,19 @@ class ComboV2Plugin @Inject constructor (
 
         when (event) {
             is ComboCtlPump.Event.BatteryLow -> {
-                val notification = Notification(
+                activityNames.addNotification(
                     Notification.COMBO_PUMP_ALARM,
                     text = rh.gs(R.string.combov2_battery_low_warning),
                     level = Notification.NORMAL
                 )
-                rxBus.send(EventNewNotification(notification))
             }
 
             is ComboCtlPump.Event.ReservoirLow -> {
-                val notification = Notification(
+                activityNames.addNotification(
                     Notification.COMBO_PUMP_ALARM,
                     text = rh.gs(R.string.combov2_reservoir_low_warning),
                     level = Notification.NORMAL
                 )
-                rxBus.send(EventNewNotification(notification))
             }
 
             is ComboCtlPump.Event.QuickBolusInfused -> {
@@ -1756,7 +1747,7 @@ class ComboV2Plugin @Inject constructor (
                     event.remainingTbrDurationInMinutes / 60,
                     event.remainingTbrDurationInMinutes % 60
                 )
-                val notification = Notification(
+                activityNames.addNotification(
                     Notification.COMBO_UNKNOWN_TBR,
                     text = rh.gs(
                         R.string.combov2_unknown_tbr_detected,
@@ -1765,7 +1756,6 @@ class ComboV2Plugin @Inject constructor (
                     ),
                     level = Notification.URGENT
                 )
-                rxBus.send(EventNewNotification(notification))
             }
 
             else -> Unit
@@ -1900,7 +1890,7 @@ class ComboV2Plugin @Inject constructor (
                     else -> true
                 }
             }
-            else -> true
+            else                     -> true
         }
         if (updateUIState) {
             _driverStateUIFlow.value = newState
@@ -1909,12 +1899,11 @@ class ComboV2Plugin @Inject constructor (
             // that the Combo is currently suspended, otherwise this
             // only shows up in the Combo fragment.
             if (newState == DriverState.Suspended) {
-                val notification = Notification(
+                activityNames.addNotification(
                     Notification.COMBO_PUMP_SUSPENDED,
                     text = rh.gs(R.string.combov2_pump_is_suspended),
                     level = Notification.NORMAL
                 )
-                rxBus.send(EventNewNotification(notification))
             }
         }
 
@@ -1928,10 +1917,10 @@ class ComboV2Plugin @Inject constructor (
         // TODO: Is it OK to send CONNECTED twice? It can happen when changing from Ready to Suspended.
         when (newState) {
             DriverState.Disconnected -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-            DriverState.Connecting -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
+            DriverState.Connecting   -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
             DriverState.Ready,
-            DriverState.Suspended -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
-            else -> Unit
+            DriverState.Suspended    -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            else                     -> Unit
         }
     }
 
@@ -1945,14 +1934,13 @@ class ComboV2Plugin @Inject constructor (
 
     private fun unpairDueToPumpDataError() {
         disconnectInternal(forceDisconnect = true)
-        val notification = Notification(
+        activityNames.addNotificationValidTo(
             id = Notification.PUMP_ERROR,
             date = dateUtil.now(),
             text = rh.gs(R.string.combov2_cannot_access_pump_data),
             level = Notification.URGENT,
             validTo = 0
         )
-        rxBus.send(EventNewNotification(notification))
         unpair()
     }
 
@@ -2032,12 +2020,11 @@ class ComboV2Plugin @Inject constructor (
         }
 
     private fun notifyAboutComboAlert(alert: AlertScreenContent) {
-        val notification = Notification(
+        activityNames.addNotification(
             Notification.COMBO_PUMP_ALARM,
             text = "${rh.gs(R.string.combov2_combo_alert)}: ${getAlertDescription(alert)}",
             level = if (alert is AlertScreenContent.Warning) Notification.NORMAL else Notification.URGENT
         )
-        rxBus.send(EventNewNotification(notification))
     }
 
     private fun reportFinishedBolus(status: String, pumpEnactResult: PumpEnactResult, succeeded: Boolean) {

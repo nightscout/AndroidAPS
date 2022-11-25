@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.combov2
+package info.nightscout.pump.combov2
 
 import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.CurrentTbrState

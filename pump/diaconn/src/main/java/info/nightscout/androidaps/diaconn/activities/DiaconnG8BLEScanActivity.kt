@@ -73,7 +73,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
                 startScan()
             }
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
         }
     }
 
@@ -112,7 +112,7 @@ class DiaconnG8BLEScanActivity : NoSplashAppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
             return
         }
         if (device == null || device.name == null || device.name == "") {

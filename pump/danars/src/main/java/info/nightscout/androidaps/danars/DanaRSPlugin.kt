@@ -14,8 +14,6 @@ import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.pump.convertedToAbsolute
-import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint

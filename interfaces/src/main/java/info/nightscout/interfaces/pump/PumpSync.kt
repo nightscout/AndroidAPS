@@ -3,8 +3,12 @@ package info.nightscout.interfaces.pump
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.utils.DecimalFormatter
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * This interface allows pump drivers to push data changes (creation and update of treatments, temporary basals and extended boluses) back to AAPS-core.
@@ -83,6 +87,32 @@ interface PumpSync {
 
             val end: Long get() = timestamp + duration
             val plannedRemainingMinutes: Long get() = max(T.msecs(end - System.currentTimeMillis()).mins(), 0L)
+            fun convertedToAbsolute(time: Long, profile: Profile): Double =
+                if (isAbsolute) rate
+                else profile.getBasal(time) * rate / 100
+
+            fun toStringFull(dateUtil: DateUtil): String {
+                return when {
+                    isAbsolute -> {
+                        DecimalFormatter.to2Decimal(rate) + "U/h @" +
+                            dateUtil.timeString(timestamp) +
+                            " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+                    }
+
+                    else       -> { // percent
+                        rate.toString() + "% @" +
+                            dateUtil.timeString(timestamp) +
+                            " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
+                    }
+                }
+            }
+
+            val durationInMinutes: Int
+                get() = T.msecs(duration).mins().toInt()
+
+            private fun getPassedDurationToTimeInMinutes(time: Long): Int =
+                ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
+
         }
 
         data class ExtendedBolus @JvmOverloads constructor(
@@ -93,7 +123,20 @@ interface PumpSync {
             // used only to cancel EB on pump change
             val pumpType: PumpType = PumpType.USER,
             val pumpSerial: String = ""
-        )
+        ) {
+
+            val end: Long
+                get() = timestamp + duration
+
+            val plannedRemainingMinutes: Long
+                get() = max(T.msecs(end - System.currentTimeMillis()).mins(), 0L)
+            private fun getPassedDurationToTimeInMinutes(time: Long): Int =
+                ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
+            fun toStringFull(dateUtil: DateUtil): String =
+                "E " + DecimalFormatter.to2Decimal(rate) + "U/h @" +
+                    dateUtil.timeString(timestamp) +
+                    " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
+        }
 
         data class Bolus(val timestamp: Long, val amount: Double)
     }

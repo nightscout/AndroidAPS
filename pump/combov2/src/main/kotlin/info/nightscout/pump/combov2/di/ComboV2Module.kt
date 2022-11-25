@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.combov2.di
+package info.nightscout.pump.combov2.di
 
 import dagger.Module
 

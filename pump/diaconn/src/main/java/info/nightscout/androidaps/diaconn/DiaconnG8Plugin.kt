@@ -12,8 +12,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.androidaps.diaconn.service.DiaconnG8Service
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.pump.convertedToAbsolute
-import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint

@@ -66,7 +66,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             bluetoothAdapter?.safeEnable()
             startScan()
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
         }
     }
 
@@ -82,7 +82,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             } catch (ignore: IllegalStateException) {
             } // ignore BT not on
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
         }
 
     private fun stopScan() =
@@ -92,7 +92,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
             } catch (ignore: IllegalStateException) {
             } // ignore BT not on
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
         }
 
     @SuppressLint("MissingPermission")
@@ -153,7 +153,7 @@ class BLEScanActivity : NoSplashAppCompatActivity() {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())
                 } else {
-                    ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.needconnectpermission))
+                    ToastUtils.errorToast(context, context.getString(info.nightscout.core.main.R.string.need_connect_permission))
                 }
                 finish()
             }

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.combov2.activities
+package info.nightscout.pump.combov2.activities
 
 import android.app.Activity
 import android.os.Bundle
@@ -10,21 +10,25 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import info.nightscout.androidaps.combov2.R
-import info.nightscout.androidaps.combov2.databinding.Combov2PairingActivityBinding
-import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PairingPIN
-import info.nightscout.core.activities.NoSplashAppCompatActivity
+import info.nightscout.core.ui.activities.PluginNoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.pump.combov2.ComboV2Plugin
+import info.nightscout.pump.combov2.R
+import info.nightscout.pump.combov2.databinding.Combov2PairingActivityBinding
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-class ComboV2PairingActivity : NoSplashAppCompatActivity() {
+class ComboV2PairingActivity : PluginNoSplashAppCompatActivity() {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var combov2Plugin: ComboV2Plugin
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -4,14 +4,13 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
 
-apply from: "${project.rootDir}/core/core-main//android_dependencies.gradle"
-apply from: "${project.rootDir}/core/core-main//android_module_dependencies.gradle"
-apply from: "${project.rootDir}/core/core-main//test_dependencies.gradle"
-apply from: "${project.rootDir}/core/core-main//jacoco_global.gradle"
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 dependencies {
     implementation project(':libraries')
-    implementation project(':core:core-main')
     implementation project(':core:ui')
     implementation project(':core:utils')
     implementation project(':app-wear-shared:rx')
@@ -37,7 +36,7 @@ dependencies {
 }
 
 android {
-    namespace 'info.nightscout.androidaps.combov2'
+    namespace 'info.nightscout.pump.combov2'
     buildFeatures {
         dataBinding true
     }

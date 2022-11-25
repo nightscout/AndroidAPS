@@ -111,7 +111,7 @@ class AndroidPermissionImpl @Inject constructor(
             if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
                 activePlugin.activeOverview.addNotification(
                     id = Notification.PERMISSION_BT,
-                    text = rh.gs(R.string.needconnectpermission),
+                    text = rh.gs(R.string.need_connect_permission),
                     level = Notification.URGENT,
                     actionButtonId = R.string.request
                 ) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }

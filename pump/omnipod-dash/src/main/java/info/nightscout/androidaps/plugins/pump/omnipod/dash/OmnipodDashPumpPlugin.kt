@@ -34,9 +34,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.pump.convertedToAbsolute
-import info.nightscout.core.pump.plannedRemainingMinutes
-import info.nightscout.core.pump.toStringFull
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification

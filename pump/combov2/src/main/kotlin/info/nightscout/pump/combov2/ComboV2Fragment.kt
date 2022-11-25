@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.combov2
+package info.nightscout.pump.combov2
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,12 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.combov2.R
-import info.nightscout.androidaps.combov2.databinding.Combov2FragmentBinding
 import info.nightscout.comboctl.base.NullDisplayFrame
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.pump.combov2.databinding.Combov2FragmentBinding
 import info.nightscout.shared.interfaces.ResourceHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
@@ -62,13 +61,13 @@ class ComboV2Fragment : DaggerFragment() {
                 combov2Plugin.driverStateUIFlow
                     .onEach { connectionState ->
                         val text = when (connectionState) {
-                            ComboV2Plugin.DriverState.NotInitialized -> rh.gs(R.string.combov2_not_initialized)
-                            ComboV2Plugin.DriverState.Disconnected -> rh.gs(R.string.disconnected)
-                            ComboV2Plugin.DriverState.Connecting -> rh.gs(R.string.connecting)
-                            ComboV2Plugin.DriverState.CheckingPump -> rh.gs(R.string.combov2_checking_pump)
-                            ComboV2Plugin.DriverState.Ready -> rh.gs(R.string.combov2_ready)
-                            ComboV2Plugin.DriverState.Suspended -> rh.gs(R.string.combov2_suspended)
-                            ComboV2Plugin.DriverState.Error -> rh.gs(R.string.error)
+                            ComboV2Plugin.DriverState.NotInitialized      -> rh.gs(R.string.combov2_not_initialized)
+                            ComboV2Plugin.DriverState.Disconnected        -> rh.gs(R.string.disconnected)
+                            ComboV2Plugin.DriverState.Connecting          -> rh.gs(R.string.connecting)
+                            ComboV2Plugin.DriverState.CheckingPump        -> rh.gs(R.string.combov2_checking_pump)
+                            ComboV2Plugin.DriverState.Ready               -> rh.gs(R.string.combov2_ready)
+                            ComboV2Plugin.DriverState.Suspended           -> rh.gs(R.string.combov2_suspended)
+                            ComboV2Plugin.DriverState.Error               -> rh.gs(R.string.error)
                             is ComboV2Plugin.DriverState.ExecutingCommand ->
                                 when (val desc = connectionState.description) {
                                     is ComboCtlPump.GettingBasalProfileCommandDesc ->
@@ -101,9 +100,9 @@ class ComboV2Fragment : DaggerFragment() {
 
                         binding.combov2DriverState.setTextColor(
                             when (connectionState) {
-                                ComboV2Plugin.DriverState.Error -> Color.RED
+                                ComboV2Plugin.DriverState.Error     -> Color.RED
                                 ComboV2Plugin.DriverState.Suspended -> Color.YELLOW
-                                else -> Color.WHITE
+                                else                                -> Color.WHITE
                             }
                         )
                     }

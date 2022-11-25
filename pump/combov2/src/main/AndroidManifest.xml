@@ -7,7 +7,7 @@
 
     <application>
         <activity
-            android:name="info.nightscout.androidaps.plugins.pump.combov2.activities.ComboV2PairingActivity"
+            android:name="info.nightscout.pump.combov2.activities.ComboV2PairingActivity"
             android:label="@string/combov2_pair_with_pump_title"
             android:theme="@style/AppTheme" />
     </application>

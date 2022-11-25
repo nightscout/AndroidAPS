@@ -28,6 +28,8 @@
     <string name="tempbasal_label">Temp basal</string>
     <string name="extended_bolus_label">Extended bolus</string>
     <string name="serial_number">Serial number</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connecting">Connecting</string>
 
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>
@@ -55,9 +57,10 @@
     <string name="event_time_label">Event time</string>
 
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">Application needs bluetooth permission</string>
+    <string name="need_connect_permission">Application needs bluetooth permission</string>
 
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
 
 </resources>

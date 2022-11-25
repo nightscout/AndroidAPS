@@ -221,7 +221,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), R.string.devicenotfound);
             }
         } else {
-            ToastUtils.INSTANCE.errorToast(context, R.string.needconnectpermission);
+            ToastUtils.INSTANCE.errorToast(context, R.string.need_connect_permission);
         }
     }
 
