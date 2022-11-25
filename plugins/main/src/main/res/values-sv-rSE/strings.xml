@@ -51,7 +51,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Begränsar bolus till %1$.1f enheter pga %2$s</string>
     <string name="limitingcarbs">Begränsar kolhydrater till %1$d g pga %2$s</string>
-    <string name="limitingiob">Begränsar IOB till %1$.1f pga %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen kan inte hantera temp basaler</string>
     <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inaktiverat.</string>
