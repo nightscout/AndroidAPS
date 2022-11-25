@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Refresh</string>
     <string name="save">Save</string>
     <string name="not_set_short">Not set</string>
-    <string name="failedupdatebasalprofile">Failed to update basal profile</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
-    <string name="connecting">Connecting</string>
-    <string name="disconnected">Disconnected</string>
     <string name="androidaps_start">AAPS started</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
     <string name="pumpbusy">Pump is busy</string>
@@ -41,15 +36,7 @@
     <string name="basal_long_label">Basal rate</string>
     <string name="target_long_label">Blood Glucose Target</string>
     <string name="initializing">Initializing ...</string>
-    <string name="serialnumber">Serial number</string>
-    <string name="battery_label">Battery</string>
-    <string name="lastconnection_label">Last connection</string>
-    <string name="lastbolus_label">Last bolus</string>
     <string name="dailyunits">Daily units</string>
-    <string name="base_basal_rate_label">Base basal rate</string>
-    <string name="tempbasal_label">Temp basal</string>
-    <string name="extended_bolus_label">Extended bolus</string>
-    <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Pump history</string>
     <string name="viewprofile">View profile</string>
     <string name="eventtype">Event type</string>
@@ -62,13 +49,7 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
     <string name="pairing">Pairing</string>
-    <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
-    <string name="bolusdelivered">Bolus %1$.2f U delivered successfully</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">No valid basal rate read from pump</string>
-    <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
-    <string name="unsafeusage">unsafe usage</string>
-    <string name="pump_unreachable">Pump unreachable</string>
     <string name="extended_bolus">Extended bolus</string>
     <string name="pump_time_updated">Pump time updated</string>
     <string name="exit">Exit</string>
@@ -161,7 +142,6 @@
     <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
     <string name="itmustbepositivevalue">it must be positive value</string>
     <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
@@ -260,7 +240,6 @@
     <string name="percent">Percent</string>
     <string name="absolute">Absolute</string>
     <string name="configbuilder_insulin">Insulin</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smb_shortname">SMB</string>
 
@@ -464,9 +443,7 @@
     <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
-    <string name="user_request" comment="26 characters max for translation">User request</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
