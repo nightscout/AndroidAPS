@@ -45,10 +45,10 @@
     <string name="basal_long_label">Basaalstand</string>
     <string name="target_long_label">Bloedglucose doelwaarde</string>
     <string name="initializing">Initialiseren...</string>
-    <string name="serialnumber">Serie nummer</string>
+    <string name="serial_number">Serie nummer</string>
     <string name="battery_label">Batterij</string>
-    <string name="lastconnection_label">Laatste verbinding</string>
-    <string name="lastbolus_label">Laatste bolus</string>
+    <string name="last_connection_label">Laatste verbinding</string>
+    <string name="last_bolus_label">Laatste bolus</string>
     <string name="dailyunits">Dag totaal</string>
     <string name="base_basal_rate_label">Basis basaalstand</string>
     <string name="tempbasal_label">Tijdelijk basaal</string>

@@ -45,10 +45,10 @@
     <string name="basal_long_label">Bazal oranı</string>
     <string name="target_long_label">Kan Şekeri Hedefi</string>
     <string name="initializing">Başlatılıyor ...</string>
-    <string name="serialnumber">Seri numarası</string>
+    <string name="serial_number">Seri numarası</string>
     <string name="battery_label">Pil</string>
-    <string name="lastconnection_label">Son bağlantı</string>
-    <string name="lastbolus_label">Son bolus</string>
+    <string name="last_connection_label">Son bağlantı</string>
+    <string name="last_bolus_label">Son bolus</string>
     <string name="dailyunits">Günlük ünite</string>
     <string name="base_basal_rate_label">Temel bazal oranı</string>
     <string name="tempbasal_label">Geçici Bazal</string>

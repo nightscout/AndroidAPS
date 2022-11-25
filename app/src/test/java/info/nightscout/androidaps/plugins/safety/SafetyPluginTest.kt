@@ -56,7 +56,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
         `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
+        `when`(rh.gs(R.string.limiting_iob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %1\$d g because of %2\$s")
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable")

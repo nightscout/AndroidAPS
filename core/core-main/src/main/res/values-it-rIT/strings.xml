@@ -43,10 +43,10 @@
     <string name="basal_long_label">Velocità basale</string>
     <string name="target_long_label">Target glicemia</string>
     <string name="initializing">Inizializzazione...</string>
-    <string name="serialnumber">Numero seriale</string>
+    <string name="serial_number">Numero seriale</string>
     <string name="battery_label">Batteria</string>
-    <string name="lastconnection_label">Ultima connessione</string>
-    <string name="lastbolus_label">Ultimo bolo</string>
+    <string name="last_connection_label">Ultima connessione</string>
+    <string name="last_bolus_label">Ultimo bolo</string>
     <string name="dailyunits">Unità giornaliere</string>
     <string name="base_basal_rate_label">Velocità basale originale</string>
     <string name="tempbasal_label">Basale temporanea</string>

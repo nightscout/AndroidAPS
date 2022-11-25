@@ -50,7 +50,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/serialnumber"
+                    android:text="@string/serial_number"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -204,7 +204,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastconnection_label"
+                    android:text="@string/last_connection_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -252,7 +252,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastbolus_label"
+                    android:text="@string/last_bolus_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 

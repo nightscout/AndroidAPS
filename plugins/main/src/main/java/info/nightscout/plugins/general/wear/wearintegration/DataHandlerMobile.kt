@@ -886,7 +886,7 @@ class DataHandlerMobile @Inject constructor(
             iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${DecimalFormatter.to2Decimal(bolusIob.iob)}|${DecimalFormatter.to2Decimal(basalIob.basaliob)})"
             cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString()
-            currentBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
+            currentBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(R.string.pump_base_basal_rate, profile.getBasal())
 
             //bgi
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())

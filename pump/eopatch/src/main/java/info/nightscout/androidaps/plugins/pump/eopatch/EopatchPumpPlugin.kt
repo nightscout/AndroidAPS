@@ -300,7 +300,7 @@ class EopatchPumpPlugin @Inject constructor(
             } while (!patchManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
             rxBus.send(EventOverviewBolusProgress.apply {
-                status = rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
+                status = rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin)
                 percent = 100
             })
 
@@ -329,7 +329,7 @@ class EopatchPumpPlugin @Inject constructor(
                              .observeOn(aapsSchedulers.main)
                              .subscribe { it ->
                                  rxBus.send(EventOverviewBolusProgress.apply {
-                                     status = rh.gs(R.string.bolusdelivered, (it.injectedBolusAmount * 0.05f))
+                                     status = rh.gs(R.string.bolus_delivered, (it.injectedBolusAmount * 0.05f))
                                  })
                              }
         )

@@ -115,7 +115,7 @@
     <string name="autosens_disabled_in_preferences">Autosens disabled in preferences</string>
 
     <!--    Verify if needed in safety-->
-    <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
+    <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
 

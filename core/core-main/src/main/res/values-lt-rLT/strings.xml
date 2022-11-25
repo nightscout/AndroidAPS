@@ -40,10 +40,10 @@
     <string name="ic_long_label">Insulino į angliavandenius santykis</string>
     <string name="basal_long_label">Valandinė bazė</string>
     <string name="initializing">Inicijuojama ...</string>
-    <string name="serialnumber">Serijos numeris</string>
+    <string name="serial_number">Serijos numeris</string>
     <string name="battery_label">Baterija</string>
-    <string name="lastconnection_label">Paskutinis prisijungimas</string>
-    <string name="lastbolus_label">Paskutinis bolusas</string>
+    <string name="last_connection_label">Paskutinis prisijungimas</string>
+    <string name="last_bolus_label">Paskutinis bolusas</string>
     <string name="dailyunits">Paros insulinas</string>
     <string name="base_basal_rate_label">Pagrindinis bazės dydis</string>
     <string name="tempbasal_label">Laikina bazė</string>

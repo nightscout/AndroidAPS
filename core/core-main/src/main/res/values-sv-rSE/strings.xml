@@ -42,10 +42,10 @@
     <string name="basal_long_label">Basaldos</string>
     <string name="target_long_label">Mål-BG</string>
     <string name="initializing">Startar...</string>
-    <string name="serialnumber">Serienummer</string>
+    <string name="serial_number">Serienummer</string>
     <string name="battery_label">Batterinivå</string>
-    <string name="lastconnection_label">Senast ansluten</string>
-    <string name="lastbolus_label">Senaste bolus</string>
+    <string name="last_connection_label">Senast ansluten</string>
+    <string name="last_bolus_label">Senaste bolus</string>
     <string name="dailyunits">Enheter per dag</string>
     <string name="base_basal_rate_label">Profilens basaldos</string>
     <string name="tempbasal_label">Temp basal</string>

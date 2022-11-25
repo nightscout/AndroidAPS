@@ -224,7 +224,7 @@ class LoopPlugin @Inject constructor(
             val loopEnabled = constraintChecker.isLoopInvocationAllowed()
             if (!loopEnabled.value()) {
                 val message = """
-                    ${rh.gs(R.string.loopdisabled)}
+                    ${rh.gs(R.string.loop_disabled)}
                     ${loopEnabled.getReasons(aapsLogger)}
                     """.trimIndent()
                 aapsLogger.debug(LTag.APS, message)

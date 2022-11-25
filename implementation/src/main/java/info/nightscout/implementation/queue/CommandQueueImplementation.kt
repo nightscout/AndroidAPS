@@ -117,7 +117,7 @@ class CommandQueueImplementation @Inject constructor(
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
-                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
+                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failed_update_basal_profile), R.raw.boluserror)
                                        } else {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(

@@ -384,7 +384,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.baseBasalRate.text =
                 if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                     rh.gs(
-                        R.string.pump_basebasalrate,
+                        R.string.pump_base_basal_rate,
                         omnipodDashPumpPlugin.model()
                             .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )

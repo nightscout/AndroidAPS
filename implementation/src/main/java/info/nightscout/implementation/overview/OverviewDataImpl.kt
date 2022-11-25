@@ -166,16 +166,16 @@ class OverviewDataImpl @Inject constructor(
             var temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
             temporaryBasal?.let { "T:" + it.toStringShort() }
-                ?: rh.gs(R.string.pump_basebasalrate, profile.getBasal())
+                ?: rh.gs(R.string.pump_base_basal_rate, profile.getBasal())
         } ?: rh.gs(R.string.value_unavailable_short)
 
     override fun temporaryBasalDialogText(iobCobCalculator: IobCobCalculator): String =
         profileFunction.getProfile()?.let { profile ->
             iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
-                "${rh.gs(R.string.base_basal_rate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}" +
+                "${rh.gs(R.string.base_basal_rate_label)}: ${rh.gs(R.string.pump_base_basal_rate, profile.getBasal())}" +
                     "\n" + rh.gs(R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil)
             }
-                ?: "${rh.gs(R.string.base_basal_rate_label)}: ${rh.gs(R.string.pump_basebasalrate, profile.getBasal())}"
+                ?: "${rh.gs(R.string.base_basal_rate_label)}: ${rh.gs(R.string.pump_base_basal_rate, profile.getBasal())}"
         } ?: rh.gs(R.string.value_unavailable_short)
 
     @DrawableRes override fun temporaryBasalIcon(iobCobCalculator: IobCobCalculator): Int =
@@ -205,7 +205,7 @@ class OverviewDataImpl @Inject constructor(
     override fun extendedBolusText(iobCobCalculator: IobCobCalculator): String =
         iobCobCalculator.getExtendedBolus(dateUtil.now())?.let { extendedBolus ->
             if (!extendedBolus.isInProgress(dateUtil)) ""
-            else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(R.string.pump_basebasalrate, extendedBolus.rate)
+            else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(R.string.pump_base_basal_rate, extendedBolus.rate)
             else ""
         } ?: ""
 

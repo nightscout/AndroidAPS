@@ -320,7 +320,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
-                rh.gs(R.string.pump_basebasalrate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                rh.gs(R.string.pump_base_basal_rate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
             } else {
                 PLACEHOLDER
             }

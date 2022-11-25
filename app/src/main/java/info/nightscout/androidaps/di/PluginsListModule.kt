@@ -14,8 +14,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
-import info.nightscout.plugins.general.wear.WearPlugin
-import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.combov2.ComboV2Plugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
@@ -41,6 +39,7 @@ import info.nightscout.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
+import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.insulin.InsulinLyumjevPlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
@@ -63,6 +62,7 @@ import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
+import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin

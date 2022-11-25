@@ -42,10 +42,10 @@
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">BZ Ziel</string>
     <string name="initializing">Initialisierung...</string>
-    <string name="serialnumber">Seriennummer</string>
+    <string name="serial_number">Seriennummer</string>
     <string name="battery_label">Batterie</string>
-    <string name="lastconnection_label">Letzte Verbindung</string>
-    <string name="lastbolus_label">Letzter Bolus</string>
+    <string name="last_connection_label">Letzte Verbindung</string>
+    <string name="last_bolus_label">Letzter Bolus</string>
     <string name="dailyunits">Tägliche Einheiten</string>
     <string name="base_basal_rate_label">Basis-Basalrate</string>
     <string name="tempbasal_label">TBR</string>

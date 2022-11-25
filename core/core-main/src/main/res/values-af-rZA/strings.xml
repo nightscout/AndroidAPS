@@ -33,10 +33,10 @@
     <string name="target_label">Doelwit</string>
     <string name="basal_long_label">Basale waarde</string>
     <string name="initializing">Inisialiseer tans...</string>
-    <string name="serialnumber">Reeksnommer</string>
+    <string name="serial_number">Reeksnommer</string>
     <string name="battery_label">Battery</string>
-    <string name="lastconnection_label">Laaste verbinding</string>
-    <string name="lastbolus_label">Laaste bolus</string>
+    <string name="last_connection_label">Laaste verbinding</string>
+    <string name="last_bolus_label">Laaste bolus</string>
     <string name="dailyunits">Daaglikse eenhede</string>
     <string name="base_basal_rate_label">Basis basale tempo</string>
     <string name="tempbasal_label">Tydelike basaal</string>

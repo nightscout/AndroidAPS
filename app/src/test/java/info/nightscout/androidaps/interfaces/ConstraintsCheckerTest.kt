@@ -12,8 +12,6 @@ import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
@@ -31,12 +29,15 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.GlimpPlugin
+import info.nightscout.pump.combo.ComboPlugin
+import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -62,6 +63,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
+    @Mock lateinit var activityNames: ActivityNames
 
     private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
@@ -93,7 +95,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun prepare() {
         `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
-        `when`(rh.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
+        `when`(rh.gs(info.nightscout.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
         `when`(rh.gs(R.string.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
         `when`(rh.gs(R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
         `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
@@ -106,7 +108,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
         `when`(rh.gs(R.string.key_child)).thenReturn("child")
         `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
-        `when`(rh.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %.1f U because of %s")
+        `when`(rh.gs(info.nightscout.ui.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
@@ -132,7 +134,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, activityNames)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
         danaRSPlugin =
             DanaRSPlugin(

@@ -10,12 +10,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-val PumpSync.PumpState.TemporaryBasal.end: Long
-    get() = timestamp + duration
-
-val PumpSync.PumpState.TemporaryBasal.plannedRemainingMinutes: Long
-    get() = max(T.msecs(end - System.currentTimeMillis()).mins(), 0L)
-
 val PumpSync.PumpState.TemporaryBasal.plannedRemainingMinutesRoundedUp: Int
     get() = max(ceil((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 

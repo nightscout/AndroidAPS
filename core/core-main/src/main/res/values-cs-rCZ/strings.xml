@@ -45,10 +45,10 @@
     <string name="basal_long_label">Bazál</string>
     <string name="target_long_label">Cílová glykémie</string>
     <string name="initializing">Inicializuji ...</string>
-    <string name="serialnumber">Sériové číslo</string>
+    <string name="serial_number">Sériové číslo</string>
     <string name="battery_label">Baterie</string>
-    <string name="lastconnection_label">Poslední spojení</string>
-    <string name="lastbolus_label">Poslední bolus</string>
+    <string name="last_connection_label">Poslední spojení</string>
+    <string name="last_bolus_label">Poslední bolus</string>
     <string name="dailyunits">Jednotek za den</string>
     <string name="base_basal_rate_label">Základní hodnota bazálu</string>
     <string name="tempbasal_label">Dočasný bazál</string>

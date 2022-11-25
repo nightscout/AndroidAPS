@@ -45,10 +45,10 @@
     <string name="basal_long_label">Tasa basal</string>
     <string name="target_long_label">Objetivo de glucosa en sangre</string>
     <string name="initializing">Iniciando...</string>
-    <string name="serialnumber">Número de serie</string>
+    <string name="serial_number">Número de serie</string>
     <string name="battery_label">Batería</string>
-    <string name="lastconnection_label">Última conexión</string>
-    <string name="lastbolus_label">Último bolo</string>
+    <string name="last_connection_label">Última conexión</string>
+    <string name="last_bolus_label">Último bolo</string>
     <string name="dailyunits">Unidades diarias</string>
     <string name="base_basal_rate_label">Dosis Basal Base</string>
     <string name="tempbasal_label">Basal temporal</string>

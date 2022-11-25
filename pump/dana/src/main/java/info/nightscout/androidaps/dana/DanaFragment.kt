@@ -14,9 +14,9 @@ import info.nightscout.androidaps.dana.activities.DanaHistoryActivity
 import info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
 import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Dana
 import info.nightscout.interfaces.pump.Pump
@@ -222,7 +222,7 @@ class DanaFragment : DaggerFragment() {
 
         binding.dailyunits.text = rh.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
         warnColors.setColor(binding.dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
-        binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
+        binding.basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()

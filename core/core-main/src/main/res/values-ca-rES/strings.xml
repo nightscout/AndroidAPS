@@ -38,10 +38,10 @@
     <string name="target_label">Objectiu</string>
     <string name="basal_long_label">Ràtio de basal</string>
     <string name="initializing">Inicialitzant...</string>
-    <string name="serialnumber">Nr. de sèrie</string>
+    <string name="serial_number">Nr. de sèrie</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Última connexió</string>
-    <string name="lastbolus_label">Darrer bolus</string>
+    <string name="last_connection_label">Última connexió</string>
+    <string name="last_bolus_label">Darrer bolus</string>
     <string name="dailyunits">Unitats diàries</string>
     <string name="base_basal_rate_label">Ràtio de basal base</string>
     <string name="tempbasal_label">Basal temporal</string>

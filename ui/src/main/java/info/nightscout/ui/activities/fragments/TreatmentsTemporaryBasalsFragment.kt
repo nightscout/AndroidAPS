@@ -188,7 +188,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
             }
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempBasal.duration).mins())
-            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(R.string.pump_basebasalrate, tempBasal.rate)
+            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(R.string.pump_base_basal_rate, tempBasal.rate)
             else holder.binding.rate.text = rh.gs(R.string.format_percent, tempBasal.rate.toInt())
             val now = dateUtil.now()
             var iob = IobTotal(now)

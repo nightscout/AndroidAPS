@@ -214,17 +214,17 @@ class DiaconnG8Plugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
-            val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT)
+            val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            result.comment = rh.gs(R.string.pumpNotInitializedProfileNotSet)
+            result.comment = rh.gs(R.string.pump_not_initialized_profile_not_set)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (diaconnG8Service?.updateBasalsInPump(profile) != true) {
-            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            result.comment = rh.gs(R.string.failedupdatebasalprofile)
+            result.comment = rh.gs(R.string.failed_update_basal_profile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))

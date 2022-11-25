@@ -38,10 +38,10 @@
     <string name="target_label">목표:</string>
     <string name="basal_long_label">Basal양</string>
     <string name="initializing">초기화중 ...</string>
-    <string name="serialnumber">시리얼번호</string>
+    <string name="serial_number">시리얼번호</string>
     <string name="battery_label">배터리</string>
-    <string name="lastconnection_label">마지막 접속</string>
-    <string name="lastbolus_label">최근 Bolus:</string>
+    <string name="last_connection_label">마지막 접속</string>
+    <string name="last_bolus_label">최근 Bolus:</string>
     <string name="dailyunits">일 인슐린 총량</string>
     <string name="base_basal_rate_label">기본 Basal양</string>
     <string name="tempbasal_label">임시Basal</string>

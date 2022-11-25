@@ -144,17 +144,17 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         }
         if (!isInitialized()) {
             getAapsLogger().error("setNewBasalProfile not initialized");
-            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment(R.string.pumpNotInitializedProfileNotSet);
+            result.comment(R.string.pump_not_initialized_profile_not_set);
             return result;
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
-            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(R.string.failed_update_basal_profile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment(R.string.failedupdatebasalprofile);
+            result.comment(R.string.failed_update_basal_profile);
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
@@ -401,7 +401,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             if (pumpState.getTemporaryBasal() != null) {
                 extended.put("TempBasalAbsoluteRate", PumpStateExtensionKt.convertedToAbsolute(pumpState.getTemporaryBasal(), now, profile));
                 extended.put("TempBasalStart", dateUtil.dateAndTimeString(pumpState.getTemporaryBasal().getTimestamp()));
-                extended.put("TempBasalRemaining", PumpStateExtensionKt.getPlannedRemainingMinutes(pumpState.getTemporaryBasal()));
+                extended.put("TempBasalRemaining", pumpState.getTemporaryBasal().getPlannedRemainingMinutes());
             }
             if (pumpState.getExtendedBolus() != null) {
                 extended.put("ExtendedBolusAbsoluteRate", pumpState.getExtendedBolus().getRate());

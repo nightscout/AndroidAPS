@@ -15,7 +15,7 @@
     <string name="target_label">Cél</string>
     <string name="basal_long_label">Bázisütem</string>
     <string name="initializing">Inicializálás ...</string>
-    <string name="serialnumber">Sorozatszám</string>
+    <string name="serial_number">Sorozatszám</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>

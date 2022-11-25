@@ -45,10 +45,10 @@
     <string name="basal_long_label">Базальная скорость</string>
     <string name="target_long_label">Целевая ГК</string>
     <string name="initializing">инициализация...</string>
-    <string name="serialnumber">Серийный номер</string>
+    <string name="serial_number">Серийный номер</string>
     <string name="battery_label">батарея</string>
-    <string name="lastconnection_label">прошлое соединение</string>
-    <string name="lastbolus_label">предыдущий болюс</string>
+    <string name="last_connection_label">прошлое соединение</string>
+    <string name="last_bolus_label">предыдущий болюс</string>
     <string name="dailyunits">суточные единицы</string>
     <string name="base_basal_rate_label">базовая величина базала</string>
     <string name="tempbasal_label">врем базал</string>

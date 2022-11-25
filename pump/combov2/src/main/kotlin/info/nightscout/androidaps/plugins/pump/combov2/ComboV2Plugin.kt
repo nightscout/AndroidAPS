@@ -26,7 +26,6 @@ import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.pump.convertedToAbsolute
-import info.nightscout.core.pump.plannedRemainingMinutes
 import info.nightscout.core.pump.toStringFull
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
@@ -638,7 +637,7 @@ class ComboV2Plugin @Inject constructor (
 
             val notification = Notification(
                 Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
-                rh.gs(R.string.pumpNotInitializedProfileNotSet),
+                rh.gs(R.string.pump_not_initialized_profile_not_set),
                 Notification.URGENT
             )
             rxBus.send(EventNewNotification(notification))
@@ -646,7 +645,7 @@ class ComboV2Plugin @Inject constructor (
             return PumpEnactResult(injector).apply {
                 success = false
                 enacted = false
-                comment = rh.gs(R.string.pumpNotInitializedProfileNotSet)
+                comment = rh.gs(R.string.pump_not_initialized_profile_not_set)
             }
         }
 
@@ -699,7 +698,7 @@ class ComboV2Plugin @Inject constructor (
 
                 val notification = Notification(
                     Notification.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.failedupdatebasalprofile),
+                    rh.gs(R.string.failed_update_basal_profile),
                     Notification.URGENT
                 )
                 rxBus.send(EventNewNotification(notification))
@@ -707,7 +706,7 @@ class ComboV2Plugin @Inject constructor (
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.failedupdatebasalprofile)
+                    comment = rh.gs(R.string.failed_update_basal_profile)
                 }
             }
         }
@@ -865,7 +864,7 @@ class ComboV2Plugin @Inject constructor (
                     acquiredPump.deliverBolus(requestedBolusAmount, bolusReason)
                 }
 
-                reportFinishedBolus(rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
+                reportFinishedBolus(rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
 
                 // TODO: Check that an alert sound and error dialog
                 // are produced if an exception was thrown that

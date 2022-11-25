@@ -43,10 +43,10 @@
     <string name="basal_long_label">Taxa basal</string>
     <string name="target_long_label">Alvo de glicemia</string>
     <string name="initializing">Inicializando...</string>
-    <string name="serialnumber">Número de série</string>
+    <string name="serial_number">Número de série</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Última ligação</string>
-    <string name="lastbolus_label">Último Bolus</string>
+    <string name="last_connection_label">Última ligação</string>
+    <string name="last_bolus_label">Último Bolus</string>
     <string name="dailyunits">Unidades diárias</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
     <string name="tempbasal_label">Basal temporaria</string>

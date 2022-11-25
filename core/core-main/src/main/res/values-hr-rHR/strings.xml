@@ -43,10 +43,10 @@
     <string name="basal_long_label">Bazalna stopa</string>
     <string name="target_long_label">Ciljana razina glukoze u krvi</string>
     <string name="initializing">Pokretanje...</string>
-    <string name="serialnumber">Serijski broj</string>
+    <string name="serial_number">Serijski broj</string>
     <string name="battery_label">Baterija</string>
-    <string name="lastconnection_label">Zadnja uspostava veze</string>
-    <string name="lastbolus_label">Zadnji bolus</string>
+    <string name="last_connection_label">Zadnja uspostava veze</string>
+    <string name="last_bolus_label">Zadnji bolus</string>
     <string name="shortgram">g</string>
     <string name="pump_unreachable">Pumpa nedostupna</string>
     <string name="exit">Izlaz</string>

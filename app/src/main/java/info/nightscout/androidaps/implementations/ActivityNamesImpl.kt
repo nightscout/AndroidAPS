@@ -11,7 +11,10 @@ import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.services.AlarmSoundService
+import info.nightscout.core.events.EventNewNotification
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.SingleFragmentActivity
@@ -27,7 +30,9 @@ import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.WizardDialog
 import javax.inject.Inject
 
-class ActivityNamesImpl @Inject constructor() : ActivityNames {
+class ActivityNamesImpl @Inject constructor(
+    private val rxBus: RxBus
+) : ActivityNames {
 
     override val mainActivity: Class<*> = MainActivity::class.java
     override val tddStatsActivity: Class<*> = TDDStatsActivity::class.java
@@ -113,5 +118,21 @@ class ActivityNamesImpl @Inject constructor() : ActivityNames {
             it.setId(id)
             it.show(fragmentManager, "BolusProgress")
         }
+    }
+
+    override fun addNotification(id: Int, text: String, level: Int) {
+        rxBus.send(EventNewNotification(Notification(id, text, level)))
+    }
+
+    override fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int) {
+        rxBus.send(EventNewNotification(Notification(id, text, level, validMinutes)))
+    }
+
+    override fun addNotificationWithSound(id: Int, text: String, level: Int, soundId: Int) {
+        rxBus.send(EventNewNotification(Notification(id, text, level).also { it.soundId = soundId }))
+    }
+
+    override fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long) {
+        rxBus.send(EventNewNotification(Notification(id, System.currentTimeMillis(), text, level,validTo)))
     }
 }

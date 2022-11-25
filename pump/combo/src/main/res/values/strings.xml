@@ -72,4 +72,6 @@
     <string name="key_combo_error_display_error" translatable="false">ON_ERROR</string>
     <string name="key_combo_error_display_always" translatable="false">ALWAYS</string>
 
+    <string name="unsafeusage">unsafe usage</string>
+
 </resources>

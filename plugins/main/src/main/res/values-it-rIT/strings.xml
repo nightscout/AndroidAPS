@@ -141,7 +141,7 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
     <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
-    <string name="limitingiob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
+    <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
     <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
     <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>

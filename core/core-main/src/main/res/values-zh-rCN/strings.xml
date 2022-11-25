@@ -42,10 +42,10 @@
     <string name="basal_long_label">基础率</string>
     <string name="target_long_label">血糖目标</string>
     <string name="initializing">正在初始化</string>
-    <string name="serialnumber">序列号</string>
+    <string name="serial_number">序列号</string>
     <string name="battery_label">电池</string>
-    <string name="lastconnection_label">上次连接</string>
-    <string name="lastbolus_label">上次大剂量</string>
+    <string name="last_connection_label">上次连接</string>
+    <string name="last_bolus_label">上次大剂量</string>
     <string name="dailyunits">每日单位数</string>
     <string name="base_basal_rate_label">基础率</string>
     <string name="tempbasal_label">临时基础率</string>

@@ -38,10 +38,10 @@
     <string name="target_label">Целeва КЗ:</string>
     <string name="basal_long_label">Базал</string>
     <string name="initializing">Инициализация ...</string>
-    <string name="serialnumber">Сериен номер</string>
+    <string name="serial_number">Сериен номер</string>
     <string name="battery_label">Батерия</string>
-    <string name="lastconnection_label">Последна връзка</string>
-    <string name="lastbolus_label">Последен болус:</string>
+    <string name="last_connection_label">Последна връзка</string>
+    <string name="last_bolus_label">Последен болус:</string>
     <string name="dailyunits">Инсулин за деня</string>
     <string name="base_basal_rate_label">Базова базална стойност</string>
     <string name="tempbasal_label">Временен базал</string>

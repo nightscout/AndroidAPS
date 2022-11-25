@@ -776,7 +776,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
                 extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
-                extended.put("TempBasalRemaining", getPlannedRemainingMinutes(tb));
+                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
             PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
             if (eb != null) {

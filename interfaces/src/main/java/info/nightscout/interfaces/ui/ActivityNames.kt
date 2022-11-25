@@ -53,4 +53,9 @@ interface ActivityNames {
     }
 
     fun runCareDialog(fragmentManager: FragmentManager, options: EventType, @StringRes event: Int)
+
+    fun addNotification(id: Int, text: String, level: Int)
+    fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int)
+    fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int)
+    fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)
 }

@@ -38,10 +38,10 @@
     <string name="target_label">Țintă</string>
     <string name="basal_long_label">Rată bazală</string>
     <string name="initializing">Inițializare...</string>
-    <string name="serialnumber">Număr serial</string>
+    <string name="serial_number">Număr serial</string>
     <string name="battery_label">Baterie</string>
-    <string name="lastconnection_label">Ultima conexiune</string>
-    <string name="lastbolus_label">Ultimul bolus</string>
+    <string name="last_connection_label">Ultima conexiune</string>
+    <string name="last_bolus_label">Ultimul bolus</string>
     <string name="dailyunits">Unități zilnic</string>
     <string name="base_basal_rate_label">Rată bazală normală</string>
     <string name="tempbasal_label">Bazală temporară</string>

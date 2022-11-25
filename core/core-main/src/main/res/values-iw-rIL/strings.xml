@@ -43,10 +43,10 @@
     <string name="basal_long_label">מינון בזאלי</string>
     <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
-    <string name="serialnumber">מספר סידורי</string>
+    <string name="serial_number">מספר סידורי</string>
     <string name="battery_label">סוללה</string>
-    <string name="lastconnection_label">התחברות אחרונה</string>
-    <string name="lastbolus_label">בולוס אחרון</string>
+    <string name="last_connection_label">התחברות אחרונה</string>
+    <string name="last_bolus_label">בולוס אחרון</string>
     <string name="dailyunits">יחידות יומיות</string>
     <string name="base_basal_rate_label">בזאלי בסיסי</string>
     <string name="tempbasal_label">בזאלי זמני</string>

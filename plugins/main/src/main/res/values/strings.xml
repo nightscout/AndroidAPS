@@ -273,7 +273,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
     <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
-    <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
 
     <string name="safety" translatable="false">Safety</string>
     <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>

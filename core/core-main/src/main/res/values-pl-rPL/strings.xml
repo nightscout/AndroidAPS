@@ -38,10 +38,10 @@
     <string name="target_label">Cel</string>
     <string name="basal_long_label">Dawka bazowa</string>
     <string name="initializing">Inicjuje ...</string>
-    <string name="serialnumber">Numer seryjny</string>
+    <string name="serial_number">Numer seryjny</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Ostatnie połączenie</string>
-    <string name="lastbolus_label">Ostatni bolus</string>
+    <string name="last_connection_label">Ostatnie połączenie</string>
+    <string name="last_bolus_label">Ostatni bolus</string>
     <string name="dailyunits">Jednostki dzienne</string>
     <string name="base_basal_rate_label">Podstawowa dawka bazowa</string>
     <string name="tempbasal_label">Baza tymczasowa</string>

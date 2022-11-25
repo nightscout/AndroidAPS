@@ -27,10 +27,10 @@
     <string name="target_label">Cuspóir</string>
     <string name="basal_long_label">Bunaidh ráta</string>
     <string name="initializing">Tosaithe ...</string>
-    <string name="serialnumber">Sraithuimhir</string>
+    <string name="serial_number">Sraithuimhir</string>
     <string name="battery_label">Ceallraí</string>
-    <string name="lastconnection_label">Nasc deiridh</string>
-    <string name="lastbolus_label">Bólas deiridh</string>
+    <string name="last_connection_label">Nasc deiridh</string>
+    <string name="last_bolus_label">Bólas deiridh</string>
     <string name="dailyunits">Aonaid lá</string>
     <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
     <string name="reservoir_label">Taiscumar</string>

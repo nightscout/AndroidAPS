@@ -43,10 +43,10 @@
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">Blodsukker mål</string>
     <string name="initializing">Initialiserer ...</string>
-    <string name="serialnumber">Serienummer</string>
+    <string name="serial_number">Serienummer</string>
     <string name="battery_label">Batteri</string>
-    <string name="lastconnection_label">Seneste forbindelse</string>
-    <string name="lastbolus_label">Seneste Bolus</string>
+    <string name="last_connection_label">Seneste forbindelse</string>
+    <string name="last_bolus_label">Seneste Bolus</string>
     <string name="dailyunits">Daglige enheder</string>
     <string name="base_basal_rate_label">Standard basal rate</string>
     <string name="tempbasal_label">Midlertidig basal</string>

@@ -13,8 +13,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.combov2.R
 import info.nightscout.androidaps.combov2.databinding.Combov2FragmentBinding
 import info.nightscout.comboctl.base.NullDisplayFrame
-import info.nightscout.comboctl.main.Pump as ComboCtlPump
-import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
 import info.nightscout.interfaces.queue.CommandQueue
@@ -23,9 +21,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.math.max
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.math.max
+import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
+import info.nightscout.comboctl.main.Pump as ComboCtlPump
 
 class ComboV2Fragment : DaggerFragment() {
     @Inject lateinit var combov2Plugin: ComboV2Plugin
@@ -181,7 +181,7 @@ class ComboV2Fragment : DaggerFragment() {
                 combov2Plugin.baseBasalRateUIFlow
                     .onEach { baseBasalRate ->
                         binding.combov2BaseBasalRate.text = if (baseBasalRate != null)
-                            rh.gs(R.string.pump_basebasalrate, baseBasalRate)
+                            rh.gs(R.string.pump_base_basal_rate, baseBasalRate)
                         else
                             ""
                     }

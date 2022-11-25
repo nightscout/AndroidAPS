@@ -198,7 +198,7 @@ open class VirtualPumpPlugin @Inject constructor(
                     .comment(rh.gs(R.string.stop))
         }
         SystemClock.sleep(200)
-        bolusingEvent.status = rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
+        bolusingEvent.status = rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin)
         bolusingEvent.percent = 100
         rxBus.send(bolusingEvent)
         SystemClock.sleep(1000)

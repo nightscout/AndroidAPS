@@ -34,10 +34,10 @@
     <string name="target_label">Στόχος</string>
     <string name="basal_long_label">Βασικός Ρυθμός</string>
     <string name="initializing">Παραμετροποίηση...</string>
-    <string name="serialnumber">Serial number</string>
+    <string name="serial_number">Serial number</string>
     <string name="battery_label">Μπαταρία</string>
-    <string name="lastconnection_label">Τελευταία σύνδεση</string>
-    <string name="lastbolus_label">Τελευταίο Bolus:</string>
+    <string name="last_connection_label">Τελευταία σύνδεση</string>
+    <string name="last_bolus_label">Τελευταίο Bolus:</string>
     <string name="dailyunits">Μονάδες ανά ημέρα </string>
     <string name="base_basal_rate_label">Βάση Βασικού Ρυθμού</string>
     <string name="tempbasal_label">Προσωρινός Ρυθμός</string>
