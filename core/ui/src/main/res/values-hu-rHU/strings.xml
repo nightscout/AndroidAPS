@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <!--    PumpFragments-->
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="yes">Igen</string>
@@ -9,4 +10,5 @@
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
 </resources>
