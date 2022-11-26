@@ -4,6 +4,7 @@
     <string name="combov2_warning_10">Bluetooth hatası; yeniden eşleştirin</string>
     <string name="combov2_error_5">Yedek pompa çalışma sonu</string>
     <string name="combov2_error_9">Ödünç pompa çalışma sonu</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="bluetooth_address">Bluetooth adresi</string>
     <string name="combov2_pairing_in_progress">Pompa eşleştirme devam ediyor</string>
     <string name="combov2_pairing_start_steps">Combo pompanızla eşleştirme adımları:\n\n
@@ -33,4 +34,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_pairing_pin_failure">PIN çalışmadı. Bir yazım hatası olup olmadığını kontrol edin. Eğer bu
          devam ederse, eşleştirmeyi iptal edin ve yeniden deneyin.</string>
     <string name="combov2_discovery_duration">Süreyi girin (saniye olarak)</string>
+    <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %1$d%%\'de bir sınıra ulaştı</string>
+    <string name="combov2_pair_with_pump_summary">AndroidAPS ile şu anda eşleştirilmemiş bir Accu-Chek Combo pompasını eşleştirin</string>
 </resources>
