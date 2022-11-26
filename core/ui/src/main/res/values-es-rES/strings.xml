@@ -18,6 +18,10 @@
     <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
+    <string name="event_type">Tipo de evento</string>
+    <string name="reload">Recargar</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
     <!--    Pumps -->
     <string name="battery_label">Batería</string>
     <string name="reservoir_label">Reservorio</string>
@@ -29,7 +33,23 @@
     <string name="serial_number">Número de serie</string>
     <string name="disconnected">Desconectado</string>
     <string name="connecting">Conectando</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Presiona conectar con la bomba</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unidades diarias</string>
+    <string name="pump_icon">Icono de la bomba</string>
+    <string name="view_profile">Ver perfil</string>
+    <string name="pump_history">Historial de la bomba</string>
+    <string name="stats">Estadísticas</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio del controlador de la bomba</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolo Correcto</string>
+    <string name="temp_basal_delivery_error">Error en la entrega de la basal temporal</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
+    <string name="pumplimit">límite de la bomba</string>
+    <string name="limitingpercentrate">Limitando el porcentaje máximo de la dosis a %1$d%% debido a %2$s</string>
+    <string name="itmustbepositivevalue">tiene que ser un valor positivo</string>
+    <string name="limitingbolus">Limitando el bolo a %1$.1f U debido a %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmación</string>
