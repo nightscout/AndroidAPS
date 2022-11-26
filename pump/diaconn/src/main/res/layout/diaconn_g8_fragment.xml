@@ -1,9 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="5dp"
-    tools:context="info.nightscout.androidaps.diaconn.DiaconnG8Fragment">
+    tools:context=".DiaconnG8Fragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -676,8 +677,8 @@
                 android:layout_width="150dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:drawableTop="@drawable/ic_diaconn_g8"
-                android:paddingTop="10dp" />
+                android:paddingTop="10dp"
+                app:drawableTopCompat="@drawable/ic_diaconn_g8" />
 
         </LinearLayout>
 
@@ -721,7 +722,7 @@
             android:drawableTop="@drawable/ic_user_options"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/diagonn_g8_useroptions" />
+            android:text="@string/diaconn_g8_user_options" />
 
     </LinearLayout>
 

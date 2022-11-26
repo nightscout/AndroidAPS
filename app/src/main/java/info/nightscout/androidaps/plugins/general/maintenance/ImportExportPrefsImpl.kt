@@ -23,8 +23,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.diaconn.events.EventDiaconnG8PumpLogReset
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
@@ -37,6 +35,7 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefFileNotFoundError
@@ -50,6 +49,7 @@ import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.pump.diaconn.events.EventDiaconnG8PumpLogReset
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.logging.AAPSLogger

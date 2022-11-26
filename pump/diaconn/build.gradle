@@ -14,7 +14,7 @@ apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 android {
 
-    namespace 'info.nightscout.androidaps.diaconn'
+    namespace 'info.nightscout.pump.diaconn'
     defaultConfig {
         kapt {
             arguments {
@@ -30,12 +30,11 @@ dependencies {
     implementation project(':core:libraries')
     implementation project(':core:interfaces')
     implementation project(':core:utils')
-    implementation project(':core:core-main')
+    implementation project(':core:ui')
 
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
     api "androidx.room:room-rxjava3:$room_version"
-    implementation project(path: ':core:ui')
     kapt "androidx.room:room-compiler:$room_version"
 
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"

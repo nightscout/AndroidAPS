@@ -64,7 +64,7 @@ class BLEScanActivity : DaggerAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             bluetoothAdapter?.safeEnable()
             startScan()
         } else {
@@ -74,7 +74,9 @@ class BLEScanActivity : DaggerAppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        stopScan()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+            stopScan()
+        }
     }
 
     private fun startScan() =

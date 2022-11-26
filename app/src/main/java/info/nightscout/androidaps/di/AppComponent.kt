@@ -6,7 +6,6 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.danar.di.DanaRModule
-import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
 import info.nightscout.androidaps.plugin.general.openhumans.di.OpenHumansModule
@@ -29,6 +28,7 @@ import info.nightscout.pump.common.di.PumpCommonModule
 import info.nightscout.pump.dana.di.DanaHistoryModule
 import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
+import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule

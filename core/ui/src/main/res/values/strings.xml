@@ -22,6 +22,7 @@
     <string name="reload">Reload</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="save">Save</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>
@@ -51,6 +52,7 @@
     <string name="reading_pump_history">Reading pump history</string>
     <string name="password_cleared">Password cleared!</string>
     <string name="pairing">Pairing</string>
+    <string name="initializing">Initializing ...</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

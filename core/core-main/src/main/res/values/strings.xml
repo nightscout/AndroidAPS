@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="save">Save</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="androidaps_start">AAPS started</string>
@@ -29,7 +28,6 @@
     <string name="isf_long_label">Insulin Sensitivity Factor</string>
     <string name="basal_long_label">Basal rate</string>
     <string name="target_long_label">Blood Glucose Target</string>
-    <string name="initializing">Initializing ...</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Advanced Settings</string>
