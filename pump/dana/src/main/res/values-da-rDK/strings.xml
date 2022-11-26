@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Parring</string>
-    <string name="danars_nodeviceavailable">Ingen enhed fundet indtil videre</string>
     <string name="danars_pairingok">Parring OK</string>
     <string name="danars_pairingtimedout">Parring fik timeout</string>
     <string name="danars_waitingforpairing">Venter på parring på pumpen</string>
