@@ -20,6 +20,5 @@
     <string name="password_set">Slaptažodis nustatytas!</string>
     <string name="password_not_set">Slaptažodis nenustatytas</string>
     <string name="password_not_changed">Slaptažodis nepakeistas</string>
-    <string name="password_cleared">Slaptažodis išvalytas!</string>
     <string name="password_hint">Įveskite slaptažodį čia</string>
 </resources>
