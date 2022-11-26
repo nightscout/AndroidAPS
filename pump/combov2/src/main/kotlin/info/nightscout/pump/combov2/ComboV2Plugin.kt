@@ -1925,12 +1925,18 @@ class ComboV2Plugin @Inject constructor (
 
         aapsLogger.info(LTag.PUMP, "Setting Combo driver state:  old: $oldState  new: $newState")
 
-        // TODO: Is it OK to send CONNECTED twice? It can happen when changing from Ready to Suspended.
         when (newState) {
             DriverState.Disconnected -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             DriverState.Connecting   -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
-            DriverState.Ready,
-            DriverState.Suspended    -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            // Filter Ready<->Suspended state changes to avoid sending CONNECTED unnecessarily often.
+            DriverState.Ready        -> {
+                if (oldState != DriverState.Suspended)
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            }
+            DriverState.Suspended    -> {
+                if (oldState != DriverState.Ready)
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            }
             else                     -> Unit
         }
     }
