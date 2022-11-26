@@ -45,6 +45,12 @@
     <string name="device_changed" comment="26 characters max for translation">Device changed</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="temp_basal_delivery_error">Tempbasal delivery error</string>
+    <string name="not_set_short">Not set</string>
+    <string name="pump_busy">Pump is busy</string>
+    <string name="connection_error">Pump connection error</string>
+    <string name="reading_pump_history">Reading pump history</string>
+    <string name="password_cleared">Password cleared!</string>
+    <string name="pairing">Pairing</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
@@ -84,5 +90,12 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">User request</string>
     <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
+
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
+    <string name="ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="location_not_found_title">Location Is Not Enabled</string>
+    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
 
 </resources>
