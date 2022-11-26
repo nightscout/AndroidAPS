@@ -74,4 +74,5 @@
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
+    <!--    BlePreCheck-->
 </resources>
