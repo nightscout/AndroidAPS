@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Associazione</string>
-    <string name="danars_nodeviceavailable">Nessun dispositivo trovato finora</string>
     <string name="danars_pairingok">Associazione OK</string>
     <string name="danars_pairingtimedout">Time out associazione</string>
     <string name="danars_waitingforpairing">In attesa di associare il micro</string>
