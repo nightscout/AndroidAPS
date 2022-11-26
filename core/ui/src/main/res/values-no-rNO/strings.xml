@@ -31,4 +31,5 @@
     <string name="event_time_label">Tidspunkt for hendelse</string>
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <!--    BlePreCheck-->
 </resources>
