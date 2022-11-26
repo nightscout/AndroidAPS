@@ -122,11 +122,15 @@
     <string name="motol_default_profile">Perfil predeterminado</string>
     <string name="current_profile">Perfil actual</string>
     <string name="available_profile">Perfil disponible</string>
+    <string name="format_with_tdd">Edad: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Edad: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Edad: %1$d Peso: %2$.0f kg</string>
     <string name="dpv_default_profile">Perfil DPV por defecto</string>
     <string name="invalid_pct">Entrada % inválida</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Tasa basal</string>
     <!--    BolusProgressDialog-->
+    <string name="stop_pressed">DETENER PRESIONADO</string>
     <!--    PrefImport-->
     <string name="check_preferences_details_btn">Explicar problemas de importación…</string>
     <string name="check_preferences_details_title">Importar detalles del problema</string>
