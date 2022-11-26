@@ -16,7 +16,7 @@
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
 
     <string name="danars_pairing">Pairing</string>
-    <string name="danars_nodeviceavailable">No device found so far</string>
+    <string name="danars_no_device_available">No device found so far</string>
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Pairing timed out</string>
     <string name="danars_waitingforpairing">Waiting for pairing on pump</string>

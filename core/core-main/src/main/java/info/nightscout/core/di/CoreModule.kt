@@ -11,7 +11,6 @@ import dagger.Provides
         CoreReceiversModule::class,
         CoreFragmentsModule::class,
         CoreDataClassesModule::class,
-        ValidatorsModule::class,
         PreferencesModule::class
     ]
 )

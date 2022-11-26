@@ -6,7 +6,6 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.danar.di.DanaRModule
-import info.nightscout.androidaps.danars.di.DanaRSModule
 import info.nightscout.androidaps.diaconn.di.DiaconnG8Module
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
 import info.nightscout.configuration.di.ConfigurationModule
 import info.nightscout.core.di.CoreModule
+import info.nightscout.core.validators.di.ValidatorsModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.aps.di.ApsModule
@@ -28,6 +28,7 @@ import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
 import info.nightscout.pump.dana.di.DanaHistoryModule
 import info.nightscout.pump.dana.di.DanaModule
+import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
@@ -62,6 +63,7 @@ import javax.inject.Singleton
         SharedModule::class,
         SharedImplModule::class,
         UiModule::class,
+        ValidatorsModule::class,
 
         // pumps
         ComboModule::class,

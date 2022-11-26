@@ -1140,7 +1140,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * Reads the pump's history and updates the DB accordingly.
      */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
-        CommandResult historyResult = runCommand(getRh().gs(R.string.combo_activity_reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
+        CommandResult historyResult = runCommand(getRh().gs(R.string.reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         PumpHistory history = historyResult.history;
         if (!historyResult.success || history == null) {
             return false;
@@ -1226,7 +1226,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
         // fetch new records
         long lastKnownPumpRecordTimestamp = recentBoluses.isEmpty() ? 0 : recentBoluses.get(0).timestamp;
-        CommandResult historyResult = runCommand(getRh().gs(R.string.combo_activity_reading_pump_history), 3, () ->
+        CommandResult historyResult = runCommand(getRh().gs(R.string.reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(lastKnownPumpRecordTimestamp)));
         if (!historyResult.success) {
             pumpHistoryChanged = true;

@@ -2,31 +2,32 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
     <application>
         <activity
-            android:name="info.nightscout.androidaps.danars.activities.BLEScanActivity"
-            android:exported="false">
+            android:name=".activities.BLEScanActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+                <action android:name="info.nightscout.pump.danars.activities.BLEScanActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="info.nightscout.androidaps.danars.activities.PairingHelperActivity"
+            android:name=".activities.PairingHelperActivity"
             android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask" />
         <activity
-            android:name="info.nightscout.androidaps.danars.activities.EnterPinActivity"
+            android:name=".activities.EnterPinActivity"
             android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask" />
 
         <service
-            android:name="info.nightscout.androidaps.danars.services.DanaRSService"
+            android:name=".services.DanaRSService"
             android:enabled="true"
             android:exported="false" />
     </application>

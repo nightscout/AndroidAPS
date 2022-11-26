@@ -314,7 +314,7 @@ class DataHandlerMobile @Inject constructor(
             message = "OLD DATA - "
             //if pump is not busy: try to fetch data
             if (activePump.isBusy()) {
-                message += rh.gs(R.string.pumpbusy)
+                message += rh.gs(R.string.pump_busy)
             } else {
                 message += "trying to fetch data from pump."
                 commandQueue.loadTDDs(object : Callback() {

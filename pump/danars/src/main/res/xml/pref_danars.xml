@@ -12,10 +12,10 @@
             android:key="@string/key_danars_name"
             android:summary=""
             android:title="@string/selectedpump">
-            <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+            <intent android:action="info.nightscout.pump.danars.activities.BLEScanActivity" />
         </Preference>
 
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+        <info.nightscout.core.validators.ValidatingEditTextPreference
             android:inputType="numberPassword"
             android:digits="0123456789ABCDEF"
             android:key="@string/key_danars_password"

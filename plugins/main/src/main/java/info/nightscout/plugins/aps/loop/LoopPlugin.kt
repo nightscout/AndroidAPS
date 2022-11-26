@@ -256,8 +256,8 @@ class LoopPlugin @Inject constructor(
             }
 
             if (!isEmptyQueue()) {
-                aapsLogger.debug(LTag.APS, rh.gs(R.string.pumpbusy))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.pumpbusy)))
+                aapsLogger.debug(LTag.APS, rh.gs(R.string.pump_busy))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.pump_busy)))
                 return
             }
 

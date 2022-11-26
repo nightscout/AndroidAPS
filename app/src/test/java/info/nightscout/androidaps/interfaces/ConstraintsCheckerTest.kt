@@ -6,7 +6,6 @@ import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
@@ -78,7 +77,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var objectivesPlugin: ObjectivesPlugin
     private lateinit var comboPlugin: ComboPlugin
     private lateinit var danaRPlugin: DanaRPlugin
-    private lateinit var danaRSPlugin: DanaRSPlugin
+    private lateinit var danaRSPlugin: info.nightscout.pump.danars.DanaRSPlugin
     private lateinit var insightPlugin: LocalInsightPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
@@ -142,7 +141,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, activityNames)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync, activityNames)
         danaRSPlugin =
-            DanaRSPlugin(
+            info.nightscout.pump.danars.DanaRSPlugin(
                 injector,
                 aapsLogger,
                 aapsSchedulers,
@@ -158,11 +157,12 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 detailedBolusInfoStorage,
                 temporaryBasalStorage,
                 fabricPrivacy,
-                dateUtil
+                dateUtil,
+                activityNames
             )
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync)
         openAPSSMBPlugin =
-            info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin(
+            OpenAPSSMBPlugin(
                 injector,
                 aapsLogger,
                 rxBus,
@@ -180,7 +180,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 glucoseStatusProvider
             )
         openAPSSMBDynamicISFPlugin =
-            info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin(
+            OpenAPSSMBDynamicISFPlugin(
                 injector,
                 aapsLogger,
                 rxBus,
@@ -199,7 +199,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 config
             )
         openAPSAMAPlugin =
-            info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin(
+            OpenAPSAMAPlugin(
                 injector,
                 aapsLogger,
                 rxBus,

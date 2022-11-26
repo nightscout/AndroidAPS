@@ -2,7 +2,6 @@
 <resources>
     <!--    General-->
     <string name="save">Save</string>
-    <string name="not_set_short">Not set</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="androidaps_start">AAPS started</string>
@@ -10,8 +9,6 @@
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
-    <string name="pumpbusy">Pump is busy</string>
-    <string name="connectionerror">Pump connection error</string>
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
     <string name="mute">Mute</string>
@@ -39,7 +36,6 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
-    <string name="pairing">Pairing</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="extended_bolus">Extended bolus</string>
     <string name="pump_time_updated">Pump time updated</string>
@@ -127,13 +123,6 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
 
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
-    <string name="ble_not_enabled">Bluetooth not enabled.</string>
-    <string name="location_not_found_title">Location Is Not Enabled</string>
-    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
-
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
     <string name="wrongpin">Wrong PIN</string>
@@ -211,7 +200,6 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
-    <string name="reading_pump_history">Reading pump history</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
