@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Appairage</string>
-    <string name="danars_nodeviceavailable">Aucun appareil trouvé pour l\'instant</string>
     <string name="danars_pairingok">Appairage OK</string>
     <string name="danars_pairingtimedout">Délai d\'appairage expiré</string>
     <string name="danars_waitingforpairing">Attente appairage pompe</string>
