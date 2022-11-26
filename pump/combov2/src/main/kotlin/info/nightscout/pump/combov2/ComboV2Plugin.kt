@@ -1135,13 +1135,7 @@ class ComboV2Plugin @Inject constructor (
                             "Cannot include base basal rate in JSON status " +
                             "since no basal profile is currently active"
                         )
-                    try {
-                        // TODO: What about the profileName argument?
-                        // Is it obsolete?
-                        put("ActiveProfile", profileFunction.getProfileName())
-                    } catch (e: Exception) {
-                        aapsLogger.error("Unhandled exception", e)
-                    }
+                    put("ActiveProfile", profileName)
                     when (val alert = lastComboAlert) {
                         is AlertScreenContent.Warning ->
                             put("WarningCode", alert.code)
