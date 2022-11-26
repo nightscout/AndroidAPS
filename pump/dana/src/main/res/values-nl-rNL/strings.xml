@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Aan het koppelen</string>
-    <string name="danars_nodeviceavailable">Nog geen apparaat gevonden</string>
     <string name="danars_pairingok">Koppeling geslaagd</string>
     <string name="danars_pairingtimedout">Koppeling verlopen</string>
     <string name="danars_waitingforpairing">Wachten op koppelen van de pomp</string>
