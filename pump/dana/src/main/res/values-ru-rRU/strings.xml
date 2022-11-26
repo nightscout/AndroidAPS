@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Сопряжение</string>
-    <string name="danars_nodeviceavailable">Устройства пока не найдены</string>
     <string name="danars_pairingok">Соединение OK</string>
     <string name="danars_pairingtimedout">Истекло время ожидания соединения</string>
     <string name="danars_waitingforpairing">Ожидание соединения на помпе</string>
