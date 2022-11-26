@@ -59,6 +59,7 @@ import javax.inject.Singleton
         ImplementationModule.Bindings::class,
         OpenHumansModule::class,
         PluginsModule::class,
+        PluginsModule.Bindings::class,
         RxModule::class,
         SharedModule::class,
         SharedImplModule::class,

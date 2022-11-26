@@ -1,6 +1,11 @@
 package info.nightscout.plugins.di
 
+import dagger.Binds
 import dagger.Module
+import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
+import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatusImpl
+import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
 
 @Module(
     includes = [
@@ -21,4 +26,12 @@ import dagger.Module
 )
 
 @Suppress("unused")
-abstract class PluginsModule
+abstract class PluginsModule {
+
+    @Module
+    interface Bindings {
+
+        @Binds fun bindProcessedDeviceStatusData(processedDeviceStatusDataImpl: ProcessedDeviceStatusDataImpl): ProcessedDeviceStatusData
+        @Binds fun bindNSSettingsStatus(nsSettingsStatusImpl: NSSettingsStatusImpl): NSSettingsStatus
+    }
+}

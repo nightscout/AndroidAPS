@@ -53,7 +53,7 @@ import info.nightscout.plugins.source.IntelligoPlugin
 import info.nightscout.plugins.source.PoctechPlugin
 import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.pump.combo.ComboPlugin

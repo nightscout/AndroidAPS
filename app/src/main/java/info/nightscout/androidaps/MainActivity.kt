@@ -58,7 +58,7 @@ import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventInitializationChanged

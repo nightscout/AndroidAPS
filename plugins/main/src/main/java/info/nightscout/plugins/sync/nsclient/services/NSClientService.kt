@@ -42,7 +42,7 @@ import info.nightscout.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
-import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclient.workers.NSClientAddAckWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientMbgWorker

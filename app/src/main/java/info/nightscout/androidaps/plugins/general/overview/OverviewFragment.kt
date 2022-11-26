@@ -78,8 +78,8 @@ import info.nightscout.plugins.general.overview.notifications.events.EventUpdate
 import info.nightscout.plugins.skins.SkinProvider
 import info.nightscout.plugins.source.DexcomPlugin
 import info.nightscout.plugins.source.XdripPlugin
-import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
-import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusData
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
+import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
