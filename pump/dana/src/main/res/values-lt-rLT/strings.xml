@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Sujungiama</string>
-    <string name="danars_nodeviceavailable">Nerasta jokio prietaiso</string>
     <string name="danars_pairingok">Sujungta</string>
     <string name="danars_pairingtimedout">Sujungimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
