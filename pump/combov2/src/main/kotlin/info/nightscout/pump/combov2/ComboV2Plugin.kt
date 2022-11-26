@@ -155,6 +155,12 @@ class ComboV2Plugin @Inject constructor (
     // state (in other words, while isBusy() was returning true).
     private var disconnectRequestPending = false
 
+    // Set to true in when unpair() starts and back to false in the
+    // pumpManager onPumpUnpaired callback. This fixes a race condition
+    // that can happen if the user unpairs the pump while AndroidAPS
+    // is calling connect().
+    private var unpairing = false
+
     // The current driver state. We use a StateFlow here to
     // allow other components to react to state changes.
     private val _driverStateFlow = MutableStateFlow<DriverState>(DriverState.NotInitialized)
@@ -239,6 +245,7 @@ class ComboV2Plugin @Inject constructor (
         pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
         pumpManager!!.setup {
             _pairedStateUIFlow.value = false
+            unpairing = false
         }
 
         // UI flows that must have defined values right
@@ -267,6 +274,11 @@ class ComboV2Plugin @Inject constructor (
         pumpManager = null
         bluetoothInterface?.teardown()
         bluetoothInterface = null
+
+        // Set this flag to false here in case an ongoing pairing attempt
+        // is somehow aborted inside the interface without the onPumpUnpaired
+        // callback being invoked.
+        unpairing = false
 
         setDriverState(DriverState.NotInitialized)
 
@@ -365,6 +377,11 @@ class ComboV2Plugin @Inject constructor (
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Connecting to Combo; reason: $reason")
+
+        if (unpairing) {
+            aapsLogger.debug(LTag.PUMP, "Aborting connect attempt since we are currently unpairing")
+            return
+        }
 
         when (driverStateFlow.value) {
             DriverState.Connecting,
@@ -1405,7 +1422,12 @@ class ComboV2Plugin @Inject constructor (
     }
 
     fun unpair() {
+        if (unpairing)
+            return
+
         val bluetoothAddress = getBluetoothAddress() ?: return
+
+        unpairing = true
 
         disconnectInternal(forceDisconnect = true)
 
@@ -1436,6 +1458,9 @@ class ComboV2Plugin @Inject constructor (
         _baseBasalRateUIFlow.value = null
         _serialNumberUIFlow.value = ""
         _bluetoothAddressUIFlow.value = ""
+
+        // The unpairing variable is set to false in
+        // the PumpManager onPumpUnpaired callback.
     }
 
 
