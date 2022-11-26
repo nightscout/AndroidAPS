@@ -13,7 +13,6 @@
     <string name="combo_pump_action_refreshing">Frissítés</string>
     <string name="combo_pump_unsupported_operation">A kért műveletet nem támogatja a pumpa</string>
     <string name="combo_pump_connected_now">Most</string>
-    <string name="combo_activity_reading_pump_history">Pumpa előzmények lekérése</string>
     <string name="combo_activity_setting_basal_profile">Bázisprofil beállítása</string>
     <string name="combo_pump_cartridge_low_warrning">Ürülő tartály</string>
     <string name="combo_pump_battery_low_warrning">Pumpa eleme merülőben</string>
