@@ -21,7 +21,7 @@
     <string name="combov2_error_10">Reservoir error</string>
     <string name="combov2_error_11">Infusion set not primed</string>
     <string name="combov2_extended_bolus_not_supported">Extended bolus is not supported</string>
-    <string name="combov2_title">Accu-Check Combo</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Pair with pump</string>
     <string name="combov2_unpair_pump_title">Unpair pump</string>
     <string name="combov2_driver_state_label">Driver state</string>
