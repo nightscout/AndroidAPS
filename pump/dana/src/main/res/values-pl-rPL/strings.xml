@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Parowanie</string>
-    <string name="danars_nodeviceavailable">Urządzenie nie zostało znalezione do tej pory</string>
     <string name="danars_pairingok">Parowanie OK</string>
     <string name="danars_pairingtimedout">Przekroczono limit czasu parowania</string>
     <string name="danars_waitingforpairing">Oczekiwanie na pompę na sparowanie</string>
