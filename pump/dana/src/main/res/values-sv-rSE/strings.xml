@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Parkoppling</string>
-    <string name="danars_nodeviceavailable">Ingen enhet funnen ännu</string>
     <string name="danars_pairingok">Parkopplingen klar</string>
     <string name="danars_pairingtimedout">Parkopplingen tog för lång tid</string>
     <string name="danars_waitingforpairing">Väntar på parkoppling med pump</string>
