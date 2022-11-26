@@ -20,6 +20,5 @@
     <string name="password_set">Password impostata!</string>
     <string name="password_not_set">Password non impostata</string>
     <string name="password_not_changed">Password non modificata</string>
-    <string name="password_cleared">Password cancellata!</string>
     <string name="password_hint">Inserisci qui la password</string>
 </resources>
