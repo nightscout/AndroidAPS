@@ -33,6 +33,12 @@
 2. Comprobar si existe un dispositivo como emparejado; Si es así, vaya a la pantalla de bomba \"Eliminar dispositivo\" para eliminar/desemparejar ese dispositivo\n
 3. Prosiga a la pantalla de bomba \"Añadir dispositivo\" e inicia el emparejamiento en la bomba\n
 4. Haga clic en el botón \"Empezar a emparejar\" de abajo para iniciar emparejamiento en AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Después de unos instantes, se muestra en la pantalla de la bomba el nombre del teléfono; presiona COMPROBAR para confirmarlo.\n\n
+Cuando el emparejamiento se complete con éxito, confirma que el emparejamiento ha terminado en la bomba y vuelve a la pantalla principal, pulsando dos veces el botón COMPROBAR.\n\n
+Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
+1. Pulsa Atrás o el botón \"Cancelar emparejamiento\"\n
+2. Cancela el emparejamiento en Combo (presiona al mismo tiempo los botones ARRIBA y MENÚ al mismo tiempo para cancelar el emparejamiento)\n
+3. Intenta emparejar de nuevo</string>
     <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Introducir PIN</string>
     <string name="combov2_cancel_pairing">Emparejamiento cancelado</string>
