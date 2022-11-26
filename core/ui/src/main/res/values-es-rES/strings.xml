@@ -44,6 +44,12 @@
     <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiado</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolo Correcto</string>
     <string name="temp_basal_delivery_error">Error en la entrega de la basal temporal</string>
+    <string name="not_set_short">No establecido</string>
+    <string name="pump_busy">Bomba ocupada</string>
+    <string name="connection_error">Error de conexión de la bomba</string>
+    <string name="reading_pump_history">Leyendo el historial de la bomba</string>
+    <string name="password_cleared">Contraseña borrada</string>
+    <string name="pairing">Emparejando</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitando la basal máxima a %1$.2f U/h debido a %2$s</string>
     <string name="pumplimit">límite de la bomba</string>
@@ -75,4 +81,9 @@
     <string name="user_request" comment="26 characters max for translation">Solicitud de usuario</string>
     <string name="pump_paired" comment="26 characters max for translation">Bomba emparejada</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth de baja energía no soportado.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy no compatible o dispositivo no emparejado.</string>
+    <string name="ble_not_enabled">Bluetooth no activado</string>
+    <string name="location_not_found_title">La ubicación no está activa</string>
+    <string name="location_not_found_message">Para activar la visibilidad Bluetooth en nuevos dispositivos, la ubicación debe estar habilitada. AAPS no hace un seguimiento de su ubicación y se puede desactivar después de realizar la vinculación.</string>
 </resources>
