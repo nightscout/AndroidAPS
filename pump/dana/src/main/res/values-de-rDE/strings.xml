@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Koppeln</string>
-    <string name="danars_nodeviceavailable">Pumpe noch nicht gefunden</string>
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Zeitüberschreitung beim Pairing</string>
     <string name="danars_waitingforpairing">Auf Verbindung warten</string>
