@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Emparejando</string>
-    <string name="danars_nodeviceavailable">Aparato no encontrado</string>
     <string name="danars_pairingok">Conexión OK</string>
     <string name="danars_pairingtimedout">Tiempo de Vinculación agotado</string>
     <string name="danars_waitingforpairing">Esperando para conectar con bomba</string>
