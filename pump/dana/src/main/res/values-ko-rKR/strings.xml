@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">동기화</string>
-    <string name="danars_nodeviceavailable">현재까지 발견된 기기가 없습니다.</string>
     <string name="danars_pairingok">연동완료</string>
     <string name="danars_pairingtimedout">연동시간초과</string>
     <string name="danars_waitingforpairing">펌프연동 대기중</string>
