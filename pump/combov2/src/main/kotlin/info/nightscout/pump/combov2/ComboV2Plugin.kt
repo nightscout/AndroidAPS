@@ -974,8 +974,19 @@ class ComboV2Plugin @Inject constructor (
         val cctlTbrType = when (tbrType) {
             PumpSync.TemporaryBasalType.NORMAL -> ComboCtlTbr.Type.NORMAL
             PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND -> ComboCtlTbr.Type.EMULATED_COMBO_STOP
-            PumpSync.TemporaryBasalType.PUMP_SUSPEND -> ComboCtlTbr.Type.COMBO_STOPPED // TODO: Can this happen? It is currently not allowed by ComboCtlPump.setTbr()
             PumpSync.TemporaryBasalType.SUPERBOLUS -> ComboCtlTbr.Type.SUPERBOLUS
+            PumpSync.TemporaryBasalType.PUMP_SUSPEND -> {
+                aapsLogger.error(
+                    LTag.PUMP,
+                    "PUMP_SUSPEND TBR type produced by AAPS for the TBR initiation even though this is supposed to only be produced by pump drivers"
+                )
+                pumpEnactResult.apply {
+                    success = false
+                    enacted = false
+                    comment = rh.gs(R.string.error)
+                }
+                return pumpEnactResult
+            }
         }
 
         setTbrInternal(limitedPercentage, durationInMinutes, cctlTbrType, force100Percent = false, pumpEnactResult)
@@ -994,8 +1005,19 @@ class ComboV2Plugin @Inject constructor (
         val cctlTbrType = when (tbrType) {
             PumpSync.TemporaryBasalType.NORMAL -> ComboCtlTbr.Type.NORMAL
             PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND -> ComboCtlTbr.Type.EMULATED_COMBO_STOP
-            PumpSync.TemporaryBasalType.PUMP_SUSPEND -> ComboCtlTbr.Type.COMBO_STOPPED // TODO: Can this happen? It is currently not allowed by ComboCtlPump.setTbr()
             PumpSync.TemporaryBasalType.SUPERBOLUS -> ComboCtlTbr.Type.SUPERBOLUS
+            PumpSync.TemporaryBasalType.PUMP_SUSPEND -> {
+                aapsLogger.error(
+                    LTag.PUMP,
+                    "PUMP_SUSPEND TBR type produced by AAPS for the TBR initiation even though this is supposed to only be produced by pump drivers"
+                )
+                pumpEnactResult.apply {
+                    success = false
+                    enacted = false
+                    comment = rh.gs(R.string.error)
+                }
+                return pumpEnactResult
+            }
         }
 
         setTbrInternal(limitedPercentage, durationInMinutes, cctlTbrType, force100Percent = false, pumpEnactResult)
