@@ -29,7 +29,6 @@
     <string name="pin_not_set">PIN-kode ikke angitt</string>
     <string name="password_not_changed">Passordet er ikke endret</string>
     <string name="pin_not_changed">PIN-koden er ikke endret</string>
-    <string name="password_cleared">Passordet er fjernet!</string>
     <string name="pin_cleared">PIN-kode fjernet!</string>
     <string name="password_hint">Skriv inn passordet</string>
     <string name="pin_hint">Skriv inn PIN-koden</string>
