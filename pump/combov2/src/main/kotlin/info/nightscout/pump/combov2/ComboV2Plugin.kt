@@ -307,11 +307,13 @@ class ComboV2Plugin @Inject constructor (
         // Setup coroutine to enable/disable the pair and unpair
         // preferences depending on the pairing state.
         preferenceFragment.run {
-            // TODO: Verify that the lifecycle and coroutinescope are correct here.
-            // We want to avoid duplicate coroutine launches and premature coroutine terminations.
-            // The viewLifecycle does not work here since this is called before onCreateView() is,
-            // and it is questionable whether the viewLifecycle is even the one to use - verify
-            // that lifecycle instead of viewLifecycle is the correct choice.
+            // We use the fragment's lifecyle instead of the fragment view's, since the latter
+            // is initialized in onCreateView(), and we reach this point here _before_ that
+            // method is called. In other words, the fragment view does not exist at this point.
+            // repeatOnLifecycle() is a utility function that runs its block when the lifecycle
+            // starts. If the fragment is destroyed, the code inside - that is, the flow - is
+            // cancelled. That way, the UI flow is automatically reconstructed when Android
+            // recreates the fragment.
             lifecycle.coroutineScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     val pairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_pair_with_pump))
@@ -355,9 +357,10 @@ class ComboV2Plugin @Inject constructor (
             // NOTE: Even though the Combo is technically already connected by the
             // time the DriverState.CheckingPump state is reached, do not return
             // true then. That's because the pump still tries to issue commands
-            // during that state even though isBusy() returns true. Worse, it
-            // might try to call connect()!
-            // TODO: Check why this happens.
+            // during that state. isBusy() informs about the pump being busy during
+            // that state, but that function is not always called before commands
+            // are dispatched, so we announce to the queue thread that we aren't
+            // connected yet.
             DriverState.Ready,
             DriverState.Suspended,
             is DriverState.ExecutingCommand -> true
@@ -875,10 +878,6 @@ class ComboV2Plugin @Inject constructor (
                 }
 
                 reportFinishedBolus(rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
-
-                // TODO: Check that an alert sound and error dialog
-                // are produced if an exception was thrown that
-                // counts as an error
             } catch (e: CancellationException) {
                 // Cancellation is not an error, but it also means
                 // that the profile update was not enacted.
@@ -1005,11 +1004,6 @@ class ComboV2Plugin @Inject constructor (
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        // TODO: Check if some of the additional checks in ComboPlugin.cancelTempBasal can be carried over here.
-        // Note that ComboCtlPump.setTbr itself checks the TBR that is actually active after setting the TBR
-        // is done, and throws exceptions when there's a mismatch. It considers mismatches as an error, unlike
-        // the ComboPlugin.cancelTempBasal code, which just sets enact to false when there's a mismatch.
-
         val pumpEnactResult = PumpEnactResult(injector)
         pumpEnactResult.isPercent = true
         pumpEnactResult.isTempCancel = enforceNew
@@ -1302,8 +1296,6 @@ class ComboV2Plugin @Inject constructor (
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         // Currently just logging this; the ComboCtl.Pump code will set the new datetime
         // (as localtime) as part of the on-connect checks automatically.
-        // TODO: It may be useful to do this here, since setting the datetime takes
-        // a while with the Combo. It has to be done via the RT mode, which is slow.
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. Time change type = $timeChangeType")
     }
 
