@@ -30,7 +30,6 @@
     <string name="pin_not_set">PIN not set</string>
     <string name="password_not_changed">Password not changed</string>
     <string name="pin_not_changed">PIN not changed</string>
-    <string name="password_cleared">Password cleared!</string>
     <string name="pin_cleared">PIN cleared!</string>
     <string name="password_hint">Enter password here</string>
     <string name="pin_hint">Enter PIN here</string>
