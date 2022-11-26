@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">配对中</string>
-    <string name="danars_nodeviceavailable">迄今未找到任何设备</string>
     <string name="danars_pairingok">配对成功</string>
     <string name="danars_pairingtimedout">配对超时</string>
     <string name="danars_waitingforpairing">等待泵配对</string>
