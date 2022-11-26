@@ -20,6 +20,7 @@
     <string name="combov2_error_10">Error del reservorio</string>
     <string name="combov2_error_11">El set de infusión no ha sido llenado</string>
     <string name="combov2_extended_bolus_not_supported">El bolo extendido no es compatible</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="combov2_pair_with_pump_title">Emparejar con la bomba</string>
     <string name="combov2_unpair_pump_title">Desemparejar la bomba</string>
     <string name="combov2_driver_state_label">Estado del controlador</string>
@@ -64,6 +65,7 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Obtener el historial TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Actualizando fecha de la bomba</string>
     <string name="combov2_updating_pump_status_cmddesc">Actualizando estado de la bomba</string>
+    <string name="combov2_pairing_pin_failure">El PIN no funcionó. Comprueba si hay un error tipográfico. Si esto sigue sucediendo, cancela y vuelve a intentar el emparejamiento.</string>
     <string name="combov2_discovery_duration">Duración del descubrimiento (en segundos)</string>
     <string name="combov2_verbose_logging">Habilitar el registro detallado de Combo</string>
     <string name="combov2_getting_basal_profile">Obteniendo perfil basal; %1$d factor(es) leídos</string>
