@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Sincronitzant</string>
-    <string name="danars_nodeviceavailable">Cap dispositiu trobat fins ara</string>
     <string name="danars_pairingok">Sincronització OK</string>
     <string name="danars_pairingtimedout">Temps d\'espera excedit en sincronitzar</string>
     <string name="danars_waitingforpairing">Esperant sincronitació a la bomba</string>
