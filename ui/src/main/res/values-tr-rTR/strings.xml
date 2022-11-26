@@ -48,6 +48,7 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
     <string name="timeshift_label">Zaman kaydırma</string>
     <string name="percentage_label">Yüzde</string>
     <!-- LoopDialog -->
@@ -102,6 +103,9 @@
     <string name="show_loop_records">Döngü kayıtlarını göster</string>
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <!-- ProfileHelperActivity -->
+    <string name="format_with_tdd">Yaş: %1$d GTD: %2$.0f Ü</string>
+    <string name="format_with_tdd_and_pct">Yaş: %1$d GTD: %2$.0f Ü %3$d%%</string>
+    <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
     <!--    PrefImport-->
