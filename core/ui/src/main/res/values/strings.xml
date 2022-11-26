@@ -18,8 +18,12 @@
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="event_type">Event type</string>
+    <string name="reload">Reload</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
 
-    <!--    PumpFragments-->
+    <!--    Pumps -->
     <string name="battery_label">Battery</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="last_connection_label">Last connection</string>
@@ -30,6 +34,24 @@
     <string name="serial_number">Serial number</string>
     <string name="disconnected">Disconnected</string>
     <string name="connecting">Connecting</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicked connect to pump</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Daily units</string>
+    <string name="pump_icon">Pump icon</string>
+    <string name="view_profile">View profile</string>
+    <string name="pump_history">Pump history</string>
+    <string name="stats">Stats</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pump driver change.</string>
+    <string name="device_changed" comment="26 characters max for translation">Device changed</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Tempbasal delivery error</string>
+
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
+    <string name="pumplimit">pump limit</string>
+    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="itmustbepositivevalue">it must be positive value</string>
+    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
 
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>
