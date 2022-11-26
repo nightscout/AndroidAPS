@@ -140,9 +140,9 @@
     <string name="motol_default_profile">Default profile</string>
     <string name="current_profile">Current profile</string>
     <string name="available_profile">Available profile</string>
-    <string name="format_with_tdd">Age: %1$.0f TDD: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Age: %1$.0f Weight: %2$.0f kg</string>
+    <string name="format_with_tdd">Age: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Default profile</string>
     <string name="invalid_pct">Invalid % entry</string>
 
