@@ -267,7 +267,7 @@ abstract class PluginsListModule {
     @NotNSClient
     @IntoMap
     @IntKey(270)
-    abstract fun bindVersionCheckerPlugin(plugin: VersionCheckerPlugin): PluginBase
+    abstract fun bindVersionCheckerPlugin(plugin: info.nightscout.plugins.constraints.versionChecker.VersionCheckerPlugin): PluginBase
 
     @Binds
     @NotNSClient
@@ -279,7 +279,7 @@ abstract class PluginsListModule {
     @APS
     @IntoMap
     @IntKey(290)
-    abstract fun bindStorageConstraintPlugin(plugin: StorageConstraintPlugin): PluginBase
+    abstract fun bindStorageConstraintPlugin(plugin: info.nightscout.plugins.constraints.storage.StorageConstraintPlugin): PluginBase
 
     @Binds
     @APS
@@ -339,7 +339,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(380)
-    abstract fun bindDstHelperPlugin(plugin: DstHelperPlugin): PluginBase
+    abstract fun bindDstHelperPlugin(plugin: info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin): PluginBase
 
     @Binds
     @AllConfigs

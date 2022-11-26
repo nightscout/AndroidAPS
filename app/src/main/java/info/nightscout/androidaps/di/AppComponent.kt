@@ -22,6 +22,7 @@ import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.aps.di.ApsModule
 import info.nightscout.plugins.di.PluginsModule
+import info.nightscout.plugins.support.di.PluginsSupportModule
 import info.nightscout.pump.combo.di.ComboModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
@@ -65,6 +66,8 @@ import javax.inject.Singleton
         SharedImplModule::class,
         UiModule::class,
         ValidatorsModule::class,
+        PluginsSupportModule::class,
+        PluginsSupportModule.Bindings::class,
 
         // pumps
         ComboModule::class,

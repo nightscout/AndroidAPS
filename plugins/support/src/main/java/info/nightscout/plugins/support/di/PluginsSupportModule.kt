@@ -1,0 +1,21 @@
+package info.nightscout.plugins.support.di
+
+import dagger.Binds
+import dagger.Module
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
+
+@Module(
+    includes = [
+    ]
+)
+
+@Suppress("unused")
+abstract class PluginsSupportModule {
+
+    @Module
+    interface Bindings {
+
+        @Binds fun bindProcessedDeviceStatusData(versionCheckerUtils: VersionCheckerUtilsImpl): VersionCheckerUtils
+    }
+}

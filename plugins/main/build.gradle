@@ -46,9 +46,6 @@ dependencies {
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
 
-    // Phone checker
-    api 'com.scottyab:rootbeer-lib:0.1.0'
-
     //SmsCommunicator
     api 'com.eatthepath:java-otp:0.3.1'
     api 'com.github.kenglxn.QRGen:android:2.6.0'

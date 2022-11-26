@@ -9,7 +9,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.R
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -79,13 +79,13 @@ class DstHelperPlugin @Inject constructor(
         return value
     }
 
-    fun wasDST(now: Calendar): Boolean {
+    private fun wasDST(now: Calendar): Boolean {
         val ago = now.clone() as Calendar
         ago.add(Calendar.HOUR, DISABLE_TIME_FRAME_HOURS)
         return now[Calendar.DST_OFFSET] != ago[Calendar.DST_OFFSET]
     }
 
-    fun willBeDST(now: Calendar): Boolean {
+    private fun willBeDST(now: Calendar): Boolean {
         val ago = now.clone() as Calendar
         ago.add(Calendar.HOUR, WARN_PRIOR_TIME_FRAME_HOURS)
         return now[Calendar.DST_OFFSET] != ago[Calendar.DST_OFFSET]

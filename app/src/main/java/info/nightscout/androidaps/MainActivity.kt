@@ -42,7 +42,7 @@ import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.isRunningRealPumpTest
-import info.nightscout.core.versionChecker.VersionCheckerUtils
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission

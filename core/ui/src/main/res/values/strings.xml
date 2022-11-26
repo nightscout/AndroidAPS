@@ -23,6 +23,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Save</string>
+    <string name="snooze">Snooze</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>

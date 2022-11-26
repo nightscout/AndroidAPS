@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.contraints.versionChecker
 import dagger.Lazy
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.receivers.ReceiverStatusStore
-import info.nightscout.core.versionChecker.VersionCheckerUtils
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.core.versionChecker.numericVersionPart
 import info.nightscout.interfaces.Config
 import info.nightscout.rx.bus.RxBus

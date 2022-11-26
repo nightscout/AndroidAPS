@@ -20,10 +20,10 @@ class StorageConstraintPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     private val rxBusWrapper = RxBus(aapsSchedulers, aapsLogger)
 
-    private lateinit var storageConstraintPlugin: StorageConstraintPlugin
+    private lateinit var storageConstraintPlugin: info.nightscout.plugins.constraints.storage.StorageConstraintPlugin
 
     @Before fun prepareMock() {
-        storageConstraintPlugin = StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, rxBusWrapper)
+        storageConstraintPlugin = info.nightscout.plugins.constraints.storage.StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, rxBusWrapper)
         `when`(rh.gs(anyInt(), anyLong())).thenReturn("")
     }
 
@@ -32,7 +32,7 @@ class StorageConstraintPluginTest : TestBase() {
         aapsLogger: AAPSLogger,
         rh: ResourceHelper,
         rxBus: RxBus
-    ) : StorageConstraintPlugin(injector, aapsLogger, rh, rxBus) {
+    ) : info.nightscout.plugins.constraints.storage.StorageConstraintPlugin(injector, aapsLogger, rh, rxBus) {
 
         var memSize = 150L
         override fun availableInternalMemorySize(): Long = memSize

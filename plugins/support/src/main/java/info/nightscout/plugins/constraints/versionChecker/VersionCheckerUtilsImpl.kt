@@ -1,14 +1,14 @@
-package info.nightscout.core.versionChecker
+package info.nightscout.plugins.constraints.versionChecker
 
 import android.os.Build
 import dagger.Lazy
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.main.R
 import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -22,19 +22,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VersionCheckerUtils @Inject constructor(
+class VersionCheckerUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus,
     private val config: Lazy<Config>,
     private val receiverStatusStore: ReceiverStatusStore,
-    private val dateUtil: DateUtil
-) {
+    private val dateUtil: DateUtil,
+    private val activityNames: ActivityNames
+) : VersionCheckerUtils {
 
     private fun isConnected(): Boolean = receiverStatusStore.isConnected
 
-    fun triggerCheckVersion() {
+    override fun triggerCheckVersion() {
 
         if (!sp.contains(R.string.key_last_time_this_version_detected_as_ok)) {
             // On a new installation, set it as 30 days old in order to warn that there is a new version.
@@ -73,7 +73,7 @@ class VersionCheckerUtils @Inject constructor(
             aapsLogger.debug(LTag.CORE, "Github master version not checked. No connectivity")
 
     @Suppress("SameParameterValue")
-    internal fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
+    override fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
 
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
@@ -121,7 +121,7 @@ class VersionCheckerUtils @Inject constructor(
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
-            rxBus.send(EventNewNotification(Notification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)))
+            activityNames.addNotification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
             sp.putLong(R.string.key_last_versionchecker_warning, now)
         }
     }
@@ -130,7 +130,7 @@ class VersionCheckerUtils @Inject constructor(
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_expired_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, endDate))
-            rxBus.send(EventNewNotification(Notification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)))
+            activityNames.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)
             sp.putLong(R.string.key_last_expired_versionchecker_warning, now)
         }
     }
@@ -138,7 +138,7 @@ class VersionCheckerUtils @Inject constructor(
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
 
-    fun versionDigits(versionString: String?): IntArray {
+    override fun versionDigits(versionString: String?): IntArray {
         val digits = mutableListOf<Int>()
         versionString?.numericVersionPart().toNumberList()?.let {
             digits.addAll(it.take(4))
@@ -146,7 +146,7 @@ class VersionCheckerUtils @Inject constructor(
         return digits.toIntArray()
     }
 
-    internal fun findVersion(file: String?): String? {
+    override fun findVersion(file: String?): String? {
         val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
         return file?.lines()?.filter { regex.matches(it) }?.firstNotNullOfOrNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }
     }

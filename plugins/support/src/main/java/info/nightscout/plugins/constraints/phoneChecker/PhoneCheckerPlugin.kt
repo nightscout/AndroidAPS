@@ -8,7 +8,7 @@ import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.R
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject

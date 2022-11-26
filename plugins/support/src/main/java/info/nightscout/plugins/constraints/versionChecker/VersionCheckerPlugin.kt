@@ -1,8 +1,6 @@
 package info.nightscout.plugins.constraints.versionChecker
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.versionChecker.VersionCheckerUtils
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -10,7 +8,9 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.R
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -30,7 +30,8 @@ class VersionCheckerPlugin @Inject constructor(
     val rxBus: RxBus,
     aapsLogger: AAPSLogger,
     private val config: Config,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val activityNames: ActivityNames
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -95,7 +96,7 @@ class VersionCheckerPlugin @Inject constructor(
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
-            rxBus.send(EventNewNotification(Notification(Notification.OLD_VERSION, message, Notification.NORMAL)))
+            activityNames.addNotification(Notification.OLD_VERSION, message, Notification.NORMAL)
         }
 
         val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
@@ -104,7 +105,7 @@ class VersionCheckerPlugin @Inject constructor(
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            rxBus.send(EventNewNotification(Notification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)))
+            activityNames.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
         }
     }
 

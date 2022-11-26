@@ -259,16 +259,6 @@
     <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
-    <!-- VersionChecker -->
-    <string name="key_last_time_this_version_detected_as_ok" translatable="false">last_time_this_version_detected</string>
-    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
-    <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
-    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
-    <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
-    <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
-    <string name="versionavailable">Version %1$s available</string>
-    <string name="version_expire">Version %1$s expire on %2$s</string>
-
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 

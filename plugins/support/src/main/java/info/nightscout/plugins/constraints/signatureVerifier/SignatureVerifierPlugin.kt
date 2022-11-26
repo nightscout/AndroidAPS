@@ -5,15 +5,14 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.R
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -45,8 +44,8 @@ class SignatureVerifierPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
-    private val rxBus: RxBus,
-    private val context: Context
+    private val context: Context,
+    private val activityNames: ActivityNames
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -104,8 +103,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        val notification = Notification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
-        rxBus.send(EventNewNotification(notification))
+        activityNames.addNotification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
     }
 
     private fun hasIllegalSignature(): Boolean {
@@ -170,6 +168,7 @@ class SignatureVerifierPlugin @Inject constructor(
         return sb.toString()
     }
 
+/*
     fun singleCharUnMap(shortHash: String): String {
         val array = ByteArray(shortHash.length)
         val sb = StringBuilder()
@@ -179,6 +178,7 @@ class SignatureVerifierPlugin @Inject constructor(
         }
         return sb.toString()
     }
+*/
 
     private fun shouldDownloadCerts(): Boolean {
         return System.currentTimeMillis() - sp.getLong(R.string.key_last_revoked_certs_check, 0L) >= UPDATE_INTERVAL
