@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Párování</string>
-    <string name="danars_nodeviceavailable">Prozatím žádné zařízení nenalezeno</string>
     <string name="danars_pairingok">Spárováno</string>
     <string name="danars_pairingtimedout">Vypršel časový limit pro párování</string>
     <string name="danars_waitingforpairing">Čekání na spárování na pumpě</string>
