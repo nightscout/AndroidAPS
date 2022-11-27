@@ -5,8 +5,6 @@
     <string name="bg_label">BG</string>
     <string name="missed_bg_readings">Geen BG metingen</string>
     <string name="time_to_eat">Tijd om te eten</string>
-    <string name="enable_bolus_advisor">Bolusadviseur inschakelen</string>
-    <string name="enable_bolus_advisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
