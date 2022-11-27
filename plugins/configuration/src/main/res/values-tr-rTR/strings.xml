@@ -48,6 +48,9 @@
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
+    <string name="apsmode_title">APS modu</string>
+    <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -64,8 +67,6 @@
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
-    <string name="apsmode_title">APS modu</string>
-    <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
 </resources>
