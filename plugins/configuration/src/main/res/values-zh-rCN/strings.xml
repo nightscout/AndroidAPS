@@ -57,4 +57,6 @@
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="configbuilder_sensitivity">灵敏度检测</string>
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
