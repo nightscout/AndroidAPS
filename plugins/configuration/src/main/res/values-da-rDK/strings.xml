@@ -62,4 +62,6 @@
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
     <string name="configbuilder_sensitivity">Detektering af følsomhed</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
