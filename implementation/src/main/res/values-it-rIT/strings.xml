@@ -4,8 +4,6 @@
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
     <string name="bg_label">BG</string>
     <string name="missed_bg_readings">Letture BG mancanti</string>
-    <string name="enable_bolus_advisor">Abilita consiglio bolo</string>
-    <string name="enable_bolus_advisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
