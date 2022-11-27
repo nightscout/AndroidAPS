@@ -39,6 +39,9 @@
     <string name="data_choices">데이터선택</string>
     <string name="fabric_upload">Fabric 업로드</string>
     <string name="allow_automated_crash_reporting">fabric.io 서비스를 통해 개발자에게 앱 오류 및 특정 데이터를 자동 전송합니다.</string>
+    <string name="apsmode_title">APS 모드</string>
+    <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_profile">프로파일</string>
     <string name="configbuilder_aps">APS</string>
@@ -49,8 +52,6 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_insulin_description">어떤 종류의 인슐린을 사용합니까?</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
-    <string name="apsmode_title">APS 모드</string>
-    <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
 </resources>
