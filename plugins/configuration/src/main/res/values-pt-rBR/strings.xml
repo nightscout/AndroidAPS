@@ -61,4 +61,6 @@
     <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
