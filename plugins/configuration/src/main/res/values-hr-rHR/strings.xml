@@ -15,4 +15,6 @@
     <string name="configbuilder_general">Općenito</string>
     <string name="configbuilder_loop_description">Koristite ovo za aktiviranje integracije AAPS-ove petlje.</string>
     <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
