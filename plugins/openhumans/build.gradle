@@ -28,7 +28,6 @@ dependencies {
     api "androidx.browser:browser:1.4.0"
 
     //WorkManager
-    api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
     //api "androidx.work:work-rxjava3:$work_version"
     //api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'

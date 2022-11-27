@@ -7,6 +7,7 @@ import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.database.impl.transactions.InsertOrUpdateBolusTransaction
@@ -28,6 +29,8 @@ class PersistenceLayerImpl @Inject constructor(
 ) : PersistenceLayer {
 
     private val disposable = CompositeDisposable()
+    override fun clearDatabases() = repository.clearDatabases()
+    override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = cleanupDatabase(keepDays, deleteTrackedChanges)
 
     override fun insertOrUpdate(bolusCalculatorResult: BolusCalculatorResult) {
         disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult))
@@ -64,4 +67,5 @@ class PersistenceLayerImpl @Inject constructor(
     }
 
     override fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryTarget>> = repository.getTemporaryTargetActiveAt(timestamp)
+    override fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UserEntry>> = repository.getUserEntryFilteredDataFromTime(timestamp)
 }

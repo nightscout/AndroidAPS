@@ -11,6 +11,7 @@ import info.nightscout.interfaces.constraints.Constraint;
 import info.nightscout.interfaces.constraints.Constraints;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
+import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
 import info.nightscout.interfaces.profile.Profile;
@@ -28,6 +29,7 @@ import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaFragment;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.comm.RecordTypes;
+import info.nightscout.pump.dana.database.DanaHistoryDatabase;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventConfigBuilderChange;
@@ -44,7 +46,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump, Dana, Constraints {
+public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump, Dana, Constraints, OwnDatabasePlugin {
     protected AbstractDanaRExecutionService sExecutionService;
 
     protected CompositeDisposable disposable = new CompositeDisposable();
@@ -61,7 +63,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected AapsSchedulers aapsSchedulers;
     protected PumpSync pumpSync;
     protected ActivityNames activityNames;
-
+    protected DanaHistoryDatabase danaHistoryDatabase;
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
             DanaPump danaPump,
@@ -75,7 +77,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             SP sp,
             DateUtil dateUtil,
             PumpSync pumpSync,
-            ActivityNames activityNames
+            ActivityNames activityNames,
+            DanaHistoryDatabase danaHistoryDatabase
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -96,6 +99,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.aapsSchedulers = aapsSchedulers;
         this.pumpSync = pumpSync;
         this.activityNames = activityNames;
+        this.danaHistoryDatabase = danaHistoryDatabase;
     }
 
     @Override protected void onStart() {
@@ -515,5 +519,9 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override public void clearPairing() {
+    }
+
+    @Override public void clearAllTables() {
+        danaHistoryDatabase.clearAllTables();
     }
 }

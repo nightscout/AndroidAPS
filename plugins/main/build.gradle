@@ -54,7 +54,6 @@ dependencies {
     api 'com.google.android.flexbox:flexbox:3.0.0'
 
     // Food
-    api "androidx.work:work-runtime:$work_version"
     api "androidx.work:work-runtime-ktx:$work_version"
 
     // DataLayerListenerService

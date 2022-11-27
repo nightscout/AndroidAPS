@@ -70,7 +70,7 @@
             android:exported="false"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
+            android:name="info.nightscout.configuration.maintenance.activities.PrefImportListActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
@@ -141,7 +141,7 @@
         <service android:name=".plugins.general.persistentNotification.DummyService" />
 
         <activity
-            android:name=".plugins.general.maintenance.activities.LogSettingActivity"
+            android:name="info.nightscout.configuration.maintenance.activities.LogSettingActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
 

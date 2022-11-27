@@ -8,7 +8,6 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
+import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin

@@ -62,6 +62,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog;
@@ -76,6 +77,7 @@ import info.nightscout.core.utils.DateTimeUtil;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
+import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
 import info.nightscout.interfaces.profile.Profile;
@@ -120,7 +122,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice, OmnipodEros {
+public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
@@ -147,6 +149,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final PumpType pumpType = PumpType.OMNIPOD_EROS;
     private final PumpSync pumpSync;
     private final ActivityNames activityNames;
+    private final ErosHistoryDatabase erosHistoryDatabase;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -186,7 +189,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
             PumpSync pumpSync,
-            ActivityNames activityNames
+            ActivityNames activityNames,
+            ErosHistoryDatabase erosHistoryDatabase
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -215,6 +219,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.profileFunction = profileFunction;
         this.pumpSync = pumpSync;
         this.activityNames = activityNames;
+        this.erosHistoryDatabase = erosHistoryDatabase;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -1180,4 +1185,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceId);
     }
 
+    @Override public void clearAllTables() {
+        erosHistoryDatabase.clearAllTables();
+    }
 }

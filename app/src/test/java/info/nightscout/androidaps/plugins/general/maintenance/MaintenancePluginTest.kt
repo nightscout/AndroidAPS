@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.maintenance
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
+import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.maintenance.PrefFileListProvider

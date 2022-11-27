@@ -147,16 +147,4 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP PRESSED</string>
 
-    <!--    PrefImport-->
-    <string name="check_preferences_details_btn">Explain import issues…</string>
-    <string name="check_preferences_details_title">Import issues details</string>
-    <string name="check_preferences_import_btn">Import</string>
-    <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
-    <string name="import_setting">Import settings</string>
-    <string name="check_preferences_before_import">Please check preferences before importing:</string>
-    <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
-    <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
-
-    <!--    Preferences -->
-    <string name="nav_plugin_preferences">Plugin preferences</string>
 </resources>

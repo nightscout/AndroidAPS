@@ -4,7 +4,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.core.graph.OverviewData
-import info.nightscout.implementation.AndroidPermissionImpl
 import info.nightscout.implementation.BolusTimerImpl
 import info.nightscout.implementation.CarbTimerImpl
 import info.nightscout.implementation.DefaultValueHelperImpl
@@ -18,7 +17,6 @@ import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.db.PersistenceLayerImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
-import info.nightscout.implementation.maintenance.PrefFileListProviderImpl
 import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.implementation.profile.ProfileFunctionImpl
@@ -39,7 +37,6 @@ import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
 import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
 import info.nightscout.implementation.storage.FileStorage
-import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.LocalAlertUtils
@@ -50,7 +47,6 @@ import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -88,7 +84,6 @@ abstract class ImplementationModule {
     interface Bindings {
         @Binds fun bindPersistenceLayer(persistenceLayerImpl: PersistenceLayerImpl): PersistenceLayer
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
-        @Binds fun bindPrefFileListProvider(prefFileListProviderImpl: PrefFileListProviderImpl): PrefFileListProvider
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
         @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
@@ -113,7 +108,6 @@ abstract class ImplementationModule {
         @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
         @Binds fun bindCarbTimerInterface(carbTimer: CarbTimerImpl): CarbTimer
         @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
-        @Binds fun bindAndroidPermissionInterface(androidPermission: AndroidPermissionImpl): AndroidPermission
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder

@@ -23,6 +23,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
@@ -55,8 +56,9 @@ class DanaRKoreanPlugin @Inject constructor(
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
-    activityNames: ActivityNames
-) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, activityNames) {
+    activityNames: ActivityNames,
+    danaHistoryDatabase: DanaHistoryDatabase
+) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, activityNames, danaHistoryDatabase) {
 
     init {
         pluginDescription.description(R.string.description_pump_dana_r_korean)

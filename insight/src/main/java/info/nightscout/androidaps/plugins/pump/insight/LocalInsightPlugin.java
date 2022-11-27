@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.insight.database.InsightBolusID;
+import info.nightscout.androidaps.insight.database.InsightDatabase;
 import info.nightscout.androidaps.insight.database.InsightDbHelper;
 import info.nightscout.androidaps.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.insight.database.InsightPumpID;
@@ -104,6 +105,7 @@ import info.nightscout.interfaces.Config;
 import info.nightscout.interfaces.constraints.Constraint;
 import info.nightscout.interfaces.constraints.Constraints;
 import info.nightscout.interfaces.notifications.Notification;
+import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
 import info.nightscout.interfaces.profile.Profile;
@@ -132,7 +134,7 @@ import info.nightscout.shared.utils.DateUtil;
 import info.nightscout.shared.utils.T;
 
 @Singleton
-public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight, Constraints,
+public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight, Constraints, OwnDatabasePlugin,
         InsightConnectionService.StateCallback {
 
     private final AAPSLogger aapsLogger;
@@ -145,6 +147,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     private final DateUtil dateUtil;
     private final InsightDbHelper insightDbHelper;
     private final PumpSync pumpSync;
+    private final InsightDatabase insightDatabase;
 
     public static final String ALERT_CHANNEL_ID = "AAPS-InsightAlert";
 
@@ -205,7 +208,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
             Config config,
             DateUtil dateUtil,
             InsightDbHelper insightDbHelper,
-            PumpSync pumpSync
+            PumpSync pumpSync,
+            InsightDatabase insightDatabase
     ) {
         super(new PluginDescription()
                         .pluginIcon(R.drawable.ic_insight_128)
@@ -228,6 +232,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         this.dateUtil = dateUtil;
         this.insightDbHelper = insightDbHelper;
         this.pumpSync = pumpSync;
+        this.insightDatabase = insightDatabase;
 
         pumpDescription = new PumpDescription();
         pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
@@ -1646,4 +1651,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         return true;
     }
 
+    @Override public void clearAllTables() {
+        insightDatabase.clearAllTables();
+    }
 }

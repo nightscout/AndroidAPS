@@ -60,7 +60,6 @@
     <string name="openapsma_iob_data_label">IOB data</string>
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_meal_data_label">Meal data</string>
-    <string name="result">Result</string>
     <string name="openapsma_request_label">Request</string>
     <string name="constraints">Constraints</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>

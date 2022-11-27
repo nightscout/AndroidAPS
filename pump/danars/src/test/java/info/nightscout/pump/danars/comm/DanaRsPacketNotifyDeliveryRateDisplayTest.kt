@@ -4,11 +4,11 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.constraints.Constraints
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSTestBase
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
@@ -20,7 +20,7 @@ import org.mockito.Mockito.`when`
 
 class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
-    @Mock lateinit var activePlugin: ActivePlugin
+    @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var context: Context
@@ -77,7 +77,8 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 temporaryBasalStorage,
                 fabricPrivacy,
                 dateUtil,
-                activityNames
+                activityNames,
+                danaHistoryDatabase
             )
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
     }

@@ -10,6 +10,10 @@ interface Config {
     val FLAVOR: String
     val VERSION_NAME: String
     val BUILD_VERSION: String
+    val REMOTE: String
+    val BUILD_TYPE: String
+    val VERSION: String
+    val APPLICATION_ID: String
     val DEBUG: Boolean
     val currentDeviceModelString : String
     val appName: Int

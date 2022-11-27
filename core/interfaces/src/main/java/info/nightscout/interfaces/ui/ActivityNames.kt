@@ -20,6 +20,7 @@ interface ActivityNames {
     val preferencesActivity: Class<*>
     val myPreferenceFragment: Class<*>
 
+    val prefGeneral: Int
     /**
      * Show ErrorHelperActivity and start alarm
      * @param ctx Context

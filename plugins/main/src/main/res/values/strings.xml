@@ -33,7 +33,6 @@
     <string name="smscommunicator_otp_reset_warning">By resetting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
     <string name="sms_wrong_code">Wrong code. Command cancelled.</string>
     <string name="sms_timeout_while_waiting">Timeout while waiting for finish of previous pump communication</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">To deliver bolus %1$.2fU reply with code %2$s</string>

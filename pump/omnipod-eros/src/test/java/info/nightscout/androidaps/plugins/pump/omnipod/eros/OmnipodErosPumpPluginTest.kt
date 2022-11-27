@@ -4,6 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
@@ -38,6 +39,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var erosHistoryDatabase: ErosHistoryDatabase
 
     private var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
@@ -54,7 +56,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
             injector, aapsLogger, TestAapsSchedulers(), rxBusWrapper, null,
             rh, activePlugin, null, null, aapsOmnipodErosManager, commandQueue,
             null, null, null, null,
-            rileyLinkUtil, null, null, pumpSync, activityNames
+            rileyLinkUtil, null, null, pumpSync, activityNames, erosHistoryDatabase
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")
         `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)

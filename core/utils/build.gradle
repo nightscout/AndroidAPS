@@ -35,5 +35,5 @@ dependencies {
     api "com.google.crypto.tink:tink-android:$tink_version"
 
     //WorkManager
-    api "androidx.work:work-runtime:$work_version" // DataWorkerStorage
+    api "androidx.work:work-runtime-ktx:$work_version" // DataWorkerStorage
 }

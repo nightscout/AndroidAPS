@@ -21,14 +21,15 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.automation.AutomationPlugin
+import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -53,7 +54,6 @@ import info.nightscout.plugins.source.IntelligoPlugin
 import info.nightscout.plugins.source.PoctechPlugin
 import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.pump.combo.ComboPlugin

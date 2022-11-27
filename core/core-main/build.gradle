@@ -32,7 +32,7 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     //WorkManager
-    api "androidx.work:work-runtime:$work_version" // DataWorkerStorage
+    api "androidx.work:work-runtime-ktx:$work_version" // DataWorkerStorage
 }
 
 android {

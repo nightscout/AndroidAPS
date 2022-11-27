@@ -9,6 +9,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.Assert
 import org.junit.Before
@@ -24,6 +25,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
     private lateinit var danaRSPlugin: info.nightscout.pump.danars.DanaRSPlugin
 
@@ -71,7 +73,8 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 temporaryBasalStorage,
                 fabricPrivacy,
                 dateUtil,
-                activityNames
+                activityNames,
+                danaHistoryDatabase
             )
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
     }

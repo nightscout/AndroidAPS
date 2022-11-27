@@ -14,6 +14,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.OwnDatabasePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
@@ -35,6 +36,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
+import info.nightscout.pump.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.pump.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.pump.diaconn.service.DiaconnG8Service
 import info.nightscout.rx.AapsSchedulers
@@ -75,7 +77,8 @@ class DiaconnG8Plugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val aapsSchedulers: AapsSchedulers,
-    private val activityNames: ActivityNames
+    private val activityNames: ActivityNames,
+    private val diaconnHistoryDatabase: DiaconnHistoryDatabase
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -86,7 +89,7 @@ class DiaconnG8Plugin @Inject constructor(
         .preferencesId(R.xml.pref_diaconn)
         .description(R.string.description_pump_diaconn_g8),
     injector, aapsLogger, rh, commandQueue
-), Pump, Diaconn, Constraints {
+), Pump, Diaconn, Constraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var diaconnG8Service: DiaconnG8Service? = null
@@ -604,5 +607,7 @@ class DiaconnG8Plugin @Inject constructor(
             true
         }
     }
+
+    override fun clearAllTables() = diaconnHistoryDatabase.clearAllTables()
 
 }

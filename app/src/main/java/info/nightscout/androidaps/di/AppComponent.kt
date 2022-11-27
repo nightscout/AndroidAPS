@@ -47,7 +47,6 @@ import javax.inject.Singleton
         ReceiversModule::class,
         ServicesModule::class,
         WorkflowModule::class,
-        WorkersModule::class,
 
         // Gradle modules
         AutomationModule::class,

@@ -7,17 +7,18 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import info.nightscout.androidaps.MainActivity
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.services.AlarmSoundService
+import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
-import info.nightscout.ui.activities.SingleFragmentActivity
 import info.nightscout.ui.activities.TDDStatsActivity
 import info.nightscout.ui.dialogs.BolusProgressDialog
 import info.nightscout.ui.dialogs.CalibrationDialog
@@ -47,6 +48,7 @@ class ActivityNamesImpl @Inject constructor(
     override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
     override val preferencesActivity: Class<*> = PreferencesActivity::class.java
     override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
+    override val prefGeneral: Int = R.xml.pref_general
 
     override fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int) {
         val i = Intent(ctx, errorHelperActivity)

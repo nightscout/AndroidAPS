@@ -10,6 +10,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -26,6 +27,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
@@ -77,7 +79,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 temporaryBasalStorage,
                 fabricPrivacy,
                 dateUtil,
-                activityNames
+                activityNames,
+                danaHistoryDatabase
             )
     }
 }

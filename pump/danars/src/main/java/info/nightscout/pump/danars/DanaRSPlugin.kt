@@ -13,6 +13,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.OwnDatabasePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
@@ -35,6 +36,7 @@ import info.nightscout.interfaces.utils.Round
 import info.nightscout.pump.dana.DanaFragment
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.comm.RecordTypes
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange
 import info.nightscout.pump.danars.services.DanaRSService
 import info.nightscout.rx.AapsSchedulers
@@ -76,7 +78,8 @@ class DanaRSPlugin @Inject constructor(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val activityNames: ActivityNames,
+    private val danaHistoryDatabase: DanaHistoryDatabase
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -88,7 +91,7 @@ class DanaRSPlugin @Inject constructor(
         .preferencesId(R.xml.pref_danars)
         .description(R.string.description_pump_dana_rs),
     injector, aapsLogger, rh, commandQueue
-), Pump, Dana, Constraints {
+), Pump, Dana, Constraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null
@@ -637,4 +640,6 @@ class DanaRSPlugin @Inject constructor(
         sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + mDeviceName)
         sp.remove(rh.gs(R.string.key_dana_ble5_pairingkey) + mDeviceName)
     }
+
+    override fun clearAllTables() = danaHistoryDatabase.clearAllTables()
 }

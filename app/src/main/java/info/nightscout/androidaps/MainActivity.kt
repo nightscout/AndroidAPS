@@ -33,8 +33,9 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
+import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
+import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.configuration.setupwizard.SetupWizardActivity
-import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper
@@ -67,7 +68,6 @@ import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.activities.ProfileHelperActivity
-import info.nightscout.ui.activities.SingleFragmentActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.TreatmentsActivity
 import info.nightscout.ui.tabs.TabPageAdapter
