@@ -68,4 +68,6 @@
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
     <string name="configbuilder_sensitivity">Detekcia citlivosti</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
