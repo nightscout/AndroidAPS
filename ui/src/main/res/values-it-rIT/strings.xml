@@ -26,12 +26,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolo</string>
     <string name="treatments_wizard_total_label">Totale</string>
     <!-- FillDialog -->
-    <string name="button1">Tasto 1</string>
-    <string name="button2">Tasto 2</string>
-    <string name="button3">Tasto 3</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
     <!-- InsulinDialog -->
