@@ -40,4 +40,6 @@
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_sensitivity">Sensitiwiteit opsporing</string>
     <string name="configbuilder_sensitivity_description">Watter sensitiwiteit algoritme moet gebruik word?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
