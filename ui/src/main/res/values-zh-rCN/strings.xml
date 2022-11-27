@@ -19,12 +19,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">超级大剂量Superbolus</string>
     <string name="treatments_wizard_total_label">总计</string>
     <!-- FillDialog -->
-    <string name="button1">按钮1</string>
-    <string name="button2">按钮2</string>
-    <string name="button3">按钮3</string>
     <string name="record_pump_site_change">记录泵管路更换</string>
     <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
     <!-- InsulinDialog -->
