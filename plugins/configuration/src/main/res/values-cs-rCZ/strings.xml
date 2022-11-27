@@ -21,7 +21,6 @@
     <string name="need_storage_permission">Aby bylo možné nahrávat logy a exportovat nastavení, je nutné pro aplikaci povolit oprávnění přístupu k úložišti</string>
     <string name="askforpermission">Získat povolení</string>
     <string name="need_whitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
-    <string name="import_setting">Importovat nastavení</string>
     <string name="storedsettingsfound">Nalezeno uložené nastavení</string>
     <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
     <string name="current_master_password">Aktuální hlavní heslo</string>
@@ -71,4 +70,7 @@
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
     <string name="configbuilder_sensitivity">Detekce citlivosti</string>
     <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
+    <!--ImportExport-->
+    <string name="import_setting">Importovat nastavení</string>
+    <!--    Maintenance-->
 </resources>
