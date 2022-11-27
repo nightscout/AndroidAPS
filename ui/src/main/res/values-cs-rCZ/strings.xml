@@ -35,14 +35,9 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Celkem</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
-    <string name="fill_bolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
-    <string name="button1">Tlačítko 1</string>
-    <string name="button2">Tlačítko 2</string>
-    <string name="button3">Tlačítko 3</string>
     <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
     <!-- InsulinDialog -->
