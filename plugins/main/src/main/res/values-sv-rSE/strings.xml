@@ -20,12 +20,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Klart. Bra jobbat!</string>
     <string name="maxiobset">Max IOB är korrekt angivet</string>
@@ -61,7 +55,6 @@
     <string name="hardlimit">hård begränsning</string>
     <string name="treatmentssafety_title">Säkerhetsbegränsningar</string>
     <!-- Overview -->
-    <string name="snooze">Snooze</string>
     <string name="show_statuslights">Visa \"statuslampor\" på hemskärmen</string>
     <string name="statuslights_iage_warning">Insulinålder - varning: [h]</string>
     <string name="statuslights_iage_critical">Insulinålder - akut varning: [h]</string>
@@ -83,10 +76,9 @@
     <string name="a11y_bg_quality">Kvalitet på BG-data</string>
     <string name="a11y_blood_glucose">blodglukos</string>
     <string name="a11y_bg_outdated">föråldrad</string>
-    <string name="apsmode_title">APS-läge</string>
-    <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Snabbsteg</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Starta om</string>
     <string name="deliver_now">Synkronisera nu</string>
