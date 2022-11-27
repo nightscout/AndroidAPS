@@ -57,4 +57,6 @@
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
