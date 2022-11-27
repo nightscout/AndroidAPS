@@ -14,12 +14,6 @@
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="dia_short">DIA</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="loopenabled">Lúb cumasaithe</string>
     <string name="apsselected">APS  roghnaithe</string>
@@ -27,8 +21,8 @@
     <string name="actions_shortname">GNÍ</string>
     <!-- Safety -->
     <!-- Overview -->
-    <string name="apsmode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Atosaigh</string>
     <string name="deliver_now">Seachadadh anois</string>
