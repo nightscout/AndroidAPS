@@ -34,7 +34,6 @@
     <string name="openapsma_iob_data_label">Данные IOB (активн инс)</string>
     <string name="openapsma_profile_label">Профиль</string>
     <string name="openapsma_meal_data_label">Данные приема пищи</string>
-    <string name="result">результат</string>
     <string name="openapsma_request_label">запрос</string>
     <string name="constraints">ограничения</string>
     <string name="openapsma_autosensdata_label">данные autosens</string>
