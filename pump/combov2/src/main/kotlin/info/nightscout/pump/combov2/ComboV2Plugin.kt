@@ -46,6 +46,7 @@ import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
+import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventOverviewBolusProgress.Treatment
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -138,6 +139,7 @@ class ComboV2Plugin @Inject constructor (
     // These are initialized in onStart() and torn down in onStop().
     private var bluetoothInterface: AndroidBluetoothInterface? = null
     private var pumpManager: ComboCtlPumpManager? = null
+    private var initializationChangedEventSent = false
 
     // These are initialized in connect() and torn down in disconnect().
     private var pump: ComboCtlPump? = null
@@ -259,6 +261,8 @@ class ComboV2Plugin @Inject constructor (
         _pairedStateUIFlow.value = paired
 
         setDriverState(DriverState.Disconnected)
+
+        // NOTE: EventInitializationChanged is sent in getPumpStatus() .
     }
 
     override fun onStop() {
@@ -281,6 +285,9 @@ class ComboV2Plugin @Inject constructor (
         unpairing = false
 
         setDriverState(DriverState.NotInitialized)
+
+        rxBus.send(EventInitializationChanged())
+        initializationChangedEventSent = false
 
         super.onStop()
     }
@@ -637,6 +644,13 @@ class ComboV2Plugin @Inject constructor (
             try {
                 executeCommand {
                     pump?.updateStatus()
+                }
+
+                // We send this event here, and not in onStart(), to include
+                // the initial pump status update before emitting the event.
+                if (!initializationChangedEventSent) {
+                    rxBus.send(EventInitializationChanged())
+                    initializationChangedEventSent = true
                 }
             } catch (e: CancellationException) {
                 throw e
