@@ -21,7 +21,6 @@
     <string name="need_storage_permission">App trenger tilgang til Lagring for lagre logg filer og eksportere innstillinger</string>
     <string name="askforpermission">Spør om tillatelse</string>
     <string name="need_whitelisting">%1$s trenger tillatelse for å omgå automatisk batterisparefunksjonene for å fungere tilfredsstillende</string>
-    <string name="import_setting">Import innstillinger</string>
     <string name="storedsettingsfound">Lagrede innstillinger funnet</string>
     <string name="master_password_summary">Hovedpassordet brukes for å beskytte backup og tilpasse enkelte sikkerhetsinnstillinger i appen. Husk passordet eller lagre det på et trygt sted.</string>
     <string name="current_master_password">Nåværende hovedpassord</string>
@@ -71,4 +70,7 @@
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
     <string name="configbuilder_sensitivity">Sensitivitetsdeteksjon</string>
     <string name="configbuilder_sensitivity_description">Hvilken sensitivitetsalgoritme skal benyttes?</string>
+    <!--ImportExport-->
+    <string name="import_setting">Import innstillinger</string>
+    <!--    Maintenance-->
 </resources>
