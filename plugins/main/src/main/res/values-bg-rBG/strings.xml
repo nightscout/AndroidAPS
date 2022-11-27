@@ -13,12 +13,6 @@
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="dia_short">DIA</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Приключихме, Браво!</string>
     <string name="maxiobset">Максимален IOB е зададен правилно</string>
@@ -51,7 +45,6 @@
     <string name="hardlimit">твърд лимит</string>
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <!-- Overview -->
-    <string name="snooze">Отложи</string>
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
     <string name="statuslights_iage_warning">Праг за инсулинова възраст [часа]</string>
     <string name="statuslights_iage_critical">Праг за критична инсулинова възраст [часа]</string>
@@ -70,10 +63,9 @@
     <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="chart_menu">Меню на графиката</string>
-    <string name="apsmode_title">APS режим</string>
-    <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Бърз болус</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Рестарт</string>
     <string name="deliver_now">Изпрати сега</string>
