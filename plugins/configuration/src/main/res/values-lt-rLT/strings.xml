@@ -57,4 +57,6 @@
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudoti?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
