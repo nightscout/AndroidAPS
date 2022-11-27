@@ -103,12 +103,4 @@
     <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">İçe aktarım sorun detayları</string>
-    <string name="check_preferences_import_btn">İçe aktarma</string>
-    <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
-    <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
-    <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
-    <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
-    <!--    Preferences -->
 </resources>
