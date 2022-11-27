@@ -19,4 +19,6 @@
     <string name="configbuilder_loop_description">Koristite ovo da aktivirate integraciju AAPS-ovog loop-a.</string>
     <string name="configbuilder_bgsource">GUK Izvor</string>
     <string name="configbuilder_bgsource_description">Odakle AAPS treba da dobija svoje podatke?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
