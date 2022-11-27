@@ -8,9 +8,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Lomlán</string>
     <!-- FillDialog -->
-    <string name="button1">Cnaipe 1</string>
-    <string name="button2">Cnaipe 2</string>
-    <string name="button3">Cnaipe 3</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
