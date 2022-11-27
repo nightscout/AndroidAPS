@@ -3,27 +3,16 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="nav_preferences">Voorkeure</string>
     <string name="nav_refreshtreatments">Verfris behandelings vanaf NS</string>
-    <string name="nav_resetdb">Herstel databasis</string>
-    <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
     <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
     <string name="delta">Delta</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
-    <string name="exported">Voorkeure uitgevoer</string>
-    <string name="export_to">Uitvoer instellings na</string>
-    <string name="import_from">Voer instellings in vanaf</string>
-    <string name="setting_imported">Instellings ingevoer</string>
-    <string name="filenotfound">Lêer nie gevind nie</string>
-    <string name="nav_export">Voer instellings uit na</string>
     <string name="save">Stoor</string>
     <string name="reloadprofile">Herlaai profiel</string>
     <string name="correctionbous">Corr</string>
     <string name="wear">Wear</string>
     <string name="ongoingnotificaction">Voortgesette kennisgewing</string>
     <string name="old_data">OU DATA</string>
-    <string name="restartingapp">Begin toepassing weer om instellings toe te pas.</string>
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
     <string name="ns_alarm_options">Alarm Opsies</string>
@@ -37,21 +26,11 @@
     <string name="enable_missed_bg_readings_alert">Stel in kennis as geen BG data ontvang is</string>
     <string name="enable_pump_unreachable_alert">Waarsku wanneer pomp onbereikbaar is</string>
     <string name="pump_unreachable_threshold">Pomp onbereikbaar drempel [min]</string>
-    <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
     <string name="open_navigation">Open navigasie</string>
     <string name="close_navigation">Sluit navigasie</string>
     <string name="error_adding_treatment_title">Behandeling data onvolledig</string>
-    <string name="maintenance_settings">Onderhoud instellings</string>
-    <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
-    <string name="maintenance">Onderhoud</string>
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Bied verskeie funksies vir onderhoud (bv. log stuur, log skrapping).</string>
-    <string name="send_all_logs">Stuur Logs per Epos</string>
-    <string name="delete_logs">Skrap joernaal</string>
     <string name="error_adding_treatment_message">\'n Behandeling (insulien: %1$.2f, koolhidrate: %2$d, by: %3$s) kon nie bygevoeg word by behandelings. Kontroleer asseblief en voeg per hand \'n rekord soos vanpas.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), vertraag: %3$d m</string>
-    <string name="nav_logsettings">Logboekinstellings</string>
-    <string name="resettodefaults">Herstel na verstek</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <!-- WEAR OS-->
 </resources>
