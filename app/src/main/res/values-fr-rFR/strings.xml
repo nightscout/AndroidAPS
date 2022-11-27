@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Préférences de %1$s</string>
-    <string name="nav_preferences">Préférences</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
-    <string name="nav_resetdb">Réinitialiser les Bases de Données </string>
-    <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
-    <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
-    <string name="exported">Préférences exportées</string>
-    <string name="ue_exported">Entrées utilisateur exportées</string>
-    <string name="export_to">Exporter les paramètres au</string>
-    <string name="import_from">Importer les paramètres depuis</string>
-    <string name="setting_imported">Paramètres importés</string>
-    <string name="filenotfound">Fichier introuvable</string>
-    <string name="nav_export">Exporter les paramètres</string>
-    <string name="password_preferences_encrypt_prompt">Le mot de passe principal vous sera demandé pour crypter les préférences exportées.</string>
-    <string name="preferences_export_canceled">Export annulé ! Les préférences n\'ont PAS été exportées !</string>
-    <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>
-    <string name="preferences_import_impossible">Impossible d\'importer les préférences !</string>
-    <string name="goto_main_try_again">Veuillez retourner à l\'écran principal et réessayer.</string>
-    <string name="old_master_password">Ancien mot de passe principal</string>
-    <string name="different_password_used">Ce fichier a été exporté et chiffré avec un mot de passe principal différent. Veuillez renseigner votre ancien mot de passe principal pour déchiffrer le fichier.</string>
-    <string name="master_password_will_be_replaced">Suite à l\'importation réussie, le mot de place principal actuel SERA REMPLACÉ par cet ancien mot de passe!</string>
     <string name="save">Enregistrer</string>
     <string name="reloadprofile">Actualiser le profil</string>
     <string name="correctionbous">Corr.</string>
@@ -36,7 +17,6 @@
     <string name="wear">Wear</string>
     <string name="ongoingnotificaction">Notification en cours</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
-    <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
     <string name="ns_alarm_options">Options d\'alarme</string>
@@ -54,26 +34,13 @@
     <string name="enable_pump_unreachable_alert">Alerte si la pompe est hors de portée</string>
     <string name="pump_unreachable_threshold">Seuil d\'alerte pompe hors de portée [min]</string>
     <string name="enable_carbs_req_alert">Alerte si glucides requis</string>
-    <string name="engineering_mode_enabled">Mode ingénierie actif</string>
     <string name="open_navigation">Ouvrir navigation</string>
     <string name="close_navigation">Fermer navigation</string>
     <string name="remove_items">Supprimer des entrées</string>
     <string name="sort_items">Trier les objets</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
-    <string name="maintenance_settings">Paramètres de maintenance</string>
-    <string name="maintenance_email">E-mail</string>
-    <string name="maintenance_amount">Nombre de journaux (Logs) à envoyer</string>
-    <string name="maintenance">Maintenance</string>
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
-    <string name="send_all_logs">Envoyer les logs par mail</string>
-    <string name="delete_logs">Supprimer les logs</string>
     <string name="error_adding_treatment_message">Le traitement (insuline : %1$.2f, glucides : %2$d, à : %3$s) n\'a pas pu être ajouté aux traitements. Vérifiez et ajoutez SVP manuellement ce traitement.</string>
     <string name="generated_ecarbs_note">eCarbs : %1$d g (%2$d h), retard : %3$d m</string>
-    <string name="log_files">Fichiers log</string>
-    <string name="miscellaneous">Divers</string>
-    <string name="nav_logsettings">Paramètres journal</string>
-    <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Unités</string>
     <string name="show_removed">Afficher les éléments supprimés</string>
@@ -96,7 +63,4 @@
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="sort_label">Trier</string>
     <string name="search">Chercher</string>
-    <string name="database_cleanup">Nettoyer la base de données</string>
-    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
-    <string name="cleared_entries">Entrées effacées</string>
 </resources>
