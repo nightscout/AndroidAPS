@@ -21,7 +21,6 @@
     <string name="need_storage_permission">La aplicación necesita permiso de almacenamiento para poder almacenar los archivos de registro y exportar las configuraciones</string>
     <string name="askforpermission">Pedir permiso</string>
     <string name="need_whitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
-    <string name="import_setting">Importar ajustes</string>
     <string name="storedsettingsfound">Encontrados ajustes de configuración</string>
     <string name="master_password_summary">La contraseña maestra se utiliza para cifrar la copia de seguridad y para desbloquear la seguridad de la aplicación. Recuérdala o guárdala en un lugar seguro.</string>
     <string name="current_master_password">Contraseña maestra actual</string>
@@ -76,4 +75,7 @@
     <string name="description_config_builder">Utilizado para configurar los complementos activos</string>
     <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="a11y_open_settings">abrir ajustes</string>
+    <!--ImportExport-->
+    <string name="import_setting">Importar ajustes</string>
+    <!--    Maintenance-->
 </resources>
