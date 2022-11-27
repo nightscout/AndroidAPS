@@ -12,12 +12,6 @@
     <!-- Food-->
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="description_objectives">Program učenja</string>
     <!-- Actions -->
@@ -25,9 +19,8 @@
     <!-- Safety -->
     <string name="treatmentssafety_title">Sigurnost tretmana</string>
     <!-- Overview -->
-    <string name="apsmode_title">APS režim</string>
-    <string name="setbasalquestion">Prihvatite novi privremeni bazal:</string>
     <string name="quickwizard">Brzi Čarobnjak</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <!-- Tidepool -->
     <!-- VirtualPump -->
