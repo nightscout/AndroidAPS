@@ -69,4 +69,6 @@
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
