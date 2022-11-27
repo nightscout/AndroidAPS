@@ -17,12 +17,6 @@
     <!-- Food-->
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
     <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
@@ -71,7 +65,6 @@
     <string name="hardlimit">sert sınır</string>
     <string name="treatmentssafety_title">Tedavi güvenliği</string>
     <!-- Overview -->
-    <string name="snooze">Ertele</string>
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
     <string name="statuslights_cage_warning">Kanül ömrü uyarısı belirle (saat) [h]</string>
     <string name="statuslights_cage_critical">Kritik kanül ömrü (saat) [h]</string>
@@ -95,10 +88,9 @@
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
-    <string name="apsmode_title">APS modu</string>
-    <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Hızlı Asistan</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Yeniden başlat</string>
     <string name="nsclient_token_title">NS erişim anahtarları</string>
