@@ -58,4 +58,6 @@
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
