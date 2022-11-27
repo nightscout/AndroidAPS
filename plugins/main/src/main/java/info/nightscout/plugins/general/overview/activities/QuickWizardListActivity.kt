@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -31,13 +31,14 @@ import info.nightscout.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDragListener {
+class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
@@ -45,6 +46,7 @@ class QuickWizardListActivity : DaggerAppCompatActivityWithResult(), OnStartDrag
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sp: SP
+    @Inject lateinit var rh: ResourceHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var actionHelper: ActionModeHelper<QuickWizardEntry>
