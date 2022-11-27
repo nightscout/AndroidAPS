@@ -22,12 +22,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
     <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
-    <string name="superbolus">סופר בולוס</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <!-- FillDialog -->
-    <string name="button1">כפתור 1</string>
-    <string name="button2">כפתור 2</string>
-    <string name="button3">כפתור 3</string>
     <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- InsulinDialog -->
