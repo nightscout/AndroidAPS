@@ -127,7 +127,7 @@
     <string name="disabled_loop">Boucle désactivée</string>
     <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
     <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
-    <string name="xdrip_status_settings">état Xdrip+ (montre)</string>
+    <string name="xdrip_status_settings">État Xdrip+ (montre)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
