@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">Leisti automatinį pranešimų apie programos trikdžius ir funkcijų naudojimo duomenų siuntimą kūrėjams, naudojant fabric.io servisą.</string>
     <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
+    <string name="apsmode_title">DKS režimas</string>
+    <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_profile">Profilis</string>
     <string name="configbuilder_aps">DKS</string>
@@ -52,8 +55,6 @@
     <string name="configbuilder_loop">Ciklas</string>
     <string name="configbuilder_insulin_description">Kokio tipo insuliną naudojate?</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
-    <string name="apsmode_title">DKS režimas</string>
-    <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudoti?</string>
 </resources>
