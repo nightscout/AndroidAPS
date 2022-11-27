@@ -24,7 +24,6 @@
     <string name="description_smb_dynamic_isf">Algoritmo più recente per utenti avanzati con ISF dinamico/automatico</string>
     <string name="openapsma_run">Esegui ora</string>
     <string name="openapsma_profile_label">Profilo</string>
-    <string name="result">Risultato</string>
     <string name="openapsma_request_label">Richiesta</string>
     <string name="constraints">Vincoli</string>
     <string name="openapsma_autosensdata_label">Dati autosens</string>
