@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">העדפות %1$s</string>
-    <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
-    <string name="nav_resetdb">איפוס מסדי נתונים</string>
-    <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="delta">דלתא</string>
     <string name="profile_label">פרופיל</string>
-    <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
-    <string name="exported">ההעדפות יוצאו</string>
-    <string name="ue_exported">רשומות המשתמש יוצאו</string>
-    <string name="export_to">ייצא הגדרות ל-</string>
-    <string name="import_from">יבא הגדרות מ-</string>
-    <string name="setting_imported">הגדרות מיובאות</string>
-    <string name="filenotfound">הקובץ לא נמצא</string>
-    <string name="nav_export">ייצא הגדרות</string>
-    <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
-    <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
-    <string name="preferences_import_canceled">ייבוא בוטל! ההעדפות לא הובאו!</string>
-    <string name="preferences_import_impossible">לא ניתן לייבא את ההגדרות!</string>
-    <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
-    <string name="old_master_password">סיסמה ראשית ישנה</string>
-    <string name="different_password_used">קובץ זה יוצא והוצפן באמצעות סיסמה ראשית שונה. אנא ספקו סיסמה ראשית זו כדי לפענח את הקובץ.</string>
-    <string name="master_password_will_be_replaced">בעקבות ייבוא ההגדרות הסיסמה הראשית הקיימת תוחלף עם הסיסמה הראשית המיובאת!</string>
     <string name="save">שמירה</string>
     <string name="reloadprofile">טעינה מחדש של הפרופיל</string>
     <string name="correctionbous">תיקון</string>
@@ -36,7 +17,6 @@
     <string name="wear">Wear</string>
     <string name="ongoingnotificaction">התראה מתמשכת</string>
     <string name="old_data">נתונים ישנים</string>
-    <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
     <string name="ns_alarm_options">אפשרויות התראה</string>
@@ -54,26 +34,13 @@
     <string name="enable_pump_unreachable_alert">התראה אם המשאבה בלתי נגישה</string>
     <string name="pump_unreachable_threshold">סף משאבה בלתי נגישה [min]</string>
     <string name="enable_carbs_req_alert">התראה אם יש צורך בפחמימות</string>
-    <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
     <string name="open_navigation">פתח ניווט</string>
     <string name="close_navigation">סגור ניווט</string>
     <string name="remove_items">הסר פריטים</string>
     <string name="sort_items">מיין פריטים</string>
     <string name="error_adding_treatment_title">נתוני טיפול לא שלמים</string>
-    <string name="maintenance_settings">הגדרות תחזוקה</string>
-    <string name="maintenance_email">נמען דוא\"ל</string>
-    <string name="maintenance_amount">מספר הרשומות למשלוח</string>
-    <string name="maintenance">תחזוקה</string>
-    <string name="maintenance_shortname">תחזוקה</string>
-    <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
-    <string name="send_all_logs">שלח יומנים בדוא\"ל</string>
-    <string name="delete_logs">מחק רישומים</string>
     <string name="error_adding_treatment_message">לא ניתן להוסיף טיפול (אינסולין: %1$.2f, פחמ\': %2$d, בשעה: %3$s) לטיפולים. נא לבדוק ולהוסיף רשומה באופן ידני כנדרש.</string>
     <string name="generated_ecarbs_note">פחמימות ממושכות: %1$d גר\' (%2$d ש\'), עיכוב %3$d דק\'</string>
-    <string name="log_files">קבצי יומן</string>
-    <string name="miscellaneous">שונות</string>
-    <string name="nav_logsettings">הגדרות יומן רישום</string>
-    <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="profile_total">== ∑  %1$s יח\'</string>
     <string name="unitsnosemicolon">יחידות</string>
     <string name="show_removed">הצג מחוקים</string>
