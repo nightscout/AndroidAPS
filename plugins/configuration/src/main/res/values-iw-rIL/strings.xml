@@ -62,4 +62,6 @@
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
     <string name="configbuilder_sensitivity">זיהוי רגישות</string>
     <string name="configbuilder_sensitivity_description">באיזה אלגוריתם זיהוי רגישות להשתמש?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
