@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Tercihler</string>
-    <string name="nav_preferences">Tercihler</string>
     <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
-    <string name="nav_resetdb">Veritabanlarını sıfırla</string>
-    <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
-    <string name="exported">Tercihler dışa aktarıldı</string>
-    <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
-    <string name="export_to">Ayarları aktar</string>
-    <string name="import_from">Ayarları içe aktar</string>
-    <string name="setting_imported">Ayarlar içe aktarıldı</string>
-    <string name="filenotfound">Dosya bulunamadı</string>
-    <string name="nav_export">Dışarı aktarma ayarları</string>
-    <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
-    <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
-    <string name="preferences_import_canceled">Aktarım iptal edildi! Tercihler içe aktarılmadı!</string>
-    <string name="preferences_import_impossible">Tercihler içe aktarılamıyor!</string>
-    <string name="goto_main_try_again">Lütfen ana ekrana dönün ve tekrar deneyin.</string>
-    <string name="old_master_password">Eski Ana Parola</string>
-    <string name="different_password_used">Bu dosya dışa aktarılmış ve farklı bir parola ile şifrelenmiş. Dosyanın şifresini çözmek için eski parolayı bulun.</string>
-    <string name="master_password_will_be_replaced">Başarılı içe aktarma işleminin sonucu olarak mevcut ana parola, eski ana parola ile DEĞİŞTİRİLECEKTİR!</string>
     <string name="save">Kaydet</string>
     <string name="reloadprofile">Profili yeniden yükle</string>
     <string name="correctionbous">Düzeltme</string>
@@ -36,7 +17,6 @@
     <string name="wear">Wear</string>
     <string name="ongoingnotificaction">Sürekli Bildirim</string>
     <string name="old_data">ESKİ VERİ</string>
-    <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
     <string name="nav_about">Hakkında</string>
     <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
     <string name="ns_alarm_options">Alarm türleri</string>
@@ -54,26 +34,13 @@
     <string name="enable_pump_unreachable_alert">Pompa ulaşılamıyorsa uyar</string>
     <string name="pump_unreachable_threshold">Pompa ulaşılamaz eşiği [dk]</string>
     <string name="enable_carbs_req_alert">Karbonhidrat gerekliyse uyar</string>
-    <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="remove_items">Öğeleri kaldır</string>
     <string name="sort_items">Öğeleri sırala</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
-    <string name="maintenance_settings">Bakım ayarları</string>
-    <string name="maintenance_email">E-Posta alıcısı</string>
-    <string name="maintenance_amount">Gönderilecek kayıt yok</string>
-    <string name="maintenance">Bakım</string>
-    <string name="maintenance_shortname">BAKIM</string>
-    <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
-    <string name="send_all_logs">Kayıtları E-posta ile Gönder</string>
-    <string name="delete_logs">Kayıtları Sil</string>
     <string name="error_adding_treatment_message">Tedavilere (insülin: %1$.2f, karbonhidrat: %2$d, %3$s) şeklinde bir tedavi eklenemedi. Lütfen kontrol edin ve uygun şekilde elle bir kayıt ekleyin.</string>
     <string name="generated_ecarbs_note">yKarb: %1$d g (%2$d sa), gecikme: %3$d dk</string>
-    <string name="log_files">Günlük dosyaları</string>
-    <string name="miscellaneous">Diğer Ayarlar</string>
-    <string name="nav_logsettings">Günlük ayarları</string>
-    <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="profile_total">== ∑  %1$s Ü</string>
     <string name="unitsnosemicolon">Birim</string>
     <string name="show_removed">Kaldırılanları göster</string>
@@ -96,7 +63,4 @@
     <string name="count_selected">%1$d seçildi</string>
     <string name="sort_label">Sırala</string>
     <string name="search">Ara</string>
-    <string name="database_cleanup">Veritabanı temizleme</string>
-    <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
-    <string name="cleared_entries">Temizlenen girişler</string>
 </resources>
