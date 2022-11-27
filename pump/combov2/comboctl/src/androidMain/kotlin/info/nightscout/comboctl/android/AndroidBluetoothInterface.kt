@@ -88,6 +88,13 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
 
     override var deviceFilterCallback: (deviceAddress: BluetoothAddress) -> Boolean = { true }
 
+    /**
+     * Safe version of getParcelableExtra depending on Android version running
+     */
+    fun <T> Intent.safeGetParcelableExtra(name: String?, clazz: Class<T>): T? =
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) getParcelableExtra(name, clazz)
+        else @Suppress("DEPRECATION") getParcelableExtra(name)
+
     fun setup() {
         val bluetoothManager = androidContext.getSystemService(Context.BLUETOOTH_SERVICE) as SystemBluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
@@ -334,7 +341,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
         // Sanity check to make sure we can actually get
         // a Bluetooth device out of the intent. Otherwise,
         // we have to wait for the next notification.
-        val androidBtDevice = intent.getParcelableExtra<SystemBluetoothDevice>(SystemBluetoothDevice.EXTRA_DEVICE)
+        val androidBtDevice = intent.safeGetParcelableExtra(SystemBluetoothDevice.EXTRA_DEVICE, SystemBluetoothDevice::class.java)
         if (androidBtDevice == null) {
             logger(LogLevel.DEBUG) { "Ignoring ACL_CONNECTED intent that has no Bluetooth device" }
             return
@@ -430,7 +437,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
         // If so, the caller may have to update states like
         // the pump state store accordingly.
 
-        val androidBtDevice = intent.getParcelableExtra<SystemBluetoothDevice>(SystemBluetoothDevice.EXTRA_DEVICE)
+        val androidBtDevice = intent.safeGetParcelableExtra(SystemBluetoothDevice.EXTRA_DEVICE, SystemBluetoothDevice::class.java)
         if (androidBtDevice == null) {
             logger(LogLevel.DEBUG) { "Ignoring BOND_STATE_CHANGED intent that has no Bluetooth device" }
             return
@@ -486,7 +493,7 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
     }
 
     private fun onPairingRequest(intent: Intent, btPairingPin: String) {
-        val androidBtDevice = intent.getParcelableExtra<SystemBluetoothDevice>(SystemBluetoothDevice.EXTRA_DEVICE)
+        val androidBtDevice = intent.safeGetParcelableExtra(SystemBluetoothDevice.EXTRA_DEVICE, SystemBluetoothDevice::class.java)
         if (androidBtDevice == null) {
             logger(LogLevel.DEBUG) { "Ignoring PAIRING_REQUEST intent that has no Bluetooth device" }
             return
