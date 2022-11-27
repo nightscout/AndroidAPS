@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s 首选项</string>
-    <string name="nav_preferences">参数选项</string>
     <string name="nav_refreshtreatments">从Nightscout刷新治疗数据</string>
-    <string name="nav_resetdb">重置数据库</string>
-    <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="nav_exit">退出</string>
     <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="delta">增量</string>
     <string name="profile_label">配置文件</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
-    <string name="exported">参数选项导出了</string>
-    <string name="ue_exported">用户条目已导出</string>
-    <string name="export_to">导出配置</string>
-    <string name="import_from">导入配置</string>
-    <string name="setting_imported">配置导入了</string>
-    <string name="filenotfound">找不到文件</string>
-    <string name="nav_export">导出配置</string>
-    <string name="password_preferences_encrypt_prompt">请您输入主密码，该密码将用于加密导出的首选项配置。</string>
-    <string name="preferences_export_canceled">导出已取消！首选项未导出！</string>
-    <string name="preferences_import_canceled">导入已取消! 未导入首选项 !</string>
-    <string name="preferences_import_impossible">无法导入首选项 !</string>
-    <string name="goto_main_try_again">请返回主屏幕，然后重试。</string>
-    <string name="old_master_password">旧的主密码</string>
-    <string name="different_password_used">此文件已导出并使用不同的主密码进行加密。 提供旧的主密码以解密文件。</string>
-    <string name="master_password_will_be_replaced">成功导入后，当前主密码将替换为旧主密码！</string>
     <string name="save">保存</string>
     <string name="reloadprofile">重新加载配置文件</string>
     <string name="correctionbous">矫正</string>
@@ -36,7 +17,6 @@
     <string name="wear">手表</string>
     <string name="ongoingnotificaction">持续的的通知</string>
     <string name="old_data">旧数据</string>
-    <string name="restartingapp">正在退出应用程序以应用设置。</string>
     <string name="nav_about">关于</string>
     <string name="smscommunicator_missingphonestatepermission">缺少手机状态权限</string>
     <string name="ns_alarm_options">报警选项</string>
@@ -54,24 +34,13 @@
     <string name="enable_pump_unreachable_alert">如果无法连接泵, 则发出警报</string>
     <string name="pump_unreachable_threshold">泵无法连接的时间阈值[min]</string>
     <string name="enable_carbs_req_alert">当需要碳水化合物时发出提醒</string>
-    <string name="engineering_mode_enabled">已启用工程模式</string>
     <string name="open_navigation">打开导航栏</string>
     <string name="close_navigation">关闭导航栏</string>
     <string name="remove_items">删除项目</string>
     <string name="sort_items">项目排序</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
-    <string name="maintenance_settings">维护设置</string>
-    <string name="maintenance_email">电子邮箱收件人</string>
-    <string name="maintenance_amount">没有要发送的日志</string>
-    <string name="maintenance">维护</string>
-    <string name="maintenance_shortname">维护</string>
-    <string name="description_maintenance">提供了几个维护功能 (例如日志发送、日志删除)。</string>
-    <string name="send_all_logs">用电子邮件发送</string>
-    <string name="delete_logs">删除日志</string>
     <string name="error_adding_treatment_message">一个治疗 (胰岛素: %1$.2f, 碳水: %2$d, 在: %3$s)不能被添加到治疗里。请检查并手动记录是合适的。</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d 克 (%2$d h), 延迟: %3$d 分钟</string>
-    <string name="nav_logsettings">日志设置</string>
-    <string name="resettodefaults">重置为默认值</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">单位</string>
     <string name="show_removed">显示已删除</string>
