@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
     <string name="sms_wrong_code">Código incorrecto. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Para entregar bolo %1$.2fU responder con el código %2$s</string>
