@@ -50,6 +50,9 @@
     <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
+    <string name="apsmode_title">Modo APS</string>
+    <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -66,8 +69,6 @@
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
-    <string name="apsmode_title">Modo APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <string name="configbuilder_sensitivity">Detección de sensibilidad</string>
     <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
 </resources>
