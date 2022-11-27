@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Настройки %1$s</string>
-    <string name="nav_preferences">Настройки</string>
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
-    <string name="nav_resetdb">обнулить базы</string>
-    <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="delta">изменение</string>
     <string name="profile_label">профиль</string>
-    <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
-    <string name="exported">настройки экспортированы</string>
-    <string name="ue_exported">Записи пользователя экспортированы</string>
-    <string name="export_to">экспортировать настройки в</string>
-    <string name="import_from">импортировать настройки из</string>
-    <string name="setting_imported">настройки импортированы</string>
-    <string name="filenotfound">файл не найден</string>
-    <string name="nav_export">экспорт настроек</string>
-    <string name="password_preferences_encrypt_prompt">Будет предложено ввести главный пароль, который будет использоваться для шифрования экспортированных параметров.</string>
-    <string name="preferences_export_canceled">Экспорт отменен! Настройки НЕ экспортированы!</string>
-    <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>
-    <string name="preferences_import_impossible">Не удается импортировать настройки!</string>
-    <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
-    <string name="old_master_password">Старый главный пароль</string>
-    <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
-    <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
     <string name="save">Сохранить</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="correctionbous">коррекция</string>
@@ -36,7 +17,6 @@
     <string name="wear">Смарт-часы Wear</string>
     <string name="ongoingnotificaction">текущие уведомления</string>
     <string name="old_data">старые данные</string>
-    <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
     <string name="ns_alarm_options">опции оповещения</string>
@@ -54,26 +34,13 @@
     <string name="enable_pump_unreachable_alert">Оповещать в случае недоступности помпы</string>
     <string name="pump_unreachable_threshold">Порог недоступности помпы [min]</string>
     <string name="enable_carbs_req_alert">Оповещать если требуются углеводы</string>
-    <string name="engineering_mode_enabled">Режим отладки включен</string>
     <string name="open_navigation">Показать панель навигации</string>
     <string name="close_navigation">Cкрыть панель навигации</string>
     <string name="remove_items">Удалить элементы</string>
     <string name="sort_items">Сортировать элементы</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
-    <string name="maintenance_settings">Параметры обслуживания</string>
-    <string name="maintenance_email">Адрес электронной почты</string>
-    <string name="maintenance_amount">Количество логов для отправки</string>
-    <string name="maintenance">Обслуживание</string>
-    <string name="maintenance_shortname">ОБСЛУЖ</string>
-    <string name="description_maintenance">Предоставляет возможности для обслуживания (например. отправку логов, удаление логов).</string>
-    <string name="send_all_logs">Отправить журналы (логи) по email</string>
-    <string name="delete_logs">Удалить записи журнала</string>
     <string name="error_adding_treatment_message">Назначение (инсулин: %1$.2f, углеводы: %2$d, в: %3$s) не было добавлено. Пожалуйста, проверьте и при необходимости добавьте запись вручную.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d г. (%2$d h), задержка: %3$d m</string>
-    <string name="log_files">Файлы журналов</string>
-    <string name="miscellaneous">Разное</string>
-    <string name="nav_logsettings">Настройки журнала</string>
-    <string name="resettodefaults">Восстановить значения по умолчанию</string>
     <string name="profile_total">== ∑  %1$s ед</string>
     <string name="unitsnosemicolon">Единицы</string>
     <string name="show_removed">Показать удаленные</string>
@@ -96,7 +63,4 @@
     <string name="count_selected">%1$d выбрано</string>
     <string name="sort_label">Сортировать</string>
     <string name="search">Поиск</string>
-    <string name="database_cleanup">Очистка базы данных</string>
-    <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
-    <string name="cleared_entries">Удалённые записи</string>
 </resources>
