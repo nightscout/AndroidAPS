@@ -50,6 +50,9 @@
     <string name="allow_automated_crash_reporting">Automatické odesílání chyb aplikace a statistiky používání vývojářům pomocí služby fabric.io.</string>
     <string name="summary_email_for_crash_report">Tato e-identifikace bude připojena ke zprávám o pádech aplikace, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
     <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
+    <string name="apsmode_title">Typ smyčky</string>
+    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -66,8 +69,6 @@
     <string name="configbuilder_insulin_description">Jaký druh inzulínu používáte?</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
-    <string name="apsmode_title">Typ smyčky</string>
-    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="configbuilder_sensitivity">Detekce citlivosti</string>
     <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
 </resources>
