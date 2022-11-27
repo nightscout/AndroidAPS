@@ -5,8 +5,6 @@
     <string name="bg_label">KŞ</string>
     <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="time_to_eat">Yemek zamanı</string>
-    <string name="enable_bolus_advisor">Bolus danışmanını etkinleştir</string>
-    <string name="enable_bolus_advisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
