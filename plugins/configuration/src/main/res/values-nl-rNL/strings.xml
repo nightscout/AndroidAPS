@@ -48,6 +48,9 @@
     <string name="allow_automated_crash_reporting">Sta automatische crashrapporten en verder gebruik van data toe zodat deze naar de ontwikkelaars via fabric.io kan verzonden worden.</string>
     <string name="summary_email_for_crash_report">Deze identificatie wordt gekoppeld aan crashrapporten, zodat we contact met je kunnen opnemen in urgente gevallen. Het is optioneel.</string>
     <string name="identification">Identificatie (e-mail, FB, Discord e. d.)</string>
+    <string name="apsmode_title">APS Mode</string>
+    <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pomp</string>
     <string name="configbuilder_pump_description">Welke pomp wilt u gebruiken met AAPS?</string>
     <string name="configbuilder_profile">Profiel</string>
@@ -64,8 +67,6 @@
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
-    <string name="apsmode_title">APS Mode</string>
-    <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
     <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
 </resources>
