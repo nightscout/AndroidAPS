@@ -126,15 +126,4 @@
     <string name="basal_rate">Débit de Basal</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">ARRÊT APPUYÉ</string>
-    <!--    PrefImport-->
-    <string name="check_preferences_details_btn">Explication des problèmes d\'importation…</string>
-    <string name="check_preferences_details_title">Détails des problèmes d\'importation</string>
-    <string name="check_preferences_import_btn">Import</string>
-    <string name="check_preferences_import_anyway_btn">Importer quand même (DANGEREUX !)</string>
-    <string name="import_setting">Importer les paramètres</string>
-    <string name="check_preferences_before_import">Veuillez vérifier les préférences avant d\'importer:</string>
-    <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
-    <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
-    <!--    Preferences -->
-    <string name="nav_plugin_preferences">Préférences du plugin</string>
 </resources>
