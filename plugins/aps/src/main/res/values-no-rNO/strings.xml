@@ -34,7 +34,6 @@
     <string name="openapsma_iob_data_label">IOB data</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_meal_data_label">Måltidsdata</string>
-    <string name="result">Resultat</string>
     <string name="openapsma_request_label">Forespørsel</string>
     <string name="constraints">Begrensninger</string>
     <string name="openapsma_autosensdata_label">Autosens-data</string>
