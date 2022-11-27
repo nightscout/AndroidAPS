@@ -28,12 +28,6 @@
     <!-- Profile -->
     <string name="localprofile">Профиль</string>
     <string name="do_you_want_switch_profile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Завершено, отлично!</string>
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
@@ -82,7 +76,6 @@
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <!-- Overview -->
-    <string name="snooze">Отложить</string>
     <string name="show_statuslights">Показать индикаторы состояния на главном экране</string>
     <string name="statuslights_cage_warning">Порог предупреждения о времени, отработанном катетером [h]</string>
     <string name="statuslights_cage_critical">Критический порог предупреждения о времени, отработанном катетером [h]</string>
@@ -106,10 +99,9 @@
     <string name="a11y_bg_quality">качество ГК</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови ГК</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
-    <string name="apsmode_title">Режим APS</string>
-    <string name="setbasalquestion">Принять новый врем базал:</string>
     <string name="overview_cgm">Непрерывный мониторинг ГК</string>
     <string name="quickwizard">Мастер Быстрого доступа</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="ns_client_v3">NSClientV3</string>
     <string name="ns_client_v3_short_name">NSV3</string>
