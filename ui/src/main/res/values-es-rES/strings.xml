@@ -35,14 +35,9 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolo</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
     <string name="fill_warning">Por favor, asegúrate de que la cantidad coincide con la especificada en el set de infusión!</string>
-    <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
-    <string name="button1">Botón 1</string>
-    <string name="button2">Botón 2</string>
-    <string name="button3">Botón 3</string>
     <string name="record_pump_site_change">Anotar el cambio de sitio de la bomba</string>
     <string name="record_insulin_cartridge_change">Anotar cambio del cartucho de insulina</string>
     <!-- InsulinDialog -->
