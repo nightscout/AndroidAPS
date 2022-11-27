@@ -35,14 +35,9 @@
     <string name="format_bg_isf">%1$s IDF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Süperbolus</string>
     <string name="treatments_wizard_total_label">Toplam</string>
     <!-- FillDialog -->
     <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
-    <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
-    <string name="button1">Buton 1</string>
-    <string name="button2">Buton 2</string>
-    <string name="button3">Buton 3</string>
     <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
     <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
     <!-- InsulinDialog -->
