@@ -19,12 +19,6 @@
     <string name="errors">Errors</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Enllestit, ben fet!</string>
     <string name="maxiobset">Màx IOB correctament configurada</string>
@@ -57,7 +51,6 @@
     <string name="hardlimit">límit estricte</string>
     <string name="treatmentssafety_title">Seguretat tractaments</string>
     <!-- Overview -->
-    <string name="snooze">Postposar</string>
     <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
     <string name="statuslights_iage_warning">Llindar per avís d\'edat de l\'insulina [h]</string>
     <string name="statuslights_iage_critical">Llindar avís crític per edat de l\'insulina [h]</string>
@@ -74,10 +67,9 @@
     <string name="statuslights">Llums d\'estat</string>
     <string name="statuslights_copy_ns">Copiar configuració d\'NS</string>
     <string name="chart_menu">Menú gràfica</string>
-    <string name="apsmode_title">Mode APS</string>
-    <string name="setbasalquestion">Acceptar nova basal temporal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Assistent</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Reiniciar</string>
     <string name="deliver_now">Lliurar ara</string>
