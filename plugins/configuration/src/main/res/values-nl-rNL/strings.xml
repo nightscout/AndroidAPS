@@ -69,4 +69,6 @@
     <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
     <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
