@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Ustawienia</string>
-    <string name="nav_preferences">Ustawienia</string>
     <string name="nav_refreshtreatments">Odśwież/pobierz zdarzenia z NS</string>
-    <string name="nav_resetdb">Zresetuj bazy danych</string>
-    <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="nav_exit">Wyjście</string>
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
-    <string name="configbuilder_nightscoutversion_label">Wersja Nightscout:</string>
-    <string name="exported">Ustawienia wyeksportowane</string>
-    <string name="ue_exported">Wyeksportowano wpisy użytkownika</string>
-    <string name="export_to">Eksportuj ustawienia do</string>
-    <string name="import_from">Importuj ustawienia z</string>
-    <string name="setting_imported">Ustawienia zaimportowane</string>
-    <string name="filenotfound">Nie znaleziono pliku</string>
-    <string name="nav_export">Eksportuj ustawienia</string>
-    <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych preferencji.</string>
-    <string name="preferences_export_canceled">Eksportowanie anulowane! Ustawienia NIE zostały wyeksportowane!</string>
-    <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
-    <string name="preferences_import_impossible">Nie można zaimportować ustawień!</string>
-    <string name="goto_main_try_again">Wróć do ekranu głównego i spróbuj ponownie.</string>
-    <string name="old_master_password">Stare hasło główne</string>
-    <string name="different_password_used">Ten plik zaszyfrowano innym hasłem głównym. Podaj te stare hasło główne którego używałeś do eksportu, aby odszyfrować plik.</string>
-    <string name="master_password_will_be_replaced">W efekcie udanego importu bieżące hasło główne ZOSTANIE ZASTĄPIONE starym hasłem głównym z importowanych ustawień!</string>
     <string name="save">ZACHOWAJ</string>
     <string name="reloadprofile">Załaduj profil ponownie</string>
     <string name="correctionbous">Korekta</string>
@@ -36,7 +17,6 @@
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
-    <string name="restartingapp">Zamykanie aplikacji w celu wprowadzenia ustawień.</string>
     <string name="nav_about">O programie</string>
     <string name="smscommunicator_missingphonestatepermission">Brak uprawnień do wykrywania stanu telefonu</string>
     <string name="ns_alarm_options">Opcje alarmu</string>
@@ -54,23 +34,11 @@
     <string name="enable_pump_unreachable_alert">Alarm, gdy pompa jest nieosiągalna</string>
     <string name="pump_unreachable_threshold">Pompa nieosiągalna próg [min]</string>
     <string name="enable_carbs_req_alert">Alarm gdy wymagane jest podanie węglowodanów</string>
-    <string name="engineering_mode_enabled">Tryb Inżynierski włączony</string>
     <string name="open_navigation">Otwórz menu</string>
     <string name="close_navigation">Zamknij menu</string>
     <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
-    <string name="maintenance_settings">Ustawienia Konserwacji</string>
-    <string name="maintenance_email">Odbiorca E-maila</string>
-    <string name="maintenance_amount">Liczba logów do wysłania</string>
-    <string name="maintenance">Konserwacja</string>
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
-    <string name="send_all_logs">Wyślij Logi Emailem</string>
-    <string name="delete_logs">Usuń logi</string>
     <string name="error_adding_treatment_message">Leczenie (insulina: %1$.2f, węglowodany: %2$d, czas:%3$s) nie mogą być dodane. Sprawdź i dodaj ręcznie rekord w razie potrzeby.</string>
     <string name="generated_ecarbs_note">eWęgle: %1$d g (%2$d h), Opóźnienie: %3$d m</string>
-    <string name="log_files">Log files</string>
-    <string name="nav_logsettings">Ustawienia logów</string>
-    <string name="resettodefaults">Przywróć ustawienia domyślne</string>
     <string name="profile_total">== ∑ %1$s U</string>
     <string name="unitsnosemicolon">Jednostki</string>
     <string name="show_removed">Pokaż usunięte</string>
