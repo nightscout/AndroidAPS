@@ -445,6 +445,18 @@
     <string name="loop_open_mode_min_change">Changement minimum [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
+    <string name="send_logfiles">Envoyer les fichiers journaux d\'aujourd\'hui aux développeurs avec l\'heure actuel. Situation inattendue.</string>
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
+    <string name="no_watch_connected">(Pas de montre connectée)</string>
+    <string name="pump_status">État de la pompe</string>
+    <string name="loop_status">État de la boucle</string>
+    <string name="wizard_result">Calc. Assistant :\nInsuline : %1$.2fU\nGlucides : %2$dg</string>
+    <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
+    <string name="quick_wizard_message">Assistant : %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temp. : %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
 </resources>
