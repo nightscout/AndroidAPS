@@ -16,12 +16,6 @@
     <!-- Profile -->
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Terminado, parabéns!</string>
     <string name="maxiobset">IA máxima definida corretamente</string>
@@ -54,7 +48,6 @@
     <string name="hardlimit">limite rígido</string>
     <string name="treatmentssafety_title">Segurança de Tratamentos</string>
     <!-- Overview -->
-    <string name="snooze">Silenciar</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_iage_warning">Limite aviso idade insulina [h]</string>
     <string name="statuslights_iage_critical">Limite crítico da idade da insulina [h]</string>
@@ -71,10 +64,9 @@
     <string name="statuslights">Luzes de Estado</string>
     <string name="statuslights_copy_ns">Copiar definições do NS</string>
     <string name="chart_menu">Menu do Gráfico</string>
-    <string name="apsmode_title">Modo APS</string>
-    <string name="setbasalquestion">Aceitar nova basal temporária:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Assistente Rápido</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Reiniciar</string>
     <string name="deliver_now">Administrar agora</string>
