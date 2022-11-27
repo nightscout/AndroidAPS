@@ -26,6 +26,9 @@
     <string name="snooze">Snooze</string>
     <string name="virtual_pump">Virtual Pump</string>
     <string name="constraints">Constraints</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pump paused</string>
+    <string name="and">And</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview
+package info.nightscout.plugins.general.overview
 
 import android.annotation.SuppressLint
 import android.app.NotificationManager
@@ -27,18 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewIobCob
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewSensitivity
-import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.automation.AutomationPlugin
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.ProfileSealed
@@ -56,10 +47,15 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.aps.VariableSensitivityResult
+import info.nightscout.interfaces.automation.Automation
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
+import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -70,16 +66,20 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
+import info.nightscout.plugins.general.overview.activities.QuickWizardListActivity
+import info.nightscout.plugins.general.overview.events.EventUpdateOverviewCalcProgress
+import info.nightscout.plugins.general.overview.events.EventUpdateOverviewGraph
+import info.nightscout.plugins.general.overview.events.EventUpdateOverviewIobCob
+import info.nightscout.plugins.general.overview.events.EventUpdateOverviewSensitivity
+import info.nightscout.plugins.general.overview.graphData.GraphData
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
 import info.nightscout.plugins.skins.SkinProvider
 import info.nightscout.plugins.source.DexcomPlugin
 import info.nightscout.plugins.source.XdripPlugin
-import info.nightscout.interfaces.nsclient.NSSettingsStatus
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -101,14 +101,6 @@ import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.ui.dialogs.CalibrationDialog
-import info.nightscout.ui.dialogs.CarbsDialog
-import info.nightscout.ui.dialogs.InsulinDialog
-import info.nightscout.ui.dialogs.LoopDialog
-import info.nightscout.ui.dialogs.ProfileSwitchDialog
-import info.nightscout.ui.dialogs.TempTargetDialog
-import info.nightscout.ui.dialogs.TreatmentDialog
-import info.nightscout.ui.dialogs.WizardDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -150,8 +142,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
-    @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var bgQualityCheckPlugin: BgQualityCheckPlugin
+    @Inject lateinit var automation: Automation
+    @Inject lateinit var bgQualityCheck: BgQualityCheck
     @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
@@ -375,28 +367,28 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.treatment_button    -> protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { if (isAdded) TreatmentDialog().show(childFragmentManager, "Overview") })
+                    UIRunnable { if (isAdded) activityNames.runTreatmentDialog(childFragmentManager) })
 
                 R.id.wizard_button       -> protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { if (isAdded) WizardDialog().show(childFragmentManager, "Overview") })
+                    UIRunnable { if (isAdded) activityNames.runWizardDialog(childFragmentManager) })
 
                 R.id.insulin_button      -> protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { if (isAdded) InsulinDialog().show(childFragmentManager, "Overview") })
+                    UIRunnable { if (isAdded) activityNames.runInsulinDialog(childFragmentManager) })
 
                 R.id.quick_wizard_button -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if (isAdded) onClickQuickWizard() })
                 R.id.carbs_button        -> protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { if (isAdded) CarbsDialog().show(childFragmentManager, "Overview") })
+                    UIRunnable { if (isAdded) activityNames.runCarbsDialog(childFragmentManager) })
 
                 R.id.temp_target         -> protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { if (isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
+                    UIRunnable { if (isAdded) activityNames.runTempTargetDialog(childFragmentManager) })
 
                 R.id.active_profile      -> {
                     activityNames.runProfileViewerDialog(
@@ -419,7 +411,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 R.id.calibration_button  -> {
                     if (xdripPlugin.isEnabled()) {
-                        CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
+                        activityNames.runCalibrationDialog(childFragmentManager)
                     } else if (dexcomPlugin.isEnabled()) {
                         try {
                             dexcomMediator.findDexcomPackageName()?.let {
@@ -431,7 +423,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             }
                                 ?: ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_installed))
                         } catch (e: ActivityNotFoundException) {
-                            ToastUtils.infoToast(activity, rh.gs(R.string.g5appnotdetected))
+                            ToastUtils.infoToast(activity, rh.gs(R.string.dexcom_app_not_detected))
                         }
                     }
                 }
@@ -461,9 +453,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 R.id.aps_mode            -> {
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                        if (isAdded) LoopDialog().also { dialog ->
-                            dialog.arguments = Bundle().also { it.putInt("showOkCancel", 1) }
-                        }.show(childFragmentManager, "Overview")
+                        if (isAdded) activityNames.runLoopDialog(childFragmentManager, 1)
                     })
                 }
             }
@@ -494,9 +484,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             R.id.aps_mode            -> {
                 activity?.let { activity ->
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                        LoopDialog().also { dialog ->
-                            dialog.arguments = Bundle().also { it.putInt("showOkCancel", 0) }
-                        }.show(childFragmentManager, "Overview")
+                        activityNames.runLoopDialog(childFragmentManager, 0)
                     })
                 }
             }
@@ -508,7 +496,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     protectionCheck.queryProtection(
                         activity,
                         ProtectionCheck.Protection.BOLUS,
-                        UIRunnable { ProfileSwitchDialog().show(childFragmentManager, "ProfileSwitchDialog") })
+                        UIRunnable { activityNames.runProfileSwitchDialog(childFragmentManager) })
             }
 
         }
@@ -528,7 +516,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
                 activity?.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                        OKDialog.show(it, rh.gs(R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.changeyourinput))
+                        OKDialog.show(it, rh.gs(R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
                         return
                     }
                     wizard.confirmAndExecute(it)
@@ -571,7 +559,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding ?: return@runOnUiThread
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && (loop as PluginBase).isEnabled()) {
                 binding.buttonsLayout.acceptTempButton.visibility = View.VISIBLE
-                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.setbasalquestion)}\n${lastRun!!.constraintsProcessed}"
+                binding.buttonsLayout.acceptTempButton.text = "${rh.gs(R.string.set_basal_question)}\n${lastRun!!.constraintsProcessed}"
             } else {
                 binding.buttonsLayout.acceptTempButton.visibility = View.GONE
             }
@@ -610,10 +598,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             // Automation buttons
             binding.buttonsLayout.userButtonsLayout.removeAllViews()
-            val events = automationPlugin.userEvents()
+            val events = automation.userEvents()
             if (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null)
                 for (event in events)
-                    if (event.isEnabled && event.trigger.shouldRun())
+                    if (event.isEnabled && event.canRun())
                         context?.let { context ->
                             SingleClickButton(context, null, R.attr.customBtnStyle).also {
                                 it.setTextColor(rh.gac(context, R.attr.treatmentButton))
@@ -625,7 +613,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                 it.text = event.title
 
                                 it.setOnClickListener {
-                                    OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automationPlugin.processEvent(event) } })
+                                    OKDialog.showConfirmation(context, rh.gs(R.string.run_question, event.title), { handler.post { automation.processEvent(event) } })
                                 }
                                 binding.buttonsLayout.userButtonsLayout.addView(it)
                             }
@@ -644,7 +632,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
             } else {
-                binding.infoLayout.apsMode.contentDescription = rh.gs(R.string.apsmode_title) + " " + rh.gs(stringRes)
+                binding.infoLayout.apsMode.contentDescription = rh.gs(R.string.aps_mode_title) + " " + rh.gs(stringRes)
             }
         }
 
@@ -830,13 +818,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.infoLayout.timeAgo.contentDescription = dateUtil.minAgoLong(rh, lastBg?.timestamp)
             binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(lastBg?.timestamp) + ")"
 
-            val qualityIcon = bgQualityCheckPlugin.icon()
+            val qualityIcon = bgQualityCheck.icon()
             if (qualityIcon != 0) {
                 binding.infoLayout.bgQuality.visibility = View.VISIBLE
                 binding.infoLayout.bgQuality.setImageResource(qualityIcon)
-                binding.infoLayout.bgQuality.contentDescription = rh.gs(R.string.a11y_bg_quality) + " " + bgQualityCheckPlugin.stateDescription()
+                binding.infoLayout.bgQuality.contentDescription = rh.gs(R.string.a11y_bg_quality) + " " + bgQualityCheck.stateDescription()
                 binding.infoLayout.bgQuality.setOnClickListener {
-                    context?.let { context -> OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheckPlugin.message) }
+                    context?.let { context -> OKDialog.show(context, rh.gs(R.string.data_status), bgQualityCheck.message) }
                 }
             } else {
                 binding.infoLayout.bgQuality.visibility = View.GONE
@@ -916,7 +904,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             insulinAge.visibility = isPatchPump.not().toVisibility()
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
             pbAge.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
-            val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS && pump is OmnipodErosPumpPlugin)
+            val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS)
                 || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
             batteryLevel.visibility = useBatteryLevel.toVisibility()
             statusLights.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
@@ -1118,7 +1106,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val request = loop.lastRun?.request
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
-            if (config.APS && request is info.nightscout.plugins.aps.openAPSSMB.DetermineBasalResultSMB) request.variableSens ?: 0.0
+            if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
             else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
             else 0.0
 

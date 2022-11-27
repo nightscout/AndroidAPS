@@ -108,7 +108,7 @@
                     android:layout_gravity="top"
                     android:paddingStart="10dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/overview_editquickwizard_valid"
+                    android:text="@string/overview_edit_quickwizard_valid"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <TextView

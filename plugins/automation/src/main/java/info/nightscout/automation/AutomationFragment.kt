@@ -66,7 +66,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
-    private lateinit var actionHelper: ActionModeHelper<AutomationEvent>
+    private lateinit var actionHelper: ActionModeHelper<AutomationEventObject>
     private val itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback())
     private var _binding: AutomationFragmentBinding? = null
 
@@ -286,7 +286,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         }
     }
 
-    private fun getConfirmationText(selectedItems: SparseArray<AutomationEvent>): String {
+    private fun getConfirmationText(selectedItems: SparseArray<AutomationEventObject>): String {
         if (selectedItems.size() == 1) {
             val event = selectedItems.valueAt(0)
             return rh.gs(R.string.removerecord) + " " + event.title
@@ -294,7 +294,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected(selectedItems: SparseArray<AutomationEvent>) {
+    private fun removeSelected(selectedItems: SparseArray<AutomationEventObject>) {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, event ->
@@ -311,7 +311,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         actionHelper.finish()
         EditEventDialog().also {
             it.arguments = Bundle().apply {
-                putString("event", AutomationEvent(injector).toJSON())
+                putString("event", AutomationEventObject(injector).toJSON())
                 putInt("position", -1) // New event
             }
         }.show(childFragmentManager, "EditEventDialog")

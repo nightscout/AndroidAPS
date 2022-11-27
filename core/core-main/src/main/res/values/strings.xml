@@ -59,7 +59,7 @@
     <string name="loading">Loading …</string>
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
-    <string name="addnew">Add new</string>
+    <string name="add_new">Add new</string>
     <string name="addnew_above">Add new above</string>
     <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
     <string name="bg_label">BG</string>

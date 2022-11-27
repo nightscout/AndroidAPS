@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.activities
+package info.nightscout.plugins.general.overview.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -14,11 +14,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.OverviewQuickwizardlistActivityBinding
-import info.nightscout.androidaps.databinding.OverviewQuickwizardlistItemBinding
-import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
-import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.ActionModeHelper
@@ -28,6 +23,11 @@ import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.interfaces.dragHelpers.OnStartDragListener
 import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
+import info.nightscout.plugins.R
+import info.nightscout.plugins.databinding.OverviewQuickwizardlistActivityBinding
+import info.nightscout.plugins.databinding.OverviewQuickwizardlistItemBinding
+import info.nightscout.plugins.general.overview.dialogs.EditQuickWizardDialog
+import info.nightscout.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility

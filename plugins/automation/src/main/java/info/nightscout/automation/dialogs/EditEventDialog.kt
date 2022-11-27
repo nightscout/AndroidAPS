@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.HasAndroidInjector
-import info.nightscout.automation.AutomationEvent
+import info.nightscout.automation.AutomationEventObject
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.R
 import info.nightscout.automation.actions.Action
@@ -38,7 +38,7 @@ class EditEventDialog : BaseDialog() {
     @Inject lateinit var automationPlugin: AutomationPlugin
 
     private var actionListAdapter: ActionListAdapter? = null
-    private lateinit var event: AutomationEvent
+    private lateinit var event: AutomationEventObject
     private var position: Int = -1
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -53,11 +53,11 @@ class EditEventDialog : BaseDialog() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        event = AutomationEvent(injector)
+        event = AutomationEventObject(injector)
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             position = bundle.getInt("position", -1)
-            bundle.getString("event")?.let { event = AutomationEvent(injector).fromJSON(it, position) }
+            bundle.getString("event")?.let { event = AutomationEventObject(injector).fromJSON(it, position) }
         }
 
         onCreateViewGeneral()

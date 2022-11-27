@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview
+package info.nightscout.plugins.general.overview
 
 import android.content.Context
 import android.text.SpannableString
@@ -11,10 +11,10 @@ import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
-import info.nightscout.androidaps.R
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale
@@ -39,14 +39,14 @@ class OverviewMenus @Inject constructor(
         PRE(R.string.overview_show_predictions, R.attr.predictionColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname),
         TREAT(R.string.overview_show_treatments, R.attr.cobColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname),
         BAS(R.string.overview_show_basals, R.attr.basal, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname),
-        ABS(R.string.overview_show_absinsulin, R.attr.iobColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.abs_insulin_shortname),
+        ABS(R.string.overview_show_abs_insulin, R.attr.iobColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.abs_insulin_shortname),
         IOB(R.string.overview_show_iob, R.attr.iobColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.iob),
         COB(R.string.overview_show_cob, R.attr.cobColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.cob),
         DEV(R.string.overview_show_deviations, R.attr.bgiColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.deviation_shortname),
         BGI(R.string.overview_show_bgi, R.attr.bgiColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.bgi_shortname),
         SEN(R.string.overview_show_sensitivity, R.attr.ratioColor, R.attr.menuTextColorInverse, primary = false, secondary = true, shortnameId = R.string.sensitivity_shortname),
         ACT(R.string.overview_show_activity, R.attr.activityColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.activity_shortname),
-        DEVSLOPE(R.string.overview_show_deviationslope, R.attr.devSlopePosColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.devslope_shortname)
+        DEVSLOPE(R.string.overview_show_deviation_slope, R.attr.devSlopePosColor, R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.devslope_shortname)
     }
 
     companion object {
@@ -72,13 +72,13 @@ class OverviewMenus @Inject constructor(
     @Synchronized
     private fun storeGraphConfig() {
         val sts = Gson().toJson(_setting)
-        sp.putString(R.string.key_graphconfig, sts)
+        sp.putString(R.string.key_graph_config, sts)
         aapsLogger.debug(sts)
     }
 
     @Synchronized
     fun loadGraphConfig() {
-        val sts = sp.getString(R.string.key_graphconfig, "")
+        val sts = sp.getString(R.string.key_graph_config, "")
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
             // reset when new CharType added

@@ -1,7 +1,9 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
+import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -43,7 +45,7 @@ class BgQualityCheckPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.bg_quality),
     aapsLogger, rh, injector
-), Constraints {
+), Constraints, BgQualityCheck {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -68,7 +70,7 @@ class BgQualityCheckPlugin @Inject constructor(
     }
 
     var state: State = State.UNKNOWN
-    var message: String = ""
+    override var message: String = ""
 
     // Fallback to LGS if BG values are doubled
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
@@ -100,7 +102,7 @@ class BgQualityCheckPlugin @Inject constructor(
         }
     }
 
-    fun icon(): Int =
+    @DrawableRes override fun icon(): Int =
         when (state) {
             State.UNKNOWN       -> 0
             State.FIVE_MIN_DATA -> 0
@@ -108,7 +110,7 @@ class BgQualityCheckPlugin @Inject constructor(
             State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
         }
 
-    fun stateDescription(): String =
+    override fun stateDescription(): String =
         when (state) {
             State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
             State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)

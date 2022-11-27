@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".plugins.general.overview.activities.QuickWizardListActivity">
+    tools:context="info.nightscout.plugins.general.overview.activities.QuickWizardListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
@@ -19,7 +19,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
-        android:contentDescription="@string/addnew"
+        android:contentDescription="@string/add_new"
         android:focusable="true"
         android:src="@drawable/ic_add_black_24dp"
         tools:ignore="RelativeOverlap" />

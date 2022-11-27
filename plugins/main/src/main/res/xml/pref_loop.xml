@@ -13,7 +13,7 @@
             android:entries="@array/aps_modeArray"
             android:entryValues="@array/aps_modeValues"
             android:key="@string/key_aps_mode"
-            android:title="@string/apsmode_title" />
+            android:title="@string/aps_mode_title" />
 
         <info.nightscout.core.validators.ValidatingEditTextPreference
             android:defaultValue="20"

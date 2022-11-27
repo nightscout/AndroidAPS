@@ -4,7 +4,7 @@
     style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.general.overview.dialogs.EditQuickWizardDialog">
+    tools:context="info.nightscout.plugins.general.overview.dialogs.EditQuickWizardDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/quickwizardsettings"
+                android:text="@string/quickwizard_settings"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@+id/button_edit"
-            android:text="@string/overview_editquickwizard_buttontext"
+            android:text="@string/overview_edit_quickwizard_button_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:labelFor="@+id/carbs_edit"
-            android:text="@string/overview_editquickwizard_carbs"
+            android:text="@string/overview_edit_quickwizard_carbs"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="@string/overview_editquickwizard_valid"
+                android:text="@string/overview_edit_quickwizard_valid"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
@@ -112,7 +112,7 @@
             android:id="@+id/device_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_show_on_device"
+            android:text="@string/overview_edit_quickwizard_show_on_device"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
@@ -141,7 +141,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usebg"
+            android:text="@string/overview_edit_quickwizard_use_bg"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
@@ -165,7 +165,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usebolusiob"
+            android:text="@string/overview_edit_quickwizard_use_bolus_iob"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
@@ -189,7 +189,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usebasaliob"
+            android:text="@string/overview_edit_quickwizard_use_basal_iob"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
@@ -211,12 +211,12 @@
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/positiveonly" />
+                android:text="@string/positive_only" />
 
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/negativeonly" />
+                android:text="@string/negative_only" />
 
         </RadioGroup>
 
@@ -249,7 +249,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usetrend"
+            android:text="@string/overview_edit_quickwizard_use_trend"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
@@ -271,19 +271,19 @@
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/positiveonly" />
+                android:text="@string/positive_only" />
 
             <RadioButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/negativeonly" />
+                android:text="@string/negative_only" />
 
         </RadioGroup>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_usesuperbolus"
+            android:text="@string/overview_edit_quickwizard_use_superbolus"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <RadioGroup
@@ -358,7 +358,7 @@
             android:id="@+id/percentage_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/overview_editquickwizard_percentage"
+            android:text="@string/overview_edit_quickwizard_percentage"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <EditText

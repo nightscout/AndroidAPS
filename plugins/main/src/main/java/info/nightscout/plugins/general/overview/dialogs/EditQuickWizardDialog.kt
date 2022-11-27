@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.plugins.general.overview.dialogs
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -10,14 +10,14 @@ import android.view.WindowManager
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.OverviewEditquickwizardDialogBinding
-import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.extensions.selectedItemPosition
 import info.nightscout.androidaps.utils.extensions.setEnableForChildren
 import info.nightscout.androidaps.utils.extensions.setSelection
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
+import info.nightscout.plugins.R
+import info.nightscout.plugins.databinding.OverviewEditquickwizardDialogBinding
+import info.nightscout.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.SafeParse
@@ -36,8 +36,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var sp: SP
 
     var position = -1
-    var fromSeconds: Int = 0
-    var toSeconds: Int = 0
+    private var fromSeconds: Int = 0
+    private var toSeconds: Int = 0
 
     private var _binding: OverviewEditquickwizardDialogBinding? = null
 

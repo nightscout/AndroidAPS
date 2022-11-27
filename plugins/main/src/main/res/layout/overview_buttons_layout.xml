@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:text="@string/setbasalquestion"
+        android:text="@string/set_basal_question"
         android:textColor="?attr/acceptTempButtonColor"
         android:visibility="gone" />
 

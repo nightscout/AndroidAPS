@@ -20,13 +20,18 @@ import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.SingleFragmentActivity
 import info.nightscout.ui.activities.TDDStatsActivity
 import info.nightscout.ui.dialogs.BolusProgressDialog
+import info.nightscout.ui.dialogs.CalibrationDialog
+import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.ui.dialogs.CareDialog
 import info.nightscout.ui.dialogs.ExtendedBolusDialog
 import info.nightscout.ui.dialogs.FillDialog
+import info.nightscout.ui.dialogs.InsulinDialog
+import info.nightscout.ui.dialogs.LoopDialog
 import info.nightscout.ui.dialogs.ProfileSwitchDialog
 import info.nightscout.ui.dialogs.ProfileViewerDialog
 import info.nightscout.ui.dialogs.TempBasalDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
+import info.nightscout.ui.dialogs.TreatmentDialog
 import info.nightscout.ui.dialogs.WizardDialog
 import javax.inject.Inject
 
@@ -52,14 +57,20 @@ class ActivityNamesImpl @Inject constructor(
         ctx.startActivity(i)
     }
 
-    override fun runWizard(fragmentManager: FragmentManager, carbs: Int, name: String) {
+    override fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int?, name: String?) {
         WizardDialog().also { dialog ->
             dialog.arguments = Bundle().also { bundle ->
-                bundle.putDouble("carbs_input", carbs.toDouble())
-                bundle.putString("notes_input", " $name - ${carbs}g")
+                carbs?.let { bundle.putDouble("carbs_input", carbs.toDouble())}
+                name?.let {bundle.putString("notes_input", " $name - ${carbs}g") }
             }
         }.show(fragmentManager, "Food Item")
 
+    }
+
+    override fun runLoopDialog(fragmentManager: FragmentManager, showOkCancel: Int) {
+        LoopDialog()
+            .also { it.arguments = Bundle().also { bundle -> bundle.putInt("showOkCancel", showOkCancel) } }
+            .show(fragmentManager, "LoopDialog")
     }
 
     override fun runProfileSwitchDialog(fragmentManager: FragmentManager, profileName: String?) {
@@ -71,6 +82,26 @@ class ActivityNamesImpl @Inject constructor(
     override fun runTempBasalDialog(fragmentManager: FragmentManager) {
         TempBasalDialog()
             .show(fragmentManager, "TempBasalDialog")
+    }
+
+    override fun runTreatmentDialog(fragmentManager: FragmentManager) {
+        TreatmentDialog()
+            .show(fragmentManager, "TreatmentDialog")
+    }
+
+    override fun runInsulinDialog(fragmentManager: FragmentManager) {
+        InsulinDialog()
+            .show(fragmentManager, "InsulinDialog")
+    }
+
+    override fun runCalibrationDialog(fragmentManager: FragmentManager) {
+        CalibrationDialog()
+            .show(fragmentManager, "CalibrationDialog")
+    }
+
+    override fun runCarbsDialog(fragmentManager: FragmentManager) {
+        CarbsDialog()
+            .show(fragmentManager, "CarbsDialog")
     }
 
     override fun runTempTargetDialog(fragmentManager: FragmentManager) {

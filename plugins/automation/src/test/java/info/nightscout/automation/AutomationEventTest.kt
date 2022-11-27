@@ -26,7 +26,7 @@ class AutomationEventTest : TestBase() {
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is AutomationEvent) {
+            if (it is AutomationEventObject) {
                 it.aapsLogger = aapsLogger
             }
             if (it is Action) {
@@ -44,7 +44,7 @@ class AutomationEventTest : TestBase() {
     @Test
     fun testCloneEvent() {
         // create test object
-        val event = AutomationEvent(injector)
+        val event = AutomationEventObject(injector)
         event.title = "Test"
         event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem)) as TriggerConnector
         event.addAction(ActionLoopEnable(injector))
@@ -55,7 +55,7 @@ class AutomationEventTest : TestBase() {
         Assert.assertEquals(eventJsonExpected, event.toJSON())
 
         // clone
-        val clone = AutomationEvent(injector).fromJSON(eventJsonExpected, 1)
+        val clone = AutomationEventObject(injector).fromJSON(eventJsonExpected, 1)
 
         // check title
         Assert.assertEquals(event.title, clone.title)
@@ -74,7 +74,7 @@ class AutomationEventTest : TestBase() {
 
     @Test
     fun hasStopProcessing() {
-        val event = AutomationEvent(injector)
+        val event = AutomationEventObject(injector)
         event.title = "Test"
         event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem)) as TriggerConnector
         Assert.assertFalse(event.hasStopProcessing())

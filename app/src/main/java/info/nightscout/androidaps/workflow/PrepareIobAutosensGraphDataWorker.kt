@@ -10,7 +10,6 @@ import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.DataPointWithLabelInterface
@@ -31,6 +30,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.DecimalFormatter
+import info.nightscout.plugins.general.overview.OverviewMenus
 import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

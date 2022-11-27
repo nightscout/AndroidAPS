@@ -1,4 +1,4 @@
-package info.nightscout.plugins.di
+package info.nightscout.plugins.aps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

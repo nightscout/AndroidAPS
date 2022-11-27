@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.graphData
+package info.nightscout.plugins.general.overview.graphData
 
 import android.content.Context
 import android.graphics.DashPathEffect
@@ -8,7 +8,6 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.BolusDataPoint
 import info.nightscout.core.graph.data.EffectiveProfileSwitchDataPoint
@@ -19,6 +18,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.Round
+import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject

@@ -16,7 +16,9 @@ import info.nightscout.shared.utils.T
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
+import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.`when`
 
 class BgQualityCheckPluginTest : TestBase() {
@@ -46,6 +48,8 @@ class BgQualityCheckPluginTest : TestBase() {
                 dateUtil
             )
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
+        `when`(rh.gs(anyInt())).thenReturn("")
+        `when`(rh.gs(anyInt(), any(), any())).thenReturn("")
     }
 
     @Test

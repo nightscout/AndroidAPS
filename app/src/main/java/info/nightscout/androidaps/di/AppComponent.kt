@@ -52,6 +52,7 @@ import javax.inject.Singleton
 
         // Gradle modules
         AutomationModule::class,
+        AutomationModule.Bindings::class,
         ApsModule::class,
         ConfigurationModule::class,
         ConfigurationModule.Bindings::class,

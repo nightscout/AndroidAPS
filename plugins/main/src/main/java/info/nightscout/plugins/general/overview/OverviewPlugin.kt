@@ -1,18 +1,16 @@
-package info.nightscout.androidaps.plugins.general.overview
+package info.nightscout.plugins.general.overview
 
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.extensions.putDouble
 import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.extensions.putString
 import info.nightscout.androidaps.extensions.storeDouble
 import info.nightscout.androidaps.extensions.storeInt
 import info.nightscout.androidaps.extensions.storeString
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -22,6 +20,8 @@ import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.plugins.R
+import info.nightscout.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification

@@ -15,11 +15,13 @@ import info.nightscout.implementation.TrendCalculatorImpl
 import info.nightscout.implementation.UserEntryLoggerImpl
 import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.androidNotification.NotificationHolderImpl
+import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.db.PersistenceLayerImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
 import info.nightscout.implementation.maintenance.PrefFileListProviderImpl
 import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.implementation.plugin.PluginStore
+import info.nightscout.implementation.profile.ProfileFunctionImpl
 import info.nightscout.implementation.profile.ProfileInstantiatorImpl
 import info.nightscout.implementation.profile.ProfileStoreObject
 import info.nightscout.implementation.profiling.ProfilerImpl
@@ -36,6 +38,7 @@ import info.nightscout.implementation.resources.ResourceHelperImpl
 import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
 import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
+import info.nightscout.implementation.storage.FileStorage
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
@@ -43,12 +46,14 @@ import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.protection.PasswordCheck
@@ -62,6 +67,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.stats.DexcomTirCalculator
 import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.stats.TirCalculator
+import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
@@ -112,5 +118,8 @@ abstract class ImplementationModule {
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindCommandQueue(commandQueue: CommandQueueImplementation): CommandQueue
+        @Binds fun bindsConstraints(constraintsImpl: ConstraintsImpl): Constraints
+        @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
+        @Binds fun bindsStorage(fileStorage: FileStorage): Storage
     }
 }

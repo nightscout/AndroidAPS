@@ -69,7 +69,7 @@
             android:name=".activities.PreferencesActivity"
             android:exported="false" />
         <activity
-            android:name=".plugins.general.overview.activities.QuickWizardListActivity"
+            android:name="info.nightscout.plugins.general.overview.activities.QuickWizardListActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
