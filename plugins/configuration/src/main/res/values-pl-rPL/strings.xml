@@ -57,4 +57,6 @@
     <string name="configbuilder_bgsource">Źródło BG</string>
     <string name="configbuilder_sensitivity">Detekcja wrażliwości (sensitivity)</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
