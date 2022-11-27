@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille autentiseringen vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
     <string name="sms_wrong_code">Feil kode. Kommandoen avbrutt.</string>
     <string name="sms_timeout_while_waiting">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="smscommunicator_allowednumbers">Godkjente mobilnumre</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">For å levere bolus på %1$.2fE, svar med kode %2$s</string>
