@@ -35,14 +35,9 @@
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assurez-vous que le montant correspond à la spécification de votre ensemble de perfusions!</string>
-    <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
-    <string name="button1">Bouton 1</string>
-    <string name="button2">Bouton 2</string>
-    <string name="button3">Bouton 3</string>
     <string name="record_pump_site_change">Enregistrer le changement de site de la pompe</string>
     <string name="record_insulin_cartridge_change">Enreg. changement de réservoir</string>
     <!-- InsulinDialog -->
