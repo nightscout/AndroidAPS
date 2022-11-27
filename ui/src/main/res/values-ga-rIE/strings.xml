@@ -42,7 +42,4 @@
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_import_btn">Iompórtáil</string>
-    <!--    Preferences -->
 </resources>
