@@ -9,13 +9,12 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.R
 import info.nightscout.plugins.source.NSClientSourcePlugin
 import info.nightscout.plugins.sync.nsShared.StoreDataForDb
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -52,8 +51,7 @@ class LoadBgWorker(
                         rxBus.send(
                             EventNSClientNewLog(
                                 "RCV",
-                                "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}",
-                                NsClient.Version.V3
+                                "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"
                             )
                         )
                         // Objective0
@@ -65,7 +63,7 @@ class LoadBgWorker(
                             OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
                         ).then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build()).enqueue()
                     } else {
-                        rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+                        rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"))
                         WorkManager.getInstance(context)
                             .beginUniqueWork(
                                 NSClientV3Plugin.JOB_NAME,
@@ -80,7 +78,7 @@ class LoadBgWorker(
                     ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
             else {
-                rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}", NsClient.Version.V3))
+                rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"))
                 WorkManager.getInstance(context)
                     .beginUniqueWork(
                         NSClientV3Plugin.JOB_NAME,

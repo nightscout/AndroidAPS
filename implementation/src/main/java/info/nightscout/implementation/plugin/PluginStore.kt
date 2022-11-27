@@ -37,7 +37,7 @@ class PluginStore @Inject constructor(
     private var activeInsulinStore: Insulin? = null
     private var activeSensitivityStore: Sensitivity? = null
 
-    fun loadDefaults() {
+    override fun loadDefaults() {
         verifySelectionInCategories()
     }
 

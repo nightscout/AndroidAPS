@@ -409,7 +409,6 @@
     <string name="virtual_pump_definition">Pump Definition</string>
     <string name="virtual_pump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
 
-    <string name="virtual_pump">Virtual Pump</string>
     <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUAL PUMP</string>
@@ -537,7 +536,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Request</string>
     <string name="loop_constraints_processed_label">After processed constraints</string>
-    <string name="constraints">Constraints</string>
     <string name="loop_tbr_request_time_label">Temp basal request time</string>
     <string name="loop_tbr_execution_time_label">Temp basal execution time</string>
     <string name="loop_tbr_set_by_pump_label">Temp basal set by pump</string>

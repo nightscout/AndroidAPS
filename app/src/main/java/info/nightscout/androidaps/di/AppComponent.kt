@@ -54,6 +54,7 @@ import javax.inject.Singleton
         AutomationModule::class,
         ApsModule::class,
         ConfigurationModule::class,
+        ConfigurationModule.Bindings::class,
         CoreModule::class,
         DatabaseModule::class,
         ImplementationModule::class,

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.configBuilder
+package info.nightscout.configuration.configBuilder
 
 import android.content.Context
 import android.content.Intent
@@ -15,10 +15,9 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding
-import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
+import info.nightscout.configuration.R
+import info.nightscout.configuration.configBuilder.events.EventConfigBuilderUpdateGui
+import info.nightscout.configuration.databinding.ConfigbuilderFragmentBinding
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -26,12 +25,12 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.ui.activities.SingleFragmentActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -47,6 +46,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var config: Config
     @Inject lateinit var ctx: Context
+    @Inject lateinit var activityNames: ActivityNames
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -65,7 +65,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
-        inMenu = parentClass == SingleFragmentActivity::class.java
+        inMenu = parentClass == activityNames.singleFragmentActivity
         updateProtectedUi()
         binding.unlock.setOnClickListener { queryProtection() }
     }
@@ -166,7 +166,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginPreferences.setOnClickListener {
                 fragment.activity?.let { activity ->
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
-                        val i = Intent(ctx, PreferencesActivity::class.java)
+                        val i = Intent(ctx, activityNames.preferencesActivity)
                         i.putExtra("id", plugin.preferencesId)
                         fragment.startActivity(i)
                     }, null)

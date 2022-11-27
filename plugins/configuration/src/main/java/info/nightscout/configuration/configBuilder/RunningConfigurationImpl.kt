@@ -1,19 +1,19 @@
-package info.nightscout.plugins.configBuilder
+package info.nightscout.configuration.configBuilder
 
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.aps.Sensitivity
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.sync.NsClient
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
@@ -25,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RunningConfiguration @Inject constructor(
+class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,
     private val sp: SP,
@@ -34,13 +34,13 @@ class RunningConfiguration @Inject constructor(
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val pumpSync: PumpSync
-) {
+) : RunningConfiguration {
 
     private var counter = 0
     private val every = 12 // Send only every 12 device status to save traffic
 
     // called in AAPS mode only
-    fun configuration(): JSONObject {
+    override fun configuration(): JSONObject {
         val json = JSONObject()
         val pumpInterface = activePlugin.activePump
 
@@ -67,11 +67,11 @@ class RunningConfiguration @Inject constructor(
     }
 
     // called in NSClient mode only
-    fun apply(configuration: RemoteDeviceStatus.Configuration, version: NsClient.Version) {
+    override fun apply(configuration: RemoteDeviceStatus.Configuration) {
         assert(config.NSCLIENT)
 
         configuration.version?.let {
-            rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  $it", version))
+            rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  $it"))
             if (config.VERSION_NAME.startsWith(it).not())
                 rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
         }

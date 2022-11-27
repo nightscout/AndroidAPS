@@ -6,11 +6,10 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.interfaces.sync.NsClient
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -39,10 +38,10 @@ class LoadDeviceStatusWorker(
                 val deviceStatuses = nsClientV3Plugin.nsAndroidClient.getDeviceStatusModifiedSince(from)
                 aapsLogger.debug("DEVICESTATUSES: $deviceStatuses")
                 if (deviceStatuses.isNotEmpty()) {
-                    rxBus.send(EventNSClientNewLog("RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}", NsClient.Version.V3))
-                    nsDeviceStatusHandler.handleNewData(deviceStatuses.toTypedArray(), NsClient.Version.V3)
+                    rxBus.send(EventNSClientNewLog("RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                    nsDeviceStatusHandler.handleNewData(deviceStatuses.toTypedArray())
                 } else {
-                    rxBus.send(EventNSClientNewLog("END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}", NsClient.Version.V3))
+                    rxBus.send(EventNSClientNewLog("END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                 }
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)

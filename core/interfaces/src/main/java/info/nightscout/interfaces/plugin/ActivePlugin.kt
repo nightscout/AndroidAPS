@@ -110,4 +110,6 @@ interface ActivePlugin {
      *  List of all plugins of type
      */
     fun getSpecificPluginsList(type: PluginType): ArrayList<PluginBase>
+
+    fun loadDefaults()
 }

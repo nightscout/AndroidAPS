@@ -1,12 +1,11 @@
 package info.nightscout.plugins.sync.nsclient.data
 
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R
-import info.nightscout.plugins.configBuilder.RunningConfiguration
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -75,7 +74,7 @@ class NSDeviceStatusHandler @Inject constructor(
     private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) {
 
-    fun handleNewData(deviceStatuses: Array<RemoteDeviceStatus>, version: NsClient.Version) {
+    fun handleNewData(deviceStatuses: Array<RemoteDeviceStatus>) {
         var configurationDetected = false
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
@@ -87,7 +86,7 @@ class NSDeviceStatusHandler @Inject constructor(
             if (config.NSCLIENT && !configurationDetected)
                 nsDeviceStatus.configuration?.let {
                     // copy configuration of Insulin and Sensitivity from main AAPS
-                    runningConfiguration.apply(it, version)
+                    runningConfiguration.apply(it)
                     configurationDetected = true // pick only newest
                 }
         }

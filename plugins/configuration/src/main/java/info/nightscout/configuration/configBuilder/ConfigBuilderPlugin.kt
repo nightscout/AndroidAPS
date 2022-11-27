@@ -1,14 +1,13 @@
-package info.nightscout.androidaps.plugins.configBuilder
+package info.nightscout.configuration.configBuilder
 
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
+import info.nightscout.configuration.R
+import info.nightscout.configuration.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.aps.APS
 import info.nightscout.interfaces.aps.Sensitivity
@@ -52,14 +51,14 @@ class ConfigBuilderPlugin @Inject constructor(
         .alwaysEnabled(true)
         .alwaysVisible(false)
         .pluginIcon(R.drawable.ic_cogs)
-        .pluginName(R.string.configbuilder)
-        .shortName(R.string.configbuilder_shortname)
+        .pluginName(R.string.config_builder)
+        .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),
     aapsLogger, rh, injector
 ), ConfigBuilder {
 
     override fun initialize() {
-        (activePlugin as PluginStore).loadDefaults()
+        activePlugin.loadDefaults()
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
         rxBus.send(EventAppInitialized())

@@ -1,11 +1,9 @@
-package info.nightscout.plugins.sync.nsShared.events
+package info.nightscout.rx.events
 
-import info.nightscout.interfaces.sync.NsClient
-import info.nightscout.rx.events.Event
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class EventNSClientNewLog(val action: String, val logText: String, val version: NsClient.Version) : Event() {
+class EventNSClientNewLog(val action: String, val logText: String) : Event() {
     var date = System.currentTimeMillis()
 
     private var timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())

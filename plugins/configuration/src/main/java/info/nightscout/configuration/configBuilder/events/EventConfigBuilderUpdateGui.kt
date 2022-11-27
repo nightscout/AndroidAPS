@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.configBuilder.events
+package info.nightscout.configuration.configBuilder.events
 
 import info.nightscout.rx.events.EventUpdateGui
 

@@ -21,7 +21,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.plugins.aps.loop.LoopFragment
 import info.nightscout.plugins.aps.loop.LoopPlugin
-import info.nightscout.plugins.configBuilder.RunningConfiguration
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

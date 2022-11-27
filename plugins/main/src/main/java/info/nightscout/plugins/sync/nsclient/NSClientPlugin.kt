@@ -26,7 +26,6 @@ import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
@@ -37,6 +36,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventChargingState
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
@@ -92,12 +92,10 @@ class NSClientPlugin @Inject constructor(
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.version == NsClient.Version.V1) {
                                status = event.getStatus(context)
                                rxBus.send(EventNSClientUpdateGUI())
                                // Pass to setup wizard
                                rxBus.send(EventSWSyncStatus(event.getStatus(context)))
-                           }
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
@@ -115,7 +113,6 @@ class NSClientPlugin @Inject constructor(
             .toObservable(EventNSClientNewLog::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventNSClientNewLog ->
-                           if (event.version != NsClient.Version.V1) return@subscribe
                            addToLog(event)
                            aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
                        }, fabricPrivacy::logException)

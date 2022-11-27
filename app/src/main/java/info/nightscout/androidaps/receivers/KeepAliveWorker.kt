@@ -28,7 +28,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.plugins.configBuilder.RunningConfiguration
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged

@@ -8,7 +8,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.Pump
-import info.nightscout.plugins.configBuilder.RunningConfiguration
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.plugins.sync.nsShared.extensions.json
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject

@@ -55,6 +55,11 @@
     <string name="summary_email_for_crash_report">This identification will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
     <string name="identification">Identification (email, FB or Discord nick etc)</string>
 
+    <string name="apsmode_title">APS Mode</string>
+    <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
+
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Config Builder</string>
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_pump_description">Which pump would you like to use with AAPS?</string>
     <string name="configbuilder_profile">Profile</string>
@@ -71,9 +76,12 @@
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
-    <string name="apsmode_title">APS Mode</string>
-    <string name="setupwizard_preferred_aps_mode">Preferred APS mode</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
+    <string name="config_builder_shortname">CONF</string>
+    <string name="description_config_builder">Used for configuring the active plugins</string>
+    <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
+    <string name="a11y_open_settings">open settings</string>
+
 
 </resources>

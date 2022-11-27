@@ -55,7 +55,7 @@ import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.plugins.configBuilder.RunningConfiguration
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
 import info.nightscout.rx.AapsSchedulers

@@ -36,13 +36,11 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.R
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.NSClientSourcePlugin
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.localmodel.treatment.NSBolus
@@ -69,7 +67,6 @@ class StoreDataForDb @Inject constructor(
     private val sp: SP,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin,
     private val config: Config,
     private val nsClientSourcePlugin: NSClientSourcePlugin,
     private val xDripBroadcast: XDripBroadcast,
@@ -122,7 +119,7 @@ class StoreDataForDb @Inject constructor(
         else put(key, 1)
 
     private fun storeGlucoseValuesToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING BG", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+        rxBus.send(EventNSClientNewLog("PROCESSING BG", ""))
 
         if (glucoseValues.isNotEmpty())
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
@@ -154,11 +151,11 @@ class StoreDataForDb @Inject constructor(
 
         sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
         SystemClock.sleep(pause)
-        rxBus.send(EventNSClientNewLog("DONE BG", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+        rxBus.send(EventNSClientNewLog("DONE BG", ""))
     }
 
     fun storeTreatmentsToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING TR", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+        rxBus.send(EventNSClientNewLog("PROCESSING TR", ""))
 
         if (boluses.isNotEmpty())
             repository.runTransactionForResult(SyncNsBolusTransaction(boluses))
@@ -734,32 +731,32 @@ class StoreDataForDb @Inject constructor(
         SystemClock.sleep(pause)
 
         uel.log(userEntries)
-        rxBus.send(EventNSClientNewLog("DONE TR", "", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+        rxBus.send(EventNSClientNewLog("DONE TR", ""))
     }
 
     private fun sendLog(item: String, clazz: String) {
         inserted[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INSERT", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("INSERT", "$item $it"))
         }
         inserted.remove(clazz)
         updated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("UPDATE", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("UPDATE", "$item $it"))
         }
         updated.remove(clazz)
         invalidated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INVALIDATE", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("INVALIDATE", "$item $it"))
         }
         invalidated.remove(clazz)
         nsIdUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("NS_ID", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("NS_ID", "$item $it"))
         }
         nsIdUpdated.remove(clazz)
         durationUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("DURATION", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("DURATION", "$item $it"))
         }
         durationUpdated.remove(clazz)
         ended[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("CUT", "$item $it", activePlugin.activeNsClient?.version ?: NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("CUT", "$item $it"))
         }
         ended.remove(clazz)
     }

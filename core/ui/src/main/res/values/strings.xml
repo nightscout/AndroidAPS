@@ -24,6 +24,8 @@
     <string name="mmol">mmol/l</string>
     <string name="save">Save</string>
     <string name="snooze">Snooze</string>
+    <string name="virtual_pump">Virtual Pump</string>
+    <string name="constraints">Constraints</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>

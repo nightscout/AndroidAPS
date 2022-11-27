@@ -25,7 +25,6 @@ import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
@@ -39,6 +38,7 @@ import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
@@ -145,12 +145,10 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.version == NsClient.Version.V3) {
                                status = event.getStatus(context)
                                rxBus.send(EventNSClientUpdateGUI())
                                // Pass to setup wizard
                                rxBus.send(EventSWSyncStatus(event.getStatus(context)))
-                           }
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
@@ -168,7 +166,6 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNSClientNewLog::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.version != NsClient.Version.V3) return@subscribe
                            addToLog(event)
                            aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
                        }, fabricPrivacy::logException)
@@ -291,9 +288,9 @@ class NSClientV3Plugin @Inject constructor(
 
     fun test() {
         if (workIsRunning(arrayOf(JOB_NAME)))
-            rxBus.send(EventNSClientNewLog("RUN", "Already running", NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("RUN", "Already running"))
         else {
-            rxBus.send(EventNSClientNewLog("RUN", "Starting next round", NsClient.Version.V3))
+            rxBus.send(EventNSClientNewLog("RUN", "Starting next round"))
             WorkManager.getInstance(context)
                 .beginUniqueWork(
                     "NSCv3Load",

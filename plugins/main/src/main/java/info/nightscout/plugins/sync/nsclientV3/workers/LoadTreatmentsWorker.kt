@@ -9,11 +9,10 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.sync.nsShared.StoreDataForDb
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.runBlocking
@@ -44,8 +43,7 @@ class LoadTreatmentsWorker(
                         rxBus.send(
                             EventNSClientNewLog(
                                 "RCV",
-                                "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}",
-                                NsClient.Version.V3
+                                "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}"
                             )
                         )
                         // Schedule processing of fetched data and continue of loading
@@ -61,8 +59,7 @@ class LoadTreatmentsWorker(
                     } else {
                         rxBus.send(
                             EventNSClientNewLog(
-                                "END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}",
-                                NsClient.Version.V3
+                                "END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}"
                             )
                         )
                         storeDataForDb.storeTreatmentsToDb()
@@ -78,7 +75,7 @@ class LoadTreatmentsWorker(
                     ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
             else {
-                rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}", NsClient.Version.V3))
+                rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}"))
                 storeDataForDb.storeTreatmentsToDb()
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
