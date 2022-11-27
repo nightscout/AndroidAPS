@@ -20,12 +20,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
-    <string name="superbolus">Суперболус</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <!-- FillDialog -->
-    <string name="button1">Бутон 1</string>
-    <string name="button2">Бутон 2</string>
-    <string name="button3">Бутон 3</string>
     <string name="record_pump_site_change">Запис смяна на сет</string>
     <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
     <!-- InsulinDialog -->
