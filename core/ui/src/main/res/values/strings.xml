@@ -22,6 +22,13 @@
     <string name="reload">Reload</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="save">Save</string>
+    <string name="snooze">Snooze</string>
+    <string name="virtual_pump">Virtual Pump</string>
+    <string name="constraints">Constraints</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pump paused</string>
+    <string name="and">And</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>
@@ -51,6 +58,7 @@
     <string name="reading_pump_history">Reading pump history</string>
     <string name="password_cleared">Password cleared!</string>
     <string name="pairing">Pairing</string>
+    <string name="initializing">Initializing ...</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
