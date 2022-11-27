@@ -36,7 +36,6 @@
     <string name="timeout_during_handshake">Таймаут при сдвояването - рестартирайте bluetooth</string>
     <string name="pump_stopped">Помпата е спряна</string>
     <string name="pump_started">Помпата е стартирана</string>
-    <string name="pump_paused">Помпата е на пауза</string>
     <string name="short_status_last_connected">Последно свързване: преди %1$d минути </string>
     <string name="short_status_tbr">TBR: %1$d%% за %2$d / %3$d мин</string>
     <string name="short_status_extended">Удължен: %1$.2f / %2$.2f U за %3$d мин</string>
