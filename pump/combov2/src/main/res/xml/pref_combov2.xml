@@ -28,6 +28,7 @@
             android:title="@string/combov2_discovery_duration"
             android:min="30"
             android:max="300"
+            app:showSeekBarValue="true"
             android:inputType="number"
             android:defaultValue="300" />
 

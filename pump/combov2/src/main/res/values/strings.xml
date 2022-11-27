@@ -78,7 +78,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_updating_pump_status_cmddesc">Updating pump status</string>
     <string name="combov2_pairing_pin_failure">PIN did not work. Check if there was a typo. If this
         keeps happening, cancel and retry pairing.</string>
-    <string name="key_combov2_discovery_duration" translatable="false">combov2_discovery_duration</string>
+    <string name="key_combov2_discovery_duration" translatable="false">combov2_bt_discovery_duration</string>
     <string name="combov2_discovery_duration">Discovery duration (in seconds)</string>
     <string name="key_combov2_verbose_logging" translatable="false">combov2_verbose_logging</string>
     <string name="combov2_verbose_logging">Enable verbose Combo logging</string>
