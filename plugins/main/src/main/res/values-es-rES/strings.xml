@@ -246,8 +246,16 @@
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
+    <string name="aps_mode_title">Modo APS</string>
+    <string name="set_basal_question">Aceptar nueva basal temporal:</string>
     <string name="overview_cgm">MCG</string>
     <string name="quickwizard">Asistente</string>
+    <string name="a11y_only_on_watch">Sólo en reloj</string>
+    <string name="a11y_only_on_phone">Sólo en teléfono</string>
+    <string name="overview">Inicio</string>
+    <string name="overview_shortname">INICIO</string>
+    <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
+    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
     <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="no_write_permission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
