@@ -54,4 +54,6 @@
     <string name="configbuilder_bgsource">혈당 출처</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
