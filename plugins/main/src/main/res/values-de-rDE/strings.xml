@@ -22,12 +22,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
@@ -63,7 +57,6 @@
     <string name="hardlimit">festem Grenzwert</string>
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <!-- Overview -->
-    <string name="snooze">Schlummern</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
     <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
     <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
@@ -85,10 +78,9 @@
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="apsmode_title">APS-Modus</string>
-    <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Neustart</string>
     <string name="deliver_now">Jetzt abgeben</string>
