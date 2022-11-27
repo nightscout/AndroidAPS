@@ -8,10 +8,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.R
 import info.nightscout.configuration.databinding.ActivitySetupwizardBinding
 import info.nightscout.configuration.setupwizard.elements.SWItem
-import info.nightscout.core.activities.NoSplashAppCompatActivity
+import info.nightscout.core.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.ui.locale.LocaleHelper.update
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged
@@ -27,7 +27,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class SetupWizardActivity : NoSplashAppCompatActivity() {
+class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var swDefinition: SWDefinition

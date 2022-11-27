@@ -1,25 +1,54 @@
 package info.nightscout.core.activities
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.permissions.OptimizationPermissionContract
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventThemeSwitch
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
 
+    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var aapsLogger: AAPSLogger
+
+    private val compositeDisposable = CompositeDisposable()
+
+    public override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setTheme(R.style.AppTheme_NoActionBar)
+        rh.updateContext(this)
+
+        compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe {
+            recreate()
+        })
+
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        super.onDestroy()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.wrap(newBase))
+    }
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
         it?.let {
