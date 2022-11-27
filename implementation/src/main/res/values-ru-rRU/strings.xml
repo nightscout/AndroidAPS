@@ -5,8 +5,6 @@
     <string name="bg_label">ГК</string>
     <string name="missed_bg_readings">Пропущенные данные СК</string>
     <string name="time_to_eat">Пора есть</string>
-    <string name="enable_bolus_advisor">Вкл помощник болюса</string>
-    <string name="enable_bolus_advisor_summary">Воспользуйтесь напоминанием для того, чтобы начать есть позже, вместо того, чтобы задействовать помощник болюса на высоких значениях ГК (\"пре-болюс\")</string>
     <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
     <string name="executing_right_now">Команда выполняется</string>
     <string name="basal_value_below_minimum">значение базала ниже минимума. профиль не создан!</string>
