@@ -12,12 +12,6 @@
     <!-- Profile -->
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">完成了，做的好</string>
     <string name="maxiobset">合理地设置最大 IOB</string>
@@ -53,7 +47,6 @@
     <string name="hardlimit">硬限制</string>
     <string name="treatmentssafety_title">治疗安全</string>
     <!-- Overview -->
-    <string name="snooze">稍后再响</string>
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
     <string name="statuslights_iage_warning">胰岛素状态灯警示阀值[小时]</string>
     <string name="statuslights_iage_critical">胰岛素状态灯临界阀值[小时]</string>
@@ -75,10 +68,9 @@
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">已过期</string>
-    <string name="apsmode_title">APS模式</string>
-    <string name="setbasalquestion">接受新的临时基础率</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">快速向导</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">重新启动</string>
     <string name="deliver_now">立即输注</string>
