@@ -172,23 +172,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CIEĽ</string>
     <string name="basal_short">BAZ</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Použité prepočítané dáta</string>
-    <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">prepočítané</string>
-    <string name="a11y_bg_quality_doubles">dvojité zápisy</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
-    <string name="dst_loop_disabled_warning">Zmena letného času za menej ako 3 hodiny - Uzavretý okruh pozastavený</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">stará verzia</string>
-    <string name="very_old_version">veľmi stará verzia</string>
-    <string name="application_expired">Aplikácia expirovala</string>
-    <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Hotovo, gratulujeme!</string>
     <string name="not_completed_yet">Nedokončené</string>
@@ -239,7 +222,6 @@
     <string name="hardlimit">pevný limit</string>
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <!-- Overview -->
-    <string name="snooze">Odložiť</string>
     <string name="copy_existing_values">Skopírovať nastavenia NS (ak existujú)?</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
     <string name="statuslights_cage_warning">Prah upozornenia na vek kanyly [h]</string>
@@ -264,10 +246,9 @@
     <string name="a11y_bg_quality">kvalita glykémií</string>
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
-    <string name="apsmode_title">APS mód</string>
-    <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Rýchly bolus</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="no_write_permission">NSClient nemá právo na zápis. Nesprávne API secret?</string>
     <string name="ns_client_v3">NSClientV3</string>
@@ -348,7 +329,6 @@
     <string name="virtual_pump_type">Typ virtuálnej pumpy</string>
     <string name="virtual_pump_definition">Definícia pumpy</string>
     <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump">Virtuálna pumpa</string>
     <string name="virtual_pump_shortname">VPUM</string>
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="virtual_pump_label">Virtuálna pumpa</string>
@@ -435,7 +415,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Požiadavka</string>
     <string name="loop_constraints_processed_label">Po spracovaní obmedzení</string>
-    <string name="constraints">Obmedzenia</string>
     <string name="loop_tbr_request_time_label">Čas požiadavky dočasného bazálu</string>
     <string name="loop_tbr_execution_time_label">Čas spustenia dočasného bazálu</string>
     <string name="loop_tbr_set_by_pump_label">Bazál nastavený pumpou</string>
