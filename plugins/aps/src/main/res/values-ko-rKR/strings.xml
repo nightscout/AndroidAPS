@@ -18,7 +18,6 @@
     <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="openapsma_profile_label">프로파일</string>
-    <string name="result">결과</string>
     <string name="openapsma_request_label">요청</string>
     <string name="constraints">제한</string>
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
