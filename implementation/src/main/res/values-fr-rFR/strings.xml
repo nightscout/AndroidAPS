@@ -5,8 +5,6 @@
     <string name="bg_label">Gly</string>
     <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
     <string name="time_to_eat">Il est temps de manger</string>
-    <string name="enable_bolus_advisor">Activer l\'assistant bolus</string>
-    <string name="enable_bolus_advisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="executing_right_now">Commande exécutée à l\'instant</string>
     <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
