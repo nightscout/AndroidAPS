@@ -41,15 +41,10 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
 
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
-    <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
-    <string name="button1">Button 1</string>
-    <string name="button2">Button 2</string>
-    <string name="button3">Button 3</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
 
