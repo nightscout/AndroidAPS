@@ -41,4 +41,6 @@
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="configbuilder_sensitivity">Ανίχνευση ευαισθησίας</string>
     <string name="configbuilder_sensitivity_description">Ποιος αλγόριθμος ευαισθησίας να χρησιμοποιηθεί;</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
