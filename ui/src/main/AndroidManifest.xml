@@ -38,11 +38,11 @@
         <activity
             android:name=".activities.SurveyActivity"
             android:exported="false"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.StatsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.TreatmentsActivity"
             android:exported="false"
@@ -50,7 +50,7 @@
         <activity
             android:name=".activities.ProfileHelperActivity"
             android:exported="false"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SingleFragmentActivity"
             android:exported="false"

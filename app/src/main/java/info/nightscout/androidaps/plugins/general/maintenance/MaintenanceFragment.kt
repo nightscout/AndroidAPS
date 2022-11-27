@@ -26,6 +26,7 @@ import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.diaconn.database.DiaconnHistoryDatabase
@@ -36,7 +37,6 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.ui.activities.SingleFragmentActivity
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -64,6 +64,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var activityNames: ActivityNames
 
     private val disposable = CompositeDisposable()
     private var inMenu = false
@@ -81,7 +82,7 @@ class MaintenanceFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
-        inMenu = parentClass == SingleFragmentActivity::class.java
+        inMenu = parentClass == activityNames.singleFragmentActivity
         updateProtectedUi()
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {

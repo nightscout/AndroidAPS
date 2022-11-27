@@ -67,7 +67,8 @@
         </activity>
         <activity
             android:name=".activities.PreferencesActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
             android:exported="false"
@@ -141,7 +142,8 @@
 
         <activity
             android:name=".plugins.general.maintenance.activities.LogSettingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <uses-library
             android:name="org.apache.http.legacy"

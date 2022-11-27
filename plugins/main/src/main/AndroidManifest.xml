@@ -11,7 +11,8 @@
     <application>
         <activity
             android:name=".general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 

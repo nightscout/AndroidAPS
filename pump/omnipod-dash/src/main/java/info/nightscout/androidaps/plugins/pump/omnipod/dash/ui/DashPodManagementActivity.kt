@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -12,20 +13,21 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
-import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class DashPodManagementActivity : NoSplashAppCompatActivity() {
+class DashPodManagementActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueue
@@ -34,6 +36,8 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
     @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 

@@ -14,7 +14,7 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.core.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.main.R
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.TotalDailyDose
@@ -25,9 +25,12 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.databinding.ActivityTddStatsBinding
@@ -41,7 +44,7 @@ import javax.inject.Inject
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-class TDDStatsActivity : NoSplashAppCompatActivity() {
+class TDDStatsActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
@@ -50,6 +53,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private lateinit var binding: ActivityTddStatsBinding
     private val disposable = CompositeDisposable()

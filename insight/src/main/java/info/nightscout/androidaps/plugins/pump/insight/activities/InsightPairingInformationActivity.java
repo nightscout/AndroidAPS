@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import dagger.android.support.DaggerAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
-import info.nightscout.core.activities.NoSplashAppCompatActivity;
 
-public class InsightPairingInformationActivity extends NoSplashAppCompatActivity {
+public class InsightPairingInformationActivity extends DaggerAppCompatActivity {
 
     private InsightConnectionService connectionService;
 

@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
-import info.nightscout.core.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
@@ -21,8 +21,10 @@ import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
@@ -36,7 +38,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class ProfileHelperActivity : NoSplashAppCompatActivity() {
+class ProfileHelperActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction
@@ -47,6 +49,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
 
     enum class ProfileType {
         MOTOL_DEFAULT,
