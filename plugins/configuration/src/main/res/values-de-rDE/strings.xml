@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">Erlauben, dass automatische Fehler-Berichte und Nutzungsstatistiken an die Entwickler über den Service von Fabric.io gesendet werden</string>
     <string name="summary_email_for_crash_report">Diese Identifikation wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
     <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
+    <string name="apsmode_title">APS-Modus</string>
+    <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
@@ -52,8 +55,6 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_insulin_description">Welchen Insulin-Typ verwendest Du?</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
-    <string name="apsmode_title">APS-Modus</string>
-    <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="configbuilder_sensitivity">Sensitivitätserkennung</string>
     <string name="configbuilder_sensitivity_description">Welcher Sensitivitäts-Algorithmus soll verwendet werden?</string>
 </resources>
