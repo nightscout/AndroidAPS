@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">%1$s Innstillinger</string>
-    <string name="nav_preferences">Innstillinger</string>
     <string name="nav_refreshtreatments">Oppdater behandlinger fra NS</string>
-    <string name="nav_resetdb">Nullstill databasene</string>
-    <string name="reset_db_confirm">Vil du virkelig nullstille databasene?</string>
     <string name="nav_exit">Avslutt</string>
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout versjon:</string>
-    <string name="exported">Innstillinger er eksportert</string>
-    <string name="ue_exported">Brukeroppføringer er eksportert</string>
-    <string name="export_to">Eksporter innstillinger til</string>
-    <string name="import_from">Importer innstillinger fra</string>
-    <string name="setting_imported">Innstillinger importert</string>
-    <string name="filenotfound">Fil ikke funnet</string>
-    <string name="nav_export">Eksporter innstillinger</string>
-    <string name="password_preferences_encrypt_prompt">Du må angi et hovedpassord som vil bli brukt til å kryptere dine eksporterte innstillinger.</string>
-    <string name="preferences_export_canceled">Eksport kansellert! Innstillinger ble IKKE lagret!</string>
-    <string name="preferences_import_canceled">Innlesing avbrutt! Innstillinger ble IKKE lest inn!</string>
-    <string name="preferences_import_impossible">Kunne ikke importere innstillinger!</string>
-    <string name="goto_main_try_again">Gå tilbake til hovedskjermen og prøv på nytt.</string>
-    <string name="old_master_password">Gammelt hovedpassord</string>
-    <string name="different_password_used">Denne filen ble eksportert og kryptert med et annet passord. Oppgi det gamle passordet for å dekryptere filen.</string>
-    <string name="master_password_will_be_replaced">Som et resultat av vellykket import vil ditt nåværende passord bli ERSTATTET med det gamle passordet!</string>
     <string name="save">Lagre</string>
     <string name="reloadprofile">Les inn profil på nytt</string>
     <string name="correctionbous">Korreksjon</string>
@@ -36,7 +17,6 @@
     <string name="wear">Klokke</string>
     <string name="ongoingnotificaction">Pågående varslinger</string>
     <string name="old_data">GAMLE DATA</string>
-    <string name="restartingapp">Avslutter appen for å aktivere innstillinger.</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
     <string name="ns_alarm_options">Alarmvalg</string>
@@ -54,26 +34,13 @@
     <string name="enable_pump_unreachable_alert">Varsel hvis pumpen er utilgjengelig</string>
     <string name="pump_unreachable_threshold">Pumpen er ikke tilgjengelig etter [min]</string>
     <string name="enable_carbs_req_alert">Varsel hvis karbohydrater må tilføres</string>
-    <string name="engineering_mode_enabled">Engineering Mode aktivert</string>
     <string name="open_navigation">Åpne meny</string>
     <string name="close_navigation">Lukk meny</string>
     <string name="remove_items">Fjern oppføringer</string>
     <string name="sort_items">Sorter elementer</string>
     <string name="error_adding_treatment_title">Behandlingsdata er ufullstendige</string>
-    <string name="maintenance_settings">Vedlikeholds innstillinger</string>
-    <string name="maintenance_email">E-post mottaker</string>
-    <string name="maintenance_amount">Antall logger du vil sende</string>
-    <string name="maintenance">Vedlikehold</string>
-    <string name="maintenance_shortname">VEDL</string>
-    <string name="description_maintenance">Flere funksjoner for vedlikehold (f.eks. loggsending, loggsletting).</string>
-    <string name="send_all_logs">Send logger via e-post</string>
-    <string name="delete_logs">Slett logger</string>
     <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, karbohydrater: %2$d, tid: %3$s) kunne ikke legges til Behandlinger. Vennligst kontroller og manuelt legg til en registrering der det er aktuelt.</string>
     <string name="generated_ecarbs_note">eKarbo: %1$d g (%2$d t), forsinkelse: %3$d m</string>
-    <string name="log_files">Loggfiler</string>
-    <string name="miscellaneous">Annet</string>
-    <string name="nav_logsettings">Logginnstillinger</string>
-    <string name="resettodefaults">Gjenopprett standardinnstillinger</string>
     <string name="profile_total">== ∑  %1$s E</string>
     <string name="unitsnosemicolon">Enheter</string>
     <string name="show_removed">Vis slettede</string>
@@ -96,7 +63,4 @@
     <string name="count_selected">%1$d valgt</string>
     <string name="sort_label">Sorter</string>
     <string name="search">Søk</string>
-    <string name="database_cleanup">Database opprydding</string>
-    <string name="cleanup_db_confirm">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.</string>
-    <string name="cleared_entries">Ryddet opp i oppføringer</string>
 </resources>
