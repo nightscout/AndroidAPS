@@ -66,4 +66,6 @@
     <string name="configbuilder_bgsource_description">Da dove AAPS dovrebbe ottenere i suoi dati?</string>
     <string name="configbuilder_sensitivity">Rilevamento sensibilità</string>
     <string name="configbuilder_sensitivity_description">Quale algoritmo di sensibilità dovrebbe essere usato?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
