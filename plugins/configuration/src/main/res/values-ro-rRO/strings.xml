@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">Permite trimiterea de rapoarte automate de eroare și de date despre folosire către dezvoltatori prin serviciul fabric.io.</string>
     <string name="summary_email_for_crash_report">Această identificare va fi atașată rapoartelor de eroare pentru a vă putea contacta în cazuri urgente. Este opționala.</string>
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
+    <string name="apsmode_title">Mod APS</string>
+    <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
@@ -52,8 +55,6 @@
     <string name="configbuilder_loop">Buclă</string>
     <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
-    <string name="apsmode_title">Mod APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
 </resources>
