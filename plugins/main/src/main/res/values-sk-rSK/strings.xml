@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">Resetovaním autentifikátora budú všetky už poskytnuté autentifikátory neplatné. Budete ich musieť znovu nastaviť!</string>
     <string name="sms_wrong_code">Nesprávný kód. Príkaz zrušený.</string>
     <string name="sms_timeout_while_waiting">Vypršal časový limit pri čakaní na dokončenie predchádzajúcej komunikácie s pumpou</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+421XXXXXXXXX;+421YYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Pre podanie bolusu %1$.2fJI odpovedz SMS kódom %2$s</string>
