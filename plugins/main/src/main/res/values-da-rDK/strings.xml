@@ -21,12 +21,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Fuldført, godt klaret!</string>
     <string name="maxiobset">Maksimal IOB sat korrekt</string>
@@ -62,7 +56,6 @@
     <string name="hardlimit">hård grænse</string>
     <string name="treatmentssafety_title">Behandlings sikkerhed</string>
     <!-- Overview -->
-    <string name="snooze">Udsæt</string>
     <string name="show_statuslights">Vis statuslys på startskærm</string>
     <string name="statuslights_iage_warning">Grænseværdi for insulin-alder [h]</string>
     <string name="statuslights_iage_critical">Grænseværdi for kritisk insulin-alder [h]</string>
@@ -84,10 +77,9 @@
     <string name="a11y_bg_quality">blodglukose kvalitet</string>
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
-    <string name="apsmode_title">APS Tilstand</string>
-    <string name="setbasalquestion">Acceptér ny midlertidig basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Lynguide</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">Genstart</string>
     <string name="deliver_now">Afgiver nu</string>
