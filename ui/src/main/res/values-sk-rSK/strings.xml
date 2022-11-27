@@ -123,12 +123,4 @@
     <string name="basal_rate">Bazál</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STLAČENÝ STOP</string>
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Podrobnosti chýb pri importe</string>
-    <string name="check_preferences_import_btn">Importovať</string>
-    <string name="check_preferences_import_anyway_btn">Importovať rovnako (NEBEZPEČNÉ!)</string>
-    <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
-    <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
-    <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
-    <!--    Preferences -->
 </resources>
