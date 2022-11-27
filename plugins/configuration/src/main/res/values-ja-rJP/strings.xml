@@ -2,6 +2,7 @@
 <resources>
     <string name="low_mark">低血糖マーク</string>
     <string name="high_mark">高血糖マーク</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">ポンプ</string>
     <string name="configbuilder_pump_description">AAPSで使用するポンプはどれですか？</string>
     <string name="configbuilder_profile">プロファイル</string>
