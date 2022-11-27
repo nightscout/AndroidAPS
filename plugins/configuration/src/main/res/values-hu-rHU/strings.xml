@@ -9,4 +9,5 @@
     <string name="privacy_settings">Adatvédelmi beállítások</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
+    <!--    ConfigBuilder-->
 </resources>
