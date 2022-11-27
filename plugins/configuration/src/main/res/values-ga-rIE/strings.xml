@@ -14,4 +14,6 @@
     <string name="configbuilder_general">Ginearálta</string>
     <string name="configbuilder_loop">Lúb</string>
     <string name="configbuilder_bgsource">Foinse BG</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
