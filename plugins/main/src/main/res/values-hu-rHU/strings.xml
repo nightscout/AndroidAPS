@@ -9,12 +9,6 @@
     <!-- Food-->
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="apsselected">APS kiválasztva</string>
     <!-- Actions -->
@@ -22,8 +16,8 @@
     <string name="cannula">Kanül</string>
     <!-- Safety -->
     <!-- Overview -->
-    <string name="snooze">Szundi</string>
     <string name="overview_cgm">CGM</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="status">Állapot:</string>
     <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
