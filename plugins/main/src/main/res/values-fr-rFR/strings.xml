@@ -172,23 +172,6 @@
     <string name="dia_short">DAI</string>
     <string name="target_short">CIBLE</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Données recalculées utilisées</string>
-    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">recalculé</string>
-    <string name="a11y_bg_quality_doubles">entrées doubles</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
-    <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">ancienne version</string>
-    <string name="very_old_version">très ancienne version</string>
-    <string name="application_expired">Application expirée</string>
-    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
@@ -239,7 +222,6 @@
     <string name="hardlimit">limite fixée</string>
     <string name="treatmentssafety_title">Traitements de sécurité</string>
     <!-- Overview -->
-    <string name="snooze">Masquer</string>
     <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="show_statuslights">Afficher les voyants d\'état sur l\'écran d\'accueil</string>
     <string name="statuslights_cage_warning">Seuil d\'alerte âge canule [h]</string>
@@ -264,10 +246,9 @@
     <string name="a11y_bg_quality">qualité de la glycémie</string>
     <string name="a11y_blood_glucose">glycémie</string>
     <string name="a11y_bg_outdated">obsolète</string>
-    <string name="apsmode_title">Mode APS</string>
-    <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_cgm">MGC</string>
     <string name="quickwizard">Assistant Rapide</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT ne possède pas la permission d\'écriture. Mauvais API secret?</string>
     <string name="ns_client_v3">NSClientV3</string>
@@ -348,7 +329,6 @@
     <string name="virtual_pump_type">Type de pompe virtuelle</string>
     <string name="virtual_pump_definition">Définition de pompe</string>
     <string name="virtual_pump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump">Pompe virtuelle</string>
     <string name="virtual_pump_shortname">POMPEV</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="virtual_pump_label">POMPE VIRTUELLE</string>
@@ -435,7 +415,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Requête</string>
     <string name="loop_constraints_processed_label">Après applicaton des restrictions</string>
-    <string name="constraints">Restrictions</string>
     <string name="loop_tbr_request_time_label">Heure de demande basal temp</string>
     <string name="loop_tbr_execution_time_label">Heure d\'exécution basal temp</string>
     <string name="loop_tbr_set_by_pump_label">Basal temporaire défini par la pompe</string>
