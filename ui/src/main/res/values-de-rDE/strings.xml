@@ -22,12 +22,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <!-- FillDialog -->
-    <string name="button1">Schaltfläche 1</string>
-    <string name="button2">Schaltfläche 2</string>
-    <string name="button3">Schaltfläche 3</string>
     <string name="record_pump_site_change">Katheter-Wechsel erfassen</string>
     <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
     <!-- InsulinDialog -->
