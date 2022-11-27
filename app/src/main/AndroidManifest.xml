@@ -69,16 +69,6 @@
             android:name=".activities.PreferencesActivity"
             android:exported="false" />
         <activity
-            android:name="info.nightscout.plugins.general.overview.activities.QuickWizardListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
@@ -147,10 +137,6 @@
             android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name="info.nightscout.plugins.general.overview.notifications.DismissNotificationService"
-            android:exported="false" />
-
         <service android:name=".plugins.general.persistentNotification.DummyService" />
 
         <activity

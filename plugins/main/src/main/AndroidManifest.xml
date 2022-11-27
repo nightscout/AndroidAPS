@@ -22,10 +22,25 @@
             android:name=".source.activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
+        <activity
+            android:name="info.nightscout.plugins.general.overview.activities.QuickWizardListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".sync.nsclient.services.NSClientService"
             android:enabled="true"
             android:exported="true" />
+
+        <service
+            android:name="info.nightscout.plugins.general.overview.notifications.DismissNotificationService"
+            android:exported="false" />
 
         <service
             android:name=".general.wear.wearintegration.DataLayerListenerServiceMobile"
