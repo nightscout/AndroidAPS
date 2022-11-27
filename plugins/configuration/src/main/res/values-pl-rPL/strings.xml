@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">Zezwalaj na automatyczne zgłaszanie awarii i danych o użytkowaniu aplikacji do deweloperów za pośrednictwem usługi fabric.io.</string>
     <string name="summary_email_for_crash_report">Ten identyfikator zostanie dołączony do raportu o błędzie aby umożliwić kontakt z tobą, w przypadku gdyby zaszła pilna konieczność. Jego podanie jest opcjonalne.</string>
     <string name="identification">Identyfikator (email, nick na FB lub Discordzie itp.)</string>
+    <string name="apsmode_title">Tryb APS</string>
+    <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
@@ -52,8 +55,6 @@
     <string name="configbuilder_loop">Pętla</string>
     <string name="configbuilder_insulin_description">Jakiego typu insuliny używasz?</string>
     <string name="configbuilder_bgsource">Źródło BG</string>
-    <string name="apsmode_title">Tryb APS</string>
-    <string name="setupwizard_preferred_aps_mode">Preferowany tryb APS</string>
     <string name="configbuilder_sensitivity">Detekcja wrażliwości (sensitivity)</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
 </resources>
