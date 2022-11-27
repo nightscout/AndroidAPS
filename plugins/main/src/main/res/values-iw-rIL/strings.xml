@@ -13,12 +13,6 @@
     <!-- Profile -->
     <string name="localprofile_shortname">LP</string>
     <string name="dia_short">DIA</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">הושלם, כל הכבוד!</string>
     <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
@@ -54,7 +48,6 @@
     <string name="hardlimit">מגבלה קשיחה</string>
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
     <!-- Overview -->
-    <string name="snooze">נודניק</string>
     <string name="show_statuslights">הצגת אורות חיווי במסך הבית</string>
     <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
     <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
@@ -76,10 +69,9 @@
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
-    <string name="apsmode_title">מצב APS</string>
-    <string name="setbasalquestion">אשר בזאלי זמני חדש:</string>
     <string name="overview_cgm">סנסור</string>
     <string name="quickwizard">אשף מהיר</string>
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="restart">הפעל מחדש</string>
     <string name="deliver_now">ספק עכשיו</string>
