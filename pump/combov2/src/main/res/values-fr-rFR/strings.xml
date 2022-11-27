@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Intégration native de la pompe Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Impossible de se connecter à la pompe</string>
+    <string name="combov2_not_paired">Pompe non appairée</string>
+    <string name="combov2_pump_terminated_connection">La pompe a interrompue la connexion</string>
+    <string name="combov2_warning">Avertissement combo</string>
+    <string name="combov2_error">Erreur du combo</string>
+    <string name="combov2_warning_4">Appel de la hotline pour une mise à jour</string>
+    <string name="combov2_warning_10">Défaut bluetooth, refaire l\'appairage</string>
+    <string name="combov2_error_1">Réservoir vide</string>
+    <string name="combov2_error_2">Pile vide</string>
+    <string name="combov2_error_4">Occlusion</string>
+    <string name="combov2_error_5">Fin de l\'opération de sauvegarde de la pompe</string>
+    <string name="combov2_error_6">Erreur mécanique</string>
+    <string name="combov2_error_7">Erreur électronique</string>
+    <string name="combov2_error_8">Coupure de l\'alimentation</string>
+    <string name="combov2_error_9">Fin de la pompe de prêt</string>
+    <string name="combov2_error_10">Erreur de réservoir</string>
+    <string name="combov2_extended_bolus_not_supported">Le bolus étendu n\'est pas pris en charge</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Appairer la pompe</string>
+    <string name="combov2_unpair_pump_title">Désappairer la pompe</string>
+    <string name="combov2_driver_state_label">État du pilote</string>
+    <string name="combov2_current_activity_label">Activité en cours</string>
     <string name="bluetooth_address">Adresse Bluetooth</string>
+    <string name="combov2_start_pairing">Démarrer l\'appairage</string>
+    <string name="combov2_pairing_in_progress">Appairage du Combo en cours</string>
+    <string name="combov2_pairing_start_steps">Étapes pour effectuer l\'appairage avec votre Combo :\n\n1. Sur votre pompe, accédez aux paramètres Bluetooth\n2. Vérifiez si un appareil est déjà appairé, si oui, allez à l\'écran de la pompe \"Supprimer le périphérique\" pour supprimer/désassocier ce périphérique\n3. Allez à l\'écran de la pompe \"Ajouter un appareil\" et initiez l\'appairage sur la pompe\n4. Cliquez sur le bouton \"Commencer l\'appairage\" ci-dessous pour commencer l\'appairage dans AndroidAPS\n</string>
+    <string name="combov2_checking_pump">Vérification de la pompe</string>
+    <string name="combov2_ready">Prêt</string>
+    <string name="combov2_suspended">Suspendu</string>
+    <string name="combov2_pump_is_suspended">La pompe est suspendue</string>
+    <string name="combov2_executing_command">Exécution de la commande</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Récupération du profil basal</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Définir le profil basal</string>
+    <string name="combov2_setting_tbr_cmddesc">Réglage du DBT %1$d%% pendant %2$d minutes</string>
+    <string name="combov2_cancelling_tbr">Annulation du DBT en cours</string>
+    <string name="combov2_delivering_bolus_cmddesc">Injection de %1$.1fU de bolus en cours</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Récupération de l\'historique DTI</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Mise à jour date et heure de la pompe</string>
+    <string name="combov2_updating_pump_status_cmddesc">Mise à jour de l\'état pompe</string>
 </resources>
