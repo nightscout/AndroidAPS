@@ -196,38 +196,6 @@
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
 
-    <!-- BG Quality -->
-    <string name="bg_quality" translatable="false">BG Quality</string>
-    <string name="recalculated_data_used">Recalculated data used</string>
-    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">recalculated</string>
-    <string name="a11y_bg_quality_doubles">double entries</string>
-
-    <!-- DST Helper -->
-    <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
-    <string name="key_snooze_loop_disabled" translatable="false">snooze_loop_disabled</string>
-
-    <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
-    <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
-    <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
-
-    <!-- Storage constraint -->
-    <string name="storage" translatable="false">Storage constraint</string>
-    <string name="disk_full">Free at least %1$d MB from internal storage! Loop disabled!</string>
-
-    <!-- Signature verifier -->
-    <string name="signature_verifier" translatable="false">Signature verifier</string>
-
-    <!-- Version Checker -->
-    <string name="version_checker" translatable="false">Version Checker</string>
-    <string name="old_version">old version</string>
-    <string name="very_old_version">very old version</string>
-    <string name="application_expired">Application expired</string>
-    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
-
-    <!-- PhoneChecker -->
-    <string name="phone_checker" translatable="false">PhoneChecker</string>
-
     <!-- Objectives -->
     <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
     <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
@@ -286,10 +254,17 @@
     <string name="treatmentssafety_title">Treatments safety</string>
 
     <!-- Overview -->
+    <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
+    <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
+    <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
+    <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
+    <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
+    <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
+    <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
+    <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
 
-    <string name="snooze">Snooze</string>
     <string name="copy_existing_values">Copy NS settings (if exists)?</string>
     <string name="key_show_statuslights" translatable="false">show_statuslights</string>
     <string name="show_statuslights">Show status lights on home screen</string>
@@ -329,10 +304,112 @@
     <string name="a11y_bg_quality">blood glucose quality</string>
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
-    <string name="apsmode_title">APS Mode</string>
-    <string name="setbasalquestion">Accept new temp basal:</string>
+    <string name="aps_mode_title">APS Mode</string>
+    <string name="set_basal_question">Accept new temp basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
+    <string name="a11y_only_on_watch">only on watch</string>
+    <string name="a11y_only_on_phone">only on phone</string>
+    <string name="overview">Overview</string>
+    <string name="overview_shortname">HOME</string>
+    <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
+    <string name="overview_editquickwizard_usecob">COB calculation</string>
+    <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
+    <string name="overview_buttons_selection">Buttons</string>
+    <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
+    <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
+    <string name="dexcom_app_not_installed">Dexcom app is not installed.</string>
+    <string name="dexcom_app_not_detected">Please update your Dexcom app to supported version</string>
+    <string name="error_starting_cgm">Could not launch CGM application.  Make sure it is installed.</string>
+    <string name="not_available_full">Not available</string>
+    <string name="constraints_violation">Constraints violation</string>
+    <string name="change_your_input">Change your input!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Uploader</string>
+    <string name="data_status">BG data status</string>
+    <string name="quickwizard_settings">QuickWizard settings</string>
+    <string name="overview_edit_quickwizard_button_text">Button text:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbs:</string>
+    <string name="overview_edit_quickwizard_valid">Valid:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Add</string>
+    <string name="overview_quickwizard_item_edit_button">Edit</string>
+    <string name="overview_edit_quickwizard_show_on_device">Show entry on device:</string>
+    <string name="overview_edit_quickwizard_use_bg">BG calculation</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB calculation</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB calculation</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend calculation</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus calculation</string>
+    <string name="overview_edit_quickwizard_percentage">Percentage</string>
+    <string name="device_all">All</string>
+    <string name="device_phone">Phone</string>
+    <string name="device_watch">Watch</string>
+    <string name="positive_only">Positive only</string>
+    <string name="negative_only">Negative only</string>
+    <string name="app_default">Application default</string>
+    <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
+    <string name="keep_screen_on_title">Keep screen on</string>
+    <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
+    <string name="treatments">Treatments</string>
+    <string name="carb_increment_button_message">Number of carbs to add when button is pressed</string>
+    <string name="insulin_increment_button_message">Amount of insulin to add when button is pressed</string>
+    <string name="firstinsulinincrement">First insulin increment</string>
+    <string name="secondinsulinincrement">Second insulin increment</string>
+    <string name="thirdinsulinincrement">Third insulin increment</string>
+    <string name="firstcarbsincrement">First carbs increment</string>
+    <string name="secondcarbsincrement">Second carbs increment</string>
+    <string name="thirdcarbsincrement">Third carbs increment</string>
+    <string name="cgm">CGM</string>
+    <string name="default_temptargets">Default Temp-Targets</string>
+    <string name="eatingsoon_duration">eatingsoon duration</string>
+    <string name="eatingsoon_target">eatingsoon target</string>
+    <string name="activity_duration">activity duration</string>
+    <string name="activity_target">activity target</string>
+    <string name="hypo_duration">hypo duration</string>
+    <string name="hypo_target">hypo target</string>
+    <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
+    <string name="button1">Button 1</string>
+    <string name="button2">Button 2</string>
+    <string name="button3">Button 3</string>
+    <string name="prefs_range_title">Range for Visualization</string>
+    <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
+    <string name="low_mark">LOW mark</string>
+    <string name="high_mark">HIGH mark</string>
+    <string name="short_tabtitles">Shorten tab titles</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
+    <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
+    <string name="enable_bolus_advisor">Enable bolus advisor</string>
+    <string name="enable_bolus_advisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
+    <string name="enablesuperbolus">Enable superbolus in wizard</string>
+    <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
+    <string name="enablebolusreminder">Enable bolus reminder</string>
+    <string name="enablebolusreminder_summary">Use reminder to bolus later with wizard ("post-bolus")</string>
+
+    <!--    OverviewMenu-->
+    <string name="key_graph_config" translatable="false">graphconfig</string>
+
+    <string name="overview_show_predictions">Predictions</string>
+    <string name="overview_show_treatments">Treatments</string>
+    <string name="overview_show_deviation_slope">Deviation slope</string>
+    <string name="overview_show_activity">Activity</string>
+    <string name="overview_show_bgi">Blood Glucose Impact</string>
+    <string name="overview_show_sensitivity">Sensitivity</string>
+    <string name="overview_show_deviations">Deviations</string>
+    <string name="overview_show_cob">Carbs On Board</string>
+    <string name="overview_show_iob">Insulin On Board</string>
+    <string name="overview_show_basals">Basals</string>
+    <string name="overview_show_abs_insulin">Absolute insulin</string>
+    <string name="prediction_shortname">PRED</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="treatments_shortname">TREAT</string>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="graph_scale">Graph scale</string>
+    <string name="graph_menu_divider_header">Graph</string>
 
     <!-- NSClient -->
     <string name="key_ns_client_autoscroll" translatable="false">ns_client_autoscroll</string>
@@ -442,7 +519,6 @@
     <string name="virtual_pump_definition">Pump Definition</string>
     <string name="virtual_pump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
 
-    <string name="virtual_pump">Virtual Pump</string>
     <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUAL PUMP</string>
@@ -570,7 +646,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Request</string>
     <string name="loop_constraints_processed_label">After processed constraints</string>
-    <string name="constraints">Constraints</string>
     <string name="loop_tbr_request_time_label">Temp basal request time</string>
     <string name="loop_tbr_execution_time_label">Temp basal execution time</string>
     <string name="loop_tbr_set_by_pump_label">Temp basal set by pump</string>
