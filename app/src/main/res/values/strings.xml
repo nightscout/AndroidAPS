@@ -32,31 +32,12 @@
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_last_cleanup_run" translatable="false">last_cleanup_run</string>
     <string name="nav_preferences_plugin">%1$s Preferences</string>
-    <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
-    <string name="nav_resetdb">Reset Databases</string>
-    <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="nav_exit">Exit</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profile</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="exported">Preferences exported</string>
-    <string name="ue_exported">User Entries exported</string>
-    <string name="export_to">Export settings to</string>
-    <string name="import_from">Import settings from</string>
-    <string name="setting_imported">Settings imported</string>
-    <string name="filenotfound">File not found</string>
-    <string name="nav_export">Export settings</string>
     <string name="language" translatable="false">Language</string>
-    <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
-    <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
-    <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
-    <string name="preferences_import_impossible">Cannot import preferences!</string>
-    <string name="goto_main_try_again">Please go back to main screen and try again.</string>
-    <string name="old_master_password">Old Master Password</string>
-    <string name="different_password_used">This file was exported and encrypted with different master password. Provide old master password to decrypt file.</string>
-    <string name="master_password_will_be_replaced">As a result of successful import current master password WILL BE REPLACED with that old master password!</string>
     <string name="save">Save</string>
     <string name="reloadprofile">Reload profile</string>
     <string name="correctionbous">Corr</string>
@@ -65,7 +46,6 @@
     <string name="wear">Wear</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
-    <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="ns_alarm_options">Alarm options</string>
@@ -87,29 +67,13 @@
     <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
     <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
     <string name="enable_carbs_req_alert">Alert if carbs are required</string>
-    <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="open_navigation">Open navigation</string>
     <string name="close_navigation">Close navigation</string>
     <string name="remove_items">Remove items</string>
     <string name="sort_items">Sort items</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
-    <string name="maintenance_settings">Maintenance Settings</string>
-    <string name="maintenance_email">Email recipient</string>
-    <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
-    <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
-    <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
-    <string name="maintenance_amount">No of Logs to send</string>
-    <string name="maintenance">Maintenance</string>
-    <string name="maintenance_shortname">MAINT</string>
-    <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
-    <string name="send_all_logs">Send Logs by Email</string>
-    <string name="delete_logs">Delete Logs</string>
     <string name="error_adding_treatment_message">A treatment (insulin: %1$.2f, carbs: %2$d, at: %3$s) could not be added to treatments. Please check and manually add a record as appropriate.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), delay: %3$d m</string>
-    <string name="log_files">Log files</string>
-    <string name="miscellaneous">Miscellaneous</string>
-    <string name="nav_logsettings">Log settings</string>
-    <string name="resettodefaults">Reset to defaults</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Units</string>
     <string name="show_removed">Show removed</string>
@@ -132,9 +96,5 @@
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
     <string name="search">Search</string>
-
-    <string name="database_cleanup">Database cleanup</string>
-    <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
-    <string name="cleared_entries">Cleared entries</string>
 
 </resources>
