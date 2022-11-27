@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Cible Temp. %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Pourcentage profil %1$s %2$d%%</string>
     <string name="iobcompared">IA %1$s %2$.1f</string>
-    <string name="and">Et</string>
     <string name="or">Ou</string>
     <string name="xor">Exclusif ou</string>
     <string name="atspecifiedtime">À %1$s</string>
