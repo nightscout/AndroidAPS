@@ -53,6 +53,7 @@
     <string name="apsmode_title">Modo APS</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <!--    ConfigBuilder-->
+    <string name="config_builder">Tabla de configuraciones</string>
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">¿Qué bomba quieres utilizar con AAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -71,4 +72,8 @@
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
     <string name="configbuilder_sensitivity">Detección de sensibilidad</string>
     <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
+    <string name="config_builder_shortname">CONF</string>
+    <string name="description_config_builder">Utilizado para configurar los complementos activos</string>
+    <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
+    <string name="a11y_open_settings">abrir ajustes</string>
 </resources>
