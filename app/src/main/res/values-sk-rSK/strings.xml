@@ -4,30 +4,11 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_preferences_plugin">Nastavenie pluginu %1$s</string>
-    <string name="nav_preferences">Nastavenia</string>
     <string name="nav_refreshtreatments">Obnoviť ošetrenia z NS</string>
-    <string name="nav_resetdb">Vymaž databázu</string>
-    <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
     <string name="nav_exit">Ukončiť</string>
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="delta">Rozdiel</string>
     <string name="profile_label">Profil</string>
-    <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
-    <string name="exported">Nastavenie exportované</string>
-    <string name="ue_exported">Užívateľské záznamy exportované</string>
-    <string name="export_to">Exportovať nastavenia do</string>
-    <string name="import_from">Importovať nastavenia z</string>
-    <string name="setting_imported">Nastavenia importované</string>
-    <string name="filenotfound">Súbor nenájdený</string>
-    <string name="nav_export">Exportovať nastavenia</string>
-    <string name="password_preferences_encrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie exportovaných nastavení.</string>
-    <string name="preferences_export_canceled">Export zrušený! Nastavenia neboli exportované!</string>
-    <string name="preferences_import_canceled">Import zrušený! Nastavenia neboli importované!</string>
-    <string name="preferences_import_impossible">Nastavenia sa nedajú importovať!</string>
-    <string name="goto_main_try_again">Prosím, vráťte se späť na hlavnú obrazovku a skúste to znovu.</string>
-    <string name="old_master_password">Staré hlavné heslo</string>
-    <string name="different_password_used">Tento súbor bol exportovaný a zašifrovaný iným hlavným heslom. Pre dešifrovanie súboru použite staré hlavné heslo.</string>
-    <string name="master_password_will_be_replaced">V dôsledku úspešného importu bude aktuálne hlavné heslo NAHRADENÉ týmto starým hlavným heslom!</string>
     <string name="save">Uložiť</string>
     <string name="reloadprofile">Obnoviť profil</string>
     <string name="correctionbous">Korekcia</string>
@@ -36,7 +17,6 @@
     <string name="wear">Wear</string>
     <string name="ongoingnotificaction">Priebežné notifikácie</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
-    <string name="restartingapp">Zatváram aplikáciu, aby sa aplikovali nové nastavenia.</string>
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
     <string name="ns_alarm_options">Nastavenie alarmov</string>
@@ -54,26 +34,13 @@
     <string name="enable_pump_unreachable_alert">Výstraha pri nedostupnej pumpe</string>
     <string name="pump_unreachable_threshold">Limit pre nedostupnosť pumpy [min]</string>
     <string name="enable_carbs_req_alert">Výstraha, ak sú požadované sacharidy</string>
-    <string name="engineering_mode_enabled">Vývojársky mód povolený</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>
     <string name="remove_items">Odstrániť položky</string>
     <string name="sort_items">Zoradiť položky</string>
     <string name="error_adding_treatment_title">Dáta ošetrení neúplné</string>
-    <string name="maintenance_settings">Nastavenie údržby</string>
-    <string name="maintenance_email">E-Mail</string>
-    <string name="maintenance_amount">Počet protokolov na odoslanie</string>
-    <string name="maintenance">Údržba</string>
-    <string name="maintenance_shortname">Údržba</string>
-    <string name="description_maintenance">Poskytuje viaceré funkcie pre údržbu (ako napr. zasielanie logov, vymazanie logov).</string>
-    <string name="send_all_logs">Zasielať logy E-mailom</string>
-    <string name="delete_logs">Vymazať logy</string>
     <string name="error_adding_treatment_message">Ošetrenie (inzulín: %1$.2f, sacharidy: %2$d, čas: %3$s) nie je možné pridať. Skontrolujte a podľa potreby manuálne pridajte záznam.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), Oneskorenie: %3$d m</string>
-    <string name="log_files">Log súbory</string>
-    <string name="miscellaneous">Rôzne</string>
-    <string name="nav_logsettings">Nastavenie logovania</string>
-    <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="profile_total">== ∑  %1$s JI</string>
     <string name="unitsnosemicolon">Jednotky</string>
     <string name="show_removed">Zobraziť odstránené</string>
@@ -96,7 +63,4 @@
     <string name="count_selected">Vybrané: %1$d</string>
     <string name="sort_label">Zoradiť</string>
     <string name="search">Hľadať</string>
-    <string name="database_cleanup">Vyčistenie databázy</string>
-    <string name="cleanup_db_confirm">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.</string>
-    <string name="cleared_entries">Vymazané záznamy</string>
 </resources>
