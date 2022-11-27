@@ -24,13 +24,13 @@ class DstHelperPluginTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var loop: Loop
 
-    private lateinit var plugin: info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin
+    private lateinit var plugin: DstHelperPlugin
 
-    val injector = HasAndroidInjector { AndroidInjector { } }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
 
     @Before
     fun mock() {
-        plugin = info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin(injector, aapsLogger, rh, sp, activePlugin, loop)
+        plugin = DstHelperPlugin(injector, aapsLogger, rh, sp, activePlugin, loop)
     }
 
     @Test

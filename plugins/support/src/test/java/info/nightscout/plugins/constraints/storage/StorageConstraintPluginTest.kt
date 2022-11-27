@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.Assert
@@ -18,12 +18,12 @@ import org.mockito.Mockito.`when`
 class StorageConstraintPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    private val rxBusWrapper = RxBus(aapsSchedulers, aapsLogger)
+    @Mock lateinit var activityNames: ActivityNames
 
-    private lateinit var storageConstraintPlugin: info.nightscout.plugins.constraints.storage.StorageConstraintPlugin
+    private lateinit var storageConstraintPlugin: StorageConstraintPlugin
 
     @Before fun prepareMock() {
-        storageConstraintPlugin = info.nightscout.plugins.constraints.storage.StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, rxBusWrapper)
+        storageConstraintPlugin = StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, activityNames)
         `when`(rh.gs(anyInt(), anyLong())).thenReturn("")
     }
 
@@ -31,15 +31,15 @@ class StorageConstraintPluginTest : TestBase() {
         injector: HasAndroidInjector,
         aapsLogger: AAPSLogger,
         rh: ResourceHelper,
-        rxBus: RxBus
-    ) : info.nightscout.plugins.constraints.storage.StorageConstraintPlugin(injector, aapsLogger, rh, rxBus) {
+        activityNames: ActivityNames
+    ) : StorageConstraintPlugin(injector, aapsLogger, rh, activityNames) {
 
         var memSize = 150L
         override fun availableInternalMemorySize(): Long = memSize
     }
 
     @Test fun isLoopInvocationAllowedTest() {
-        val mocked = MockedStorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, rxBusWrapper)
+        val mocked = MockedStorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, activityNames)
         // Set free space under 200(Mb) to disable loop
         mocked.memSize = 150L
         Assert.assertEquals(false, mocked.isClosedLoopAllowed(Constraint(true)).value())

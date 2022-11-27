@@ -8,7 +8,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.plugins.R
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventBucketedDataCreated
@@ -77,8 +77,7 @@ class BgQualityCheckPlugin @Inject constructor(
         else
             maxIob
 
-    @Suppress("CascadeIf")
-    fun processBgData() {
+    @Suppress("CascadeIf") fun processBgData() {
         val readings = iobCobCalculator.ads.getBgReadingsDataTableCopy()
         for (i in readings.indices)
         // Deltas are calculated from last ~50 min. Detect RED state only on this interval

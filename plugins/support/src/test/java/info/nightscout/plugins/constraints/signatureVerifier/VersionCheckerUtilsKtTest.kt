@@ -1,12 +1,13 @@
-package info.nightscout.androidaps.plugins.contraints.versionChecker
+package info.nightscout.plugins.constraints.signatureVerifier
 
 import dagger.Lazy
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.receivers.ReceiverStatusStore
-import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
-import info.nightscout.core.versionChecker.numericVersionPart
 import info.nightscout.interfaces.Config
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
+import info.nightscout.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -30,10 +31,10 @@ import org.mockito.Mockito.`when`
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var config: Lazy<Config>
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var rxBus: RxBus
+    @Mock lateinit var activityNames: ActivityNames
 
     @Before fun setup() {
-        versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, rh, rxBus, config, receiverStatusStore, dateUtil)
+        versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, sp, rh, config, receiverStatusStore, dateUtil, activityNames)
     }
 
     @Test
@@ -169,49 +170,49 @@ import org.mockito.Mockito.`when`
     @Test
     fun `should find update1`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should find update2`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should find update3`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should find update4`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should find update5`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should find update6`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should not find update on fourth version digit`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0.1")
-        verify(rxBus, times(0)).send(anyObject())
+        verify(activityNames, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
     fun `should not find update on personal version with same number`() {
         versionCheckerUtils.compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0-myversion")
-        verify(rxBus, times(0)).send(anyObject())
+        verify(activityNames, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -225,7 +226,7 @@ import org.mockito.Mockito.`when`
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2.2")
 
-        verify(rxBus, times(0)).send(anyObject())
+        verify(activityNames, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
     @Test
     fun `find higher version`() {
@@ -237,7 +238,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2.2")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -250,7 +251,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2.2")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -263,7 +264,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.0-RC04")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -276,7 +277,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.0RC04")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -289,7 +290,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.RC04")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -302,7 +303,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.0.RC04")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -315,7 +316,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "3.7.9")
-        verify(rxBus, times(1)).send(anyObject())
+        verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -328,7 +329,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.3")
-        verify(rxBus, times(0)).send(anyObject())
+        verify(activityNames, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Test
@@ -341,7 +342,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.3-RC")
-        verify(rxBus, times(0)).send(anyObject())
+        verify(activityNames, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
 
    @Test
@@ -354,7 +355,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2-beta1")
-        verify(rxBus, times(1)).send(anyObject())
+       verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
    @Test
@@ -367,7 +368,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2-rc1")
-        verify(rxBus, times(1)).send(anyObject())
+       verify(activityNames, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @Before

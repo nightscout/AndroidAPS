@@ -196,13 +196,6 @@
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
 
-    <!-- BG Quality -->
-    <string name="bg_quality" translatable="false">BG Quality</string>
-    <string name="recalculated_data_used">Recalculated data used</string>
-    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">recalculated</string>
-    <string name="a11y_bg_quality_doubles">double entries</string>
-
     <!-- Objectives -->
     <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
     <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>

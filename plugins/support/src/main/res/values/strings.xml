@@ -33,4 +33,11 @@
     <!-- Signature verifier -->
     <string name="signature_verifier" translatable="false">Signature verifier</string>
 
+    <!-- BG Quality -->
+    <string name="bg_quality" translatable="false">BG Quality</string>
+    <string name="recalculated_data_used">Recalculated data used</string>
+    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculated</string>
+    <string name="a11y_bg_quality_doubles">double entries</string>
+
 </resources>

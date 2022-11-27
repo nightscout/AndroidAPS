@@ -3,12 +3,12 @@ package info.nightscout.plugins.constraints.bgQualityCheck
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.plugins.R
+import info.nightscout.plugins.support.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
@@ -17,7 +17,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
 class BgQualityCheckPluginTest : TestBase() {
 
@@ -25,29 +25,40 @@ class BgQualityCheckPluginTest : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var autosensDataStore: AutosensDataStore
 
     private lateinit var plugin: BgQualityCheckPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
-    private val autosensDataStore = AutosensDataStoreObject()
+    //private val autosensDataStore = AutosensDataStoreObject()
 
     @Before
     fun mock() {
-        plugin = BgQualityCheckPlugin(injector, aapsLogger, rh, RxBus(aapsSchedulers, aapsLogger), iobCobCalculator, aapsSchedulers, fabricPrivacy, dateUtil)
-        Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
+        plugin =
+            BgQualityCheckPlugin(
+                injector,
+                aapsLogger,
+                rh,
+                RxBus(aapsSchedulers, aapsLogger),
+                iobCobCalculator,
+                aapsSchedulers,
+                fabricPrivacy,
+                dateUtil
+            )
+        `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
     }
 
     @Test
     fun runTest() {
-        autosensDataStore.lastUsed5minCalculation = null
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(null)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.UNKNOWN, plugin.state)
         Assert.assertEquals(0, plugin.icon())
-        autosensDataStore.lastUsed5minCalculation = true
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.FIVE_MIN_DATA, plugin.state)
         Assert.assertEquals(0, plugin.icon())
-        autosensDataStore.lastUsed5minCalculation = false
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.RECALCULATED, plugin.state)
         Assert.assertEquals(R.drawable.ic_baseline_warning_24_yellow, plugin.icon())
@@ -57,12 +68,12 @@ class BgQualityCheckPluginTest : TestBase() {
         superData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         superData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         superData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        autosensDataStore.bgReadings = superData
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(superData)
 
-        autosensDataStore.lastUsed5minCalculation = true
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.FIVE_MIN_DATA, plugin.state)
-        autosensDataStore.lastUsed5minCalculation = false
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.RECALCULATED, plugin.state)
 
@@ -117,9 +128,9 @@ class BgQualityCheckPluginTest : TestBase() {
                 trendArrow = GlucoseValue.TrendArrow.FLAT
             )
         )
-        autosensDataStore.bgReadings = duplicatedData
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(duplicatedData)
 
-        autosensDataStore.lastUsed5minCalculation = true
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.DOUBLED, plugin.state)
         Assert.assertEquals(R.drawable.ic_baseline_warning_24_red, plugin.icon())
@@ -175,9 +186,9 @@ class BgQualityCheckPluginTest : TestBase() {
                 trendArrow = GlucoseValue.TrendArrow.FLAT
             )
         )
-        autosensDataStore.bgReadings = identicalData
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(identicalData)
 
-        autosensDataStore.lastUsed5minCalculation = false
+        `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
         Assert.assertEquals(BgQualityCheckPlugin.State.DOUBLED, plugin.state)
     }

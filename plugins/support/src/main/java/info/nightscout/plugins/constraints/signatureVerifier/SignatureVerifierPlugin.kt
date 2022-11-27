@@ -168,18 +168,6 @@ class SignatureVerifierPlugin @Inject constructor(
         return sb.toString()
     }
 
-/*
-    fun singleCharUnMap(shortHash: String): String {
-        val array = ByteArray(shortHash.length)
-        val sb = StringBuilder()
-        for (i in array.indices) {
-            if (i != 0) sb.append(":")
-            sb.append(String.format("%02X", 0xFF and map[map.indexOf(shortHash[i])].code))
-        }
-        return sb.toString()
-    }
-*/
-
     private fun shouldDownloadCerts(): Boolean {
         return System.currentTimeMillis() - sp.getLong(R.string.key_last_revoked_certs_check, 0L) >= UPDATE_INTERVAL
     }

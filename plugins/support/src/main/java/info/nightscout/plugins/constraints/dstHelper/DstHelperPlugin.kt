@@ -79,13 +79,13 @@ class DstHelperPlugin @Inject constructor(
         return value
     }
 
-    private fun wasDST(now: Calendar): Boolean {
+    fun wasDST(now: Calendar): Boolean {
         val ago = now.clone() as Calendar
         ago.add(Calendar.HOUR, DISABLE_TIME_FRAME_HOURS)
         return now[Calendar.DST_OFFSET] != ago[Calendar.DST_OFFSET]
     }
 
-    private fun willBeDST(now: Calendar): Boolean {
+    fun willBeDST(now: Calendar): Boolean {
         val ago = now.clone() as Calendar
         ago.add(Calendar.HOUR, WARN_PRIOR_TIME_FRAME_HOURS)
         return now[Calendar.DST_OFFSET] != ago[Calendar.DST_OFFSET]
