@@ -5,8 +5,6 @@
     <string name="bg_label">BS</string>
     <string name="missed_bg_readings">Mangler BS-målinger</string>
     <string name="time_to_eat">Nå må du spise</string>
-    <string name="enable_bolus_advisor">Aktiver boluskalkulator</string>
-    <string name="enable_bolus_advisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
     <string name="executing_right_now">Kommandoen utføres akkurat nå</string>
     <string name="basal_value_below_minimum">Basalverdi under minimum. Profilen settes ikke!</string>
