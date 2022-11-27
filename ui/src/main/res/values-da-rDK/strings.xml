@@ -21,12 +21,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">I alt</string>
     <!-- FillDialog -->
-    <string name="button1">Knap 1</string>
-    <string name="button2">Knap 2</string>
-    <string name="button3">Knap 3</string>
     <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <!-- InsulinDialog -->
