@@ -15,12 +15,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IHC: %2$.1f</string>
-    <string name="superbolus">Superbólus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Botão 1</string>
-    <string name="button2">Botão 2</string>
-    <string name="button3">Botão 3</string>
     <string name="record_pump_site_change">Registar mudança local bomba</string>
     <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
     <!-- InsulinDialog -->
