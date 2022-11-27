@@ -111,23 +111,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CILJ</string>
     <string name="basal_short">BAZAL</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Korišteni preračunati podaci</string>
-    <string name="bg_too_close">BG preblizu:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">preračunato</string>
-    <string name="a11y_bg_quality_doubles">dvostruki unosi</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Promjena računanja vremena za 24 sata ili manje</string>
-    <string name="dst_loop_disabled_warning">Promjena računanja vremena prije manje od 3 sata - zatvorena petlja onemogućena</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Oslobodite najmanje %1$d MB iz interne pohrane! Petlja onemogućena!</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">stara verzija</string>
-    <string name="very_old_version">vrlo stara verzija</string>
-    <string name="application_expired">Aplikacija je istekla</string>
-    <string name="new_version_warning">Nova verzija dostupna najmanje %1$d dana! Vraćanje na LGS nakon %2$d dana, petlja će biti onemogućena nakon %3$d dana</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="not_completed_yet">Nije još dovršeno</string>
     <string name="time_elapsed">Prošlo vrijeme</string>
@@ -137,6 +120,7 @@
     <!-- Safety -->
     <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
     <!-- Overview -->
+    <!--    OverviewMenu-->
     <!-- NSClient -->
     <string name="ns_upload_summary">Profili, bolusi, ugljikohidrati, privremeni bazali učitavaju se u NS</string>
     <string name="ns_upload">Upload podataka u NS</string>
