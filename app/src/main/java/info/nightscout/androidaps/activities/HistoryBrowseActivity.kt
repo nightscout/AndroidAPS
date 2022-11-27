@@ -11,9 +11,9 @@ import android.widget.TextView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import info.nightscout.core.activities.NoSplashAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.interfaces.Config
@@ -24,13 +24,16 @@ import info.nightscout.plugins.general.overview.events.EventUpdateOverviewGraph
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.events.EventCustomCalculationFinished
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -40,7 +43,7 @@ import java.util.GregorianCalendar
 import javax.inject.Inject
 import kotlin.math.min
 
-class HistoryBrowseActivity : NoSplashAppCompatActivity() {
+class HistoryBrowseActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var historyBrowserData: HistoryBrowserData
     @Inject lateinit var injector: HasAndroidInjector
@@ -53,6 +56,9 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var context: Context
     @Inject lateinit var calculationWorkflow: CalculationWorkflow
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private val disposable = CompositeDisposable()
 

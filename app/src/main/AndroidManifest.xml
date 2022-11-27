@@ -85,7 +85,7 @@
         <activity
             android:name=".activities.HistoryBrowseActivity"
             android:exported="false"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name=".receivers.DataReceiver"
