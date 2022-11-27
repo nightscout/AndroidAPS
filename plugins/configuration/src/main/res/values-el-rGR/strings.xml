@@ -26,6 +26,9 @@
     <string name="data_choices">Επιλογές δεδομένων</string>
     <string name="fabric_upload">Αποστολή δεδομένων στο εργοστάσιο</string>
     <string name="allow_automated_crash_reporting">Να επιτρέπεται η αυτόματη αποστολή αναφορών σφάλματος και χαρακτηριστικά χρήσης δεδομένων στους προγραμματιστές μέσω του fabric.io. service.</string>
+    <string name="apsmode_title">Λειτουργία APS</string>
+    <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_profile">Προφίλ</string>
     <string name="configbuilder_aps">APS</string>
@@ -36,8 +39,6 @@
     <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="configbuilder_insulin_description">Ποιο τύπο ινσουλίνης χρησιμοποιείτε;</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
-    <string name="apsmode_title">Λειτουργία APS</string>
-    <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
     <string name="configbuilder_sensitivity">Ανίχνευση ευαισθησίας</string>
     <string name="configbuilder_sensitivity_description">Ποιος αλγόριθμος ευαισθησίας να χρησιμοποιηθεί;</string>
 </resources>
