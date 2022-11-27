@@ -35,14 +35,9 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fг IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fг IC: %2$.1f</string>
-    <string name="superbolus">Суперболюс</string>
     <string name="treatments_wizard_total_label">Всего</string>
     <!-- FillDialog -->
     <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
-    <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
-    <string name="button1">Кнопка 1</string>
-    <string name="button2">Кнопка 2</string>
-    <string name="button3">Кнопка 3</string>
     <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
     <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
     <!-- InsulinDialog -->
