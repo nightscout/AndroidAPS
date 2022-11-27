@@ -42,6 +42,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
     <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
+    <string name="apsmode_title">Mode APS</string>
+    <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -58,8 +61,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_insulin_description">Quel type d\'insuline utilisez-vous ?</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
-    <string name="apsmode_title">Mode APS</string>
-    <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="configbuilder_sensitivity">Estimation de Sensibilité</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
 </resources>
