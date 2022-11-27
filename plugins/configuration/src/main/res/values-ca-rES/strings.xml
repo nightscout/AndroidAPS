@@ -56,4 +56,6 @@
     <string name="configbuilder_bgsource">Origen glucèmia</string>
     <string name="configbuilder_sensitivity">Detecció de sensibilitat</string>
     <string name="configbuilder_sensitivity_description">Quin algoritme de sensibilitat voleu utilitzar?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
