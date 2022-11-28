@@ -4,4 +4,6 @@
     <!--    PumpType-->
     <!-- PumpPluginBase -->
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f A</string>
+    <string name="format_insulin_units">%1$.2f A</string>
 </resources>
