@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Actualizar</string>
+    <string name="error">Erro</string>
+    <string name="profile_set_ok">Perfil Basal actualizado na bomba</string>
+    <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
+    <string name="pump_unreachable">Bomba inacessível</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Recarregar</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Guardar</string>
+    <string name="snooze">Silenciar</string>
+    <string name="constraints">Restrições</string>
+    <string name="superbolus">Superbólus</string>
+    <string name="pump_paused">Bomba suspensa</string>
+    <string name="and">E</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
+    <string name="result">Resultado</string>
+    <string name="statuslights">Luzes de Estado</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Reservatório</string>
+    <string name="base_basal_rate_label">Taxa Basal de base</string>
+    <string name="tempbasal_label">Basal temp</string>
+    <string name="extended_bolus_label">Bólus Prolongado</string>
+    <string name="serial_number">Número de Série</string>
+    <string name="disconnected">Desconectada</string>
+    <string name="connecting">A ligar</string>
+    <string name="pump_icon">Ícone da bomba</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bólus OK</string>
+    <string name="not_set_short">Não definido</string>
+    <string name="reading_pump_history">A ler histórico da bomba</string>
+    <string name="password_cleared">Senha limpa!</string>
+    <string name="pairing">A Emparelhar</string>
+    <string name="initializing">A inicializar ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">A basal máx está limitada a %1$.2f U/h por %2$s</string>
+    <string name="pumplimit">limite bomba</string>
+    <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
+    <string name="itmustbepositivevalue">deve ser valor positivo</string>
+    <string name="limitingbolus">A limitar bólus para %1$.1f U porque %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
@@ -12,12 +49,19 @@
     <string name="dismiss">DISPENSAR</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Bomba Emparelhada</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy não suportado.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy não suportado ou dispositivo não emparalhado.</string>
+    <string name="ble_not_enabled">Bluetooth não está activado.</string>
+    <string name="location_not_found_title">Localização Não Está Activa</string>
+    <string name="location_not_found_message">Para a Pesquisa Bluetooth funcionar em dispositivos mais recentes, a localização deve ser activada. AAPS não acompanha a sua localização e pode ser desactivada após o emparelhamento bem-sucedido.</string>
     <!--    Preferences -->
 </resources>
