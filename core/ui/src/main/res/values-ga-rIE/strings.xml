@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Athnuachan</string>
+    <string name="error">Earráid</string>
+    <string name="tempbasals_iobtotal_label_string">Lomlán IOB:</string>
+    <string name="insulin_unit_shortname">A</string>
+    <string name="reload">Athlódáil</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Sábháil</string>
+    <string name="constraints">Srianta</string>
+    <string name="pump_paused">Caidéil ar sos</string>
+    <string name="and">Agus</string>
+    <string name="result">Toradh</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Taiscumar</string>
+    <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
+    <string name="serial_number">Sraithuimhir</string>
+    <string name="disconnected">Dínasctha</string>
+    <string name="connecting">Ag nascadh</string>
+    <string name="reading_pump_history">Léigh stair caidéil</string>
+    <string name="initializing">Tosaithe ...</string>
     <!--    Constraints-->
     <!-- Locale -->
     <!--    Dialogs-->
@@ -11,6 +30,7 @@
     <string name="cancel">Cuir ar ceal</string>
     <string name="yes">Tá</string>
     <string name="no">Níl</string>
+    <string name="close">Dún</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$du %2$dn</string>
