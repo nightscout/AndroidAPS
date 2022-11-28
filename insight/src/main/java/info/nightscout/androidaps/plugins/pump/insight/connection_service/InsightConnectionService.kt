@@ -186,7 +186,7 @@ class InsightConnectionService : DaggerService(), ConnectionEstablisher.Callback
 
     @Synchronized override fun onCreate() {
         super.onCreate()
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) === PackageManager.PERMISSION_GRANTED) {
+        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.S) || (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)) {
             bluetoothAdapter = (applicationContext.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
         }
         pairingDataStorage = PairingDataStorage(this)

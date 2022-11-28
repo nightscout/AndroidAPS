@@ -15,10 +15,10 @@ import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.*
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI
-import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
-import info.nightscout.androidaps.extensions.notifyAll
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.core.utils.notifyAll
 
 @SuppressWarnings("unchecked")
 class MessageQueue {

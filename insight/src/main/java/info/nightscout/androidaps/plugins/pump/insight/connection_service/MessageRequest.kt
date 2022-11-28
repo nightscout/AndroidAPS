@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.insight.connection_service
 
-import info.nightscout.androidaps.extensions.wait
-import info.nightscout.androidaps.extensions.waitMillis
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage
+import info.nightscout.core.utils.wait
+import info.nightscout.core.utils.waitMillis
 
 open class MessageRequest<T : AppLayerMessage> internal constructor(var request: T) : Comparable<MessageRequest<*>> {
 

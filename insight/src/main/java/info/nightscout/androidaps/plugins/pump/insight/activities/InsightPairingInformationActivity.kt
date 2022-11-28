@@ -5,11 +5,11 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingInformationBinding
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 
-class InsightPairingInformationActivity : NoSplashAppCompatActivity() {
+class InsightPairingInformationActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: ActivityInsightPairingInformationBinding
 

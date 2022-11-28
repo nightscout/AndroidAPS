@@ -22,19 +22,18 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.ArrayList
-import javax.inject.Inject
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.ActivityInsightPairingBinding
-import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
+import info.nightscout.interfaces.pump.BlePreCheck
 import info.nightscout.interfaces.pump.PumpSync
+import javax.inject.Inject
 
-class InsightPairingActivity : NoSplashAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
+class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
 
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context

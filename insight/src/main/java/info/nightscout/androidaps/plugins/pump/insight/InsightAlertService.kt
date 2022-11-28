@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.insight
 
 import android.annotation.SuppressLint
-import android.app.Notification
 import android.app.PendingIntent
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
@@ -34,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightExcepti
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.shared.interfaces.ResourceHelper
 
@@ -267,7 +264,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             AlertStatus.ACTIVE  -> {
                     val muteIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "mute")
                     val mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    notificationBuilder.addAction(0, resourceHelper.gs(R.string.mute_alert), mutePendingIntent)
+                    notificationBuilder.addAction(0, resourceHelper.gs(R.string.mute), mutePendingIntent)
                     val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
                     val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
                     notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent)

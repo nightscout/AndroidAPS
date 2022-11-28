@@ -9,15 +9,12 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.database.InsightBolusID
+import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.insight.database.InsightHistoryOffset
 import info.nightscout.androidaps.insight.database.InsightPumpID
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.Service
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.HistoryReadingDirection
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.history.ReadHistoryEventsMessage
@@ -35,10 +32,12 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.plugin.OwnDatabasePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
@@ -51,6 +50,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventRefreshOverview
@@ -83,7 +83,8 @@ class LocalInsightPlugin @Inject constructor(
     config: Config,
     private val dateUtil: DateUtil,
     private val insightDbHelper: InsightDbHelper,
-    private val pumpSync: PumpSync
+    private val pumpSync: PumpSync,
+    private val insightDatabase: InsightDatabase
 ) : PumpPluginBase(PluginDescription()
     .pluginIcon(R.drawable.ic_insight_128)
     .pluginName(R.string.insight_local)
@@ -93,7 +94,7 @@ class LocalInsightPlugin @Inject constructor(
     .fragmentClass(LocalInsightFragment::class.java.name)
     .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
     injector, aapsLogger, rh, commandQueue
-), Pump, Insight, Constraints, InsightConnectionService.StateCallback {
+), Pump, Insight, Constraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
     private var alertService: InsightAlertService? = null
@@ -373,17 +374,17 @@ class LocalInsightPlugin @Inject constructor(
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: Exception) {
                 aapsLogger.error("Exception while setting profile", e)
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 result.comment(ExceptionTranslator.getString(context, e))
             }
@@ -1245,26 +1246,26 @@ class LocalInsightPlugin @Inject constructor(
                 startID = event.eventPosition))
             bolusID = insightDbHelper.getInsightBolusID(serial, event.bolusID, timestamp)
         }
-        bolusID?.let { bolusID ->
-            bolusID.startID = event.eventPosition
-            insightDbHelper.createOrUpdate(bolusID)
+        bolusID?.let { insightBolusID ->
+            insightBolusID.startID = event.eventPosition
+            insightDbHelper.createOrUpdate(insightBolusID)
             if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
                 pumpSync.syncBolusWithPumpId(
                     timestamp = timestamp,
                     amount = event.immediateAmount,
                     type = null,
-                    pumpId = bolusID.id,
+                    pumpId = insightBolusID.id,
                     pumpType = PumpType.ACCU_CHEK_INSIGHT,
                     pumpSerial = serial
                 )
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
-                if (profileFunction.getProfile(bolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
+                if (profileFunction.getProfile(insightBolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
                     timestamp = timestamp,
                     amount = event.extendedAmount,
                     duration = mins(event.duration.toLong()).msecs(),
                     isEmulatingTB = isFakingTempsByExtendedBoluses,
-                    pumpId = bolusID.id,
+                    pumpId = insightBolusID.id,
                     pumpType = PumpType.ACCU_CHEK_INSIGHT,
                     pumpSerial = serial
                 )
@@ -1288,27 +1289,27 @@ class LocalInsightPlugin @Inject constructor(
         }
         bolusID.endID = event.eventPosition
         insightDbHelper.createOrUpdate(bolusID)
-        insightDbHelper.getInsightBolusID(serial, event.bolusID, startTimestamp)?.also { bolusID ->
+        insightDbHelper.getInsightBolusID(serial, event.bolusID, startTimestamp)?.also { insightBolusID ->
             if (event.bolusType == BolusType.STANDARD || event.bolusType == BolusType.MULTIWAVE) {
                 pumpSync.syncBolusWithPumpId(
-                    timestamp = bolusID.timestamp,
+                    timestamp = insightBolusID.timestamp,
                     amount = event.immediateAmount,
                     type = null,
-                    pumpId = bolusID.id,
+                    pumpId = insightBolusID.id,
                     pumpType = PumpType.ACCU_CHEK_INSIGHT,
                     pumpSerial = serial)
-                lastBolusTimestamp = bolusID.timestamp
+                lastBolusTimestamp = insightBolusID.timestamp
                 sp.putLong(R.string.key_insight_last_bolus_timestamp, lastBolusTimestamp)
                 lastBolusAmount = event.immediateAmount
                 sp.putDouble(R.string.key_insight_last_bolus_amount, lastBolusAmount)
             }
             if (event.bolusType == BolusType.EXTENDED || event.bolusType == BolusType.MULTIWAVE) {
-                if (event.duration > 0 && profileFunction.getProfile(bolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp = bolusID.timestamp,
+                if (event.duration > 0 && profileFunction.getProfile(insightBolusID.timestamp) != null) pumpSync.syncExtendedBolusWithPumpId(
+                    timestamp = insightBolusID.timestamp,
                     amount = event.extendedAmount,
                     duration = timestamp - startTimestamp,
                     isEmulatingTB = isFakingTempsByExtendedBoluses,
-                    pumpId = bolusID.id,
+                    pumpId = insightBolusID.id,
                     pumpType = PumpType.ACCU_CHEK_INSIGHT,
                     pumpSerial = serial)
             }
@@ -1508,6 +1509,10 @@ class LocalInsightPlugin @Inject constructor(
 
     override fun canHandleDST(): Boolean {
         return true
+    }
+
+    override fun clearAllTables() {
+        insightDatabase.clearAllTables()
     }
 
     companion object {
