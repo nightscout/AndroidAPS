@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">刷新</string>
+    <string name="error">错误</string>
+    <string name="profile_set_ok">泵基础率配置文件更新了</string>
+    <string name="tempbasals_iobtotal_label_string">总 IOB:</string>
+    <string name="pump_unreachable">泵无法连接</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">重新加载</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">保存</string>
+    <string name="snooze">稍后再响</string>
+    <string name="constraints">约束条件</string>
+    <string name="superbolus">超级大剂量Superbolus</string>
+    <string name="pump_paused">泵暂停了</string>
+    <string name="and">而且</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">用户</string>
+    <string name="result">结果</string>
+    <string name="settings">设置</string>
+    <string name="statuslights">状态指示灯</string>
     <!--    Pumps -->
+    <string name="reservoir_label">储药器</string>
+    <string name="base_basal_rate_label">基础率</string>
+    <string name="tempbasal_label">临时基础率</string>
+    <string name="extended_bolus_label">扩展大剂量(方波)</string>
+    <string name="serial_number">序列号</string>
+    <string name="disconnected">已断开连接</string>
+    <string name="connecting">正在连接</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">单击连接到泵</string>
+    <string name="pump_icon">泵图标</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">泵驱动程序变更</string>
+    <string name="device_changed" comment="26 characters max for translation">设备已更改</string>
+    <string name="bolus_ok" comment="26 characters max for translation">大剂量完成</string>
+    <string name="not_set_short">未设置</string>
+    <string name="reading_pump_history">读取泵历史记录</string>
+    <string name="pairing">配对中</string>
+    <string name="initializing">正在初始化</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
+    <string name="pumplimit">泵限制</string>
+    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%</string>
+    <string name="itmustbepositivevalue">它必须是正数</string>
+    <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">确认</string>
@@ -12,6 +52,7 @@
     <string name="dismiss">忽略</string>
     <string name="yes">是</string>
     <string name="no">否</string>
+    <string name="close">关闭</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">将%1$s 增加 %2$s</string>
@@ -19,6 +60,12 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">不支持蓝牙低能量。</string>
+    <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
+    <string name="ble_not_enabled">蓝牙未启用</string>
+    <string name="location_not_found_title">未启用位置</string>
+    <string name="location_not_found_message">为了蓝牙能发现新的设备，手机定位功能必须启用， AAPS 不会追踪你的位置，你可以在配对成功后禁用定位。</string>
     <!--    Preferences -->
 </resources>
