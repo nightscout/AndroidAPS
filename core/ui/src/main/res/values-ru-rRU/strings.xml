@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Обновить</string>
+    <string name="error">Ошибка</string>
+    <string name="profile_set_ok">базальный профиль помпы обновлен</string>
+    <string name="constraint_applied">применено ограничение!</string>
+    <string name="tempbasals_iobtotal_label_string">Общий IOB:</string>
+    <string name="pump_unreachable">Помпа недоступна</string>
+    <string name="insulin_unit_shortname">Ед</string>
+    <string name="bolus_delivered">Болюс %1$.2f ед. подан успешно</string>
+    <string name="reload">Перезагрузка истории</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммоль/л</string>
+    <string name="save">Сохранить</string>
+    <string name="snooze">Отложить</string>
+    <string name="constraints">ограничения</string>
+    <string name="superbolus">Суперболюс</string>
+    <string name="pump_paused">Помпа приостановлена</string>
+    <string name="and">И</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Пользователь</string>
+    <string name="result">результат</string>
+    <string name="settings">Настройки</string>
+    <string name="statuslights">Индикаторы состояния</string>
+    <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Резервуар</string>
+    <string name="base_basal_rate_label">базовая величина базала</string>
+    <string name="tempbasal_label">врем базал</string>
+    <string name="extended_bolus_label">Пролонгированный болюс</string>
+    <string name="serial_number">Серийный номер</string>
+    <string name="disconnected">Разъединено</string>
+    <string name="connecting">соединение устанавливается</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Нажато подключ к помпе</string>
+    <string name="pump_icon">Пиктограмма помпы</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Замена драйвера помпы.</string>
+    <string name="device_changed" comment="26 characters max for translation">Устройство изменено</string>
+    <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
+    <string name="not_set_short">Не выбрано</string>
+    <string name="reading_pump_history">Чтение истории помпы</string>
+    <string name="password_cleared">Пароль сброшен!</string>
+    <string name="pairing">Сопряжение</string>
+    <string name="initializing">инициализация...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
+    <string name="pumplimit">лимит помпы</string>
+    <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
+    <string name="itmustbepositivevalue">величина должна быть положительной</string>
+    <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Подтверждение</string>
@@ -12,6 +56,7 @@
     <string name="dismiss">ОТКЛОНИТЬ</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="close">Закрыть</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
@@ -19,6 +64,13 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth с низким энергопотреблением не поддерживается.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy не поддерживается или устройство не сопряжено.</string>
+    <string name="ble_not_enabled">Bluetooth не включен.</string>
+    <string name="location_not_found_title">Геолокация не включена</string>
+    <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">Настройки расширений</string>
 </resources>
