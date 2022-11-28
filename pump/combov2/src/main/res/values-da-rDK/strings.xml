@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_error_2">Batteri afladet</string>
+    <string name="combov2_error_4">Tilstopning</string>
+    <string name="combov2_error_6">Mekanisk fejl</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
+    <string name="combov2_not_initialized">Ikke initialiseret</string>
+    <string name="combov2_ready">Klar</string>
+    <string name="combov2_suspended">Sat på pause</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Indstiller basal profil</string>
+    <string name="combov2_bolus_cancelled">Bolus annulleret</string>
+    <string name="combov2_bolus_delivery_failed">Bolus levering mislykkedes. Det ser ud til at ingen bolus blev leveret. Kontroller venligst pumpen for at undgå en dobbelt bolus og derefter bolus igen. For at beskytte mod fejl hentes bolusser ikke automatisk.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min tilbage)</string>
+    <string name="combov2_battery_low_warning">Pumpebatteri er lavt</string>
+    <string name="combov2_short_status_last_connection">Seneste forb: %1$d min siden</string>
+    <string name="combov2_short_status_temp_basal">Midl: %s</string>
+    <string name="combov2_short_status_reservoir">Reservoir: %dIE</string>
+    <string name="combov2_short_status_battery_state_empty">tom</string>
+    <string name="combov2_short_status_battery_state_low">lav</string>
 </resources>
