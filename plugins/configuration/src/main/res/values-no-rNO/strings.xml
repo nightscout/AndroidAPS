@@ -124,4 +124,6 @@
     <string name="miscellaneous">Annet</string>
     <string name="nav_resetdb">Nullstill databasene</string>
     <string name="resettodefaults">Tilbakestill til standardverdier</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
