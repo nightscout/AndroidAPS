@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Wykryto nieprawidłowe dane historii pompy. Otwórz nowy problem (\"Issue\") na GitHub i dodaj logi.</string>
     <string name="riley_statistics">Statystyki RL</string>
     <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Naciśnięto odśwież</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planowe odświeżenie statusu</string>
 </resources>
