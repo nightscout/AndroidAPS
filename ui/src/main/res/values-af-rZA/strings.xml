@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Beperking toegepas!</string>
     <string name="bolus_constraint_applied">Bolus beperking toegepas</string>
     <string name="carbs_constraint_applied">Karbs beperking toegepas</string>
     <string name="temp_target_short">TT</string>
@@ -15,12 +14,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <!-- FillDialog -->
-    <string name="button1">Knoppie 1</string>
-    <string name="button2">Knoppie 2</string>
-    <string name="button3">Knoppie 3</string>
     <string name="record_pump_site_change">Rekord pomp ligging verandering</string>
     <string name="record_insulin_cartridge_change">Rekord insulien kasset verandering</string>
     <!-- InsulinDialog -->
@@ -48,12 +43,9 @@
     <string name="tempbasals_netratio_label_string">Verhouding:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IAB:</string>
-    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="prime">Prima</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
 </resources>
