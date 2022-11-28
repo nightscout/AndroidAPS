@@ -19,4 +19,8 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <!-- Rx -->
+    <string name="handshaking">Establint comunicació</string>
+    <string name="connected">Connectat</string>
+    <string name="disconnecting">Desconnectant</string>
+    <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
 </resources>
