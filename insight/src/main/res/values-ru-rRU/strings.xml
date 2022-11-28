@@ -43,7 +43,6 @@
     <string name="short_status_tdd">Суммарный инсулин TDD: %1$.2f</string>
     <string name="short_status_reservoir">Резерв.: %1$.2f ед</string>
     <string name="short_status_battery">Батарея: %1$d%%</string>
-    <string name="mute_alert">Отключить звук</string>
     <string name="release_software_version">Версия ПО</string>
     <string name="ui_processor_software_version">Версия процессора UI</string>
     <string name="pc_processor_software_version">Версия процессора ПК</string>
