@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Se han detectado datos inválidos en el historial de la bomba. Abre una nueva incidencia y proporciona los archivos de registros.</string>
     <string name="riley_statistics">Estadísticas del RL</string>
     <string name="medtronic_history_type">Tipo:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Refresco pulsado</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Refrescar estado programado</string>
 </resources>
