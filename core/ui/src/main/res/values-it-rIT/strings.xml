@@ -23,6 +23,7 @@
     <string name="settings">Impostazioni</string>
     <string name="statuslights">Indicatori di stato</string>
     <string name="do_ns_upload_title">Carica dati BG su NS</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Serbatoio</string>
     <string name="base_basal_rate_label">Velocità basale originale</string>
@@ -72,4 +73,5 @@
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

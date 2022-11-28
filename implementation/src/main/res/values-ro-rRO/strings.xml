@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Lipsesc date glicemie</string>
     <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="permission">Permisiune</string>
     <!--       Stats -->

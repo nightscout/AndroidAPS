@@ -118,4 +118,6 @@
     <string name="miscellaneous">Diğer Ayarlar</string>
     <string name="nav_resetdb">Veritabanlarını sıfırla</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

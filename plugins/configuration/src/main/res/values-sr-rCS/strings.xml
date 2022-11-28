@@ -47,4 +47,6 @@
     <!--    Maintenance-->
     <string name="reset_db_confirm">Da li zaista želite da poništite baze podataka?</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout verzija:</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

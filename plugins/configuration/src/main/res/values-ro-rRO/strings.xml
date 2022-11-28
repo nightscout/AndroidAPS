@@ -82,5 +82,24 @@
     <string name="exported">Am exportat preferințele</string>
     <string name="filenotfound">Nu am găsit fișierul</string>
     <string name="goto_main_try_again">Mergeți la ecranul principal și încercați din nou.</string>
+    <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
+    <string name="ue_exported">Înregistrările de la Utilizator exportate</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MENTN</string>
+    <string name="description_maintenance">Pune la dispoziție funcții pentru mentenanță (ex: trimitere de loguri, ștergere de loguri).</string>
+    <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
+    <string name="maintenance_settings">Setări de întreținere</string>
+    <string name="maintenance_email">Destinatar email</string>
+    <string name="maintenance_amount">Nr de loguri de trimis</string>
+    <string name="send_all_logs">Trimite un email cu loguri</string>
+    <string name="delete_logs">Șterge logurile</string>
+    <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
+    <string name="engineering_mode_enabled">Mod inginer activat</string>
+    <string name="log_files">Fişiere jurnal</string>
+    <string name="nav_logsettings">Setări loguri</string>
+    <string name="miscellaneous">Diverse</string>
+    <string name="nav_resetdb">Resetează bazele de date</string>
+    <string name="resettodefaults">Resetare la setările implicite</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

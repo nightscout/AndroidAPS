@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Ustawienia</string>
     <string name="nav_refreshtreatments">Odśwież/pobierz zdarzenia z NS</string>
     <string name="nav_exit">Wyjście</string>
-    <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">ZACHOWAJ</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(NIEBEZPIECZNIE TO WYŁĄCZYĆ) tylko przesyłanie NS</string>
     <string name="ns_upload_only_summary">Tylko przesyłanie NS (wyłączona synchronizacja). Nie ma wpływu na pomiary glikemii (SGV), chyba że wybrane jest lokalne źródło, takie jak xDrip+. Nie wpływa na profile gdy używane są profile z Nightscout.\n!!! OSTRZEŻENIE !!! Wyłączenie tej opcji może spowodować nieprawidłowe działanie i przedawkowanie insuliny, jeśli którykolwiek z Twoich komponentów (AAPS, NS, xDrip+) nie jest skonfigurowany poprawnie. Uważnie obserwuj, czy dane wyświetlane przez AAPS są zgodne ze stanem pompy!</string>
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
-    <string name="ongoingnotificaction">Nadchodzące powiadomienia</string>
-    <string name="old_data">NIEAKTUALNE DANE</string>
     <string name="nav_about">O programie</string>
     <string name="smscommunicator_missingphonestatepermission">Brak uprawnień do wykrywania stanu telefonu</string>
     <string name="ns_alarm_options">Opcje alarmu</string>

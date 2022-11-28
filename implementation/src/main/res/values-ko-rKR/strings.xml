@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
     <string name="permission">권한</string>
     <!--       Stats -->
 </resources>

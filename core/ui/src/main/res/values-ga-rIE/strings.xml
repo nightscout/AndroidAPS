@@ -13,6 +13,7 @@
     <string name="pump_paused">Caidéil ar sos</string>
     <string name="and">Agus</string>
     <string name="result">Toradh</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Taiscumar</string>
     <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
@@ -39,4 +40,5 @@
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

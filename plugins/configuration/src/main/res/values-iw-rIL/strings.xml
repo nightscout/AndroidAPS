@@ -102,4 +102,12 @@
     <string name="send_all_logs">שלח יומנים בדוא\"ל</string>
     <string name="delete_logs">מחק רישומים</string>
     <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
+    <string name="engineering_mode_enabled">מצב הנדסה מופעל</string>
+    <string name="log_files">קבצי יומן</string>
+    <string name="nav_logsettings">הגדרות יומן רישום</string>
+    <string name="miscellaneous">שונות</string>
+    <string name="nav_resetdb">איפוס מסדי נתונים</string>
+    <string name="resettodefaults">אפס לברירת המחדל</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

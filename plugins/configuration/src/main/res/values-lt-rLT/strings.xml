@@ -98,4 +98,6 @@
     <string name="nav_logsettings">Įrašų nustatymai</string>
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <string name="resettodefaults">Atkurti numatytuosius</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

@@ -5,16 +5,12 @@
     <string name="settings_protection">Instellingen beveiliging</string>
     <string name="application_protection">App beveiliging</string>
     <string name="bolus_protection">Bolus beveiliging</string>
-    <string name="master_password">Masterwachtwoord</string>
     <string name="settings_password">Instellingen wachtwoord</string>
     <string name="application_password">App wachtwoord</string>
     <string name="bolus_password">Bolus wachtwoord</string>
-    <string name="unlock_settings">Instellingen ontgrendelen</string>
     <string name="biometric">Biometrisch</string>
     <string name="custom_password">Aangepast wachtwoord</string>
     <string name="noprotection">Geen beveiliging</string>
-    <string name="protection">Beveiliging</string>
-    <string name="master_password_missing">Masterwachtwoord is niet ingesteld!\n\nStel een masterwachtwoord in in Instellingen (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Niet beveiligde fallback</string>
     <string name="unsecure_fallback_descriotion_biometric">Om biometrische beveiliging te kunnen gebruiken, heb je een masterwachtwoord nodig als backup optie.\n\nStel dus een masterwachtwoord in!</string>
     <string name="password_set">Wachtwoord ingesteld!</string>

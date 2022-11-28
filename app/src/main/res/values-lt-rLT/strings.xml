@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Nustatymai</string>
     <string name="nav_refreshtreatments">Atnaujinti terapiją iš NS</string>
     <string name="nav_exit">Išeiti</string>
-    <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="delta">Pokytis</string>
     <string name="profile_label">Profilis</string>
     <string name="save">Išsaugoti</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(PAVOJINGA IŠJUNGTI) Tik įkeliama į NS</string>
     <string name="ns_upload_only_summary">Tik įkelti į Nightscout (be sinchronizavimo). Netaikoma NGJ reikšmėms, nebent pasirinktas vietinis duomenų šaltinis, pvz., xDrip+. Taip pat netaikoma profilio duomenims, jei naudojamas NS profilis.\n!!! ĮSPĖJIMAS !!! Išjungus šią parinktį, galimas insulino perdozavimas, jei bet kuris iš komponentų (AAPS, NS, xDrip+) sukonfigūruotas neteisingai. Atidžiai stebėkite, ar AAPS rodomi duomenys atitinka pompos duomenis!</string>
     <string name="wear">Išmanieji laikrodžiai</string>
-    <string name="ongoingnotificaction">Nuolatinis pranešimas</string>
-    <string name="old_data">SENI DUOMENYS</string>
     <string name="nav_about">Apie</string>
     <string name="smscommunicator_missingphonestatepermission">Trūksta telefono būsenos leidimo</string>
     <string name="ns_alarm_options">Aliarmų nustatymai</string>

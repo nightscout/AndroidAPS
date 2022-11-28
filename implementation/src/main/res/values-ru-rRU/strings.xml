@@ -3,7 +3,6 @@
     <string name="xdrip_not_installed">xdrip+ не установлен</string>
     <string name="calibration_sent">Калибровка отправлена на xDrip+</string>
     <string name="bg_label">ГК</string>
-    <string name="missed_bg_readings">Пропущенные данные СК</string>
     <string name="time_to_eat">Пора есть</string>
     <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
     <string name="executing_right_now">Команда выполняется</string>

@@ -16,4 +16,7 @@
     <string name="old_master_password">Régi mesterjelszó</string>
     <string name="filenotfound">Fájl nem található</string>
     <!--    Maintenance-->
+    <string name="configbuilder_nightscoutversion_label">Nightscout verzió:</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

@@ -5,6 +5,7 @@
     <string name="save">Sačuvaj</string>
     <string name="constraints">Ograničenja</string>
     <string name="result">Rezultat</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <!--    Constraints-->
     <!-- Locale -->
@@ -16,4 +17,5 @@
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

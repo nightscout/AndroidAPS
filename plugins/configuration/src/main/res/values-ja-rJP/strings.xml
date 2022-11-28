@@ -30,4 +30,7 @@
     <string name="ue_exported">ユーザーエントリをエクスポートしました</string>
     <!--    Maintenance-->
     <string name="reset_db_confirm">データベースをリセットしますか？</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscoutバージョン:</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

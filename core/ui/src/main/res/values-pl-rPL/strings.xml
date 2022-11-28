@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Użytkownik</string>
     <string name="result">Rezultat</string>
     <string name="statuslights">Wskaźniki stanu</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Zbiornik</string>
     <string name="base_basal_rate_label">Podstawowa dawka bazowa</string>
@@ -67,4 +68,5 @@
     <string name="location_not_found_title">Lokalizacja nie jest włączona</string>
     <string name="location_not_found_message">Aby uruchomić odnajdywanie Bluetooth na nowszych urządzeniach, lokalizacja musi być uruchomiona. AAPS nie śledzi twojej lokalizacji więc po udanym parowaniu urządzenia Bluetooth można wyłączyć lokalizację.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

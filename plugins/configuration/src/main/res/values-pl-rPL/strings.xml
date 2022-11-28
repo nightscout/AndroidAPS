@@ -99,4 +99,6 @@
     <string name="nav_logsettings">Ustawienia logów</string>
     <string name="nav_resetdb">Zresetuj bazy danych</string>
     <string name="resettodefaults">Przywróć ustawienia domyślne</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

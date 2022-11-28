@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
     <string name="result">Rezultat</string>
     <string name="statuslights">Lumini de stare</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Rezervor</string>
     <string name="base_basal_rate_label">Rată bazală normală</string>
@@ -67,4 +68,5 @@
     <string name="location_not_found_title">Localizarea este dezactivată</string>
     <string name="location_not_found_message">Pentru a putea căuta dispozitive Bluetooth noi, trebuie să activați localizarea. AAPS nu folosește datele dumneavoastră de localizare și acestea pot fi dezactivate după stabilirea conexiunii cu pompa.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

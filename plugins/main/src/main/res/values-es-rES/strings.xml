@@ -368,4 +368,5 @@
     <string name="wear_predictions_title">Predicciones</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
+    <!--    PersistentNotification-->
 </resources>

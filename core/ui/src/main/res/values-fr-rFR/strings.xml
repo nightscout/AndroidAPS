@@ -30,6 +30,7 @@
     <string name="pump_paused">Pompe suspendue</string>
     <string name="and">Et</string>
     <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">Pile</string>
     <string name="reservoir_label">Réservoir</string>
@@ -96,4 +97,5 @@
     <string name="location_not_found_title">Localisation désactivée</string>
     <string name="location_not_found_message">Afin que la recherche par Bluetooth puisse marcher sur les nouveaux appareils, la localisation doit être activée. AAPS ne trace pas votre position, sauf lorsque vous activez l\'option Message d\'Urgence.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

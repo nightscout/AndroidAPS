@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Ditt namn</string>
     <string name="result">Resultat</string>
     <string name="statuslights">Statuslampor</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservoar</string>
     <string name="base_basal_rate_label">Profilens basaldos</string>
@@ -68,4 +69,5 @@
     <string name="location_not_found_title">Platsdata är inte aktiverat</string>
     <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

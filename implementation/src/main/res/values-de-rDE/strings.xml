@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">BZ-Werte fehlen</string>
     <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="permission">Berechtigung</string>
     <!--       Stats -->

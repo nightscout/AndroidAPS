@@ -22,6 +22,7 @@
     <string name="result">Resultaat</string>
     <string name="settings">Instellingen</string>
     <string name="statuslights">Statusindicatoren</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservoir</string>
     <string name="base_basal_rate_label">Basis basaalstand</string>
@@ -71,4 +72,5 @@
     <string name="location_not_found_title">Locatie is niet ingeschakeld</string>
     <string name="location_not_found_message">Om Bluetooth discovery met nieuwere apparaten te laten werken moet locatie worden ingeschakeld. AAPS volgt je locatie niet en locatie kan ook weer worden uitgeschakeld nadat het koppelen is gelukt.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

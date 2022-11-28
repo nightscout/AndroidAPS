@@ -17,6 +17,7 @@
     <string name="pump_paused">Pomp wag</string>
     <string name="and">En</string>
     <string name="result">Uitslag</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Stoor</string>
     <string name="base_basal_rate_label">Basis basale tempo</string>
@@ -54,4 +55,5 @@
     <string name="location_not_found_title">Location nie aan</string>
     <string name="location_not_found_message">Vir Bluetooth ontdek om te werk op nuwer toestelle, lokaliteit moet aan wees. AAPS speur nie jou lokaliteit en kan afgeskakel na paring.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

@@ -118,4 +118,6 @@
     <string name="miscellaneous">Разное</string>
     <string name="nav_resetdb">обнулить базы</string>
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

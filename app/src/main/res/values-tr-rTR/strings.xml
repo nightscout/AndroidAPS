@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Tercihler</string>
     <string name="nav_refreshtreatments">NS\'tan tedavileri güncelle</string>
     <string name="nav_exit">Çıkış</string>
-    <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">Kaydet</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(DEVRE DIŞI BIRAKILMASI TEHLİKELİ) Yalnızca NS yüklemelerinde</string>
     <string name="ns_upload_only_summary">Yalnızca NS yüklemesi (senkronizasyon devre dışı). xDrip+ gibi yerel bir kaynak seçilmediği sürece SGV üzerinde etkili değildir. NS-Profili kullanılırken Profiller üzerinde etkili değildir.\n!!! UYARI !!! Bileşenlerinizden herhangi biri (AAPS, NS, xDrip+) yanlış yapılandırılmışsa, bu seçeneğin devre dışı bırakılması arızalara ve aşırı insülin dozuna neden olabilir. AAPS tarafından görüntülenen verilerin pompa durumuyla eşleşip eşleşmediğini dikkatlice izleyin!</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Sürekli Bildirim</string>
-    <string name="old_data">ESKİ VERİ</string>
     <string name="nav_about">Hakkında</string>
     <string name="smscommunicator_missingphonestatepermission">Telefon durumu izni eksik</string>
     <string name="ns_alarm_options">Alarm türleri</string>

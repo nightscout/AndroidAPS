@@ -94,4 +94,20 @@
     <string name="ue_exported">Brugerindtastninger exporteret</string>
     <!--    Maintenance-->
     <string name="maintenance_shortname">MAINT</string>
+    <string name="description_maintenance">Giver flere funktioner til vedligeholdelse (f.eks. log afsendelse, log sletning).</string>
+    <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
+    <string name="maintenance_settings">Vedligeholdelses Indstillinger</string>
+    <string name="maintenance_email">E-mail modtager</string>
+    <string name="maintenance_amount">Antal logs at sende</string>
+    <string name="send_all_logs">Send logfiler via e-mail</string>
+    <string name="delete_logs">Slet logs</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
+    <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
+    <string name="log_files">Logfiler</string>
+    <string name="nav_logsettings">Log indstillinger</string>
+    <string name="miscellaneous">Diverse</string>
+    <string name="nav_resetdb">Nulstil databaser</string>
+    <string name="resettodefaults">Nulstil til standardindstillinger</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

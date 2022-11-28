@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s 首选项</string>
     <string name="nav_refreshtreatments">从Nightscout刷新治疗数据</string>
     <string name="nav_exit">退出</string>
-    <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
     <string name="delta">增量</string>
     <string name="profile_label">配置文件</string>
     <string name="save">保存</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(禁用很危险) NS仅上传</string>
     <string name="ns_upload_only_summary">NS只上传数据(禁用同步)。除非选择本地血糖数据如xDrip+否则此功能无效。使用NS网站配置文件时此功能无效。\n！！！警告！！！如果您的任何组件(AAPS，NS，xDrip+) 配置错误，禁用此选项可能导致故障和胰岛素过量。请仔细观察AAPS显示的数据是否与泵状态匹配！</string>
     <string name="wear">手表</string>
-    <string name="ongoingnotificaction">持续的的通知</string>
-    <string name="old_data">旧数据</string>
     <string name="nav_about">关于</string>
     <string name="smscommunicator_missingphonestatepermission">缺少手机状态权限</string>
     <string name="ns_alarm_options">报警选项</string>

@@ -17,6 +17,7 @@
     <string name="and">Και</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Χρήστης</string>
     <string name="result">Αποτέλεσμα</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Αμπούλα</string>
     <string name="base_basal_rate_label">Βάση Βασικού Ρυθμού</string>
@@ -53,4 +54,5 @@
     <string name="location_not_found_title">Τοποθεσία μη ενεργοποιημένη</string>
     <string name="location_not_found_message">Για την εύρεση Bluetooth σε νεότερες συσκευές, η τοποθεσία πρέπει να είναι ενεργοποιημένη. Το AAPS δεν παρακολουθεί την τοποθεσία σας και μπορεί να απενεργοποιηθεί μετά την επιτυχή σύζευξη.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

@@ -5,13 +5,10 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_refreshtreatments">Ανανέωση Θεραπειών από NS</string>
     <string name="nav_exit">Έξοδος</string>
-    <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
     <string name="delta">Διαφορά</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
     <string name="correctionbous">Διορθ</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Συνεχής Ειδοποίηση</string>
-    <string name="old_data">Παλιά Δεδομένα</string>
     <string name="nav_about">Σχετικά με</string>
     <string name="smscommunicator_missingphonestatepermission">Λείπει η άδεια κατάστασης τηλεφώνου</string>
     <string name="ns_alarm_options">Επιλογές συναγερμού</string>

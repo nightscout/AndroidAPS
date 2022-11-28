@@ -3,7 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
     <string name="calibration_sent">Kalibrácia odoslaná do xDrip+</string>
     <string name="bg_label">Glykémia</string>
-    <string name="missed_bg_readings">Chýbajúce hodnoty glykémie</string>
     <string name="time_to_eat">Čas na jedlo</string>
     <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="executing_right_now">Príkaz sa práve vykonáva</string>

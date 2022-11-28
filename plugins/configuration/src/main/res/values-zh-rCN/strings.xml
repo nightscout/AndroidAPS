@@ -100,4 +100,6 @@
     <string name="nav_logsettings">日志设置</string>
     <string name="nav_resetdb">重置数据库</string>
     <string name="resettodefaults">重置为默认值</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

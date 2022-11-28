@@ -21,6 +21,7 @@
     <string name="result">Ergebnis</string>
     <string name="settings">Einstellungen</string>
     <string name="statuslights">Statusanzeige</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservoir</string>
     <string name="base_basal_rate_label">Basis-Basalrate</string>
@@ -70,4 +71,5 @@
     <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
     <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

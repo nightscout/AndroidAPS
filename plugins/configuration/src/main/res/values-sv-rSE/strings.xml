@@ -96,4 +96,8 @@
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
     <string name="nav_logsettings">Loggningsinställningar</string>
+    <string name="nav_resetdb">Återställ databaserna</string>
+    <string name="resettodefaults">Återställ standardinställningar</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

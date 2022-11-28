@@ -97,4 +97,11 @@
     <string name="delete_logs">Logs löschen</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
     <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
+    <string name="log_files">Log Dateien</string>
+    <string name="nav_logsettings">Log-Einstellungen</string>
+    <string name="miscellaneous">Verschiedenes</string>
+    <string name="nav_resetdb">Datenbanken zurücksetzen</string>
+    <string name="resettodefaults">Auf Standardwerte zurücksetzen</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

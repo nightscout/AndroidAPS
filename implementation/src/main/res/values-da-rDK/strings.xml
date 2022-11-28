@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Manglende BS målinger </string>
     <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
     <string name="permission">Tilladelse</string>
     <!--       Stats -->

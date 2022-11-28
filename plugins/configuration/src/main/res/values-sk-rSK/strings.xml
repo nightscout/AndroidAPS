@@ -116,4 +116,7 @@
     <string name="nav_logsettings">Nastavenie logovania</string>
     <string name="miscellaneous">Rôzne</string>
     <string name="nav_resetdb">Vymaž databázu</string>
+    <string name="resettodefaults">Obnoviť predvolené</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

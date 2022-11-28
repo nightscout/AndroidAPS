@@ -54,4 +54,16 @@
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Bied verskeie funksies vir onderhoud (bv. log stuur, log skrapping).</string>
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
+    <string name="maintenance_settings">Onderhoud instellings</string>
+    <string name="maintenance_email">E-pos</string>
+    <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
+    <string name="send_all_logs">Stuur Logs per Epos</string>
+    <string name="delete_logs">Skrap joernaal</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
+    <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
+    <string name="nav_logsettings">Logboekinstellings</string>
+    <string name="nav_resetdb">Herstel databasis</string>
+    <string name="resettodefaults">Herstel na verstek</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

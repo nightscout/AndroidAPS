@@ -33,6 +33,7 @@
     <string name="result">Resultado</string>
     <string name="settings">Ajustes</string>
     <string name="do_ns_upload_title">Subir datos de glucosa a Nightscout</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">Batería</string>
     <string name="reservoir_label">Reservorio</string>
@@ -100,4 +101,5 @@
     <string name="location_not_found_message">Para activar la visibilidad Bluetooth en nuevos dispositivos, la ubicación debe estar habilitada. AAPS no hace un seguimiento de su ubicación y se puede desactivar después de realizar la vinculación.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
+    <!-- SmsCommunicator -->
 </resources>

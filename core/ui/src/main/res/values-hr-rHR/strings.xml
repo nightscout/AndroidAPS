@@ -11,6 +11,7 @@
     <string name="superbolus">Superbolus</string>
     <string name="result">Rezultat</string>
     <string name="settings">Postavke</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="disconnected">Odspojen</string>
     <string name="connecting">Povezivanje</string>
@@ -43,4 +44,5 @@
     <string name="location_not_found_title">Lokacija nije omogućena</string>
     <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

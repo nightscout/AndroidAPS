@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">Inställningar för %1$s</string>
     <string name="nav_refreshtreatments">Uppdatera behandlingar från Nightscout</string>
     <string name="nav_exit">Avsluta</string>
-    <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">Spara</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(INAKTIVERAD KAN MEDFÖRA FARA) NS-Endast uppladdning</string>
     <string name="ns_upload_only_summary">NS-endast uppladdning (inaktiverad synkronisering). Påverkar inte uppladdning av BG om inte en lokal källa som xDrip+ är vald. NS-profiler kan också användas.\nVARNING! Att inaktivera detta alternativ och därmed tillåta att NS påverkar AAPS kan orsaka fel och t. o. m. insulinöverdos om någon av dina komponenter (AAPS, NS, xDrip+) inte är helt rätt konfigurerade. Övervaka noga att data som visas av AAPS överensstämmer med verkligheten!</string>
     <string name="wear">Klocka (Wear)</string>
-    <string name="ongoingnotificaction">Konstant avisering i telefonen</string>
-    <string name="old_data">Aktuellt BG saknas!</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
     <string name="ns_alarm_options">Larminställningar</string>

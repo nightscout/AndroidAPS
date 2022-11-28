@@ -18,6 +18,7 @@
     <string name="settings">Ayarlar</string>
     <string name="statuslights">Durum ışıkları</string>
     <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
     <string name="reservoir_value">%1$.0f / %2$d Ü</string>
@@ -56,4 +57,5 @@
     <!--    BlePreCheck-->
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
+    <!-- SmsCommunicator -->
 </resources>

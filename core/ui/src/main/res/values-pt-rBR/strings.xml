@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuário</string>
     <string name="result">Resultado</string>
     <string name="statuslights">Luzes de estado</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservatório</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
@@ -68,4 +69,5 @@
     <string name="location_not_found_title">Localização Não Está Ativada</string>
     <string name="location_not_found_message">Para que a procura de Bluetooth funcione em aparelhos mais recentes, a localização tem que ser activada. A app não rastreia a sua localização e pode ser desativada depois de um emparelhamento bem sucedido.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

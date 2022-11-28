@@ -399,4 +399,5 @@
     <string name="wear_predictions_title">Prédictions</string>
     <string name="resend_all_data">Renvoyer toutes les données</string>
     <string name="open_settings_on_wear">Afficher les Paramètres sur la Montre</string>
+    <!--    PersistentNotification-->
 </resources>

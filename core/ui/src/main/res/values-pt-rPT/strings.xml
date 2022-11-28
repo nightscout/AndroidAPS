@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
     <string name="result">Resultado</string>
     <string name="statuslights">Luzes de Estado</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservatório</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
@@ -64,4 +65,5 @@
     <string name="location_not_found_title">Localização Não Está Activa</string>
     <string name="location_not_found_message">Para a Pesquisa Bluetooth funcionar em dispositivos mais recentes, a localização deve ser activada. AAPS não acompanha a sua localização e pode ser desactivada após o emparelhamento bem-sucedido.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

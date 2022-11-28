@@ -31,4 +31,6 @@
     <string name="cleared_entries">Izbrisani unosi</string>
     <string name="reset_db_confirm">Stvarno želiš resetirati bazu?</string>
     <string name="nav_resetdb">Resetiraj bazu</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

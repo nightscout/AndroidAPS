@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Preferințe</string>
     <string name="nav_refreshtreatments">Reîncarcă tratamentele din NS</string>
     <string name="nav_exit">Ieșire</string>
-    <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="delta">Diferență</string>
     <string name="profile_label">Profil</string>
     <string name="save">Salvează</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(E PERICULOS SĂ DEZACTIVEZI) Doar încărcare în NS</string>
     <string name="ns_upload_only_summary">Numai încărcare NS (sincronizare dezactivata). Nu este eficient pe SGV (rom. valori de glicemie din senzor) dacă nu este selectată o sursă locală ca xDrip. Nu este eficient pe Profiluri dacă sunt utilizate cele din NS.\n!!! ATENȚIE !!! Dezactivarea acestei opțiuni poate determina disfuncționalități și supradozaj cu insulină dacă oricare dintre componentele dumneavoastră (AAPS, NS, xDrip) este configurată greșit. Urmăriți cu atenție dacă datele afișate de AAPS se potrivesc cu starea pompei!</string>
     <string name="wear">Ceas</string>
-    <string name="ongoingnotificaction">Notificare activă</string>
-    <string name="old_data">DATE VECHI</string>
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
     <string name="ns_alarm_options">Opțiuni alarmare</string>
