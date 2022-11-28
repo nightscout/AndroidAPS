@@ -56,11 +56,11 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
+import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -781,33 +781,6 @@ class LoopPlugin @Inject constructor(
             uploaderBattery = receiverStatusStore.batteryLevel,
             configuration = runningConfiguration.configuration().toString()
         )
-    }
-
-    fun PumpEnactResult.json(baseBasal: Double): JSONObject {
-        val result = JSONObject()
-        when {
-            bolusDelivered > 0     -> {
-                result.put("smb", bolusDelivered)
-            }
-
-            isTempCancel           -> {
-                result.put("rate", 0)
-                result.put("duration", 0)
-            }
-
-            isPercent          -> {
-                // Nightscout is expecting absolute value
-                val abs = Round.roundTo(baseBasal * percent / 100, 0.01)
-                result.put("rate", abs)
-                result.put("duration", duration)
-            }
-
-            else               -> {
-                result.put("rate", absolute)
-                result.put("duration", duration)
-            }
-        }
-        return result
     }
     companion object {
 

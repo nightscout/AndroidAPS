@@ -7,22 +7,29 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
+import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileSource
+import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Before
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -57,6 +64,16 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {}
         override fun suspendLoop(durationInMinutes: Int) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
+        override fun buildDeviceStatus(
+            dateUtil: DateUtil,
+            loop: Loop,
+            iobCobCalculatorPlugin: IobCobCalculator,
+            profileFunction: ProfileFunction,
+            pump: Pump,
+            receiverStatusStore: ReceiverStatusStore,
+            runningConfiguration: RunningConfiguration,
+            version: String
+        ): DeviceStatus? = null
     }
 
     @Mock lateinit var sp: SP

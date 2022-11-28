@@ -6,8 +6,8 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.main.R
 import info.nightscout.core.pump.toHtml
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.plugins.extensions.toText
-import info.nightscout.plugins.sync.nsShared.extensions.json
 import info.nightscout.plugins.sync.nsShared.extensions.log
 import org.json.JSONObject
 import org.junit.Assert

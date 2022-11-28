@@ -131,5 +131,6 @@
     <string name="key_snoozed_to" translatable="false">snoozedTo</string>
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
     <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
+    <string name="key_do_ns_upload" translatable="false">dexcomg5_nsupload</string>
 
 </resources>

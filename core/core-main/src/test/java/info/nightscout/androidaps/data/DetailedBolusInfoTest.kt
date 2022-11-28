@@ -68,9 +68,9 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.insulin = 7.0
 
         val bolus = detailedBolusInfo.createBolus()
-        Assert.assertEquals(1000L, bolus?.timestamp)
-        Assert.assertEquals(Bolus.Type.SMB, bolus?.type)
-        Assert.assertEquals(7.0, bolus?.amount)
+        Assert.assertEquals(1000L, bolus.timestamp)
+        Assert.assertEquals(Bolus.Type.SMB, bolus.type)
+        Assert.assertEquals(7.0, bolus.amount, 0.01)
     }
 
     @Test
@@ -80,8 +80,8 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.carbs = 6.0
 
         val carbs = detailedBolusInfo.createCarbs()
-        Assert.assertEquals(1000L, carbs?.timestamp)
-        Assert.assertEquals(6.0, carbs?.amount)
+        Assert.assertEquals(1000L, carbs.timestamp)
+        Assert.assertEquals(6.0, carbs.amount, 0.01)
     }
 
     private fun createBolusCalculatorResult(): BolusCalculatorResult =

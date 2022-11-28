@@ -3,7 +3,7 @@ package info.nightscout.plugins.sync.nsclient
 import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.plugins.R
+import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
@@ -22,13 +22,13 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
-    private lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock private lateinit var receiverStatusStore: ReceiverStatusStore
     private lateinit var sut: NsClientReceiverDelegate
 
 
     @Before
     fun prepare() {
-        receiverStatusStore = ReceiverStatusStore(context, rxBus)
+        //receiverStatusStore = ReceiverStatusStore(context, rxBus)
         sut = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)
     }
 
