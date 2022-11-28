@@ -23,6 +23,7 @@
     <string name="settings">Настройки</string>
     <string name="statuslights">Индикаторы состояния</string>
     <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Резервуар</string>
     <string name="base_basal_rate_label">базовая величина базала</string>
@@ -73,4 +74,5 @@
     <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Настройки расширений</string>
+    <!-- SmsCommunicator -->
 </resources>
