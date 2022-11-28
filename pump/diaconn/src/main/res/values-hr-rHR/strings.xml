@@ -2,9 +2,12 @@
 <resources>
     <string name="diaconn_g8_history_bolus">Bolusi</string>
     <string name="diaconn_g8_history_errors">Greške</string>
+    <string name="diaconn_g8_history_prime">Punjenje katetera</string>
     <string name="diaconn_g8_useextended_title">Koristi produženi bolus za &gt;200%%</string>
+    <string name="diagonn_g8_tdd_label">TDD</string>
     <string name="diaconn_g8_pumpalarm_intensity_low">nisko</string>
     <string name="diaconn_g8_pumpalarm_intensity_high">visoko</string>
     <string name="diaconn_g8_pumpalarm_low">nisko</string>
     <string name="diaconn_g8_reasonother">Ostalo</string>
+    <string name="diaconn_g8_logsuccess">Uspješno</string>
 </resources>
