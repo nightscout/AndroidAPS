@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">OK</string>
+    <string name="pump_serial_number">ポンプのシリアル番号</string>
     <!-- PumpCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
     <!-- Time -->
+    <string name="time_today">今日</string>
     <!-- BLE Config -->
+    <string name="ble_config_scan_stop">停止</string>
     <!-- BLE Errors -->
     <!-- Pump Error -->
     <!-- Pump History -->
+    <plurals name="daysago">
+        <item quantity="other">%1$d 日前</item>
+    </plurals>
 </resources>
