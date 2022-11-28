@@ -14,5 +14,8 @@
     <!--    PumpType-->
     <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units">%1$.2f E</string>
 </resources>
