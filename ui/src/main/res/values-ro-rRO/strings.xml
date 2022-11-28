@@ -15,12 +15,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Buton 1</string>
-    <string name="button2">Buton 2</string>
-    <string name="button3">Buton 3</string>
     <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
     <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
     <!-- InsulinDialog -->
@@ -58,8 +54,6 @@
     <string name="tempbasals_netratio_label_string">Raport:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
     <string name="prime">Amorsare</string>
     <string name="refresheventsfromnightscout">Actualizează din NS</string>
@@ -68,11 +62,4 @@
     <string name="selected_profile">Selectat:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Detalii probleme de import</string>
-    <string name="check_preferences_import_btn">Importă</string>
-    <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
-    <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
-    <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
-    <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
 </resources>
