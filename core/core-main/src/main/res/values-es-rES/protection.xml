@@ -29,7 +29,6 @@
     <string name="pin_not_set">PIN no establecido</string>
     <string name="password_not_changed">Contraseña no cambiada</string>
     <string name="pin_not_changed">PIN no cambiado</string>
-    <string name="password_cleared">¡Contraseña borrada!</string>
     <string name="pin_cleared">PIN eliminado</string>
     <string name="password_hint">Introducir contraseña aquí</string>
     <string name="pin_hint">Introducir PIN aquí</string>

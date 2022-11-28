@@ -30,7 +30,6 @@
     <string name="timeout_during_handshake">Afsnytyd gedurende handskud - terugstel bluetooth</string>
     <string name="pump_stopped">Pomp gestop</string>
     <string name="pump_started">Pomp is begin</string>
-    <string name="pump_paused">Pomp wag</string>
     <string name="short_status_last_connected">Laaste kon: %1$d min gelede</string>
     <string name="short_status_tbr">TBR: %1$d%% vir %2$d / %3$d min</string>
     <string name="short_status_extended">Verleng: %1$.2f / %2$.2f U vir %3$d min</string>

@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Utilisation dangereuse : la pompe utilise un profil avec un taux basal différent du premier. Le mode Boucle a été désactivé. Sélectionner le premier profil sur la pompe et rafraîchir.</string>
     <string name="bolus_frequency_exceeded">Un bolus avec la même quantité d’insuline a été demandé au cours de la dernière minute. Pour prévenir l’administration accidentelle de deux bolus à la fois et pour protéger contre les bugs, ceci (bolus) n\'est pas autorisé.</string>
     <string name="combo_pump_connected_now">Maintenant</string>
-    <string name="combo_activity_reading_pump_history">Lecture historique pompe</string>
     <string name="combo_activity_setting_basal_profile">Définir le profil basal</string>
     <string name="combo_pump_cartridge_low_warrning">Niveau réservoir pompe bas</string>
     <string name="combo_pump_battery_low_warrning">Pile pompe faible</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Jamais</string>
     <string name="combo_error_display_error">En cas d\'erreur</string>
     <string name="combo_error_display_always">Toujours</string>
+    <string name="unsafeusage">utilisation dangereuse</string>
 </resources>

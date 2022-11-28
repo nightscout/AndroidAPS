@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Сопряжение</string>
-    <string name="danars_nodeviceavailable">Устройства пока не найдены</string>
+    <string name="danars_no_device_available">Устройства не найдены</string>
     <string name="danars_pairingok">Соединение OK</string>
     <string name="danars_pairingtimedout">Истекло время ожидания соединения</string>
     <string name="danars_waitingforpairing">Ожидание соединения на помпе</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Перезаправка</string>
     <string name="danar_history_syspend">Останов</string>
     <string name="danar_history_prime">Заполнение</string>
-    <string name="danar_useroptions">Параметры пользователя</string>
-    <string name="danar_timedisplay">Формат отображения времени</string>
-    <string name="danar_buttonscroll">Кнопка прокрутки</string>
+    <string name="danar_user_options">Параметры пользователя</string>
+    <string name="danar_time_display">Показывать формат времени</string>
+    <string name="danar_button_scroll">Кнопочная прокрутка</string>
     <string name="danar_beep">Звуковой сигнал при нажатии кнопки</string>
-    <string name="danar_pumpalarm">Сигнал тревоги</string>
-    <string name="danar_pumpalarm_sound">Звуковой сигнал</string>
-    <string name="danar_pumpalarm_vibrate">Вибросигнал</string>
-    <string name="danar_pumpalarm_both">Оба</string>
-    <string name="danar_screentimeout">Время LCD экрана [seconds]</string>
+    <string name="danar_pump_alarm">Оповещения</string>
+    <string name="danar_pump_alarm_sound">Звуковой сигнал</string>
+    <string name="danar_pump_alarm_vibrate">Вибросигнал</string>
+    <string name="danar_pump_alarm_both">Оба варианта</string>
+    <string name="danar_screen_timeout">Таймаут LCD экрана [seconds]</string>
     <string name="danar_backlight">Время подсветки [seconds]</string>
-    <string name="danar_glucoseunits">Единиц глюкозы</string>
+    <string name="danar_glucose_units">Единицы ГК</string>
     <string name="danar_shutdown">Выключение через [hours]</string>
-    <string name="danar_lowreservoir">В резервуаре мало инсулина [Units]</string>
-    <string name="danar_saveuseroptions">Сохранить параметры в помпе</string>
+    <string name="danar_low_reservoir">В резервуаре мало инсулина [Units]</string>
+    <string name="danar_save_user_options">Сохранить параметры в помпе</string>
     <string name="description_pump_dana_r">Интеграция с помпой DANA Diabetcare R</string>
     <string name="description_pump_dana_r_korean">Интеграция с локальной помпой DANA Diabetcare R</string>
     <string name="description_pump_dana_r_v2">Интеграция с помпой Dana Diabetcare R с обновленной прошивкой</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">настройка базального профиля не состоялась</string>
     <string name="danar_bluetooth_status">статус блутус</string>
     <string name="danar_iob_label">активный инсулин на помпе</string>
-    <string name="virtualpump_firmware_label">прошивка</string>
+    <string name="firmware_label">Прошивка</string>
     <string name="danar_pump_settings">Настройки помпы Dana</string>
-    <string name="timeformat12h">12 ч</string>
-    <string name="timeformat24h">24 ч</string>
+    <string name="time_format_12h">12 ч</string>
+    <string name="time_format_24h">24 ч</string>
     <string name="option_on">Вкл.</string>
     <string name="option_off">Выкл.</string>
     <string name="danar_bt_name_title">устройство блутус danaR</string>

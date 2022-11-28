@@ -4,7 +4,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="save">Spremi</string>
-    <string name="basal_shortname">BAZAL</string>
     <string name="ns_alarms">Kreirajte obavijesti iz NS alarma</string>
     <string name="ns_announcements">Kreirajte obavijesti iz NS najava</string>
     <string name="invalid">GREŠKA</string>

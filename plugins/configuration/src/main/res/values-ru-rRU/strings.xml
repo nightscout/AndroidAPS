@@ -20,7 +20,6 @@
     <string name="need_storage_permission">Приложение требует разрешения на доступ к записи в память, чтобы хранить файлы журналов и настройки экспорта</string>
     <string name="askforpermission">Запросить права доступа</string>
     <string name="need_whitelisting">для корректной работы %1$s необходимо включить в белый список оптимизации батареи</string>
-    <string name="import_setting">Импортировать настройки</string>
     <string name="storedsettingsfound">Найдены сохраненные параметры</string>
     <string name="master_password_summary">Главный пароль используется для шифрования резервных копий и для переопределения защиты в приложении. Запомните его или храните в безопасном месте.</string>
     <string name="current_master_password">Текущий главный пароль</string>
@@ -49,6 +48,9 @@
     <string name="allow_automated_crash_reporting">Разрешить отправлять сообщения о неполадках и данные об использовании опций разработчикам при помощи сервиса fabric.io.</string>
     <string name="summary_email_for_crash_report">Эта идентификация будет прикреплена к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
+    <string name="apsmode_title">Режим APS</string>
+    <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
     <string name="configbuilder_profile">профиль</string>
@@ -64,8 +66,9 @@
     <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
-    <string name="apsmode_title">Режим APS</string>
-    <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
+    <!--ImportExport-->
+    <string name="import_setting">Импортировать настройки</string>
+    <!--    Maintenance-->
 </resources>

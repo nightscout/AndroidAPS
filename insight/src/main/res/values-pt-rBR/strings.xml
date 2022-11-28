@@ -31,7 +31,6 @@
     <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="pump_paused">Bomba suspensa</string>
     <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
     <string name="short_status_tbr">Basal temporária: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>

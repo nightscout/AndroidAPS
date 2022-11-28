@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Restricció aplicada!</string>
     <string name="bolus_constraint_applied">Restricció de bolus aplicada</string>
     <string name="carbs_constraint_applied">Restricció de carbs. aplicada</string>
     <string name="temp_target_short">OT</string>
@@ -19,12 +18,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Botó 1</string>
-    <string name="button2">Botó 2</string>
-    <string name="button3">Botó 3</string>
     <string name="record_pump_site_change">Anotar canvi de cànula</string>
     <string name="record_insulin_cartridge_change">Anotar canvi reservori d\'insulina</string>
     <!-- InsulinDialog -->
@@ -61,8 +56,6 @@
     <string name="tempbasals_netratio_label_string">Ràtio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
-    <string name="treatments_wizard_tt_label">OT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="refresheventsfromnightscout">Actualitzar des de NS</string>
     <string name="clone_label">Duplicar</string>
@@ -70,11 +63,4 @@
     <string name="selected_profile">Seleccionat:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Detall problemes d\'importació</string>
-    <string name="check_preferences_import_btn">Importar</string>
-    <string name="check_preferences_import_anyway_btn">Importar en qualsevol cas (PERILLÓS!)</string>
-    <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
-    <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
-    <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
 </resources>

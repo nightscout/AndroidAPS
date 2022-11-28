@@ -5,11 +5,7 @@
     <string name="statistics">Statisztikák</string>
     <string name="calculation_in_progress">Számítás folyamatban</string>
     <!-- WizardDialog -->
-    <string name="superbolus">Szuperbólus</string>
     <!-- FillDialog -->
-    <string name="button1">Gomb 1</string>
-    <string name="button2">Gomb 2</string>
-    <string name="button3">Gomb 3</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
@@ -20,5 +16,4 @@
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
 </resources>

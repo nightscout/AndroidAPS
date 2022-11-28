@@ -10,6 +10,7 @@
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
+    <string name="display_settings">Nastavení zobrazení</string>
     <string name="low_mark">Dolní značka</string>
     <string name="high_mark">Horní značka</string>
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
@@ -48,6 +49,9 @@
     <string name="allow_automated_crash_reporting">Automatické odesílání chyb aplikace a statistiky používání vývojářům pomocí služby fabric.io.</string>
     <string name="summary_email_for_crash_report">Tato e-identifikace bude připojena ke zprávám o pádech aplikace, abychom vás mohli kontaktovat v naléhavých případech. Je to dobrovolné.</string>
     <string name="identification">Identifikace (e-mail, jméno na FB nebo Discord atd.)</string>
+    <string name="apsmode_title">Typ smyčky</string>
+    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -64,8 +68,9 @@
     <string name="configbuilder_insulin_description">Jaký druh inzulínu používáte?</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
-    <string name="apsmode_title">Typ smyčky</string>
-    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="configbuilder_sensitivity">Detekce citlivosti</string>
     <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
+    <!--ImportExport-->
+    <string name="import_setting">Importovat nastavení</string>
+    <!--    Maintenance-->
 </resources>

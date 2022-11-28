@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Unités</string>
+    <string name="setupwizard_units_prompt">Sélectionnez les unités dans lesquelles vous souhaitez afficher les valeurs</string>
+    <string name="next_button">Suivant</string>
+    <string name="previous_button">Préc</string>
+    <string name="nav_setupwizard">Assistant de configuration</string>
+    <string name="setupwizard_finish">TERMINER</string>
+    <string name="welcometosetupwizard">Bienvenue dans l\'assistant de configuration. Il vous guidera tout au long du processus de configuration\n</string>
+    <string name="end_user_license_agreement">Accord de licence de l’utilisateur final</string>
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
 L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
     <string name="end_user_license_agreement_i_understand">JE COMPRENDS ET J\'ACCEPTE LES CONDITIONS DU CONTRAT</string>
+    <string name="display_settings">Paramètres d\'affichage</string>
     <string name="low_mark">Ligne BASSE</string>
     <string name="high_mark">Ligne HAUTE</string>
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
@@ -13,7 +22,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="need_storage_permission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>
     <string name="askforpermission">Demande d\'autorisation</string>
     <string name="need_whitelisting">%1$s a besoin d\'être sur la liste blanche de l\'optimisation de la batterie pour des performances correctes</string>
-    <string name="import_setting">Importer les paramètres</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="master_password_summary">Le mot de passe principal est utilisé pour crypter les sauvegardes et superviser la sécurité de l\'application. Rappelez-vous en ou stockez le en lieu sûr.</string>
     <string name="current_master_password">Mot de passe principal actuel</string>
@@ -42,6 +50,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
     <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
+    <string name="apsmode_title">Mode APS</string>
+    <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -58,8 +69,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_insulin_description">Quel type d\'insuline utilisez-vous ?</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
-    <string name="apsmode_title">Mode APS</string>
-    <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="configbuilder_sensitivity">Estimation de Sensibilité</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
+    <!--ImportExport-->
+    <string name="import_setting">Importer les paramètres</string>
+    <!--    Maintenance-->
 </resources>

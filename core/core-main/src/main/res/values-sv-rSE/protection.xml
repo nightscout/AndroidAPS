@@ -20,6 +20,5 @@
     <string name="password_set">Lösenord sparat!</string>
     <string name="password_not_set">Lösenord inte inställt</string>
     <string name="password_not_changed">Lösenordet har inte ändrats</string>
-    <string name="password_cleared">Lösenordet togs bort!</string>
     <string name="password_hint">Ange lösenord här</string>
 </resources>

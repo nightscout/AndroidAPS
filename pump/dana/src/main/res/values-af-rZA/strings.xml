@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Paring</string>
-    <string name="danars_nodeviceavailable">Geen toestel gevind so ver</string>
     <string name="danars_pairingok">Paring OK</string>
     <string name="danars_pairingtimedout">Paring tyd verstreke</string>
     <string name="danars_waitingforpairing">Wag vir paring op pomp</string>
@@ -55,20 +54,9 @@
     <string name="danar_history_refill">Hervul</string>
     <string name="danar_history_syspend">Opgeskort</string>
     <string name="danar_history_prime">Prima</string>
-    <string name="danar_useroptions">Gebruiker opsies</string>
-    <string name="danar_timedisplay">Vertoon tyd formaat</string>
-    <string name="danar_buttonscroll">Knoppie rol</string>
     <string name="danar_beep">Biep op knoppie druk</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Klank</string>
-    <string name="danar_pumpalarm_vibrate">Vibreer</string>
-    <string name="danar_pumpalarm_both">Beide</string>
-    <string name="danar_screentimeout">LCD aantyd [seconds]</string>
     <string name="danar_backlight">Agterlig aantyd [seconds]</string>
-    <string name="danar_glucoseunits">Glukose eenhede</string>
     <string name="danar_shutdown">Afsluit [hours]</string>
-    <string name="danar_lowreservoir">Lae reserwe [Units]</string>
-    <string name="danar_saveuseroptions">Stoor opsies te pomp</string>
     <string name="description_pump_dana_r">Pomp integrasie vir DANA Diabecare R pompe</string>
     <string name="description_pump_dana_r_korean">Pomp integrasie vir Koreanse DANA Diabecare R pompe</string>
     <string name="description_pump_dana_r_v2">Pomp integrasie vir DANA Diabecare R pompe met opgegradeerde firmware</string>
@@ -84,7 +72,6 @@
     <string name="profile_set_failed">Instelling van basale profiel het misluk</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pomp IAB</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pomp instellings</string>
     <string name="option_on">Aan</string>
     <string name="option_off">Af</string>

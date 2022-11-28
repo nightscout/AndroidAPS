@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">מגבלה הוחלה!</string>
     <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
     <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
     <string name="temp_target_short">TT</string>
@@ -23,12 +22,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
     <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
-    <string name="superbolus">סופר בולוס</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <!-- FillDialog -->
-    <string name="button1">כפתור 1</string>
-    <string name="button2">כפתור 2</string>
-    <string name="button3">כפתור 3</string>
     <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- InsulinDialog -->
@@ -70,8 +65,6 @@
     <string name="tempbasals_netratio_label_string">יחס:</string>
     <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
     <string name="prime">תיחול</string>
     <string name="profile_changes">שינויים בפרופיל</string>
@@ -93,11 +86,4 @@
     <string name="selected_profile">נבחר:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
-    <string name="check_preferences_import_btn">ייבוא</string>
-    <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
-    <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
-    <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
-    <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
 </resources>

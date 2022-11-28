@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">применено ограничение!</string>
     <string name="bolus_constraint_applied">применено ограничение болюса</string>
     <string name="carbs_constraint_applied">применено ограничение углеводов</string>
     <string name="temp_target_short">TT</string>
@@ -36,14 +35,9 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fг IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fг IC: %2$.1f</string>
-    <string name="superbolus">Суперболюс</string>
     <string name="treatments_wizard_total_label">Всего</string>
     <!-- FillDialog -->
     <string name="fill_warning">Убедитесь что количество соответствует характеристикам инфузионной системы!</string>
-    <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
-    <string name="button1">Кнопка 1</string>
-    <string name="button2">Кнопка 2</string>
-    <string name="button3">Кнопка 3</string>
     <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
     <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
     <!-- InsulinDialog -->
@@ -93,8 +87,6 @@
     <string name="tempbasals_netratio_label_string">Процент:</string>
     <string name="tempbasals_netinsulin_label_string">Инсулин:</string>
     <string name="tempbasals_iob_label_string">IOB акт инс:</string>
-    <string name="tempbasals_iobtotal_label_string">Общий IOB:</string>
-    <string name="treatments_wizard_tt_label">Врем цель (TT)</string>
     <string name="treatments_wizard_correction_label">Коррекция</string>
     <string name="meal_bolus">На еду</string>
     <string name="prime">Заполн инфуз системы</string>
@@ -121,21 +113,13 @@
     <string name="motol_default_profile">Профиль по умолчанию</string>
     <string name="current_profile">Текущий профиль</string>
     <string name="available_profile">Доступный профиль</string>
-    <string name="format_with_tdd_and_pct">Возраст: %1$.0f Суточная Потребность: %2$.0f ед %3$d%%</string>
-    <string name="format_with_weight">Возраст: %1$.0f Вес: %2$.0f кг</string>
+    <string name="format_with_tdd">Возраст: %1$d Суточная Потребность: %2$.0f ед</string>
+    <string name="format_with_tdd_and_pct">Возраст: %1$d Суточная Потребность: %2$.0f ед %3$d%%</string>
+    <string name="format_with_weight">Возраст: %1$d Вес: %2$.0f кг</string>
     <string name="dpv_default_profile">Значение для профиля по умолчанию</string>
     <string name="invalid_pct">Некорректное значение</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Базальная скорость</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">НАЖАТ СТОП</string>
-    <!--    PrefImport-->
-    <string name="check_preferences_details_btn">Объяснить проблемы импорта…</string>
-    <string name="check_preferences_details_title">Сведения о проблемах импорта</string>
-    <string name="check_preferences_import_btn">Импортировать</string>
-    <string name="check_preferences_import_anyway_btn">Импортировать в любом случае (ОПАСНО!)</string>
-    <string name="import_setting">Импортировать настройки</string>
-    <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
-    <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
-    <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
 </resources>

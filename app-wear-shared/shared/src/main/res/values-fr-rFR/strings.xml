@@ -27,4 +27,10 @@
     <string name="tomorrow">Demain</string>
     <string name="today">Aujourd’hui</string>
     <string name="yesterday">Hier</string>
+    <!-- Rx -->
+    <string name="connecting_for">Connexion en cours %1$ds</string>
+    <string name="handshaking">Connexion</string>
+    <string name="connected">Connectée</string>
+    <string name="disconnecting">Déconnexion en cours</string>
+    <string name="waiting_for_disconnection">Attente de déconnexion</string>
 </resources>

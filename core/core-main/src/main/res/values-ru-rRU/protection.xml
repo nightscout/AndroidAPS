@@ -20,6 +20,5 @@
     <string name="password_set">Пароль задан!</string>
     <string name="password_not_set">Пароль не задан</string>
     <string name="password_not_changed">Пароль не был изменён</string>
-    <string name="password_cleared">Пароль сброшен!</string>
     <string name="password_hint">Введите пароль здесь</string>
 </resources>

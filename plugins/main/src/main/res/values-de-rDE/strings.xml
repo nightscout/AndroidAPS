@@ -22,12 +22,6 @@
     <string name="localprofile_shortname">LP</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
@@ -53,7 +47,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
     <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
-    <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
     <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
     <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
@@ -64,7 +57,6 @@
     <string name="hardlimit">festem Grenzwert</string>
     <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <!-- Overview -->
-    <string name="snooze">Schlummern</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
     <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
     <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
@@ -78,7 +70,6 @@
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
     <string name="statuslights_bat_warning">Warnschwelle Pumpenbatterie-Stand [%]</string>
     <string name="statuslights_bat_critical">Warnschwelle kritischer Pumpenbatterie-Stand [%]</string>
-    <string name="statuslights">Statusanzeige</string>
     <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
     <string name="a11y_graph">Diagramm</string>
     <string name="a11y_insulin_label">Insulin</string>
@@ -86,63 +77,10 @@
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="apsmode_title">APS-Modus</string>
-    <string name="setbasalquestion">Akzeptiere neue TBR:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
-    <!-- NSClient -->
-    <string name="restart">Neustart</string>
-    <string name="deliver_now">Jetzt abgeben</string>
-    <string name="clear_queue">Warteschlange leeren</string>
-    <string name="show_queue">Zeige Warteschlange</string>
-    <string name="queue">Warteschlange:</string>
-    <string name="status">Status:</string>
-    <string name="full_sync">Vollständige Synchronisierung</string>
-    <string name="full_sync_comment">Vollständige Synchronisierung? Es kann viele Stunden dauern und bis zur Fertigstellung wirst du keine neuen Daten in NS sehen.</string>
-    <string name="ns_sync_options">Synchronisierung</string>
-    <string name="ns_upload_summary">Profile, Boli, Kohlenhydrate und temporäre Basalraten werden zu NS hochgeladen</string>
-    <string name="ns_upload">Daten zu NS hochladen</string>
-    <string name="ns_receive_profile_store">Gespeicherte Profile abrufen</string>
-    <string name="ns_receive_profile_store_summary">Profile mit NS Profil-Editor synchronisieren</string>
-    <string name="ns_receive_temp_target">Temporäre Ziele abrufen</string>
-    <string name="ns_receive_temp_target_summary">Temp. Ziele akzeptieren, die in NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_profile_switch">Profilwechsel abrufen</string>
-    <string name="ns_receive_profile_switch_summary">Profilwechsel akzeptieren, die in NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_offline_event">APS Offline-Ereignisse empfangen</string>
-    <string name="ns_receive_offline_event_summary">APS Offline-Ereignisse akzeptieren, die über NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_tbr_eb">TBR und EB empfangen</string>
-    <string name="ns_receive_tbr_eb_summary">Akzeptiere TBR und EB, die von einer anderen Instanz eingegeben wurden</string>
-    <string name="ns_receive_insulin">Insulin abrufen</string>
-    <string name="ns_receive_insulin_summary">Insulin akzeptieren, das in NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_carbs">Kohlenhydrate abrufen</string>
-    <string name="ns_receive_carbs_summary">Kohlenhydrate akzeptieren, die in NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_therapy_events">Ereignisse abrufen</string>
-    <string name="ns_receive_therapy_events_summary">Ereignisse (Kanülen-, Ampullen-, Batteriewechsel etc.) akzeptieren, die in NS oder NSClient eingegeben wurden</string>
-    <string name="ns_receive_cgm">Historische CGM Daten ergänzen</string>
-    <string name="ns_receive_cgm_summary">CGM Daten von NS akzeptieren</string>
     <string name="run_question">%s ausführen?</string>
-    <string name="ns_sync_slow">Hochladen verlangsamen</string>
-    <string name="ns_alarms">Benachrichtigungen über NS-Alarme</string>
-    <string name="ns_announcements">Benachrichtigungen über NS-Ankündigungen</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
-    <string name="title_tidepool_username">Login-Benutzername</string>
-    <string name="summary_tidepool_password">Dein Tidepool Anmeldekennwort</string>
-    <string name="title_tidepool_password">Anmeldekennwort</string>
-    <string name="title_tidepool_test_login">Teste den Tidepool Login</string>
-    <string name="summary_tidepool_dev_servers">Wenn diese Option aktiviert ist, werden die Uploads an https://int-app.tidepool.org statt an die reguläre https://app.tidepool.org/ weitergeleitet</string>
-    <string name="title_tidepool_dev_servers">Integrations (Test) Server verwenden</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Daten zu Tidepool hochladen</string>
-    <string name="tidepool_upload_cgm">CGM Daten hochladen</string>
-    <string name="tidepool_upload_bolus">Behandlungen (Insulin, Kohlenhydrate) hochladen</string>
-    <string name="tidepool_upload_tbr">Temporäre Basalrate hochladen</string>
-    <string name="tidepool_upload_profile">Profilwechsel und temporäre Ziele hochladen</string>
-    <string name="tidepool_upload_bg">BZ-Werte (blutig) hochladen</string>
-    <string name="remove_all">Alle entfernen</string>
-    <string name="reset_start">Start zurücksetzen</string>
-    <string name="upload_now">Jetzt hochladen</string>
+    <!--    OverviewMenu-->
     <!-- VirtualPump -->
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
@@ -170,21 +108,6 @@
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
     <string name="bgsource_upload">BZ Upload Einstellungen</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Mobilfunkverbindung verwenden</string>
-    <string name="ns_wifi">WLAN Verbindung verwenden</string>
-    <string name="ns_wifi_ssids">WLAN SSID</string>
-    <string name="ns_charging">Während des Ladevorgangs</string>
-    <string name="ns_battery">Bei Batteriebetrieb</string>
-    <string name="ns_create_announcements_from_errors_title">Ankündigungen aus Fehlern generieren</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
-    <string name="ns_create_announcements_from_errors_summary">Erstelle Nightscout-Ankündigungen für Fehler-Dialoge und lokale Alarme (auch einsehbar im Careportal unter \"Behandlungen\").</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Nightscout-Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
-    <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
-    <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
-    <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- Skins -->
     <string name="classic_description">Ursprüngliches Erscheinungsbild</string>
     <string name="lowres_description">Darstellung niedrige Auflösung</string>
@@ -193,4 +116,6 @@
     <string name="skin">Erscheinungsbild</string>
     <!--    Loop -->
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
 </resources>

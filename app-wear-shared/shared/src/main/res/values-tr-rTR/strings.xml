@@ -27,4 +27,10 @@
     <string name="tomorrow">Yarın</string>
     <string name="today">Bugün</string>
     <string name="yesterday">Dün</string>
+    <!-- Rx -->
+    <string name="connecting_for">%1$d bağlanıyor</string>
+    <string name="handshaking">Bağlandı</string>
+    <string name="connected">Bağlandı</string>
+    <string name="disconnecting">Bağlantı kesiliyor</string>
+    <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
 </resources>
