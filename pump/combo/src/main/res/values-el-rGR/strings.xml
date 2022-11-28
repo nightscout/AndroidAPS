@@ -50,4 +50,5 @@
     <string name="bolusstopped">Το bolus σταμάτησε</string>
     <string name="bolusstopping">Το bolus σταματάει</string>
     <string name="combo_error_display_never">Ποτέ</string>
+    <string name="unsafeusage">μη ασφαλής χρήση</string>
 </resources>
