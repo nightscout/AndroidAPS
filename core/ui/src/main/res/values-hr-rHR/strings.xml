@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Osvježi</string>
+    <string name="constraint_applied">Primijenjeno ograničenje!</string>
+    <string name="tempbasals_iobtotal_label_string">Ukupni aktivni inzulin:</string>
+    <string name="pump_unreachable">Pumpa nedostupna</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Ponovno učitaj</string>
+    <string name="save">Spremi</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="result">Rezultat</string>
+    <string name="settings">Postavke</string>
     <!--    Pumps -->
+    <string name="disconnected">Odspojen</string>
+    <string name="connecting">Povezivanje</string>
+    <string name="not_set_short">Nije postavljeno</string>
+    <string name="initializing">Pokretanje...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Ograničavanje maksimalne bazalne doze na %1$.2f U/h zbog %2$s</string>
+    <string name="pumplimit">ograničenje pumpe</string>
+    <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
+    <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
+    <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrda</string>
@@ -10,6 +29,7 @@
     <string name="ok">U redu</string>
     <string name="cancel">Otkaži</string>
     <string name="dismiss">ODBACITI</string>
+    <string name="close">Zatvori</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
@@ -17,5 +37,10 @@
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
+    <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
+    <string name="location_not_found_title">Lokacija nije omogućena</string>
+    <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
     <!--    Preferences -->
 </resources>
