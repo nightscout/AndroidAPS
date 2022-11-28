@@ -42,8 +42,10 @@
     <string name="allow_automated_crash_reporting">允许通过fabric.io服务将自动崩溃报告和功能使用数据发送给开发人员。</string>
     <string name="summary_email_for_crash_report">此项为选填信息，会附在反馈的崩溃报告中，以便我们在紧急情况下与您联系。</string>
     <string name="identification">身份识别 (email邮件地址, FaceBook账号 或 Discord账号等等)</string>
+    <string name="request">请求</string>
     <string name="apsmode_title">APS模式</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">此设备似乎不支持电池优化白名单 - 您可能会遇到性能问题。</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_profile">配置文件</string>
@@ -57,6 +59,45 @@
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="configbuilder_sensitivity">灵敏度检测</string>
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
+    <string name="description_config_builder">用于配置活动插件</string>
+    <string name="a11y_open_settings">打开设置</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">请您输入主密码，该密码将用于加密导出的首选项配置。</string>
+    <string name="preferences_export_canceled">导出已取消！首选项未导出！</string>
+    <string name="preferences_import_canceled">导入已取消! 未导入首选项 !</string>
+    <string name="preferences_import_impossible">无法导入首选项 !</string>
+    <string name="check_preferences_details_btn">说明导入问题…</string>
+    <string name="check_preferences_details_title">导入问题详细信息</string>
+    <string name="check_preferences_import_btn">导入</string>
+    <string name="check_preferences_import_anyway_btn">继续导入（危险！）</string>
+    <string name="check_preferences_before_import">请在导入之前检查首选项：</string>
+    <string name="check_preferences_cannot_import">无法导入首选项！</string>
+    <string name="check_preferences_dangerous_import">不应导入首选项 !</string>
+    <string name="nav_export">导出配置</string>
+    <string name="export_to">导出配置</string>
+    <string name="import_from">导入配置</string>
+    <string name="setting_imported">配置导入了</string>
+    <string name="old_master_password">旧的主密码</string>
+    <string name="different_password_used">此文件已导出并使用不同的主密码进行加密。 提供旧的主密码以解密文件。</string>
+    <string name="master_password_will_be_replaced">成功导入后，当前主密码将替换为旧主密码！</string>
+    <string name="exported">参数选项导出了</string>
+    <string name="filenotfound">找不到文件</string>
+    <string name="goto_main_try_again">请返回主屏幕，然后重试。</string>
+    <string name="restartingapp">正在退出应用程序以应用设置。</string>
+    <string name="ue_exported">用户条目已导出</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">维护</string>
+    <string name="description_maintenance">提供了几个维护功能 (例如日志发送、日志删除)。</string>
+    <string name="reset_db_confirm">你真的想重置数据库吗?</string>
+    <string name="maintenance_settings">维护设置</string>
+    <string name="maintenance_email">电子邮箱收件人</string>
+    <string name="maintenance_amount">没有要发送的日志</string>
+    <string name="send_all_logs">用电子邮件发送</string>
+    <string name="delete_logs">删除日志</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
+    <string name="engineering_mode_enabled">已启用工程模式</string>
+    <string name="log_files">日志文件</string>
+    <string name="nav_logsettings">日志设置</string>
+    <string name="nav_resetdb">重置数据库</string>
+    <string name="resettodefaults">重置为默认值</string>
 </resources>
