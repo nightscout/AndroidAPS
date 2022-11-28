@@ -33,7 +33,6 @@
     <string name="result">Result</string>
     <string name="settings">Settings</string>
     <string name="statuslights">Status lights</string>
-    <string name="do_ns_upload_title">Upload BG data to NS</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>
