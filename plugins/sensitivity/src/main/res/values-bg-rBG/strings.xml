@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
+    <string name="sensitivity_oref1">Чрез Oref1</string>
+    <string name="sensitivity_aaps">чрез AAPS</string>
+    <string name="sensitivity_weighted_average">чрез Среднопретеглената стойност</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
     <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 или 24 назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Това е необходимо за изчисление на необявени хранения (UAM).</string>
     <string name="description_sensitivity_weighted_average">Чувствителността се изчислява като среднопретеглена стойност от отклоненията. По-новите отклонения имат по-високо тегло. Минималната абсорбция на въглехидрати се изчислява от Време за макс усвояване на въглехидрати от опциите. Този алгоритъм е най-бързият при проследяването на промени в чувствителността.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM изключен, защото му трябва Oref1 плъгин за чувствителност </string>
+    <string name="absorption_settings_title">Настройки за абсорбция</string>
+    <string name="absorption_max_time_title">Максимално време за усвояване на храненето [ч]</string>
+    <string name="absorption_max_time_summary">Брой часове, за които се очаква храненето да бъде напълно усвоено в организма</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
     <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максималният множител на autosens (а скоро autotune), за да позволи 20%% максимален лимит на autosens коефициента, който от своя страна настройва базалите, колко може да намали инсулиновата чувствителност, и колко ниско може да свали целевата КЗ.</string>
     <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДругата част от сигурността на autosens, слагайки ограничение на колко ниско може да ограничи базалите, колко да повиши чувствителността (ISF) и целевите КЗ.</string>
     <string name="openapsama_autosens_max">Макс. стойност за аутосенс</string>
     <string name="openapsama_autosens_min">Мин. стойност за аутосенс</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Стойност по подразбиране: 3.0 (АМА) или 8.0 (SMB). Това е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл за 5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
     <string name="absorption_cutoff_title">Макс. време за усвояване на храна (часове)</string>
     <string name="absorption_cutoff_summary">Време за което всяко хранене се счита за усвоено. Оставащите въглехидрати ще бъдат изчиствани.</string>
 </resources>
