@@ -28,4 +28,8 @@
     <string name="today">Oggi</string>
     <string name="yesterday">Ieri</string>
     <!-- Rx -->
+    <string name="handshaking">Connessione</string>
+    <string name="connected">Connesso</string>
+    <string name="disconnecting">Disconnessione</string>
+    <string name="waiting_for_disconnection">In attesa della disconnessione</string>
 </resources>
