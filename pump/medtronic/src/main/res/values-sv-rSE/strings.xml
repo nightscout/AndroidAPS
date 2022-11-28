@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Ogiltig pumpdata upptäckt. Öppna nytt ärende och bifoga loggar.</string>
     <string name="riley_statistics">RL-statistik</string>
     <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Klickade Uppdatering</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Schemalagd statusuppdat</string>
 </resources>
