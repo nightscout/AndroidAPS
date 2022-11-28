@@ -19,6 +19,7 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <!-- Rx -->
+    <string name="connecting_for">Jungiamasi %1$d s</string>
     <string name="handshaking">Ryšio užmezgimas</string>
     <string name="connected">Prisijungta</string>
     <string name="disconnecting">Atsijungiama</string>
