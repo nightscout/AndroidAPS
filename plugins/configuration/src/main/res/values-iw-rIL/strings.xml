@@ -43,8 +43,11 @@
     <string name="allow_automated_crash_reporting">אפשר דיווח אוטומטי על קריסה ושליחת נתוני השימוש למפתחים דרך שירות fabric.io.</string>
     <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
+    <string name="request">בקשה</string>
     <string name="apsmode_title">מצב APS</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
+    <string name="error_asking_for_permissions">שגיאה בעת בקשת הרשאות</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">משאבה</string>
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
@@ -62,6 +65,41 @@
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
     <string name="configbuilder_sensitivity">זיהוי רגישות</string>
     <string name="configbuilder_sensitivity_description">באיזה אלגוריתם זיהוי רגישות להשתמש?</string>
+    <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
+    <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
+    <string name="a11y_open_settings">פתח הגדרות</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
+    <string name="preferences_export_canceled">ייצוא בוטל! ההגדרות לא יוצאו!</string>
+    <string name="preferences_import_canceled">ייבוא בוטל! ההעדפות לא הובאו!</string>
+    <string name="preferences_import_impossible">לא ניתן לייבא את ההגדרות!</string>
+    <string name="check_preferences_details_btn">הסבר בעיות ייבוא…</string>
+    <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
+    <string name="check_preferences_import_btn">ייבוא</string>
+    <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
+    <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
+    <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
+    <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
+    <string name="nav_export">ייצא הגדרות</string>
+    <string name="export_to">ייצא הגדרות ל-</string>
+    <string name="import_from">יבא הגדרות מ-</string>
+    <string name="setting_imported">הגדרות מיובאות</string>
+    <string name="old_master_password">סיסמה ראשית ישנה</string>
+    <string name="different_password_used">קובץ זה יוצא והוצפן באמצעות סיסמה ראשית שונה. אנא ספקו סיסמה ראשית זו כדי לפענח את הקובץ.</string>
+    <string name="master_password_will_be_replaced">בעקבות ייבוא ההגדרות הסיסמה הראשית הקיימת תוחלף עם הסיסמה הראשית המיובאת!</string>
+    <string name="exported">ההעדפות יוצאו</string>
+    <string name="filenotfound">הקובץ לא נמצא</string>
+    <string name="goto_main_try_again">נא לחזור למסך הראשי ולנסות שוב.</string>
+    <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
+    <string name="ue_exported">רשומות המשתמש יוצאו</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">תחזוקה</string>
+    <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
+    <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
+    <string name="maintenance_settings">הגדרות תחזוקה</string>
+    <string name="maintenance_email">נמען דוא\"ל</string>
+    <string name="maintenance_amount">מספר הרשומות למשלוח</string>
+    <string name="send_all_logs">שלח יומנים בדוא\"ל</string>
+    <string name="delete_logs">מחק רישומים</string>
+    <string name="configbuilder_nightscoutversion_label">גירסת נייטסקאוט:</string>
 </resources>
