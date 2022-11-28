@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">העדפות %1$s</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
     <string name="nav_exit">יציאה</string>
-    <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="delta">דלתא</string>
     <string name="profile_label">פרופיל</string>
     <string name="save">שמירה</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(מסוכן להשבית) העלאה בלבד לנייטסקאוט</string>
     <string name="ns_upload_only_summary">העלאה בלבד של נתונים לנייטסקאוט. לא מתאים לשימוש אלא אם מקור נתוני הסוכר הוא מקומי כדוגמת xDrip. לא מתאים לשימוש בפרופילים מקוונים מנייטסקאוט.\n!!! אזהרה !!! ביטול אפשרות זו עלולה לגרום לתקלות ולמינון יתר של אינסולין אם אחד או יותר מרכיבי המערכת (AAPS, xDrip, נייטסקאוט) אינו מוגדר כהלכה. וודאו היטב שהנתונים המוצגים ב-AAPS תואמים את מצב המשאבה!</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">התראה מתמשכת</string>
-    <string name="old_data">נתונים ישנים</string>
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
     <string name="ns_alarm_options">אפשרויות התראה</string>
