@@ -92,6 +92,7 @@
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="insulin_plugins">胰岛素插件</string>
     <string name="insulin_ultrarapid">在超速效Oref插件中你应该使用哪种胰岛素？</string>
     <string name="insulin_fiasp">Fiasp®速效门冬胰岛素(超速效)</string>
     <string name="insulin_novorapid">诺和锐®/门冬胰岛素®</string>
