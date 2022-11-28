@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Обнаружены недопустимые данные истории помпы. Создайте запись о новой проблеме и предоставьте журналы.</string>
     <string name="riley_statistics">Статистика RL</string>
     <string name="medtronic_history_type">Тип:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Нажато обновление</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Запланированное обновление статуса</string>
 </resources>
