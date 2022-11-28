@@ -51,4 +51,5 @@
     <string name="bolusstopped">Bolus oprit</string>
     <string name="bolusstopping">Se oprește bolusul</string>
     <string name="combo_error_display_never">Niciodată</string>
+    <string name="unsafeusage">utilizare nesigură</string>
 </resources>
