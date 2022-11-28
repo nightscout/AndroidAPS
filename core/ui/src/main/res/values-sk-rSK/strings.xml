@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Obnoviť</string>
+    <string name="error">Chyba</string>
+    <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
+    <string name="invalid_input">Chybné vstupné dáta</string>
+    <string name="bolus_delivering">Podávanie %1$.2f JI</string>
+    <string name="constraint_applied">Aplikované obmedzenie!</string>
+    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
+    <string name="tt_label">DC</string>
+    <string name="pump_unreachable">Pumpa nedostupná</string>
+    <string name="insulin_unit_shortname">JI</string>
+    <string name="pump_base_basal_rate">%1$.2f JI/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pumpa nie je inicializovaná, profil nenastavený!</string>
+    <string name="failed_update_basal_profile">Chyba pri aktualizovaní bazálneho profilu</string>
+    <string name="bolus_delivered">Bolus %1$.2f JI podaný úspešne</string>
+    <string name="no_valid_basal_rate">Nenačítaný žiadny platný bazál z pumpy</string>
+    <string name="limiting_iob">IOB obmedzený na %1$.1f JI: %2$s</string>
+    <string name="loop_disabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ OBMEDZENÍM</string>
+    <string name="event_type">Typ udalosti</string>
+    <string name="reload">Znova načítať</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Uložiť</string>
+    <string name="snooze">Odložiť</string>
+    <string name="virtual_pump">Virtuálna pumpa</string>
+    <string name="constraints">Obmedzenia</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpa pozastavená</string>
+    <string name="and">A</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
+    <string name="result">Výsledok</string>
+    <string name="settings">Nastavenia</string>
+    <string name="statuslights">Indikátory stavu</string>
+    <string name="do_ns_upload_title">Nahrávať glykémie do NS</string>
+    <string name="configbuilder_insulin">Inzulín</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Hlavné heslo</string>
+    <string name="ue_export_to_csv">Exportovať užívateľské záznamy do Excelu (csv)</string>
+    <string name="confirm">Potvrdiť</string>
+    <string name="pump">Pumpa</string>
+    <string name="missed_bg_readings">Chýbajúce hodnoty glykémie</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Stíšiť na 5 minút</string>
+    <string name="mute">Stíšiť</string>
+    <string name="success">Úspešne</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Odomknúť nastavenia</string>
+    <!--    Pumps -->
+    <string name="battery_label">Batéria</string>
+    <string name="reservoir_label">Zásobník</string>
+    <string name="last_connection_label">Posledné spojenie</string>
+    <string name="last_bolus_label">Posledný bolus</string>
+    <string name="base_basal_rate_label">Základná hodnota bazálu</string>
+    <string name="tempbasal_label">Dočasný bazál</string>
+    <string name="extended_bolus_label">Predĺžený bolus</string>
+    <string name="serial_number">Sériové číslo</string>
+    <string name="disconnected">Odpojené</string>
+    <string name="connecting">Pripájanie</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuté pripojiť k pumpe</string>
+    <string name="reservoir_value">%1$.0f / %2$d JI</string>
+    <string name="daily_units">Jednotiek za deň</string>
+    <string name="pump_icon">Ikona pumpy</string>
+    <string name="view_profile">Zobraziť profil</string>
+    <string name="pump_history">História pumpy</string>
+    <string name="stats">Štatistiky</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Zmena ovládača pumpy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Zariadenie zmenené</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Chyba podávania dočasného bazálu</string>
+    <string name="not_set_short">Nenastavené</string>
+    <string name="pump_busy">Pumpa je zaneprázdnená</string>
+    <string name="connection_error">Chyba pripájania pumpy</string>
+    <string name="reading_pump_history">Načítavam históriu z pumpy</string>
+    <string name="password_cleared">Heslo vymazané!</string>
+    <string name="pairing">Párovanie</string>
+    <string name="initializing">Inicializácia ...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
+    <string name="pumplimit">limit pumpy</string>
+    <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
+    <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
+    <string name="limitingbolus">Bolus obmedzený na %1$.1f JI: %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrdenie</string>
     <string name="message">Správa</string>
@@ -8,6 +91,7 @@
     <string name="dismiss">ODMIETNUŤ</string>
     <string name="yes">Áno</string>
     <string name="no">Nie</string>
+    <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <!-- NumberPicker -->
@@ -18,5 +102,36 @@
     <!-- datetime layout -->
     <string name="event_time_label">Čas udalosti</string>
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">Aplikácia vyžaduje povolenie Bluetooth</string>
+    <string name="need_connect_permission">Aplikácia vyžaduje povolenie Bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Požiadavka používateľa</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nie je podporované.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie je podporované, alebo zariadenie nie je spárované.</string>
+    <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
+    <string name="location_not_found_title">Poloha nie je aktivovaná</string>
+    <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Nastavenie modulu</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
+    <plurals name="days">
+        <item quantity="one">%1$d deň</item>
+        <item quantity="few">%1$d dní</item>
+        <item quantity="many">%1$d dní</item>
+        <item quantity="other">%1$d dní</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodín</item>
+        <item quantity="many">%1$d hodín</item>
+        <item quantity="other">%1$d hodín</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minúta</item>
+        <item quantity="few">%1$d minút</item>
+        <item quantity="many">%1$d minút</item>
+        <item quantity="other">%1$d minút</item>
+    </plurals>
 </resources>

@@ -11,7 +11,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -25,7 +25,7 @@ class StorageConstraintPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
-    private val activeNames: ActivityNames
+    private val activeNames: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)

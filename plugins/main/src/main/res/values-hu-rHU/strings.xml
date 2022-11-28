@@ -2,48 +2,82 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="wrong_format">Hibás formátum</string>
+    <string name="sms_actual_bg">VC:</string>
+    <string name="sms_bolus">Bólus:</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <!-- Food-->
+    <string name="food_short">Étel</string>
+    <string name="food">Étel</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
+    <string name="localprofile">Profil</string>
+    <string name="dia_short">DIA</string>
     <!-- Objectives -->
     <string name="apsselected">APS kiválasztva</string>
+    <string name="objectives_next_button">Tovább</string>
+    <string name="objectives_previous_button">Vissza</string>
     <!-- Actions -->
+    <string name="actions">Műveletek</string>
     <string name="tools">Eszközök</string>
+    <string name="sensor_label">Szenzor</string>
+    <string name="age_label">kor:</string>
+    <string name="insulin_label">Inzulin</string>
     <string name="cannula">Kanül</string>
     <!-- Safety -->
     <!-- Overview -->
-    <string name="snooze">Szundi</string>
+    <string name="a11y_graph">grafikon</string>
+    <string name="a11y_insulin_label">inzulin</string>
     <string name="overview_cgm">CGM</string>
-    <!-- NSClient -->
-    <string name="status">Állapot:</string>
-    <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
-    <!-- Tidepool -->
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="upload_now">Feltöltés most</string>
+    <string name="overview">Kezdőlap</string>
+    <string name="overview_shortname">KEZD</string>
+    <string name="overview_buttons_selection">Gombok</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Feltöltő</string>
+    <string name="overview_edit_quickwizard_button_text">Gombfelirat:</string>
+    <string name="overview_edit_quickwizard_valid">Érvényes:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Hozzáad</string>
+    <string name="overview_quickwizard_item_edit_button">Szerkeszt</string>
+    <string name="keep_screen_on_title">Képernyő bekapcsolva tartása</string>
+    <string name="cgm">CGM</string>
+    <string name="button1">Gomb 1</string>
+    <string name="button2">Gomb 2</string>
+    <string name="button3">Gomb 3</string>
+    <string name="enable_bolus_advisor">Bólusvarázsló bekapcsolása</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Előrejelzések</string>
+    <string name="overview_show_sensitivity">Érzékenység</string>
+    <string name="overview_show_basals">Bázis</string>
+    <string name="overview_show_abs_insulin">Inzulin összesen</string>
+    <string name="basal_shortname">BÁZ</string>
+    <string name="graph_menu_divider_header">Grafikon</string>
     <!-- VirtualPump -->
     <!-- Source -->
+    <string name="glimp">Glimp</string>
+    <string name="mm640g">MM640g</string>
     <string name="poctech">Poctech</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <!-- NSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">FELT</string>
+    <string name="random_bg">Véletlenszerű VC</string>
+    <string name="random_bg_short">VC</string>
     <!-- Skins -->
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
     <string name="skin">Megjelenés</string>
     <!--    Loop -->
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="wear_settings">Wear beállítások</string>
+    <string name="wear_display_settings">Megjelenítési beállítások</string>
+    <string name="wear_general_settings">Általános beállítások</string>
+    <string name="wear_predictions_title">Előrejelzések</string>
+    <!--    PersistentNotification-->
+    <string name="old_data">RÉGI ADAT</string>
 </resources>

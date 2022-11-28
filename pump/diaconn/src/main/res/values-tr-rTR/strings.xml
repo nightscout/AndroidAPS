@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Eşleştirmeyi Sıfırla</string>
-    <string name="diaconn_nodeviceavailable">Kullanılabilir Cihaz yok</string>
+    <string name="diaconn_no_device_available">Kullanılabilir Cihaz yok</string>
     <string name="diaconn_pairing">Diaconn Pompa Eşleştirme</string>
     <string name="pumperror">Pompa Hatası</string>
     <string name="diaconn_g8_history_alarm">Alarmlar</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Bolus Adımı</string>
     <string name="basal_step">Bazal Adımı</string>
     <string name="pump_firmware_label">Yazılım</string>
-    <string name="diagonn_g8_useroptions">KULLANICI SEÇENEKLERİ</string>
+    <string name="diaconn_g8_user_options">KULLANICI SEÇENEKLERİ</string>
     <string name="pairfirst">Lütfen pompanızı telefonunuzla eşleştirin!</string>
     <string name="processinghistory">"Etkinlik İşleniyor "</string>
     <string name="apslastLogNum">aps_son_log_num</string>

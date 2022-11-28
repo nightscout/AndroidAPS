@@ -2,6 +2,40 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Za isporuku bolusa %1$.2fU odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Da bi isporučili bolus za obrok %1$.2fU odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Da bi podesili privremeni cilj %1$s odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Da otkažete privremenog cilja odgovorI sa kodom %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Da bi onemogućili SMS usluga na daljinu odgovori sa kodom %1$s.\n\nImaj na umu da ćeš moći da ga ponovo aktiviraš direktno samo sa AAPS glavnog pametnog telefona.</string>
+    <string name="smscommunicator_stopped_sms">SMS usluga na daljinu je zaustavljen. Da bi je ponovo aktivirali, koristite AAPS na glavnom pametnom telefonu.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Za slanje kalibracije %1$.2f odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolus nije uspeo</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalni broj minuta koji mora da prođe između jednog daljinskog bolusa i sledećeg</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Koliko minuta mora da prođe najmanje između jednog bolusa i sledećeg</string>
+    <string name="smscommunicator_remote_bolus_min_distance_caveat">Radi tvoje sigurnosti, za izmenu ove postavke, moraš dodati najmanje 2 telefonska broja.</string>
+    <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U je uspešno isporučen</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bolus za obrok %1$.2f U je uspešno isporučen</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Cilj %1$s za %2$d minuta</string>
+    <string name="smscommunicator_remote_commands_allowed">Dozvoli daljinske komande putem SMS-a</string>
+    <string name="smscommunicator_loop_has_been_disabled">Petlja je onemogućena</string>
+    <string name="smscommunicator_loop_has_been_enabled">Petlja je omogućena</string>
+    <string name="smscommunicator_loop_is_enabled">Petlja je omogućena</string>
+    <string name="smscommunicator_pump_connect_with_code">Za povezivanje pumpe, odgovori sa kodom %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Povezivanje sa pumpom nije uspelo</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Za isključivanje pumpe na %1$d minuta, odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
+    <string name="smscommunicator_remote_command_not_allowed">Daljinska komanda nije dozvoljena</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Daljinski bolus nije dostupan. Pokušaj ponovo kasnije.</string>
+    <string name="smscommunicator_basal_reply_with_code">Za početak bazala %1$.2f U/h za %2$d min odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Za promenu profila na %1$s %2$d%% odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Za početak produženog bolusa %1$.2f U za %2$d min, odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Za unos %1$dg u %2$s odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Za početak bazala %1$d%% za %2$d min, odgovori sa kodom %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Za obustavljanje petlje na %1$d minuta, odgovori sa kodom %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Za nastavak petlje odgovori sa kodom %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Za omogućavanje petlje odgovori sa kodom %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Za onemogućavanje petlje odgovori sa kodom %1$s</string>
+    <string name="sms_actual_bg">GUK:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
@@ -9,29 +43,43 @@
     <!-- Insulin -->
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="disabled_loop">Loop Onesposobljen</string>
     <!-- Food-->
+    <string name="calculator_label">Kalkulator</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
+    <string name="localprofile">Profil</string>
     <!-- Objectives -->
     <string name="description_objectives">Program učenja</string>
     <!-- Actions -->
     <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
+    <string name="tempbasal_button">Privremeni Basal</string>
+    <string name="extended_bolus_button">Produženi Bolus</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Insulin</string>
     <!-- Safety -->
     <string name="treatmentssafety_title">Sigurnost tretmana</string>
     <!-- Overview -->
-    <string name="apsmode_title">APS režim</string>
-    <string name="setbasalquestion">Prihvatite novi privremeni bazal:</string>
+    <string name="a11y_insulin_label">insulin</string>
+    <string name="aps_mode_title">APS režim</string>
+    <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
     <string name="quickwizard">Brzi Čarobnjak</string>
-    <!-- NSClient -->
-    <!-- Tidepool -->
+    <string name="overview">Pregled</string>
+    <string name="description_overview">Prikazuje trenutno stanje tvog loop-a i tipke za najčešće radnje</string>
+    <string name="constraints_violation">Kršenje ograničenja</string>
+    <string name="change_your_input">Promeni tvoj unos!</string>
+    <string name="quickwizard_settings">Brzi Čarobnjak postavke</string>
+    <string name="overview_edit_quickwizard_button_text">Tekst tipke:</string>
+    <string name="overview_edit_quickwizard_carbs">Ugljeni hidrati:</string>
+    <string name="overview_edit_quickwizard_valid">Važi:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Dodaj</string>
+    <string name="overview_quickwizard_item_edit_button">Izmeni</string>
+    <string name="treatments">Tretmani</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_treatments">Tretmani</string>
     <!-- VirtualPump -->
     <string name="description_pump_virtual">Integracija pumpe za pumpe koje još uvek nemaju upravljački program (Open Loop)</string>
+    <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
     <!-- Source -->
     <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
     <string name="xdrip">xDrip+</string>
@@ -39,9 +87,23 @@
     <string name="description_source_eversense">Preuzimajte vrednosti GUK iz zakrpljene aplikacije Eversense.</string>
     <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
     <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
-    <!-- NSClient -->
-    <string name="description_ns_client">Sinhronizuje vaše podatke sa Nightscout-om</string>
+    <string name="random_bg_short">GUK</string>
     <!-- Skins -->
     <!--    Loop -->
+    <string name="run_now">Pokreni sada</string>
+    <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
+    <string name="no_aps_selected">NIJE IZABRAN APS NITI PRUŽEN REZULTAT</string>
+    <string name="carbs_suggestion">Predlog za ugljene hidrate</string>
+    <string name="open_loop_new_suggestion">Novi predlog je dostupan</string>
+    <string name="last_run_label">Poslednje pokretanje</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Zahtev</string>
+    <string name="loop_constraints_processed_label">Nakon obrađenih ograničenja</string>
+    <string name="loop_tbr_set_by_pump_label">TBR postavljen pumpom</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Prikazuje tekuće obaveštenje sa kratkim pregledom onoga što vaša petlja radi</string>
 </resources>

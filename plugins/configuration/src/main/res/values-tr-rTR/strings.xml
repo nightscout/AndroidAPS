@@ -48,6 +48,13 @@
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
+    <string name="request">İstek</string>
+    <string name="apsmode_title">APS modu</string>
+    <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
+    <string name="error_asking_for_permissions">İzin istenirken hata</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Konfigürasyon ayarları</string>
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -64,8 +71,84 @@
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
-    <string name="apsmode_title">APS modu</string>
-    <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
+    <string name="config_builder_shortname">KONF</string>
+    <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
+    <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
+    <string name="a11y_open_settings">ayarları aç</string>
+    <string name="nsclient_version_does_not_match">AAPSClient sürümü, AAPS sürümü ile eşleşmiyor. Lütfen güncelle.</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Tercihler</string>
+    <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
+    <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
+    <string name="preferences_import_canceled">Aktarım iptal edildi! Tercihler içe aktarılmadı!</string>
+    <string name="preferences_import_impossible">Tercihler içe aktarılamıyor!</string>
+    <string name="check_preferences_details_btn">İçe aktarım sorunlarını açıkla…</string>
+    <string name="check_preferences_details_title">İçe aktarım sorun detayları</string>
+    <string name="check_preferences_import_btn">İçe aktarma</string>
+    <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
+    <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
+    <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
+    <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
+    <string name="nav_export">Dışarı aktarma ayarları</string>
+    <string name="export_to">Ayarları aktar</string>
+    <string name="import_from">Ayarları içe aktar</string>
+    <string name="setting_imported">Ayarlar içe aktarıldı</string>
+    <string name="old_master_password">Eski Ana Parola</string>
+    <string name="different_password_used">Bu dosya dışa aktarılmış ve farklı bir parola ile şifrelenmiş. Dosyanın şifresini çözmek için eski parolayı bulun.</string>
+    <string name="master_password_will_be_replaced">Başarılı içe aktarma işleminin sonucu olarak mevcut ana parola, eski ana parola ile DEĞİŞTİRİLECEKTİR!</string>
+    <string name="exported">Tercihler dışa aktarıldı</string>
+    <string name="filenotfound">Dosya bulunamadı</string>
+    <string name="goto_main_try_again">Lütfen ana ekrana dönün ve tekrar deneyin.</string>
+    <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
+    <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
+    <string name="protection">Güvenlik</string>
+    <string name="master_password_missing">Ana parola belirlenmedi!\n\nLütfen Ana parolanızı Tercihler\'de belirleyin (%1$s &#8594; %2$s)</string>
+    <!--    Maintenance-->
+    <string name="maintenance">Bakım</string>
+    <string name="maintenance_shortname">BAKIM</string>
+    <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
+    <string name="database_cleanup">Veritabanı temizleme</string>
+    <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
+    <string name="cleared_entries">Temizlenen girişler</string>
+    <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
+    <string name="maintenance_settings">Bakım ayarları</string>
+    <string name="maintenance_email">E-Posta alıcısı</string>
+    <string name="maintenance_amount">Gönderilecek kayıt yok</string>
+    <string name="send_all_logs">Kayıtları E-posta ile Gönder</string>
+    <string name="delete_logs">Kayıtları Sil</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
+    <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
+    <string name="log_files">Günlük dosyaları</string>
+    <string name="nav_logsettings">Günlük ayarları</string>
+    <string name="miscellaneous">Diğer Ayarlar</string>
+    <string name="nav_resetdb">Veritabanlarını sıfırla</string>
+    <string name="resettodefaults">Varsayılanlara sıfırla</string>
+    <!-- Maintenance -->
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s önce dışa aktarıldı</string>
+    <string name="exported_at" comment="at placeholder we add export date">%1$s\'de dışa aktarıldı</string>
+    <string name="exported_less_than_hour_ago">bir süre önce dışa aktarıldı</string>
+    <string name="in_directory" comment="placeholder is for exported file path">dizinde: %1$s</string>
+    <string name="preferences_import_list_title">İçe aktarılacak dosyayı seçin</string>
+    <string name="metadata_warning_different_flavour">Sizde: %2$s varken, farklı AAPS (%1$s) türeviyle tercihler oluşturuldu.\n\nBazı ayarlar eksik veya geçersiz olabilir - içe aktardıktan sonra lütfen tercihlerinizi kontrol edin ve güncelleyin.</string>
+    <string name="metadata_warning_different_device">Tercihler farklı bir cihazda oluşturuldu. Daha eski/farklı bir telefondan içe aktarıyorsanız sorun değil, ancak içe aktarılan tercihlerin doğru olduğundan emin olun!</string>
+    <string name="metadata_warning_outdated_format">Eski AAPS sürümünün güvenli olmayan eski dosya biçimini kullanıyorsunuz! Geçerli JSON formatında bir dosyanız yoksa son çare olarak kullanın.</string>
+    <string name="metadata_warning_old_export">İçe aktarılan tercihler zaten %1$s günlük! Belki daha güncel tercihleriniz var ya da yanlış dosyayı mı seçiyorsunuz? Tercihleri düzenli olarak dışa aktarmayı unutmayın!</string>
+    <string name="metadata_warning_date_format">Geçersiz tarih-saat biçimi!</string>
+    <string name="metadata_warning_different_version">Uygulamanın farklı alt sürümlerinden tercihler. Yükseltmeden sonra içe aktarıyorsanız sorun değil, ancak tercihlerin hala doğru olup olmadığını içe aktarmadan sonra kontrol edin!</string>
+    <string name="metadata_urgent_different_version">Uygulamanın farklı ana sürümünden tercihler. Ana sürümler önemli ölçüde farklılık gösterir ve uyumsuz tercihlere sahip olabilir! İçe aktardıktan sonra tercihlerin hala doğru olduğundan emin olun!</string>
+    <string name="prefdecrypt_settings_tampered">Ayarlar dosyası kurcalanmış</string>
+    <string name="prefdecrypt_settings_secure">Ayarlar dosyası güvenli</string>
+    <string name="prefdecrypt_settings_unencrypted">Güvenli olmayan, şifrelenmemiş ayar biçimi kullanma</string>
+    <string name="prefdecrypt_wrong_json">JSON biçim hatası, gerekli alan eksik (biçim, içerik, meta veri veya güvenlik)</string>
+    <string name="prefdecrypt_wrong_password">Şifre çözme hatası, verilen şifre dosyayı çözemiyor</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Dosya sağlama eksik, ayarların gerçekliğini doğrulayamıyor!</string>
+    <string name="prefdecrypt_issue_modified">Dosya dışa aktarıldıktan sonra değiştirildi!</string>
+    <string name="prefdecrypt_issue_parsing">Şifre çözme hatası, tercihler ayrıştırılamadı!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Şifre çözme hatası, sağlanan şifre geçersiz veya ayar dosyası değiştirildi! İçe aktarılan dosya farklı bir Ana parola ile dışa aktarılmış olabilir.</string>
+    <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
+    <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada AAPS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
 </resources>

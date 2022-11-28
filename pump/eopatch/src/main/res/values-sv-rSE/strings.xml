@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolus %1$.2f enheter levererat</string>
+    <string name="category_alerts">Varningar</string>
+    <string name="bolus_delivered">Bolus %1$.2f enheter levererat</string>
+    <string name="eopatch_status">Status</string>
+    <string name="eopatch_base_basal_rate">Profilens basaldos</string>
+    <string name="eopatch_temp_basal_rate">Temp basaldos</string>
+    <string name="eopatch_total_delivered">Totalt levererat</string>
+    <string name="symbol_day">dag</string>
+    <string name="patch_finish">Slutför</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="symbol_days">dagar</string>
+    <string name="string_resume">Återuppta</string>
+    <string name="string_suspend">Pausa</string>
+    <string name="string_suspended">Pausad</string>
+    <string name="string_running">Körs</string>
     <string name="cancel">Avbryt</string>
     <string name="confirm">Bekräfta</string>
+    <string name="string_alarm">Larm</string>
+    <string name="string_connecting">Ansluter</string>
+    <string name="retry">Försök igen</string>
+    <string name="string_suspended_insulin_delivery_message">Insulinleverans är pausad.</string>
+    <string name="finish">Slutför</string>
+    <string name="next">Nästa</string>
 </resources>

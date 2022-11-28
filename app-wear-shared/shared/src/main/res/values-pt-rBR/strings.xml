@@ -22,8 +22,15 @@
     <string name="unit_days">dias</string>
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
+    <string name="shortday">d</string>
     <string name="later_today">Hoje, Mais tarde</string>
     <string name="tomorrow">Amanhã</string>
     <string name="today">Hoje</string>
     <string name="yesterday">Ontem</string>
+    <!-- Rx -->
+    <string name="connecting_for">Conectando para %1$d</string>
+    <string name="handshaking">Cumprimento</string>
+    <string name="connected">Conectado</string>
+    <string name="disconnecting">A desligar</string>
+    <string name="waiting_for_disconnection">Aguardando a desconexão</string>
 </resources>

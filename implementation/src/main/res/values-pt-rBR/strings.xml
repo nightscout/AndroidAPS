@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Leituras Glic. perdidas</string>
     <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
-    <string name="request">Pedido</string>
     <string name="permission">Permissão</string>
-    <string name="error_asking_for_permissions">Erro alterando permissões</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Muito baixo</string>
+    <string name="low" comment="3.1-3.9">Baixo</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
     <string name="veryHigh" comment="above 13.9">Muito alto</string>
+    <string name="below" comment="below &quot;in range&quot;">Abaixo</string>
     <string name="in_range">Dentro da meta</string>
+    <string name="above" comment="above &quot;in range&quot;">Acima</string>
     <string name="hba1c">HbA1c: </string>
     <string name="detailed_14_days">Detalhes de 14 dias</string>
     <string name="day_tir">Tempo no Alvo (TIR) do dia</string>

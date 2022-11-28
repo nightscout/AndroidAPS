@@ -38,4 +38,6 @@
     <string name="omnipod_dash_connection_lost">Conexión perdida con el pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Otro bolo está siendo entregado</string>
     <string name="omnipod_dash_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comando no confirmado</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
 </resources>

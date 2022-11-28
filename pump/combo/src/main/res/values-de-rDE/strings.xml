@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Unsichere Verwendung: In der Pumpe ist nicht das erste Basalratenprofil gewählt. Der Loop wird deaktiviert, bis dies korrigiert ist.</string>
     <string name="bolus_frequency_exceeded">Ein gleich großer Bolus wurde in den letzten zwei Minuten angefordert. Dies ist nicht zulässig, um ungewollte Doppelboli zu verhindern und vor eventuellen Bugs zu schützen.</string>
     <string name="combo_pump_connected_now">Jetzt</string>
-    <string name="combo_activity_reading_pump_history">Historie wird gelesen</string>
     <string name="combo_activity_setting_basal_profile">BR-Profil wird aktualisiert.</string>
     <string name="combo_pump_cartridge_low_warrning">Das Reservoir in der Pumpe ist fast leer</string>
     <string name="combo_pump_battery_low_warrning">Die Batterie in der Pumpe ist fast leer</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Nie</string>
     <string name="combo_error_display_error">Bei Fehler</string>
     <string name="combo_error_display_always">Immer</string>
+    <string name="unsafeusage">Unsichere Benutzung</string>
 </resources>

@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Onveilige gebruik: die pomp gebruik \'n verskillende basale koers profiel as die eerste. Die lus is gedeaktiveer. Kies die eerste profiel op die pomp en verfris.</string>
     <string name="bolus_frequency_exceeded">\'n Bolus met dieselfde hoeveelheid was versoek binne die laaste twee minute. Om te waak teen toevallige dubbele boluses en om te waak teen goggas is dit nie toegelaat nie.</string>
     <string name="combo_pump_connected_now">Nou</string>
-    <string name="combo_activity_reading_pump_history">Lees pomp geskiedenis</string>
     <string name="combo_activity_setting_basal_profile">Instelling basale profiel</string>
     <string name="combo_pump_cartridge_low_warrning">Pomp kasset vlak is laag</string>
     <string name="combo_pump_battery_low_warrning">Pomp battery is laag</string>
@@ -51,4 +50,5 @@
     <string name="bolusstopped">Bolus gestaak</string>
     <string name="bolusstopping">Staak bolus</string>
     <string name="combo_error_display_never">Nooit</string>
+    <string name="unsafeusage">onveilige gebruik</string>
 </resources>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na belu listu za optimizaciju baterije – mogli biste imati problema s performansama.</string>
     <!--       Stats -->
 </resources>

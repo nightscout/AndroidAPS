@@ -3,24 +3,74 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="sms_wrong_code">Verkeerde kode. Opdrag gekanselleer.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Om %1$.2fU bolus te lewer antwoord met kode %2$s</string>
+    <string name="smscommunicator_calibration_reply_with_code">Om kalibrasie %1$.2f te stuur antwoord met kode %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolus het misluk</string>
+    <string name="smscommunicator_remote_commands_allowed">Laat afstandbeheerde bevele toe via SMS</string>
+    <string name="smscommunicator_loop_has_been_disabled">Loop is gedeaktiveer</string>
+    <string name="smscommunicator_loop_has_been_enabled">Loop is geaktiveerd</string>
+    <string name="smscommunicator_loop_is_enabled">Lus geaktiveer</string>
+    <string name="smscommunicator_remote_command_not_allowed">Afstandbeheerde bevel word nie toegelaat nie</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Afstandbeheerde bolus nie beskikbaar nie. Probeer later weer.</string>
+    <string name="smscommunicator_profile_reply_with_code">Om profiel te verander na %1$s %2$d%% antwoord met %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Om basal e %1$d%% vir %2$d min te begin kies %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Om lus op te skort vir %1$d minute antwoord met kode %2$s</string>
+    <string name="smscommunicator_tempbasal_set">Temp basale %1$.2fU/h vir %2$d min suksesvol geaktiveerd</string>
+    <string name="smscommunicator_extended_set">Verlengde bolus %1$.2fU vir %2$d min is begin</string>
+    <string name="smscommunicator_tempbasal_set_percent">Tydelike basale %1$d%% vir %2$d min hardloop</string>
+    <string name="smscommunicator_tempbasal_failed">Tydelike basale aktivering het gefaal</string>
+    <string name="smscommunicator_extended_failed">Verlengde bolus het misluk</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Stop tydelike basale antwoord met kode %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Stop tydelike basale antwoord met kode %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Tydelike basale gekanselleer</string>
+    <string name="smscommunicator_extended_canceled">Verlengde bolus gekanselleer</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Kansellassie van tydelike basale het gefaal</string>
+    <string name="smscommunicator_extended_cancel_failed">Kansellasie van verlengde bolus het misluk</string>
+    <string name="smscommunicator_unknown_command">Onbekende opdrag of verkeerde opsie</string>
+    <string name="smscommunicator_wrong_duration">Verkeerde duur</string>
+    <string name="smscommunicator_loop_suspended">Lus opgeskort</string>
+    <string name="smscommunicator_loop_resumed">Lus hervat</string>
+    <string name="smscommunicator_invalid_phone_number">Ongeldige SMS selfoon nommer</string>
+    <string name="smscommunicator_calibration_sent">Kalibrasie gestuur. Ontvang moet geaktiveer word in xDrip+.</string>
+    <string name="smscommunicator_message_body">Ongeldig boodskap teks</string>
+    <string name="wrong_format">Verkeerde formaat</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">Laaste BG:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_bolus">Bolus:</string>
+    <string name="sms_min_ago">%1$d min terug</string>
+    <string name="sms_loop_suspended_for">Opgeskort (%1$d m)</string>
+    <string name="sms_read_status_failed">Lees status gefaal</string>
+    <string name="sms_profile_switch_created">Profiel skakelaar geskep</string>
     <!-- Insulin -->
     <string name="insulin_shortname">INS</string>
+    <string name="ultra_rapid_oref">Ultra-Snel Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status_shortname">xds</string>
+    <string name="xdrip_status_detailed_iob_title">Wys gedetailleerde IAB</string>
+    <string name="xdrip_status_detailed_iob_summary">Breek af IAB in bolus en basale IAB op die watchface</string>
+    <string name="disabled_loop">Loop Afgeskakel</string>
+    <string name="xdrip_status_show_bgi_title">Wys BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Voeg BGI by status lyn</string>
     <!-- Food-->
+    <string name="food_short">Kos</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">En</string>
+    <string name="short_protein">Pr</string>
+    <string name="short_fat">Vet</string>
+    <string name="calculator_label">Rekenaar</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <string name="localprofile">Profiel</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="errors">Foute</string>
+    <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Voltooi, baie mooi gedoen!</string>
     <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
@@ -30,14 +80,22 @@
     <string name="closedmodeenabled">Geslote modus geaktiveer</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Onderrig program</string>
+    <string name="objectives_next_button">Volgende</string>
+    <string name="objectives_previous_button">Vorige</string>
     <!-- Actions -->
+    <string name="actions">Aksies</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
     <string name="actions_shortname">ACT</string>
+    <string name="tempbasal_button">TydelikeBasaal</string>
+    <string name="extended_bolus_button">Verlengde Bolus</string>
+    <string name="extended_bolus_cancel_button">Kanselleer Verlengde Bolus</string>
+    <string name="nav_history_browser">Geskiedenis blaaier</string>
+    <string name="sensor_label">Sensor</string>
+    <string name="insulin_label">Insulien</string>
     <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Verlengde bolus is beperk tot %1$.1f U as gevolg van %2$s</string>
     <string name="limitingcarbs">Beperk koolhidrate tot %1$d g agv %2$s</string>
-    <string name="limitingiob">Beperk IAB tot %1$.1f U agv %2$s</string>
     <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
     <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
     <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
@@ -47,61 +105,157 @@
     <string name="hardlimit">harde limiet</string>
     <string name="treatmentssafety_title">Behandelings veiligheid</string>
     <!-- Overview -->
-    <string name="snooze">Sluimer</string>
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
-    <string name="apsmode_title">APS modus</string>
-    <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
+    <string name="a11y_insulin_label">insulien</string>
+    <string name="aps_mode_title">APS modus</string>
+    <string name="set_basal_question">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">SlimNutsman</string>
-    <!-- NSClient -->
-    <string name="restart">Herbegin</string>
-    <string name="deliver_now">Lewer nou</string>
-    <string name="clear_queue">Vee tou uit</string>
-    <string name="show_queue">Wys tou</string>
-    <string name="queue">Tou:</string>
-    <string name="status">Status:</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
-    <string name="title_tidepool_username">Login Gebruiker Naam</string>
-    <string name="summary_tidepool_password">Jou Tidepool login kode</string>
-    <string name="title_tidepool_password">Login wagwoord</string>
-    <string name="title_tidepool_test_login">Toets Tidepool Login</string>
-    <string name="summary_tidepool_dev_servers">As ge-aktiveer sal data oplaai na https://int-app.tidepool.org instede van die gewone https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Gebruik Integrasie (toets) bedieners</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Laai data op na Tidepool</string>
-    <string name="tidepool_upload_cgm">Laai CGM data op</string>
-    <string name="tidepool_upload_bolus">Laai behandelings op (insulien, karbs)</string>
-    <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
-    <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
-    <string name="tidepool_upload_bg">Laai BG toetse op</string>
+    <string name="overview">Oorsig</string>
+    <string name="overview_shortname">TUIS</string>
+    <string name="description_overview">Wys die huidige staat van jou lus en knoppies vir mees algemene optrede</string>
+    <string name="overview_editquickwizard_usecob">COB berekening</string>
+    <string name="overview_editquickwizard_usetemptarget">Tydelike doelwit berekening</string>
+    <string name="overview_buttons_selection">Knoppies</string>
+    <string name="dexcom_app_not_installed">Dexcom toep is nie geïnstalleer nie.</string>
+    <string name="dexcom_app_not_detected">Hernuwe asseblief jou G5 toepassing na \'n ondersteunde weergawe</string>
+    <string name="error_starting_cgm">Kon nie CGM toepassing laat hardloop nie.  Maak seker dat dit geïnstalleer is.</string>
+    <string name="not_available_full">Nie beskikbaar nie</string>
+    <string name="constraints_violation">Beperkings skending</string>
+    <string name="change_your_input">Verander jou insette!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Oplaaier</string>
+    <string name="quickwizard_settings">SlimNutsman instellings</string>
+    <string name="overview_edit_quickwizard_button_text">Knoppie teks:</string>
+    <string name="overview_edit_quickwizard_carbs">Karbs:</string>
+    <string name="overview_edit_quickwizard_valid">Geldig:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Voeg by</string>
+    <string name="overview_quickwizard_item_edit_button">Wysig</string>
+    <string name="overview_edit_quickwizard_use_bg">BG berekening</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IAB berekening</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basale IAB berekening</string>
+    <string name="overview_edit_quickwizard_use_trend">Tendens berekening</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus berekening</string>
+    <string name="overview_edit_quickwizard_percentage">Persentasie</string>
+    <string name="device_all">Alle</string>
+    <string name="positive_only">Slegs positiewe</string>
+    <string name="negative_only">Slegs negatiewe</string>
+    <string name="keep_screen_on_title">Hou skerm aktief</string>
+    <string name="keep_screen_on_summary">Verhoed dat Android skerm afskakel. Dit sal baie meer energie vereis wanneer nie in krag prop is nie.</string>
+    <string name="treatments">Behandelings</string>
+    <string name="carb_increment_button_message">Hoeveelheid karbs om by te voeg op druk van knoppie</string>
+    <string name="insulin_increment_button_message">Hoeveelheid Insulien om by te voeg op druk van knoppie</string>
+    <string name="firstinsulinincrement">Eerste insulien inkrement</string>
+    <string name="secondinsulinincrement">Tweede insulien inkrement</string>
+    <string name="thirdinsulinincrement">Derde insulien inkrement</string>
+    <string name="firstcarbsincrement">Eerste koolhidrate inkrement</string>
+    <string name="secondcarbsincrement">Tweede koolhidrate inkrement</string>
+    <string name="thirdcarbsincrement">Derde koolhidrate inkrement</string>
+    <string name="cgm">CGM</string>
+    <string name="default_temptargets">Verstek Tydelike-doelwitte</string>
+    <string name="eatingsoon_duration">eetgou durasie</string>
+    <string name="eatingsoon_target">eetgou doelwit</string>
+    <string name="activity_duration">aktiwiteits tydsduur</string>
+    <string name="activity_target">aktiwiteit doelwit</string>
+    <string name="hypo_duration">hipo duur</string>
+    <string name="hypo_target">hipo doelwit</string>
+    <string name="fill_bolus_title">Vul/prima standaard insulien hoeveelhede</string>
+    <string name="button1">Knoppie 1</string>
+    <string name="button2">Knoppie 2</string>
+    <string name="button3">Knoppie 3</string>
+    <string name="prefs_range_title">Reeks vir visualisering</string>
+    <string name="prefs_range_summary">Hoë en lae merke vir die diagramme in Overview en Smartwatch</string>
+    <string name="low_mark">LAE merk</string>
+    <string name="high_mark">HOË punt</string>
+    <string name="short_tabtitles">Verkort oortjie titels</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Wys notas veld in behandeling dialoë</string>
+    <string name="enablesuperbolus">Ontsper superbolus in Ghoeroe</string>
+    <string name="enablesuperbolus_summary">Ontsper superbolus funksionaliteit in Ghoeroe. Moenie aktiveer totdat jy leer wat dit werklik doen. DIT KAN \'n INSULIEN OORDOSIS VEROORSAAK AS BLINDELINGS GEBRUIK WORD!</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Projeksies</string>
+    <string name="overview_show_treatments">Behandelings</string>
+    <string name="overview_show_activity">Aktiwiteit</string>
+    <string name="overview_show_sensitivity">Sensitiewiteit</string>
+    <string name="overview_show_deviations">Afwykings</string>
+    <string name="overview_show_cob">Karbs AanBoord</string>
+    <string name="overview_show_iob">Insulien AanBoord</string>
+    <string name="overview_show_basals">Basale</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="treatments_shortname">BEHANDEL</string>
+    <string name="sensitivity_shortname">SENS</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Virtuele Pomp</string>
+    <string name="virtual_pump_definition">Pomp definisie</string>
+    <string name="virtual_pump_pump_def">Bolus: Stap =%1$s\nVerlengde Bolus: [stap%2$s, duur = =%3$smin -%4$sh]\nBasal: stap =%5$s\nTBR: %6$s (deur %7$s), duur =%8$smin -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPOMP</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
+    <string name="virtual_pump_label">VIRTUELE POMP</string>
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
     <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Ontvang BG waardes vana xDrip+.</string>
     <string name="eversense">Eversense App (bygewerk)</string>
     <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">Stuur BG data na xDrip+</string>
+    <string name="do_xdrip_upload_summary">Xdrip+ kies 640g/Eversense data bron</string>
     <string name="bgsource_upload">BG oplaai instellings</string>
-    <!-- NSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_create_announcements_from_errors_title">Skep aankondigings vanaf foute</string>
-    <string name="ns_create_announcements_from_errors_summary">Skep Nightscout aankondiging vir foutdialoë en plaaslike waarskuwings (ook vertoonbaar in Careportal onder behandelings)</string>
-    <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
+    <string name="dexcom_log_ns_sensor_change_title">Log sensor verander na NS</string>
     <!-- Skins -->
     <!--    Loop -->
+    <string name="executing">Besig met uitvoering</string>
+    <string name="run_now">Begin nou</string>
+    <string name="smb_frequency_exceeded">\'n Bolus was binne die laaste 3 minute afgelewer, SMB is oorgespring</string>
+    <string name="pump_not_initialized">Pomp nie geïnisialiseer nie!</string>
+    <string name="loop_shortname">LUS</string>
+    <string name="description_loop">Aktiveer of deaktiveer die implementering die lus wakker maak.</string>
+    <string name="no_aps_selected">GEEN APS GEKIES OF UITSLAG VERSKAF</string>
+    <string name="open_loop_new_suggestion">Nuwe voorstel beskikbaar</string>
+    <string name="basal_set_correctly">Basale reggestel</string>
+    <string name="last_run_label">Vorige lopie</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Versoek</string>
+    <string name="loop_constraints_processed_label">Na verwerkte beperkings</string>
+    <string name="loop_tbr_set_by_pump_label">Tydelike basale gestel deur pomp</string>
+    <string name="loop_smb_set_by_pump_label">SMB gestel deur pomp</string>
+    <string name="loop_open_mode_min_change">Minimale versoek verandering [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <string name="send_logfiles">Stuur vandag se loglêers aan ontwikkelaars saam met hierdie tyd. Onverwagte situasie.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="no_success">nie suksesvol - Kontroleer asseblief foon</string>
+    <string name="wear_settings">Wear instellings</string>
+    <string name="wearcontrol_title">Kontroles van horlosie</string>
+    <string name="wearcontrol_summary">Stel tydeleike doelwitte en behandelings vanaf horlosie.</string>
+    <string name="wear_wizard_settings_summary">Berekeninge is ingesluit in die ghoeroe verslag:</string>
+    <string name="wear_display_settings">Vertooninstellings</string>
+    <string name="wear_general_settings">Algemene instellings</string>
+    <string name="wear_detailed_delta_title">Wys gedetailleerde delta</string>
+    <string name="wear_detailed_delta_summary">Wys delta met een meer desimale plek</string>
+    <string name="wear_notifysmb_title">Vermeld op SMB</string>
+    <string name="wear_notifysmb_summary">Wys SMB op horlosie soos \'n standaard bolus.</string>
+    <string name="wear_predictions_summary">Wys die voorspellings op die horlosie.</string>
+    <string name="wear_predictions_title">Projeksies</string>
+    <string name="resend_all_data">Stuur alle Data weer</string>
+    <string name="open_settings_on_wear">Oop instellings op Wear</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
+    <string name="old_data">OU DATA</string>
 </resources>

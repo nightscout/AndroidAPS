@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Filformat</string>
+    <string name="metadata_label_created_at">Opprettet den</string>
+    <string name="metadata_label_aaps_version">AAPS versjon</string>
+    <string name="metadata_label_aaps_flavour">Bygge variant</string>
+    <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
+    <string name="metadata_label_device_model">Eksportere enhetsmodell</string>
+    <string name="metadata_label_encryption">Fil kryptering</string>
+    <string name="metadata_format_new">Nytt krypteringsformat</string>
+    <string name="metadata_format_debug">Nytt feilsøkingsformat (ukryptert)</string>
+    <string name="metadata_format_other">Ukjent eksportformat</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units">%1$.2f E</string>
+</resources>

@@ -7,7 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -18,7 +18,7 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.aps.loop.LoopFragment
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
@@ -53,7 +53,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var runningConfiguration: RunningConfiguration
     @Mock lateinit var config: Config
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var loopPlugin: LoopPlugin
 
@@ -62,7 +62,7 @@ class LoopPluginTest : TestBase() {
 
         loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
                                 constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-                                repository, runningConfiguration, activityNames)
+                                repository, runningConfiguration, uiInteraction)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Aan het koppelen</string>
-    <string name="danars_nodeviceavailable">Nog geen apparaat gevonden</string>
+    <string name="danars_no_device_available">Nog geen apparaat gevonden</string>
     <string name="danars_pairingok">Koppeling geslaagd</string>
     <string name="danars_pairingtimedout">Koppeling verlopen</string>
     <string name="danars_waitingforpairing">Wachten op koppelen van de pomp</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Reservoir vullen</string>
     <string name="danar_history_syspend">Onderbreken</string>
     <string name="danar_history_prime">Vullen</string>
-    <string name="danar_useroptions">Gebruikersopties</string>
-    <string name="danar_timedisplay">Tijdnotatie</string>
-    <string name="danar_buttonscroll">Scroll-functie</string>
+    <string name="danar_user_options">Gebruikersopties</string>
+    <string name="danar_time_display">Tijdnotatie</string>
+    <string name="danar_button_scroll">Scroll-functie</string>
     <string name="danar_beep">Geef een \'piep\' als op een knop gedrukt wordt</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Geluid</string>
-    <string name="danar_pumpalarm_vibrate">Trillen</string>
-    <string name="danar_pumpalarm_both">Beide</string>
-    <string name="danar_screentimeout">LCD-aan tijd [sec.]</string>
+    <string name="danar_pump_alarm">Alarm</string>
+    <string name="danar_pump_alarm_sound">Geluid</string>
+    <string name="danar_pump_alarm_vibrate">Trillen</string>
+    <string name="danar_pump_alarm_both">Beide</string>
+    <string name="danar_screen_timeout">LCD-aan tijd [sec.]</string>
     <string name="danar_backlight">Achtergrondverlichting-aan tijd [sec.]</string>
-    <string name="danar_glucoseunits">Glucose eenheden</string>
+    <string name="danar_glucose_units">Glucose eenheden</string>
     <string name="danar_shutdown">Afsluiten [uren]</string>
-    <string name="danar_lowreservoir">Laag reservoir (Eenheden)</string>
-    <string name="danar_saveuseroptions">Opties op de pomp opslaan</string>
+    <string name="danar_low_reservoir">Laag reservoir (Eenheden)</string>
+    <string name="danar_save_user_options">Opties op de pomp opslaan</string>
     <string name="description_pump_dana_r">Pomp integratie voor DANA Diabecare R pompen</string>
     <string name="description_pump_dana_r_korean">Pomp integratie voor Koreaanse DANA Diabecare R pompen</string>
     <string name="description_pump_dana_r_v2">Pomp integratie voor DANA Diabecare R pompen met geupgrade firmware</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Instellen van basaal profiel mislukt</string>
     <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pomp IOB</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pomp instellingen</string>
-    <string name="timeformat12h">12u</string>
-    <string name="timeformat24h">24u</string>
+    <string name="time_format_12h">12u</string>
+    <string name="time_format_24h">24u</string>
     <string name="option_on">Aan</string>
     <string name="option_off">Uit</string>
     <string name="danar_bt_name_title">DanaR Bluetooth apparaat</string>

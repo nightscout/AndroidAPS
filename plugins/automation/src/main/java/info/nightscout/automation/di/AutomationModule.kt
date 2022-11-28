@@ -49,7 +49,11 @@ import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
 import info.nightscout.interfaces.automation.Automation
 
-@Module
+@Module(
+    includes = [
+        AutomationModule.Bindings::class
+    ]
+)
 @Suppress("unused")
 abstract class AutomationModule {
 

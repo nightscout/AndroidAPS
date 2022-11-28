@@ -3,18 +3,16 @@ package info.nightscout.plugins.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.valueToUnits
-import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.services.AlarmSoundServiceHelper
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.toStringShort
+import info.nightscout.core.extensions.valueToUnits
+import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.graph.data.GlucoseValueDataPoint
 import info.nightscout.core.iob.generateCOBString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
@@ -38,6 +36,7 @@ import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -46,11 +45,12 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
@@ -101,7 +101,7 @@ class DataHandlerMobile @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
-    private val alarmSoundServiceHelper: AlarmSoundServiceHelper
+    private val uiInteraction: UiInteraction
 ) {
 
     private val disposable = CompositeDisposable()
@@ -293,7 +293,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "SnoozeAlert received $it from ${it.sourceNodeId}")
-                           alarmSoundServiceHelper.stopService(context, "Muted from wear")
+                           uiInteraction.stopAlarm("Muted from wear")
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.WearException::class.java)

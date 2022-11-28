@@ -1,12 +1,12 @@
 package info.nightscout.plugins.constraints.safety
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.putDouble
-import info.nightscout.androidaps.extensions.putInt
-import info.nightscout.androidaps.extensions.putString
-import info.nightscout.androidaps.extensions.storeDouble
-import info.nightscout.androidaps.extensions.storeInt
-import info.nightscout.androidaps.extensions.storeString
+import info.nightscout.core.extensions.putDouble
+import info.nightscout.core.extensions.putInt
+import info.nightscout.core.extensions.putString
+import info.nightscout.core.extensions.storeDouble
+import info.nightscout.core.extensions.storeInt
+import info.nightscout.core.extensions.storeString
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint

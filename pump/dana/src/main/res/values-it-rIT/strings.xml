@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Associazione</string>
-    <string name="danars_nodeviceavailable">Nessun dispositivo trovato finora</string>
+    <string name="danars_no_device_available">Nessun dispositivo trovato finora</string>
     <string name="danars_pairingok">Associazione OK</string>
     <string name="danars_pairingtimedout">Time out associazione</string>
     <string name="danars_waitingforpairing">In attesa di associare il micro</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Riempimento</string>
     <string name="danar_history_syspend">Sospensione</string>
     <string name="danar_history_prime">Caricamento</string>
-    <string name="danar_useroptions">Opzioni utente</string>
-    <string name="danar_timedisplay">Formato dell\'ora</string>
-    <string name="danar_buttonscroll">Scorrimento (tasto)</string>
+    <string name="danar_user_options">Opzioni utente</string>
+    <string name="danar_time_display">Formato dell\'ora</string>
+    <string name="danar_button_scroll">Scorrimento (tasto)</string>
     <string name="danar_beep">Suono alla pressione del tasto</string>
-    <string name="danar_pumpalarm">Allarme</string>
-    <string name="danar_pumpalarm_sound">Suono</string>
-    <string name="danar_pumpalarm_vibrate">Vibrazione</string>
-    <string name="danar_pumpalarm_both">Entrambi</string>
-    <string name="danar_screentimeout">LCD attivo [seconds]</string>
+    <string name="danar_pump_alarm">Allarme</string>
+    <string name="danar_pump_alarm_sound">Suono</string>
+    <string name="danar_pump_alarm_vibrate">Vibrazione</string>
+    <string name="danar_pump_alarm_both">Entrambi</string>
+    <string name="danar_screen_timeout">LCD attivo [seconds]</string>
     <string name="danar_backlight">Retroilluminazione attiva [seconds]</string>
-    <string name="danar_glucoseunits">Unità glicemia</string>
+    <string name="danar_glucose_units">Unità glicemia</string>
     <string name="danar_shutdown">Arresto [hours]</string>
-    <string name="danar_lowreservoir">Livello serbatoio basso [Units]</string>
-    <string name="danar_saveuseroptions">Salva opzioni nel micro</string>
+    <string name="danar_low_reservoir">Livello serbatoio basso [Units]</string>
+    <string name="danar_save_user_options">Salva opzioni nel micro</string>
     <string name="description_pump_dana_r">Integrazione del microinfusore DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Integrazione del microinfusore DANA Diabecare R Korean</string>
     <string name="description_pump_dana_r_v2">Integrazione del microinfusore DANA Diabecare R con firmware aggiornato</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Impostazione profilo basale fallita</string>
     <string name="danar_bluetooth_status">Stato bluetooth</string>
     <string name="danar_iob_label">IOB micro</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Impostazioni micro Dana</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>

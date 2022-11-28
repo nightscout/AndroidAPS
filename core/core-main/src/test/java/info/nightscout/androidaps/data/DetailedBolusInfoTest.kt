@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.data
 
 import android.content.Context
+import com.google.gson.Gson
 import info.nightscout.androidaps.TestBase
-import info.nightscout.core.pump.fromJsonString
-import info.nightscout.core.pump.toJsonString
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.TherapyEvent
@@ -29,6 +28,11 @@ class DetailedBolusInfoTest : TestBase() {
         Assert.assertEquals(true, EqualsBuilder.reflectionEquals(d2, d1))
     }
 
+    private fun fromJsonString(json: String): DetailedBolusInfo =
+        Gson().fromJson(json, DetailedBolusInfo::class.java)
+
+    private fun DetailedBolusInfo.toJsonString(): String = Gson().toJson(this)
+
     @Test
     fun shouldAllowSerialization() {
         val detailedBolusInfo = DetailedBolusInfo()
@@ -36,7 +40,7 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.context = context
         detailedBolusInfo.eventType = DetailedBolusInfo.EventType.BOLUS_WIZARD
         val serialized = detailedBolusInfo.toJsonString()
-        val deserialized = DetailedBolusInfo().fromJsonString(serialized)
+        val deserialized = fromJsonString(serialized)
         Assert.assertEquals(1L, deserialized.bolusCalculatorResult?.timestamp)
         Assert.assertEquals(DetailedBolusInfo.EventType.BOLUS_WIZARD, deserialized.eventType)
         // Context should be excluded
@@ -68,9 +72,9 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.insulin = 7.0
 
         val bolus = detailedBolusInfo.createBolus()
-        Assert.assertEquals(1000L, bolus?.timestamp)
-        Assert.assertEquals(Bolus.Type.SMB, bolus?.type)
-        Assert.assertEquals(7.0, bolus?.amount)
+        Assert.assertEquals(1000L, bolus.timestamp)
+        Assert.assertEquals(Bolus.Type.SMB, bolus.type)
+        Assert.assertEquals(7.0, bolus.amount, 0.01)
     }
 
     @Test
@@ -80,8 +84,8 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.carbs = 6.0
 
         val carbs = detailedBolusInfo.createCarbs()
-        Assert.assertEquals(1000L, carbs?.timestamp)
-        Assert.assertEquals(6.0, carbs?.amount)
+        Assert.assertEquals(1000L, carbs.timestamp)
+        Assert.assertEquals(6.0, carbs.amount, 0.01)
     }
 
     private fun createBolusCalculatorResult(): BolusCalculatorResult =

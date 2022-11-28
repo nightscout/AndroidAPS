@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">更新</string>
+    <string name="error">エラー</string>
+    <string name="profile_set_ok">ポンプのべーサルプロファイルが更新されました</string>
+    <string name="invalid_input">無効な入力です。</string>
+    <string name="bolus_delivering">%1$.2fUを注入中</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="failed_update_basal_profile">べーサルプロファイルの更新に失敗しました</string>
+    <string name="event_type">イベント種別</string>
+    <string name="reload">再読込</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">保存</string>
+    <string name="pump">ポンプ</string>
+    <string name="mute">消音</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <string name="battery_label">バッテリー</string>
+    <string name="reservoir_label">リザーバ</string>
+    <string name="last_connection_label">最終接続</string>
+    <string name="last_bolus_label">最終ボーラス</string>
+    <string name="base_basal_rate_label">基準ベーサルレート</string>
+    <string name="tempbasal_label">一時ベーサル</string>
+    <string name="extended_bolus_label">追加ボーラス</string>
+    <string name="serial_number">シリアルナンバー</string>
+    <string name="disconnected">未接続</string>
+    <string name="connecting">接続中</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">今日の総単位</string>
+    <string name="view_profile">プロフィールを表示</string>
+    <string name="pump_history">ポンプ履歴</string>
+    <string name="temp_basal_delivery_error">テンプベーサル注入エラー</string>
+    <string name="not_set_short">未設定</string>
+    <string name="pump_busy">ポンプがビジー状態です</string>
+    <string name="connection_error">ポンプの接続エラー</string>
+    <string name="initializing">初期化中...</string>
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
+    <string name="close">閉じる</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Bluetoothアプリの権限が必要です</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

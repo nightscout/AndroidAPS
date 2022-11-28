@@ -9,7 +9,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.databinding.DanarUserOptionsActivityBinding
@@ -37,7 +37,7 @@ class DanaUserOptionsActivity : DaggerAppCompatActivity() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val disposable = CompositeDisposable()
 
@@ -158,7 +158,7 @@ class DanaUserOptionsActivity : DaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

@@ -3,7 +3,10 @@
     <!-- Omnipod Dash - Description -->
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
+    <string name="omnipod_dash_history_item_date">日時</string>
+    <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <!-- Omnipod Dash - Overview -->
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
+    <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>

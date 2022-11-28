@@ -114,5 +114,34 @@
     <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
     <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
     <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
+    <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
+    <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
+    <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>
+    <string name="key_statuslights_cage_critical" translatable="false">statuslights_cage_critical</string>
+    <string name="key_statuslights_iage_warning" translatable="false">statuslights_iage_warning</string>
+    <string name="key_statuslights_iage_critical" translatable="false">statuslights_iage_critical</string>
+    <string name="key_statuslights_sage_warning" translatable="false">statuslights_sage_warning</string>
+    <string name="key_statuslights_sage_critical" translatable="false">statuslights_sage_critical</string>
+    <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
+    <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
+    <string name="key_ns_announcements" translatable="false">ns_announcements</string>
+    <string name="key_ns_alarms" translatable="false">ns_alarms</string>
+    <string name="key_ns_alarm_stale_data_value" translatable="false">ns_alarm_stale_data_value</string>
+    <string name="key_ns_alarm_urgent_stale_data_value" translatable="false">ns_alarm_urgent_stale_data_value</string>
+    <string name="key_snoozed_to" translatable="false">snoozedTo</string>
+    <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
+    <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
+    <string name="key_do_ns_upload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_master_password" translatable="false">master_password</string>
+    <string name="key_settings_password" translatable="false">settings_password</string>
+    <string name="key_settings_pin" translatable="false">settings_pin</string>
+    <string name="key_application_password" translatable="false">application_password</string>
+    <string name="key_application_pin" translatable="false">application_pin</string>
+    <string name="key_bolus_password" translatable="false">bolus_password</string>
+    <string name="key_bolus_pin" translatable="false">bolus_pin</string>
+    <string name="key_settings_protection" translatable="false">settings_protection</string>
+    <string name="key_application_protection" translatable="false">application_protection</string>
+    <string name="key_bolus_protection" translatable="false">bolus_protection</string>
+    <string name="key_protection_timeout" translatable="false">protection_timeout</string>
 
 </resources>

@@ -2,10 +2,10 @@ package info.nightscout.plugins.general.overview.notifications
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.plugins.R
-import info.nightscout.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.plugins.sync.nsclient.data.NSAlarm
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -22,7 +22,7 @@ class NotificationWithAction constructor(
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var nsClientPlugin: NSClientPlugin
+    @Inject lateinit var activePlugin: ActivePlugin
 
     init {
         injector.androidInjector().inject(this)
@@ -61,7 +61,7 @@ class NotificationWithAction constructor(
         }
         buttonText = R.string.snooze
         action = Runnable {
-            nsClientPlugin.handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
+            activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
             // Adding current time to snooze if we got staleData
             aapsLogger.debug(LTag.NOTIFICATION, "Notification text is: $text")
             val msToSnooze = sp.getInt(R.string.key_ns_alarm_stale_data_value, 15) * 60 * 1000L
@@ -70,9 +70,10 @@ class NotificationWithAction constructor(
         }
     }
 
-    fun action(buttonText: Int, action: Runnable) {
+    fun action(buttonText: Int, action: Runnable): NotificationWithAction {
         this.buttonText = buttonText
         this.action = action
+        return this
     }
 
 }

@@ -20,24 +20,24 @@ import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
-import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.implementation.lifecycle.ProcessLifecycleListener
 import info.nightscout.core.ui.locale.LocaleHelper
-import info.nightscout.core.utils.receivers.NetworkChangeReceiver
-import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
 import info.nightscout.implementation.db.CompatDBHelper
+import info.nightscout.implementation.lifecycle.ProcessLifecycleListener
 import info.nightscout.implementation.plugin.PluginStore
+import info.nightscout.implementation.receivers.NetworkChangeReceiver
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.rx.logging.AAPSLogger
@@ -74,7 +74,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var dateUtil: DateUtil
     @Suppress("unused") @Inject lateinit var staticInjector: info.nightscout.plugins.aps.utils.StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
     @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
@@ -247,7 +247,7 @@ class MainApp : DaggerApplication() {
     override fun onTerminate() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
-        alarmSoundServiceHelper.stopService(this, "onTerminate")
+        uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
     }
 }

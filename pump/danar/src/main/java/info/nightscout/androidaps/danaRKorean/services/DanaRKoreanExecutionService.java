@@ -37,7 +37,6 @@ import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.interfaces.Constants;
 import info.nightscout.interfaces.constraints.Constraints;
 import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.profile.ProfileFunction;
 import info.nightscout.interfaces.pump.BolusProgressData;
@@ -46,7 +45,7 @@ import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.Command;
 import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.events.EventDanaRNewStatus;
 import info.nightscout.rx.bus.RxBus;
@@ -70,7 +69,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject CommandQueue commandQueue;
     @Inject MessageHashTableRKorean messageHashTableRKorean;
-    @Inject ActivityNames activityNames;
+    @Inject UiInteraction uiInteraction;
     @Inject ProfileFunction profileFunction;
     @Inject PumpSync pumpSync;
     @Inject DateUtil dateUtil;
@@ -199,7 +198,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             if (danaPump.getDailyTotalUnits() > danaPump.getMaxDailyTotalUnits() * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits());
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    activityNames.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT);
+                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT);
                     pumpSync.insertAnnouncement(rh.gs(R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U", null, PumpType.DANA_R_KOREAN, danaRKoreanPlugin.serialNumber());
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }

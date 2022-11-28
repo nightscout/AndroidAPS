@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="automation_short">Automatikus</string>
     <string name="automation">Automatizálás</string>
-    <string name="and">És</string>
+    <string name="alarm_short">Riasztás:</string>
     <string name="or">vagy</string>
+    <string name="locationis">%1$s %2$s</string>
     <string name="weekday_sunday_short">Vas</string>
     <string name="weekday_saturday_short">Szo</string>
     <string name="weekday_friday_short">Pé</string>
@@ -17,6 +19,7 @@
     <string name="deltacompared">%3$s %1$s %2$s</string>
     <string name="latitude_short">Szélesség:</string>
     <string name="longitude_short">Hosszúság:</string>
+    <string name="triggercoblabel">COB</string>
     <string name="every">Minden</string>
     <string name="never">Soha</string>
     <string name="condition">Feltétel:</string>

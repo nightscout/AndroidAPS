@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Bestandsformaat</string>
+    <string name="metadata_label_created_at">Gemaakt op</string>
+    <string name="metadata_label_aaps_version">AAPS versie</string>
+    <string name="metadata_label_aaps_flavour">Build variant</string>
+    <string name="metadata_label_device_name">Patiëntnaam van exporterend apparaat</string>
+    <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
+    <string name="metadata_label_encryption">Bestandsversleuteling</string>
+    <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
+    <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
+    <string name="metadata_format_other">Onbekende export indeling</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units">%1$.2f E</string>
+</resources>

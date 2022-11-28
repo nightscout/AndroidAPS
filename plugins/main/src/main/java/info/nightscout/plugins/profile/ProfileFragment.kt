@@ -22,7 +22,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
@@ -57,7 +57,7 @@ class ProfileFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var inMenu = false
@@ -105,7 +105,7 @@ class ProfileFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
-        inMenu = parentClass == activityNames.singleFragmentActivity
+        inMenu = parentClass == uiInteraction.singleFragmentActivity
         updateProtectedUi()
         processVisibility(0)
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -298,7 +298,7 @@ class ProfileFragment : DaggerFragment() {
         binding.units.text = rh.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) rh.gs(R.string.mgdl) else rh.gs(R.string.mmol))
 
         binding.profileswitch.setOnClickListener {
-            activityNames.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
+            uiInteraction.runProfileSwitchDialog(childFragmentManager, profilePlugin.currentProfile()?.name)
         }
 
         binding.reset.setOnClickListener {

@@ -11,8 +11,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
@@ -35,7 +34,8 @@ class MedtronicUtil @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil,
-    private val medtronicPumpStatus: MedtronicPumpStatus
+    private val medtronicPumpStatus: MedtronicPumpStatus,
+    private val uiInteraction: UiInteraction
 ) {
 
     private val ENVELOPE_SIZE = 4 // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
@@ -93,20 +93,20 @@ class MedtronicUtil @Inject constructor(
         return ByteUtil.concat(input.size.toByte(), input)
     }
 
-    fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper, rxBus: RxBus) {
-        val notification = Notification( //
-            notificationType.notificationType,  //
-            rh.gs(notificationType.resourceId),  //
-            notificationType.notificationUrgency)
-        rxBus.send(EventNewNotification(notification))
+    fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper) {
+        uiInteraction.addNotification(
+            notificationType.notificationType,
+            rh.gs(notificationType.resourceId),
+            notificationType.notificationUrgency
+        )
     }
 
-    fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper, rxBus: RxBus, vararg parameters: Any?) {
-        val notification = Notification( //
-            notificationType.notificationType,  //
-            rh.gs(notificationType.resourceId, *parameters),  //
-            notificationType.notificationUrgency)
-        rxBus.send(EventNewNotification(notification))
+    fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper, vararg parameters: Any?) {
+        uiInteraction.addNotification(
+            notificationType.notificationType,
+            rh.gs(notificationType.resourceId, *parameters),
+            notificationType.notificationUrgency
+        )
     }
 
     fun dismissNotification(notificationType: MedtronicNotificationType, rxBus: RxBus) {

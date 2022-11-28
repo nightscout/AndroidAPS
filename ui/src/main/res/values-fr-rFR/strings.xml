@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Restriction appliquée !</string>
     <string name="bolus_constraint_applied">Restriction de bolus appliquée</string>
     <string name="carbs_constraint_applied">Restriction des glucides appliquée</string>
     <string name="temp_target_short">CT</string>
@@ -36,14 +35,9 @@
     <string name="format_bg_isf">%1$s SI: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
     <string name="fill_warning">Assurez-vous que le montant correspond à la spécification de votre ensemble de perfusions!</string>
-    <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
-    <string name="button1">Bouton 1</string>
-    <string name="button2">Bouton 2</string>
-    <string name="button3">Bouton 3</string>
     <string name="record_pump_site_change">Enregistrer le changement de site de la pompe</string>
     <string name="record_insulin_cartridge_change">Enreg. changement de réservoir</string>
     <!-- InsulinDialog -->
@@ -93,8 +87,6 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
-    <string name="tempbasals_iobtotal_label_string">IA Totale:</string>
-    <string name="treatments_wizard_tt_label">CT</string>
     <string name="treatments_wizard_correction_label">Corr.</string>
     <string name="meal_bolus">Repas</string>
     <string name="prime">Amorcer</string>
@@ -125,13 +117,13 @@
     <string name="motol_default_profile">Profil par défaut</string>
     <string name="current_profile">Profil actuel</string>
     <string name="available_profile">Profils disponibles</string>
-    <string name="format_with_tdd">Âge: %1$.0f DTI: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Âge: %1$.0f DTI: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Âge: %1$.0f Poids: %2$.0f kg</string>
+    <string name="format_with_tdd">Âge: %1$d DTI: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Âge: %1$d DTI: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Âge: %1$d Poids: %2$.0f kg</string>
     <string name="dpv_default_profile">Profil par défaut DPV</string>
     <string name="invalid_pct">% saisi invalide</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Débit de Basal</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
+    <string name="stop_pressed">ARRÊT APPUYÉ</string>
 </resources>

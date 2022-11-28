@@ -4,8 +4,8 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.plannedRemainingMinutes
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.plannedRemainingMinutes
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.fabric.InstanceId

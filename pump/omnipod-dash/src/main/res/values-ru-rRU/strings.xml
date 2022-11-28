@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">Потеряно соединение с подом</string>
     <string name="omnipod_dash_bolus_already_in_progress">Вводится еще один болюс</string>
     <string name="omnipod_dash_not_enough_insulin">В резервуаре недостаточно инсулина</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Неподтвержденная команда</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
 </resources>

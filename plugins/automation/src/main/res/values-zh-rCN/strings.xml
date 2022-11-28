@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">临时目标 %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">配置文件pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">而且</string>
     <string name="or">或</string>
     <string name="xor">唯一的</string>
     <string name="atspecifiedtime">在 %1$s</string>

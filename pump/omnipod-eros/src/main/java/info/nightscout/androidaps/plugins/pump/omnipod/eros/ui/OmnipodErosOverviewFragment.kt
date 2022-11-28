@@ -41,7 +41,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
@@ -80,7 +80,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     @Inject lateinit var omnipodManager: AapsOmnipodErosManager
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -590,9 +590,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        context?.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+        uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Jedinice</string>
+    <string name="next_button">Sljedeći</string>
     <string name="permission">Dozvola</string>
     <string name="need_system_window_permission">Aplikacija treba dopuštenje sustava za obavijesti</string>
     <string name="need_location_permission">Aplikaciji je potrebna dozvola za lokaciju za BT skeniranje i WiFi identifikaciju</string>
     <string name="need_storage_permission">Aplikaciji je potrebno dopuštenje za pohranu kako bi mogla pohranjivati datoteke dnevnika i izvoziti postavke</string>
+    <string name="need_whitelisting">%1$s potrebno stavljanje na popis dopuštenih za optimizaciju baterije za pravilan rad</string>
     <string name="profile">Profil</string>
     <string name="setupwizard_loop_description">Pritisnite donji gumb kako biste omogućili APPS-u da predloži/napravi bazalne promjene</string>
+    <string name="request">Zahtjev</string>
+    <string name="error_asking_for_permissions">Pogreška pri traženju dopuštenja</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na popis dopuštenih za optimizaciju baterije - mogli biste imati problema s performansama.</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Config Builder</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Koju pumpu želite koristiti s AndroidAPS-om?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -14,4 +22,21 @@
     <string name="configbuilder_general">Općenito</string>
     <string name="configbuilder_loop_description">Koristite ovo za aktiviranje integracije AAPS-ove petlje.</string>
     <string name="configbuilder_bgsource_description">Odakle bi AAPS trebao dobiti svoje podatke?</string>
+    <string name="description_config_builder">Koristi se za konfiguriranje aktivnih softverskih dodataka</string>
+    <string name="allow_hardware_pump_text">Pažnja: ako aktivirate i povežete se s hardverskom pumpom, AAPS će kopirati bazalne postavke iz profila na pumpu, prebrišući postojeću bazalnu dozu pohranjenu na pumpi. Provjerite imate li ispravnu bazalnu postavku u AAPS-u. Ako niste sigurni ili ne želite prebrisati bazalne postavke na pumpi, pritisnite Odustani i ponovite prebacivanje na pumpu kasnije.</string>
+    <string name="a11y_open_settings">otvori postavke</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Osobne postavke</string>
+    <string name="import_setting">Uvezi postavke</string>
+    <string name="nav_export">Izvezi postavke</string>
+    <string name="setting_imported">Postavke su uvezene</string>
+    <string name="filenotfound">Datoteka nije pronađena</string>
+    <!--    Maintenance-->
+    <string name="database_cleanup">Čišćenje baze podataka</string>
+    <string name="cleanup_db_confirm">Želite li očistiti bazu podataka?\nUklonit će praćene promjene i povijesne podatke starije od 3 mjeseca.</string>
+    <string name="cleared_entries">Izbrisani unosi</string>
+    <string name="reset_db_confirm">Stvarno želiš resetirati bazu?</string>
+    <string name="nav_resetdb">Resetiraj bazu</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

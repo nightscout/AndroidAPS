@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 
 import android.content.Context
 import android.content.Intent
-import info.nightscout.androidaps.plugins.pump.eopatch.EONotification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A005
@@ -17,13 +16,13 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -59,7 +58,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var sp: SP
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var pm: IPreferenceManager
     @Inject lateinit var mAlarmRegistry: IAlarmRegistry
 
@@ -150,41 +149,50 @@ class AlarmManager @Inject constructor() : IAlarmManager {
         context.startActivity(i)
     }
 
-    private fun showNotification(alarmCode: AlarmCode, timeOffset: Long = 0L){
+    private fun showNotification(alarmCode: AlarmCode, timeOffset: Long = 0L) {
         var alarmMsg = resourceHelper.gs(alarmCode.resId)
-        if(alarmCode == B000){
+        if (alarmCode == B000) {
             val expireTimeValue = pm.getPatchWakeupTimestamp() + TimeUnit.HOURS.toMillis(84)
             val expireTimeString = SimpleDateFormat(resourceHelper.gs(R.string.date_format_yyyy_m_d_e_a_hh_mm_comma), Locale.US).format(expireTimeValue)
             alarmMsg = resourceHelper.gs(alarmCode.resId, expireTimeString)
         }
-        val notification = EONotification(Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000), alarmMsg, Notification.URGENT)
-
-        notification.action(R.string.confirm) {
-            compositeDisposable.add(
-                Single.just(isValid(alarmCode))
-                .flatMap { isValid ->
-                    return@flatMap if(isValid) mAlarmProcess.doAction(context, alarmCode)
-                    else Single.just(IAlarmProcess.ALARM_HANDLED)
-                }
-                .subscribe { ret ->
-                    if(ret == IAlarmProcess.ALARM_HANDLED){
-                        if(alarmCode == B001){
-                            pumpSync.syncStopTemporaryBasalWithPumpId(
-                                timestamp = dateUtil.now(),
-                                endPumpId = dateUtil.now(),
-                                pumpType = PumpType.EOFLOW_EOPATCH2,
-                                pumpSerial = patchManager.patchConfig.patchSerialNumber
-                            )
+        uiInteraction.addNotificationWithAction(
+            id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
+            text = alarmMsg,
+            level = Notification.URGENT,
+            buttonText = R.string.confirm,
+            action = {
+                compositeDisposable.add(
+                    Single.just(isValid(alarmCode))
+                        .flatMap { isValid ->
+                            return@flatMap if (isValid) mAlarmProcess.doAction(context, alarmCode)
+                            else Single.just(IAlarmProcess.ALARM_HANDLED)
                         }
-                        updateState(alarmCode, AlarmState.HANDLE)
-                    }else{
-                        rxBus.send(EventNewNotification(notification))
-                    }
-                })
-        }
-        notification.soundId = R.raw.error
-        notification.date =  pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.SECONDS.toMillis(timeOffset)
-        rxBus.send(EventNewNotification(notification))
+                        .subscribe { ret ->
+                            if (ret == IAlarmProcess.ALARM_HANDLED) {
+                                if (alarmCode == B001) {
+                                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                                        timestamp = dateUtil.now(),
+                                        endPumpId = dateUtil.now(),
+                                        pumpType = PumpType.EOFLOW_EOPATCH2,
+                                        pumpSerial = patchManager.patchConfig.patchSerialNumber
+                                    )
+                                }
+                                updateState(alarmCode, AlarmState.HANDLE)
+                            } else {
+                                uiInteraction.addNotification(
+                                    id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
+                                    text = alarmMsg,
+                                    level = Notification.URGENT
+                                )
+                            }
+                        }
+                )
+            },
+            soundId = R.raw.error,
+            date = pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.SECONDS.toMillis(timeOffset)
+        )
+
     }
 
     private fun updateState(alarmCode: AlarmCode, state: AlarmState){

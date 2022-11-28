@@ -10,7 +10,6 @@
     <string name="format_mins">%1$d mins</string>
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
-    <string name="mute">Mute</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
     <string name="invalid_profile">Invalid profile!</string>
@@ -30,7 +29,6 @@
     <string name="target_long_label">Blood Glucose Target</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">Advanced Settings</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>
@@ -74,7 +72,6 @@
     <string name="loopsuspended">Loop suspended</string>
     <string name="trend_arrow">Trend arrow</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="required">req</string>
     <string name="a11y_arrow_double_down">falling rapidly</string>
     <string name="a11y_arrow_single_down">falling</string>
@@ -116,7 +113,6 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
-    <string name="confirm">Confirm</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
@@ -194,7 +190,6 @@
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
     <string name="custom">Custom</string>
-    <string name="pump">Pump</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
@@ -205,10 +200,8 @@
     <!--    PumpEnactResult-->
     <string name="enacted">Enacted</string>
     <string name="comment">Comment</string>
-    <string name="success">Success</string>
     <string name="percent">Percent</string>
     <string name="absolute">Absolute</string>
-    <string name="configbuilder_insulin">Insulin</string>
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smb_shortname">SMB</string>
 
@@ -231,36 +224,6 @@
 
     <!--    Ntp-->
     <string name="timedetection">Time detection</string>
-
-    <string name="mute5min">Mute for 5 minutes</string>
-
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
-    <string name="exported_at" comment="at placeholder we add export date">exported at %1$s</string>
-    <string name="exported_less_than_hour_ago">exported less than hour ago</string>
-    <string name="in_directory" comment="placeholder is for exported file path">in directory: %1$s</string>
-    <string name="preferences_import_list_title">Select file to import</string>
-    <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
-    <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
-    <string name="metadata_warning_outdated_format">You are using the outdated legacy format from old versions of AAPS, which is not secure! Only use it as a last resort, if you do not have an export in current, JSON format.</string>
-    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
-    <string name="metadata_warning_date_format">Invalid date-time format!</string>
-    <string name="metadata_warning_different_version">Preferences from different minor version of application. It is OK if you are importing after upgrade, but check after import if preferences are still correct!</string>
-    <string name="metadata_urgent_different_version">Preferences from different major version of application. Major versions differ significantly and may have incompatible preferences! Make sure after import that preferences are still correct!</string>
-    <string name="prefdecrypt_settings_tampered">Settings file tampered</string>
-    <string name="prefdecrypt_settings_secure">Settings file is secure</string>
-    <string name="prefdecrypt_settings_unencrypted">Using not secure, unencrypted settings format</string>
-    <string name="prefdecrypt_wrong_json">JSON format error, missing required field (format, content, metadata or security)</string>
-    <string name="prefdecrypt_wrong_password">Decryption error, the given password cannot decrypt the file</string>
-    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) missing, cannot verify the authenticity of settings!</string>
-    <string name="prefdecrypt_issue_modified">File was modified after export!</string>
-    <string name="prefdecrypt_issue_parsing">Decryption error, parsing preferences failed!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Decryption error, the provided password is invalid or settings file was modified! It may happen that the imported file was exported with a different Master password.</string>
-    <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
-
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
@@ -352,7 +315,6 @@
     <string name="ue_action">Action</string>
     <string name="ue_timestamp">Timestamp</string>
     <string name="ue_none">No Unit</string>
-    <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
     <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
     <string name="uel_loop_change">LOOP CHANGED</string>
     <string name="uel_loop_removed">LOOP REMOVED</string>
@@ -373,7 +335,6 @@
     <string name="valueoutofrange">»%1$s« is out of hard limits</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f is out of hard limits</string>
     <string name="basal_value">Basal value</string>
-    <string name="nsclient_version_does_not_match">AAPSClient version doesn\'t match AAPS version. Please update.</string>
 
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f U</string>
@@ -394,10 +355,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Status outdated.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal outdated.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Clicked refresh</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
-    <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
-    <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
@@ -467,9 +424,6 @@
     <string name="urgent_alarm">Urgent Alarm</string>
     <string name="info">INFO</string>
 
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
-
     <!-- BolusWizard -->
     <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="bolus_advisor">Bolus advisor</string>
@@ -510,18 +464,5 @@
     <string name="max_bolus_title">Max allowed bolus [U]</string>
     <string name="max_carbs_title">Max allowed carbs [g]</string>
     <string name="patient_type">Patient type</string>
-
-    <plurals name="days">
-        <item quantity="one">%1$d day</item>
-        <item quantity="other">%1$d days</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d hours</item>
-    </plurals>
-    <plurals name="minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d minutes</item>
-    </plurals>
 
 </resources>

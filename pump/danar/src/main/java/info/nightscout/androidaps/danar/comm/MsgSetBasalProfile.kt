@@ -26,11 +26,11 @@ class MsgSetBasalProfile(
         if (result != 1) {
             failed = true
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result FAILED!!!")
-            activityNames.addNotification(Notification.PROFILE_SET_FAILED, rh.gs(R.string.profile_set_failed), Notification.URGENT)
+            uiInteraction.addNotification(Notification.PROFILE_SET_FAILED, rh.gs(R.string.profile_set_failed), Notification.URGENT)
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result")
-            activityNames.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
         }
     }
 }

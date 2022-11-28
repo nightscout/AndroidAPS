@@ -9,29 +9,42 @@
     <string name="remind_to_bolus_later">Påmind om at bolus senere</string>
     <string name="a11y_carb_reminder">Indstil påmindelse</string>
     <!--    Widget-->
+    <string name="configure">Indstil gennemsigtighed</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="activity_monitor">Aktivitetsovervågning</string>
+    <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
     <string name="statistics">Statistikker</string>
     <string name="calculation_in_progress">Beregning i gang</string>
+    <string name="invalid_age">Ugyldig angivelse af alder</string>
+    <string name="invalid_weight">Ugyldig angivelse af vægt</string>
     <string name="id">ID:</string>
     <string name="submit">Send</string>
     <string name="age">Alder</string>
     <string name="weight_label">Vægt</string>
+    <string name="most_common_profile">Mest almindelige profil:</string>
     <string name="survey_comment">Bemærk: Kun data synlige på denne skærm vil blive uploadet anonymt. ID tildeles til denne installation af AAPS. Du kan indsende data igen, hvis din hovedprofil bliver ændret, men lad det køre mindst en uge for at gøre resultatet synligt i tidsinterval. Din hjælp er værdsat.</string>
+    <string name="glucose_type">Glukose type</string>
+    <string name="bg_other">Andet</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">I alt</string>
     <!-- FillDialog -->
-    <string name="button1">Knap 1</string>
-    <string name="button2">Knap 2</string>
-    <string name="button3">Knap 3</string>
+    <string name="fill_warning">Sørg for, at mængden svarer til specifikationen på dit infusionssæt!</string>
     <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Ikke bolus, registrer kun</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Genbrug %1$d%% %2$dt</string>
+    <string name="timeshift_label">Tidsskift</string>
+    <string name="percentage_label">Procentdel</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Suspendér loop i 1t</string>
     <string name="suspendloopfor2h">Suspendér loop i 2t</string>
     <string name="suspendloopfor3h">Suspendér loop i 3t</string>
     <string name="suspendloopfor10h">Suspendér loop i 10t</string>
@@ -52,6 +65,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">korrekt resultat med %</string>
     <string name="a11_correction_units">korrekt resultat med enheder</string>
+    <string name="two_hours">2t</string>
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="a11y_current_bg">nuværende blodglukose</string>
@@ -59,18 +73,19 @@
     <string name="a11y_set_carb_timer">indstil KH alarm</string>
     <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
+    <string name="no_records_available">Ingen poster tilgængelige</string>
     <string name="calculation_short">Beregn</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Kulhydrater:</string>
     <string name="treatments_iobtotal_label_string">Total IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Total IOB aktivitet:</string>
     <string name="tempbasals_realduration_label_string">Tid:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_tt_label">Midlertidig Mål</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
+    <string name="meal_bolus">Måltid</string>
     <string name="prime">Klargør</string>
     <string name="profile_changes">Profil ændringer</string>
     <string name="tempt_targets">Midlertidig mål </string>
@@ -81,21 +96,31 @@
     <string name="refresheventsfromnightscout">Opdater fra NS</string>
     <string name="show_invalidated">Vis ugyldige</string>
     <string name="hide_invalidated">Skjul ugyldige</string>
+    <string name="careportal_remove_started_events">Fjern AAPS startede poster</string>
     <string name="hide_loop">Skjul loop</string>
     <string name="show_loop">Vis loop</string>
+    <string name="user_entry">Bruger indtastning</string>
     <string name="clone_label">Klon</string>
     <string name="show_loop_records">Vis loop poster</string>
     <string name="show_hide_records">Skjul loop poster</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
     <string name="profile2">Profil 2</string>
+    <string name="profile_type">Profil type</string>
+    <string name="basal_pct_from_tdd_label">% af basal</string>
     <string name="selected_profile">Valgt:</string>
+    <string name="compare_profile">Sammenlign profiler</string>
+    <string name="nav_profile_helper">Profil hjælper</string>
+    <string name="motol_default_profile">Standard profil</string>
+    <string name="current_profile">Nuværende profil</string>
+    <string name="available_profile">Tilgængelig profil</string>
+    <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f IE</string>
+    <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f IE %3$d%%</string>
+    <string name="format_with_weight">Alder: %1$d Vægt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV standardprofil</string>
+    <string name="invalid_pct">Ugyldig angivelse af %</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Basalrate</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Importeringsfejl detaljer</string>
-    <string name="check_preferences_import_btn">Importer</string>
-    <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
-    <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
-    <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
-    <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
+    <string name="stop_pressed">STOP TRYKKET</string>
 </resources>

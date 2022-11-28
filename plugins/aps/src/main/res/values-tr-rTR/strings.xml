@@ -24,7 +24,6 @@
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="openapsma_profile_label">Profil</string>
-    <string name="result">Sonuç</string>
     <string name="openapsma_request_label">İstek</string>
     <string name="constraints">Kısıtlamalar</string>
     <string name="openapsma_autosensdata_label">Otoduyarlılık verileri</string>

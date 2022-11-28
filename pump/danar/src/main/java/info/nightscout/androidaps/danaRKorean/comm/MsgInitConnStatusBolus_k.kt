@@ -31,7 +31,7 @@ class MsgInitConnStatusBolus_k(
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus max: " + danaPump.maxBolus)
         aapsLogger.debug(LTag.PUMPCOMM, "Delivery status: $deliveryStatus")
         if (!danaPump.isExtendedBolusEnabled) {
-            activityNames.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
+            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))
         }

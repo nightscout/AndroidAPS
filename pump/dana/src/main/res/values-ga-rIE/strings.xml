@@ -13,14 +13,14 @@
     <string name="danar_history_glucose">Glúcóis</string>
     <string name="danar_history_refill">Athlán</string>
     <string name="danar_history_syspend">Fionraí</string>
-    <string name="danar_pumpalarm">Aláram</string>
-    <string name="danar_glucoseunits">Aonaid Glúcóis</string>
+    <string name="danar_pump_alarm">Aláram</string>
+    <string name="danar_glucose_units">Aonaid Glúcóis</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="danarkoreanpump">DanaR Cóiréis</string>
     <string name="danarpump">DanaR</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_bluetooth_status">Bluetooth stádas</string>
-    <string name="timeformat12h">12u</string>
-    <string name="timeformat24h">24u</string>
+    <string name="time_format_12h">12u</string>
+    <string name="time_format_24h">24u</string>
     <string name="danar_bt_name_title">DanaR Bluetooth gléas</string>
 </resources>

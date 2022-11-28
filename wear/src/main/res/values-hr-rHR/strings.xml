@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="menu_wizard">Kalkulator</string>
+    <string name="menu_wizard_short">Izračun</string>
+    <string name="menu_treatment">Tretman</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="action_duration">Trajanje</string>
+    <string name="action_target" comment="In temp target menu, single target value">Cilj</string>
+    <string name="action_bolus">Bolus</string>
+    <string name="status_tdd">TDD</string>
+</resources>

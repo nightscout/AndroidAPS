@@ -34,7 +34,6 @@
     <string name="openapsma_iob_data_label">IOB data</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_meal_data_label">Måltidsdata</string>
-    <string name="result">Resultat</string>
     <string name="openapsma_request_label">Forespørsel</string>
     <string name="constraints">Begrensninger</string>
     <string name="openapsma_autosensdata_label">Autosens-data</string>
@@ -73,8 +72,21 @@
     <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er aktive temp targets (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maks minutter</string>
+    <string name="uam_smb_max_minutes_summary">Maks antall minutter basal som kan bli SMB ved UAM</string>
+    <string name="carbs_req_threshold">Minimumsgrense for KH-forslag</string>
+    <string name="carbs_req_threshold_summary">Minste KH mengde i gram som kreves for å vise varsel. Karbohydrater under denne mengden vil ikke utløse et varsel.</string>
+    <string name="lgs_threshold_summary">Terskelverdi for BS hvor all insulintilførsel stoppes. Bruker kan definere verdier mellom 3.3mmol/l (60mg/dl) og 5.5mmol/l (100mg/dl). Verdier under 3.6/65 bruker standard målverdier</string>
+    <string name="lgs_threshold_title">Insulintilførsel stoppes når BS er under denne terskelverdien</string>
+    <string name="increasing_max_basal">Øker maks basaldose fordi innstillingen er lavere enn din maks basal definert i profilen</string>
+    <string name="max_basal_multiplier">maks basal multiplikator</string>
+    <string name="max_daily_basal_multiplier">maks daglig basal multiplikator</string>
+    <string name="smb_disabled_in_preferences">SMB deaktivert i innstillinger</string>
+    <string name="uam_disabled_in_preferences">UAM deaktivert i innstillinger</string>
+    <string name="autosens_disabled_in_preferences">Autosens deaktivert i innstillinger</string>
     <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
     <string name="hardlimit">hard begrensning</string>
     <!--    Autotune   -->
+    <string name="insulin_peak">Topp</string>
 </resources>

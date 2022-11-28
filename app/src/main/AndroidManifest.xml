@@ -70,10 +70,6 @@
             android:exported="false"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name="info.nightscout.configuration.maintenance.activities.PrefImportListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".activities.HistoryBrowseActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -135,16 +131,9 @@
         </provider>
 
         <service
-            android:name=".services.AlarmSoundService"
+            android:name="info.nightscout.core.services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".plugins.general.persistentNotification.DummyService" />
-
-        <activity
-            android:name="info.nightscout.configuration.maintenance.activities.LogSettingActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

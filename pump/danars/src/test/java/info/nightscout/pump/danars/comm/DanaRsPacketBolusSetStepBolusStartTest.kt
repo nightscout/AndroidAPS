@@ -73,7 +73,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 temporaryBasalStorage,
                 fabricPrivacy,
                 dateUtil,
-                activityNames,
+                uiInteraction,
                 danaHistoryDatabase
             )
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))

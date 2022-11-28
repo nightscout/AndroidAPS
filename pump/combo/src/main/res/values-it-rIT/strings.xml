@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Uso non sicuro: il micro usa un profilo della velocità basale diverso dal primo in elenco tra le sue impostazioni. Il loop è stato disabilitato. Selezionare sul micro il profilo basale numero 1.</string>
     <string name="bolus_frequency_exceeded">Un bolo con la stessa quantità è stato richiesto negli ultimi due minuti. Questo non è consentito al fine di evitare boli doppi accidentali e a protezione di eventuali \"bug\".</string>
     <string name="combo_pump_connected_now">Adesso</string>
-    <string name="combo_activity_reading_pump_history">Lettura storico micro</string>
     <string name="combo_activity_setting_basal_profile">Impostazione profilo basale</string>
     <string name="combo_pump_cartridge_low_warrning">Livello cartuccia basso</string>
     <string name="combo_pump_battery_low_warrning">Livello batteria basso</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Mai</string>
     <string name="combo_error_display_error">In caso di errore</string>
     <string name="combo_error_display_always">Sempre</string>
+    <string name="unsafeusage">uso non sicuro</string>
 </resources>

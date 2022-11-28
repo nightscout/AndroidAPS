@@ -37,7 +37,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.isSame
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
@@ -55,7 +54,7 @@ import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.defs.PumpDriverState
@@ -102,7 +101,7 @@ class MedtronicPumpPlugin @Inject constructor(
     private val medtronicHistoryData: MedtronicHistoryData,
     private val rileyLinkServiceData: RileyLinkServiceData,
     private val serviceTaskExecutor: ServiceTaskExecutor,
-    private val activityNames: ActivityNames,
+    private val uiInteraction: UiInteraction,
     dateUtil: DateUtil,
     aapsSchedulers: AapsSchedulers,
     pumpSync: PumpSync,
@@ -578,8 +577,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff))
                 rileyLinkMedtronicService?.medtronicUIComm?.executeCommand(MedtronicCommandType.SetRealTimeClock)
                 if (clock.timeDifference == 0) {
-                    val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(R.string.pump_time_updated), Notification.INFO, 60)
-                    rxBus.send(EventNewNotification(notification))
+                    uiInteraction.addNotificationValidFor(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(R.string.pump_time_updated), Notification.INFO, 60)
                 }
             } else {
                 if (clock.localDeviceTime.year > 2015) {
@@ -648,7 +646,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread {
                         SystemClock.sleep(2000)
-                        activityNames.runAlarm(context, rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
+                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
                     }.start()
                 }
                 val now = System.currentTimeMillis()
@@ -1204,7 +1202,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (rileyLinkMedtronicService?.verifyConfiguration() == true) {
                     serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
                 } else {
-                    activityNames.runAlarm(context, rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
+                    uiInteraction.runAlarm(rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
                 }
             }
 

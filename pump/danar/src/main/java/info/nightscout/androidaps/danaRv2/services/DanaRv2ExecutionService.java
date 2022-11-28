@@ -59,7 +59,7 @@ import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.Command;
 import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.events.EventDanaRNewStatus;
 import info.nightscout.rx.bus.RxBus;
@@ -90,7 +90,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject PumpSync pumpSync;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
-    @Inject ActivityNames activityNames;
+    @Inject UiInteraction uiInteraction;
 
     public DanaRv2ExecutionService() {
     }
@@ -194,8 +194,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff),
-                            rh.gs(R.string.largetimedifftitle), R.raw.error);
+                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error);
 
                     //deinitialize pump
                     danaPump.reset();
@@ -236,7 +235,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             if (danaPump.getDailyTotalUnits() > danaPump.getMaxDailyTotalUnits() * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits());
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    activityNames.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT);
+                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT);
                     pumpSync.insertAnnouncement(rh.gs(R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U", null, PumpType.DANA_R_KOREAN, danaRKoreanPlugin.serialNumber());
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
@@ -350,8 +349,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
             if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
-                activityNames.runAlarm(context, rh.gs(R.string.carbs_store_error)
-                        , rh.gs(R.string.error), R.raw.boluserror);
+                uiInteraction.runAlarm(rh.gs(R.string.carbs_store_error), rh.gs(R.string.error), R.raw.boluserror);
         }
 
         final long bolusStart = System.currentTimeMillis();

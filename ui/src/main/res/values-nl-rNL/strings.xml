@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Beperking toegepast!</string>
     <string name="bolus_constraint_applied">Bolus limiet ingesteld</string>
     <string name="carbs_constraint_applied">Koolhydraten beperking ingesteld</string>
     <string name="temp_target_short">TT</string>
@@ -36,16 +35,13 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <!-- FillDialog -->
-    <string name="button1">Knop 1</string>
-    <string name="button2">Knop 2</string>
-    <string name="button3">Knop 3</string>
     <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
+    <string name="timeshift_label">Tijd verschuiving</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor2h">Onderbreek loop voor 2u</string>
     <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
@@ -85,8 +81,6 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="meal_bolus">Maaltijd</string>
     <string name="prime">Vullen</string>
@@ -109,13 +103,10 @@
     <!-- ProfileHelperActivity -->
     <string name="profile2">Profiel 2</string>
     <string name="selected_profile">Geselecteerd:</string>
+    <string name="format_with_tdd">Duur: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Leeftijd: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Leeftijd: %1$d Gewicht: %2$.0f kg</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Importeer problemen - details</string>
-    <string name="check_preferences_import_btn">Importeren</string>
-    <string name="check_preferences_import_anyway_btn">Toch importeren (GEVAARLIJK!)</string>
-    <string name="check_preferences_before_import">Controleer instellingen voor het importeren:</string>
-    <string name="check_preferences_cannot_import">Instellingen kunnen niet worden geïmporteerd!</string>
-    <string name="check_preferences_dangerous_import">Instellingen zouden niet moeten worden geïmporteerd!</string>
+    <string name="stop_pressed">STOP INGEDRUKT</string>
 </resources>

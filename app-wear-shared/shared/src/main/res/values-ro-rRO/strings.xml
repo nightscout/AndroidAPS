@@ -18,4 +18,10 @@
     <string name="unit_weeks">săptămâni</string>
     <string name="shortminute">m</string>
     <string name="shortday">z</string>
+    <!-- Rx -->
+    <string name="connecting_for">Conectat de %1$d s</string>
+    <string name="handshaking">Împerechere</string>
+    <string name="connected">Conectat</string>
+    <string name="disconnecting">Se deconectează</string>
+    <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
 </resources>

@@ -2,11 +2,11 @@ package info.nightscout.plugins.constraints.versionChecker
 
 import android.os.Build
 import dagger.Lazy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
@@ -29,7 +29,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
     private val config: Lazy<Config>,
     private val receiverStatusStore: ReceiverStatusStore,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : VersionCheckerUtils {
 
     private fun isConnected(): Boolean = receiverStatusStore.isConnected
@@ -121,7 +121,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
-            activityNames.addNotification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
+            uiInteraction.addNotification(Notification.NEW_VERSION_DETECTED, rh.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
             sp.putLong(R.string.key_last_versionchecker_warning, now)
         }
     }
@@ -130,7 +130,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
         val now = dateUtil.now()
         if (now > sp.getLong(R.string.key_last_expired_versionchecker_warning, 0) + WARN_EVERY) {
             aapsLogger.debug(LTag.CORE, rh.gs(R.string.version_expire, currentVersion, endDate))
-            activityNames.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)
+            uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)
             sp.putLong(R.string.key_last_expired_versionchecker_warning, now)
         }
     }

@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
     <string name="sms_wrong_code">Código incorrecto. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Para entregar bolo %1$.2fU responder con el código %2$s</string>
@@ -172,23 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Datos usados para recalcular</string>
-    <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">recalculado</string>
-    <string name="a11y_bg_quality_doubles">entradas repetidas</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
-    <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡Loop se encuentra desactivado!</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">versión antigua</string>
-    <string name="very_old_version">versión muy antigua</string>
-    <string name="application_expired">Aplicación caducada</string>
-    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Soporte a la función de suspensión por glucosa baja (LGS) durante %2$d días. Después se deshabilitará el lazo en %3$d días</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">¡Logrado, bien hecho!</string>
     <string name="not_completed_yet">No logrado</string>
@@ -229,7 +211,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
     <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
-    <string name="limitingiob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
     <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
     <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
@@ -240,8 +221,6 @@
     <string name="hardlimit">límite estricto</string>
     <string name="treatmentssafety_title">Seguridad de tratamientos</string>
     <!-- Overview -->
-    <string name="snooze">Silenciar</string>
-    <string name="copy_existing_values">¿Deseas copiar los ajustes desde Nightscout, si existen?</string>
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
     <string name="statuslights_cage_warning">Umbral de advertencia de la edad de la cánula [h]</string>
     <string name="statuslights_cage_critical">Umbral crítico de la edad de la cánula [h]</string>
@@ -257,7 +236,6 @@
     <string name="statuslights_res_critical">Umbral crítico del nivel del reservorio [U]</string>
     <string name="statuslights_bat_warning">Umbral de advertencia de nivel de batería bomba [%]</string>
     <string name="statuslights_bat_critical">Umbral nivel crítico de la batería de bomba [%]</string>
-    <string name="statuslights">Luces de estado</string>
     <string name="statuslights_copy_ns">Copiar ajustes desde Nightscout</string>
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
@@ -265,91 +243,115 @@
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
-    <string name="apsmode_title">Modo APS</string>
-    <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
+    <string name="aps_mode_title">Modo APS</string>
+    <string name="set_basal_question">Aceptar nueva basal temporal:</string>
     <string name="overview_cgm">MCG</string>
     <string name="quickwizard">Asistente</string>
-    <!-- NSClient -->
-    <string name="no_write_permission">NSClient no tiene permisos de escritura. ¿API Secret incorrecta?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
-    <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCLI</string>
-    <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Desplazamiento automático</string>
-    <string name="restart">Reiniciar</string>
-    <string name="ns_client_internal_title">NSClient</string>
-    <string name="ns_client_url_title">URL de Nightscout</string>
-    <string name="ns_client_url_dialog_message">Introduce tu página de Nightscout</string>
-    <string name="ns_client_secret_title">API Secret de Nightscout</string>
-    <string name="ns_client_secret_dialog_title">API Secret de Nightscout</string>
-    <string name="ns_client_secret_dialog_message">Introduce la contraseña API Secret de Nightscout (mínimo de 12 caracteres)</string>
-    <string name="nsclient_token_title">Token de acceso de Nightscout</string>
-    <string name="nsclient_token_dialog_title">Token de acceso de Nightscout</string>
-    <string name="nsclient_token_dialog_message">Token de acceso generado en la página de administración de NS (mínimo 17 caracteres)</string>
-    <string name="deliver_now">Lanzar ahora</string>
-    <string name="clear_queue">Borrar cola</string>
-    <string name="show_queue">Mostrar cola</string>
-    <string name="queue">Cola:</string>
-    <string name="status">Estado:</string>
-    <string name="clear_log">Borrar log</string>
-    <string name="full_sync">Sincronización completa</string>
-    <string name="full_sync_comment">¿Sincronización completa? Puede tardar muchas horas y hasta que termine no verás nuevos datos en Nightscout</string>
-    <string name="ns_sync_options">Sincronización</string>
-    <string name="ns_upload_summary">Perfiles, bolos, carbohidratos y basales temporales se suben a Nightscout</string>
-    <string name="ns_upload">Subir datos a Nightscout</string>
-    <string name="ns_receive_profile_store">Recibir perfil almacenado</string>
-    <string name="ns_receive_profile_store_summary">Sincronizar perfiles desde el editor de perfiles de Nightscout</string>
-    <string name="ns_receive_temp_target">Recibir objetivos temporales</string>
-    <string name="ns_receive_temp_target_summary">Aceptar objetivos temporales registrados mediante Nightscout o NSClient</string>
-    <string name="ns_receive_profile_switch">Recibir cambios de perfil</string>
-    <string name="ns_receive_profile_switch_summary">Aceptar cambios de perfil registrados mediante Nightscout o NSClient</string>
-    <string name="ns_receive_offline_event">Recibir eventos de desconexión de APS</string>
-    <string name="ns_receive_offline_event_summary">Aceptar eventos de desconexión de APS registrados mediante Nightscout o NSClient</string>
-    <string name="ns_receive_tbr_eb">Recibir TBR y EB</string>
-    <string name="ns_receive_tbr_eb_summary">Aceptar TBR y EB ingresados mediante otra instancia</string>
-    <string name="ns_receive_insulin">Recibir insulina</string>
-    <string name="ns_receive_insulin_summary">Aceptar insulina registrada mediante Nightscout o NSClient (no se entrega, sólo se calcula para IOB)</string>
-    <string name="ns_receive_carbs">Recibir carbohidratos</string>
-    <string name="ns_receive_carbs_summary">Aceptar carbohidratos añadidos mediante Nightscout o NSClient</string>
-    <string name="ns_receive_therapy_events">Recibir eventos de tratamientos</string>
-    <string name="ns_receive_therapy_events_summary">Aceptar registros de terapia (cánula, insulina, cambios de batería, etc.) añadidos mediante Nightscout o NSClient</string>
-    <string name="ns_receive_cgm">Recibir/Rellenar datos del MCG</string>
-    <string name="ns_receive_cgm_summary">Aceptar valores MCG desde Nightscout</string>
+    <string name="a11y_only_on_watch">Sólo en reloj</string>
+    <string name="a11y_only_on_phone">Sólo en teléfono</string>
+    <string name="overview">Inicio</string>
+    <string name="overview_shortname">INICIO</string>
+    <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
+    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Cálculo objetivo temporal</string>
+    <string name="overview_editquickwizard_usepercentage">Cálculo de porcentaje</string>
+    <string name="overview_buttons_selection">Botones</string>
+    <string name="show_calibration_button_summary">Envía una calibración a xDrip+ o abre la pantalla de calibración de Dexcom BYODA</string>
+    <string name="show_cgm_button_summary">Abre xDrip+ o Dexcom BYODA. Si pulsas el botón atrás, regresa a AAPS</string>
+    <string name="dexcom_app_not_installed">La aplicación Dexcom no está instalada.</string>
+    <string name="dexcom_app_not_detected">Actualiza tu aplicación de Dexcom a una versión compatible</string>
+    <string name="error_starting_cgm">No se pudo iniciar la aplicación CGM. Asegúrate de que está instalada.</string>
+    <string name="not_available_full">No disponible</string>
+    <string name="constraints_violation">Violación de restricciones</string>
+    <string name="change_your_input">¡Cambiar datos!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Cargador datos</string>
+    <string name="data_status">Estado de datos de glucosa</string>
+    <string name="quickwizard_settings">Asistente de configuración</string>
+    <string name="overview_edit_quickwizard_button_text">Botón Texto:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidratos [g]:</string>
+    <string name="overview_edit_quickwizard_valid">Validar:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Añadir</string>
+    <string name="overview_quickwizard_item_edit_button">Editar</string>
+    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada en dispositivo:</string>
+    <string name="overview_edit_quickwizard_use_bg">Cálculo de glucosa</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Cálculo bolo IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo basal IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Cálculo tendencia</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Cálculo de superbolo</string>
+    <string name="overview_edit_quickwizard_percentage">Porcentaje</string>
+    <string name="device_all">Todo</string>
+    <string name="device_phone">Teléfono</string>
+    <string name="device_watch">Reloj</string>
+    <string name="positive_only">Solo positivo</string>
+    <string name="negative_only">Solo negativo</string>
+    <string name="app_default">Aplicación por defecto</string>
+    <string name="a11y_drag_and_drop_handle">Arrastrar y soltar </string>
+    <string name="keep_screen_on_title">Mantener la pantalla activa</string>
+    <string name="keep_screen_on_summary">Evita que Android apague la pantalla. Consume mucha batería cuando el teléfono no está conectado al cargador</string>
+    <string name="treatments">Tratamientos</string>
+    <string name="carb_increment_button_message">Cantidad de carbohidratos que se agregan cuando se presiona el botón </string>
+    <string name="insulin_increment_button_message">Cantidad de insulina que se agrega cuando se presiona el botón</string>
+    <string name="firstinsulinincrement">Primer incremento de insulina</string>
+    <string name="secondinsulinincrement">Segundo incremento de insulina</string>
+    <string name="thirdinsulinincrement">Tercer incremento de insulina</string>
+    <string name="firstcarbsincrement">Primer incremento de carbohidratos</string>
+    <string name="secondcarbsincrement">Segundo incremento de carbohidratos</string>
+    <string name="thirdcarbsincrement">Tercer incremento de carbohidratos</string>
+    <string name="cgm">MCG</string>
+    <string name="default_temptargets">Objetivo temporal por defecto</string>
+    <string name="eatingsoon_duration">Duración OT Comiendo Pronto</string>
+    <string name="eatingsoon_target">Objetivo Comiendo Pronto</string>
+    <string name="activity_duration">Duración OT Actividad</string>
+    <string name="activity_target">Objetivo Actividad</string>
+    <string name="hypo_duration">Duración OT Hipo</string>
+    <string name="hypo_target">Objetivo Hipo</string>
+    <string name="fill_bolus_title">Cebar/Llenar la cantidad de insulina estándar</string>
+    <string name="button1">Botón 1</string>
+    <string name="button2">Botón 2</string>
+    <string name="button3">Botón 3</string>
+    <string name="prefs_range_title">Rango de visualización</string>
+    <string name="prefs_range_summary">Establece los rangos de glucosa objetivos (hiper e hipo) en la pantalla inicio de AAPS y en la esfera del reloj</string>
+    <string name="low_mark">Valor de hipoglucemia</string>
+    <string name="high_mark">Valor de hiperglucemia</string>
+    <string name="short_tabtitles">Nombres cortos en pestañas</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Mostrar el campo notas en diálogos de tratamientos</string>
+    <string name="deliverpartofboluswizard">El asistente de bolos realiza el cálculo, pero solo se entrega esta parte de la insulina calculada. Útil con el algoritmo SMB.</string>
+    <string name="enable_bolus_advisor">Habilitar asistente de bolo</string>
+    <string name="enable_bolus_advisor_summary">Utiliza un recordatorio para empezar a comer más tarde, en lugar del resultado del asistente durante una glucemia alta (\"pre-bolo\")</string>
+    <string name="enablesuperbolus">Activar superbolo en asistente</string>
+    <string name="enablesuperbolus_summary">Activar la función superbolo en el asistente. No lo actives hasta que hayas aprendido lo que realmente hace. ¡PUEDE CAUSAR SOBREDOSIS DE INSULINA si lo usas sin precaución!</string>
+    <string name="enablebolusreminder">Habilitar recordatorio de bolo</string>
+    <string name="enablebolusreminder_summary">Usa recordatorio de bolo más tarde con el asistente
+        (\"post-bolus\")</string>
     <string name="run_question">¿Ejecutar %s?</string>
-    <string name="ns_sync_slow">Ralentizar subidas</string>
-    <string name="ns_alarm_options">Opciones de alarma</string>
-    <string name="ns_alarms">Crear notificaciones de alarmas desde Nightscout</string>
-    <string name="ns_announcements">Crear notificaciones desde Nightscout</string>
-    <string name="ns_alarm_stale_data_value_label">Datos antiguos limite [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Datos antiguos urgentes limite [min]</string>
-    <string name="ns_log_app_started_event">Registrar el inicio de la aplicación en Nightscout</string>
-    <string name="ns_local_broadcasts">Activar transmisiones a otras aplicaciones (como xDrip+). ¡No activar si tiene más de una instancia de AAPS o AAPSClient instalado!</string>
-    <string name="ns_local_broadcasts_title">Habilitar la emisión de mensajes localmente</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Tu nombre de usuario de Tidepool, normalmente tu dirección de correo electrónico</string>
-    <string name="title_tidepool_username">Nombre de usuario</string>
-    <string name="summary_tidepool_password">Tu contraseña de acceso a Tidepool</string>
-    <string name="title_tidepool_password">Contraseña de inicio de sesión</string>
-    <string name="title_tidepool_test_login">Prueba de acceso Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Si está habilitado, las subidas irán a https://int-app.tidepool.org en lugar de a https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Usar servidores de integración (prueba)</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Carga datos a Tidepool</string>
-    <string name="tidepool_upload_cgm">Carga tus datos</string>
-    <string name="tidepool_upload_bolus">Subir tratamientos (insulina, carbohidratos)</string>
-    <string name="tidepool_upload_tbr">Subir basales temporales</string>
-    <string name="tidepool_upload_profile">Subir conmutaciones de perfil, objetivos temps</string>
-    <string name="tidepool_upload_bg">Subir pruebas de glucosa</string>
-    <string name="remove_all">Eliminar todos</string>
-    <string name="reset_start">Restablecer inicio</string>
-    <string name="upload_now">Subir ahora</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Predicciones</string>
+    <string name="overview_show_treatments">Tratamientos</string>
+    <string name="overview_show_deviation_slope">Pendiente de desviación</string>
+    <string name="overview_show_activity">Actividad</string>
+    <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
+    <string name="overview_show_sensitivity">Sensibilidad</string>
+    <string name="overview_show_deviations">Desviaciones</string>
+    <string name="overview_show_cob">Carbohidratos activos COB</string>
+    <string name="overview_show_iob">Insulina activa</string>
+    <string name="overview_show_basals">Basales</string>
+    <string name="overview_show_abs_insulin">Insulina absoluta</string>
+    <string name="prediction_shortname">PRED</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="treatments_shortname">TRAT</string>
+    <string name="sensitivity_shortname">Sens</string>
+    <string name="graph_scale">Escala gráfica</string>
+    <string name="graph_menu_divider_header">Gráfico</string>
     <!-- VirtualPump -->
     <string name="virtual_pump_type">Tipo de bomba virtual</string>
     <string name="virtual_pump_definition">Definición de la bomba</string>
     <string name="virtual_pump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, Duración =%3$smin -%4$sh] \nBasal: Paso =%5$s\nTBR: %6$s ( %7$s), Duración =%8$sMin -%9$sh\n%10$s</string>
-    <string name="virtual_pump">Bomba virtual</string>
     <string name="virtual_pump_shortname">BOMBAV</string>
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
     <string name="virtual_pump_label">BOMBA VIRTUAL</string>
@@ -387,31 +389,9 @@
     <string name="random_bg_short">BG</string>
     <string name="do_xdrip_upload_title">Enviar datos de glucosa a xDrip+</string>
     <string name="do_xdrip_upload_summary">En xDrip+, selecciona 640G/Eversense como fuente de datos</string>
-    <string name="do_ns_upload_title">Subir datos de glucosa a Nightscout</string>
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="dexcom_log_ns_sensor_change_title">Registro de cambio de sensor en Nightscout</string>
     <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Usar conexión móvil</string>
-    <string name="ns_wifi">Usar conexión WiFi</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_charging">Durante la carga</string>
-    <string name="ns_battery">Con batería</string>
-    <string name="connection_settings_title">Ajustes de conexión</string>
-    <string name="ns_wifi_allowed_ssids">SSID\'s permitidos (separados por punto y coma)</string>
-    <string name="ns_allow_roaming">Permitir conexión en roaming</string>
-    <string name="ns_create_announcements_from_errors_title">Crear notificaciones de los errores</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Crear notificaciones de alertas de carbohidratos necesarios</string>
-    <string name="ns_create_announcements_from_errors_summary">Crear notificaciones en Nightscout para diálogos de error y alertas locales (también visibles en el portal de cuidados, en los tratamientos)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Crear notificaciones de Nightscout para las alertas de carbohidratos necesarios</string>
-    <string name="description_ns_client">Sincroniza tus datos con Nightscout</string>
-    <string name="description_ns_client_v3">Sincroniza tus datos con Nightscout usando API v3</string>
-    <string name="blocked_by_charging">Bloqueado por opciones de carga</string>
-    <string name="blocked_by_connectivity">Bloqueado por opciones de conectividad</string>
-    <string name="unsupported_ns_version">Versión de Nightscout no soportada</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Tema baja resolución</string>
@@ -436,7 +416,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Solicitud</string>
     <string name="loop_constraints_processed_label">Tras procesar las restricciones</string>
-    <string name="constraints">Restricciones</string>
     <string name="loop_tbr_request_time_label">Tiempo requerido para basal temporal</string>
     <string name="loop_tbr_execution_time_label">Tiempo de ejecución para basal temporal</string>
     <string name="loop_tbr_set_by_pump_label">Basal temporal establecida por la bomba</string>
@@ -446,4 +425,43 @@
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">uso:</string>
+    <!--    Iob-->
+    <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">RELOJ</string>
+    <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
+    <string name="no_watch_connected">(Ningún reloj conectado)</string>
+    <string name="pump_status">Estado de la bomba de insulina</string>
+    <string name="loop_status">Estado del lazo</string>
+    <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
+    <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
+    <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Objetivo Temporal preestablecido desconocido: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">¿Cancelar la ejecución del objetivo temporal?</string>
+    <string name="wear_action_tempt_unit_error">¡Diferentes unidades usadas en el reloj y en el teléfono!</string>
+    <string name="wear_action_tempt_zero_message">Objetivo Temporal Zero - ¿Cancelar el Objetivo Temporal en ejecución?</string>
+    <string name="wear_action_tempt_min_bg_error">¡Glucosa mínima fuera de rango!</string>
+    <string name="wear_action_tempt_max_bg_error">¡Glucosa máxima fuera de rango!</string>
+    <string name="wear_action_tempt_manual_range_message">Objetivo temporal:\nMin: %1$s\nMax: %2$s\nDuración: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Objetivo temporal:\nObjetivo: %1$s\nDuración: %2$s</string>
+    <string name="wear_action_tempt_preset_message">ObjetivoTemporal:\nRazón: %1$s\nObjetivo: %2$s\nDuración: %3$s</string>
+    <string name="no_success">sin efecto - por favor verificar en teléfono</string>
+    <string name="wear_settings">Ajustes del reloj</string>
+    <string name="wearcontrol_title">Control desde el reloj</string>
+    <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
+    <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
+    <string name="wear_display_settings">Ajustes de pantalla</string>
+    <string name="wear_general_settings">Configuración general</string>
+    <string name="wear_detailed_delta_title">Mostrar deltas detallados</string>
+    <string name="wear_detailed_delta_summary">Mostrar el delta con un decimal más</string>
+    <string name="wear_notifysmb_title">Notificar los SMB</string>
+    <string name="wear_notifysmb_summary">Mostrar los SMB en el reloj como un bolo estándar</string>
+    <string name="wear_predictions_summary">Mostrar las predicciones en la esfera</string>
+    <string name="wear_predictions_title">Predicciones</string>
+    <string name="resend_all_data">Reenviar todos los datos</string>
+    <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
+    <string name="old_data">DATOS CADUCADOS</string>
 </resources>

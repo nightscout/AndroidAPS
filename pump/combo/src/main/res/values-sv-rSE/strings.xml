@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Osäker användning: Pumpen använder en annan basalprofil än den första. Loop avstängd. Välj den första profilen på pumpen och uppdatera.</string>
     <string name="bolus_frequency_exceeded">En bolus med samma mängd efterfrågades inom den senaste minuten. För att förhindra att råka ge dubbla bolusar av misstag och ev programfel är detta inte tillåtet.</string>
     <string name="combo_pump_connected_now">Nu</string>
-    <string name="combo_activity_reading_pump_history">Läser historik från pumpen</string>
     <string name="combo_activity_setting_basal_profile">Sätter basalprofil</string>
     <string name="combo_pump_cartridge_low_warrning">Låg nivå i insulinreservoaren</string>
     <string name="combo_pump_battery_low_warrning">Pumpbatteriet är svagt</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Aldrig</string>
     <string name="combo_error_display_error">Vid fel</string>
     <string name="combo_error_display_always">Alltid</string>
+    <string name="unsafeusage">osäker användning</string>
 </resources>

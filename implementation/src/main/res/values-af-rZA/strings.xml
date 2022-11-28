@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Gemiste BG lesings</string>
-    <string name="request">Versoek</string>
     <string name="permission">Toestemming</string>
     <!--       Stats -->
+    <string name="low" comment="3.1-3.9">Laag</string>
+    <string name="high" comment="10.0-13.9">Hoog</string>
 </resources>

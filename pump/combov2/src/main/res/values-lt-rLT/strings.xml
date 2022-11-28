@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">Baterija tuščia</string>
+    <string name="combov2_error_4">Užsikimšimas</string>
+    <string name="combov2_error_6">Mechaninė klaida</string>
     <string name="bluetooth_address">Bluetooth adresas</string>
+    <string name="combov2_not_initialized">Nepavyko paleisti</string>
+    <string name="combov2_suspended">Sustabdyta</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Nustatyti bazės profilį</string>
+    <string name="combov2_bolus_cancelled">Bolusas atšauktas</string>
+    <string name="combov2_bolus_delivery_failed">Boluso suleisti nepavyko. Panašu, kad nė kiek insulino nesuleista. Patikrinkite pompos įstoriją, kad įsitikintumėte tuo, ir bandykite vėl. Bolusai nekartojami automatiškai, siekiant apsisaugoti nuo programos klaidų.</string>
+    <string name="combov2_current_tbr">%1$d%% (liko%2$d min)</string>
+    <string name="combov2_battery_low_warning">Pompos baterija baigia išsikrauti</string>
+    <string name="combov2_short_status_last_connection">Pask. prisijung.: prieš %1$d min</string>
+    <string name="combov2_short_status_temp_basal">Laik.bazė: %s</string>
+    <string name="combov2_short_status_reservoir">Rezerv: %dvv</string>
+    <string name="combov2_short_status_battery_state_empty">tuščias</string>
+    <string name="combov2_short_status_battery_state_low">žemas</string>
 </resources>

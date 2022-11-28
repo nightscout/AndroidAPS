@@ -12,7 +12,7 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.shared.sharedPreferences.SP
@@ -29,7 +29,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var profileInstantiator: ProfileInstantiator
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
     lateinit var danaPump: DanaPump
@@ -49,7 +49,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-                                  activityNames, danaHistoryDatabase)
+                                  uiInteraction, danaHistoryDatabase)
     }
 
     @Test @Throws(Exception::class)

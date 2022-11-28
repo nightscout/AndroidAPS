@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCalculator
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.database.entities.GlucoseValue

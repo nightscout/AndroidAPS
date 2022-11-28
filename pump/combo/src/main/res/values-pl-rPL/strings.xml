@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Niebezpieczne użytkowanie: pompa używa innego profilu dawki bazowej niż pierwszy. Pętla została wyłączona. Wybierz pierwszy profil na pompie i odśwież.</string>
     <string name="bolus_frequency_exceeded">W ciągu ostatnich dwóch minut zażądano bolusa o tej samej wielkości. Z uwagi na zapobieganie przypadkowym podwójnym bolusom i ochronę przed błędami jest to zabronione.</string>
     <string name="combo_pump_connected_now">Teraz</string>
-    <string name="combo_activity_reading_pump_history">Sczytuję historię pompy</string>
     <string name="combo_activity_setting_basal_profile">Wczytuje profil bazowy</string>
     <string name="combo_pump_cartridge_low_warrning">Poziom zasobnika pompy jest niski</string>
     <string name="combo_pump_battery_low_warrning">Poziom baterii pompy jest niski</string>
@@ -52,4 +51,5 @@
     <string name="bolusstopped">Bolus zatrzymany</string>
     <string name="bolusstopping">Zatrzymuję bolus</string>
     <string name="combo_error_display_never">Nigdy</string>
+    <string name="unsafeusage">niebezpieczne użycie</string>
 </resources>

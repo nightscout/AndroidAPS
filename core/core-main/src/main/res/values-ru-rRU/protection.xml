@@ -5,21 +5,16 @@
     <string name="settings_protection">Защита настроек</string>
     <string name="application_protection">Защита приложения</string>
     <string name="bolus_protection">Защита болюсов</string>
-    <string name="master_password">Главный пароль</string>
     <string name="settings_password">Пароль параметров</string>
     <string name="application_password">Пароль приложения</string>
     <string name="bolus_password">Пароль болюсов</string>
-    <string name="unlock_settings">Разблокировать настройки</string>
     <string name="biometric">Биометрия</string>
     <string name="custom_password">Настраиваемый пароль</string>
     <string name="noprotection">Без защиты</string>
-    <string name="protection">Защита</string>
-    <string name="master_password_missing">Не задан главный пароль!\n\nЗадайте главный пароль в настройках (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Небезопасный резервный вход</string>
     <string name="unsecure_fallback_descriotion_biometric">Биометрической защите требуется главный пароль для безопасности.\n\n Установите главный пароль!</string>
     <string name="password_set">Пароль задан!</string>
     <string name="password_not_set">Пароль не задан</string>
     <string name="password_not_changed">Пароль не был изменён</string>
-    <string name="password_cleared">Пароль сброшен!</string>
     <string name="password_hint">Введите пароль здесь</string>
 </resources>

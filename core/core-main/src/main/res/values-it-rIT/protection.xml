@@ -5,21 +5,16 @@
     <string name="settings_protection">Protezione impostazioni</string>
     <string name="application_protection">Protezione applicazione</string>
     <string name="bolus_protection">Protezione bolo</string>
-    <string name="master_password">Password Master</string>
     <string name="settings_password">Password impostazioni</string>
     <string name="application_password">Password applicazione</string>
     <string name="bolus_password">Password bolo</string>
-    <string name="unlock_settings">Impostazioni sblocco</string>
     <string name="biometric">Biometrico</string>
     <string name="custom_password">Password personalizzata</string>
     <string name="noprotection">Nessuna protezione</string>
-    <string name="protection">Protezione</string>
-    <string name="master_password_missing">La password master non è impostata!\n\nImposta la tua password master in Preferenze (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Fallback non sicuro</string>
     <string name="unsecure_fallback_descriotion_biometric">Per essere efficace, la protezione biometrica richiede una password master per impostare un\'alternativa in caso di necessità (fallback).\n\nImposta una password master!</string>
     <string name="password_set">Password impostata!</string>
     <string name="password_not_set">Password non impostata</string>
     <string name="password_not_changed">Password non modificata</string>
-    <string name="password_cleared">Password cancellata!</string>
     <string name="password_hint">Inserisci qui la password</string>
 </resources>

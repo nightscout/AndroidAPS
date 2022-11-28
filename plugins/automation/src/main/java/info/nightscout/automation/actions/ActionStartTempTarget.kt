@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.friendlyDescription
+import info.nightscout.core.extensions.friendlyDescription
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorExists

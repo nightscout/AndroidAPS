@@ -3,19 +3,15 @@
     <string name="xdrip_not_installed">xDrip+ не е инсталиран</string>
     <string name="calibration_sent">Калибрацията е изпратена към xDrip+</string>
     <string name="bg_label">КЗ</string>
-    <string name="missed_bg_readings">Липсват данни за КЗ</string>
     <string name="time_to_eat">Време е за ядене</string>
-    <string name="enable_bolus_advisor">Активиране на болус съветник</string>
-    <string name="enable_bolus_advisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="executing_right_now">Командата се изпълнява в момента</string>
     <string name="basal_value_below_minimum">Базалните стойности са под минимума. Не е зададен профил!</string>
-    <string name="request">Искане</string>
     <string name="permission">Разрешение</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <string name="need_location_permission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
     <string name="need_storage_permission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
     <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Много ниска</string>
     <string name="low" comment="3.1-3.9">Ниска</string>
     <string name="high" comment="10.0-13.9">Висока</string>
     <string name="veryHigh" comment="above 13.9">Много висока</string>

@@ -73,9 +73,12 @@ class ComboV2PairingActivity : DaggerAppCompatActivity() {
         //
         //     xxx xxx xxxx
         binding.combov2PinEntryEdit.addTextChangedListener(object : TextWatcher {
+            var previousText = ""
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Nothing needs to be done here; overridden method only exists
-                // to properly and fully implement the TextWatcher interface.
+                // Store the text as it is before the change. We need this
+                // to later determine if digits got added or removed.
+                previousText = binding.combov2PinEntryEdit.text.toString()
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -109,11 +112,44 @@ class ComboV2PairingActivity : DaggerAppCompatActivity() {
                     // listener is called, listener changes text).
                     binding.combov2PinEntryEdit.removeTextChangedListener(this)
 
-                    // Shift the cursor position to skip the whitespaces.
-                    val cursorPosition = when (val it = binding.combov2PinEntryEdit.selectionStart) {
-                        4 -> 5
-                        8 -> 9
-                        else -> it
+                    val trimmedPreviousText = previousText.trim().replace(nonDigitsRemovalRegex, "")
+
+                    // Shift the cursor position to skip the whitespaces. Distinguish between the cases
+                    // when the user adds or removes a digit. In the former case, the trimmed version
+                    // of the previous text is shorted than the trimmed current text.
+                    var cursorPosition = if (trimmedPreviousText.length < trimmedText.length)
+                        when (val it = binding.combov2PinEntryEdit.selectionStart) {
+                            // In these cases, we shift the cursor position, since we just entered the
+                            // first digit of the next digit group, and the input has been adjusted to
+                            // automatically include a whitespace. For example, we already had entered
+                            // digits "123". The user entered the fourth digit, yielding "1234". The
+                            // code above turned this into "123 4".
+                            4, 8 ->
+                                it + 1
+                            else ->
+                                it
+                        }
+                    else
+                        when (val it = binding.combov2PinEntryEdit.selectionStart) {
+                            // Similar to the block above, but in reverse: At these positions, removing
+                            // the digit will also remove the automatically inserted whitespace, so we
+                            // have to skip that one. For example, previously, the text on screen was
+                            // "123 4", now we press backspace, and get "123 ". The code above turns
+                            // this into "123".
+                            4, 8 ->
+                                it - 1
+                            else ->
+                                it
+                        }
+
+                    // Failsafe in case the calculations above are off for some reason. This is not
+                    // clean; however, it is better than letting all of AndroidAPS crash.
+                    if (cursorPosition > processedText.length) {
+                        aapsLogger.warn(
+                            LTag.PUMP,
+                            "Incorrect cursor position $cursorPosition (processed text length ${processedText.length}); fixing"
+                        )
+                        cursorPosition = processedText.length
                     }
 
                     binding.combov2PinEntryEdit.setText(processedText)

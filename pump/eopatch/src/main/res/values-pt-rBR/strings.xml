@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolus %1$.2f U aplicado com sucesso</string>
+    <string name="category_alerts">Alertas</string>
+    <string name="bolus_delivered">Bolus %1$.2f U aplicado com sucesso</string>
+    <string name="eopatch_status">Estado</string>
+    <string name="eopatch_base_basal_rate">Taxa Basal de base</string>
+    <string name="eopatch_temp_basal_rate">Taxa Basal Temporária</string>
+    <string name="eopatch_total_delivered">Total entregue</string>
+    <string name="symbol_day">dia</string>
+    <string name="patch_finish">Fim</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="symbol_days">dias</string>
+    <string name="string_resume">Continuar</string>
+    <string name="string_suspend">Suspender</string>
+    <string name="string_suspended">Suspenso</string>
+    <string name="string_running">Funcionando</string>
     <string name="cancel">Cancelar</string>
     <string name="confirm">Confirmar</string>
+    <string name="string_alarm">Alarme</string>
+    <string name="string_connecting">Conectando</string>
+    <string name="retry">Tente novamente</string>
+    <string name="string_suspended_insulin_delivery_message">A administração da insulina está suspensa.</string>
+    <string name="finish">Fim</string>
+    <string name="next">Seguinte</string>
 </resources>

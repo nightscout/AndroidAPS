@@ -9,8 +9,10 @@
     <!-- LoopDialog -->
     <!-- WizardDialog -->
     <!-- Treatments -->
+    <string name="treatments_carbs_label_string">炭水化物:</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
+    <string name="basal_rate">基礎レート</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
 </resources>

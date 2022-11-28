@@ -1,5 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Actualiser</string>
+    <string name="error">Erreur</string>
+    <string name="profile_set_ok">Profil basal dans la pompe mis à jour</string>
+    <string name="invalid_input">Données saisies invalides</string>
+    <string name="bolus_delivering">Injection de %1$.2fU en cours</string>
+    <string name="constraint_applied">Restriction appliquée !</string>
+    <string name="tempbasals_iobtotal_label_string">IA Totale:</string>
+    <string name="tt_label">CT</string>
+    <string name="pump_unreachable">Pompe hors de portée</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pompe non initialisée, profil non défini !</string>
+    <string name="failed_update_basal_profile">La mise à jour du profil basal a échouée</string>
+    <string name="bolus_delivered">Bolus de %1$.2f U délivré avec succès</string>
+    <string name="no_valid_basal_rate">Aucun débit basal valide lu depuis la pompe</string>
+    <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
+    <string name="loop_disabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
+    <string name="event_type">Type d\'évènement</string>
+    <string name="reload">Actualiser</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Enregistrer</string>
+    <string name="snooze">Masquer</string>
+    <string name="virtual_pump">Pompe virtuelle</string>
+    <string name="constraints">Restrictions</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompe suspendue</string>
+    <string name="and">Et</string>
+    <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
+    <string name="configbuilder_insulin">Insuline</string>
+    <string name="value_unavailable_short">n/d</string>
+    <string name="master_password">Mot de passe principal</string>
+    <string name="ue_export_to_csv">Exporter vers Excel (csv)</string>
+    <string name="confirm">Confirmer</string>
+    <string name="pump">Pompe</string>
+    <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
+    <string name="treatments_iob_label_string">IA: </string>
+    <string name="mute5min">Muet pendant 5 minutes</string>
+    <string name="mute">Muet</string>
+    <string name="success">Succès</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Déverrouiller les paramètres</string>
+    <!--    Pumps -->
+    <string name="battery_label">Pile</string>
+    <string name="reservoir_label">Réservoir</string>
+    <string name="last_connection_label">Dernière connexion</string>
+    <string name="last_bolus_label">Dernier bolus</string>
+    <string name="base_basal_rate_label">Débit de basal</string>
+    <string name="tempbasal_label">Basal temp.</string>
+    <string name="extended_bolus_label">Bolus étendu</string>
+    <string name="serial_number">Numéro de série</string>
+    <string name="disconnected">Déconnectée</string>
+    <string name="connecting">Connexion en cours</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Cnx à la pompe demandée</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unités journalières</string>
+    <string name="pump_icon">Icône Pompe</string>
+    <string name="view_profile">Voir le profil</string>
+    <string name="pump_history">Historique pompe</string>
+    <string name="stats">Stats</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Changement pilote pompe.</string>
+    <string name="device_changed" comment="26 characters max for translation">Appareil changé</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Erreur injection basal temp.</string>
+    <string name="not_set_short">Non configuré</string>
+    <string name="pump_busy">Pompe occupée</string>
+    <string name="connection_error">Erreur connexion pompe</string>
+    <string name="reading_pump_history">Lecture historique pompe</string>
+    <string name="password_cleared">Mot de passe effacé !</string>
+    <string name="pairing">Appairage</string>
+    <string name="initializing">En cours d\'initialisation...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
+    <string name="pumplimit">limite de la pompe</string>
+    <string name="limitingpercentrate">Limiter le pourcentage max à %1$d%% à cause de %2$s</string>
+    <string name="itmustbepositivevalue">la valeur doit être positive</string>
+    <string name="limitingbolus">Bolus limité à %1$.1f U à cause de %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
@@ -8,6 +87,7 @@
     <string name="dismiss">REJETER</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="close">Fermer</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
     <!-- NumberPicker -->
@@ -18,5 +98,29 @@
     <!-- datetime layout -->
     <string name="event_time_label">Heure de l\'événement</string>
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">L\'application a besoin de l\'autorisation Bluetooth</string>
+    <string name="need_connect_permission">L\'application a besoin de l\'autorisation Bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Demande utilisateur</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompe appairée</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy non pris en charge.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non pris en charge ou appareil non appairé.</string>
+    <string name="ble_not_enabled">Bluetooth désactivé.</string>
+    <string name="location_not_found_title">Localisation désactivée</string>
+    <string name="location_not_found_message">Afin que la recherche par Bluetooth puisse marcher sur les nouveaux appareils, la localisation doit être activée. AAPS ne trace pas votre position, sauf lorsque vous activez l\'option Message d\'Urgence.</string>
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
+    <plurals name="days">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d heure</item>
+        <item quantity="other">%1$d heures</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
 </resources>

@@ -9,26 +9,38 @@
     <string name="a11y_carb_reminder">ställ in påminnelse</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="activity_monitor">Aktivitetsövervakare</string>
+    <string name="do_you_want_reset_stats">Vill du återställa aktivitetsstatistiken?</string>
     <string name="statistics">Statistik</string>
     <string name="calculation_in_progress">Beräkning pågår</string>
+    <string name="invalid_age">Ogiltig inmatning (ålder)</string>
+    <string name="invalid_weight">Ogiltig inmatning (vikt)</string>
     <string name="id">ID:</string>
     <string name="submit">Spara</string>
     <string name="age">Ålder</string>
     <string name="weight_label">Vikt</string>
+    <string name="most_common_profile">Den vanligaste profilen:</string>
+    <string name="glucose_type">Glukostyp</string>
+    <string name="bg_other">Annat</string>
+    <string name="bg_meter">Mätare</string>
+    <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Knapp 1</string>
-    <string name="button2">Knapp 2</string>
-    <string name="button3">Knapp 3</string>
+    <string name="fill_warning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
     <string name="record_pump_site_change">Logga byte av kanyl</string>
     <string name="record_insulin_cartridge_change">Logga byte av insulinreservoar</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Ge ingen bolus, logga bara</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Återanvänd %1$d%% %2$dtim</string>
+    <string name="timeshift_label">Tidsförskjutning</string>
+    <string name="percentage_label">Procent</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pausa loop i 1 timme</string>
     <string name="suspendloopfor2h">Pausa loop i 2 timmar</string>
     <string name="suspendloopfor3h">Pausa loop i 3 timmar</string>
     <string name="suspendloopfor10h">Pausa loop i 10 timmar</string>
@@ -49,6 +61,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">korrigera med %</string>
     <string name="a11_correction_units">korrigera med enheter</string>
+    <string name="two_hours">2 tim</string>
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Saknar %1$dg</string>
     <string name="a11y_current_bg">nuvarande BG</string>
@@ -60,25 +73,33 @@
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">KH:</string>
     <string name="treatments_iobtotal_label_string">IOB fr bolus:</string>
+    <string name="treatments_iob_activity_total_label_string">Insulinaktivitet (5m):</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Tot:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
+    <string name="meal_bolus">Måltid</string>
     <string name="prime">Förfyllning</string>
     <string name="refresheventsfromnightscout">Uppdatera från NS</string>
+    <string name="user_entry">Angivet av användare</string>
     <string name="clone_label">Kopiera</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profiltyp</string>
+    <string name="basal_pct_from_tdd_label">% av basal</string>
     <string name="selected_profile">Valt:</string>
+    <string name="compare_profile">Jämför profiler</string>
+    <string name="nav_profile_helper">Profilguide</string>
+    <string name="motol_default_profile">Standardprofil</string>
+    <string name="current_profile">Nuvarande profil</string>
+    <string name="available_profile">Tillgänglig profil</string>
+    <string name="format_with_tdd">Ålder: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Ålder: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Ålder: %1$d Vikt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV-standardprofil</string>
+    <string name="invalid_pct">Ogiltig %-inmatning</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Basaldos</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Detaljer kring importproblem</string>
-    <string name="check_preferences_import_btn">Importera</string>
-    <string name="check_preferences_import_anyway_btn">Importera ändå (FARLIGT!)</string>
-    <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
-    <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
-    <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
+    <string name="stop_pressed">Stopp nedtryckt</string>
 </resources>

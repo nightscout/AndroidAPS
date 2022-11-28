@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">Resetovaním autentifikátora budú všetky už poskytnuté autentifikátory neplatné. Budete ich musieť znovu nastaviť!</string>
     <string name="sms_wrong_code">Nesprávný kód. Príkaz zrušený.</string>
     <string name="sms_timeout_while_waiting">Vypršal časový limit pri čakaní na dokončenie predchádzajúcej komunikácie s pumpou</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+421XXXXXXXXX;+421YYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Pre podanie bolusu %1$.2fJI odpovedz SMS kódom %2$s</string>
@@ -172,23 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CIEĽ</string>
     <string name="basal_short">BAZ</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Použité prepočítané dáta</string>
-    <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">prepočítané</string>
-    <string name="a11y_bg_quality_doubles">dvojité zápisy</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
-    <string name="dst_loop_disabled_warning">Zmena letného času za menej ako 3 hodiny - Uzavretý okruh pozastavený</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">stará verzia</string>
-    <string name="very_old_version">veľmi stará verzia</string>
-    <string name="application_expired">Aplikácia expirovala</string>
-    <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Hotovo, gratulujeme!</string>
     <string name="not_completed_yet">Nedokončené</string>
@@ -229,7 +211,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Predĺžený bolus obmedzený na %1$.1f JI: %2$s</string>
     <string name="limitingcarbs">Sacharidy obmedzené na %1$d g: %2$s</string>
-    <string name="limitingiob">IOB obmedzený na %1$.1f JI: %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
     <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
@@ -240,8 +221,6 @@
     <string name="hardlimit">pevný limit</string>
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <!-- Overview -->
-    <string name="snooze">Odložiť</string>
-    <string name="copy_existing_values">Skopírovať nastavenia NS (ak existujú)?</string>
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
     <string name="statuslights_cage_warning">Prah upozornenia na vek kanyly [h]</string>
     <string name="statuslights_cage_critical">Prah kritického veku kanyly [h]</string>
@@ -257,7 +236,6 @@
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
     <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie v pumpe [%]</string>
     <string name="statuslights_bat_critical">Prah kritickej úrovne batérie v pumpe [%]</string>
-    <string name="statuslights">Indikátory stavu</string>
     <string name="statuslights_copy_ns">Kopírovať nastavenia z NS</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_insulin_label">inzulín</string>
@@ -265,91 +243,115 @@
     <string name="a11y_bg_quality">kvalita glykémií</string>
     <string name="a11y_blood_glucose">glykémia</string>
     <string name="a11y_bg_outdated">zastaralé</string>
-    <string name="apsmode_title">APS mód</string>
-    <string name="setbasalquestion">Povoliť nový dočasný bazál:</string>
+    <string name="aps_mode_title">APS mód</string>
+    <string name="set_basal_question">Povoliť nový dočasný bazál:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Rýchly bolus</string>
-    <!-- NSClient -->
-    <string name="no_write_permission">NSClient nemá právo na zápis. Nesprávne API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
-    <string name="ns_client">Interný NSClient</string>
-    <string name="ns_client_short_name">NSCl</string>
-    <string name="ns_client_url">Adresa URL:</string>
-    <string name="ns_client_autoscroll">Automatický posuv</string>
-    <string name="restart">Reštart</string>
-    <string name="ns_client_internal_title">Interný NSClient</string>
-    <string name="ns_client_url_title">Adresa Nightscoutu</string>
-    <string name="ns_client_url_dialog_message">Zadajte adresu Nightscoutu</string>
-    <string name="ns_client_secret_title">NS heslo (API secret)</string>
-    <string name="ns_client_secret_dialog_title">NS heslo (API secret)</string>
-    <string name="ns_client_secret_dialog_message">Zadajte API secret (min 12. znakov)</string>
-    <string name="nsclient_token_title">Prístupový token NS</string>
-    <string name="nsclient_token_dialog_title">Prístupový token NS</string>
-    <string name="nsclient_token_dialog_message">Prístupový token vygenerovaný na stránke pre administráciu NS (min. 17 znakov)</string>
-    <string name="deliver_now">Podať teraz</string>
-    <string name="clear_queue">Vymazať frontu</string>
-    <string name="show_queue">Zobraziť frontu</string>
-    <string name="queue">Fronta:</string>
-    <string name="status">Stav:</string>
-    <string name="clear_log">Vymazať log</string>
-    <string name="full_sync">Úplná synchronizácia</string>
-    <string name="full_sync_comment">Úplná synchronizácia? Môže to trvať niekoľko hodín a kým skončí, neuvidíte nové dáta v NS.</string>
-    <string name="ns_sync_options">Synchronizácia</string>
-    <string name="ns_upload_summary">Profily, bolusy, sacharidy, dočasné bazály sú nahrávané do NS</string>
-    <string name="ns_upload">Nahrávať dáta do NS</string>
-    <string name="ns_receive_profile_store">Prijímať úložisko profilov</string>
-    <string name="ns_receive_profile_store_summary">Synchronizovať profily z NS editora profilov</string>
-    <string name="ns_receive_temp_target">Prijímať dočasné ciele</string>
-    <string name="ns_receive_temp_target_summary">Prijať dočasné ciele zadané prostredníctvom NS, alebo NSClienta</string>
-    <string name="ns_receive_profile_switch">Prijímať prepnutia profilov</string>
-    <string name="ns_receive_profile_switch_summary">Prijať prepnutia profilov zadané prostredníctvom NS, alebo NSClienta</string>
-    <string name="ns_receive_offline_event">Prijímať udalosti APS offline</string>
-    <string name="ns_receive_offline_event_summary">Prijať APS offline udalosti zadané prostredníctvom NS, alebo NSClienta</string>
-    <string name="ns_receive_tbr_eb">Prijímať dočasný bazál a predĺžený bolus</string>
-    <string name="ns_receive_tbr_eb_summary">Prijať dočasný bazál a predĺžený bolus zadaný cez inú inštanciu</string>
-    <string name="ns_receive_insulin">Prijímať inzulín</string>
-    <string name="ns_receive_insulin_summary">Prijať inzulín vložený cez NS, alebo NSClient (nie je dodaný, iba započítaný do IOB)</string>
-    <string name="ns_receive_carbs">Prijímať sacharidy</string>
-    <string name="ns_receive_carbs_summary">Prijať sacharidy vložené prostredníctvom NS, alebo NSClienta</string>
-    <string name="ns_receive_therapy_events">Prijímať liečebné udalosti</string>
-    <string name="ns_receive_therapy_events_summary">Prijať liečebné udalosti (výmena setu, inzulínu, batérie atď.) zadané prostredníctvom NS, alebo NSClienta</string>
-    <string name="ns_receive_cgm">Prijímať/doplňovať glykémie</string>
-    <string name="ns_receive_cgm_summary">Prijať CGM dáta z NS</string>
+    <string name="a11y_only_on_watch">iba na hodinkách</string>
+    <string name="a11y_only_on_phone">iba na telefóne</string>
+    <string name="overview">Prehľad</string>
+    <string name="overview_shortname">PREH</string>
+    <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
+    <string name="overview_editquickwizard_usecob">Výpočet COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Výpočet dočasného cieľa</string>
+    <string name="overview_editquickwizard_usepercentage">Percentuálny výpočet</string>
+    <string name="overview_buttons_selection">Tlačidlá</string>
+    <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu BYODA</string>
+    <string name="show_cgm_button_summary">Otvorí xDrip+, alebo BYODA, tlačidlom späť sa vrátiš do AndroidAPS</string>
+    <string name="dexcom_app_not_installed">Dexcom aplikácia nie je nainštalovaná.</string>
+    <string name="dexcom_app_not_detected">Prosím aktualizuj tvoju Dexcom aplikáciu na podporovanú verziu</string>
+    <string name="error_starting_cgm">Nie je možné spustiť aplikáciu CGM. Uistite sa, že je nainštalovaná.</string>
+    <string name="not_available_full">Nedostupný</string>
+    <string name="constraints_violation">Mimo povolený rozsah</string>
+    <string name="change_your_input">Zmeňte zadanie!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Uploader</string>
+    <string name="data_status">Stav dát glykémie</string>
+    <string name="quickwizard_settings">Nastavenie rýchleho bolusu</string>
+    <string name="overview_edit_quickwizard_button_text">Text na tlačidle:</string>
+    <string name="overview_edit_quickwizard_carbs">Sacharidy:</string>
+    <string name="overview_edit_quickwizard_valid">Platnosť:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Pridať</string>
+    <string name="overview_quickwizard_item_edit_button">Upraviť</string>
+    <string name="overview_edit_quickwizard_show_on_device">Zobraziť záznam na zariadení:</string>
+    <string name="overview_edit_quickwizard_use_bg">Výpočet glykémie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Výpočet bolusového IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Výpočet bazálneho IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Výpočet trendu</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Výpočet superbolusu</string>
+    <string name="overview_edit_quickwizard_percentage">% zmena</string>
+    <string name="device_all">Všetko</string>
+    <string name="device_phone">Telefón</string>
+    <string name="device_watch">Hodinky</string>
+    <string name="positive_only">Iba kladné</string>
+    <string name="negative_only">Iba záporné</string>
+    <string name="app_default">Predvolené aplikáciou</string>
+    <string name="a11y_drag_and_drop_handle">úchop potiahni a pusť</string>
+    <string name="keep_screen_on_title">Nechať obrazovku zapnutú</string>
+    <string name="keep_screen_on_summary">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky vybije veľmi rýchlo batériu!</string>
+    <string name="treatments">Ošetrenia</string>
+    <string name="carb_increment_button_message">Množstvo sacharidov, ktoré má byť pridané po stlačení tlačidla</string>
+    <string name="insulin_increment_button_message">Množstvo inzulínu, ktoré má byť pridané po stlačení tlačidla</string>
+    <string name="firstinsulinincrement">Prvý prídavok inzulínu</string>
+    <string name="secondinsulinincrement">Druhý prídavok inzulínu</string>
+    <string name="thirdinsulinincrement">Tretí prídavok inzulínu</string>
+    <string name="firstcarbsincrement">Prvý prídavok sacharidov</string>
+    <string name="secondcarbsincrement">Druhý prídavok sacharidov</string>
+    <string name="thirdcarbsincrement">Tretí prídavok sacharidov</string>
+    <string name="cgm">CGM</string>
+    <string name="default_temptargets">Predvolené nastavenie dočasných cieľov</string>
+    <string name="eatingsoon_duration">Trvanie \"blížiaceho sa jedla\"</string>
+    <string name="eatingsoon_target">Cieľ pre \"blížiace se jedlo\"</string>
+    <string name="activity_duration">Trvanie aktivity</string>
+    <string name="activity_target">Cieľ pri aktivite</string>
+    <string name="hypo_duration">Trvanie dočasného cieľa pri hypoglykémii</string>
+    <string name="hypo_target">Cieľová hodnota pri hypoglykémii</string>
+    <string name="fill_bolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
+    <string name="button1">Tlačidlo 1</string>
+    <string name="button2">Tlačidlo 2</string>
+    <string name="button3">Tlačidlo 3</string>
+    <string name="prefs_range_title">Rozsah pre zobrazenie</string>
+    <string name="prefs_range_summary">Značka vysokej a nízkej hodnoty v prehľade a na hodinkách Wear</string>
+    <string name="low_mark">Dolná značka</string>
+    <string name="high_mark">Horná značka</string>
+    <string name="short_tabtitles">Krátke názvy modulov</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Zobrazovať kolónku poznámky v dialógoch ošetrení</string>
+    <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
+    <string name="enable_bolus_advisor">Povoliť bolusového poradcu</string>
+    <string name="enable_bolus_advisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
+    <string name="enablesuperbolus">Povoliť superbolus</string>
+    <string name="enablesuperbolus_summary">Povolenie superbolusu v kalkulátore. Nepovoľujte, pokiaľ se nenaučíte, čo to v skutočnosti robí. MÔŽE SPÔSOBIŤ PREDÁVKOVANIE INZULÍNOM PRI NESPRÁVNOM POUŽITÍ!</string>
+    <string name="enablebolusreminder">Zapnúť pripomínanie bolusu</string>
+    <string name="enablebolusreminder_summary">Použite pripomenutie pre neskorší bolus s kalkulačkou
+        (\"oneskorený bolus\")</string>
     <string name="run_question">Spustiť %s?</string>
-    <string name="ns_sync_slow">Spomaliť nahrávanie</string>
-    <string name="ns_alarm_options">Nastavenie alarmov</string>
-    <string name="ns_alarms">Vytvoriť oznámenia z alarmov NS</string>
-    <string name="ns_announcements">Vytvoriť oznámenia z upozornení NS</string>
-    <string name="ns_alarm_stale_data_value_label">Hraničná hodnota pre zastaralé dáta [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
-    <string name="ns_log_app_started_event">Zaznamenávať spustenie aplikácie do NS</string>
-    <string name="ns_local_broadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
-    <string name="ns_local_broadcasts_title">Povoliť lokálne vysielanie.</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Vaše meno používateľa na Tidepoole, obvykle Vaša E-mailová adresa</string>
-    <string name="title_tidepool_username">Meno používateľa</string>
-    <string name="summary_tidepool_password">Heslo na Tidepool</string>
-    <string name="title_tidepool_password">Heslo</string>
-    <string name="title_tidepool_test_login">Odtestovať prihlásenie na Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Pokiaľ bude aktivované, dáta sa budú nahrávať na https://int-app.tidepool.org namiesto https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Používať testovacie servery</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Nahrávánie dát na Tidepool</string>
-    <string name="tidepool_upload_cgm">Nahrávať CGM dáta</string>
-    <string name="tidepool_upload_bolus">Nahrávať ošetrenia (inzulín, sacharidy)</string>
-    <string name="tidepool_upload_tbr">Nahrávať dočasné bazály</string>
-    <string name="tidepool_upload_profile">Nahrávať prepnutia profilu, dočasné ciele</string>
-    <string name="tidepool_upload_bg">Nahrávať merania z prsta</string>
-    <string name="remove_all">Odstrániť všetko</string>
-    <string name="reset_start">Resetovať štart</string>
-    <string name="upload_now">Nahrať teraz</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Predikcie</string>
+    <string name="overview_show_treatments">Ošetrenia</string>
+    <string name="overview_show_deviation_slope">Odchýlka sklonu</string>
+    <string name="overview_show_activity">Aktivita</string>
+    <string name="overview_show_bgi">Vplyv na glykémiu (BGI)</string>
+    <string name="overview_show_sensitivity">Citlivosť</string>
+    <string name="overview_show_deviations">Odchýlky</string>
+    <string name="overview_show_cob">Aktívne sacharidy</string>
+    <string name="overview_show_iob">Aktívny inzulín</string>
+    <string name="overview_show_basals">Bazály</string>
+    <string name="overview_show_abs_insulin">Celkový inzulín</string>
+    <string name="prediction_shortname">PRED</string>
+    <string name="basal_shortname">BAZ</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">AKT</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="treatments_shortname">OŠET</string>
+    <string name="sensitivity_shortname">SENZ</string>
+    <string name="graph_scale">Mierka grafu</string>
+    <string name="graph_menu_divider_header">Graf</string>
     <!-- VirtualPump -->
     <string name="virtual_pump_type">Typ virtuálnej pumpy</string>
     <string name="virtual_pump_definition">Definícia pumpy</string>
     <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump">Virtuálna pumpa</string>
     <string name="virtual_pump_shortname">VPUM</string>
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="virtual_pump_label">Virtuálna pumpa</string>
@@ -387,31 +389,9 @@
     <string name="random_bg_short">Gly</string>
     <string name="do_xdrip_upload_title">Odosielať glykémie do xDrip+</string>
     <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
-    <string name="do_ns_upload_title">Nahrávať glykémie do NS</string>
     <string name="bgsource_upload">Nastavenie nahrávania glykémie</string>
     <string name="dexcom_log_ns_sensor_change_title">Ulož výmenu senzora do NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Použiť mobilné pripojenie</string>
-    <string name="ns_wifi">Použiť WiFi pripojenie</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_charging">Počas nabíjania</string>
-    <string name="ns_battery">Na batérii</string>
-    <string name="connection_settings_title">Nastavenie pripojenia</string>
-    <string name="ns_wifi_allowed_ssids">Povolené SSID (oddelené bodkočiarkou)</string>
-    <string name="ns_allow_roaming">Povoliť pripojenie pri roamingu</string>
-    <string name="ns_create_announcements_from_errors_title">Vytvárať z chýb oznámenia</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Vytvoriť oznámenie z výstrahy požadovaných sacharidov</string>
-    <string name="ns_create_announcements_from_errors_summary">Vytvárať oznámenia pre chyby a lokálne výstrahy v NS (zobraziteľné v starostlivosti pod ošetrením)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Pre výstrahy požadovaných sacharidov vytvoriť oznámenie v Nightscoute</string>
-    <string name="description_ns_client">Synchronizuje vaše dáta s NS</string>
-    <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom pomocou v3 API</string>
-    <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
-    <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
-    <string name="unsupported_ns_version">Nepodporovaná verzia Nighscoutu</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
     <!-- Skins -->
     <string name="classic_description">Pôvodný vzhľad</string>
     <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>
@@ -436,7 +416,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Požiadavka</string>
     <string name="loop_constraints_processed_label">Po spracovaní obmedzení</string>
-    <string name="constraints">Obmedzenia</string>
     <string name="loop_tbr_request_time_label">Čas požiadavky dočasného bazálu</string>
     <string name="loop_tbr_execution_time_label">Čas spustenia dočasného bazálu</string>
     <string name="loop_tbr_set_by_pump_label">Bazál nastavený pumpou</string>
@@ -446,4 +425,41 @@
     <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <string name="send_logfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
+    <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
+    <string name="loop_status">Stav uzavretého okruhu</string>
+    <string name="wizard_result">Kalkulačka: \nInzulín: %1$.2fJI\nSacharidy: %2$dg</string>
+    <string name="quick_wizard_not_available">Vybraný rýchly bolus už nie je k dispozícii, obnovte prosím dlaždicu</string>
+    <string name="quick_wizard_message">Rýchly bolus: %1$s\nInzulín: %2$.2fJI\nSacharidy: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Dočasný cieľ neznáma predvoľba: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Zrušenie bežiaceho dočasného cieľa?</string>
+    <string name="wear_action_tempt_unit_error">Použité rozdielne jednotky v hodinkách a v telefóne!</string>
+    <string name="wear_action_tempt_zero_message">Nulový dočasný cieľ - zrušenie bežiaceho dočasného cieľa?</string>
+    <string name="wear_action_tempt_min_bg_error">Minimálna glykémia mimo rozsah!</string>
+    <string name="wear_action_tempt_max_bg_error">Maximálna glykémia mimo rozsah!</string>
+    <string name="wear_action_tempt_manual_range_message">Doč. cieľ:\nMin: %1$s\nMax: %2$s\nTrvanie: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Doč. cieľ:\nCieľ: %1$s\nTrvanie: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Doč. cieľ:\nDôvod: %1$s\nCieľ: %2$s\nTrvanie: %3$s</string>
+    <string name="no_success">Neúspešné - skontrolujte telefón</string>
+    <string name="wear_settings">Nastavenie hodiniek</string>
+    <string name="wearcontrol_title">Ovládanie z hodiniek</string>
+    <string name="wearcontrol_summary">Nastavovanie dočasných cieľov a vkladanie ošetrení hodinkami.</string>
+    <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>
+    <string name="wear_display_settings">Nastavenie zobrazenia</string>
+    <string name="wear_general_settings">Všeobecné nastavenia</string>
+    <string name="wear_detailed_delta_title">Zobrazovať detailné zmeny</string>
+    <string name="wear_detailed_delta_summary">Zobrazovať rozdiel s jedným desatinným miestom naviac</string>
+    <string name="wear_notifysmb_title">Oznámenie pri SMB</string>
+    <string name="wear_notifysmb_summary">Ukazovať SMB na hodinkách ako normálny bolus.</string>
+    <string name="wear_predictions_summary">Zobrazovať predikcie na hodinkách.</string>
+    <string name="wear_predictions_title">Predikcia</string>
+    <string name="resend_all_data">Všetky dáta poslať znova</string>
+    <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
+    <string name="old_data">ZASTARALÉ DÁTA</string>
 </resources>

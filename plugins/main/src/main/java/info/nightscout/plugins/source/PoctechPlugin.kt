@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
@@ -64,12 +65,12 @@ class PoctechPlugin @Inject constructor(
             if (!poctechPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $inputData")
             try {
-                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
                 val jsonArray = JSONArray(inputData.getString("data"))
                 aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data size:" + jsonArray.length())
                 for (i in 0 until jsonArray.length()) {
                     val json = jsonArray.getJSONObject(i)
-                    glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                    glucoseValues += TransactionGlucoseValue(
                         timestamp = json.getLong("date"),
                         value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current") * Constants.MMOLL_TO_MGDL
                         else json.getDouble("current"),

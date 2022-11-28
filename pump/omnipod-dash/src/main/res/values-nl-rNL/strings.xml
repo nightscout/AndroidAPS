@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">Verbinding met pod verbroken</string>
     <string name="omnipod_dash_bolus_already_in_progress">Een andere bolus wordt op dit moment toegediend</string>
     <string name="omnipod_dash_not_enough_insulin">Niet voldoende insuline in het reservoir</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Onbevestigde opdracht</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Aangevraagd door gebruiker</string>
 </resources>

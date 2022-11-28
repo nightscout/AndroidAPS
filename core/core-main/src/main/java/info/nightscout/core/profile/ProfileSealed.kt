@@ -1,11 +1,11 @@
 package info.nightscout.core.profile
 
-import info.nightscout.androidaps.extensions.blockValueBySeconds
-import info.nightscout.androidaps.extensions.highTargetBlockValueBySeconds
-import info.nightscout.androidaps.extensions.lowTargetBlockValueBySeconds
-import info.nightscout.androidaps.extensions.shiftBlock
-import info.nightscout.androidaps.extensions.shiftTargetBlock
-import info.nightscout.androidaps.extensions.targetBlockValueBySeconds
+import info.nightscout.core.extensions.blockValueBySeconds
+import info.nightscout.core.extensions.highTargetBlockValueBySeconds
+import info.nightscout.core.extensions.lowTargetBlockValueBySeconds
+import info.nightscout.core.extensions.shiftBlock
+import info.nightscout.core.extensions.shiftTargetBlock
+import info.nightscout.core.extensions.targetBlockValueBySeconds
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
 import info.nightscout.core.utils.MidnightUtils

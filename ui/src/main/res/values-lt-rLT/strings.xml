@@ -8,27 +8,40 @@
     <string name="remind_to_bolus_later">Priminti apie bolusą vėliau</string>
     <string name="a11y_carb_reminder">nustatyti priminimą</string>
     <!--    Widget-->
+    <string name="widget_description">AAPS valdiklis</string>
     <!--     Activities-->
+    <string name="activity_monitor">Aktyvumo stebėjimas</string>
+    <string name="do_you_want_reset_stats">Ar norite iš naujo nustatyti aktyvumo statistiką?</string>
     <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Skaičiuojama</string>
+    <string name="invalid_age">Neteisingas amžiaus įrašas</string>
+    <string name="invalid_weight">Neteisingas svorio įrašas</string>
     <string name="id">ID:</string>
     <string name="submit">Pateikti</string>
     <string name="age">Amžius</string>
     <string name="weight_label">Svoris</string>
+    <string name="most_common_profile">Dažniausiai naudojamas profilis:</string>
+    <string name="glucose_type">Gliukozės tipas</string>
+    <string name="bg_other">Kiti</string>
+    <string name="bg_meter">Matuoklis</string>
+    <string name="bg_sensor">Iš sensoriaus</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s JIF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Viso</string>
     <!-- FillDialog -->
-    <string name="button1">Mygtukas 1</string>
-    <string name="button2">Mygtukas 2</string>
-    <string name="button3">Mygtukas 3</string>
+    <string name="fill_warning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
     <string name="record_pump_site_change">Įrašas apie infuzijos rinkinio keitimą</string>
     <string name="record_insulin_cartridge_change">Įrašas apie rezervuaro keitimą</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Boluso nesuleisti, tik įrašyti</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Pakartotinai naudoti %1$d%% %2$dh</string>
+    <string name="timeshift_label">Laiko perstūmimas</string>
+    <string name="percentage_label">Procentais</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Sustabdyti ciklą 1 val</string>
     <string name="suspendloopfor2h">Sustabdyti ciklą 2 val</string>
     <string name="suspendloopfor3h">Sustabdyti ciklą 3 val</string>
     <string name="suspendloopfor10h">Sustabdyti ciklą 10 val</string>
@@ -47,8 +60,10 @@
     <string name="duration3h">3 val.</string>
     <string name="duration10h">10 val.</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2 val</string>
     <string name="result_insulin_carbs">Rezultatas: %1$s %2$s</string>
     <string name="missing_carbs">Trūksta %1$d g</string>
+    <string name="a11y_current_bg">dabartinis gliukozės kiekis kraujyje</string>
     <string name="carb_time_label">AV laikas</string>
     <string name="show_calculation">Rodyti skaičiavimą</string>
     <!-- Treatments -->
@@ -57,25 +72,33 @@
     <string name="treatments_insulin_label_string">Insulinas:</string>
     <string name="treatments_carbs_label_string">AV:</string>
     <string name="treatments_iobtotal_label_string">Visas AIO:</string>
+    <string name="treatments_iob_activity_total_label_string">Bendro AIO aktyvumas:</string>
     <string name="tempbasals_realduration_label_string">Trukmė:</string>
     <string name="tempbasals_netratio_label_string">Santykis:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">AIO:</string>
-    <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
-    <string name="treatments_wizard_tt_label">LT</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
+    <string name="meal_bolus">Maistas</string>
     <string name="prime">Užpildyti sistemą</string>
     <string name="refresheventsfromnightscout">Atnaujinti iš NS</string>
+    <string name="user_entry">Naudotojo įrašas</string>
     <string name="clone_label">Klonuoti</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Profilio tipas</string>
+    <string name="basal_pct_from_tdd_label">% bazės</string>
     <string name="selected_profile">Parinkta:</string>
+    <string name="compare_profile">Palyginti profilius</string>
+    <string name="nav_profile_helper">Profilio pagalbininkas</string>
+    <string name="motol_default_profile">Numatytasis profilis</string>
+    <string name="current_profile">Dabartinis profilis</string>
+    <string name="available_profile">Galimas profilis</string>
+    <string name="format_with_tdd">Amžius: %1$d BPD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Amžius: %1$d BPD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Amžius: %1$d Svoris: %2$.0f kg</string>
+    <string name="dpv_default_profile">Numatytasis profilis</string>
+    <string name="invalid_pct">Netinkamas % įrašas</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Valandinė bazė</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Importo sutrikimų detalės</string>
-    <string name="check_preferences_import_btn">Importas</string>
-    <string name="check_preferences_import_anyway_btn">Importuoti vistiek (PAVOJINGA!)</string>
-    <string name="check_preferences_before_import">Prašom patikrinti nustatymus prieš importuojant:</string>
-    <string name="check_preferences_cannot_import">Nustatymai negali būti importuoti!</string>
-    <string name="check_preferences_dangerous_import">Nustatymai neturėtų būti importuoti!</string>
+    <string name="stop_pressed">Paspausta STOP</string>
 </resources>

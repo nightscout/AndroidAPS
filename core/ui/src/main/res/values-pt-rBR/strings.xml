@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Atualizar</string>
+    <string name="error">Erro</string>
+    <string name="profile_set_ok">Perfil Basal atualizado na bomba</string>
+    <string name="invalid_input">Dados de entrada inválidos</string>
+    <string name="bolus_delivering">Aplicando %1$.2fU</string>
+    <string name="constraint_applied">Restrição aplicada!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Bomba inacessível</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Bomba não inicializada, perfil não definido!</string>
+    <string name="failed_update_basal_profile">Falha ao atualizar o perfil basal</string>
+    <string name="bolus_delivered">Bolus %1$.2f U aplicado com sucesso</string>
+    <string name="no_valid_basal_rate">Nenhum valor de basal temporaria valido foi lido da bomba</string>
+    <string name="limiting_iob">A limitar IOB para %1$.1f U porque %2$s</string>
+    <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
+    <string name="event_type">Tipo de evento</string>
+    <string name="reload">Recarregar</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Salvar</string>
+    <string name="snooze">Silenciar</string>
+    <string name="virtual_pump">Bomba virtual</string>
+    <string name="constraints">Restrições</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Bomba suspensa</string>
+    <string name="and">E</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuário</string>
+    <string name="result">Resultado</string>
+    <string name="settings">Definições</string>
+    <string name="statuslights">Luzes de estado</string>
+    <string name="do_ns_upload_title">Enviar dados Glic. para NS</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Senha mestra</string>
+    <string name="ue_export_to_csv">Exportar Entradas de Usuário para Excel (csv)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="pump">Bomba</string>
+    <string name="missed_bg_readings">Leituras Glic. perdidas</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Silenciar por 5 minutos</string>
+    <string name="mute">Silêncio</string>
+    <string name="success">Sucesso</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Definições de desbloqueio</string>
+    <!--    Pumps -->
+    <string name="battery_label">Bateria</string>
+    <string name="reservoir_label">Reservatório</string>
+    <string name="last_connection_label">Última ligação</string>
+    <string name="last_bolus_label">Último Bolus</string>
+    <string name="base_basal_rate_label">Taxa Basal de base</string>
+    <string name="tempbasal_label">Basal temporaria</string>
+    <string name="extended_bolus_label">Bólus estendido</string>
+    <string name="serial_number">Número de série</string>
+    <string name="disconnected">Desconectado</string>
+    <string name="connecting">Conectando</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicado no conectar à bomba</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unidades diárias</string>
+    <string name="pump_icon">Ícone da bomba</string>
+    <string name="view_profile">Ver perfil</string>
+    <string name="pump_history">Histórico da Bomba</string>
+    <string name="stats">Estatísticas</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Alteração driver da bomba.</string>
+    <string name="device_changed" comment="26 characters max for translation">Troca de dispositivo</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Erro na entrega da basal temporária</string>
+    <string name="not_set_short">Não definido</string>
+    <string name="pump_busy">A bomba está ocupada</string>
+    <string name="connection_error">Erro de conexão com a bomba</string>
+    <string name="reading_pump_history">Lendo histórico da bomba</string>
+    <string name="password_cleared">Senha apagada!</string>
+    <string name="pairing">Emparelhando</string>
+    <string name="initializing">Inicializando...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
+    <string name="pumplimit">limite da bomba</string>
+    <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
+    <string name="itmustbepositivevalue">deve ser valor positivo</string>
+    <string name="limitingbolus">Limitando bólus para %1$.1f U porque %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
     <string name="message">Mensagem</string>
@@ -8,10 +91,41 @@
     <string name="dismiss">Dispensar</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">diminuição de %1$s para %2$s</string>
     <string name="a11y_plus_button_description">aumento de %1$s para %2$s</string>
+    <string name="you_are_on_allowed_limit">Limite máximo atingido</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Hora do Evento</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">O aplicativo precisa de permissão bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Solicitação do usuário</string>
+    <string name="pump_paired" comment="26 characters max for translation">Bomba acoplada</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth de energia baixa (LE) não suportado.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetoothn Low Energy (BLE) não suportado ou o dispositivo não está acoplado.</string>
+    <string name="ble_not_enabled">Bluetooth não está ativado.</string>
+    <string name="location_not_found_title">Localização Não Está Ativada</string>
+    <string name="location_not_found_message">Para que a procura de Bluetooth funcione em aparelhos mais recentes, a localização tem que ser activada. A app não rastreia a sua localização e pode ser desativada depois de um emparelhamento bem sucedido.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Preferências plugin</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
 </resources>

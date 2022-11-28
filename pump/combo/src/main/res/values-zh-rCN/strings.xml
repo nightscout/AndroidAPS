@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">不安全的用法：这个泵使用了和第一个不同的基础率配件文件，闭环已经被禁用，在泵上选择第一个配件文件然后刷新.</string>
     <string name="bolus_frequency_exceeded">在最近2分钟内要输注相同数量的大剂量。 为了防止错误地重复打大剂量发生意外，不允许这样操作</string>
     <string name="combo_pump_connected_now">现在</string>
-    <string name="combo_activity_reading_pump_history">读取泵历史记录</string>
     <string name="combo_activity_setting_basal_profile">设置基础率配置文件</string>
     <string name="combo_pump_cartridge_low_warrning">泵储药器快没胰岛素了</string>
     <string name="combo_pump_battery_low_warrning">泵电池电量不足</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">从不</string>
     <string name="combo_error_display_error">当出错时</string>
     <string name="combo_error_display_always">总是</string>
+    <string name="unsafeusage">不安全的用法</string>
 </resources>

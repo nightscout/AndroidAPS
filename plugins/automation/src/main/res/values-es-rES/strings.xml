@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Objetivo Temporal %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Porcentaje de basal en perfil %1$s %2$d</string>
     <string name="iobcompared">IOB (Insulina a Bordo) %1$s %2$.1f</string>
-    <string name="and">Y</string>
     <string name="or">O</string>
     <string name="xor">Xor (O exclusiva)</string>
     <string name="atspecifiedtime">A las %1$s</string>

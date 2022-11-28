@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="count_selected">%1$d valgt</string>
+    <string name="remove_items">Fjern Emner</string>
+    <string name="sort_items">Sortér Emner</string>
+    <string name="remove_selected_items">Fjern valgte emner</string>
+    <string name="sort_label">Sortér</string>
+</resources>

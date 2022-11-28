@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dynisf_adjust_sensitivity">Ajustar sensibilidade e GLIC</string>
+    <string name="DynISFAdjust_title" formatted="false">Fator de Ajuste FSI dinâmico %</string>
     <string name="DynISFAdjust_summary" formatted="false">Fator de ajuste para FSI dinâmico. Defina mais de 100%% para doses de correção mais agressivas e menos de 100%% para correções menos agressivas.</string>
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
@@ -8,11 +9,14 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Baixar sensibilidade para alvostemp < 100]]></string>
     <string name="openapssmb">SMB OpenAPS</string>
     <string name="openaps_smb_dynamic_isf">FSI Dinâmico</string>
+    <string name="smb_interval_summary">Com que frequência em min os SMBs serão dados</string>
     <string name="resistance_lowers_target_title">Resistência reduz alvo</string>
     <string name="resistance_lowers_target_summary">Quando a resistência for detectada, diminui o alvo de glicose</string>
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="openapsma_disabled">Plugin está desativado</string>
+    <string name="openapsma_no_glucose_data">Sem dados de glicose disponíveis</string>
+    <string name="openaps_no_as_data">Sem dados Autosens disponíveis</string>
     <string name="dynisf_shortname">DINFS</string>
     <string name="executing">Executando</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -21,18 +25,68 @@
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
     <string name="description_smb_dynamic_isf">Algoritmo mais recente para usuários avançados com FS dinâmico/automático</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Pausa bólus divisor DIA</string>
     <string name="openapsma_run">Executar agora</string>
+    <string name="openapsma_last_run_label">Última execução</string>
+    <string name="openapsma_input_parameters_label">Parâmetros de entrada</string>
+    <string name="openapsma_glucose_status_label">Status da Glicose</string>
+    <string name="openapsma_current_temp_label">Temp atual</string>
+    <string name="openapsma_iob_data_label">Dados de IOB</string>
     <string name="openapsma_profile_label">Perfil</string>
-    <string name="result">Resultado</string>
+    <string name="openapsma_meal_data_label">Dados de refeição</string>
     <string name="openapsma_request_label">Solicitar</string>
     <string name="constraints">Restrições</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
+    <string name="openapsma_script_debug_data_label">Script debug</string>
+    <string name="openapsama_use_autosens">Usar função Autosens</string>
+    <string name="openapsma_max_basal_title">Max U/h em que uma Basal temporária pode ser definida</string>
+    <string name="openapsma_max_basal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
+    <string name="openapsma_max_iob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
+    <string name="openapsma_max_iob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode dar de uma vez.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de ISF e basais.</string>
+    <string name="openapsama_autosens_adjust_targets">Autosens também ajusta os alvos</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valor padrão: 3.0 para assitência avançada de refeições (AAR) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glicemia (BG) devido à absorção de carboidratos. O padrão é 3mg/dl/5min. Isso afeta a rapidez com que decaem os carboidratos ativos (CA) e quanta absorção de carboidrato será considerada no cálculo da previsão de glicemia futura, tornando possível notar que glicemia está baixando mais do que o esperado ou não subindo como esperado.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor atual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias muito elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de ação da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequências antes de alterar qualquer um destes valores.</string>
+    <string name="always_use_short_avg">Usar sempre delta médio curto em vez de delta simples</string>
+    <string name="always_use_short_avg_summary">Útil quando há ruído nos dados das fontes sem filtro como o xDrip.</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplicador máx. diário de segurança</string>
     <string name="openapsama_current_basal_safety_multiplier">Multiplicador actual de segurança basal</string>
+    <string name="openapssmb_max_iob_title">Máximo total de IOB OpenAPS não pode superar [U]</string>
+    <string name="openapssmb_max_iob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
+    <string name="enable_uam">Ativar UAM</string>
+    <string name="enable_smb">Ativar SMB</string>
+    <string name="enable_smb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
+    <string name="enable_uam_summary">Detecção de refeições não Introduzidas</string>
+    <string name="enable_smb_always">SMB sempre activado</string>
+    <string name="enable_smb_always_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
+    <string name="enable_smb_after_carbs">Ativar SMB após carbos</string>
+    <string name="enable_smb_after_carbs_summary">SMB activo por 6h após carbs, mesmo com 0 COB. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
+    <string name="enable_smb_with_cob">Ativar SMB com COB</string>
+    <string name="enable_smb_with_cob_summary">Ativar SMB quando houver COB ativo.</string>
+    <string name="enable_smb_with_temp_target">SMB activo com valores alvo temporários</string>
+    <string name="enable_smb_with_temp_target_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
+    <string name="enable_smb_with_high_temp_target">SMB activo com alvos temporários elevados</string>
+    <string name="enable_smb_with_high_temp_target_summary">Ativar SMB quando tiver um alvo temporário alto ativo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
+    <string name="smb_max_minutes_summary">Limite de minutos de basal para SMB</string>
+    <string name="uam_smb_max_minutes">UAM SMB máx minutos</string>
+    <string name="uam_smb_max_minutes_summary">Max minutos de basal para limitar SMB para UAM</string>
+    <string name="carbs_req_threshold">Limite mínimo de carboidratos necessários para sugerir</string>
+    <string name="carbs_req_threshold_summary">Mínimo de gramas de carboidratos requeridos para exibir uma alerta de sugestão de carboidratos. Sugestões de carboidratos abaixo deste número não ativarão uma notificação.</string>
+    <string name="lgs_threshold_summary">Valor a partir do qual a insulina é suspensa. O valor padrão usa como base o alvo padrão. O usuário pode definir o valor entre 60mg/dl (3.3mmol/l) e 100mg/dl(5.5 mmol/l). Valores abaixo de 65/3.6 resulta em uso do modelo padrão.</string>
+    <string name="lgs_threshold_title">Nível de glicose (BG) está abaixo do ponto em que ocorre a suspensão causada por hipoglicemia.</string>
+    <string name="increasing_max_basal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
+    <string name="max_basal_multiplier">multiplicador de basal máx</string>
+    <string name="max_daily_basal_multiplier">multiplicador de basal máx diária</string>
+    <string name="smb_disabled_in_preferences">SMB desactivado nas configurações</string>
+    <string name="uam_disabled_in_preferences">UAM desactivado nas configurações</string>
+    <string name="autosens_disabled_in_preferences">Autosens desabilitado nas preferências</string>
     <!--    Verify if needed in safety-->
+    <string name="limiting_iob">A limitar IOB para %1$.1f U porque %2$s</string>
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <!--    Autotune   -->
+    <string name="insulin_peak">Pico</string>
 </resources>

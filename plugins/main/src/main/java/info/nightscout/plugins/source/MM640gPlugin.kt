@@ -9,6 +9,7 @@ import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -69,13 +70,13 @@ class MM640gPlugin @Inject constructor(
                 aapsLogger.debug(LTag.BGSOURCE, "Received MM640g Data: $data")
                 if (!data.isNullOrEmpty()) {
                     try {
-                        val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                        val glucoseValues = mutableListOf<TransactionGlucoseValue>()
                         val jsonArray = JSONArray(data)
                         for (i in 0 until jsonArray.length()) {
                             val jsonObject = jsonArray.getJSONObject(i)
                             when (val type = jsonObject.getString("type")) {
                                 "sgv" ->
-                                    glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                                    glucoseValues += TransactionGlucoseValue(
                                         timestamp = jsonObject.getLong("date"),
                                         value = jsonObject.getDouble("sgv"),
                                         raw = jsonObject.getDouble("sgv"),

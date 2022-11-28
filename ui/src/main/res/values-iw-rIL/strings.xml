@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">מגבלה הוחלה!</string>
     <string name="bolus_constraint_applied">בולוס מעבר למגבלה</string>
     <string name="carbs_constraint_applied">פחמימות מעבר למגבלה</string>
     <string name="temp_target_short">TT</string>
@@ -14,26 +13,37 @@
     <string name="a11y_carb_reminder">קביעת תזכורת</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="statistics">סטטיסטיקה</string>
     <string name="calculation_in_progress">מבצע חישוב</string>
+    <string name="invalid_age">רשומת גיל לא חוקית</string>
+    <string name="invalid_weight">רשומת משקל לא חוקית</string>
     <string name="id">מס\' זיהוי:</string>
     <string name="submit">עדכן</string>
     <string name="age">גיל</string>
     <string name="weight_label">משקל</string>
+    <string name="most_common_profile">הפרופיל הנפוץ ביותר:</string>
+    <string name="glucose_type">סוג גלוקוז</string>
+    <string name="bg_other">אחר</string>
+    <string name="bg_meter">מד</string>
+    <string name="bg_sensor">חיישן</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s פקטור הרגישות: %2$.1f</string>
     <string name="format_cob_ic">%1$.1f גר\' יחס פחמ\':%2$.1f</string>
     <string name="format_carbs_ic">%1$.0f גר\' יחס פחמ\': %2$.1f</string>
-    <string name="superbolus">סופר בולוס</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
     <!-- FillDialog -->
-    <string name="button1">כפתור 1</string>
-    <string name="button2">כפתור 2</string>
-    <string name="button3">כפתור 3</string>
+    <string name="fill_warning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
     <string name="record_pump_site_change">רשום החלפת אתר עירוי</string>
     <string name="record_insulin_cartridge_change">רשום החלפת מכל אינסולין</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">רישום בולוס ללא הזרקה</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
+    <string name="timeshift_label">היסט זמן</string>
+    <string name="percentage_label">אחוזים</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">השהה לולאה לשעה אחת</string>
     <string name="suspendloopfor2h">השהה לולאה ל-2 ש\'</string>
     <string name="suspendloopfor3h">השהה לולאה ל-3 ש\'</string>
     <string name="suspendloopfor10h">השהה לולאה ל-10 ש\'</string>
@@ -54,6 +64,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">תיקון עם %</string>
     <string name="a11_correction_units">תיקון עם יחידות</string>
+    <string name="two_hours">שעתיים</string>
     <string name="result_insulin_carbs">תוצאה: %1$s %2$s</string>
     <string name="missing_carbs">חסרים %1$d גר\'</string>
     <string name="a11y_current_bg">רמת סוכר נוכחית</string>
@@ -61,18 +72,19 @@
     <string name="a11y_set_carb_timer">הגדרת אזעקה טיימר פחמימות</string>
     <string name="show_calculation">הצג חישוב</string>
     <!-- Treatments -->
+    <string name="no_records_available">אין רישומים זמינים</string>
     <string name="calculation_short">חישוב</string>
     <string name="treatments_iob_label_string">אינסולין פעיל:</string>
     <string name="treatments_insulin_label_string">אינסולין:</string>
     <string name="treatments_carbs_label_string">פחמימות:</string>
     <string name="treatments_iobtotal_label_string"> אינסולין פעיל כולל:</string>
+    <string name="treatments_iob_activity_total_label_string">פעילות אינסולין פעיל כוללת:</string>
     <string name="tempbasals_realduration_label_string">משך:</string>
     <string name="tempbasals_netratio_label_string">יחס:</string>
     <string name="tempbasals_netinsulin_label_string">אינסולין:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">תיקון</string>
+    <string name="meal_bolus">ארוחה</string>
     <string name="prime">תיחול</string>
     <string name="profile_changes">שינויים בפרופיל</string>
     <string name="tempt_targets">ערכי מטרה זמניים</string>
@@ -83,21 +95,31 @@
     <string name="refresheventsfromnightscout">רענון אירועים מנייטסקאוט</string>
     <string name="show_invalidated">הצג פסולים</string>
     <string name="hide_invalidated">הסתר פסולים</string>
+    <string name="careportal_remove_started_events">הסרת רשומות הפעלת AAPS</string>
     <string name="hide_loop">החבא לולאה</string>
     <string name="show_loop">הצג לולאה</string>
+    <string name="user_entry">קלט המשתמש</string>
     <string name="clone_label">שכפול</string>
     <string name="show_loop_records">הצג רשומות לולאה</string>
     <string name="show_hide_records">החבא רשומות לולאה</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">פרופיל 1</string>
     <string name="profile2">פרופיל 2</string>
+    <string name="profile_type">סוג פרופיל</string>
+    <string name="basal_pct_from_tdd_label">% של הבזאלי</string>
     <string name="selected_profile">נבחר:</string>
+    <string name="compare_profile">השוואת פרופילים</string>
+    <string name="nav_profile_helper">עוזר הפרופילים</string>
+    <string name="motol_default_profile">פרופיל ברירת מחדל</string>
+    <string name="current_profile">פרופיל נוכחי</string>
+    <string name="available_profile">פרופיל זמין</string>
+    <string name="format_with_tdd">גיל: %1$d יח\' מינון יומי כולל: %2$.0f יח\'</string>
+    <string name="format_with_tdd_and_pct">גיל: %1$d יח\' מינון יומי כולל: %2$.0f יח\' %3$d%%</string>
+    <string name="format_with_weight">גיל: %1$d יח\' משקל: %2$.0f ק\"ג</string>
+    <string name="dpv_default_profile">פרופיל ברירת מחדל DPV</string>
+    <string name="invalid_pct">רשומת אחוזים לא חוקית</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">מינון בזאלי</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
-    <string name="check_preferences_import_btn">ייבוא</string>
-    <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
-    <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
-    <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
-    <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
+    <string name="stop_pressed">עצור נלחץ!</string>
 </resources>

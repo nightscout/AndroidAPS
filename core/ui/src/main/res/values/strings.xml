@@ -32,6 +32,23 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
     <string name="result">Result</string>
     <string name="settings">Settings</string>
+    <string name="statuslights">Status lights</string>
+    <string name="do_ns_upload_title">Upload BG data to NS</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Master password</string>
+    <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
+    <string name="confirm">Confirm</string>
+    <string name="pump">Pump</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Mute for 5 minutes</string>
+    <string name="mute">Mute</string>
+    <string name="success">Success</string>
+    <string name="advancedsettings_title">Advanced Settings</string>
+
+    <!--    Protection-->
+    <string name="unlock_settings">Unlock settings</string>
 
     <!--    Pumps -->
     <string name="battery_label">Battery</string>
@@ -111,5 +128,21 @@
 
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin preferences</string>
+
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+
+    <plurals name="days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
 
 </resources>

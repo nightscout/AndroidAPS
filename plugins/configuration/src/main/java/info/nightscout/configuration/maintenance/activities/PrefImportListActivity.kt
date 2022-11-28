@@ -11,10 +11,10 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.configuration.R
 import info.nightscout.configuration.databinding.MaintenanceImportListActivityBinding
 import info.nightscout.configuration.databinding.MaintenanceImportListItemBinding
 import info.nightscout.configuration.maintenance.PrefsFileContract
-import info.nightscout.core.main.R
 import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefsFile
@@ -87,8 +87,8 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
-                    val colorattr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
-                    metaVariantFormat.setTextColor(rh.gac( metaVariantFormat.context, colorattr))
+                    val colorAttr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
+                    metaVariantFormat.setTextColor(rh.gac(metaVariantFormat.context, colorAttr))
                 }
 
                 prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
@@ -97,8 +97,8 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
                     metaAppVersion.text = it.value
-                    val colorattr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
-                    metaAppVersion.setTextColor(rh.gac( metaVariantFormat.context, colorattr))
+                    val colorAttr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
+                    metaAppVersion.setTextColor(rh.gac(metaVariantFormat.context, colorAttr))
                 }
 
                 prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {

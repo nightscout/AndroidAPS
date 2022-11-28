@@ -1,9 +1,16 @@
 package info.nightscout.interfaces.aps
 
+import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.shared.utils.DateUtil
 
 interface Loop {
 
@@ -40,4 +47,14 @@ interface Loop {
     fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason)
     fun suspendLoop(durationInMinutes: Int)
     fun disableCarbSuggestions(durationMinutes: Int)
+    fun buildDeviceStatus(
+        dateUtil: DateUtil,
+        loop: Loop,
+        iobCobCalculatorPlugin: IobCobCalculator,
+        profileFunction: ProfileFunction,
+        pump: Pump,
+        receiverStatusStore: ReceiverStatusStore,
+        runningConfiguration: RunningConfiguration,
+        version: String
+    ): DeviceStatus?
 }

@@ -27,4 +27,10 @@
     <string name="tomorrow">I morgen</string>
     <string name="today">Idag</string>
     <string name="yesterday">I går</string>
+    <!-- Rx -->
+    <string name="connecting_for">Tilkobler i %1$d sek</string>
+    <string name="handshaking">Tilkobling verifiseres</string>
+    <string name="connected">Tilkoblet</string>
+    <string name="disconnecting">Frakobler</string>
+    <string name="waiting_for_disconnection">Venter på frakobling</string>
 </resources>

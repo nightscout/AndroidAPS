@@ -5,21 +5,16 @@
     <string name="settings_protection">Защита на настройките</string>
     <string name="application_protection">Защита на приложението</string>
     <string name="bolus_protection">Защита от болус</string>
-    <string name="master_password">Главна парола</string>
     <string name="settings_password">Парола за настройки</string>
     <string name="application_password">Парола за приложението</string>
     <string name="bolus_password">Парола за болус</string>
-    <string name="unlock_settings">Отключи настройките</string>
     <string name="biometric">Биометрични данни</string>
     <string name="custom_password">Допълнителна парола</string>
     <string name="noprotection">Няма защита</string>
-    <string name="protection">Защита</string>
-    <string name="master_password_missing">Главната парола не е зададена!\n\nМоля, настройте Вашата главна парола в Предпочитания (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Грешка при биометрични данни!</string>
     <string name="unsecure_fallback_descriotion_biometric">За да бъде ефективна, биометричната защита се нуждае от главна парола.\n\nМоля, въведете главна парола!</string>
     <string name="password_set">Паролата е зададена!</string>
     <string name="password_not_set">Паролата не е зададена</string>
     <string name="password_not_changed">Паролата не е променена</string>
-    <string name="password_cleared">Паролата е изчистена!</string>
     <string name="password_hint">Въведете парола</string>
 </resources>

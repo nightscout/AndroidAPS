@@ -48,7 +48,11 @@
     <string name="smscommunicator_unknown_command">Nepoznata naredba ili pogrešan odgovor</string>
     <string name="smscommunicator_wrong_duration">Pogrešno trajanje</string>
     <string name="smscommunicator_loop_suspended">Petlja suspendirana</string>
+    <string name="sms_actual_bg">GUK:</string>
     <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">Aktivni inzulin:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Bazal:</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="description_insulin_rapid">Unaprijed podešen predložak za inzulin Humalog i NovoRapid / NovoLog</string>
@@ -66,6 +70,7 @@
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">xDrip+ Statusna linija (sat)</string>
     <string name="xdrip_status_shortname">xds</string>
     <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
@@ -77,6 +82,10 @@
     <string name="food_short">Hrana</string>
     <string name="filter">Filter</string>
     <string name="food">Hrana</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">Eng</string>
+    <string name="short_protein">Proteini</string>
+    <string name="short_fat">Masnoće</string>
     <string name="category">Kategorija</string>
     <string name="subcategory">Podkategorija</string>
     <string name="calculator_label">Kalkulator</string>
@@ -111,87 +120,45 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CILJ</string>
     <string name="basal_short">BAZAL</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Korišteni preračunati podaci</string>
-    <string name="bg_too_close">BG preblizu:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">preračunato</string>
-    <string name="a11y_bg_quality_doubles">dvostruki unosi</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Promjena računanja vremena za 24 sata ili manje</string>
-    <string name="dst_loop_disabled_warning">Promjena računanja vremena prije manje od 3 sata - zatvorena petlja onemogućena</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Oslobodite najmanje %1$d MB iz interne pohrane! Petlja onemogućena!</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">stara verzija</string>
-    <string name="very_old_version">vrlo stara verzija</string>
-    <string name="application_expired">Aplikacija je istekla</string>
-    <string name="new_version_warning">Nova verzija dostupna najmanje %1$d dana! Vraćanje na LGS nakon %2$d dana, petlja će biti onemogućena nakon %3$d dana</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
+    <string name="completed_well_done">Dovršeno, bravo!</string>
     <string name="not_completed_yet">Nije još dovršeno</string>
     <string name="time_elapsed">Prošlo vrijeme</string>
     <string name="description_objectives">Program učenja</string>
+    <string name="objectives_next_button">Sljedeći</string>
     <!-- Actions -->
     <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Inzulin</string>
     <!-- Safety -->
     <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
     <!-- Overview -->
-    <!-- NSClient -->
-    <string name="ns_upload_summary">Profili, bolusi, ugljikohidrati, privremeni bazali učitavaju se u NS</string>
-    <string name="ns_upload">Upload podataka u NS</string>
-    <string name="ns_receive_profile_store">Primite pohranu profila</string>
-    <string name="ns_receive_profile_store_summary">Sinkronizirajte profile iz NS uređivača profila</string>
-    <string name="ns_receive_temp_target">Primanje privremenih ciljeva</string>
-    <string name="ns_receive_temp_target_summary">Prihvatite privremene ciljeve unesene putem NS ili NSClient</string>
-    <string name="ns_receive_profile_switch">Primite promjene profila</string>
-    <string name="ns_receive_profile_switch_summary">Prihvatite promjene profila unesene putem NS ili NSClient</string>
-    <string name="ns_receive_offline_event">Primajte izvanmrežne APS događaje</string>
-    <string name="ns_receive_offline_event_summary">Prihvatite APS Offline događaje unesene putem NS ili NSClient</string>
-    <string name="ns_receive_tbr_eb">Primi TBR i EB</string>
-    <string name="ns_receive_tbr_eb_summary">Prihvatite TBR i EB unesene kroz drugu instancu</string>
-    <string name="ns_receive_insulin">Primiti inzulin</string>
-    <string name="ns_receive_insulin_summary">Prihvatite inzulin unesen putem NS ili NSClijenta (ne isporučuje se, samo se obračunava prema IOB-u)</string>
-    <string name="ns_receive_carbs">Primajte ugljikohidrate</string>
-    <string name="ns_receive_carbs_summary">Prihvatite ugljikohidrate unesene putem NS ili NSClijenta</string>
-    <string name="ns_receive_therapy_events">Primajte terapijske događaje</string>
-    <string name="ns_receive_therapy_events_summary">Prihvati terapijske događaje (kanila, inzulin, promjena baterije itd.) unesene putem NS ili NSClijenta</string>
-    <string name="ns_receive_cgm">Primanje/ispunjavanje CGM podataka</string>
-    <string name="ns_receive_cgm_summary">Prihvati CGM podatke iz NS-a</string>
+    <string name="a11y_insulin_label">inzulin</string>
+    <string name="a11y_only_on_watch">samo na satu</string>
+    <string name="a11y_only_on_phone">samo na telefonu</string>
+    <string name="overview">Pregled</string>
+    <string name="description_overview">Prikaži trenutno stanje tvog loop-a i izbore za najuobičajenije postupke</string>
+    <string name="overview_edit_quickwizard_carbs">Ugljikohidrati (UH):</string>
+    <string name="device_all">Svi</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Sat</string>
+    <string name="a11y_drag_and_drop_handle">povuci i ostavi ruka</string>
+    <string name="treatments">Tretmani</string>
+    <string name="enable_bolus_advisor">Omogući savjetnika za bolus</string>
+    <string name="enable_bolus_advisor_summary">Omogući savjetnika za bolus i koristite podsjetnik da počnete jesti kasnije umjesto rezultata čarobnjaka tijekom visoke glikemije (\"pre-bolus\")</string>
+    <string name="enablebolusreminder_summary">Koristite podsjetnik za bolus kasnije pomoću čarobnjaka (\"post-bolus\")</string>
     <string name="run_question">Pokrenuti %s?</string>
-    <string name="ns_sync_slow">Usporite prijenose</string>
-    <string name="ns_alarm_options">Mogućnosti alarma</string>
-    <string name="ns_alarms">Kreirajte obavijesti iz NS alarma</string>
-    <string name="ns_announcements">Kreirajte obavijesti iz NS najava</string>
-    <string name="ns_alarm_stale_data_value_label">Prag zastarjelih podataka [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Hitan prag zastarjelih podataka [min]</string>
-    <string name="ns_log_app_started_event">Prijavite pokretanje aplikacije u NS</string>
-    <string name="ns_local_broadcasts_title">Omogući lokalne emisije.</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Vaše korisničko ime za prijavu na Tidepool, obično vaša adresa e-pošte</string>
-    <string name="title_tidepool_username">Korisničko ime za prijavu</string>
-    <string name="summary_tidepool_password">Vaša lozinka za prijavu na Tidepool</string>
-    <string name="title_tidepool_password">Vaša lozinka za prijavu</string>
-    <string name="title_tidepool_test_login">Testirajte Tidepool prijavu</string>
-    <string name="summary_tidepool_dev_servers">Ako je omogućeno, prijenosi će ići na https://int-app.tidepool.org umjesto na uobičajeni https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Koristite integracijske (testne) poslužitelje</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Učitava podatke u Tidepool</string>
-    <string name="tidepool_upload_cgm">Učitajte CGM podatke</string>
-    <string name="tidepool_upload_bolus">Prijenos tretmana (inzulin, ugljikohidrati)</string>
-    <string name="tidepool_upload_tbr">Učitajte privremene bazale</string>
-    <string name="tidepool_upload_profile">Učitajte prekidače profila, privremene ciljeve</string>
-    <string name="tidepool_upload_bg">Učitajte testove glukoze u krvi</string>
-    <string name="remove_all">Ukloniti sve</string>
-    <string name="reset_start">Poništi početak</string>
-    <string name="upload_now">Pošalji sada</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_treatments">Tretmani</string>
+    <string name="basal_shortname">BAZAL</string>
+    <string name="graph_scale">Skala grafikona</string>
     <!-- VirtualPump -->
     <string name="virtual_pump_type">Vrsta virtualne pumpe</string>
     <string name="virtual_pump_definition">Definicija pumpe</string>
     <string name="virtual_pump_pump_def">Bolus: korak=%1$s\nProduženi bolus: [korak=%2$s, trajanje=%3$smin-%4$sh]\nBazal: korak=%5$s\nTBR: %6$s (do %7$s), Trajanje=%8$smin-%9$sh\n%10$s</string>
     <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
+    <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
     <string name="virtualpump_settings">Postavke virtualne pumpe</string>
     <string name="virtualpump_uploadstatus_title">Prijenos statusa u NS</string>
     <!-- Source -->
@@ -202,17 +169,25 @@
     <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
     <string name="intelligo">Intelligo</string>
     <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
+    <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Primite vrijednosti GK od GlucoRx Aidex CGMS.</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Koristite mobilnu vezu</string>
-    <string name="ns_wifi">Koristite WiFi vezu</string>
-    <string name="ns_charging">Tijekom punjenja</string>
-    <string name="ns_battery">Na bateriji</string>
-    <string name="description_ns_client">Sinkroniziraj svoje podatke sa Nightscout</string>
-    <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
-    <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
+    <string name="random_bg_short">GUK</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Stvorite događaj \"Promjena senzora\" u NS-u automatski pri pokretanju senzora</string>
     <!-- Skins -->
     <!--    Loop -->
+    <string name="run_now">Pokreni sada</string>
+    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
+    <string name="last_run_label">Zadnje pokretanje</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Zahtjev</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
+    <string name="no_watch_connected">(Sat nije povezan)</string>
+    <string name="loop_status">Loop status</string>
+    <string name="wear_action_tempt_preset_message">Trenutni cilj:\nRazlog: %1$s\nCilj: %2$s\nTrajanje: %3$s</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>
 </resources>

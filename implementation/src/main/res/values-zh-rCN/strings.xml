@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">血糖读数丢失</string>
     <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
-    <string name="request">请求</string>
     <string name="permission">权限</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">此设备似乎不支持电池优化白名单 - 您可能会遇到性能问题。</string>
     <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">非常低</string>
     <string name="low" comment="3.1-3.9">低</string>
     <string name="high" comment="10.0-13.9">高</string>
     <string name="veryHigh" comment="above 13.9">非常高</string>
+    <string name="below" comment="below &quot;in range&quot;">底部</string>
     <string name="in_range">在范围内</string>
+    <string name="above" comment="above &quot;in range&quot;">上方</string>
     <string name="hba1c">糖化血红蛋白: </string>
 </resources>

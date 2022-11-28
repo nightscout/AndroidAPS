@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.toStringShort
+import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy

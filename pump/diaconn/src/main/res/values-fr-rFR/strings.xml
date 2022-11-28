@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Réinit. Appairage</string>
-    <string name="diaconn_nodeviceavailable">Aucun appareil disponible</string>
+    <string name="diaconn_no_device_available">Aucun appareil disponible</string>
     <string name="diaconn_pairing">Appairage pompe Diaconn</string>
     <string name="pumperror">Erreur Pompe</string>
     <string name="diaconn_g8_history_alarm">Alarmes</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Incrément Bolus</string>
     <string name="basal_step">Incrément Basal</string>
     <string name="pump_firmware_label">Firmware</string>
-    <string name="diagonn_g8_useroptions">OPTIONS UTILISATEUR</string>
+    <string name="diaconn_g8_user_options">OPTIONS UTILISATEUR</string>
     <string name="pairfirst">Veuillez appairer votre pompe avec votre téléphone !</string>
     <string name="processinghistory">"Traitement d'événement "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

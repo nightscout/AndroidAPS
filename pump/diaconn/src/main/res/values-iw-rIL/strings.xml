@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">מחיקת צימוד</string>
-    <string name="diaconn_nodeviceavailable">אין מכשירים זמינים</string>
+    <string name="diaconn_no_device_available">אין מכשירים זמינים</string>
     <string name="diaconn_pairing">צימוד משאבת Diaconn</string>
     <string name="pumperror">תקלת משאבה</string>
     <string name="diaconn_g8_history_alarm">התראות</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="basal_step">צעד במינון בזאלי</string>
     <string name="pump_firmware_label">קושחה</string>
-    <string name="diagonn_g8_useroptions">אפשרויות משתמש</string>
+    <string name="diaconn_g8_user_options">אפשרויות משתמש</string>
     <string name="pairfirst">נא לצמד את המשאבה עם הטלפון שלכם!</string>
     <string name="processinghistory">"מעבד אירוע "</string>
     <string name="diaconn_g8_history_tempbasal">בזאלי זמני</string>

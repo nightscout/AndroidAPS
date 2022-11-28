@@ -2587,10 +2587,12 @@ class Pump(
         val currentSystemTimeZone = TimeZone.currentSystemDefault()
         val currentSystemUtcOffset = currentSystemTimeZone.offsetAt(currentSystemDateTime)
         val dateTimeDelta = (currentSystemDateTime - currentPumpDateTime)
+        var needsPumpDateTimeAdjustment = false
 
         logger(LogLevel.DEBUG) { "History delta size: ${historyDelta.size}" }
         logger(LogLevel.DEBUG) { "Pump local datetime: $currentPumpLocalDateTime with UTC offset: $currentPumpDateTime" }
         logger(LogLevel.DEBUG) { "Current system datetime: $currentSystemDateTime" }
+        logger(LogLevel.DEBUG) { "Current system timezone: $currentSystemTimeZone" }
         logger(LogLevel.DEBUG) { "Datetime delta: $dateTimeDelta" }
 
         // The following checks update the UTC offset in the pump state and
@@ -2605,10 +2607,6 @@ class Pump(
         // TBRs are not affected by this, because the TBR info we store in the
         // pump state is already stored as an Instant, so it stores the timezone
         // offset along with the actual timestamp.
-        // For the same reason, we *first* update the pump's datetime (if there
-        // is a deviation from the system datetime) and *then* update the UTC
-        // offset. The pump is still running with the localtime that is tied
-        // to the old UTC offset.
 
         // Check if the system's current datetime and the pump's are at least
         // 2 minutes apart. If so, update the pump's current datetime.
@@ -2624,6 +2622,23 @@ class Pump(
                 "system / pump datetime (UTC): $currentSystemDateTime / $currentPumpDateTime; " +
                 "datetime delta: $dateTimeDelta"
             }
+            needsPumpDateTimeAdjustment = true
+        }
+
+        // Check if the pump's current UTC offset matches that of the system.
+
+        if (currentSystemUtcOffset != currentPumpUtcOffset!!) {
+            logger(LogLevel.INFO) {
+                "System UTC offset differs from pump's; system timezone: $currentSystemTimeZone; " +
+                "system UTC offset: $currentSystemUtcOffset; pump state UTC offset: ${currentPumpUtcOffset!!}; " +
+                "updating pump state and datetime"
+            }
+            pumpStateStore.setCurrentUtcOffset(bluetoothDevice.address, currentSystemUtcOffset)
+            currentPumpUtcOffset = currentSystemUtcOffset
+            needsPumpDateTimeAdjustment = true
+        }
+
+        if (needsPumpDateTimeAdjustment) {
             // Shift the pump's new datetime into the future, using a simple
             // heuristic that estimates how long it will take updatePumpDateTime()
             // to complete the adjustment. If the difference between the pump's
@@ -2635,29 +2650,19 @@ class Pump(
             // too far in the past. By estimating the updatePumpDateTime()
             // duration and taking it into account, we minimize the chances
             // of the pump's new datetime being too old already.
+            // NOTE: It is important that currentPumpDateTime has been produced
+            // with the _unadjusted_ UTC offset (in case the code above noticed
+            // a difference between system and pump UTC offsets and adjusted the
+            // latter to match the former). Otherwise, the estimates will be off.
             val newPumpDateTimeShift = estimateDateTimeSetDurationFrom(currentPumpDateTime, currentSystemDateTime, currentSystemTimeZone)
-            updatePumpDateTime(
-                (currentSystemDateTime + newPumpDateTimeShift).toLocalDateTime(currentSystemTimeZone)
-            )
+            updatePumpDateTime((currentSystemDateTime + newPumpDateTimeShift).toLocalDateTime(currentSystemTimeZone))
         } else {
             logger(LogLevel.INFO) {
                 "Current system datetime is close enough to pump's current datetime, " +
-                "no pump datetime adjustment needed; " +
+                "and timezones did not change; no pump datetime adjustment needed; " +
                 "system / pump datetime (UTC): $currentSystemDateTime / $currentPumpDateTime; " +
                 "datetime delta: $dateTimeDelta"
             }
-        }
-
-        // Check if the pump's current UTC offset matches that of the system.
-
-        if (currentSystemUtcOffset != currentPumpUtcOffset!!) {
-            logger(LogLevel.INFO) {
-                "System UTC offset differs from pump's; system timezone: $currentSystemTimeZone; " +
-                "system UTC offset: $currentSystemUtcOffset; pump state UTC offset: ${currentPumpUtcOffset!!}; " +
-                "updating pump state"
-            }
-            pumpStateStore.setCurrentUtcOffset(bluetoothDevice.address, currentSystemUtcOffset)
-            currentPumpUtcOffset = currentSystemUtcOffset
         }
     }
 
@@ -3024,7 +3029,7 @@ class Pump(
             calcLongRTButtonPressObservationPeriod(dayDistance)
 
         logger(LogLevel.DEBUG) {
-            "Current local pump / system datetime: $currentLocalPumpDateTime / $currentLocalSystemDateTime " +
+            "Current local pump / local system datetime: $currentLocalPumpDateTime / $currentLocalSystemDateTime " +
             "; estimated duration: $estimatedDuration"
         }
 

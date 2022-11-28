@@ -5,12 +5,12 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.durationInMinutes
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.durationInMinutes
+import info.nightscout.core.extensions.toStringFull
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator

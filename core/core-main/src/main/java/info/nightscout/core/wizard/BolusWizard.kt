@@ -4,9 +4,9 @@ import android.content.Context
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.highValueToUnitsToString
-import info.nightscout.androidaps.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.highValueToUnitsToString
+import info.nightscout.core.extensions.lowValueToUnitsToString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -36,7 +36,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
@@ -73,7 +73,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
 
 
@@ -400,7 +400,7 @@ class BolusWizard @Inject constructor(
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                             } else
                                 carbTimer.scheduleAutomationEventEatReminder()
                         }
@@ -447,7 +447,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                                 }
                             }
                         })
@@ -455,7 +455,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                                 }
                             }
                         })
@@ -486,7 +486,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })

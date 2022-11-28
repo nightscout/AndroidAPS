@@ -3,17 +3,11 @@
     <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
     <string name="calibration_sent">Kalibrácia odoslaná do xDrip+</string>
     <string name="bg_label">Glykémia</string>
-    <string name="missed_bg_readings">Chýbajúce hodnoty glykémie</string>
     <string name="time_to_eat">Čas na jedlo</string>
-    <string name="enable_bolus_advisor">Povoliť bolusového poradcu</string>
-    <string name="enable_bolus_advisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
     <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="executing_right_now">Príkaz sa práve vykonáva</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
-    <string name="request">Požiadavka</string>
     <string name="permission">Povolenie</string>
-    <string name="error_asking_for_permissions">Chyba pri žiadosti o oprávnenie</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <string name="need_whitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
     <string name="need_location_permission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
     <string name="need_storage_permission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>

@@ -13,7 +13,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.rx.bus.RxBus
@@ -51,7 +51,7 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     var injector: HasAndroidInjector
     var buffer = ByteArray(512)

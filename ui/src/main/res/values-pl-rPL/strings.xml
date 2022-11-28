@@ -8,26 +8,38 @@
     <string name="remind_to_bolus_later">Przypomnij o bolusie</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="activity_monitor">Monitor aktywności</string>
+    <string name="do_you_want_reset_stats">Czy chcesz zresetować statystyki aktywności?</string>
     <string name="statistics">Statystyki</string>
     <string name="calculation_in_progress">Trwa obliczanie</string>
+    <string name="invalid_age">Nieprawidłowy wpis wieku</string>
+    <string name="invalid_weight">Nieprawidłowy wpis wagi</string>
     <string name="id">ID:</string>
     <string name="submit">Wyślij</string>
     <string name="age">Czas</string>
     <string name="weight_label">Waga</string>
+    <string name="most_common_profile">Najczęściej używany profil:</string>
+    <string name="glucose_type">Typ glukozy</string>
+    <string name="bg_other">Inne</string>
+    <string name="bg_meter">Glukometr</string>
+    <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Razem</string>
     <!-- FillDialog -->
-    <string name="button1">Przycisk 1</string>
-    <string name="button2">Przycisk 2</string>
-    <string name="button3">Przycisk 3</string>
+    <string name="fill_warning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
     <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
     <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
+    <string name="timeshift_label">Zmiana czasu</string>
+    <string name="percentage_label">Procent</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Wstrzymaj pętlę na 1h</string>
     <string name="suspendloopfor2h">Wstrzymaj pętlę na 2h</string>
     <string name="suspendloopfor3h">Wstrzymaj pętlę na 3h</string>
     <string name="suspendloopfor10h">Wstrzymaj pętlę na 10 h</string>
@@ -46,35 +58,45 @@
     <string name="duration3h">3 godziny</string>
     <string name="duration10h">10 godzin</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2 h</string>
     <string name="result_insulin_carbs">Wynik: %1$s %2$s</string>
     <string name="missing_carbs">Brakuje %1$d g</string>
     <string name="carb_time_label">Czas węglow.</string>
     <string name="show_calculation">Pokaż obliczenia</string>
     <!-- Treatments -->
+    <string name="no_records_available">Brak wpisów</string>
     <string name="calculation_short">Kalk</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Węglow.:</string>
     <string name="treatments_iobtotal_label_string">Całkowita IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Aktywna IOB:</string>
     <string name="tempbasals_realduration_label_string">Czas:</string>
     <string name="tempbasals_netratio_label_string">Iloczyn:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Całkowita IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Poprawka</string>
+    <string name="meal_bolus">Posiłek</string>
     <string name="prime">Wypełnianie</string>
     <string name="refresheventsfromnightscout">Odśwież z NS</string>
+    <string name="user_entry">Wpis użytkownika</string>
     <string name="clone_label">Sklonuj</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Typ profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazy</string>
     <string name="selected_profile">Wybrany:</string>
+    <string name="compare_profile">Porównaj profile</string>
+    <string name="nav_profile_helper">Pomocnik profilu</string>
+    <string name="motol_default_profile">Profil domyślny</string>
+    <string name="current_profile">Bieżący profil</string>
+    <string name="available_profile">Dostępny profil</string>
+    <string name="format_with_tdd">Wiek: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Wiek: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Wiek: %1$d Waga: %2$.0f kg</string>
+    <string name="dpv_default_profile">Domyślny profil DPV</string>
+    <string name="invalid_pct">Nieprawidłowa wartość procentowa</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Dawka bazowa</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Szczegóły problemów z importem</string>
-    <string name="check_preferences_import_btn">Importuj</string>
-    <string name="check_preferences_import_anyway_btn">Importuj mimo to (NIEBEZPIECZNE!)</string>
-    <string name="check_preferences_before_import">Proszę sprawdzić ustawienia przed importem:</string>
-    <string name="check_preferences_cannot_import">Ustawienia nie mogą być zaimportowane!</string>
-    <string name="check_preferences_dangerous_import">Ustawienia nie powinny być importowane!</string>
+    <string name="stop_pressed">NACIŚNIĘTY STOP</string>
 </resources>

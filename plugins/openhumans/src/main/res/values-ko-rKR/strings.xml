@@ -14,7 +14,15 @@
     <string name="open_humans_notifications">Open Humans 알림</string>
     <string name="you_have_been_signed_out_of_open_humans">Open Humans에 접속 종료되었습니다.</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">의도한 것이 아닌 경우 \"여기\"를 클릭하여 다시 접속하십시오.</string>
+    <string name="next">다음</string>
     <string name="terms_of_use">이용 약관</string>
+    <string name="info_openhumans">이는 Open Humans에 사용자의 데이터를 복사하기 위한 오픈 소스 툴입니다. 사용자의 명시적 승인 없이 제3자에게 데이터를 공유할 권한은 없습니다. 프로젝트와 어플에서 수신한 데이터는 무작위 사용자 ID로 식별되고, 사용자의 승인에 따라 Open Humans 계정에 안전하게 이전 됩니다. www.openhumans.org를 통해 언제든지 업로드를 중지하고, 업로드된 데이터를 삭제할 수 있습니다.</string>
+    <string name="boluses">Boluses</string>
+    <string name="carbohydrates">탄수화물</string>
+    <string name="settings">설정</string>
+    <string name="device_model">장치모델</string>
+    <string name="nightscout_url">Nightscout URL</string>
+    <string name="agree">이해하고 동의합니다.</string>
     <string name="cancel">취소</string>
     <string name="close">닫기</string>
     <string name="upload_now">지금 업로드하기</string>

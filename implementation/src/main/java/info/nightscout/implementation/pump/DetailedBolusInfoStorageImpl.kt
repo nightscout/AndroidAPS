@@ -1,7 +1,7 @@
 package info.nightscout.implementation.pump
 
+import com.google.gson.Gson
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.pump.toJsonString
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.rx.logging.AAPSLogger
@@ -18,6 +18,8 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
 ) : DetailedBolusInfoStorage {
 
     val store = ArrayList<DetailedBolusInfo>()
+
+    fun DetailedBolusInfo.toJsonString(): String = Gson().toJson(this)
 
     @Synchronized
     override fun add(detailedBolusInfo: DetailedBolusInfo) {

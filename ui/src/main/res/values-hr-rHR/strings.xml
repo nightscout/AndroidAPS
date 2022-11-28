@@ -2,6 +2,7 @@
 <resources>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="weight_label">Težina</string>
     <string name="survey_comment">Napomena: Anonimno će se učitati samo podaci vidljivi na ovom zaslonu. ID je dodijeljen ovoj instalaciji AAPS-a. Možete ponovno poslati podatke ako se vaš glavni profil promijeni, ali pustite ga da radi barem tjedan dana kako bi rezultat bio vidljiv u određenom vremenskom rasponu. Cijenimo vašu pomoć.</string>
     <!-- WizardDialog -->
     <!-- FillDialog -->
@@ -13,8 +14,12 @@
     <string name="a11y_set_carb_timer">postavite timer alarma ugljikohidrata</string>
     <!-- Treatments -->
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
     <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Odabrano:</string>
+    <string name="compare_profile">Usporedite profile</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Bazalna stopa</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
+    <string name="stop_pressed">STOP PRITISNUT</string>
 </resources>

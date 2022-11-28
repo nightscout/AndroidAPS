@@ -3,10 +3,10 @@ package info.nightscout.plugins.iob.iobCobCalculator
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.iobCalc
+import info.nightscout.core.extensions.toTemporaryBasal
+import info.nightscout.core.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Units</string>
     <string name="low_mark">低血糖マーク</string>
     <string name="high_mark">高血糖マーク</string>
+    <string name="profile">プロファイル</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">コンフィグビルダー</string>
     <string name="configbuilder_pump">ポンプ</string>
     <string name="configbuilder_pump_description">AAPSで使用するポンプはどれですか？</string>
     <string name="configbuilder_profile">プロファイル</string>
@@ -9,4 +13,30 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">どのアルゴリズムを使用しますか？</string>
     <string name="configbuilder_general">全般</string>
+    <string name="config_builder_shortname">CONF</string>
+    <string name="description_config_builder">アクティブなプラグインの設定に使用</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">設定</string>
+    <string name="password_preferences_encrypt_prompt">インポートされた設定を復元するために、マスターパスワードが必要です。</string>
+    <string name="preferences_export_canceled">エクスポートをキャンセルしました！設定はエクスポートされませんでした！</string>
+    <string name="preferences_import_canceled">インポートがキャンセルされました！設定はインポートされませんでした！</string>
+    <string name="preferences_import_impossible">設定をインポートできません！</string>
+    <string name="nav_export">設定をエクスポート</string>
+    <string name="export_to">設定をエクスポート</string>
+    <string name="import_from">設定をインポート:</string>
+    <string name="setting_imported">設定をインポートしました</string>
+    <string name="old_master_password">古いマスターパスワードです</string>
+    <string name="different_password_used">このファイルは異なるマスターパスワードでエクスポートされ暗号化されました。ファイルを復号するには古いマスターパスワードを入力してください。</string>
+    <string name="master_password_will_be_replaced">マスターパスワードはインポートされ、古いマスターパスワードは置き換えられます。</string>
+    <string name="exported">設定をエクスポートしました</string>
+    <string name="filenotfound">ファイルが見つかりません</string>
+    <string name="goto_main_try_again">メイン画面に戻ってもう一度やり直してください。</string>
+    <string name="restartingapp">アプリケーションを終了して設定を適用します</string>
+    <string name="ue_exported">ユーザーエントリをエクスポートしました</string>
+    <!--    Maintenance-->
+    <string name="reset_db_confirm">データベースをリセットしますか？</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscoutバージョン:</string>
+    <string name="nav_resetdb">リセット データベース</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

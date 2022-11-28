@@ -21,7 +21,7 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
@@ -100,7 +100,7 @@ class DiaconnG8Service : DaggerService() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var diaconnLogUploader: DiaconnLogUploader
     @Inject lateinit var diaconnHistoryRecordDao: DiaconnHistoryRecordDao
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
@@ -212,7 +212,7 @@ class DiaconnG8Service : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
+                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
 
                     //de-initialize pump
                     diaconnG8Pump.reset()
@@ -244,7 +244,7 @@ class DiaconnG8Service : DaggerService() {
             if (diaconnG8Pump.dailyTotalUnits > diaconnG8Pump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    activityNames.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT)
+                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT)
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.approachingdailylimit) + ": " + diaconnG8Pump.dailyTotalUnits + "/" + diaconnG8Pump.maxDailyTotalUnits + "U",
                         null,

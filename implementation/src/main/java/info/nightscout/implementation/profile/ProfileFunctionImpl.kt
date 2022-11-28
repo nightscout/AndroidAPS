@@ -1,6 +1,6 @@
 package info.nightscout.implementation.profile
 
-import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy

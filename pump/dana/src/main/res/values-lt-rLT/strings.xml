@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Sujungiama</string>
-    <string name="danars_nodeviceavailable">Nerasta jokio prietaiso</string>
+    <string name="danars_no_device_available">Nerasta jokio prietaiso</string>
     <string name="danars_pairingok">Sujungta</string>
     <string name="danars_pairingtimedout">Sujungimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Užpildymas</string>
     <string name="danar_history_syspend">Sustabdyta</string>
     <string name="danar_history_prime">Užpildyti sistemą</string>
-    <string name="danar_useroptions">Vartotojo parinktys</string>
-    <string name="danar_timedisplay">Rodyti laiko formatą</string>
-    <string name="danar_buttonscroll">Mygtukų slinkties funkcija</string>
+    <string name="danar_user_options">Vartotojo parinktys</string>
+    <string name="danar_time_display">Rodyti laiko formatą</string>
+    <string name="danar_button_scroll">Mygtukų slinkties funkcija</string>
     <string name="danar_beep">Pypsėjimas spaudžiant mygtukus</string>
-    <string name="danar_pumpalarm">Aliarmas</string>
-    <string name="danar_pumpalarm_sound">Garsas</string>
-    <string name="danar_pumpalarm_vibrate">Vibravimas</string>
-    <string name="danar_pumpalarm_both">Abu</string>
-    <string name="danar_screentimeout">Ekrano aktyvumo laikas [seconds]</string>
+    <string name="danar_pump_alarm">Aliarmas</string>
+    <string name="danar_pump_alarm_sound">Garsas</string>
+    <string name="danar_pump_alarm_vibrate">Vibravimas</string>
+    <string name="danar_pump_alarm_both">Abu</string>
+    <string name="danar_screen_timeout">Ekrano aktyvumo laikas [seconds]</string>
     <string name="danar_backlight">Ekrano apšvietimo laikas [seconds]</string>
-    <string name="danar_glucoseunits">KG vienetai</string>
+    <string name="danar_glucose_units">KG vienetai</string>
     <string name="danar_shutdown">Išjungimas [hours]</string>
-    <string name="danar_lowreservoir">Žemas rezervuaro lygis [Units]</string>
-    <string name="danar_saveuseroptions">Išsaugoti nustatymus pompoje</string>
+    <string name="danar_low_reservoir">Žemas rezervuaro lygis [Units]</string>
+    <string name="danar_save_user_options">Išsaugoti nustatymus pompoje</string>
     <string name="description_pump_dana_r">DANA Diabecare R pompos integracija</string>
     <string name="description_pump_dana_r_korean">DANA Diabecare R pompos, skirtos vietinei P. Korėjos rinkai, integracija</string>
     <string name="description_pump_dana_r_v2">DANA Diabecare R pompos su atnaujinta programine-aparatine įranga integracija</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Nepavyko nustatyti bazės profilio</string>
     <string name="danar_bluetooth_status">Bluetooth statusas</string>
     <string name="danar_iob_label">Pompos AIO</string>
-    <string name="virtualpump_firmware_label">Programinė įranga</string>
+    <string name="firmware_label">Programinė įranga</string>
     <string name="danar_pump_settings">Dana pompos nustatymai</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">Įjungti</string>
     <string name="option_off">Išjungti</string>
     <string name="danar_bt_name_title">DanaR Bluetooth įrenginys</string>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="units">Μονάδες</string>
     <string name="next_button">Επόμενο</string>
     <string name="previous_button">Προηγ</string>
     <string name="nav_setupwizard">Οδηγός εγκατάστασης</string>
@@ -8,6 +9,7 @@
     <string name="end_user_license_agreement">Άδεια χρήσης τελικού χρήστη</string>
     <string name="end_user_license_agreement_text">ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΝΑ ΚΑΝΕΤΕ ΙΑΤΡΙΚΗ ΑΠΟΦΑΣΗ. ΔΕΝ ΥΠΑΡΧΕΙ ΕΓΓΥΗΣΗ ΓΙΑ ΤΟ ΠΡΟΓΡΑΜΜΑ, ΣΤΟ ΒΑΘΜΟ ΠΟΥ ΕΠΙΤΡΕΠΕΤΑΙ ΑΠΟ ΤΟ ΕΦΑΡΜΟΣΤΕΟ ΔΙΚΑΙΟ. ΕΚΤΟΣ ΟΠΟΙΑΣΔΗΠΟΤΕ ΔΙΑΒΑΘΜΙΣΜΕΝΗ ΚΑΤΑ ΤΗΝ ΕΓΓΡΑΦΗ ΤΩΝ ΚΑΤΟΧΟΙ ΠΝΕΥΜΑΤΙΚΩΝ ΔΙΚΑΙΩΜΑΤΩΝ ΚΑΙ/Ή ΑΛΛΑ ΜΕΡΗ ΠΑΡΕΧΟΝΤΑΙ ΤΟ ΠΡΟΓΡΑΜΜΑ \"ΩΣ ΕΧΕΙ\" ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ, ΕΞΑΙΡΟΥΜΕΝΕΣ Ή ΣΙΩΠΗΡΕΣ, ΣΥΜΠΕΡΙΛΑΜΒΑΝΟΜΕΝΩΝ, ΕΝΔΕΙΚΤΙΚΑ, ΤΩΝ ΣΙΩΠΗΡΩΝ ΕΓΓΥΗΣΕΩΝ ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ΚΑΙ ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Ο ΟΛΟΚΛΗΡΩΜΕΝΟΣ ΚΙΝΔΥΝΟΣ ΟΣΟΝ ΑΦΟΡΑ ΤΗΝ ΠΟΙΟΤΗΤΑ ΚΑΙ ΤΗΝ ΑΠΟΔΟΣΗ ΤΟΥ ΠΡΟΓΡΑΜΜΑΤΟΣ ΕΙΝΑΙ ΔΙΚΟ ΣΑΣ. ΕΑΝ ΤΟ ΠΡΟΓΡΑΜΜΑ ΔΕΝ ΕΙΝΑΙ ΕΛΑΤΤΩΜΑΤΙΚΟ, ΠΡΕΠΕΙ ΝΑ ΕΞΕΤΑΣΤΕ ΤΟ ΚΟΣΤΟΣ ΟΛΩΝ ΤΩΝ ΑΠΑΡΑΙΤΗΤΩΝ ΣΥΝΤΗΡΗΣΕΩΝ, ΕΠΙΣΚΕΥΩΝ Ή ΔΙΟΡΘΩΣΕΩΝ.</string>
     <string name="end_user_license_agreement_i_understand">ΚΑΤΑΛΑΒΑ ΚΑΙ ΣΥΜΦΩΝΩ</string>
+    <string name="display_settings">Ρυθμίσεις Εμφάνισης</string>
     <string name="low_mark">ΧΑΜΗΛΟ σημείο</string>
     <string name="high_mark">ΥΨΗΛΟ σημείο</string>
     <string name="permission">Άδεια</string>
@@ -26,6 +28,12 @@
     <string name="data_choices">Επιλογές δεδομένων</string>
     <string name="fabric_upload">Αποστολή δεδομένων στο εργοστάσιο</string>
     <string name="allow_automated_crash_reporting">Να επιτρέπεται η αυτόματη αποστολή αναφορών σφάλματος και χαρακτηριστικά χρήσης δεδομένων στους προγραμματιστές μέσω του fabric.io. service.</string>
+    <string name="request">Αίτημα</string>
+    <string name="apsmode_title">Λειτουργία APS</string>
+    <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Διαμόρφωση</string>
     <string name="configbuilder_pump">Αντλία</string>
     <string name="configbuilder_profile">Προφίλ</string>
     <string name="configbuilder_aps">APS</string>
@@ -36,8 +44,52 @@
     <string name="configbuilder_loop">Κύκλωμα</string>
     <string name="configbuilder_insulin_description">Ποιο τύπο ινσουλίνης χρησιμοποιείτε;</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
-    <string name="apsmode_title">Λειτουργία APS</string>
-    <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
     <string name="configbuilder_sensitivity">Ανίχνευση ευαισθησίας</string>
     <string name="configbuilder_sensitivity_description">Ποιος αλγόριθμος ευαισθησίας να χρησιμοποιηθεί;</string>
+    <string name="config_builder_shortname">Διαμόρφωση</string>
+    <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Επιλογές</string>
+    <string name="password_preferences_encrypt_prompt">Θα σας ζητηθεί ο κύριος κωδικός πρόσβασης, ο οποίος θα χρησιμοποιηθεί για να κωδικοποιηθούν οι εξαγώμενες προτιμήσεις.</string>
+    <string name="preferences_export_canceled">Η εξαγωγή ακυρώθηκε! Οι προτιμήσεις ΔΕΝ έχουν εξαχθεί!</string>
+    <string name="preferences_import_canceled">Η εισαγωγή ακυρώθηκε! Οι προτιμήσεις δεν έχουν εισαχθεί!</string>
+    <string name="preferences_import_impossible">Η εισαγωγή προτιμήσεων δεν είναι δυνατή!</string>
+    <string name="check_preferences_details_btn">Εξηγήστε τα προβλήματα εισαγωγής…</string>
+    <string name="check_preferences_details_title">Λεπτομέρειες προβλημάτων εισαγωγής</string>
+    <string name="check_preferences_import_btn">Εισαγωγή</string>
+    <string name="check_preferences_import_anyway_btn">Εισαγωγή οπωσδήποτε(ΕΠΙΚΙΝΔΥΝΟ)</string>
+    <string name="import_setting">Εισαγωγή ρυθμίσεων</string>
+    <string name="check_preferences_before_import">Ελέγξτε τις προτιμήσεις πριν την εισαγωγή:</string>
+    <string name="check_preferences_cannot_import">Δεν είναι δυνατή η εισαγωγή προτιμήσεων!</string>
+    <string name="check_preferences_dangerous_import">Δεν πρέπει να εισαχθούν προτιμήσεις!</string>
+    <string name="nav_export">Εξαγωγή ρυθμίσεων</string>
+    <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
+    <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
+    <string name="setting_imported">Ρυθμίσεις εισήχθησαν</string>
+    <string name="old_master_password">Παλιός Κύριος Κωδικός Πρόσβασης</string>
+    <string name="different_password_used">Αυτό το αρχείο εξήχθη και κρυπτογραφήθηκε με διαφορετικό κύριο κωδικό πρόσβασης. Δώστε τον παλιό κύριο κωδικό πρόσβασης για να αποκρυπτογραφήσετε το αρχείο.</string>
+    <string name="master_password_will_be_replaced">Ως αποτέλεσμα επιτυχούς εισαγωγής ο τρέχων κύριος κωδικός πρόσβασης θα αντικατασταθεί με τον παλιό κύριο κωδικό πρόσβασης!</string>
+    <string name="exported">Επιλογές εξήχθησαν</string>
+    <string name="filenotfound">Μη εύρεση φακέλου</string>
+    <string name="goto_main_try_again">Επιστρέψτε στην αρχική οθόνη και δοκιμάστε ξανά.</string>
+    <string name="restartingapp">Έξοδος από το application για την εφαρμογή των ρυθμίσεων</string>
+    <string name="ue_exported">Καταχωρήσεις χρηστών που εξάγονται</string>
+    <!--    Maintenance-->
+    <string name="maintenance">Συντήρηση</string>
+    <string name="maintenance_shortname">ΣΥΝΤΗΡ</string>
+    <string name="description_maintenance">Παρέχει λειτουργίες συντήρησης (π. χ. αποστολή, καθαρισμό καταγραφής).</string>
+    <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
+    <string name="maintenance_settings">Ρυθμίσεις συντήρησης</string>
+    <string name="maintenance_email">E-mail</string>
+    <string name="maintenance_amount">Αριθμός αρχείων καταγραφής για αποστολή</string>
+    <string name="send_all_logs">Αποστολή αρχείων καταγραφής μέσω Email</string>
+    <string name="delete_logs">Διαγραφή αρχείων καταγραφής</string>
+    <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
+    <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
+    <string name="log_files">Αρχεία καταγραφής</string>
+    <string name="nav_logsettings">Ρυθμίσεις Αρχείου Καταγραφής</string>
+    <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
+    <string name="resettodefaults">Επαναφορά προεπιλογών</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>

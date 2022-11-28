@@ -3,9 +3,9 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.core.extensions.fromConstant
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputCarePortalMenu
 import info.nightscout.automation.elements.InputDuration

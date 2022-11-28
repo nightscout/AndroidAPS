@@ -2,7 +2,7 @@ package info.nightscout.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.extensions.shiftBlock
+import info.nightscout.core.extensions.shiftBlock
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs

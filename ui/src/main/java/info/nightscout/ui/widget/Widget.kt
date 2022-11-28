@@ -13,9 +13,9 @@ import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.directionToIcon
+import info.nightscout.core.extensions.valueToUnitsString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.ProfileSealed
@@ -30,7 +30,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -51,7 +51,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var trendCalculator: TrendCalculator
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var dateUtil: DateUtil
@@ -104,7 +104,7 @@ class Widget : AppWidgetProvider() {
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 
         // Create an Intent to launch MainActivity when clicked
-        val intent = Intent(context, activityNames.mainActivity).also { it.action = intentAction }
+        val intent = Intent(context, uiInteraction.mainActivity).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)

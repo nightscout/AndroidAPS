@@ -10,11 +10,15 @@
     <string name="end_user_license_agreement">Slutbrugerlicensaftale</string>
     <string name="end_user_license_agreement_text">MÅ IKKE BRUGES TIL AT TRÆFFE MEDICINSKE BESLUTNINGER. DER ER INGEN GARANTI FOR PROGRAMMET, I DET OMFANG GÆLDENDE LOV TILLADER DET. UNDTAGEN NÅR DET ELLERS ER ANFØRT SKRIFTLIGT, AT RETTIGHEDSHAVERE OG / ELLER ANDRE PARTER LEVERER PROGRAMMET \"SOM BESET\" UDEN NOGEN FORM FOR GARANTI, HVERKEN UDTRYKT ELLER UNDERFORSTÅET, HERUNDER, MEN IKKE BEGRÆNSET TIL, DE UNDERFORSTÅELIGHEDER, DER ER FORBUNDET MED EGNETHED OG EGNETHED TIL ET BESTEMT FORMÅL. HELE RISIKOEN MED HENSYN TIL KVALITETEN OG YDEEVNEN AF PROGRAMMET ER DIN. HVIS PROGRAMMET VISER SIG AT VÆRE DEFEKT, BÆRER DU SELV OMKOSTNINGERNE VED ALLE NØDVENDIGE SERVICER, REPARATIONER ELLER KORREKTIONER SOM ER NØDVENDIGE.</string>
     <string name="end_user_license_agreement_i_understand">JEG FORSTÅR OG ER ENIG</string>
+    <string name="display_settings">Visningsindstillinger</string>
     <string name="low_mark">LAV værdi</string>
     <string name="high_mark">HØJ værdi</string>
     <string name="low_mark_comment">Nedre værdi for målområde (kun visning)</string>
     <string name="high_mark_comment">Øvre værdi for målområde (kun visning)</string>
     <string name="permission">Tilladelse</string>
+    <string name="need_system_window_permission">Applikationen mangler system vindues tilladelse til notifikationer</string>
+    <string name="need_location_permission">Applikationen mangler lokations tilladelse til BT scanning og WIFI identifikation</string>
+    <string name="need_storage_permission">Applikationen mangler lagerstyrings tilladelse for at gemme logfiler og exporteringsindstillinger</string>
     <string name="askforpermission">Anmod om tilladelse</string>
     <string name="storedsettingsfound">Gemte indstillinger fundet</string>
     <string name="master_password_summary">Hovedadgangskode bruges til backup kryptering og til at tilsidesætte sikkerhed i applikationen. Husk det eller gem et sikkert sted.</string>
@@ -43,6 +47,13 @@
     <string name="allow_automated_crash_reporting">Tillad automatisk nedbruds rapportering og funktionsbrug data som sendes til udviklerne via fabric.io tjenesten.</string>
     <string name="summary_email_for_crash_report">Denne identifikation vil blive vedhæftet til nedbrudsrapporter, så vi kan kontakte dig i hastende tilfælde. Det er valgfrit.</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
+    <string name="request">Anmod</string>
+    <string name="apsmode_title">APS Tilstand</string>
+    <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
+    <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Konfigurations bygger</string>
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -51,14 +62,87 @@
     <string name="configbuilder_aps_description">Hvilken APS algoritme skal foretage terapi justeringer?</string>
     <string name="configbuilder_general">Generelt</string>
     <string name="configbuilder_general_description">Disse er nogle generelle tilføjelser, som du måske kan finde nyttige.</string>
+    <string name="configbuilder_sync">Synkronisering</string>
     <string name="configbuilder_constraints_description">Hvilke begrænsninger er anvendt?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Brug dette til at aktivere AAPS\' loop integration.</string>
     <string name="configbuilder_insulin_description">Hvilken type insulin bruger du?</string>
     <string name="configbuilder_bgsource">BG kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
-    <string name="apsmode_title">APS Tilstand</string>
-    <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
     <string name="configbuilder_sensitivity">Detektering af følsomhed</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
+    <string name="config_builder_shortname">KONF</string>
+    <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
+    <string name="allow_hardware_pump_text">Bemærk: Hvis du aktiverer og opretter forbindelse til en hardwarepumpe, vil AndroidAPS kopiere de basale indstillinger fra profilen til pumpen og overskrive den eksisterende basal rate lagret på pumpen. Sørg for, at du har den korrekte basal indstilling i AndroidAPS. Hvis du ikke er sikker på eller ikke ønsker at overskrive de basale indstillinger på din pumpe, tryk på annuller og gentag skift til pumpen på et senere tidspunkt.</string>
+    <string name="a11y_open_settings">Åbn indstillinger</string>
+    <string name="nsclient_version_does_not_match">AAPSClient version matcher ikke AAPS version. Opdater venligst.</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Indstillinger</string>
+    <string name="password_preferences_encrypt_prompt">Du bliver bedt om hovedadgangskode, som vil blive brugt til at kryptere eksporterede præferencer.</string>
+    <string name="preferences_export_canceled">Eksport annulleret! Indstillinger er IKKE eksporteret!</string>
+    <string name="preferences_import_canceled">Import er annulleret! Præferencer er IKKE importeret!</string>
+    <string name="preferences_import_impossible">Kan ikke importere præferencer!</string>
+    <string name="check_preferences_details_btn">Forklar importproblemer…</string>
+    <string name="check_preferences_details_title">Importeringsfejl detaljer</string>
+    <string name="check_preferences_import_btn">Importer</string>
+    <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
+    <string name="import_setting">Importer indstillinger</string>
+    <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
+    <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
+    <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
+    <string name="nav_export">Eksporter indstillinger</string>
+    <string name="export_to">Eksporter indstillinger til</string>
+    <string name="import_from">Importer indstillinger fra</string>
+    <string name="setting_imported">Indstillinger importeret</string>
+    <string name="old_master_password">Gammel Hovedadgangskode</string>
+    <string name="different_password_used">Denne fil er eksporteret og krypteret med et andet masterkodeord. Angiv det gamle masterkodeord for at dekryptere filen.</string>
+    <string name="master_password_will_be_replaced">Som et resultat af en vellykket import vil nuværende hovedadgangskode blive erstattet med den gamle hovedadgangskode!</string>
+    <string name="exported">Præferencer eksporteret</string>
+    <string name="filenotfound">Filen blev ikke fundet</string>
+    <string name="goto_main_try_again">Gå venligst tilbage til hovedskærmen og prøv igen.</string>
+    <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
+    <string name="ue_exported">Brugerindtastninger exporteret</string>
+    <!--    Maintenance-->
+    <string name="maintenance">Vedligeholdelse</string>
+    <string name="maintenance_shortname">MAINT</string>
+    <string name="description_maintenance">Giver flere funktioner til vedligeholdelse (f.eks. log afsendelse, log sletning).</string>
+    <string name="reset_db_confirm">Er du sikker på, at du vil nulstille databaserne?</string>
+    <string name="maintenance_settings">Vedligeholdelses Indstillinger</string>
+    <string name="maintenance_email">E-mail modtager</string>
+    <string name="maintenance_amount">Antal logs at sende</string>
+    <string name="send_all_logs">Send logfiler via e-mail</string>
+    <string name="delete_logs">Slet logs</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
+    <string name="engineering_mode_enabled">Engineering mode aktiveret</string>
+    <string name="log_files">Logfiler</string>
+    <string name="nav_logsettings">Log indstillinger</string>
+    <string name="miscellaneous">Diverse</string>
+    <string name="nav_resetdb">Nulstil databaser</string>
+    <string name="resettodefaults">Nulstil til standardindstillinger</string>
+    <!-- Maintenance -->
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
+    <string name="exported_less_than_hour_ago">eksporteret for mindre end time siden</string>
+    <string name="in_directory" comment="placeholder is for exported file path">i mappe %1$s</string>
+    <string name="preferences_import_list_title">Vælg fil, der skal importeres</string>
+    <string name="metadata_warning_different_flavour">Præferencer er oprettet med forskellig variant af AAPS (%1$s) Mens du har: %2$s.\n\nNogle indstillinger mangler eller er ugyldige-efter import, tjek og opdatér dine præferencer.</string>
+    <string name="metadata_warning_different_device">Indstillinger er oprettet på en anden enhed. Det er OK, hvis du importerer fra ældre / anden telefon, men sørg for, at importerede præferencer er korrekte!</string>
+    <string name="metadata_warning_outdated_format">Du bruger det forældede ældre format fra gamle versioner af AAPS, som ikke er sikret. Brug kun den som en sidste udvej, hvis du ikke har en eksport i aktuelt, JSON-format.</string>
+    <string name="metadata_warning_old_export">Importerede præferencer er allerede %1$s dag(e) gammel! Måske har du flere opdaterede præferencer, eller vælger du den forkerte fil? Husk at eksportere præferencer regelmæssigt!</string>
+    <string name="metadata_warning_date_format">Ugyldigt datoformat!</string>
+    <string name="metadata_warning_different_version">Indstillinger fra en anden mindre version af applikationen. Det er OK, hvis du importerer efter opgradering, men tjek efter import, hvis indstillingerne stadig er korrekte!</string>
+    <string name="metadata_urgent_different_version">Indstillinger fra en anden overordnet version af applikationen. Større versioner er forskellige, og de kan have inkompatible præferencer. Sørg for, at indstillingerne stadig er korrekte, når du har importeret!</string>
+    <string name="prefdecrypt_settings_tampered">Opsætnings fil manipuleret</string>
+    <string name="prefdecrypt_settings_secure">Indstillingsfilen er sikker</string>
+    <string name="prefdecrypt_settings_unencrypted">Bruger ikke sikker, ukrypteret indstillingsformat</string>
+    <string name="prefdecrypt_wrong_json">JSON-formatfejl. Der mangler et påkrævet felt (format, indhold, metadata eller sikkerhed)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfejl. Det angivne kodeord kan ikke dekryptere filen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filkontrolsum (hash) mangler, kan ikke verificere valideringsindstillingerne!</string>
+    <string name="prefdecrypt_issue_modified">Filen er ændret efter eksport!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfejl, parsing præferencer mislykkedes!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfejl, det angivne kodeord er ugyldigt, eller indstillingsfilen er ændret. Det kan forekomme, at den importerede fil er eksporteret med et andet masterkodeord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
+    <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AAPS fra Systemindstillinger \nellers vil AndroidAPS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
 </resources>

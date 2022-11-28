@@ -1,4 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Check Combo</string>
+    <string name="combov2_plugin_description">Integración de bombas de insulina Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">No se pudo conectar a la bomba</string>
+    <string name="combov2_not_paired">No se encuentra emparejado a una bomba</string>
+    <string name="combov2_pump_terminated_connection">Conexión con la bomba terminada</string>
+    <string name="combov2_warning">Advertencia de Combo</string>
+    <string name="combov2_error">Error de Combo</string>
+    <string name="combov2_warning_4">Contacte a la línea de soporte para actualizar</string>
+    <string name="combov2_warning_10">Error de Bluetooth; vuelva a emparejar</string>
+    <string name="combov2_error_1">Reservorio vacío</string>
+    <string name="combov2_error_2">Batería vacía</string>
+    <string name="combov2_error_4">Oclusión</string>
+    <string name="combov2_error_5">Operación de respaldo de la bomba finalizado</string>
+    <string name="combov2_error_6">Error mecánico</string>
+    <string name="combov2_error_7">Error electrónico</string>
+    <string name="combov2_error_8">Interrupción de energía</string>
+    <string name="combov2_error_9">Reemplazar la bomba de prestamo</string>
+    <string name="combov2_error_10">Error del reservorio</string>
+    <string name="combov2_error_11">El set de infusión no ha sido llenado</string>
+    <string name="combov2_extended_bolus_not_supported">El bolo extendido no es compatible</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Emparejar con la bomba</string>
+    <string name="combov2_unpair_pump_title">Desemparejar la bomba</string>
+    <string name="combov2_driver_state_label">Estado del controlador</string>
+    <string name="combov2_current_activity_label">Actividad actual</string>
     <string name="bluetooth_address">Dirección Bluetooth</string>
+    <string name="combov2_start_pairing">Iniciar el emparejamiento</string>
+    <string name="combov2_pairing_in_progress">Emparejamiento en progreso</string>
+    <string name="combov2_pairing_start_steps">Pasos para realizar emparejamiento con su Combo:\n\n
+1. En su bomba vaya a los ajustes de Bluetooth\n
+2. Comprobar si existe un dispositivo como emparejado; Si es así, vaya a la pantalla de bomba \"Eliminar dispositivo\" para eliminar/desemparejar ese dispositivo\n
+3. Prosiga a la pantalla de bomba \"Añadir dispositivo\" e inicia el emparejamiento en la bomba\n
+4. Haga clic en el botón \"Empezar a emparejar\" de abajo para iniciar emparejamiento en AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Después de unos instantes, se muestra en la pantalla de la bomba el nombre del teléfono; presiona COMPROBAR para confirmarlo.\n\n
+Cuando el emparejamiento se complete con éxito, confirma que el emparejamiento ha terminado en la bomba y vuelve a la pantalla principal, pulsando dos veces el botón COMPROBAR.\n\n
+Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
+1. Pulsa Atrás o el botón \"Cancelar emparejamiento\"\n
+2. Cancela el emparejamiento en Combo (presiona al mismo tiempo los botones ARRIBA y MENÚ al mismo tiempo para cancelar el emparejamiento)\n
+3. Intenta emparejar de nuevo</string>
+    <string name="combov2_pin_entry_hint">0123456789</string>
+    <string name="combov2_enter_pin">Introducir PIN</string>
+    <string name="combov2_cancel_pairing">Emparejamiento cancelado</string>
+    <string name="combov2_pin_hint">PIN de 10 dígitos</string>
+    <string name="combov2_pairing_finished_successfully">Vinculado correctamente con Combo</string>
+    <string name="combov2_pairing_cancelled">Emparejamiento con Combo cancelado por el usuario</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Tiempo de espera de escaneo alcanzado</string>
+    <string name="combov2_pairing_failed_due_to_error">No se pudo emparejar debido al error: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Emparejamiento abortado por razones desconocidas</string>
+    <string name="combov2_scanning_for_pump">Buscando bomba</string>
+    <string name="combov2_establishing_bt_connection">Estableciendo conexión Bluetooth (intento número %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Realizando emparejamiento con la bomba</string>
+    <string name="combov2_pairing_pump_requests_pin">Solucitud de PIN de 10 dígitos de la bomba</string>
+    <string name="combov2_pairing_finishing">Finalizando emparejamiento</string>
+    <string name="combov2_no_connection_for_n_mins">Ninguna conexión durante %1$d min</string>
+    <string name="combov2_less_than_one_minute_ago">Hace menos de 1 minuto</string>
+    <string name="combov2_setting_current_pump_time">Configuración de la hora actual en la bomba</string>
+    <string name="combov2_setting_current_pump_date">Configuración de la fecha actual en la bomba</string>
+    <string name="combov2_not_initialized">No Inicializado</string>
+    <string name="combov2_checking_pump">Comprobando bomba</string>
+    <string name="combov2_ready">Listo</string>
+    <string name="combov2_suspended">Suspendido</string>
+    <string name="combov2_pump_is_suspended">Bomba suspendida</string>
+    <string name="combov2_executing_command">Ejecutando comando</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Obtener el perfil basal</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Configuración del perfil basal</string>
+    <string name="combov2_setting_tbr_cmddesc">Establecer %1$d%% TBR durante %2$d minutos</string>
+    <string name="combov2_cancelling_tbr">Cancelando TBR en curso</string>
+    <string name="combov2_delivering_bolus_cmddesc">Entregando %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Obtener el historial TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Actualizando fecha de la bomba</string>
+    <string name="combov2_updating_pump_status_cmddesc">Actualizando estado de la bomba</string>
+    <string name="combov2_pairing_pin_failure">El PIN no funcionó. Comprueba si hay un error tipográfico. Si esto sigue sucediendo, cancela y vuelve a intentar el emparejamiento.</string>
+    <string name="combov2_discovery_duration">Duración del descubrimiento (en segundos)</string>
+    <string name="combov2_verbose_logging">Habilitar el registro detallado de Combo</string>
+    <string name="combov2_getting_basal_profile">Obteniendo perfil basal; %1$d factor(es) leídos</string>
+    <string name="combov2_setting_basal_profile">Configurando perfil basal; %1$d factor(es) escrito(s)</string>
+    <string name="combov2_delivering_bolus">Entregando bolo (%1$.1f de %2$.1f U entregado)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">No se puede entregar el tratamiento: la bomba está suspendida</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Inulina insuficiente en el reservorio</string>
+    <string name="combov2_bolus_cancelled">Bolo cancelado</string>
+    <string name="combov2_bolus_delivery_failed">Entrega del bolo fallida. No se ha entregado ningún bolo. Para asegurarse, por favor, compruebe la bomba para evitar un doble bolo. Para protegerle contra los fallos, no se reintentan automáticamente los bolos.</string>
+    <string name="combov2_bolus_not_delivered">Bolo no entregado</string>
+    <string name="combov2_cannot_access_pump_data">No se puede acceder a los datos de la bomba; la bomba debe ser emparejada de nuevo</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Se han detectado entregas de bolos no comprobadas. Cancelando bolo por razones de seguridad.</string>
+    <string name="combov2_incorrect_active_basal_profile">Perfil basal activo incorrecto; el perfil 1 debe ser el activo, no el perfil %1$d</string>
+    <string name="combov2_unrecognized_alert">Alerta de Combo no reconocida</string>
+    <string name="combov2_combo_alert">Alerta de Combo</string>
+    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min restantes)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (menos de 1 min restante)</string>
+    <string name="combov2_load_tdds_cancelled">Cargando TDDs cancelados</string>
+    <string name="combov2_retrieving_tdds_failed">Error al recibir TDDs</string>
+    <string name="combov2_no_activity">{fa-bed}</string>
+    <string name="combov2_battery_empty_indicator">{fa-battery-empty}</string>
+    <string name="combov2_battery_low_indicator">{fa-battery-quarter}</string>
+    <string name="combov2_battery_full_indicator">{fa-battery-full}</string>
+    <string name="combov2_battery_low_warning">Batería de bomba baja</string>
+    <string name="combov2_reservoir_low_warning">El nivel del reservorio de bomba es bajo</string>
+    <string name="combov2_setting_tbr_succeeded">Configuración de TBR exitosa</string>
+    <string name="combov2_setting_tbr_failed">Configuración de TBR fallida</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Límite inesperado encontrado al ajustar TBR: el porcentaje objetivo fue de %1$d%%, alcanzó un límite de %1$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">No se puede establecer el TBR absoluto si la tasa basal base es cero</string>
+    <string name="combov2_pair_with_pump_summary">Emparejar AndroidAPS y Android con una bomba Accu-Chek Combo actualmente no emparejada</string>
+    <string name="combov2_unpair_pump_summary">Desemparejar AndroidAPS y Android desde la bomba Accu-Chek Combo actualmente emparejada</string>
+    <string name="combov2_unknown_tbr_detected">Una TBR desconocida fue detectada y detenida; porcentaje: %1$d%%; duración restante: %2$s</string>
+    <string name="combov2_connection_error">Error de conexión: %1$s</string>
+    <string name="combov2_short_status_last_connection">ÚltimaConexión: hace %1$d minutos</string>
+    <string name="combov2_short_status_alert">Alertas: %s</string>
+    <string name="combov2_short_status_last_bolus">ÚltimoBolo: %1$s @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Reservorio: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">vacío</string>
+    <string name="combov2_short_status_battery_state_low">bajo</string>
+    <string name="combov2_short_status_battery_state_full">completo</string>
+    <string name="combov2_short_status_battery_state">Batería: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetectar y añadir automáticamente los cambios de reservorio de insulina</string>
+    <string name="combov2_automatic_battery_entry">Autodetectar y añadir automáticamente los cambios de pila</string>
+    <string name="combov2_note_reservoir_change">Cambio del reservorio de insulina insertado automáticamente por el controlador Combov2</string>
+    <string name="combov2_note_battery_change">Cambio de pila insertado automáticamente por el controlador Combov2</string>
+    <string name="combov2_timezone_changed">Zona horaria cambiada</string>
+    <string name="combov2_datetime_changed">Fecha y/o hora cambiada</string>
+    <string name="combov2_dst_started">Inicio del horario de verano (DST)</string>
+    <string name="combov2_dst_ended">Fin del horario de verano (DST)</string>
 </resources>

@@ -34,7 +34,6 @@
     <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
     <string name="nav_exit">Exit</string>
-    <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profile</string>
     <string name="language" translatable="false">Language</string>
@@ -44,8 +43,6 @@
     <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
     <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Ongoing Notification</string>
-    <string name="old_data">OLD DATA</string>
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="ns_alarm_options">Alarm options</string>

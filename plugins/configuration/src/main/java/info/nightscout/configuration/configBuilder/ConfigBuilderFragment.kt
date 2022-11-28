@@ -25,7 +25,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRebuildTabs
@@ -46,7 +46,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var config: Config
     @Inject lateinit var ctx: Context
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -65,7 +65,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
-        inMenu = parentClass == activityNames.singleFragmentActivity
+        inMenu = parentClass == uiInteraction.singleFragmentActivity
         updateProtectedUi()
         binding.unlock.setOnClickListener { queryProtection() }
     }
@@ -166,7 +166,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginPreferences.setOnClickListener {
                 fragment.activity?.let { activity ->
                     protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
-                        val i = Intent(ctx, activityNames.preferencesActivity)
+                        val i = Intent(ctx, uiInteraction.preferencesActivity)
                         i.putExtra("id", plugin.preferencesId)
                         fragment.startActivity(i)
                     }, null)

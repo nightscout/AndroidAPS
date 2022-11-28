@@ -21,7 +21,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.comm.RecordTypes
 import info.nightscout.pump.dana.events.EventDanaRNewStatus
@@ -105,7 +105,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var constraintChecker: Constraints
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
@@ -199,7 +199,7 @@ class DanaRSService : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    activityNames.runAlarm(context, rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
+                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
 
                     //de-initialize pump
                     danaPump.reset()
@@ -240,7 +240,7 @@ class DanaRSService : DaggerService() {
             if (danaPump.dailyTotalUnits > danaPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits)
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    activityNames.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT)
+                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(R.string.approachingdailylimit), Notification.URGENT)
                     pumpSync.insertAnnouncement(
                         rh.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U",
                         null,
@@ -308,7 +308,7 @@ class DanaRSService : DaggerService() {
             sendMessage(msgSetHistoryEntryV2)
             danaPump.lastHistoryFetched = min(danaPump.lastHistoryFetched, carbTime - T.mins(1).msecs())
             if (!msgSetHistoryEntryV2.isReceived || msgSetHistoryEntryV2.failed)
-                activityNames.runAlarm(context, rh.gs(R.string.carbs_store_error), rh.gs(R.string.error), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.carbs_store_error), rh.gs(R.string.error), R.raw.boluserror)
         }
         val bolusStart = System.currentTimeMillis()
         if (insulin > 0) {

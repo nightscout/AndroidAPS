@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Beperking toegepas!</string>
     <string name="bolus_constraint_applied">Bolus beperking toegepas</string>
     <string name="carbs_constraint_applied">Karbs beperking toegepas</string>
     <string name="temp_target_short">TT</string>
@@ -12,20 +11,27 @@
     <!--    Widget-->
     <!--     Activities-->
     <string name="statistics">Statistiek</string>
+    <string name="weight_label">Gewig</string>
+    <string name="glucose_type">Glukose tipe</string>
+    <string name="bg_other">Ander</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <!-- FillDialog -->
-    <string name="button1">Knoppie 1</string>
-    <string name="button2">Knoppie 2</string>
-    <string name="button3">Knoppie 3</string>
+    <string name="fill_warning">Maak asseblief seker dat die hoeveelheid ooreenstem met die spesifikasies van jou infusie stel!</string>
     <string name="record_pump_site_change">Rekord pomp ligging verandering</string>
     <string name="record_insulin_cartridge_change">Rekord insulien kasset verandering</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Moet nie bolus. Rekord alleen</string>
     <!-- ProfileSwitchDialog -->
+    <string name="timeshift_label">Tyd verskuiwing</string>
+    <string name="percentage_label">Persentasie</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Skort lus vir 1h</string>
     <string name="suspendloopfor2h">Skort lus vir 2h</string>
     <string name="suspendloopfor3h">Skort lus vir 3h</string>
     <string name="suspendloopfor10h">Skort lus vir 10 h</string>
@@ -37,23 +43,27 @@
     <string name="resume">Hervat</string>
     <string name="reconnect">Herverbind Pomp</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
+    <string name="carb_time_label">Karb tyd</string>
     <!-- Treatments -->
     <string name="calculation_short">Bereken</string>
     <string name="treatments_iob_label_string">IAB:</string>
     <string name="treatments_insulin_label_string">Insulien:</string>
     <string name="treatments_carbs_label_string">Karbs:</string>
     <string name="treatments_iobtotal_label_string">Totale IAB:</string>
+    <string name="treatments_iob_activity_total_label_string">Totale IAB aktiwiteit:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Verhouding:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IAB:</string>
-    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Maaltyd</string>
     <string name="prime">Prima</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Verkose:</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Basale waarde</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
+    <string name="stop_pressed">STAAK GEDRUK</string>
 </resources>

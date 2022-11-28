@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.formatColor
@@ -17,12 +16,13 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
@@ -46,7 +46,7 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -207,7 +207,7 @@ class FillDialog : DialogFragmentWithDate() {
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                 }
             }
         })

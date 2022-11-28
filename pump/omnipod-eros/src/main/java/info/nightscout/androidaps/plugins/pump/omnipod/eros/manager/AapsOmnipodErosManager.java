@@ -55,13 +55,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ril
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions.DetailedBolusInfoExtensionKt;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.core.events.EventNewNotification;
-import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.core.pump.PumpStateExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.profile.Profile;
@@ -69,7 +68,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.common.defs.TempBasalPair;
 import info.nightscout.pump.core.utils.ByteUtil;
 import info.nightscout.rx.AapsSchedulers;
@@ -100,7 +99,7 @@ public class AapsOmnipodErosManager {
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final Context context;
     private final PumpSync pumpSync;
-    private final ActivityNames activityNames;
+    private final UiInteraction uiInteraction;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -131,7 +130,7 @@ public class AapsOmnipodErosManager {
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
                                   PumpSync pumpSync,
-                                  ActivityNames activityNames) {
+                                  UiInteraction uiInteraction) {
 
         this.podStateManager = podStateManager;
         this.erosHistory = erosHistory;
@@ -144,7 +143,7 @@ public class AapsOmnipodErosManager {
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
         this.pumpSync = pumpSync;
-        this.activityNames = activityNames;
+        this.uiInteraction = uiInteraction;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -969,7 +968,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        activityNames.runAlarm(context, message, rh.gs(R.string.error), sound);
+        uiInteraction.runAlarm(message, rh.gs(R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
@@ -981,14 +980,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showNotification(int id, String message, int urgency, Integer sound) {
-        Notification notification = new Notification( //
-                id, //
-                message, //
-                urgency);
-        if (sound != null) {
-            notification.setSoundId(sound);
-        }
-        sendEvent(new EventNewNotification(notification));
+        uiInteraction.addNotificationWithSound(id, message, urgency, sound);
     }
 
     private void dismissNotification(int id) {

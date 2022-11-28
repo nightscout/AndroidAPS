@@ -27,4 +27,10 @@
     <string name="tomorrow">Morgen</string>
     <string name="today">Heute</string>
     <string name="yesterday">Gestern</string>
+    <!-- Rx -->
+    <string name="connecting_for">Verbindungsaufbau seit %1$d s</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connected">Verbunden</string>
+    <string name="disconnecting">Verbindung wird getrennt</string>
+    <string name="waiting_for_disconnection">Warte auf Trennung der Verbindung</string>
 </resources>

@@ -27,4 +27,10 @@
     <string name="tomorrow">Morgen</string>
     <string name="today">Vandaag</string>
     <string name="yesterday">Gisteren</string>
+    <!-- Rx -->
+    <string name="connecting_for">Verbonden gedurende %1$d s</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connected">Verbonden</string>
+    <string name="disconnecting">Verbinding aan het verbreken</string>
+    <string name="waiting_for_disconnection">Wachten op het loskoppelen</string>
 </resources>

@@ -5,7 +5,6 @@
     <string name="settings_protection">Protection des paramètres</string>
     <string name="application_protection">Protection de l\'Application</string>
     <string name="bolus_protection">Protection des bolus</string>
-    <string name="master_password">Mot de passe principal</string>
     <string name="settings_password">Mot de passe des paramètres</string>
     <string name="settings_pin">Paramètres PIN</string>
     <string name="application_password">Mot de passe de l\'application</string>
@@ -14,13 +13,10 @@
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Rétention du mot de passe et du PIN [s]</string>
     <string name="protection_timeout_summary">Durée pour la saisie du mot de passe ou du code PIN</string>
-    <string name="unlock_settings">Déverrouiller les paramètres</string>
     <string name="biometric">Biométrique</string>
     <string name="custom_password">Mot de passe personnalisé</string>
     <string name="custom_pin">Code PIN personnalisé</string>
     <string name="noprotection">Pas de Protection</string>
-    <string name="protection">Protection</string>
-    <string name="master_password_missing">Le mot de passe principal n\'est pas défini !\n\nVeuillez définir votre mot de passe principal dans les préférences (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Retour arrière non sécurisé</string>
     <string name="unsecure_fallback_descriotion_biometric">Pour être effective, la protection biométrique nécessite un mot de passe principal pour revenir en arrière.\n\nMerci de définir un mot de passe principal !</string>
     <string name="password_set">Mot de passe défini !</string>
@@ -29,7 +25,6 @@
     <string name="pin_not_set">Code PIN non défini</string>
     <string name="password_not_changed">Mot de passe non modifié</string>
     <string name="pin_not_changed">Code PIN inchangé</string>
-    <string name="password_cleared">Mot de passe supprimé !</string>
     <string name="pin_cleared">Code PIN effacé!</string>
     <string name="password_hint">Entrez le mot de passe ici</string>
     <string name="pin_hint">Saisir le code PIN ici</string>

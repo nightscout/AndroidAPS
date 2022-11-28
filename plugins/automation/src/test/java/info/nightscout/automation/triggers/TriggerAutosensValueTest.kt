@@ -1,7 +1,7 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
+import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import org.json.JSONObject

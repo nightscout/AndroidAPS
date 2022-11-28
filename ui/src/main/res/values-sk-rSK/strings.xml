@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Aplikované obmedzenie!</string>
     <string name="bolus_constraint_applied">Aplikované obmedzenie bolusu</string>
     <string name="carbs_constraint_applied">Aplikované obmedzenie sacharidov</string>
     <string name="temp_target_short">TT</string>
@@ -36,14 +35,9 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Spolu</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
-    <string name="fill_bolus_title">Štandardné množstvo inzulínu pre Plnenie/Doplňovanie</string>
-    <string name="button1">Tlačidlo 1</string>
-    <string name="button2">Tlačidlo 2</string>
-    <string name="button3">Tlačidlo 3</string>
     <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenať výmenu inzulínu</string>
     <!-- InsulinDialog -->
@@ -93,8 +87,6 @@
     <string name="tempbasals_netratio_label_string">Pomer:</string>
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
-    <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_correction_label">Korekcia</string>
     <string name="meal_bolus">Jedlo</string>
     <string name="prime">Plnenie</string>
@@ -125,20 +117,10 @@
     <string name="motol_default_profile">Predvolený profil</string>
     <string name="current_profile">Aktuálny profil</string>
     <string name="available_profile">Dostupný profil</string>
-    <string name="format_with_tdd">Vek: %1$.0f CDD: %2$.0f JI</string>
-    <string name="format_with_tdd_and_pct">Vek: %1$.0f CDD: %2$.0f JI %3$d%%</string>
-    <string name="format_with_weight">Vek: %1$.0f Hmotnosť: %2$.0f kg</string>
     <string name="dpv_default_profile">Predvolený DPV profil</string>
     <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Bazál</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STLAČENÝ STOP</string>
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Podrobnosti chýb pri importe</string>
-    <string name="check_preferences_import_btn">Importovať</string>
-    <string name="check_preferences_import_anyway_btn">Importovať rovnako (NEBEZPEČNÉ!)</string>
-    <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
-    <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
-    <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
 </resources>

@@ -1,7 +1,6 @@
 package info.nightscout.configuration.configBuilder
 
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.main.R
+import info.nightscout.configuration.R
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.aps.Sensitivity
@@ -12,6 +11,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
@@ -33,7 +33,8 @@ class RunningConfigurationImpl @Inject constructor(
     private val config: Config,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
-    private val pumpSync: PumpSync
+    private val pumpSync: PumpSync,
+    private val uiInteraction: UiInteraction
 ) : RunningConfiguration {
 
     private var counter = 0
@@ -73,7 +74,7 @@ class RunningConfigurationImpl @Inject constructor(
         configuration.version?.let {
             rxBus.send(EventNSClientNewLog("VERSION", "Received AndroidAPS version  $it"))
             if (config.VERSION_NAME.startsWith(it).not())
-                rxBus.send(EventNewNotification(Notification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)))
+                uiInteraction.addNotification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)
         }
         configuration.insulin?.let {
             val insulin = Insulin.InsulinType.fromInt(it)

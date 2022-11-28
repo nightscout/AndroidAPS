@@ -14,5 +14,9 @@
     <string name="open_humans_notifications">Open Humans értesítések</string>
     <string name="you_have_been_signed_out_of_open_humans">Kijelentkezett az Open Humans rendszerből</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kattintson ide az újbóli bejelentkezéshez, ha ez nem volt szándékos.</string>
+    <string name="next">Tovább</string>
+    <string name="settings">Beállítások</string>
+    <string name="nightscout_url">Nightscout URL</string>
+    <string name="cancel">Mégse</string>
     <string name="upload_now">Feltöltés most</string>
 </resources>

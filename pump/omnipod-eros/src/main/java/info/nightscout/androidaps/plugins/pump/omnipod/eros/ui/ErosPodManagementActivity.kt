@@ -29,7 +29,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged
@@ -55,7 +55,7 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var config: Config
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var rxBus: RxBus
 
@@ -235,9 +235,7 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
     }
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
-        context.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+        uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayNotConfiguredDialog() {

@@ -34,7 +34,6 @@
     <string name="openapsma_iob_data_label">IOB data</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_meal_data_label">Data o jídle</string>
-    <string name="result">Výsledek</string>
     <string name="openapsma_request_label">Požadavek</string>
     <string name="constraints">Omezení</string>
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
@@ -85,7 +84,7 @@
     <string name="uam_disabled_in_preferences">UAM zakázáno v nastavení</string>
     <string name="autosens_disabled_in_preferences">Autosens zakázán v nastavení</string>
     <!--    Verify if needed in safety-->
-    <string name="limitingiob">IOB omezeno na %1$.1f U: %2$s</string>
+    <string name="limiting_iob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->

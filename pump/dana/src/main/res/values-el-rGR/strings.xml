@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_nodeviceavailable">Δεν βρέθηκε συσκευή ακόμα</string>
+    <string name="danars_no_device_available">Δεν βρέθηκε συσκευή ακόμα</string>
     <string name="danars_pairingok">Σύζευξη ΟΚ</string>
     <string name="danars_pairingtimedout">Τέλος χρόνου σύζευξης</string>
     <string name="danars_waitingforpairing">Περιμένετε για σύζευξη με αντλία</string>
@@ -54,18 +54,18 @@
     <string name="danar_history_refill">Ξαναγέμισμα</string>
     <string name="danar_history_syspend">Αναστολή</string>
     <string name="danar_history_prime">Πλήρωση</string>
-    <string name="danar_useroptions">Ρυθμίσεις χρήστη</string>
-    <string name="danar_timedisplay">Μορφή ώρας</string>
-    <string name="danar_buttonscroll">Πλήκτρα κύλισης</string>
+    <string name="danar_user_options">Ρυθμίσεις χρήστη</string>
+    <string name="danar_time_display">Μορφή ώρας</string>
+    <string name="danar_button_scroll">Πλήκτρα κύλισης</string>
     <string name="danar_beep">Ήχος πλήκτρων</string>
-    <string name="danar_pumpalarm">Συναγερμός</string>
-    <string name="danar_pumpalarm_sound">Ήχος</string>
-    <string name="danar_pumpalarm_vibrate">Δόνηση</string>
-    <string name="danar_pumpalarm_both">Και τα δύο</string>
-    <string name="danar_screentimeout">Χρόνος ενεργής οθόνης [seconds]</string>
+    <string name="danar_pump_alarm">Συναγερμός</string>
+    <string name="danar_pump_alarm_sound">Ήχος</string>
+    <string name="danar_pump_alarm_vibrate">Δόνηση</string>
+    <string name="danar_pump_alarm_both">Και τα δύο</string>
+    <string name="danar_screen_timeout">Χρόνος ενεργής οθόνης [seconds]</string>
     <string name="danar_backlight">Χρόνος οπίσθιου φωτισµού [seconds]</string>
-    <string name="danar_glucoseunits">Μονάδες γλυκόζης</string>
-    <string name="danar_saveuseroptions">Αποθήκευση ρυθμίσεων στην αντλία</string>
+    <string name="danar_glucose_units">Μονάδες γλυκόζης</string>
+    <string name="danar_save_user_options">Αποθήκευση ρυθμίσεων στην αντλία</string>
     <string name="description_pump_dana_r">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare R</string>
     <string name="description_pump_dana_r_korean">Ολοκλήρωση αντλίας για τις εγχώριες αντλίες Dana Diabecare R</string>
     <string name="description_pump_dana_r_v2">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare R με αναβαθμισμένο λογισμικό</string>
@@ -81,7 +81,7 @@
     <string name="profile_set_failed">Αποτυχία ρύθμισης βασικού προφίλ</string>
     <string name="danar_bluetooth_status">Κατάσταση Bluetooth</string>
     <string name="danar_iob_label">IOB αντλίας</string>
-    <string name="virtualpump_firmware_label">Έκδοση</string>
+    <string name="firmware_label">Έκδοση</string>
     <string name="option_on">Ενεργό</string>
     <string name="option_off">Ανενεργό</string>
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>

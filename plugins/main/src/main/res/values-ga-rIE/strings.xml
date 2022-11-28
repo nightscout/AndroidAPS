@@ -2,53 +2,101 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_loop_has_been_disabled">Is lúb díchumasaithe</string>
+    <string name="smscommunicator_loop_has_been_enabled">Is lúb cumasaithe</string>
+    <string name="smscommunicator_loop_is_enabled">Is lúb cumasaithe</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Cealú TBR teip</string>
+    <string name="smscommunicator_loop_suspended">Lúb ar fionraí</string>
+    <string name="smscommunicator_loop_resumed">Lúb atógáil</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">GF deiridh:</string>
     <string name="sms_iob">IOB:</string>
+    <string name="sms_min_ago">%1$dnóim ó shin</string>
+    <string name="sms_loop_suspended_for">Ar fionraí (%1$d nóim)</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="insulin_shortname">INS</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status_shortname">xds</string>
+    <string name="disabled_loop">Lúb díchumasaithe</string>
     <!-- Food-->
+    <string name="food_short">Bia</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_fat">Saill</string>
+    <string name="calculator_label">Áireamhán</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <string name="localprofile">Próifíl</string>
+    <string name="errors">Earráidí</string>
     <string name="dia_short">DIA</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="loopenabled">Lúb cumasaithe</string>
     <string name="apsselected">APS  roghnaithe</string>
+    <string name="objectives_next_button">Ar Aghaidh</string>
+    <string name="objectives_previous_button">Roimhe seo</string>
     <!-- Actions -->
+    <string name="actions">Gníomhartha</string>
     <string name="actions_shortname">GNÍ</string>
+    <string name="sensor_label">Braiteoir</string>
+    <string name="age_label">aois:</string>
+    <string name="insulin_label">Inslin</string>
+    <string name="pb_label">Caidéil ceallraí</string>
     <!-- Safety -->
     <!-- Overview -->
-    <string name="apsmode_title">APS mód</string>
+    <string name="a11y_insulin_label">inslin</string>
+    <string name="aps_mode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>
-    <!-- NSClient -->
-    <string name="restart">Atosaigh</string>
-    <string name="deliver_now">Seachadadh anois</string>
-    <string name="status">Stádas:</string>
-    <!-- Tidepool -->
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
+    <string name="quickwizard">QuickWizard</string>
+    <string name="overview_shortname">BAILE</string>
+    <string name="overview_buttons_selection">Cnaipi</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="overview_edit_quickwizard_carbs">Carbí:</string>
+    <string name="overview_edit_quickwizard_valid">Bailí:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Cuir</string>
+    <string name="overview_quickwizard_item_edit_button">In eagar</string>
+    <string name="overview_edit_quickwizard_percentage">Céatadán</string>
+    <string name="device_all">Ar fad</string>
+    <string name="treatments">Cóireálacha</string>
+    <string name="cgm">CGM</string>
+    <string name="activity_duration">Gníomhaíocht fad</string>
+    <string name="activity_target">Gníomhaíocht sprioc</string>
+    <string name="button1">Cnaipe 1</string>
+    <string name="button2">Cnaipe 2</string>
+    <string name="button3">Cnaipe 3</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_treatments">Cóireálacha</string>
+    <string name="overview_show_activity">Gníomhaíocht</string>
+    <string name="overview_show_basals">Bunaidhi</string>
+    <string name="basal_shortname">BUN</string>
+    <string name="activity_shortname">GNÍ</string>
     <!-- VirtualPump -->
     <!-- Source -->
     <string name="description_source_ns_client">Sonraí a íoslódáil ó Nightscout</string>
     <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Luachanna BG a fháil ó xDrip+.</string>
+    <string name="glimp">Glimp</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Luachanna BG a fháil ón 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <!-- NSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="openaps_short">OAPS</string>
+    <string name="random_bg_short">BG</string>
     <!-- Skins -->
     <!--    Loop -->
+    <string name="executing">Feidhmiú</string>
+    <string name="run_now">Reáchtáil anois</string>
+    <string name="loop_shortname">LÚB</string>
+    <string name="last_run_label">Reáchtáil deiridh</string>
+    <string name="loop_aps_label">APS</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="wear_general_settings">Socruithe Ginearálta</string>
+    <!--    PersistentNotification-->
 </resources>

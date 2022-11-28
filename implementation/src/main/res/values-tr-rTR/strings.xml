@@ -3,17 +3,11 @@
     <string name="xdrip_not_installed">xDrip+ uygulaması yüklenmemiş</string>
     <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <string name="bg_label">KŞ</string>
-    <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
     <string name="time_to_eat">Yemek zamanı</string>
-    <string name="enable_bolus_advisor">Bolus danışmanını etkinleştir</string>
-    <string name="enable_bolus_advisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
-    <string name="request">İstek</string>
     <string name="permission">Yetki</string>
-    <string name="error_asking_for_permissions">İzin istenirken hata</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <string name="need_whitelisting">%1$s, düzgün bir şekilde çalışması için pil optimizasyonu yapılmalıdır</string>
     <string name="need_location_permission">Uygulamanın BT taraması ve WiFi tanımlaması için konum iznine ihtiyacı var</string>
     <string name="need_storage_permission">Uygulamanın, günlük dosyalarını saklayabilmesi ve ayarları dışa aktarabilmesi için depolama iznine ihtiyacı var</string>

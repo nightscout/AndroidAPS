@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Objectiu Temporal %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Perfil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">I</string>
     <string name="or">O</string>
     <string name="xor">Exclusiu o</string>
     <string name="atspecifiedtime">A les %1$s</string>

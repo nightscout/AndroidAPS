@@ -1,9 +1,9 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.durationInMinutes
-import info.nightscout.androidaps.extensions.toJson
-import info.nightscout.androidaps.extensions.toTemporaryBasal
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.durationInMinutes
+import info.nightscout.core.extensions.toJson
+import info.nightscout.core.extensions.toTemporaryBasal
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.Bolus

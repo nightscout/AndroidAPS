@@ -39,7 +39,11 @@ import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.CUST
 import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
 import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.plugins.aps.loop.LoopPlugin
+import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+import info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
+import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
@@ -83,7 +87,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var config: Config
 
     @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var autotunePlugin: info.nightscout.plugins.general.autotune.AutotunePlugin
+    @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
@@ -96,9 +100,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var openAPSAMAPlugin: info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-    @Inject lateinit var openAPSSMBPlugin: info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-    @Inject lateinit var openAPSSMBDynamicISFPlugin: info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
+    @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
+    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+    @Inject lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
     @Inject lateinit var safetyPlugin: SafetyPlugin
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin

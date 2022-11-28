@@ -62,6 +62,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosTbrChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions.DetailedBolusInfoExtensionKt;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus;
@@ -70,13 +71,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.Ri
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.androidaps.services.AlarmSoundService;
-import info.nightscout.core.events.EventNewNotification;
-import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.core.utils.DateTimeUtil;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
@@ -95,7 +92,7 @@ import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.interfaces.queue.CustomCommand;
-import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.interfaces.utils.DecimalFormatter;
 import info.nightscout.interfaces.utils.Round;
 import info.nightscout.interfaces.utils.TimeChangeType;
@@ -138,7 +135,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final AAPSLogger aapsLogger;
     private final AapsSchedulers aapsSchedulers;
     private final RxBus rxBus;
-    private final ActivePlugin activePlugin;
     private final Context context;
     private final FabricPrivacy fabricPrivacy;
     private final ResourceHelper rh;
@@ -148,7 +144,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.OMNIPOD_EROS;
     private final PumpSync pumpSync;
-    private final ActivityNames activityNames;
+    private final UiInteraction uiInteraction;
     private final ErosHistoryDatabase erosHistoryDatabase;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -176,7 +172,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             RxBus rxBus,
             Context context,
             ResourceHelper rh,
-            ActivePlugin activePlugin,
             SP sp,
             ErosPodStateManager podStateManager,
             AapsOmnipodErosManager aapsOmnipodErosManager,
@@ -189,7 +184,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
             PumpSync pumpSync,
-            ActivityNames activityNames,
+            UiInteraction uiInteraction,
             ErosHistoryDatabase erosHistoryDatabase
     ) {
         super(new PluginDescription() //
@@ -204,7 +199,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
-        this.activePlugin = activePlugin;
         this.context = context;
         this.fabricPrivacy = fabricPrivacy;
         this.rh = rh;
@@ -218,7 +212,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
         this.pumpSync = pumpSync;
-        this.activityNames = activityNames;
+        this.uiInteraction = uiInteraction;
         this.erosHistoryDatabase = erosHistoryDatabase;
 
         pumpDescription = new PumpDescription(pumpType);
@@ -420,7 +414,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS");
-                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL).sound(R.raw.boluserror)));
+                uiInteraction.addNotificationWithSound(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL, R.raw.boluserror);
             }
         } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded");
@@ -436,8 +430,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             if (activeAlerts.size() > 0) {
                 String alerts = TextUtils.join(", ", aapsOmnipodUtil.getTranslatedActiveAlerts(podStateManager));
                 String notificationText = rh.gq(R.plurals.omnipod_common_pod_alerts, activeAlerts.size(), alerts);
-                Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, notificationText, Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
+                uiInteraction.addNotification(Notification.OMNIPOD_POD_ALERTS, notificationText, Notification.URGENT);
                 pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber());
 
                 if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandSilenceAlerts.class)) {
@@ -479,20 +472,17 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private void updatePodWarningNotifications() {
         if (System.currentTimeMillis() > this.nextPodWarningCheck) {
             if (!podStateManager.isPodRunning()) {
-                Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, rh.gs(R.string.omnipod_common_error_pod_not_attached), Notification.NORMAL);
-                rxBus.send(new EventNewNotification(notification));
+                uiInteraction.addNotification(Notification.OMNIPOD_POD_NOT_ATTACHED, rh.gs(R.string.omnipod_common_error_pod_not_attached), Notification.NORMAL);
             } else {
                 rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
 
                 if (podStateManager.isSuspended()) {
-                    Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, rh.gs(R.string.omnipod_common_error_pod_suspended), Notification.NORMAL);
-                    rxBus.send(new EventNewNotification(notification));
+                    uiInteraction.addNotification(Notification.OMNIPOD_POD_SUSPENDED, rh.gs(R.string.omnipod_common_error_pod_suspended), Notification.NORMAL);
                 } else {
                     rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
 
                     if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                        Notification notification = new Notification(Notification.OMNIPOD_TIME_OUT_OF_SYNC, rh.gs(R.string.omnipod_common_error_time_out_of_sync), Notification.NORMAL);
-                        rxBus.send(new EventNewNotification(notification));
+                        uiInteraction.addNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC, rh.gs(R.string.omnipod_common_error_time_out_of_sync), Notification.NORMAL);
                     } else {
                         rxBus.send(new EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC));
                     }
@@ -908,13 +898,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
         }
 
-        Intent i = new Intent(context, activityNames.getErrorHelperActivity());
-        i.putExtra(AlarmSoundService.SOUND_ID, 0);
-        i.putExtra(AlarmSoundService.STATUS, rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString());
-        i.putExtra(AlarmSoundService.TITLE, rh.gs(R.string.omnipod_eros_pod_management_pulse_log));
-        i.putExtra("clipboardContent", result.toString());
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        uiInteraction.runAlarm(rh.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString(), rh.gs(R.string.omnipod_eros_pod_management_pulse_log), 0);
         return new PumpEnactResult(getInjector()).success(true).enacted(false);
     }
 
@@ -936,11 +920,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             podStateManager.setExpirationAlertTimeBeforeShutdown(expirationReminderTimeBeforeShutdown);
             podStateManager.setLowReservoirAlertUnits(lowReservoirAlertUnits);
 
-            Notification notification = new Notification(
+            uiInteraction.addNotificationValidFor(
                     Notification.OMNIPOD_POD_ALERTS_UPDATED,
                     rh.gs(R.string.omnipod_common_confirmation_expiration_alerts_updated),
                     Notification.INFO, 60);
-            rxBus.send(new EventNewNotification(notification));
         } else {
             aapsLogger.warn(LTag.PUMP, "Failed to configure alerts in Pod");
         }
@@ -965,11 +948,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             timeChangeRetries = 0;
 
             if (!requestedByUser && aapsOmnipodErosManager.isTimeChangeEventEnabled()) {
-                Notification notification = new Notification(
+                uiInteraction.addNotificationValidFor(
                         Notification.TIME_OR_TIMEZONE_CHANGE,
                         rh.gs(R.string.omnipod_common_confirmation_time_on_pod_updated),
                         Notification.INFO, 60);
-                rxBus.send(new EventNewNotification(notification));
             }
 
         } else {
@@ -978,11 +960,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
                 if (timeChangeRetries > 3) {
                     if (aapsOmnipodErosManager.isTimeChangeEventEnabled()) {
-                        Notification notification = new Notification(
+                        uiInteraction.addNotificationValidFor(
                                 Notification.TIME_OR_TIMEZONE_CHANGE,
                                 rh.gs(R.string.omnipod_eros_error_automatic_time_or_timezone_change_failed),
                                 Notification.INFO, 60);
-                        rxBus.send(new EventNewNotification(notification));
                     }
                     this.hasTimeDateOrTimeZoneChanged = false;
                     timeChangeRetries = 0;
@@ -1119,7 +1100,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             }
             if (!success) {
                 aapsLogger.warn(LTag.PUMP, "Failed to retrieve Pod status on startup");
-                rxBus.send(new EventNewNotification(new Notification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, rh.gs(R.string.omnipod_common_error_failed_to_refresh_status_on_startup), Notification.NORMAL)));
+                uiInteraction.addNotification(Notification.OMNIPOD_STARTUP_STATUS_REFRESH_FAILED, rh.gs(R.string.omnipod_common_error_failed_to_refresh_status_on_startup), Notification.NORMAL);
             }
         } else {
             aapsLogger.debug(LTag.PUMP, "Not retrieving Pod status on startup: no Pod running");

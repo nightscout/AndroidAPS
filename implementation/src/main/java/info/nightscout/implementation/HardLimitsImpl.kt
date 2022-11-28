@@ -3,12 +3,10 @@ package info.nightscout.implementation
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.main.R
-import info.nightscout.core.toast.showToastAdNotification
-import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -23,11 +21,11 @@ import kotlin.math.min
 @Singleton
 class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
+    private val uiInteraction: UiInteraction,
     private val sp: SP,
     private val rh: ResourceHelper,
     private val context: Context,
-    private val repository: AppRepository
+    private val repository: AppRepository,
 ) : HardLimits {
 
     private val disposable = CompositeDisposable()
@@ -102,7 +100,7 @@ class HardLimitsImpl @Inject constructor(
             msg += rh.gs(R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
-            ToastUtils.showToastAdNotification(context, rxBus, msg, R.raw.error)
+            uiInteraction.showToastAndNotification(context, msg, R.raw.error)
         }
         return newValue
     }

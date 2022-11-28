@@ -33,7 +33,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
@@ -66,7 +66,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var config: Config
 
     companion object {
@@ -676,9 +676,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        context?.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+            uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {

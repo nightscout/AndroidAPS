@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Sincronitzant</string>
-    <string name="danars_nodeviceavailable">Cap dispositiu trobat fins ara</string>
+    <string name="danars_no_device_available">Cap dispositiu trobat fins ara</string>
     <string name="danars_pairingok">Sincronització OK</string>
     <string name="danars_pairingtimedout">Temps d\'espera excedit en sincronitzar</string>
     <string name="danars_waitingforpairing">Esperant sincronitació a la bomba</string>
@@ -63,20 +63,20 @@
     <string name="danar_history_refill">Reomplir</string>
     <string name="danar_history_syspend">Suspendre</string>
     <string name="danar_history_prime">Encebar</string>
-    <string name="danar_useroptions">Opcions d\'usuari</string>
-    <string name="danar_timedisplay">Format de visualització de l\'hora</string>
-    <string name="danar_buttonscroll">Desplaçament de botons</string>
+    <string name="danar_user_options">Opcions d\'usuari</string>
+    <string name="danar_time_display">Format de visualització de l\'hora</string>
+    <string name="danar_button_scroll">Desplaçament de botons</string>
     <string name="danar_beep">Bip en clicar botó</string>
-    <string name="danar_pumpalarm">Alarma</string>
-    <string name="danar_pumpalarm_sound">So</string>
-    <string name="danar_pumpalarm_vibrate">Vibració</string>
-    <string name="danar_pumpalarm_both">Ambdós</string>
-    <string name="danar_screentimeout">Temps pantalla LCD encesa [seconds]</string>
+    <string name="danar_pump_alarm">Alarma</string>
+    <string name="danar_pump_alarm_sound">So</string>
+    <string name="danar_pump_alarm_vibrate">Vibració</string>
+    <string name="danar_pump_alarm_both">Ambdós</string>
+    <string name="danar_screen_timeout">Temps pantalla LCD encesa [seconds]</string>
     <string name="danar_backlight">Temps llum de fons encesa [seconds]</string>
-    <string name="danar_glucoseunits">Unitats glucèmia</string>
+    <string name="danar_glucose_units">Unitats glucèmia</string>
     <string name="danar_shutdown">Apagat [hours]</string>
-    <string name="danar_lowreservoir">Reservori baix [Units]</string>
-    <string name="danar_saveuseroptions">Gravar opcions a bomba</string>
+    <string name="danar_low_reservoir">Reservori baix [Units]</string>
+    <string name="danar_save_user_options">Gravar opcions a bomba</string>
     <string name="description_pump_dana_r">Sincronització de bombes model DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Sincronització de bombes model DANA Diabecare R Corea</string>
     <string name="description_pump_dana_r_v2">Sincronització de bombes model DANA Diabecare R amb firmware actualitzat</string>
@@ -92,10 +92,10 @@
     <string name="profile_set_failed">Error en configurar el perfil basal</string>
     <string name="danar_bluetooth_status">Estat Bluetooth</string>
     <string name="danar_iob_label">IOB Bomba</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Configuració bomba Dana</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
     <string name="danar_bt_name_title">Dispositiu Bluetooth DanaR</string>

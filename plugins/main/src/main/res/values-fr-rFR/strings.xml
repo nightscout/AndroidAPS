@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà initialisés. Vous devrez les reconfigurer !</string>
     <string name="sms_wrong_code">Code incorrect. Commande annulée.</string>
     <string name="sms_timeout_while_waiting">Délai d\'attente pour finir la communication précédente avec la pompe</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
     <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Pour injecter le bolus de %1$.2f U, renvoyez le code %2$s</string>
@@ -127,7 +126,7 @@
     <string name="disabled_loop">Boucle désactivée</string>
     <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
     <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
-    <string name="xdrip_status_settings">état Xdrip+ (montre)</string>
+    <string name="xdrip_status_settings">État Xdrip+ (montre)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
@@ -172,23 +171,6 @@
     <string name="dia_short">DAI</string>
     <string name="target_short">CIBLE</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Données recalculées utilisées</string>
-    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">recalculé</string>
-    <string name="a11y_bg_quality_doubles">entrées doubles</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
-    <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">ancienne version</string>
-    <string name="very_old_version">très ancienne version</string>
-    <string name="application_expired">Application expirée</string>
-    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
@@ -229,7 +211,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Limiter les bolus prolongé à %1$.1f U à cause de %2$s</string>
     <string name="limitingcarbs">Limiter les glucides %1$d g à cause de %2$s</string>
-    <string name="limitingiob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
     <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
     <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
@@ -240,8 +221,6 @@
     <string name="hardlimit">limite fixée</string>
     <string name="treatmentssafety_title">Traitements de sécurité</string>
     <!-- Overview -->
-    <string name="snooze">Masquer</string>
-    <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>
     <string name="show_statuslights">Afficher les voyants d\'état sur l\'écran d\'accueil</string>
     <string name="statuslights_cage_warning">Seuil d\'alerte âge canule [h]</string>
     <string name="statuslights_cage_critical">Seuil critique âge canule [h]</string>
@@ -257,7 +236,6 @@
     <string name="statuslights_res_critical">Seuil critique de niveau réservoir [U]</string>
     <string name="statuslights_bat_warning">Seuil d’alerte niveau pile pompe [%]</string>
     <string name="statuslights_bat_critical">Seuil critique niveau pile pompe [%]</string>
-    <string name="statuslights">Voyants d\'état</string>
     <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
     <string name="a11y_graph">graphique</string>
     <string name="a11y_insulin_label">insuline</string>
@@ -265,91 +243,114 @@
     <string name="a11y_bg_quality">qualité de la glycémie</string>
     <string name="a11y_blood_glucose">glycémie</string>
     <string name="a11y_bg_outdated">obsolète</string>
-    <string name="apsmode_title">Mode APS</string>
-    <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
+    <string name="aps_mode_title">Mode APS</string>
+    <string name="set_basal_question">Accepter nouveau basal temp. :</string>
     <string name="overview_cgm">MGC</string>
     <string name="quickwizard">Assistant Rapide</string>
-    <!-- NSClient -->
-    <string name="no_write_permission">NSCLIENT ne possède pas la permission d\'écriture. Mauvais API secret?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
-    <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
-    <string name="ns_client_url">URL :</string>
-    <string name="ns_client_autoscroll">Défilement automatique</string>
-    <string name="restart">Redémarrer</string>
-    <string name="ns_client_internal_title">NSClient</string>
-    <string name="ns_client_url_title">URL Nightscout</string>
-    <string name="ns_client_url_dialog_message">Entrez l’URL de votre site Nightscout</string>
-    <string name="ns_client_secret_title">NS API Secret</string>
-    <string name="ns_client_secret_dialog_title">NS API Secret</string>
-    <string name="ns_client_secret_dialog_message">Entrez NS API secret (12 carac. min)</string>
-    <string name="nsclient_token_title">Jeton d\'accès NS</string>
-    <string name="nsclient_token_dialog_title">Jeton d\'accès NS</string>
-    <string name="nsclient_token_dialog_message">Jeton d\'accès généré sur la page d\'administration NS (min. 17 caractères)</string>
-    <string name="deliver_now">Transmettre maintenant</string>
-    <string name="clear_queue">Vider queue</string>
-    <string name="show_queue">Afficher queue</string>
-    <string name="queue">Queue :</string>
-    <string name="status">État :</string>
-    <string name="clear_log">Effacer le journal</string>
-    <string name="full_sync">Synchronisation complète</string>
-    <string name="full_sync_comment">Synchronisation complète ? Cela peut prendre plusieurs heures et jusqu\'à la fin, vous ne verrez pas de nouvelles données sur NS.</string>
-    <string name="ns_sync_options">Synchronisation</string>
-    <string name="ns_upload_summary">Profils, boluses, glucides, basals temporaires sont téléchargés vers NS</string>
-    <string name="ns_upload">Télécharger des données vers NS</string>
-    <string name="ns_receive_profile_store">Recevoir les profils sauvegardés</string>
-    <string name="ns_receive_profile_store_summary">Synchroniser les profils à partir de l\'éditeur de profil NS</string>
-    <string name="ns_receive_temp_target">Recevoir les cibles temporaires</string>
-    <string name="ns_receive_temp_target_summary">Accepter les cibles temporaires entrées via NS ou NSClient</string>
-    <string name="ns_receive_profile_switch">Recevoir les changements de profil</string>
-    <string name="ns_receive_profile_switch_summary">Accepter les changements de profil entrés via NS ou NSClient</string>
-    <string name="ns_receive_offline_event">Recevoir les événements APS hors ligne</string>
-    <string name="ns_receive_offline_event_summary">Accepter les événements APS hors ligne entrés via NS ou NSClient</string>
-    <string name="ns_receive_tbr_eb">Recevoir des DBT et des BE</string>
-    <string name="ns_receive_tbr_eb_summary">Accepter le DBT et le BE entrés dans une autre instance</string>
-    <string name="ns_receive_insulin">Recevoir l\'insuline</string>
-    <string name="ns_receive_insulin_summary">Acceptez l\'insuline entrée via NS ou NSClient (elle n\'est pas injectée, uniquement pour le calcul pour IA)</string>
-    <string name="ns_receive_carbs">Recevoir les glucides</string>
-    <string name="ns_receive_carbs_summary">Accepter les glucides entrés par NS ou NSClient</string>
-    <string name="ns_receive_therapy_events">Recevoir des événements thérapeutiques</string>
-    <string name="ns_receive_therapy_events_summary">Accepter les événements de thérapie (canule, insuline, changement de batterie, etc.) entrés via NS ou NSClient</string>
-    <string name="ns_receive_cgm">Recevoir/remplir les anciennes données MGC</string>
-    <string name="ns_receive_cgm_summary">Accepter les données MGC de NS</string>
+    <string name="a11y_only_on_watch">uniquement sur la montre</string>
+    <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
+    <string name="overview">Aperçu</string>
+    <string name="overview_shortname">ACCUEIL</string>
+    <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
+    <string name="overview_editquickwizard_usecob">Calcul GA</string>
+    <string name="overview_editquickwizard_usetemptarget">Calcul de la cible temporaire</string>
+    <string name="overview_editquickwizard_usepercentage">Calcul du pourcentage</string>
+    <string name="overview_buttons_selection">Boutons</string>
+    <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration de BYODA</string>
+    <string name="show_cgm_button_summary">Ouvre xDrip+ ou BYODA, le bouton de retour renverra vers AAPS</string>
+    <string name="dexcom_app_not_installed">L\'application Dexcom n\'est pas installée.</string>
+    <string name="dexcom_app_not_detected">Veuillez mettre à jour votre application Dexcom vers la version prise en charge</string>
+    <string name="error_starting_cgm">Impossible d’exécuter l’application de MGC. Assurez-vous de que celle-ci est installée.</string>
+    <string name="not_available_full">Non disponible</string>
+    <string name="constraints_violation">Violation des restrictions</string>
+    <string name="change_your_input">Changez vos entrées !</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Logiciel pour télécharger vers Internet</string>
+    <string name="data_status">État des données Gly</string>
+    <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
+    <string name="overview_edit_quickwizard_button_text">Texte du bouton :</string>
+    <string name="overview_edit_quickwizard_carbs">Glucides :</string>
+    <string name="overview_edit_quickwizard_valid">Valide:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Ajouter</string>
+    <string name="overview_quickwizard_item_edit_button">Éditer</string>
+    <string name="overview_edit_quickwizard_show_on_device">Afficher l\'entrée sur l\'appareil :</string>
+    <string name="overview_edit_quickwizard_use_bg">Calcul de Glycémie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IA du Bolus</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IA du Basal</string>
+    <string name="overview_edit_quickwizard_use_trend">Calcul de tendance</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Calcul SuperBolus</string>
+    <string name="overview_edit_quickwizard_percentage">Pourcentage</string>
+    <string name="device_all">Tous</string>
+    <string name="device_phone">Téléphone</string>
+    <string name="device_watch">Montre</string>
+    <string name="positive_only">Positif uniquement</string>
+    <string name="negative_only">Négatif uniquement</string>
+    <string name="app_default">Application par défaut</string>
+    <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
+    <string name="keep_screen_on_title">Garder l\'écran allumé</string>
+    <string name="keep_screen_on_summary">Empêcher Android d\'éteindre l\'écran. Ceci consommera beaucoup de batterie lorsque vous n’êtes pas connecté à une prise de courant.</string>
+    <string name="treatments">Traitements</string>
+    <string name="carb_increment_button_message">Nombre de glucides à ajouter lorsque vous appuyez sur le bouton</string>
+    <string name="insulin_increment_button_message">Quantité d’insuline à ajouter lorsque vous appuyez sur le bouton</string>
+    <string name="firstinsulinincrement">Premier incrément d\'insuline</string>
+    <string name="secondinsulinincrement">Deuxième incrément d\'insuline</string>
+    <string name="thirdinsulinincrement">Troisième incrément d\'insuline</string>
+    <string name="firstcarbsincrement">Premier incrément de glucides</string>
+    <string name="secondcarbsincrement">Deuxième incrément de glucides</string>
+    <string name="thirdcarbsincrement">Troisième incrément de glucides</string>
+    <string name="cgm">MGC</string>
+    <string name="default_temptargets">Cibles Temporaires par défaut</string>
+    <string name="eatingsoon_duration">durée repas imminent [min]</string>
+    <string name="eatingsoon_target">Cible Glyc. pour le prochain repas</string>
+    <string name="activity_duration">Durée d\'activité</string>
+    <string name="activity_target">Cible Glycémie pour l\'activité</string>
+    <string name="hypo_duration">durée hypo [min]</string>
+    <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
+    <string name="fill_bolus_title">Insuline par défaut pour Amorcer/Remplir</string>
+    <string name="button1">Bouton 1</string>
+    <string name="button2">Bouton 2</string>
+    <string name="button3">Bouton 3</string>
+    <string name="prefs_range_title">Fourchette de visualisation</string>
+    <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l\'aperçu et la montre</string>
+    <string name="low_mark">Ligne BASSE</string>
+    <string name="high_mark">Ligne HAUTE</string>
+    <string name="short_tabtitles">Raccourcir les titres des onglets</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Affiche les notes dans les dialogues</string>
+    <string name="deliverpartofboluswizard">L\'assistant bolus effectue le calcul mais seulement ce pourcentage de l\'insuline calculée est délivré. Utile avec l\'algorithme SMB.</string>
+    <string name="enable_bolus_advisor">Activer l\'assistant bolus</string>
+    <string name="enable_bolus_advisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
+    <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
+    <string name="enablesuperbolus_summary">Activer la fonctionnalité SuperBolus dans l’Assistant. Ne pas l’activer avant de bien comprendre comment cela fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT !</string>
+    <string name="enablebolusreminder">Activer le rappel bolus</string>
+    <string name="enablebolusreminder_summary">Utiliser un rappel pour faire le bolus plus tard avec l\'Assistant (\"post-bolus\")</string>
     <string name="run_question">Exécuter %s?</string>
-    <string name="ns_sync_slow">Ralentir les téléchargements</string>
-    <string name="ns_alarm_options">Options d\'alarme</string>
-    <string name="ns_alarms">Créer des notifications à partir des alarmes NS</string>
-    <string name="ns_announcements">Créer des notifications à partir des notifications NS</string>
-    <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Gly [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
-    <string name="ns_log_app_started_event">Démarrage AAPS entré dans NS</string>
-    <string name="ns_local_broadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de AAPSClient sont installées !</string>
-    <string name="ns_local_broadcasts_title">Activer les transmissions locales</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
-    <string name="title_tidepool_username">Nom d\'utilisateur</string>
-    <string name="summary_tidepool_password">Mot de passe de connexion Tidepool</string>
-    <string name="title_tidepool_password">Mot de passe de connexion</string>
-    <string name="title_tidepool_test_login">Test de la connexion Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Si activé, les transferts iront vers https://int-app.tidepool.org au lieu de https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Utiliser les serveurs d\'Intégration (test)</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Transfère les données vers Tidepool</string>
-    <string name="tidepool_upload_cgm">Transférer les données CGM</string>
-    <string name="tidepool_upload_bolus">Transférer les traitements (insuline, glucides)</string>
-    <string name="tidepool_upload_tbr">Transférer les Basal temporaires</string>
-    <string name="tidepool_upload_profile">Transférer les changements de profils, les objectifs temporaires</string>
-    <string name="tidepool_upload_bg">Transférer les tests de glycémies</string>
-    <string name="remove_all">Supprimer tout</string>
-    <string name="reset_start">Réinitialiser le démarrage</string>
-    <string name="upload_now">Télécharger maintenant</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Prédictions</string>
+    <string name="overview_show_treatments">Traitements</string>
+    <string name="overview_show_deviation_slope">Pente de déviations</string>
+    <string name="overview_show_activity">Activité</string>
+    <string name="overview_show_bgi">Impact glycémique</string>
+    <string name="overview_show_sensitivity">Sensibilité</string>
+    <string name="overview_show_deviations">Déviations</string>
+    <string name="overview_show_cob">Glucides actifs</string>
+    <string name="overview_show_iob">Insuline Active</string>
+    <string name="overview_show_basals">Basals</string>
+    <string name="overview_show_abs_insulin">Insuline absolue</string>
+    <string name="prediction_shortname">PRED</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-IGly</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">PENTEDEV</string>
+    <string name="treatments_shortname">TRAIT</string>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="graph_scale">Échelle du graph.</string>
+    <string name="graph_menu_divider_header">Graph</string>
     <!-- VirtualPump -->
     <string name="virtual_pump_type">Type de pompe virtuelle</string>
     <string name="virtual_pump_definition">Définition de pompe</string>
     <string name="virtual_pump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump">Pompe virtuelle</string>
     <string name="virtual_pump_shortname">POMPEV</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="virtual_pump_label">POMPE VIRTUELLE</string>
@@ -387,31 +388,9 @@
     <string name="random_bg_short">Gly</string>
     <string name="do_xdrip_upload_title">Transmettre les Gly vers xDrip+</string>
     <string name="do_xdrip_upload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
-    <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
     <string name="bgsource_upload">Paramètres de téléchargement des glycémies</string>
     <string name="dexcom_log_ns_sensor_change_title">Enreg. du changement de capteur sur NS</string>
     <string name="dexcom_log_ns_sensor_change_summary">Créer automatiquement un événement \"Changement de capteur\" dans NS au démarrage du capteur</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Utiliser la connexion mobile</string>
-    <string name="ns_wifi">Utilisez la connexion Wi-Fi</string>
-    <string name="ns_wifi_ssids">SSID WiFi</string>
-    <string name="ns_charging">Pendant la charge</string>
-    <string name="ns_battery">Sur batterie</string>
-    <string name="connection_settings_title">Paramètres de connexion</string>
-    <string name="ns_wifi_allowed_ssids">SSIDs autorisés (séparés par point-virgule)</string>
-    <string name="ns_allow_roaming">Autoriser connexion données itinérance</string>
-    <string name="ns_create_announcements_from_errors_title">Créer des messages d’erreurs</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Créer des annonces à partir des alertes Glucides requis</string>
-    <string name="ns_create_announcements_from_errors_summary">Créer une annonce Nightscout pour les messages d\'erreur et les alertes locales (également visible dans la section Careportal de l\'onglet traitements)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Créer des annonces Nightscout pour les alertes besoins de glucides</string>
-    <string name="description_ns_client">Synchronise vos données avec Nightscout</string>
-    <string name="description_ns_client_v3">Synchronise vos données avec Nightscout en utilisant l\'API v3</string>
-    <string name="blocked_by_charging">Bloqué par les options de recharge</string>
-    <string name="blocked_by_connectivity">Bloqué par les options de connectivité</string>
-    <string name="unsupported_ns_version">Version de Nightscout non supportée</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">Dysfonctionnement NSClient. Redémarrez NS et NSClient.</string>
     <!-- Skins -->
     <string name="classic_description">Thème d\'origine</string>
     <string name="lowres_description">Basse résolution</string>
@@ -436,7 +415,6 @@
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Requête</string>
     <string name="loop_constraints_processed_label">Après applicaton des restrictions</string>
-    <string name="constraints">Restrictions</string>
     <string name="loop_tbr_request_time_label">Heure de demande basal temp</string>
     <string name="loop_tbr_execution_time_label">Heure d\'exécution basal temp</string>
     <string name="loop_tbr_set_by_pump_label">Basal temporaire défini par la pompe</string>
@@ -446,4 +424,43 @@
     <string name="loop_open_mode_min_change">Changement minimum [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">utilisation:</string>
+    <!--    Iob-->
+    <string name="send_logfiles">Envoyer les fichiers journaux d\'aujourd\'hui aux développeurs avec l\'heure actuel. Situation inattendue.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Surveillez et contrôlez AAPS en utilisant votre montre WearOS.</string>
+    <string name="no_watch_connected">(Pas de montre connectée)</string>
+    <string name="pump_status">État de la pompe</string>
+    <string name="loop_status">État de la boucle</string>
+    <string name="wizard_result">Calc. Assistant :\nInsuline : %1$.2fU\nGlucides : %2$dg</string>
+    <string name="quick_wizard_not_available">L\'assistant rapide sélectionné n\'est plus disponible, veuillez actualiser l\'écran</string>
+    <string name="quick_wizard_message">Assistant : %1$s\nInsuline : %2$.2fU\nGlucides : %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Préréglage inconnu de la cible temp. : %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Annuler l\'exécution des cibles Temp?</string>
+    <string name="wear_action_tempt_unit_error">Différentes unités utilisées sur la montre et le téléphone!</string>
+    <string name="wear_action_tempt_zero_message">Pas de Cible Temp - annuler la cible temporaire en cours?</string>
+    <string name="wear_action_tempt_min_bg_error">Gly mini hors limite!</string>
+    <string name="wear_action_tempt_max_bg_error">Gly maxi hors limite!</string>
+    <string name="wear_action_tempt_manual_range_message">Cible temp.:\nMin: %1$s\nMax : %2$s\nDurée : %3$s</string>
+    <string name="wear_action_tempt_manual_message">Cible temp.:\nCible: %1$s\nDurée: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Cible temp.:\nRaison: %1$s\nCible : %2$s\nDurée : %3$s</string>
+    <string name="no_success">échec - veuillez vérifier le téléphone</string>
+    <string name="wear_settings">Paramètres Wear</string>
+    <string name="wearcontrol_title">Commandes depuis la montre</string>
+    <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre.</string>
+    <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
+    <string name="wear_display_settings">Parametres d\'affichage</string>
+    <string name="wear_general_settings">Paramètres généraux</string>
+    <string name="wear_detailed_delta_title">Afficher le delta détaillé</string>
+    <string name="wear_detailed_delta_summary">Afficher delta avec une décimale supplémentaire</string>
+    <string name="wear_notifysmb_title">Notifier en cas de SMB</string>
+    <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
+    <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de la montre.</string>
+    <string name="wear_predictions_title">Prédictions</string>
+    <string name="resend_all_data">Renvoyer toutes les données</string>
+    <string name="open_settings_on_wear">Afficher les Paramètres sur la Montre</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
+    <string name="old_data">DONNÉES ANCIENNES</string>
 </resources>

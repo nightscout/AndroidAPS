@@ -1,28 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="sms_delta">デルタ:</string>
+    <string name="sms_basal">ベーサル:</string>
     <!-- Insulin -->
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <!-- Food-->
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
+    <string name="localprofile">プロファイル</string>
+    <string name="units_colon">Units:</string>
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <!-- Actions -->
+    <string name="actions_shortname">ACT</string>
     <!-- Safety -->
     <!-- Overview -->
-    <!-- NSClient -->
-    <!-- Tidepool -->
+    <string name="overview">概要</string>
+    <string name="overview_shortname">HOME</string>
+    <string name="description_overview">Loopの状態と一般的なボタンの表示</string>
+    <string name="overview_editquickwizard_usecob">COB計算</string>
+    <string name="overview_editquickwizard_usetemptarget">一時ターゲット計算</string>
+    <string name="overview_editquickwizard_usepercentage">パーセント計算</string>
+    <string name="overview_buttons_selection">ボタン</string>
+    <string name="show_calibration_button_summary">Xdrip+にキャリブレーションを送付する。もしくはBYODAキャリブレーションダイアログを開く。</string>
+    <string name="show_cgm_button_summary">Opens xDrip+ か BYODAを開く、 戻るボタンでAAPSに戻る。</string>
+    <string name="error_starting_cgm">CGM アプリケーションを起動できません。インストールされていることを確認してください。</string>
+    <string name="constraints_violation">制約違反</string>
+    <string name="change_your_input">入力を変更します!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">アップローダー</string>
+    <string name="quickwizard_settings">クイックウィザードの設定</string>
+    <string name="overview_edit_quickwizard_button_text">ボタンテキスト</string>
+    <string name="overview_edit_quickwizard_carbs">炭水化物:</string>
+    <string name="overview_edit_quickwizard_valid">有効:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">追加</string>
+    <string name="overview_quickwizard_item_edit_button">編集</string>
+    <string name="overview_edit_quickwizard_use_bg">BG計算</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">ボーラスIOB計算</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">ボーラスIOB計算</string>
+    <string name="overview_edit_quickwizard_use_trend">トレンド計算</string>
+    <string name="overview_edit_quickwizard_use_superbolus">スーパーボーラス計算</string>
+    <string name="positive_only">ポジティブのみ</string>
+    <string name="negative_only">ネガティブのみ</string>
+    <string name="keep_screen_on_title">画面をオンに保つ</string>
+    <string name="keep_screen_on_summary">Androidが画面をオフにするのを防ぎます。電源コンセントに接続されていないと、多くのエネルギーを消費します。</string>
+    <string name="treatments">治療</string>
+    <string name="carb_increment_button_message">ボタンが押されたときに追加する炭水化物数</string>
+    <string name="insulin_increment_button_message">ボタンを押すと追加するインスリン量</string>
+    <string name="default_temptargets">デフォルトの一時ターゲット</string>
+    <string name="eatingsoon_duration">eatingsoon 時間</string>
+    <string name="eatingsoon_target">eatingsoon ターゲット</string>
+    <string name="activity_duration">アクティビティ　時間</string>
+    <string name="activity_target">アクティビティ　ターゲット</string>
+    <string name="hypo_duration">低血糖　時間</string>
+    <string name="hypo_target">低血糖　ターゲット</string>
+    <string name="prefs_range_title">表示範囲</string>
+    <string name="prefs_range_summary">スマートウォッチ　チャートの高血糖　低血糖マーク</string>
+    <string name="low_mark">低血糖マーク</string>
+    <string name="high_mark">高血糖マーク</string>
+    <string name="short_tabtitles">タブのタイトルを短縮</string>
+    <string name="enablesuperbolus">ウィザードでスーパーボーラスを有効化</string>
+    <string name="enablesuperbolus_summary">ウィザードでスーパーボーラス機能を有効にします。どういう機能か本当に理解出来るまで有効にしないでください。使用中の場合は、無効にすることができます！</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_treatments">治療</string>
+    <string name="prediction_shortname">PRED</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="treatments_shortname">TREAT</string>
     <!-- VirtualPump -->
     <!-- Source -->
-    <!-- NSClient -->
     <!-- Skins -->
     <!--    Loop -->
+    <string name="loop_aps_label">APS</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">WearOS ウォッチを使用して AAPS を監視、制御します。</string>
+    <string name="no_success">失敗しました - 携帯電話をご確認ください</string>
+    <string name="wear_settings">ウェアの設定</string>
+    <string name="wearcontrol_title">ウォッチからコントロール</string>
+    <string name="wearcontrol_summary">ウォッチから一時ターゲットとトリートメントを入力。</string>
+    <string name="wear_detailed_delta_title">デルタの詳細を表示</string>
+    <string name="wear_detailed_delta_summary">デルタの小数点以下を表示する</string>
+    <string name="wear_notifysmb_title">SMBを通知する</string>
+    <string name="resend_all_data">すべてのデータを再送信</string>
+    <string name="open_settings_on_wear">ウェアの設定を開く</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">ループの状態を通知に表示する</string>
+    <string name="old_data">旧データ</string>
 </resources>

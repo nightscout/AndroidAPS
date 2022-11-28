@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.toStringMedium
-import info.nightscout.androidaps.extensions.toStringShort
+import info.nightscout.core.extensions.toStringMedium
+import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton
@@ -30,7 +30,7 @@ import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ActionsFragmentBinding
 import info.nightscout.plugins.skins.SkinProvider
@@ -72,7 +72,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var loop: Loop
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -109,7 +109,7 @@ class ActionsFragment : DaggerFragment() {
                 protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { activityNames.runProfileSwitchDialog(childFragmentManager) })
+                    UIRunnable { uiInteraction.runProfileSwitchDialog(childFragmentManager) })
             }
         }
         binding.tempTarget.setOnClickListener {
@@ -117,7 +117,7 @@ class ActionsFragment : DaggerFragment() {
                 protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { activityNames.runTempTargetDialog(childFragmentManager) })
+                    UIRunnable { uiInteraction.runTempTargetDialog(childFragmentManager) })
             }
         }
         binding.extendedBolus.setOnClickListener {
@@ -126,7 +126,7 @@ class ActionsFragment : DaggerFragment() {
                     OKDialog.showConfirmation(
                         activity, rh.gs(R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
                         Runnable {
-                            activityNames.runExtendedBolusDialog(childFragmentManager)
+                            uiInteraction.runExtendedBolusDialog(childFragmentManager)
                         }, null
                     )
                 })
@@ -138,7 +138,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                         }
                     }
                 })
@@ -149,7 +149,7 @@ class ActionsFragment : DaggerFragment() {
                 protectionCheck.queryProtection(
                     activity,
                     ProtectionCheck.Protection.BOLUS,
-                    UIRunnable { activityNames.runTempBasalDialog(childFragmentManager) })
+                    UIRunnable { uiInteraction.runTempBasalDialog(childFragmentManager) })
             }
         }
         binding.cancelTempBasal.setOnClickListener {
@@ -158,7 +158,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                         }
                     }
                 })
@@ -166,31 +166,31 @@ class ActionsFragment : DaggerFragment() {
         }
         binding.fill.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { activityNames.runFillDialog(childFragmentManager) })
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { uiInteraction.runFillDialog(childFragmentManager) })
             }
         }
-        binding.historyBrowser.setOnClickListener { startActivity(Intent(context, activityNames.historyBrowseActivity)) }
-        binding.tddStats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
+        binding.historyBrowser.setOnClickListener { startActivity(Intent(context, uiInteraction.historyBrowseActivity)) }
+        binding.tddStats.setOnClickListener { startActivity(Intent(context, uiInteraction.tddStatsActivity)) }
         binding.bgCheck.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.BGCHECK, R.string.careportal_bgcheck)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, R.string.careportal_bgcheck)
         }
         binding.cgmSensorInsert.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.SENSOR_INSERT, R.string.cgm_sensor_insert)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.SENSOR_INSERT, R.string.cgm_sensor_insert)
         }
         binding.pumpBatteryChange.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.BATTERY_CHANGE, R.string.pump_battery_change)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BATTERY_CHANGE, R.string.pump_battery_change)
         }
         binding.note.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.NOTE, R.string.careportal_note)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.NOTE, R.string.careportal_note)
         }
         binding.exercise.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.EXERCISE, R.string.careportal_exercise)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.EXERCISE, R.string.careportal_exercise)
         }
         binding.question.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.QUESTION, R.string.careportal_question)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.QUESTION, R.string.careportal_question)
         }
         binding.announcement.setOnClickListener {
-            activityNames.runCareDialog(childFragmentManager, ActivityNames.EventType.ANNOUNCEMENT, R.string.careportal_announcement)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, R.string.careportal_announcement)
         }
 
         sp.putBoolean(R.string.key_objectiveuseactions, true)

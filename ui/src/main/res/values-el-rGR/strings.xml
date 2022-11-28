@@ -6,25 +6,34 @@
     <string name="time_offset">Χρονική μετατόπιση</string>
     <string name="unit_minute_short">min</string>
     <!--    Widget-->
+    <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
     <string name="statistics">Στατιστικά</string>
+    <string name="weight_label">Βάρος</string>
+    <string name="glucose_type">Τύπος Γλυκόζης</string>
+    <string name="bg_other">Άλλο</string>
+    <string name="bg_meter">Μετρητής</string>
+    <string name="bg_sensor">Αισθητήρας</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Σύνολο</string>
     <!-- FillDialog -->
-    <string name="button1">Πλήκτρο 1</string>
-    <string name="button2">Πλήκτρο 2</string>
-    <string name="button3">Πλήκτρο 3</string>
+    <string name="fill_warning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <!-- ProfileSwitchDialog -->
+    <string name="timeshift_label">Αλλαγή της ώρας</string>
+    <string name="percentage_label">Ποσοστό</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Κύκλωμα σε αναστολή για 1h</string>
     <string name="suspendloopfor2h">Κύκλωμα σε αναστολή για 2h</string>
     <string name="suspendloopfor3h">Κύκλωμα σε αναστολή για 3h</string>
     <string name="suspendloopfor10h">Κύκλωμα σε αναστολή για 10h</string>
+    <string name="disconnectpump">Αποσυνδέστε την αντλία</string>
     <string name="disconnectpumpfor15m">Αποσύνδεση αντλίας για 15 λεπτά</string>
     <string name="disconnectpumpfor30m">Αποσύνδεση αντλίας για 30 λεπτά</string>
     <string name="disconnectpumpfor1h">Αποσύνδεση αντλίας για 1h</string>
@@ -39,30 +48,29 @@
     <string name="duration3h">3 ώρες</string>
     <string name="duration10h">10 ώρες</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2ώρες</string>
     <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
     <string name="missing_carbs">Που υπολείπεται%1$d</string>
+    <string name="carb_time_label">Ώρα γεύματος</string>
     <!-- Treatments -->
     <string name="calculation_short">Υπολογ</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
     <string name="treatments_carbs_label_string">Υδατάνθρακες:</string>
     <string name="treatments_iobtotal_label_string">Συνολική IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Συνολική δραστηριότητα IOB:</string>
     <string name="tempbasals_realduration_label_string">Διάρκεια:</string>
     <string name="tempbasals_netratio_label_string">Αναλογία:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
+    <string name="meal_bolus">Γεύμα</string>
+    <string name="prime">Πλήρωση</string>
     <string name="refresheventsfromnightscout">Ανανέωση από NS</string>
     <!-- ProfileHelperActivity -->
+    <string name="selected_profile">Επιλεγμένο:</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Βασικός Ρυθμός</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Λεπτομέρειες προβλημάτων εισαγωγής</string>
-    <string name="check_preferences_import_btn">Εισαγωγή</string>
-    <string name="check_preferences_import_anyway_btn">Εισαγωγή οπωσδήποτε(ΕΠΙΚΙΝΔΥΝΟ)</string>
-    <string name="check_preferences_before_import">Ελέγξτε τις προτιμήσεις πριν την εισαγωγή:</string>
-    <string name="check_preferences_cannot_import">Δεν είναι δυνατή η εισαγωγή προτιμήσεων!</string>
-    <string name="check_preferences_dangerous_import">Δεν πρέπει να εισαχθούν προτιμήσεις!</string>
+    <string name="stop_pressed">Πιέστε STOP</string>
 </resources>

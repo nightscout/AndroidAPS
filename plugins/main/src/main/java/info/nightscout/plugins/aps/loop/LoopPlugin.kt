@@ -7,19 +7,21 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.convertedToPercent
-import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.convertedToPercent
+import info.nightscout.core.extensions.plannedRemainingMinutes
+import info.nightscout.core.iob.json
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
 import info.nightscout.database.ValueWrapper
+import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -32,6 +34,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.Loop.LastRun
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -44,20 +47,21 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
+import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
@@ -73,6 +77,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -100,7 +105,7 @@ class LoopPlugin @Inject constructor(
     private val uel: UserEntryLogger,
     private val repository: AppRepository,
     private val runningConfiguration: RunningConfiguration,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
@@ -456,14 +461,14 @@ class LoopPlugin @Inject constructor(
 
     private fun presentSuggestion(builder: NotificationCompat.Builder) {
         // Creates an explicit intent for an Activity in your app
-        val resultIntent = Intent(context, activityNames.mainActivity)
+        val resultIntent = Intent(context, uiInteraction.mainActivity)
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
         // your application to the Home screen.
         val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addParentStack(activityNames.mainActivity)
+        stackBuilder.addParentStack(uiInteraction.mainActivity)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
         val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -679,7 +684,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                     }
                 }
             })
@@ -687,7 +692,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                     }
                 }
             })
@@ -696,7 +701,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -714,12 +719,69 @@ class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                 }
             }
         })
     }
 
+    override fun buildDeviceStatus(
+        dateUtil: DateUtil,
+        loop: Loop,
+        iobCobCalculatorPlugin: IobCobCalculator,
+        profileFunction: ProfileFunction,
+        pump: Pump,
+        receiverStatusStore: ReceiverStatusStore,
+        runningConfiguration: RunningConfiguration,
+        version: String
+    ): DeviceStatus? {
+        val profile = profileFunction.getProfile() ?: return null
+        val profileName = profileFunction.getProfileName()
+
+        val lastRun = loop.lastRun
+        var apsResult: JSONObject? = null
+        var iob: JSONObject? = null
+        var enacted: JSONObject? = null
+        if (lastRun != null && lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
+            // do not send if result is older than 1 min
+            apsResult = lastRun.request?.json()?.also {
+                it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
+            }
+            iob = lastRun.request?.iob?.json(dateUtil)?.also {
+                it.put("time", dateUtil.toISOString(lastRun.lastAPSRun))
+            }
+            val requested = JSONObject()
+            if (lastRun.tbrSetByPump?.enacted == true) { // enacted
+                enacted = lastRun.request?.json()?.also {
+                    it.put("rate", lastRun.tbrSetByPump!!.json(profile.getBasal())["rate"])
+                    it.put("duration", lastRun.tbrSetByPump!!.json(profile.getBasal())["duration"])
+                    it.put("received", true)
+                }
+                requested.put("duration", lastRun.request?.duration)
+                requested.put("rate", lastRun.request?.rate)
+                requested.put("temp", "absolute")
+                requested.put("smb", lastRun.request?.smb)
+                enacted?.put("requested", requested)
+                enacted?.put("smb", lastRun.tbrSetByPump?.bolusDelivered)
+            }
+        } else {
+            val calcIob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile)
+            if (calcIob.isNotEmpty()) {
+                iob = calcIob[0].json(dateUtil)
+                iob.put("time", dateUtil.toISOString(dateUtil.now()))
+            }
+        }
+        return DeviceStatus(
+            timestamp = dateUtil.now(),
+            suggested = apsResult?.toString(),
+            iob = iob?.toString(),
+            enacted = enacted?.toString(),
+            device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL,
+            pump = pump.getJSONStatus(profile, profileName, version).toString(),
+            uploaderBattery = receiverStatusStore.batteryLevel,
+            configuration = runningConfiguration.configuration().toString()
+        )
+    }
     companion object {
 
         private const val CHANNEL_ID = "AAPS-OpenLoop"

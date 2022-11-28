@@ -73,3 +73,7 @@ files:
     translation: /implementation/src/main/res/values-%android_code%/strings.xml
   - source: /ui/src/main/res/values/strings.xml
     translation: /ui/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/sync/src/main/res/values/strings.xml
+    translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
+    translate_attributes: 0
+    content_segmentation: 0

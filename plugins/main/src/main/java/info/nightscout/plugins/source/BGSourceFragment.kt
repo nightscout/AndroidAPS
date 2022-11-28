@@ -14,8 +14,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.valueToUnitsString
+import info.nightscout.core.extensions.directionToIcon
+import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.ActionModeHelper

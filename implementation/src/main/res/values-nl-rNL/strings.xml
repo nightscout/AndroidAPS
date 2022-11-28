@@ -3,17 +3,11 @@
     <string name="xdrip_not_installed">xDrip+ niet geïnstalleerd</string>
     <string name="calibration_sent">Kalibratie verzonden naar xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="missed_bg_readings">Geen BG metingen</string>
     <string name="time_to_eat">Tijd om te eten</string>
-    <string name="enable_bolus_advisor">Bolusadviseur inschakelen</string>
-    <string name="enable_bolus_advisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
-    <string name="request">Verzoek</string>
     <string name="permission">Toestemming</string>
-    <string name="error_asking_for_permissions">Fout bij het vragen van toestemming</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <string name="need_whitelisting">Voor een goede werking van %1$s moeten de accubesparingsopties zijn uitgeschakeld in de telefooninstellingen</string>
     <string name="need_location_permission">App heeft locatie toestemming nodig voor Bluetooth scan en WiFi identificatie</string>
     <string name="need_storage_permission">Applicatie heeft gegevens toestemming nodig om log bestanden op te slaan en instellingen te exporteren</string>

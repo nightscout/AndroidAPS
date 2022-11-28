@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="unsupported_ns_version">Nem támogatott Nightscout verzió</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">FELT</string>
+    <!-- NSClient -->
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="status">Állapot:</string>
+    <string name="clear_log">Napló törlése</string>
+    <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
+    <string name="ns_local_broadcasts_title">Helyi adatszórás bekapcsolása.</string>
+    <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="upload_now">Feltöltés most</string>
+</resources>

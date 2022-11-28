@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">最后一次连接pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">另一个大剂量正在输注</string>
     <string name="omnipod_dash_not_enough_insulin">储药器中的胰岛素不足</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>
+    <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
 </resources>

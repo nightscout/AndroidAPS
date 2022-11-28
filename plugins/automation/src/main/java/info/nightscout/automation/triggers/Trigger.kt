@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.automation.events.EventTriggerChanged

@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Folosire nesigură: pompa folosește un alt profil decât primul. Bucla a fost dezactivată. Selectați primul profil din pompă și reîncercați.</string>
     <string name="bolus_frequency_exceeded">Un bolus de aceeași valoare a fost livrat în ultimele două minute. Pentru a preveni bolusarea accidentală dublă și pentru a evita greșelile, acesta nu se va livra.</string>
     <string name="combo_pump_connected_now">Acum</string>
-    <string name="combo_activity_reading_pump_history">Se citește istoricul din pompă</string>
     <string name="combo_activity_setting_basal_profile">Se setează profilul bazalei</string>
     <string name="combo_pump_cartridge_low_warrning">Nivelul insulinei din pompă este scăzut</string>
     <string name="combo_pump_battery_low_warrning">Nivelul bateriei pompei este scăzut</string>
@@ -52,4 +51,5 @@
     <string name="bolusstopped">Bolus oprit</string>
     <string name="bolusstopping">Se oprește bolusul</string>
     <string name="combo_error_display_never">Niciodată</string>
+    <string name="unsafeusage">utilizare nesigură</string>
 </resources>

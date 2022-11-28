@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Byla zjištěna neplatná data historie pumpy. Otevřete nový problém a poskytněte logy.</string>
     <string name="riley_statistics">Statistiky RL</string>
     <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuto na tlačítko obnovit</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Naplánovaná aktualizace stavu</string>
 </resources>

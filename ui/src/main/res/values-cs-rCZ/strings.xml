@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Aplikováno omezení!</string>
     <string name="bolus_constraint_applied">Aplikováno omezení bolusu</string>
     <string name="carbs_constraint_applied">Aplikováno omezení sacharidů</string>
     <string name="temp_target_short">DC</string>
@@ -36,14 +35,9 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Celkem</string>
     <!-- FillDialog -->
     <string name="fill_warning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
-    <string name="fill_bolus_title">Standardní množství inzulinu pro Plnění/Doplňování</string>
-    <string name="button1">Tlačítko 1</string>
-    <string name="button2">Tlačítko 2</string>
-    <string name="button3">Tlačítko 3</string>
     <string name="record_pump_site_change">Zaznamenat výměnu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenat výměnu inzulínu</string>
     <!-- InsulinDialog -->
@@ -93,8 +87,6 @@
     <string name="tempbasals_netratio_label_string">Poměr:</string>
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
-    <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_correction_label">Korekce</string>
     <string name="meal_bolus">Jídlo</string>
     <string name="prime">Doplňování</string>
@@ -134,13 +126,4 @@
     <string name="basal_rate">Bazál</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STISKNUTO STOP</string>
-    <!--    PrefImport-->
-    <string name="check_preferences_details_btn">Vysvětlení problémů při importu…</string>
-    <string name="check_preferences_details_title">Detaily problémů importu</string>
-    <string name="check_preferences_import_btn">Import</string>
-    <string name="check_preferences_import_anyway_btn">Přesto importovat (NEBEZPEČNÉ!)</string>
-    <string name="import_setting">Importovat nastavení</string>
-    <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
-    <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
-    <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
 </resources>

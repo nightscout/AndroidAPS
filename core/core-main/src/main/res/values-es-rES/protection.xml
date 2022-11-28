@@ -5,7 +5,6 @@
     <string name="settings_protection">Protección de ajustes</string>
     <string name="application_protection">Protección de aplicación</string>
     <string name="bolus_protection">Protección de bolo</string>
-    <string name="master_password">Contraseña maestra</string>
     <string name="settings_password">Contraseña de configuración</string>
     <string name="settings_pin">Configuración de PIN</string>
     <string name="application_password">Contraseña de aplicación</string>
@@ -14,13 +13,10 @@
     <string name="bolus_pin">PIN para bolos</string>
     <string name="protection_timeout_title">Contraseña y retención de PIN [s]</string>
     <string name="protection_timeout_summary">Tiempo previo a que se introduzca el PIN o la password</string>
-    <string name="unlock_settings">Desbloquear ajustes</string>
     <string name="biometric">Biométrico</string>
     <string name="custom_password">Contraseña personalizada</string>
     <string name="custom_pin">PIN personalizado</string>
     <string name="noprotection">Sin protección</string>
-    <string name="protection">Protección</string>
-    <string name="master_password_missing">¡La contraseña maestra no está configurada!\n\nPor favor, configure su contraseña maestra en Preferencias (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">No es seguro volver atrás</string>
     <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, la protección biométrica necesita una contraseña maestra establecida para el respaldo.\n\nPor favor, establezca una contraseña maestra!</string>
     <string name="password_set">¡Contraseña establecida!</string>
@@ -29,7 +25,6 @@
     <string name="pin_not_set">PIN no establecido</string>
     <string name="password_not_changed">Contraseña no cambiada</string>
     <string name="pin_not_changed">PIN no cambiado</string>
-    <string name="password_cleared">¡Contraseña borrada!</string>
     <string name="pin_cleared">PIN eliminado</string>
     <string name="password_hint">Introducir contraseña aquí</string>
     <string name="pin_hint">Introducir PIN aquí</string>

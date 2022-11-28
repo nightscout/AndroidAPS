@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="next">Ar Aghaidh</string>
+    <string name="boluses">Bólasi</string>
+    <string name="carbohydrates">Carbaihiodráití</string>
     <string name="cancel">Cuir ar ceal</string>
     <string name="close">Dún</string>
 </resources>

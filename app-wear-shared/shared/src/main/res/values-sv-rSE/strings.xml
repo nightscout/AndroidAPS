@@ -19,4 +19,10 @@
     <string name="unit_weeks">veckor</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!-- Rx -->
+    <string name="connecting_for">Ansluter (%1$d s)</string>
+    <string name="handshaking">Anslutningen verifieras</string>
+    <string name="connected">Ansluten</string>
+    <string name="disconnecting">Kopplar från</string>
+    <string name="waiting_for_disconnection">Väntar på frånkoppling</string>
 </resources>

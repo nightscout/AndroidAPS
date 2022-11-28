@@ -18,7 +18,7 @@ class MsgInitConnStatusTime(
 
     override fun handleMessage(bytes: ByteArray) {
         if (bytes.size - 10 > 7) {
-            activityNames.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
+            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)

@@ -38,7 +38,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.OmnipodDash
 import info.nightscout.interfaces.pump.OmnipodEros
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -67,7 +67,7 @@ class SWDefinition @Inject constructor(
     private val cryptoUtil: CryptoUtil,
     private val config: Config,
     private val hardLimits: HardLimits,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -353,7 +353,7 @@ class SWDefinition @Inject constructor(
         )
         .add(SWButton(injector)
                  .text(R.string.doprofileswitch)
-                 .action { activityNames.runProfileSwitchDialog(activity.supportFragmentManager) })
+                 .action { uiInteraction.runProfileSwitchDialog(activity.supportFragmentManager) })
         .validator { profileFunction.getRequestedProfile() != null }
         .visibility { profileFunction.getRequestedProfile() == null }
 

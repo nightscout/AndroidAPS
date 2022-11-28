@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.logging.AAPSLogger

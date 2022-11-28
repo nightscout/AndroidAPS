@@ -19,7 +19,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.notify
 import info.nightscout.core.utils.waitMillis
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.packet.BatteryWarningReportPacket
@@ -49,7 +49,7 @@ class BLECommonService @Inject internal constructor(
     private val diaconnG8ResponseMessageHashTable: DiaconnG8ResponseMessageHashTable,
     private val diaconnG8SettingResponseMessageHashTable: DiaconnG8SettingResponseMessageHashTable,
     private val diaconnG8Pump: DiaconnG8Pump,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) {
 
     companion object {
@@ -338,20 +338,20 @@ class BLECommonService @Inject internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                activityNames.runAlarm(context, rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                activityNames.runAlarm(context, rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                activityNames.runAlarm(context, rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
                 return
             }
 

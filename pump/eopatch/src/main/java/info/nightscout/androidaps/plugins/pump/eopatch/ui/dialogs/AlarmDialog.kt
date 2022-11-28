@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs
 
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -17,8 +16,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafe
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
-import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.R
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -28,7 +27,7 @@ import javax.inject.Inject
 
 class AlarmDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var rxBus: RxBus
@@ -159,16 +158,10 @@ class AlarmDialog : DaggerDialogFragment() {
     }
 
     private fun startAlarm(reason: String) {
-        if (sound != 0) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context?.let { context -> alarmSoundServiceHelper.startAlarm(context, sound, reason) }
-            }
-        }
+        if (sound != 0) uiInteraction.startAlarm(sound, reason)
     }
 
     private fun stopAlarm(reason: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context?.let { context -> alarmSoundServiceHelper.stopService(context, reason) }
-        }
+        uiInteraction.stopAlarm(reason)
     }
 }

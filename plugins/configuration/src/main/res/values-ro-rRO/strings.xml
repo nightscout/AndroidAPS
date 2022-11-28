@@ -10,11 +10,15 @@
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
+    <string name="display_settings">Setări afișare</string>
     <string name="low_mark">Pragul HIPO</string>
     <string name="high_mark">Pragul HIPER</string>
     <string name="low_mark_comment">Valoarea inferioară a intervalului țintă (doar afișare)</string>
     <string name="high_mark_comment">Valoarea superioară a intervalului țintă (doar afișare)</string>
     <string name="permission">Permisiune</string>
+    <string name="need_system_window_permission">Aplicația are nevoie de permisiune la fereastra sistemului pentru a afișa notificări</string>
+    <string name="need_location_permission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
+    <string name="need_storage_permission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
     <string name="askforpermission">Solicitați permisiunea</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="master_password_summary">Parola master (principală) este folosită pentru criptarea copiilor de rezervă și pentru a suprascrie securitatea în aplicație. Rețineți-o sau păstrați-o într-un loc sigur.</string>
@@ -42,18 +46,95 @@
     <string name="allow_automated_crash_reporting">Permite trimiterea de rapoarte automate de eroare și de date despre folosire către dezvoltatori prin serviciul fabric.io.</string>
     <string name="summary_email_for_crash_report">Această identificare va fi atașată rapoartelor de eroare pentru a vă putea contacta în cazuri urgente. Este opționala.</string>
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
+    <string name="request">Cerință</string>
+    <string name="apsmode_title">Mod APS</string>
+    <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Configurator</string>
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general">General</string>
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
+    <string name="configbuilder_sync">Sincronizare</string>
     <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
     <string name="configbuilder_loop">Buclă</string>
     <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
-    <string name="apsmode_title">Mod APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
+    <string name="config_builder_shortname">CONF</string>
+    <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Preferințe</string>
+    <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
+    <string name="preferences_export_canceled">Exportarea a eșuat! Preferințele NU au fost exportate!</string>
+    <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
+    <string name="preferences_import_impossible">Nu se pot prelua setările!</string>
+    <string name="check_preferences_details_btn">Explicații problemele de import…</string>
+    <string name="check_preferences_details_title">Detalii probleme de import</string>
+    <string name="check_preferences_import_btn">Importă</string>
+    <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
+    <string name="import_setting">Importă setările</string>
+    <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
+    <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
+    <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
+    <string name="nav_export">Exportă setările</string>
+    <string name="export_to">Exportă setările către</string>
+    <string name="import_from">Importă setările din</string>
+    <string name="setting_imported">Setări importate</string>
+    <string name="old_master_password">Parola Master veche</string>
+    <string name="different_password_used">Acest fişier a fost exportat şi criptat cu o parolă master diferită. Furnizaţi parola master veche pentru a decripta fişierul.</string>
+    <string name="master_password_will_be_replaced">Ca rezultat al unui import reusit, parola master curenta VA FI INLOCUITA cu parola master veche!</string>
+    <string name="exported">Am exportat preferințele</string>
+    <string name="filenotfound">Nu am găsit fișierul</string>
+    <string name="goto_main_try_again">Mergeți la ecranul principal și încercați din nou.</string>
+    <string name="restartingapp">Se iese din aplicație în vederea aplicării setărilor.</string>
+    <string name="ue_exported">Înregistrările de la Utilizator exportate</string>
+    <string name="protection">Protecţie</string>
+    <string name="master_password_missing">Parola principală nu este setată!\n\nVă rugăm să vă setaţi parola principală în Preferinţe (%1$s &#8594; %2$s)</string>
+    <!--    Maintenance-->
+    <string name="maintenance">Mentenanță</string>
+    <string name="maintenance_shortname">MENTN</string>
+    <string name="description_maintenance">Pune la dispoziție funcții pentru mentenanță (ex: trimitere de loguri, ștergere de loguri).</string>
+    <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
+    <string name="maintenance_settings">Setări de întreținere</string>
+    <string name="maintenance_email">Destinatar email</string>
+    <string name="maintenance_amount">Nr de loguri de trimis</string>
+    <string name="send_all_logs">Trimite un email cu loguri</string>
+    <string name="delete_logs">Șterge logurile</string>
+    <string name="configbuilder_nightscoutversion_label">Versiune Nightscout:</string>
+    <string name="engineering_mode_enabled">Mod inginer activat</string>
+    <string name="log_files">Fişiere jurnal</string>
+    <string name="nav_logsettings">Setări loguri</string>
+    <string name="miscellaneous">Diverse</string>
+    <string name="nav_resetdb">Resetează bazele de date</string>
+    <string name="resettodefaults">Resetare la setările implicite</string>
+    <!-- Maintenance -->
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat cu %1$s în urmă</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportat în data de %1$s</string>
+    <string name="exported_less_than_hour_ago">exportat acum mai puțin de o ora</string>
+    <string name="in_directory" comment="placeholder is for exported file path">în folderul: %1$s</string>
+    <string name="preferences_import_list_title">Selectați fișierul pentru import</string>
+    <string name="metadata_warning_different_flavour">Preferințele au fost create folosind o alta versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după import verificați și actualizați preferințele.</string>
+    <string name="metadata_warning_different_device">Preferințele au fost create pe un dispozitiv diferit. Este în regulă să le importați de pe un alt telefon, dar asigurați-vă că sunt corecte!</string>
+    <string name="metadata_warning_outdated_format">Folosiți un format neactualizat dintr-o versiune veche de AAPS care nu este securizat! Folosiți acest format în ultima instanța, doar dacă nu aveți un export în formatul curent de JSON.</string>
+    <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
+    <string name="metadata_warning_date_format">Format dată invalid!</string>
+    <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după upgrade, dar verificați după import că preferințele sunt corecte!</string>
+    <string name="metadata_urgent_different_version">Preferințe dintr-o versiune majoră a aplicației. Versiunile majore au diferențe semnificative și pot avea preferințe incompatibile! Asigurați-vă după import ca preferințele sunt corecte!</string>
+    <string name="prefdecrypt_settings_tampered">Fişier de setări modificat</string>
+    <string name="prefdecrypt_settings_secure">Fișierul de setări este securizat</string>
+    <string name="prefdecrypt_settings_unencrypted">Folosirea formatului nesecurizat, necriptat pentru setări</string>
+    <string name="prefdecrypt_wrong_json">Eroare format JSON, lipsește un câmp necesar (format, conținut, metadate sau securitate)</string>
+    <string name="prefdecrypt_wrong_password">Eroare la decriptare, parola dată nu poate decripta fişierul</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Suma de control a fişierului (hash) lipseşte, nu se poate verifica autenticitatea setărilor!</string>
+    <string name="prefdecrypt_issue_modified">Fişierul a fost modificat după export!</string>
+    <string name="prefdecrypt_issue_parsing">Eroare la decriptare, parsarea preferinţelor a eşuat!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Eroare la decriptare, parola furnizată este invalidă sau fişierul de setări a fost modificat! Se poate întâmpla ca fişierul importat să fi fost exportat cu o parolă master diferită.</string>
+    <string name="prefdecrypt_issue_wrong_format">Lipseşte configuraţia de criptare, formatul setărilor este invalid!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
+    <!-- Permissions -->
 </resources>

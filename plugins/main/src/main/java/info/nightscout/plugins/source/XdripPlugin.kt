@@ -10,6 +10,7 @@ import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -79,8 +80,8 @@ class XdripPlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
-            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+            glucoseValues += TransactionGlucoseValue(
                 timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
                 value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
                 raw = bundle.getDouble(Intents.EXTRA_RAW, 0.0),

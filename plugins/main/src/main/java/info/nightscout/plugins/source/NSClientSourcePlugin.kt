@@ -8,18 +8,19 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.nsclient.NSSgv
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.plugins.R
-import info.nightscout.plugins.sync.nsShared.StoreDataForDb
-import info.nightscout.plugins.sync.nsclient.data.NSSgv
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.AAPSLogger
@@ -49,7 +50,7 @@ class NSClientSourcePlugin @Inject constructor(
         .shortName(R.string.ns_client_bg_short)
         .description(R.string.description_source_ns_client),
     aapsLogger, rh, injector
-), BgSource {
+), BgSource, NSClientSource {
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false
@@ -68,7 +69,7 @@ class NSClientSourcePlugin @Inject constructor(
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
 
-    internal fun detectSource(glucoseValue: GlucoseValue) {
+    override fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = arrayOf(
                 GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN,
@@ -103,9 +104,9 @@ class NSClientSourcePlugin @Inject constructor(
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
-        private fun toGv(jsonObject: JSONObject): CgmSourceTransaction.TransactionGlucoseValue? {
+        private fun toGv(jsonObject: JSONObject): TransactionGlucoseValue? {
             val sgv = NSSgv(jsonObject)
-            return CgmSourceTransaction.TransactionGlucoseValue(
+            return TransactionGlucoseValue(
                 timestamp = sgv.mills ?: return null,
                 value = sgv.mgdl?.toDouble() ?: return null,
                 noise = null,
@@ -116,8 +117,8 @@ class NSClientSourcePlugin @Inject constructor(
             )
         }
 
-        private fun toGv(sgv: NSSgvV3): CgmSourceTransaction.TransactionGlucoseValue {
-            return CgmSourceTransaction.TransactionGlucoseValue(
+        private fun toGv(sgv: NSSgvV3): TransactionGlucoseValue {
+            return TransactionGlucoseValue(
                 timestamp = sgv.date,
                 value = sgv.sgv,
                 noise = sgv.noise?.toDouble(),
@@ -140,7 +141,7 @@ class NSClientSourcePlugin @Inject constructor(
 
             var latestDateInReceivedData: Long = 0
             aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
-            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
 
             try {
                 if (sgvs is JSONArray) { // V1 client

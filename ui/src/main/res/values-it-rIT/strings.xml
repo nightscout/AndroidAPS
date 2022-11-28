@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Vincolo applicato!</string>
     <string name="bolus_constraint_applied">Vincolo bolo applicato</string>
     <string name="carbs_constraint_applied">Vincolo CHO applicato</string>
     <string name="temp_target_short">TT</string>
@@ -13,31 +12,38 @@
     <string name="remind_to_bolus_later">Ricorda di fare il bolo</string>
     <string name="a11y_carb_reminder">imposta promemoria</string>
     <!--    Widget-->
+    <string name="configure">Configura opacità</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="activity_monitor">Monitor attività</string>
+    <string name="do_you_want_reset_stats">Vuoi resettare le statistiche sull\'attività?</string>
     <string name="statistics">Statistiche</string>
     <string name="calculation_in_progress">Calcolo in corso</string>
+    <string name="invalid_age">Inserimento età non valido</string>
+    <string name="invalid_weight">Inserimento peso non valido</string>
     <string name="id">ID:</string>
     <string name="submit">Invia</string>
     <string name="age">Età</string>
     <string name="weight_label">Peso</string>
+    <string name="most_common_profile">Profilo più comune:</string>
     <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati (in modo anonimo). Un ID è assegnato a questa installazione di AAPS. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
+    <string name="glucose_type">Tipo glicemia</string>
     <string name="bg_other">Altro</string>
+    <string name="bg_meter">Glucometro</string>
     <string name="bg_sensor">Sensore</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolo</string>
     <string name="treatments_wizard_total_label">Totale</string>
     <!-- FillDialog -->
-    <string name="button1">Tasto 1</string>
-    <string name="button2">Tasto 2</string>
-    <string name="button3">Tasto 3</string>
+    <string name="fill_warning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
     <string name="record_pump_site_change">Registra cambio posizione cannula</string>
     <string name="record_insulin_cartridge_change">Registra cambio cartuccia insulina</string>
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">No bolo, solo record</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="timeshift_label">Time shift</string>
     <string name="percentage_label">Percentuale</string>
     <!-- LoopDialog -->
@@ -61,18 +67,19 @@
     <string name="a11y_set_carb_timer">imposta allarme timer CHO</string>
     <string name="show_calculation">Mostra calcolo</string>
     <!-- Treatments -->
+    <string name="no_records_available">Nessun record disponibile</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">CHO:</string>
     <string name="treatments_iobtotal_label_string">IOB totale:</string>
+    <string name="treatments_iob_activity_total_label_string">Attività IOB totale:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Rapporto:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Pasto</string>
     <string name="prime">Caricamento</string>
     <string name="profile_changes">Modifiche al profilo</string>
     <string name="tempt_targets">Target Temporanei</string>
@@ -83,21 +90,31 @@
     <string name="refresheventsfromnightscout">Aggiornamento da NS</string>
     <string name="show_invalidated">Mostra invalidato</string>
     <string name="hide_invalidated">Nascondi invalidato</string>
+    <string name="careportal_remove_started_events">Rimuovi le voci \"AAPS avviato\"</string>
     <string name="hide_loop">Nascondi loop</string>
     <string name="show_loop">Mostra loop</string>
+    <string name="user_entry">Inserimento utente</string>
     <string name="clone_label">Clona</string>
     <string name="show_loop_records">Mostra record di loop</string>
     <string name="show_hide_records">Nascondi record di loop</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profilo 1</string>
     <string name="profile2">Profilo 2</string>
+    <string name="profile_type">Tipo profilo</string>
+    <string name="basal_pct_from_tdd_label">% di basale</string>
     <string name="selected_profile">Selezionato:</string>
+    <string name="compare_profile">Compara profili</string>
+    <string name="nav_profile_helper">Assistente profilo</string>
+    <string name="motol_default_profile">Profilo predefinito</string>
+    <string name="current_profile">Profilo corrente</string>
+    <string name="available_profile">Profilo disponibile</string>
+    <string name="format_with_tdd">Età: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Età: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Età: %1$d Peso: %2$.0f kg</string>
+    <string name="dpv_default_profile">Profilo DPV predefinito</string>
+    <string name="invalid_pct">Inserimento % non valido</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Velocità basale</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Dettagli dei problemi di importazione</string>
-    <string name="check_preferences_import_btn">Importa</string>
-    <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
-    <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
-    <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
-    <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
+    <string name="stop_pressed">STOP PREMUTO</string>
 </resources>

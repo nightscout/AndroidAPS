@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
+    <string name="category_alerts">Alerte</string>
+    <string name="bolus_delivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
+    <string name="eopatch_status">Stare</string>
+    <string name="eopatch_base_basal_rate">Rată bazală implicită</string>
+    <string name="eopatch_temp_basal_rate">Rată bazală temporară</string>
+    <string name="eopatch_total_delivered">Total livrat</string>
+    <string name="symbol_day">zi</string>
+    <string name="patch_finish">Finalizare</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">zile</string>
+    <string name="string_resume">Restabilește</string>
+    <string name="string_suspend">Suspendare</string>
+    <string name="string_suspended">Suspendat</string>
+    <string name="string_running">Rulează</string>
     <string name="cancel">Renunță</string>
     <string name="confirm">Confirmă</string>
+    <string name="string_alarm">Alarmă</string>
+    <string name="string_connecting">Se conectează</string>
+    <string name="retry">Încearcă din nou</string>
+    <string name="string_suspended_insulin_delivery_message">Administrarea insulinei este suspendată.</string>
+    <string name="finish">Finalizare</string>
+    <string name="next">Următor</string>
 </resources>

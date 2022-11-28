@@ -2,7 +2,12 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_tab_otp_label">Autentifikavimo sąrankos nustatymas</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="sms_wrong_code">Neteisingas kodas. Komanda atšaukta.</string>
+    <string name="sms_timeout_while_waiting">Baigėsi laikas kol buvo laukiama, kada baigsis ankstesnis susijungimas su pompa</string>
+    <string name="smscommunicator_bolus_reply_with_code">Norėdami suleisti %1$.2fvv bolusą, atsakykite kodu %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Norėdami suleisti %1$.2fvv bolusą, atsakykite su kodu %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Norėdami nustatyti laikiną tikslą %1$s, atsakykite su kodu %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Norėdami atšaukti laikiną tikslą, atsakykite su kodu %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">Norėdami išjungti SMS nuotolinį valdymą, atsakykite kodu %1$s.\n\n Turėkite omenyje, kad jūs funkciją galėsite atnaujinti tik tiesiai iš AAPS pagrindinio telefono.</string>
@@ -27,20 +32,74 @@
     <string name="smscommunicator_remote_bolus_not_allowed">Nuotolinis bolusas negalimas. Bandykite vėliau.</string>
     <string name="smscommunicator_basal_reply_with_code">Norėdami aktyvuoti %1$.2f vv/val bazę, kurios trukmė %2$d min, atsakykite kodu %3$s</string>
     <string name="smscommunicator_profile_reply_with_code">Norėdami perjungti profilį %1$s %2$d%%, atsakykite kodu %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Norint pradėti ištęstinį bolusą %1$.2f vv %2$d min., atsakykite kodu %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Įvedimui %1$dg %2$s atsakykite kodu %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Norėdami aktyvuoti %1$d%% bazę %2$d min., atsakykite kodu %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Norėdami sustabdyti Ciklą %1$d min., atsakykite kodu %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Ciklo atnaujinimui atsakykite su kodu %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Ciklo įjungimui atsakykite su kodu %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Ciklo išjungimui atsakykite su kodu %1$s</string>
+    <string name="smscommunicator_tempbasal_set">%1$.2f vv/val laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
+    <string name="smscommunicator_extended_set">%1$.2f vv ištęstas bolusas, kurio trukmė %2$d min., aktyvuotas sėkmingai</string>
+    <string name="smscommunicator_carbs_set">%1$d g angliavandenių įrašyti sėkmingai</string>
+    <string name="smscommunicator_carbs_failed">Įvesti %1$dg angliavandenių nepavyko</string>
+    <string name="smscommunicator_tempbasal_set_percent">%1$d%% laikina bazė, kurios trukmė %2$d min., aktyvuota sėkmingai</string>
+    <string name="smscommunicator_tempbasal_failed">Laikina bazė neaktyvuota</string>
+    <string name="smscommunicator_extended_failed">Ištęstinis bolusas nepradėtas</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Norėdami sustabdyti laikiną bazę, atsakykite kodu %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Norėdami sustabdyti ištęstinį bolusą, atsakykite kodu %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Laikina bazė atšaukta</string>
+    <string name="smscommunicator_extended_canceled">Ištęstinis bolusas atšauktas</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Laikinos bazės atšaukti nepavyko</string>
+    <string name="smscommunicator_extended_cancel_failed">Nepavyko atšaukti ištęstinio boluso</string>
+    <string name="smscommunicator_unknown_command">Nežinoma komanda arba neteisingas atsakymas</string>
+    <string name="smscommunicator_wrong_duration">Neteisinga trukmė</string>
+    <string name="smscommunicator_loop_suspended">Ciklas sustabdytas</string>
+    <string name="smscommunicator_loop_resumed">Ciklas atnaujintas</string>
+    <string name="smscommunicator_invalid_phone_number">Neteisingas SMS telefono numeris</string>
+    <string name="smscommunicator_calibration_sent">Kalibracija išsiųsta. xDrip+ programoje turi būti įgalintas gavimas.</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ negauna kalibracijų</string>
+    <string name="smscommunicator_message_body">Neteisingas pranešimas</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
+    <string name="smscommunicator_pump_unreachable">Pranešti apie nepasiekiamą pompą</string>
+    <string name="wrong_format">Neteisingas formatas</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">Paskutinė KG:</string>
+    <string name="sms_min_ago">prieš %1$dmin</string>
+    <string name="sms_loop_suspended_for">Sustabdyta (%1$d m)</string>
+    <string name="sms_read_status_failed">Būsenos nuskaityti nepavyko</string>
+    <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
+    <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="insulin_shortname">INS</string>
+    <string name="ultra_rapid_oref">Staigaus veikimo Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">xDrip+ būsenos juosta (laikrodyje)</string>
+    <string name="xdrip_status_shortname">xds</string>
+    <string name="xdrip_status_detailed_iob_title">Rodyti AIO detaliai</string>
+    <string name="xdrip_status_detailed_iob_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
+    <string name="disabled_loop">Ciklas išjungtas</string>
+    <string name="xdrip_status_show_bgi_title">Rodyti KG</string>
+    <string name="xdrip_status_show_bgi_summary">Pridėti KG prie statuso linijos</string>
+    <string name="xdrip_status_settings">xDrip+ statusas (laikrodyje)</string>
     <!-- Food-->
+    <string name="food_short">Maistas</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">Energ. vertė</string>
+    <string name="short_protein">Balt.</string>
+    <string name="short_fat">Rieb</string>
+    <string name="calculator_label">Skaičiuotuvas</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
+    <string name="localprofile">Profilis</string>
+    <string name="do_you_want_switch_profile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
+    <string name="save_or_reset_changes_first">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
+    <string name="delete_current_profile">Ištrinti esamą profilį?</string>
+    <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <!-- Objectives -->
     <string name="completed_well_done">Užbaigta, puiku!</string>
     <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
@@ -51,12 +110,24 @@
     <string name="objectives_shortname">TIKSL</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
+    <string name="objectives_next_button">Kitas</string>
+    <string name="objectives_previous_button">Ankstesnis</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
     <!-- Actions -->
+    <string name="actions">Veiksmai</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
     <string name="actions_shortname">VEIKS</string>
+    <string name="tempbasal_button">Laikina bazė</string>
+    <string name="extended_bolus_button">Ištęstas bolusas</string>
+    <string name="extended_bolus_cancel_button">Atšaukti ištęstą bolusą</string>
     <string name="tools">Įrankiai</string>
+    <string name="nav_history_browser">Istorija</string>
+    <string name="sensor_label">Iš sensoriaus</string>
+    <string name="age_label">amžius:</string>
+    <string name="level_label">lygis:</string>
+    <string name="insulin_label">Insulinas</string>
+    <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
@@ -64,7 +135,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Ištęstinis bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
     <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
-    <string name="limitingiob">Ribojamas AIO iki %1$.1f V dėl %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
@@ -75,7 +145,6 @@
     <string name="hardlimit">Nekeičiama riba</string>
     <string name="treatmentssafety_title">Terapijos saugumas</string>
     <!-- Overview -->
-    <string name="snooze">Snausti</string>
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
     <string name="statuslights_cage_warning">Kaniulės ribinio laiko įspėjimas [h]</string>
     <string name="statuslights_cage_critical">Kaniulės kritinio laiko įspėjimas [h]</string>
@@ -91,77 +160,121 @@
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_bat_warning">Pompos baterijos ribinio įkrovimo lygio įspėjimas [%]</string>
     <string name="statuslights_bat_critical">Pompos baterijos kritinio įkrovimo lygio įspėjimas [%]</string>
-    <string name="statuslights">Būklės indikatoriai</string>
     <string name="statuslights_copy_ns">Kopijuoti nustatymus iš NS</string>
+    <string name="a11y_graph">grafikas</string>
+    <string name="a11y_insulin_label">insulinas</string>
     <string name="chart_menu">Grafiko meniu</string>
-    <string name="apsmode_title">DKS režimas</string>
-    <string name="setbasalquestion">Patvirtinti naują laikiną bazę:</string>
+    <string name="a11y_blood_glucose">kraujo glikemija</string>
+    <string name="aps_mode_title">DKS režimas</string>
+    <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_cgm">NGJ</string>
     <string name="quickwizard">Greitasis patarėjas</string>
-    <!-- NSClient -->
-    <string name="ns_client_v3">NS Klientas V3</string>
-    <string name="ns_client_v3_short_name">NS V3</string>
-    <string name="restart">Paleisti iš naujo</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Įveskite savo Nightscout URL</string>
-    <string name="nsclient_token_title">NS prieigos raktas</string>
-    <string name="nsclient_token_dialog_title">Prieigos raktas</string>
-    <string name="nsclient_token_dialog_message">Prieigos raktas sukurtas NS administratoriaus puslapyje (min. 17 simbolių)</string>
-    <string name="deliver_now">Suleisti dabar</string>
-    <string name="clear_queue">Išvalyti eilę</string>
-    <string name="show_queue">Rodyti eilę</string>
-    <string name="queue">Eilė:</string>
-    <string name="status">Statusas:</string>
-    <string name="full_sync">Pilna sinchronizacija</string>
-    <string name="full_sync_comment">Vykdyti pilną sinchronizaciją? Tai gali užtrukti nemažai valandų ir kol ji nebus užbaigta, nematysite atnaujintų NS duomenų.</string>
-    <string name="ns_sync_options">Sinchronizacija</string>
-    <string name="ns_upload_summary">Profiliai, bolusai, angliavandeniai, laikinos bazės įkeltos į NS</string>
-    <string name="ns_upload">Įkelti duomenis į NS</string>
-    <string name="ns_receive_profile_store">Priimti profilių saugyklą</string>
-    <string name="ns_receive_profile_store_summary">Sinchronizuoti profilius iš NS</string>
-    <string name="ns_receive_temp_target">Gauti laikinus tikslus</string>
-    <string name="ns_receive_temp_target_summary">Priimti laikinus tikslus, įvestus per NS arba NSClient</string>
-    <string name="ns_receive_profile_switch">Gauti profilio keitimus</string>
-    <string name="ns_receive_profile_switch_summary">Priimti profilio keitimus, įvestus per NS arba NSClient</string>
-    <string name="ns_receive_offline_event">Gauti APS įvykius neprisijungus</string>
-    <string name="ns_receive_offline_event_summary">Priimti APS įvykius neprisijungus, įvestus per NS arba NSClient</string>
-    <string name="ns_receive_insulin">Gauti insulino duomenis</string>
-    <string name="ns_receive_insulin_summary">Priimti insulino duomenis, įvestus per NS arba NSClient (jis nėra suleidžiamas, tik įskaičiuojamas į AIO)</string>
-    <string name="ns_receive_carbs">Gauti angliavandenių duomenis</string>
-    <string name="ns_receive_carbs_summary">Priimti angliavandenių duomenis, įvestus per NS arba NSClient</string>
-    <string name="ns_receive_therapy_events">Gauti terapijos įvykius</string>
-    <string name="ns_receive_therapy_events_summary">Priimti terapijos įvykius (kaniulės, insulino, baterijos keitimą ir pan.), įvestus per NS arba NSClient</string>
-    <string name="ns_receive_cgm">Gauti/užpildyti atgaline data NGJ duomenis</string>
-    <string name="ns_receive_cgm_summary">Priimti NGJ duomenis iš NS</string>
+    <string name="overview">Apžvalga</string>
+    <string name="overview_shortname">PRADŽIA</string>
+    <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
+    <string name="overview_editquickwizard_usecob">AAO apskaičiavimas</string>
+    <string name="overview_editquickwizard_usetemptarget">Laikino tikslo apskaičiavimas</string>
+    <string name="overview_editquickwizard_usepercentage">Procentų apskaičiavimas</string>
+    <string name="overview_buttons_selection">Mygtukai</string>
+    <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro modifikuotos Dexcom programos BYODA kalibravimo dialogą</string>
+    <string name="show_cgm_button_summary">Atidaro xDrip+ ar BYODA, o mygtukas ATGAL gražina į AAPS</string>
+    <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
+    <string name="dexcom_app_not_detected">Atnaujinkite savo Dexcom programėlės versiją</string>
+    <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
+    <string name="not_available_full">Negalimas</string>
+    <string name="constraints_violation">Apribojimų pažeidimas</string>
+    <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
+    <string name="openaps">AtviraDKS</string>
+    <string name="uploader">Siuntėjas</string>
+    <string name="data_status">KG duomenų būklė</string>
+    <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
+    <string name="overview_edit_quickwizard_button_text">Mygtuko tekstas:</string>
+    <string name="overview_edit_quickwizard_carbs">Angliavandeniai:</string>
+    <string name="overview_edit_quickwizard_valid">Galioja:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Pridėti</string>
+    <string name="overview_quickwizard_item_edit_button">Redaguoti</string>
+    <string name="overview_edit_quickwizard_show_on_device">Rodyti įrašą įrenginyje:</string>
+    <string name="overview_edit_quickwizard_use_bg">KG apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolusų AIO apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Bazės AIO apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_trend">Tendencijos apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superboluso apskaičiavimas</string>
+    <string name="overview_edit_quickwizard_percentage">Procentais</string>
+    <string name="device_all">Visi</string>
+    <string name="device_phone">Telefonas</string>
+    <string name="positive_only">Tik teigiamas</string>
+    <string name="negative_only">Tik neigiamas</string>
+    <string name="keep_screen_on_title">Laikyti ekraną įjungtą</string>
+    <string name="keep_screen_on_summary">Neleidžia Android sistemai išjungti ekrano. Naudojama daug energijos, jei telefonas neprijungtas prie maitinimo šaltinio.</string>
+    <string name="treatments">Terapija</string>
+    <string name="carb_increment_button_message">Paspaudus mygtuką įvedamas nustatytas angliavandenių kiekis</string>
+    <string name="insulin_increment_button_message">Paspaudus mygtuką įvedamas nustatytas insulino kiekis</string>
+    <string name="firstinsulinincrement">Pirmas insulino dozės žingsnis</string>
+    <string name="secondinsulinincrement">Antras insulino dozės žingsnis</string>
+    <string name="thirdinsulinincrement">Trečias insulino dozės žingsnis</string>
+    <string name="firstcarbsincrement">Pirmas angliavandenių kiekio žingsnis</string>
+    <string name="secondcarbsincrement">Antras angliavandenių kiekio žingsnis</string>
+    <string name="thirdcarbsincrement">Trečias angliavandenių kiekio žingsnis</string>
+    <string name="cgm">NGJ</string>
+    <string name="default_temptargets">Numatyti Laikini Tikslai</string>
+    <string name="eatingsoon_duration">\"Netrukus valgysiu\" trukmė</string>
+    <string name="eatingsoon_target">\"Netrukus valgysiu\" tikslas</string>
+    <string name="activity_duration">\"Aktyvumas\" trukmė</string>
+    <string name="activity_target">\"Aktyvumas\" tikslas</string>
+    <string name="hypo_duration">\"Hipo\" trukmė</string>
+    <string name="hypo_target">\"Hipo\" tikslas</string>
+    <string name="fill_bolus_title">Standartiniai insulino kiekiai kateterio/kaniulės užpildymui</string>
+    <string name="button1">Mygtukas 1</string>
+    <string name="button2">Mygtukas 2</string>
+    <string name="button3">Mygtukas 3</string>
+    <string name="prefs_range_title">Vizualizacijos diapazonas</string>
+    <string name="prefs_range_summary">Aukštoji ir žemoji riba Apžvalgos grafikuose bei išmaniuosiuose laikrodžiuose</string>
+    <string name="low_mark">Žemoji riba</string>
+    <string name="high_mark">Aukštoji riba</string>
+    <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Rodyti pastabų laukelį terapijos dialoguose</string>
+    <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
+    <string name="enable_bolus_advisor">Įgalinti boluso patarėją</string>
+    <string name="enable_bolus_advisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
+    <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
+    <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
+    <string name="enablebolusreminder">Įgalinti priminimą apie bolusą</string>
+    <string name="enablebolusreminder_summary">Naudoti priminimus apie bolusą su skaičiuotuvu        („post-bolusas“)</string>
     <string name="run_question">Vykdyti %s?</string>
-    <string name="ns_sync_slow">Sulėtinti įkėlimus</string>
-    <string name="ns_alarms">Sukurti pranešimus iš NS aliarmų</string>
-    <string name="ns_announcements">Sukurkite pranešimus iš NS perspėjimų</string>
-    <string name="ns_local_broadcasts">Įgalinti perdavimą į kitas programas (pvz., xDrip+). Neįgalinkite, jei įdiegta daugiau nei vienas AAPS arba NSClient egzempliorius!</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>
-    <string name="title_tidepool_username">Vartotojo vardas</string>
-    <string name="summary_tidepool_password">Jūsų Tidepool prisijungimo slaptažodis</string>
-    <string name="title_tidepool_password">Prisijungimo slaptažodis</string>
-    <string name="title_tidepool_test_login">Patikrinti Tidepool prisijungimą</string>
-    <string name="summary_tidepool_dev_servers">Jei įjungta, duomenys bus perduoti https://int-app.tidepool.org, vietoje https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Naudoti integracijos (test) serverius</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Perduoda duomenis į Tidepool</string>
-    <string name="tidepool_upload_cgm">Perduoti NGJ duomenis</string>
-    <string name="tidepool_upload_bolus">Įkelti terapijas (insulinas, angliavandeniai)</string>
-    <string name="tidepool_upload_tbr">Perkelti laikiną bazę</string>
-    <string name="tidepool_upload_profile">Perduoti profilio pokyčius, laikinas bazes</string>
-    <string name="tidepool_upload_bg">Perduoti KG testus</string>
-    <string name="remove_all">Pašalinti visus</string>
-    <string name="reset_start">Pradėti iš naujo</string>
-    <string name="upload_now">Įkelti dabar</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Prognozė</string>
+    <string name="overview_show_treatments">Terapija</string>
+    <string name="overview_show_deviation_slope">Nukrypimo koeficientas</string>
+    <string name="overview_show_activity">Aktyvumas</string>
+    <string name="overview_show_bgi">KG įtaka</string>
+    <string name="overview_show_sensitivity">Jautrumas insulinui</string>
+    <string name="overview_show_deviations">Nuokrypiai</string>
+    <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
+    <string name="overview_show_iob">Aktyvus insulinas organizme</string>
+    <string name="overview_show_basals">Bazė</string>
+    <string name="overview_show_abs_insulin">Insulinas absoliučiais vienetais</string>
+    <string name="prediction_shortname">PROGN</string>
+    <string name="basal_shortname">VB</string>
+    <string name="deviation_shortname">DEV</string>
+    <string name="activity_shortname">VEIKS</string>
+    <string name="bgi_shortname">-KGS</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="treatments_shortname">ĮRAŠ</string>
+    <string name="sensitivity_shortname">JAUTR</string>
+    <string name="graph_menu_divider_header">Grafikas</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Virtualios pompos tipas</string>
+    <string name="virtual_pump_definition">Pompos nustatymas</string>
+    <string name="virtual_pump_pump_def">Bolusas: Žingsnis=%1$s\nIštęstinis bolusas: [Žingsnis=%2$s, Trukmė=%3$smin-%4$sh]\nBazė: Žingsnis=%5$s\nLDB: %6$s (iš %7$s), Trukmė=%8$smin -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPompa</string>
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
+    <string name="virtual_pump_label">Virtuali pompa</string>
     <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
     <string name="virtualpump_uploadstatus_title">Perduoti būsenos duomenis į NS</string>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient KG</string>
+    <string name="ns_client_bg_short">NS KG</string>
     <string name="description_source_ns_client">Gauti kraujo gliukozės vertes iš Nightscout</string>
     <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Gauti kraujo gliukozės reikšmes iš xDrip+.</string>
@@ -170,7 +283,9 @@
     <string name="description_source_dexcom">Gauti kraujo gliukozės reikšmes iš \'Build Your Own Dexcom App\'.</string>
     <string name="eversense">Eversense programėlė (modifikuota)</string>
     <string name="description_source_eversense">Gauti kraujo gliukozės vertes iš modifikuotos Eversense programėlės.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Gauti kraujo gliukozės vertes iš Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Gauti kraujo gliukozės vertes iš 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Gauti KG vertes iš Poctech programėlės</string>
@@ -184,23 +299,13 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Gauti KG reikšmes iš GlucoRx Aidex CGMS programos.</string>
+    <string name="random_bg">Atsitiktinė KG</string>
+    <string name="description_source_random_bg">Generuoti atsitiktinių KG duomenis (demonstracinis režimas)</string>
+    <string name="random_bg_short">KG</string>
+    <string name="do_xdrip_upload_title">Siųsti KG duomenis į xDrip+</string>
+    <string name="do_xdrip_upload_summary">Xdrip+ pasirinkite 640g/Eversense duomenų šaltinį</string>
     <string name="bgsource_upload">KG duomenų perdavimo nustatymai</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Naudoti Cellular sąsają</string>
-    <string name="ns_wifi">Naudoti WiFi ryšį</string>
-    <string name="ns_wifi_ssids">WiFi pavadinimas</string>
-    <string name="ns_charging">Įkrovimo metu</string>
-    <string name="ns_battery">Maitina akumuliatorius</string>
-    <string name="ns_create_announcements_from_errors_title">Kurti klaidų pranešimus</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Sukurkite pranešimus apie būtinų angliavandenių įspėjimus</string>
-    <string name="ns_create_announcements_from_errors_summary">Sukurti Nightscout pranešimus apie klaidas ir vietinius įspėjimus (taip pat matomi Priežiūroje prie Terapijos)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Sukurkite NS pranešimus apie būtinų angliavandenių įspėjimus</string>
-    <string name="description_ns_client">Sinchronizuoja duomenis su Nightscout</string>
-    <string name="description_ns_client_v3">Sinchronizuoja duomenis su Nightscout naudojant V3 API</string>
-    <string name="blocked_by_charging">Užblokuota dėl įkrovimo parinkčių</string>
-    <string name="blocked_by_connectivity">Užblokuota dėl ryšio parinkčių</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">Siunt</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
     <!-- Skins -->
     <string name="classic_description">Originali išvaizda</string>
     <string name="lowres_description">Žemos rezoliucijos išvaizda</string>
@@ -208,5 +313,63 @@
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
     <!--    Loop -->
+    <string name="executing">Vykdoma</string>
+    <string name="run_now">Paleisti dabar</string>
+    <string name="smb_frequency_exceeded">Bolusas buvo suleistas per paskutines 3 minutes, SMB praleidžiamas</string>
+    <string name="pump_not_initialized">Pompa neprijungta!</string>
+    <string name="loop_shortname">CIKLAS</string>
+    <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
+    <string name="no_aps_selected">NEPASIRINKTA DKS ARBA NĖRA REZULTATO</string>
+    <string name="ignore5m">Ignoruoti 5 min</string>
+    <string name="ignore15m">Ignoruoti 15 min</string>
+    <string name="ignore30m">Ignoruoti 30 min</string>
+    <string name="carbs_suggestion">Angliavandenių pasiūlymas</string>
+    <string name="open_loop_new_suggestion">Gautas naujas pasiūlymas</string>
+    <string name="basal_set_correctly">Bazė nustatyta teisingai</string>
+    <string name="last_run_label">Paskutinis veiksmas</string>
+    <string name="loop_aps_label">DKS</string>
+    <string name="request_label">Užklausa</string>
+    <string name="loop_constraints_processed_label">Pritaikius apribojimus</string>
+    <string name="loop_tbr_request_time_label">Laikinos bazės užklausos laikas</string>
+    <string name="loop_tbr_execution_time_label">Laikinos bazės įvykdymo laikas</string>
+    <string name="loop_tbr_set_by_pump_label">Laikina bazė nustatyta pompoje</string>
+    <string name="loop_smb_request_time_label">SMB užklausos laikas</string>
+    <string name="loop_smb_execution_time_label">SMB įvykdymo laikas</string>
+    <string name="loop_smb_set_by_pump_label">SMB nustatyta iš pompos</string>
+    <string name="loop_open_mode_min_change">Minimalaus pokyčio užklausa [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">naudojimas:</string>
+    <!--    Iob-->
+    <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="loop_status">Ciklo būklė</string>
+    <string name="wizard_result">Wizard asistento skaičiuotuvas:\nInsulinas: %1$.2fU\nAngliavandeniai: %2$dg</string>
+    <string name="quick_wizard_message">QuickWizard asistentas: %1$s\nInsulinas: %2$.2fU\nAngliavandeniai: %3$dg</string>
+    <string name="wear_action_tempt_cancel_message">Atšaukti laikinus tikslus?</string>
+    <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - atšaukti laikinus tikslus?</string>
+    <string name="wear_action_tempt_min_bg_error">Min. cukraus kiekis nepatenka į diapozoną!</string>
+    <string name="wear_action_tempt_max_bg_error">Max. cukraus kiekis nepatenka į diapozoną!</string>
+    <string name="wear_action_tempt_manual_range_message">Laikinas tikslas:\nMin: %1$s\nMax: %2$s\nLaikotarpis: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Laikinas tikslas:\nTikslas: %1$s\nLaikotarpis: %2$s</string>
+    <string name="no_success">Bandymas nesėkmingas - pasitikrinkite telefoną</string>
+    <string name="wear_settings">Išmaniojo laikrodžio nustatymai</string>
+    <string name="wearcontrol_title">Laikrodžio valdikliai</string>
+    <string name="wearcontrol_summary">Nustatyti Laikinus Tikslus ir įvesti terapinius įrašus iš laikrodžio.</string>
+    <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukti į Patarėjo rezultatą:</string>
+    <string name="wear_display_settings">Ekrano nustatymai</string>
+    <string name="wear_general_settings">Bendrieji nustatymai</string>
+    <string name="wear_detailed_delta_title">Rodyti gliukozės pokyčio detales</string>
+    <string name="wear_detailed_delta_summary">Rodyti pokytį su reikšme po kablelio</string>
+    <string name="wear_notifysmb_title">Pranešti apie SMB</string>
+    <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
+    <string name="wear_predictions_summary">Rodyti prognozes laikrodyje.</string>
+    <string name="wear_predictions_title">Prognozė</string>
+    <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
+    <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
+    <string name="old_data">SENI DUOMENYS</string>
 </resources>

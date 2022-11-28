@@ -1,23 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_tab_otp_label">验证码生成器设置</string>
+    <string name="sms_wrong_code">错误的代码。命令取消</string>
+    <string name="sms_timeout_while_waiting">等待上一次胰岛素泵通信完成时超时</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">要输注大剂量胰岛素%1$.2fU 回复如下代码 %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">要输注餐前大剂量 %1$.2fU ，请回复验证码 %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">要设置临时目标 %1$s，请回复验证码 %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">要取消临时目标，请回复验证码 %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">要禁用短信遥控服务，请回复验证码%1$s.\n\n请记住，你只能在AAPS闭环手机上重新激活此功能。</string>
+    <string name="smscommunicator_stopped_sms">短信遥控服务已禁用。要重新激活它，请使用AAPS闭环手机。</string>
+    <string name="smscommunicator_calibration_reply_with_code">要发送校准值 %1$.2f 回复如下代码 %2$s</string>
+    <string name="smscommunicator_bolus_failed">大剂量输注失败</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">一次远程遥控输注命令与下一次命令之间必须经过的最小分钟数</string>
+    <string name="smscommunicator_remote_bolus_min_distance">两次短信遥控胰岛素输注的时间间隔</string>
+    <string name="smscommunicator_remote_bolus_min_distance_caveat">为了您的安全，您需要添加至少两个电话号码。</string>
+    <string name="smscommunicator_bolus_delivered">成功输注大剂量 %1$.2f U</string>
+    <string name="smscommunicator_meal_bolus_delivered">成功输注餐时大剂量%1$.2fU</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">目标 %1$s 执行 %2$d 分钟</string>
+    <string name="smscommunicator_remote_commands_allowed">通过SMS短信允许远程命令</string>
+    <string name="smscommunicator_loop_has_been_disabled">闭环已经被禁用</string>
+    <string name="smscommunicator_loop_has_been_enabled">闭环已经被启用</string>
+    <string name="smscommunicator_loop_is_enabled">闭环被启用</string>
+    <string name="smscommunicator_pump_connect_with_code">连接泵，请回复验证码：%1$s</string>
+    <string name="smscommunicator_pump_connect_fail">连接泵失败</string>
+    <string name="smscommunicator_pump_disconnect_with_code">断开泵%1$d分钟，请回复验证码：%2$s</string>
+    <string name="smscommunicator_pump_disconnected">泵已断开</string>
+    <string name="smscommunicator_remote_command_not_allowed">远程命令没有被允许</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">远程大剂量不可用。请稍后再试。</string>
+    <string name="smscommunicator_basal_reply_with_code">执行基础率%1$.2fU/h持续时间%2$d分钟，请回复验证码：%3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">要切换配置文件到 %1$s %2$d%% 请回复代码 %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">要开始扩展大剂量 %1$.2fU/h 持续时间%2$d 分钟，请回复验证码：%3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">要在 %2$s 输入 %1$d 克，请回复验证码 %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">要开始基础率 %1$d%% 持续时间%2$d 分钟，请回复如下代码 %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">要暂停闭环 %1$d 分钟请回复如下代码 %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">恢复闭环，请回复验证码：%1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">启用闭环，请回复验证码：%1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">禁用闭环，请回复验证码：%1$s</string>
+    <string name="smscommunicator_tempbasal_set">临时基础率 %1$.2fU/h 持续 %2$d 分钟启用成功了</string>
+    <string name="smscommunicator_extended_set">扩展大剂量 %1$.2fU/h 持续时间 %2$d 分钟已经启用成功了</string>
+    <string name="smscommunicator_carbs_set">碳水%1$d克输入成功</string>
+    <string name="smscommunicator_carbs_failed">输入 %1$d 克碳水化合物失败</string>
+    <string name="smscommunicator_tempbasal_set_percent">临时基础率 %1$d%% 持续时间 %2$d 分钟 启用成功了</string>
+    <string name="smscommunicator_tempbasal_failed">开始临时基础率失败了</string>
+    <string name="smscommunicator_extended_failed">开始扩展大剂量失败了</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">要停止临时基础率，请回复如下代码 %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">要停止扩展大剂量，请回复如下代码 %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">临时基础率取消了</string>
+    <string name="smscommunicator_extended_canceled">扩展大剂量已经取消了</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">取消临时基础率失败</string>
+    <string name="smscommunicator_extended_cancel_failed">取消扩展大剂量失败</string>
+    <string name="smscommunicator_unknown_command">未知的命令或者错误的回复</string>
+    <string name="smscommunicator_wrong_duration">错误的持续时间</string>
+    <string name="smscommunicator_loop_suspended">闭环暂停了</string>
+    <string name="smscommunicator_loop_resumed">闭环恢复了</string>
+    <string name="smscommunicator_invalid_phone_number">无效的SMS手机号码</string>
+    <string name="smscommunicator_calibration_sent">校准已发送。必须在 xDrip+ 中启用接收功能。</string>
+    <string name="smscommunicator_calibration_failed">xDrip+未接收校准</string>
+    <string name="smscommunicator_message_body">无效消息</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">如果触发泵连接丢失事件，则发送短信通知。</string>
+    <string name="smscommunicator_pump_unreachable">泵连接丢失报告</string>
+    <string name="wrong_format">格式错误</string>
+    <string name="sms_actual_bg">血糖:</string>
+    <string name="sms_last_bg">上次血糖：</string>
+    <string name="sms_min_ago">%1$d分钟前</string>
+    <string name="sms_loop_suspended_for">暂停了 (%1$d m)</string>
+    <string name="sms_read_status_failed">读取状态失败了</string>
+    <string name="sms_profile_switch_created">配置文件切换已创建</string>
+    <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <!-- Insulin -->
     <string name="insulin_shortname">INS</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="ultra_rapid_oref">超速效 Oref</string>
+    <string name="fast_acting_insulin_comment">诺和锐, 门冬, 优泌乐</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp超速效</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">xDrip+状态线 (手表)</string>
+    <string name="xdrip_status_shortname">xdrip</string>
+    <string name="xdrip_status_detailed_iob_title">显示详细 IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
+    <string name="disabled_loop">闭环禁用</string>
+    <string name="xdrip_status_show_bgi_title">显示血糖线</string>
+    <string name="xdrip_status_show_bgi_summary">添加血糖线到状态线</string>
+    <string name="xdrip_status_settings">xDrip+状态 (手表)</string>
     <!-- Food-->
+    <string name="food_short">食物</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">En</string>
+    <string name="short_protein">蛋白质</string>
+    <string name="short_fat">脂肪</string>
+    <string name="calculator_label">计算器</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">选择暗色，亮色，或跟随系统主题</string>
     <!-- Profile -->
+    <string name="localprofile">配置文件</string>
+    <string name="do_you_want_switch_profile">是否要切换配置文件并放弃对当前配置文件所作的更改?</string>
+    <string name="save_or_reset_changes_first">首先保存或重置当前更改</string>
+    <string name="delete_current_profile">删除当前配置文件</string>
+    <string name="profile_name_contains_dot">配置文件名称包含点。\n这不受 NS 支持。\n配置未上载到 NS。</string>
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">完成了，做的好</string>
     <string name="maxiobset">合理地设置最大 IOB</string>
@@ -28,12 +112,24 @@
     <string name="objectives_shortname">目标</string>
     <string name="description_objectives">学习计划</string>
     <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
+    <string name="objectives_next_button">下一个</string>
+    <string name="objectives_previous_button">上一个</string>
     <string name="objectives_button_unfinish">清除已完成</string>
     <string name="objectives_button_unstart">清除已启动</string>
     <!-- Actions -->
+    <string name="actions">手动操作</string>
     <string name="description_actions">一些快速访问常用功能的按钮</string>
     <string name="actions_shortname">操作</string>
+    <string name="tempbasal_button">临时基础</string>
+    <string name="extended_bolus_button">扩展大剂量</string>
+    <string name="extended_bolus_cancel_button">取消扩展大剂量</string>
     <string name="tools">工具</string>
+    <string name="nav_history_browser">历史浏览</string>
+    <string name="sensor_label">传感器</string>
+    <string name="age_label">年龄:</string>
+    <string name="level_label">剩余:</string>
+    <string name="insulin_label">胰岛素</string>
+    <string name="pb_label">泵电池</string>
     <string name="cannula">输注导管</string>
     <string name="ebstopsloop">在使用扩展大剂量(方波) 功能期间将停止闭环功能。你真的想要启用吗？</string>
     <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
@@ -43,7 +139,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">由于 %2$s, 将扩展大剂量限制为 %1$.1f U</string>
     <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
-    <string name="limitingiob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
     <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
     <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
@@ -54,7 +149,6 @@
     <string name="hardlimit">硬限制</string>
     <string name="treatmentssafety_title">治疗安全</string>
     <!-- Overview -->
-    <string name="snooze">稍后再响</string>
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
     <string name="statuslights_iage_warning">胰岛素状态灯警示阀值[小时]</string>
     <string name="statuslights_iage_critical">胰岛素状态灯临界阀值[小时]</string>
@@ -68,7 +162,6 @@
     <string name="statuslights_res_critical">储药器药量低于阈值[U] 严重警告</string>
     <string name="statuslights_bat_warning">胰岛素泵剩余电量状态灯警示阀值[百分比]</string>
     <string name="statuslights_bat_critical">胰岛素泵剩余电量状态灯临界阀值[百分比]</string>
-    <string name="statuslights">状态指示灯</string>
     <string name="statuslights_copy_ns">从NS复制设置</string>
     <string name="a11y_graph">绘图</string>
     <string name="a11y_insulin_label">胰岛素</string>
@@ -76,67 +169,123 @@
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">已过期</string>
-    <string name="apsmode_title">APS模式</string>
-    <string name="setbasalquestion">接受新的临时基础率</string>
+    <string name="aps_mode_title">APS模式</string>
+    <string name="set_basal_question">接受新的临时基础率</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">快速向导</string>
-    <!-- NSClient -->
-    <string name="restart">重新启动</string>
-    <string name="deliver_now">立即输注</string>
-    <string name="clear_queue">清除队列</string>
-    <string name="show_queue">显示队列</string>
-    <string name="queue">队列：</string>
-    <string name="status">状态:</string>
-    <string name="full_sync">完全同步</string>
-    <string name="full_sync_comment">完全同步数据? 这可能需要很长时间，在完成以前你将无法在NS中看到新数据。</string>
-    <string name="ns_sync_options">同步</string>
-    <string name="ns_upload_summary">将用户配置，大剂量，碳水化合物，临时基础率的数据上传到NS网站</string>
-    <string name="ns_upload">上传数据到NS网站</string>
-    <string name="ns_receive_profile_store">接收存储用户配置</string>
-    <string name="ns_receive_profile_store_summary">同步NS配置文件编辑器的用户配置到本地。</string>
-    <string name="ns_receive_temp_target">接收临时目标</string>
-    <string name="ns_receive_temp_target_summary">允许通过NS或NS客户端接收血糖的临时目标值。</string>
-    <string name="ns_receive_profile_switch">接收用户配置文件切换</string>
-    <string name="ns_receive_profile_switch_summary">允许通过NS或NS客户端接收用户配置文件切换。</string>
-    <string name="ns_receive_offline_event">接收 APS 离线事件</string>
-    <string name="ns_receive_offline_event_summary">允许通过NS或NS客户端接收APS 离线事件。</string>
-    <string name="ns_receive_tbr_eb">接收TBR 和 EB</string>
-    <string name="ns_receive_tbr_eb_summary">接受通过另一个实例输入 TBR 和 EB</string>
-    <string name="ns_receive_insulin">接收胰岛素输注</string>
-    <string name="ns_receive_insulin_summary">允许通过NS或 NS客户端接收胰岛素输注 (它并不会输注胰岛素，只计算为活性胰岛素IOB)</string>
-    <string name="ns_receive_carbs">接收碳水化合物</string>
-    <string name="ns_receive_carbs_summary">允许通过NS或NS客户端接收碳水化合物输入。</string>
-    <string name="ns_receive_therapy_events">接收治疗事件</string>
-    <string name="ns_receive_therapy_events_summary">允许通过NS或NS客户端接收(导管更换、胰岛素更换、电池更换等) 护理事件</string>
-    <string name="ns_receive_cgm">接收/回填CGM数据</string>
-    <string name="ns_receive_cgm_summary">接受来自NS 的 CGM 数据</string>
+    <string name="a11y_only_on_watch">仅在手表时</string>
+    <string name="a11y_only_on_phone">仅在手机上</string>
+    <string name="overview">首页概览</string>
+    <string name="overview_shortname">主页</string>
+    <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
+    <string name="overview_editquickwizard_usecob">COB计算</string>
+    <string name="overview_editquickwizard_usetemptarget">临时目标血糖计算</string>
+    <string name="overview_editquickwizard_usepercentage">百分比计算</string>
+    <string name="overview_buttons_selection">按钮</string>
+    <string name="show_calibration_button_summary">将校准发送到xDrip+或打开BYODA校准对话框</string>
+    <string name="show_cgm_button_summary">打开xDrip+或BYODA应用时，返回键将返回到AAPS应用</string>
+    <string name="dexcom_app_not_installed">未安装德康app。</string>
+    <string name="dexcom_app_not_detected">请将您的 dexcom app 更新为支持的版本</string>
+    <string name="error_starting_cgm">无法启动 CGM 应用程序。 请确保已安装。</string>
+    <string name="not_available_full">不可用</string>
+    <string name="constraints_violation">违反约束条件</string>
+    <string name="change_your_input">更改您的输入!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">上传者</string>
+    <string name="data_status">血糖数据状态</string>
+    <string name="quickwizard_settings">快速向导设置</string>
+    <string name="overview_edit_quickwizard_button_text">按钮文本:</string>
+    <string name="overview_edit_quickwizard_carbs">碳水:</string>
+    <string name="overview_edit_quickwizard_valid">有效：</string>
+    <string name="overview_edit_quickwizard_list_activity_add">添加</string>
+    <string name="overview_quickwizard_item_edit_button">编辑</string>
+    <string name="overview_edit_quickwizard_show_on_device">在设备上显示条目：</string>
+    <string name="overview_edit_quickwizard_use_bg">血糖计算</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">大剂量IOB (活性胰岛素) 计算</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">基础率IOB (活性胰岛素) 计算</string>
+    <string name="overview_edit_quickwizard_use_trend">趋势计算</string>
+    <string name="overview_edit_quickwizard_use_superbolus">超级大剂量计算</string>
+    <string name="overview_edit_quickwizard_percentage">百分比</string>
+    <string name="device_all">全部</string>
+    <string name="device_phone">手机</string>
+    <string name="device_watch">手表</string>
+    <string name="positive_only">仅正数</string>
+    <string name="negative_only">仅负数</string>
+    <string name="app_default">应用程序预设</string>
+    <string name="a11y_drag_and_drop_handle">拖放操作</string>
+    <string name="keep_screen_on_title">保持屏幕常亮</string>
+    <string name="keep_screen_on_summary">阻止 Android 系统关闭手机屏幕。这将非常耗电</string>
+    <string name="treatments">治疗</string>
+    <string name="carb_increment_button_message">按下按钮时添加的碳水化合物数量</string>
+    <string name="insulin_increment_button_message">按下按钮时添加的胰岛素量</string>
+    <string name="firstinsulinincrement">第一胰岛素增量</string>
+    <string name="secondinsulinincrement">第二胰岛素增量</string>
+    <string name="thirdinsulinincrement">第三胰岛素增量</string>
+    <string name="firstcarbsincrement">第一碳水化合物增量</string>
+    <string name="secondcarbsincrement">第二碳水化合物增量</string>
+    <string name="thirdcarbsincrement">第三碳水化合物增量</string>
+    <string name="cgm">CGM</string>
+    <string name="default_temptargets">默认的临时目标</string>
+    <string name="eatingsoon_duration">很快吃饭　持续时间</string>
+    <string name="eatingsoon_target">很快吃饭　临时血糖目标</string>
+    <string name="activity_duration">活动持续时间</string>
+    <string name="activity_target">运动临时目标</string>
+    <string name="hypo_duration">持续时间短</string>
+    <string name="hypo_target">低目标</string>
+    <string name="fill_bolus_title">输注/充盈标准胰岛素剂量</string>
+    <string name="button1">按钮1</string>
+    <string name="button2">按钮2</string>
+    <string name="button3">按钮3</string>
+    <string name="prefs_range_title">可视化范围</string>
+    <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>
+    <string name="low_mark">低值标记</string>
+    <string name="high_mark">高值标记</string>
+    <string name="short_tabtitles">标题名称缩写</string>
+    <string name="overview_show_notes_field_in_dialogs_title">在治疗对话框中显示备注字段</string>
+    <string name="deliverpartofboluswizard">大剂量向导执行计算，但只有这部分计算结果的胰岛素被输注。适用于SMB算法。</string>
+    <string name="enable_bolus_advisor">启用大剂量向导</string>
+    <string name="enable_bolus_advisor_summary">在高血糖期间(\"预测大剂量\")，使用延迟吃饭的提醒功能，来替代大剂量向导结果</string>
+    <string name="enablesuperbolus">在向导中启用超级大剂量</string>
+    <string name="enablesuperbolus_summary">在向导中启用 superbolus超级大剂量 功能。不要启用, 直到你了解它真正的用法。如果盲目使用, 可能会导致胰岛素过量!</string>
+    <string name="enablebolusreminder">启用大剂量提醒</string>
+    <string name="enablebolusreminder_summary">使用大剂量向导稍后推注的提醒功能
+      (“稍后注射大剂量”)</string>
     <string name="run_question">运行 %s？</string>
-    <string name="ns_sync_slow">放慢上传速度</string>
-    <string name="ns_alarms">创建来自NS报警的通知</string>
-    <string name="ns_announcements">创建来自NS公告的通知</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>
-    <string name="title_tidepool_username">登录用户名</string>
-    <string name="summary_tidepool_password">登录密码</string>
-    <string name="title_tidepool_password">登录密码</string>
-    <string name="title_tidepool_test_login">测试Tidepool登录</string>
-    <string name="summary_tidepool_dev_servers">如果启用，则上载将转到https://intapp.tidepool.org，而不是常规https://app.tidepool.org/。</string>
-    <string name="title_tidepool_dev_servers">使用集成（测试）服务器</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">数据上传到Tidepool</string>
-    <string name="tidepool_upload_cgm">上传CGM数据</string>
-    <string name="tidepool_upload_bolus">上传治疗方案（胰岛素，碳水化合物）</string>
-    <string name="tidepool_upload_tbr">上传临时基础率</string>
-    <string name="tidepool_upload_profile">上传配置文件切换，临时目标</string>
-    <string name="tidepool_upload_bg">上传血糖值</string>
-    <string name="remove_all">删除全部</string>
-    <string name="upload_now">现在上传</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">预测</string>
+    <string name="overview_show_treatments">治疗</string>
+    <string name="overview_show_deviation_slope">斜度偏差</string>
+    <string name="overview_show_activity">活动</string>
+    <string name="overview_show_bgi">血糖影响</string>
+    <string name="overview_show_sensitivity">灵敏度</string>
+    <string name="overview_show_deviations">偏差</string>
+    <string name="overview_show_cob">活性碳水化合物</string>
+    <string name="overview_show_iob">活性胰岛素</string>
+    <string name="overview_show_basals">基础率</string>
+    <string name="overview_show_abs_insulin">胰岛素绝对值</string>
+    <string name="prediction_shortname">预测</string>
+    <string name="basal_shortname">基础率</string>
+    <string name="deviation_shortname">偏差</string>
+    <string name="activity_shortname">操作</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">DEVSLOPE</string>
+    <string name="treatments_shortname">治疗</string>
+    <string name="sensitivity_shortname">灵敏度</string>
+    <string name="graph_scale">图形缩放</string>
+    <string name="graph_menu_divider_header">绘图</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">虚拟泵类型</string>
+    <string name="virtual_pump_definition">泵定义</string>
+    <string name="virtual_pump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">虚拟泵</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
+    <string name="virtual_pump_label">虚拟泵</string>
     <string name="virtualpump_settings">虚拟泵设置</string>
     <string name="virtualpump_uploadstatus_title">将状态上传到 NS</string>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient 血糖</string>
+    <string name="ns_client_bg_short">NS血糖</string>
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
     <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
@@ -145,7 +294,9 @@
     <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
     <string name="eversense">Everyang App (补丁)</string>
     <string name="description_source_eversense">从 Eversense 补丁app接收血糖值。</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
+    <string name="mm640g">美敦力640g</string>
     <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
@@ -154,20 +305,16 @@
     <string name="tomato">番茄（喵喵）</string>
     <string name="tomato_short">番茄</string>
     <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
+    <string name="aidex">GlucoRx Aidex动泰</string>
     <string name="aidex_short">Aidex动泰</string>
     <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
+    <string name="random_bg">随机血糖</string>
+    <string name="description_source_random_bg">生成随机血糖数据（仅限demo演示模式）</string>
+    <string name="random_bg_short">血糖</string>
+    <string name="do_xdrip_upload_title">将血糖数据发送到 xDrip +</string>
+    <string name="do_xdrip_upload_summary">在 xDrip + 选择640ｇ/Eversense 数据源</string>
     <string name="bgsource_upload">血糖上传设置</string>
-    <!-- NSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_create_announcements_from_errors_title">创建错误公告</string>
-    <string name="ns_create_announcements_from_carbs_req_title">从碳水需求警报创建NS公告</string>
-    <string name="ns_create_announcements_from_errors_summary">为错误对话框和本地警报创建Nightscout公告(在治疗标签下的护理记录里也可查看)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">为碳水化合物需求警报创建Nightscout网站的公告</string>
-    <string name="description_ns_client">将数据与 Nightscout 同步</string>
-    <string name="blocked_by_charging">被充电选项阻止</string>
-    <string name="blocked_by_connectivity">被连接选项阻止</string>
-    <string name="openaps_short">OpenAPS</string>
-    <string name="uploader_short">UPLD</string>
+    <string name="dexcom_log_ns_sensor_change_title">记录传感器更换至NS服务器</string>
     <!-- Skins -->
     <string name="classic_description">原始皮肤</string>
     <string name="lowres_description">低分辨率皮肤</string>
@@ -175,5 +322,65 @@
     <string name="largedisplay_description">大显示屏</string>
     <string name="skin">皮肤</string>
     <!--    Loop -->
+    <string name="executing">正在执行</string>
+    <string name="run_now">现在运行</string>
+    <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
+    <string name="pump_not_initialized">泵未初始化!</string>
+    <string name="loop_shortname">闭环</string>
+    <string name="description_loop">激活或停用这个工具触发闭环。</string>
+    <string name="no_aps_selected">APS没有被选择或者提供结果</string>
+    <string name="ignore5m">忽略5分钟</string>
+    <string name="ignore15m">忽略 15分钟</string>
+    <string name="ignore30m">忽略30分钟</string>
+    <string name="carbs_suggestion">碳水建议</string>
+    <string name="open_loop_new_suggestion">新的建议可用</string>
+    <string name="basal_set_correctly">正确地设置基础率</string>
+    <string name="last_run_label">上一次运行</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">请求</string>
+    <string name="loop_constraints_processed_label">通过约束条件之后</string>
+    <string name="loop_tbr_request_time_label">临时基础率请求时间</string>
+    <string name="loop_tbr_execution_time_label">临时基础率持续时长</string>
+    <string name="loop_tbr_set_by_pump_label">通过泵设置临时基础率</string>
+    <string name="loop_smb_request_time_label">SMB 请求时间</string>
+    <string name="loop_smb_execution_time_label">SMB持续时长</string>
+    <string name="loop_smb_set_by_pump_label">通过泵设置SMB微型大剂量</string>
+    <string name="loop_open_mode_min_change">最小请求更改[%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <string name="send_logfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
+    <!--    Wear-->
+    <string name="wear_shortname">手表</string>
+    <string name="loop_status">闭环状态</string>
+    <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
+    <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
+    <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
+    <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
+    <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
+    <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
+    <string name="wear_action_tempt_zero_message">无临时目标-取消正在运行的临时目标？</string>
+    <string name="wear_action_tempt_min_bg_error">目标血糖最小值超出范围！</string>
+    <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
+    <string name="wear_action_tempt_manual_range_message">临时目标:\n最小: %1$s\n最大: %2$s\n持续时间: %3$s</string>
+    <string name="wear_action_tempt_manual_message">临时目标:\n目标: %1$s\n持续时间: %2$s</string>
+    <string name="wear_action_tempt_preset_message">临时目标：\n原因： %1$s\n目标： %2$s\n持续时间： %3$s</string>
+    <string name="no_success">未成功-请检查手机</string>
+    <string name="wear_settings">手表设置</string>
+    <string name="wearcontrol_title">从手表上控制</string>
+    <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
+    <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
+    <string name="wear_display_settings">显示设置</string>
+    <string name="wear_general_settings">常规设置</string>
+    <string name="wear_detailed_delta_title">显示详细的增量</string>
+    <string name="wear_detailed_delta_summary">增量再多显示一个小数位</string>
+    <string name="wear_notifysmb_title">在 SMB 上通知</string>
+    <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
+    <string name="wear_predictions_summary">在手表的表盘上显示预测</string>
+    <string name="wear_predictions_title">预测</string>
+    <string name="resend_all_data">重新发送所有数据</string>
+    <string name="open_settings_on_wear">在手表上打开设置</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">显示持续的通知, 其中简要概述了您的闭环正在做什么</string>
+    <string name="old_data">旧数据</string>
 </resources>

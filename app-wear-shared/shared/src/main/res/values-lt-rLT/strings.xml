@@ -2,7 +2,12 @@
 <resources>
     <!--    DateUtil-->
     <string name="minago">prieš %1$d min</string>
+    <string name="minago_long">Prieš %1$d min.</string>
     <string name="hoursago">Prieš %1$.1f val.</string>
+    <string name="days_ago">Prieš %1$s d.</string>
+    <string name="days_ago_round">Prieš %1$.0f d.</string>
+    <string name="in_days">Už %1$.0f d.</string>
+    <string name="in_days_round">Už %1$.0f d.</string>
     <string name="shorthour">v</string>
     <string name="days">d.</string>
     <string name="hours">val.</string>
@@ -18,4 +23,14 @@
     <string name="unit_weeks">savaičių</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="later_today">Šiandien vėliau</string>
+    <string name="tomorrow">Rytoj</string>
+    <string name="today">Šiandien</string>
+    <string name="yesterday">Vakar</string>
+    <!-- Rx -->
+    <string name="connecting_for">Jungiamasi %1$d s</string>
+    <string name="handshaking">Ryšio užmezgimas</string>
+    <string name="connected">Prisijungta</string>
+    <string name="disconnecting">Atsijungiama</string>
+    <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
 </resources>

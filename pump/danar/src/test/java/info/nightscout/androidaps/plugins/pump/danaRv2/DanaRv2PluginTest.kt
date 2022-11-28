@@ -14,7 +14,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.shared.sharedPreferences.SP
@@ -32,7 +32,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var profileInstantiator: ProfileInstantiator
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
     lateinit var danaPump: DanaPump
@@ -51,8 +51,8 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
-        danaRv2Plugin = DanaRv2Plugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePluginProvider, sp, commandQueue, danaPump,detailedBolusInfoStorage,
-                                      temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, activityNames, danaHistoryDatabase)
+        danaRv2Plugin = DanaRv2Plugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage,
+                                      temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync, uiInteraction, danaHistoryDatabase)
     }
 
     @Test

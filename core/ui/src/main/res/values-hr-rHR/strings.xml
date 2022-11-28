@@ -1,14 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Osvježi</string>
+    <string name="constraint_applied">Primijenjeno ograničenje!</string>
+    <string name="tempbasals_iobtotal_label_string">Ukupni aktivni inzulin:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pumpa nedostupna</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pumpa nije pokrenuta, profil nije postavljen!</string>
+    <string name="failed_update_basal_profile">Ažuriranje bazalnog profila nije uspjelo</string>
+    <string name="bolus_delivered">Bolus %1$.2f U uspješno isporučen</string>
+    <string name="reload">Ponovno učitaj</string>
+    <string name="save">Spremi</string>
+    <string name="snooze">Snooze</string>
+    <string name="virtual_pump">Virtualna pumpa</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="result">Rezultat</string>
+    <string name="settings">Postavke</string>
+    <string name="missed_bg_readings">Propušteno očitanje razine glukoze u krvi</string>
+    <string name="treatments_iob_label_string">Aktivni inzulin:</string>
+    <string name="mute5min">Isključite zvuk na 5 minuta</string>
+    <string name="mute">Isključi zvuk</string>
+    <string name="success">Uspješno</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <string name="battery_label">Baterija</string>
+    <string name="last_connection_label">Zadnja uspostava veze</string>
+    <string name="last_bolus_label">Zadnji bolus</string>
+    <string name="serial_number">Serijski broj</string>
+    <string name="disconnected">Odspojen</string>
+    <string name="connecting">Povezivanje</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="stats">Statistika</string>
+    <string name="temp_basal_delivery_error">Pogreška isporuke temp bazala</string>
+    <string name="not_set_short">Nije postavljeno</string>
+    <string name="pump_busy">Pumpa je zauzeta</string>
+    <string name="connection_error">Greška u spajanju pumpe</string>
+    <string name="initializing">Pokretanje...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Ograničavanje maksimalne bazalne doze na %1$.2f U/h zbog %2$s</string>
+    <string name="pumplimit">ograničenje pumpe</string>
+    <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
+    <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
+    <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrda</string>
     <string name="message">Poruka</string>
     <string name="ok">U redu</string>
     <string name="cancel">Otkaži</string>
     <string name="dismiss">ODBACITI</string>
+    <string name="close">Zatvori</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
+    <string name="you_are_on_allowed_limit">Dosegnuto je dopušteno ograničenje</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Aplikacija treba bluetooth dozvolu</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
+    <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
+    <string name="location_not_found_title">Lokacija nije omogućena</string>
+    <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

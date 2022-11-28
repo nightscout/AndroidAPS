@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">페어링 초기화</string>
-    <string name="diaconn_nodeviceavailable">장비가 존재하지 않습니다.</string>
+    <string name="diaconn_no_device_available">장비가 존재하지 않습니다.</string>
     <string name="diaconn_pairing">디아콘 펌프 페어링</string>
     <string name="pumperror">펌프 에러</string>
     <string name="diaconn_g8_history_alarm">알람</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Bolus 단위</string>
     <string name="basal_step">Basal 단위</string>
     <string name="pump_firmware_label">펌웨어</string>
-    <string name="diagonn_g8_useroptions">사용자설정</string>
+    <string name="diaconn_g8_user_options">사용자설정</string>
     <string name="pairfirst">펌프와 전화기를 페어링해 주세요!</string>
     <string name="processinghistory">"이벤트 처리 중 "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

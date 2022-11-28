@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Aggiorna</string>
+    <string name="error">Errore</string>
+    <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
+    <string name="invalid_input">Dati di input non validi</string>
+    <string name="bolus_delivering">Erogazione di %1$.2f U</string>
+    <string name="constraint_applied">Vincolo applicato!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Micro irraggiungibile</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Micro non inizializzato, profilo non impostato!</string>
+    <string name="failed_update_basal_profile">Impossibile aggiornare il profilo basale</string>
+    <string name="bolus_delivered">Bolo di %1$.2f U erogato con successo</string>
+    <string name="no_valid_basal_rate">Nessuna velocità basale valida letta dal micro</string>
+    <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
+    <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
+    <string name="event_type">Tipo evento</string>
+    <string name="reload">Ricarica</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Salva</string>
+    <string name="snooze">Posticipa</string>
+    <string name="virtual_pump">Micro virtuale</string>
+    <string name="constraints">Vincoli</string>
+    <string name="superbolus">Superbolo</string>
+    <string name="pump_paused">Micro in pausa</string>
+    <string name="and">E (AND)</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
+    <string name="result">Risultato</string>
+    <string name="settings">Impostazioni</string>
+    <string name="statuslights">Indicatori di stato</string>
+    <string name="do_ns_upload_title">Carica dati BG su NS</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Password Master</string>
+    <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
+    <string name="confirm">Conferma</string>
+    <string name="pump">Micro</string>
+    <string name="missed_bg_readings">Letture BG mancanti</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Muto per 5 minuti</string>
+    <string name="mute">Muto</string>
+    <string name="success">OK</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Impostazioni sblocco</string>
+    <!--    Pumps -->
+    <string name="battery_label">Batteria</string>
+    <string name="reservoir_label">Serbatoio</string>
+    <string name="last_connection_label">Ultima connessione</string>
+    <string name="last_bolus_label">Ultimo bolo</string>
+    <string name="base_basal_rate_label">Velocità basale originale</string>
+    <string name="tempbasal_label">Basale temporanea</string>
+    <string name="extended_bolus_label">Bolo Esteso</string>
+    <string name="serial_number">Numero seriale</string>
+    <string name="disconnected">Disconnesso</string>
+    <string name="connecting">Connessione</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unità giornaliere</string>
+    <string name="pump_icon">Icona micro</string>
+    <string name="view_profile">Visualizza profilo</string>
+    <string name="pump_history">Storico micro</string>
+    <string name="stats">Statistiche</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio driver micro.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiato</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
+    <string name="temp_basal_delivery_error">Errore erogazione basale temporanea</string>
+    <string name="not_set_short">Non impostato</string>
+    <string name="pump_busy">Il micro è occupato</string>
+    <string name="connection_error">Errore connessione micro</string>
+    <string name="reading_pump_history">Lettura storico micro</string>
+    <string name="password_cleared">Password cancellata!</string>
+    <string name="pairing">Associazione</string>
+    <string name="initializing">Inizializzazione...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
+    <string name="pumplimit">limite micro</string>
+    <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
+    <string name="itmustbepositivevalue">deve essere un valore positivo</string>
+    <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Conferma</string>
     <string name="message">Messaggio</string>
@@ -8,10 +91,41 @@
     <string name="dismiss">RIMUOVI</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="close">Chiudi</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">decremento %1$s di %2$s</string>
     <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
+    <string name="you_are_on_allowed_limit">Limite consentito raggiunto</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Ora evento</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">L\'applicazione richiede l\'autorizzazione bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
+    <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
+    <string name="ble_not_enabled">Bluetooth non abilitato.</string>
+    <string name="location_not_found_title">La localizzazione non è abilitata</string>
+    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Preferenze plugin</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
+    <plurals name="days">
+        <item quantity="one">%1$d giorno</item>
+        <item quantity="other">%1$d giorni</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d ora</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minuti</item>
+    </plurals>
 </resources>

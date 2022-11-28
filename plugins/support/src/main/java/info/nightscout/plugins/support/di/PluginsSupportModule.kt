@@ -9,6 +9,7 @@ import info.nightscout.plugins.constraints.versionChecker.VersionCheckerUtilsImp
 
 @Module(
     includes = [
+        PluginsSupportModule.Bindings::class
     ]
 )
 

@@ -8,7 +8,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.core.extensions.fromConstant
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
@@ -19,6 +19,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
@@ -134,7 +135,7 @@ class DexcomPlugin @Inject constructor(
                 val now = dateUtil.now()
                 val glucoseValuesBundle = bundle.getBundle("glucoseValues")
                     ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
-                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
                 for (i in 0 until glucoseValuesBundle.size()) {
                     val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
                     val timestamp = glucoseValueBundle.getLong("timestamp") * 1000
@@ -146,7 +147,7 @@ class DexcomPlugin @Inject constructor(
                     if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE)
                         if ((now - timestamp) > T.hours(20).msecs()) valid = false
                     if (valid)
-                        glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                        glucoseValues += TransactionGlucoseValue(
                             timestamp = timestamp,
                             value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
                             noise = null,

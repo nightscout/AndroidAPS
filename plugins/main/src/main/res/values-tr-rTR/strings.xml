@@ -17,12 +17,6 @@
     <!-- Food-->
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
     <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
@@ -61,7 +55,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">%2$s\'den dolayı yayma bolus %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
-    <string name="limitingiob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="pumpisnottempbasalcapable">Pompa geçici bazal özellikli değil</string>
     <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
     <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
@@ -72,7 +65,6 @@
     <string name="hardlimit">sert sınır</string>
     <string name="treatmentssafety_title">Tedavi güvenliği</string>
     <!-- Overview -->
-    <string name="snooze">Ertele</string>
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
     <string name="statuslights_cage_warning">Kanül ömrü uyarısı belirle (saat) [h]</string>
     <string name="statuslights_cage_critical">Kritik kanül ömrü (saat) [h]</string>
@@ -88,7 +80,6 @@
     <string name="statuslights_res_critical">Kritik rezervuar seviyesi (ünite) [U]</string>
     <string name="statuslights_bat_warning">Pompa pil seviye uyarısı [%]</string>
     <string name="statuslights_bat_critical">Kritik pompa pili seviyesi [%]</string>
-    <string name="statuslights">Durum ışıkları</string>
     <string name="statuslights_copy_ns">Ayarları NS\'den kopyala</string>
     <string name="a11y_graph">grafik</string>
     <string name="a11y_insulin_label">insülin</string>
@@ -96,66 +87,111 @@
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
-    <string name="apsmode_title">APS modu</string>
-    <string name="setbasalquestion">Yeni geçici bazal oranını kabul et:</string>
+    <string name="aps_mode_title">APS modu</string>
+    <string name="set_basal_question">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Hızlı Asistan</string>
-    <!-- NSClient -->
-    <string name="restart">Yeniden başlat</string>
-    <string name="nsclient_token_title">NS erişim anahtarları</string>
-    <string name="nsclient_token_dialog_title">NS erişim anahtarları</string>
-    <string name="nsclient_token_dialog_message">NS yönetici sayfasında oluşturulan erişim anahtarları (en az 17 karakter)</string>
-    <string name="deliver_now">Simdi ilet</string>
-    <string name="clear_queue">Sırayı temizle</string>
-    <string name="show_queue">Sırayı göster</string>
-    <string name="queue">Sıra:</string>
-    <string name="status">Durum:</string>
-    <string name="full_sync">Tam senkronizasyon</string>
-    <string name="full_sync_comment">Tam senkronizasyon? Birkaç saat sürebilir ve bitene kadar NS\'ta yeni veriler göremeyeceksiniz.</string>
-    <string name="ns_sync_options">Senkronizasyon</string>
-    <string name="ns_upload_summary">Profiller, boluslar, karbonhidratlar, geçici bazallar NS\'a yüklenir</string>
-    <string name="ns_upload">Verileri NS\'a yükleyin</string>
-    <string name="ns_receive_profile_store">Profil deposunu al</string>
-    <string name="ns_receive_profile_store_summary">NS profil düzenleyicisinden profilleri senkronize edin</string>
-    <string name="ns_receive_temp_target">Geçici hedefleri al</string>
-    <string name="ns_receive_temp_target_summary">NS veya NSClient aracılığıyla girilen geçici hedefleri kabul edin</string>
-    <string name="ns_receive_profile_switch">Profil değişimlerini al</string>
-    <string name="ns_receive_profile_switch_summary">NS veya NSClient aracılığıyla girilen profil değişimlerini kabul edin</string>
-    <string name="ns_receive_offline_event">APS çevrimdışı olaylarını alın</string>
-    <string name="ns_receive_offline_event_summary">NS veya NSClient aracılığıyla girilen APS çevrimdışı olaylarını kabul edin</string>
-    <string name="ns_receive_tbr_eb">GBO ve EB (Yayma Bolus) alın</string>
-    <string name="ns_receive_tbr_eb_summary">Başka bir örnek üzerinden girilen GBO ve EB (Yayma Bolusu) kabul edin</string>
-    <string name="ns_receive_insulin">İnsülinleri alın</string>
-    <string name="ns_receive_insulin_summary">NS veya NSClient aracılığıyla girilen insülini kabul edin (iletilmez, yalnızca AİNS\'e göre hesaplanır)</string>
-    <string name="ns_receive_carbs">Karbonhidratları alın</string>
-    <string name="ns_receive_carbs_summary">NS veya NSClient aracılığıyla girilen karbonhidratları kabul edin</string>
-    <string name="ns_receive_therapy_events">Terapi etkinlikleri alın</string>
-    <string name="ns_receive_therapy_events_summary">NS veya NSClient aracılığıyla girilen tedavi olaylarını (kanül, insülin, pil değişimi vb.) kabul edin</string>
-    <string name="ns_receive_cgm">SGİ (CGM) verilerini alma/doldurma</string>
-    <string name="ns_receive_cgm_summary">NS\'tan SGİ (CGM) verilerini kabul edin</string>
+    <string name="a11y_only_on_watch">sadece saatte</string>
+    <string name="a11y_only_on_phone">sadece telefonda</string>
+    <string name="overview">Genel Bakış</string>
+    <string name="overview_shortname">GİRİŞ</string>
+    <string name="description_overview">Döngünüzün mevcut durumunu ve en yaygın eylemler için düğmeleri görüntüler</string>
+    <string name="overview_editquickwizard_usecob">AKRB (Aktif Karbonhidrat) hesaplaması</string>
+    <string name="overview_editquickwizard_usetemptarget">Geçici hedef hesaplaması</string>
+    <string name="overview_editquickwizard_usepercentage">Yüzde Hesaplaması</string>
+    <string name="overview_buttons_selection">Butonlar</string>
+    <string name="show_calibration_button_summary">xDrip+\'a bir kalibrasyon gönderir veya BYODA kalibrasyon iletişim kutusunu açar</string>
+    <string name="show_cgm_button_summary">xDrip+ veya BYODA\'yı açar, geri dönme düğmesi AAPS\'ye döndürür</string>
+    <string name="dexcom_app_not_installed">Dexcom uygulaması yüklü değil.</string>
+    <string name="dexcom_app_not_detected">Lütfen Dexcom uygulamanızı desteklenen sürüme güncelleyin</string>
+    <string name="error_starting_cgm">CGM uygulaması başlatılamadı. Yüklendiğinden emin olun.</string>
+    <string name="not_available_full">Mevcut değil</string>
+    <string name="constraints_violation">Kısıtlamalar ihlali</string>
+    <string name="change_your_input">Girişinizi değiştirin!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Yükleyici</string>
+    <string name="data_status">KŞ veri durumu</string>
+    <string name="quickwizard_settings">Hızlı asistan ayarları</string>
+    <string name="overview_edit_quickwizard_button_text">Buton Metni:</string>
+    <string name="overview_edit_quickwizard_carbs">Karbonhidrat:</string>
+    <string name="overview_edit_quickwizard_valid">Geçerli:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Ekle</string>
+    <string name="overview_quickwizard_item_edit_button">Düzenle</string>
+    <string name="overview_edit_quickwizard_show_on_device">Girişi cihazda göster:</string>
+    <string name="overview_edit_quickwizard_use_bg">KŞ Hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus AİNS hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Bazal AİNS hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend hesapla</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Süperbolus hesapla</string>
+    <string name="overview_edit_quickwizard_percentage">Yüzde</string>
+    <string name="device_all">Tümü</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Saat</string>
+    <string name="positive_only">Sadece pozitif</string>
+    <string name="negative_only">Sadece negatif</string>
+    <string name="app_default">Uygulama varsayılanı</string>
+    <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
+    <string name="keep_screen_on_title">Ekranı açık tut</string>
+    <string name="keep_screen_on_summary">Android\'in ekranı kapatmasını önleyin. Prize takılı değilken çok fazla enerji tüketir.</string>
+    <string name="treatments">Tedaviler</string>
+    <string name="carb_increment_button_message">Butona basıldığında eklenecek karbonhidrat sayısı</string>
+    <string name="insulin_increment_button_message">Butona basıldığında eklenecek insülin miktarı</string>
+    <string name="firstinsulinincrement">Birinci insülin artışı</string>
+    <string name="secondinsulinincrement">İkinci insülin artışı</string>
+    <string name="thirdinsulinincrement">Üçüncü insülin artışı</string>
+    <string name="firstcarbsincrement">Birinci karbonhidrat artışı</string>
+    <string name="secondcarbsincrement">İkinci karbonhidrat artışı</string>
+    <string name="thirdcarbsincrement">Üçüncü karbonhidrat artışı</string>
+    <string name="cgm">CGM</string>
+    <string name="default_temptargets">Varsayılan Geçici hedefler</string>
+    <string name="eatingsoon_duration">yakında ye süresi</string>
+    <string name="eatingsoon_target">yakında ye hedefi</string>
+    <string name="activity_duration">aktivite süresi</string>
+    <string name="activity_target">aktivite hedefi</string>
+    <string name="hypo_duration">hipo süresi</string>
+    <string name="hypo_target">hipo hedefi</string>
+    <string name="fill_bolus_title">Standart insülin miktarlarını Hazırla/Doldur</string>
+    <string name="button1">Buton 1</string>
+    <string name="button2">Buton 2</string>
+    <string name="button3">Buton 3</string>
+    <string name="prefs_range_title">Görselleştirme Aralığı</string>
+    <string name="prefs_range_summary">Genel bakış ve akıllı saat göstergesi için yüksek ve düşük değerler</string>
+    <string name="low_mark">DÜŞÜK işareti</string>
+    <string name="high_mark">Yüksek işareti</string>
+    <string name="short_tabtitles">Kısa sekme başlıkları</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
+    <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
+    <string name="enable_bolus_advisor">Bolus danışmanını etkinleştir</string>
+    <string name="enable_bolus_advisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
+    <string name="enablesuperbolus">Sihirbazda süperbolusu etkinleştir</string>
+    <string name="enablesuperbolus_summary">Bolus sihirbazında süperbolus işlevselliğini etkinleştirin. Gerçekten ne yaptığınızı öğrenene kadar etkinleştirmeyin. BİLİNÇSİZ KULLANILDIĞINDA AŞIRI DOZ İNSÜLIN VERİLEBİLİR!</string>
+    <string name="enablebolusreminder">Bolus hatırlatıcıyı etkinleştir</string>
+    <string name="enablebolusreminder_summary">Sihirbazla daha sonra bolus için hatırlatıcı kullanın
+         (\"bolus sonrası\")</string>
     <string name="run_question">Yürüt %s?</string>
-    <string name="ns_sync_slow">Yüklemeleri yavaşlat</string>
-    <string name="ns_alarms">NS alarmlarından bildirimler oluşturun</string>
-    <string name="ns_announcements">NS duyurularından bildirimler oluşturun</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
-    <string name="title_tidepool_username">Kullanıcı adınınız</string>
-    <string name="summary_tidepool_password">Tidepool şifreniz</string>
-    <string name="title_tidepool_password">Giriş Parolası</string>
-    <string name="title_tidepool_test_login">Tidepool girişini test et</string>
-    <string name="summary_tidepool_dev_servers">Etkinleştirilirse, yüklemeler https://app.tidepool.org/ yerine https://int-app.tidepool.org adresine gider</string>
-    <string name="title_tidepool_dev_servers">Entegrasyon (test) sunucularını kullanın</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Tidepool\'a veri yükler</string>
-    <string name="tidepool_upload_cgm">SGİ (CGM) verilerini yükle</string>
-    <string name="tidepool_upload_bolus">Tedavileri yükleyin (insülin, karbonhidratlar)</string>
-    <string name="tidepool_upload_tbr">Geçici bazalları yükleyin</string>
-    <string name="tidepool_upload_profile">Profil değişimlerini, geçici hedefleri yükleyin</string>
-    <string name="tidepool_upload_bg">KŞ testlerini yükleyin</string>
-    <string name="remove_all">Tümünü kaldır</string>
-    <string name="reset_start">Başlatmayı sıfırla</string>
-    <string name="upload_now">Şimdi yükle</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Tahminler</string>
+    <string name="overview_show_treatments">Tedaviler</string>
+    <string name="overview_show_deviation_slope">Sapma eğimi</string>
+    <string name="overview_show_activity">Aktivite</string>
+    <string name="overview_show_bgi">Kan Şekeri Etkisi</string>
+    <string name="overview_show_sensitivity">Duyarlılık</string>
+    <string name="overview_show_deviations">Sapma</string>
+    <string name="overview_show_cob">Aktif Karbonhidrat</string>
+    <string name="overview_show_iob">Aktif İnsülin</string>
+    <string name="overview_show_basals">Bazallar</string>
+    <string name="overview_show_abs_insulin">Mutlak insülin</string>
+    <string name="prediction_shortname">TAHMİN</string>
+    <string name="basal_shortname">BAZAL</string>
+    <string name="deviation_shortname">SAPMA</string>
+    <string name="activity_shortname">EYLEM</string>
+    <string name="bgi_shortname">KŞE</string>
+    <string name="abs_insulin_shortname">ABS</string>
+    <string name="devslope_shortname">EĞİMSAPMA</string>
+    <string name="treatments_shortname">TEDAVİ</string>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="graph_scale">Grafik ölçeği</string>
+    <string name="graph_menu_divider_header">Grafik</string>
     <!-- VirtualPump -->
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="virtualpump_settings">Sanal pompa ayarları</string>
@@ -187,26 +223,9 @@
     <string name="random_bg_short">KŞ</string>
     <string name="do_xdrip_upload_title">XDrip+\'a KŞ verilerini gönder</string>
     <string name="do_xdrip_upload_summary">xDrip+ içerisinde 640g/Eversense veri kaynağı seç</string>
-    <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
     <string name="bgsource_upload">KŞ yükleme ayarları</string>
     <string name="dexcom_log_ns_sensor_change_title">Sensör değişimlerini NS\'a kaydet</string>
     <string name="dexcom_log_ns_sensor_change_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Mobil veri kullan</string>
-    <string name="ns_wifi">Wi-Fi bağlantısı kullan</string>
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_charging">Şarj olurken</string>
-    <string name="ns_battery">Pilde</string>
-    <string name="ns_create_announcements_from_errors_title">Hatalardan duyurular oluştur</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Karbonhidrat gerekli uyarılarından duyurular oluşturun</string>
-    <string name="ns_create_announcements_from_errors_summary">Hata diyalogları ve yerel uyarılar için Nightscout anonsu oluşturun (Tedaviler altında Bakım portalında da görüntülenebilir)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Karbonhidrat gerekli uyarılarından Nightscout duyuruları oluşturun</string>
-    <string name="description_ns_client">Nightscout ile verilerinizi senkronize eder</string>
-    <string name="description_ns_client_v3">Verilerinizi v3 API kullanarak Nightscout ile senkronize eder</string>
-    <string name="blocked_by_charging">Şarj seçenekleri tarafından engellendi</string>
-    <string name="blocked_by_connectivity">Bağlantı seçenekleri tarafından engellendi</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
     <!-- Skins -->
     <string name="classic_description">Orjinal görünüm</string>
     <string name="lowres_description">Düşük çözünürlüklü görünüm</string>
@@ -215,4 +234,36 @@
     <string name="skin">Görünüm</string>
     <!--    Loop -->
     <!--    DataBroadcast-->
+    <string name="cannula_usage">kullanım:</string>
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
+    <string name="no_watch_connected">(Saat Bağlı Değil)</string>
+    <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
+    <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
+    <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Geiçici hedef bilinmeyen ön ayarı: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Çalışan Geçici-Hedefler iptal edilsin mi?</string>
+    <string name="wear_action_tempt_unit_error">Saatte ve telefonda farklı birimler kullanılıyor!</string>
+    <string name="wear_action_tempt_zero_message">Sıfır-Geçici-Hedef - Çalışan Geçici-Hedefler iptal edilsin mi?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-KŞ aralık dışında!</string>
+    <string name="wear_action_tempt_max_bg_error">Maks-KŞ aralık dışında!</string>
+    <string name="wear_action_tempt_manual_range_message">Geçici Hedef:\nMin: %1$s\nMaks: %2$s\nSüre: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Geçici Hedef:\nHedef: %1$s\nSüre: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Geçici Hedef:\nNeden: %1$s\nHedef: %2$s\nSüre: %3$s</string>
+    <string name="no_success">başarısız - lütfen telefonu kontrol edin</string>
+    <string name="wear_settings">Wear ayarları</string>
+    <string name="wearcontrol_title">Saat tarafından kontrol</string>
+    <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
+    <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
+    <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
+    <string name="wear_detailed_delta_summary">Deltayı bir ondalık basamak daha göster</string>
+    <string name="wear_notifysmb_title">SMB\'yi bildir</string>
+    <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
+    <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
+    <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
+    <string name="old_data">ESKİ VERİ</string>
 </resources>

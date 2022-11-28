@@ -11,7 +11,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.support.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -45,7 +45,7 @@ class SignatureVerifierPlugin @Inject constructor(
     rh: ResourceHelper,
     private val sp: SP,
     private val context: Context,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -103,7 +103,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     private fun showNotification() {
-        activityNames.addNotification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
+        uiInteraction.addNotification(Notification.INVALID_VERSION, rh.gs(R.string.running_invalid_version), Notification.URGENT)
     }
 
     private fun hasIllegalSignature(): Boolean {

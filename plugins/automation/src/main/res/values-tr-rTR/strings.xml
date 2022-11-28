@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Geçici Hedef %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil yüzdesi %1$s %2$d</string>
     <string name="iobcompared">Aktif insülin %1$s %2$.1f</string>
-    <string name="and">Ve</string>
     <string name="or">Veya</string>
     <string name="xor">Özel veya</string>
     <string name="atspecifiedtime">%1$s\'de</string>

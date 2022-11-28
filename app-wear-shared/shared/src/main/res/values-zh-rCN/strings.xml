@@ -27,4 +27,10 @@
     <string name="tomorrow">明天</string>
     <string name="today">今天</string>
     <string name="yesterday">昨天</string>
+    <!-- Rx -->
+    <string name="connecting_for">正在连接 %1$d s</string>
+    <string name="handshaking">握手</string>
+    <string name="connected">已连接</string>
+    <string name="disconnecting">正在断开连接</string>
+    <string name="waiting_for_disconnection">正在等待连接</string>
 </resources>

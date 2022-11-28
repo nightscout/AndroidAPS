@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop

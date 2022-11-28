@@ -3,16 +3,10 @@
     <string name="xdrip_not_installed">xDrip+ non installato</string>
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="missed_bg_readings">Letture BG mancanti</string>
-    <string name="enable_bolus_advisor">Abilita consiglio bolo</string>
-    <string name="enable_bolus_advisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
-    <string name="request">Richiesta</string>
     <string name="permission">Autorizzazione</string>
-    <string name="error_asking_for_permissions">Errore nel richiedere le autorizzazioni</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
     <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
     <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>

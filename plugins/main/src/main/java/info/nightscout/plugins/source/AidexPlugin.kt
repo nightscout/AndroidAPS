@@ -9,6 +9,7 @@ import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
@@ -83,7 +84,7 @@ class AidexPlugin @Inject constructor(
             if (bundle.containsKey(Intents.AIDEX_TRANSMITTER_SN)) aapsLogger.debug(LTag.BGSOURCE, "transmitterSerialNumber: " + bundle.getString(Intents.AIDEX_TRANSMITTER_SN))
             if (bundle.containsKey(Intents.AIDEX_SENSOR_ID)) aapsLogger.debug(LTag.BGSOURCE, "sensorId: " + bundle.getString(Intents.AIDEX_SENSOR_ID))
 
-            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
 
             val timestamp = bundle.getLong(Intents.AIDEX_TIMESTAMP, 0)
             val bgType = bundle.getString(Intents.AIDEX_BG_TYPE, "mg/dl")
@@ -93,7 +94,7 @@ class AidexPlugin @Inject constructor(
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 
-            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+            glucoseValues += TransactionGlucoseValue(
                 timestamp = timestamp,
                 value = bgValueTarget,
                 raw = null,

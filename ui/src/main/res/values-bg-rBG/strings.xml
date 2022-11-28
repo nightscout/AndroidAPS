@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Приложено ограничение!</string>
     <string name="bolus_constraint_applied">Приложено ограничение на болус</string>
     <string name="carbs_constraint_applied">Приложено ограничение на въглехидрати</string>
     <string name="temp_target_short">Вр.цел</string>
@@ -12,26 +11,38 @@
     <string name="remind_to_bolus_later">Напомни за болус по-късно</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="activity_monitor">Мониторинг на активност</string>
+    <string name="do_you_want_reset_stats">Искате да нулирате статистиката?</string>
     <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Калкулация в прогресс</string>
+    <string name="invalid_age">Невалидна възраст</string>
+    <string name="invalid_weight">Невалидно тегло</string>
     <string name="id">Номер:</string>
     <string name="submit">Изпрати</string>
     <string name="age">Възраст</string>
     <string name="weight_label">Тегло</string>
+    <string name="most_common_profile">Най-често използван профил:</string>
+    <string name="glucose_type">Тип КЗ</string>
+    <string name="bg_other">Друго</string>
+    <string name="bg_meter">Глюкомер</string>
+    <string name="bg_sensor">Сензор</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
-    <string name="superbolus">Суперболус</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <!-- FillDialog -->
-    <string name="button1">Бутон 1</string>
-    <string name="button2">Бутон 2</string>
-    <string name="button3">Бутон 3</string>
+    <string name="fill_warning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
     <string name="record_pump_site_change">Запис смяна на сет</string>
     <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Не стартирай болус, а само запиши в базата данни</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
+    <string name="timeshift_label">Време на отместване</string>
+    <string name="percentage_label">% от профила</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Изключи APS за 1ч</string>
     <string name="suspendloopfor2h">Изключи APS за 2ч</string>
     <string name="suspendloopfor3h">Изключи APS за 3ч</string>
     <string name="suspendloopfor10h">Изключи APS за 10 ч</string>
@@ -50,6 +61,7 @@
     <string name="duration3h">3 часа</string>
     <string name="duration10h">10 часа</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2ч</string>
     <string name="result_insulin_carbs">Резултат: %1$s %2$s</string>
     <string name="missing_carbs">Нужни %1$d гр</string>
     <string name="carb_time_label">ВХ след</string>
@@ -60,27 +72,35 @@
     <string name="treatments_insulin_label_string">Инсулин:</string>
     <string name="treatments_carbs_label_string">Вълехидрати:</string>
     <string name="treatments_iobtotal_label_string">Общо IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Общо активен IOB:</string>
     <string name="tempbasals_realduration_label_string">Прод.:</string>
     <string name="tempbasals_netratio_label_string">Съотношение:</string>
     <string name="tempbasals_netinsulin_label_string">Инс:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_wizard_tt_label">Вр.цел</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
+    <string name="meal_bolus">Хранене</string>
     <string name="prime">Пълнене</string>
     <string name="refresheventsfromnightscout">Презареди от NS</string>
     <string name="show_invalidated">Покажи невалидните</string>
     <string name="hide_invalidated">Скрий невалидните</string>
+    <string name="user_entry">Потербителска настройка</string>
     <string name="clone_label">Клонирай</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Профил тип</string>
+    <string name="basal_pct_from_tdd_label">% от базата</string>
     <string name="selected_profile">Избрано:</string>
+    <string name="compare_profile">Сравняване на профили</string>
+    <string name="nav_profile_helper">Профил съветник</string>
+    <string name="motol_default_profile">Профил по подразбиране</string>
+    <string name="current_profile">Текущ профил</string>
+    <string name="available_profile">Наличен профил</string>
+    <string name="format_with_tdd">Възраст: %1$d TDD: %2$.0f Е</string>
+    <string name="format_with_tdd_and_pct">Възраст: %1$d TDD: %2$.0f Е %3$d%% </string>
+    <string name="format_with_weight">Възраст: %1$d Тегло: %2$.0f кг</string>
+    <string name="dpv_default_profile">Профил по подразбиране</string>
+    <string name="invalid_pct">Невалидна стойност в %</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Базал</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Подробности за проблеми с импорта</string>
-    <string name="check_preferences_import_btn">Импорт</string>
-    <string name="check_preferences_import_anyway_btn">Импортирай все пак (ОПАСНО!)</string>
-    <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
-    <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
-    <string name="check_preferences_dangerous_import">Настройите не трябва да бъдат импортирани! (опасни)</string>
+    <string name="stop_pressed">Натиснат е СТОП!</string>
 </resources>

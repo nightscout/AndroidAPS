@@ -25,7 +25,7 @@ import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -56,7 +56,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var activePlugin: ActivePlugin
 
     private val disposable = CompositeDisposable()
@@ -75,7 +75,7 @@ class MaintenanceFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
-        inMenu = parentClass == activityNames.singleFragmentActivity
+        inMenu = parentClass == uiInteraction.singleFragmentActivity
         updateProtectedUi()
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {

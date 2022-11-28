@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Párování</string>
-    <string name="danars_nodeviceavailable">Prozatím žádné zařízení nenalezeno</string>
+    <string name="danars_no_device_available">Prozatím žádné zařízení nenalezeno</string>
     <string name="danars_pairingok">Spárováno</string>
     <string name="danars_pairingtimedout">Vypršel časový limit pro párování</string>
     <string name="danars_waitingforpairing">Čekání na spárování na pumpě</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Plnění</string>
     <string name="danar_history_syspend">Vypnutí</string>
     <string name="danar_history_prime">Doplňování</string>
-    <string name="danar_useroptions">Uživatelská nastavení</string>
-    <string name="danar_timedisplay">Formát času</string>
-    <string name="danar_buttonscroll">Posun při stisknutí tlačítka</string>
+    <string name="danar_user_options">Uživatelská nastavení</string>
+    <string name="danar_time_display">Formát času</string>
+    <string name="danar_button_scroll">Posun při stisknutí tlačítka</string>
     <string name="danar_beep">Zvuk při stisknutí tlačítka</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Zvuk</string>
-    <string name="danar_pumpalarm_vibrate">Vibrace</string>
-    <string name="danar_pumpalarm_both">Oboje</string>
-    <string name="danar_screentimeout">Čas před vypnutím displeje [sekundy]</string>
+    <string name="danar_pump_alarm">Alarm</string>
+    <string name="danar_pump_alarm_sound">Zvuk</string>
+    <string name="danar_pump_alarm_vibrate">Vibrace</string>
+    <string name="danar_pump_alarm_both">Oboje</string>
+    <string name="danar_screen_timeout">Čas před vypnutím displeje [sekundy]</string>
     <string name="danar_backlight">Podsvícení [sekundy]</string>
-    <string name="danar_glucoseunits">Jednotky</string>
+    <string name="danar_glucose_units">Jednotky</string>
     <string name="danar_shutdown">Vypnutí [hodiny]</string>
-    <string name="danar_lowreservoir">Nízký stav zásobníku [Jednotky]</string>
-    <string name="danar_saveuseroptions">Uložit do pumpy</string>
+    <string name="danar_low_reservoir">Nízký stav zásobníku [Jednotky]</string>
+    <string name="danar_save_user_options">Uložit do pumpy</string>
     <string name="description_pump_dana_r">Ovladač pumpy pro DanaR</string>
     <string name="description_pump_dana_r_korean">Ovladač pumpy pro korejskou verzi DanaR</string>
     <string name="description_pump_dana_r_v2">Ovladač pumpy pro DanaR s upgradovaným firmwarem</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Nastavení bazálního profilu selhalo</string>
     <string name="danar_bluetooth_status">Stav Bluetooth</string>
     <string name="danar_iob_label">IOB z pumpy</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Nastavení pumpy Dana</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">ZAP</string>
     <string name="option_off">VYP</string>
     <string name="danar_bt_name_title">DanaR Bluetooth zařízení</string>

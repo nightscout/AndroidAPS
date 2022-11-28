@@ -11,6 +11,7 @@ import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -93,7 +94,7 @@ class EversensePlugin @Inject constructor(
             if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
             if (bundle.containsKey("transmitterConnectionState")) aapsLogger.debug(LTag.BGSOURCE, "transmitterConnectionState: " + bundle.getString("transmitterConnectionState"))
             if (bundle.containsKey("glucoseLevels")) {
-                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
                 val glucoseLevels = bundle.getIntArray("glucoseLevels")
                 val glucoseRecordNumbers = bundle.getIntArray("glucoseRecordNumbers")
                 val glucoseTimestamps = bundle.getLongArray("glucoseTimestamps")
@@ -102,7 +103,7 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseRecordNumbers" + Arrays.toString(glucoseRecordNumbers))
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamps" + Arrays.toString(glucoseTimestamps))
                     for (i in glucoseLevels.indices)
-                        glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                        glucoseValues += TransactionGlucoseValue(
                             timestamp = glucoseTimestamps[i],
                             value = glucoseLevels[i].toDouble(),
                             raw = glucoseLevels[i].toDouble(),

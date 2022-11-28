@@ -5,21 +5,16 @@
     <string name="settings_protection">Definições Protecção</string>
     <string name="application_protection">Protecção Aplicação</string>
     <string name="bolus_protection">Protecção Bólus</string>
-    <string name="master_password">Senha Mestre</string>
     <string name="settings_password">Senha Definições</string>
     <string name="application_password">Senha Aplicação</string>
     <string name="bolus_password">Senha Bólus</string>
-    <string name="unlock_settings">Definições Desbloqueio</string>
     <string name="biometric">Biométrico</string>
     <string name="custom_password">Senha Personalizada</string>
     <string name="noprotection">Sem Protecção</string>
-    <string name="protection">Protecção</string>
-    <string name="master_password_missing">A Senha Mestre não está definida!\n\nPor favor, configure Senha Mestre em Preferências (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Reverter Inseguro</string>
     <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, a protecção biométrica precisa de uma senha mestre definida para reverter.\n\nPor favor, defina uma senha mestre!</string>
     <string name="password_set">Senha foi definida!</string>
     <string name="password_not_set">Senha não foi definida</string>
     <string name="password_not_changed">Senha não foi alterada</string>
-    <string name="password_cleared">Senha limpa!</string>
     <string name="password_hint">Insira aqui a senha</string>
 </resources>

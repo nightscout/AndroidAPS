@@ -16,4 +16,9 @@
     <string name="unit_weeks">weke</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!-- Rx -->
+    <string name="connecting_for">Koppel vir %1$d s</string>
+    <string name="handshaking">Handskudding</string>
+    <string name="connected">Gekoppel</string>
+    <string name="disconnecting">Ontkoppel</string>
 </resources>

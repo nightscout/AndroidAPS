@@ -21,7 +21,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
@@ -43,7 +43,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var queryingProtection = false
     private var isPercentPump = true
@@ -135,7 +135,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                         }
                     }
                 }

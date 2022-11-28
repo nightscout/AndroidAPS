@@ -1,5 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Обнови</string>
+    <string name="error">Грешка</string>
+    <string name="profile_set_ok">Профила на помпата е обновен</string>
+    <string name="invalid_input">Грешни входящи данни</string>
+    <string name="bolus_delivering">Доставяне %1$.2f U</string>
+    <string name="constraint_applied">Приложено ограничение!</string>
+    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
+    <string name="tt_label">Вр.цел</string>
+    <string name="pump_unreachable">Помпата е недостъпна</string>
+    <string name="insulin_unit_shortname">Ед.</string>
+    <string name="pump_base_basal_rate">%1$.2f Е/ч</string>
+    <string name="pump_not_initialized_profile_not_set">Помпата не е инициализирана, профила не е зададен!</string>
+    <string name="failed_update_basal_profile">Неуспешно обновяване на базалния профил</string>
+    <string name="bolus_delivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="no_valid_basal_rate">Няма валиден базал в помпата</string>
+    <string name="limiting_iob">Ограничаване на IOB до %1$.1f Е поради %2$s</string>
+    <string name="loop_disabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
+    <string name="event_type">Тип събитие</string>
+    <string name="reload">Презареди</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммол/л</string>
+    <string name="save">Съхрани</string>
+    <string name="snooze">Отложи</string>
+    <string name="virtual_pump">Виртуална помпа</string>
+    <string name="constraints">Ограничения</string>
+    <string name="superbolus">Суперболус</string>
+    <string name="pump_paused">Помпата е на пауза</string>
+    <string name="and">И</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
+    <string name="result">Резултат</string>
+    <string name="settings">Настройки</string>
+    <string name="statuslights">Индикатори</string>
+    <string name="do_ns_upload_title">Качвай данните за КЗ в NS</string>
+    <string name="configbuilder_insulin">Инсулин (ед.):</string>
+    <string name="value_unavailable_short">---</string>
+    <string name="master_password">Главна парола</string>
+    <string name="confirm">Потвърди</string>
+    <string name="pump">Помпа</string>
+    <string name="missed_bg_readings">Липсват данни за КЗ</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Изключи за 5 минути</string>
+    <string name="mute">Заглушаване</string>
+    <string name="success">Успешен</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Отключи настройките</string>
+    <!--    Pumps -->
+    <string name="battery_label">Батерия</string>
+    <string name="reservoir_label">Резервоар</string>
+    <string name="last_connection_label">Последно свързване</string>
+    <string name="last_bolus_label">Последен болус:</string>
+    <string name="base_basal_rate_label">Базова базална стойност</string>
+    <string name="tempbasal_label">Временен базал</string>
+    <string name="extended_bolus_label">Удължен болус</string>
+    <string name="serial_number">Сериен номер</string>
+    <string name="disconnected">Не е сврзана</string>
+    <string name="connecting">Свързване</string>
+    <string name="reservoir_value">%1$.0f / %2$d Е</string>
+    <string name="daily_units">Инсулин за деня</string>
+    <string name="view_profile">Виж профил</string>
+    <string name="pump_history">История</string>
+    <string name="stats">Статистика</string>
+    <string name="temp_basal_delivery_error">Грешка при подаване на временен базал</string>
+    <string name="not_set_short">Не е зададен</string>
+    <string name="pump_busy">Помпата е заета</string>
+    <string name="connection_error">Грешка при връзка с помпата</string>
+    <string name="reading_pump_history">Чете историята на помпата</string>
+    <string name="password_cleared">Паролата е изчистена!</string>
+    <string name="pairing">Сдвояване</string>
+    <string name="initializing">Инициализация ...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
+    <string name="pumplimit">лимит на помпата</string>
+    <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
+    <string name="itmustbepositivevalue">трябва да бъде положително число</string>
+    <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Потвърждение</string>
     <string name="message">Съобщение</string>
@@ -8,9 +85,36 @@
     <string name="dismiss">Разбрах</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
+    <string name="close">Затвори</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dч:%2$dм</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Време на събитие</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Апликацията изисква разрешение за bluetooth</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
+    <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
+    <string name="ble_not_enabled">Bluetooth не е включен.</string>
+    <string name="location_not_found_title">Локацията не е включена</string>
+    <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Настройки на модул</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
+    <plurals name="days">
+        <item quantity="one">%1$d дeн</item>
+        <item quantity="other">%1$d дни</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="other">%1$d часа</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d минутa</item>
+        <item quantity="other">%1$d минути</item>
+    </plurals>
 </resources>

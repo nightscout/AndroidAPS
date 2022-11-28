@@ -8,24 +8,38 @@
     <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="activity_monitor">Monitorizare activitate</string>
+    <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
     <string name="statistics">Statistici</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
+    <string name="invalid_age">Valoare vârstă invalidă</string>
+    <string name="invalid_weight">Valoare greutate invalidă</string>
     <string name="id">ID:</string>
     <string name="submit">Trimiteți</string>
+    <string name="age">Vârstă</string>
+    <string name="weight_label">Greutate</string>
+    <string name="most_common_profile">Cel mai frecvent profil:</string>
+    <string name="glucose_type">Tip glicemie</string>
+    <string name="bg_other">Altul</string>
+    <string name="bg_meter">Glucometru</string>
+    <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Buton 1</string>
-    <string name="button2">Buton 2</string>
-    <string name="button3">Buton 3</string>
+    <string name="fill_warning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
     <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
     <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
+    <string name="timeshift_label">Decalare</string>
+    <string name="percentage_label">Procentaj</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
     <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
     <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
     <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
@@ -44,8 +58,10 @@
     <string name="duration3h">3 ore</string>
     <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
+    <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
     <string name="carb_time_label">Ora carbohidrați</string>
     <string name="show_calculation">Arată calculul</string>
     <!-- Treatments -->
@@ -54,25 +70,33 @@
     <string name="treatments_insulin_label_string">Insulină:</string>
     <string name="treatments_carbs_label_string">Carbohidrați:</string>
     <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="treatments_iob_activity_total_label_string">Activitate total IOB:</string>
     <string name="tempbasals_realduration_label_string">Durată:</string>
     <string name="tempbasals_netratio_label_string">Raport:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
+    <string name="meal_bolus">Masă</string>
     <string name="prime">Amorsare</string>
     <string name="refresheventsfromnightscout">Actualizează din NS</string>
+    <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonează</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">Tip profil</string>
+    <string name="basal_pct_from_tdd_label">% din bazală</string>
     <string name="selected_profile">Selectat:</string>
+    <string name="compare_profile">Compară profilurile</string>
+    <string name="nav_profile_helper">Ajutor Profil</string>
+    <string name="motol_default_profile">Profil implicit</string>
+    <string name="current_profile">Profil curent</string>
+    <string name="available_profile">Profil disponibil</string>
+    <string name="format_with_tdd">Vârstă: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Vârstă: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Vârstă: %1$d Greutate: %2$.0f kg</string>
+    <string name="dpv_default_profile">Profil implicit DPV</string>
+    <string name="invalid_pct">Intrare % invalidă</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Rată bazală</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Detalii probleme de import</string>
-    <string name="check_preferences_import_btn">Importă</string>
-    <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
-    <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
-    <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
-    <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
+    <string name="stop_pressed">STOP APĂSAT</string>
 </resources>

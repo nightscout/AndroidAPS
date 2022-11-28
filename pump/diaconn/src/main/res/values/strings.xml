@@ -12,7 +12,7 @@
     <string name="key_diaconn_g8_logneedlechange" translatable="false">diaconn_g8_logneedlechange</string>
     <string name="key_diaconn_g8_cloudsend" translatable="false">diaconn_g8_cloudsend</string>
     <string name="key_diaconn_g8_appuid" translatable="false">diaconn_g8_appuid</string>
-    <string name="key_diaconn_g8_is_bolus_speed_sync">diaconn_g8_isbolusspeedsync</string>
+    <string name="key_diaconn_g8_is_bolus_speed_sync" translatable="false">diaconn_g8_isbolusspeedsync</string>
 
     <string name="resetpairing" >Reset Pairing</string>
     <string name="diaconn_no_device_available">No Device available</string>

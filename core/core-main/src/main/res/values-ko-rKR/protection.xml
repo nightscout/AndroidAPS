@@ -5,19 +5,14 @@
     <string name="settings_protection">설정 보안</string>
     <string name="application_protection">애플리케이션 보안</string>
     <string name="bolus_protection">Bolus 보안</string>
-    <string name="master_password">마스터 비밀번호</string>
     <string name="settings_password">설정 비밀번호</string>
     <string name="application_password">애플리케이션 비밀번호</string>
     <string name="bolus_password">Bolus 비밀번호</string>
-    <string name="unlock_settings">설정 잠금해제</string>
     <string name="biometric">생체 인식</string>
     <string name="custom_password">사용자 지정 비밀번호</string>
     <string name="noprotection">보안 없음</string>
-    <string name="protection">보안</string>
-    <string name="master_password_missing">마스터 비밀번호가 설정되지 않았습니다 !\n\n마스터 암호를 설정에서 설정하십시오 (%1$s &#8594; %2$s)</string>
     <string name="password_set">비밀번호가 설정되었습니다!</string>
     <string name="password_not_set">비밀번호가 설정되지 않았습니다.</string>
     <string name="password_not_changed">비밀번호가 변경되지 않았습니다.</string>
-    <string name="password_cleared">비밀번호가 지워졌습니다.</string>
     <string name="password_hint">여기에 비밀번호를 입력하세요</string>
 </resources>

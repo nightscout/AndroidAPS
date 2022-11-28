@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <!--    PumpType-->
+    <string name="def_extended_note">* Slegs diskrete waardes geen reekse word ondersteun as granulariteit vir basale/bolus in virtuele pomp.</string>
+    <!-- PumpPluginBase -->
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

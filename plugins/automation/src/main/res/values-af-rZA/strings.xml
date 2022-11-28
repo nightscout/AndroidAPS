@@ -6,6 +6,7 @@
     <string name="automation_missing_task_name">Verskaf asb \'n aksie.</string>
     <string name="automation_missing_trigger">Gee asseblief ten minste een sneller.</string>
     <string name="automation_missing_action">Spesifisieer ten minste een aksie.</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Msg:</string>
     <string name="alreadyenabled">Reeds aangeskakel</string>
     <string name="alreadydisabled">Reeds afgeskakel</string>
@@ -35,7 +36,6 @@
     <string name="glucosecomparedmmol">Glukose %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profiel pct %1$s %2$d</string>
     <string name="iobcompared">IAB %1$s %2$.1f</string>
-    <string name="and">En</string>
     <string name="or">Of</string>
     <string name="xor">Eksklusiewe of</string>
     <string name="atspecifiedtime">By %1$s</string>

@@ -16,7 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.getCustomizedName
+import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -30,7 +30,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateProfileSwitchTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
@@ -262,7 +262,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)
+                            args.putInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }
@@ -271,7 +271,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)
+                            args.putInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }

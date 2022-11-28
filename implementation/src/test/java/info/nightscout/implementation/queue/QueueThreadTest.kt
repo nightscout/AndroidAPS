@@ -17,7 +17,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Command
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -34,7 +34,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var androidPermission: AndroidPermission
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
     val injector = HasAndroidInjector {
@@ -60,7 +60,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames, persistenceLayer
+            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer
         )
 
         val pumpDescription = PumpDescription()

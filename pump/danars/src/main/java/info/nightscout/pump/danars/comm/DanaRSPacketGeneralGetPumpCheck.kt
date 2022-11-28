@@ -42,7 +42,7 @@ class DanaRSPacketGeneralGetPumpCheck(
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaPump.protocol))
         aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaPump.productCode))
         if (danaPump.productCode < 2) {
-            activityNames.addNotification(Notification.UNSUPPORTED_FIRMWARE, rh.gs(R.string.unsupportedfirmware), Notification.URGENT)
+            uiInteraction.addNotification(Notification.UNSUPPORTED_FIRMWARE, rh.gs(R.string.unsupportedfirmware), Notification.URGENT)
         }
     }
 

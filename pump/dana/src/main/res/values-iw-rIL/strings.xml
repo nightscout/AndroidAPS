@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">מצמד</string>
-    <string name="danars_nodeviceavailable">לא נמצאו מכשירים עד כה</string>
+    <string name="danars_no_device_available">לא נמצאו מכשירים עד כה</string>
     <string name="danars_pairingok">הצימוד הצליח</string>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
     <string name="danars_waitingforpairing">מחכה לצימוד עם משאבה</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">מילוי מחדש</string>
     <string name="danar_history_syspend">השהיה</string>
     <string name="danar_history_prime">תיחול</string>
-    <string name="danar_useroptions">אפשרויות משתמש</string>
-    <string name="danar_timedisplay">מבנה הצגת השעה</string>
-    <string name="danar_buttonscroll">לחצן גלילה</string>
+    <string name="danar_user_options">אפשרויות משתמש</string>
+    <string name="danar_time_display">מבנה הצגת השעה</string>
+    <string name="danar_button_scroll">לחצן גלילה</string>
     <string name="danar_beep">צפצוף בלחיצה על כפתורים</string>
-    <string name="danar_pumpalarm">התראה</string>
-    <string name="danar_pumpalarm_sound">צלילים</string>
-    <string name="danar_pumpalarm_vibrate">רטט</string>
-    <string name="danar_pumpalarm_both">שניהם</string>
-    <string name="danar_screentimeout">זמן הפעלת מסך [seconds]</string>
+    <string name="danar_pump_alarm">התראה</string>
+    <string name="danar_pump_alarm_sound">צלילים</string>
+    <string name="danar_pump_alarm_vibrate">רטט</string>
+    <string name="danar_pump_alarm_both">שניהם</string>
+    <string name="danar_screen_timeout">זמן הפעלת מסך [seconds]</string>
     <string name="danar_backlight">זמן תאורת מסך [seconds]</string>
-    <string name="danar_glucoseunits">יחידות גלוקוז</string>
+    <string name="danar_glucose_units">יחידות גלוקוז</string>
     <string name="danar_shutdown">כיבוי [hours]</string>
-    <string name="danar_lowreservoir">מכל נמוך [Units]</string>
-    <string name="danar_saveuseroptions">שמירת הגדרות במשאבה</string>
+    <string name="danar_low_reservoir">מכל נמוך [Units]</string>
+    <string name="danar_save_user_options">שמירת הגדרות במשאבה</string>
     <string name="description_pump_dana_r">חיבור משאבת DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">חיבור משאבת DANA Diabecare R מהשוק הקוריאני</string>
     <string name="description_pump_dana_r_v2">חיבור משאבת DANA Diabecare R עם קושחה משודרגת</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">הגדרת פרופיל הבזאלי נכשל</string>
     <string name="danar_bluetooth_status">מצב בלוטות\'</string>
     <string name="danar_iob_label">אינסולין פעיל מהמשאבה</string>
-    <string name="virtualpump_firmware_label">קושחה</string>
+    <string name="firmware_label">קושחה</string>
     <string name="danar_pump_settings">הגדרות משאבת Dana</string>
-    <string name="timeformat12h">12 שעות</string>
-    <string name="timeformat24h">24 שעות</string>
+    <string name="time_format_12h">12 שעות</string>
+    <string name="time_format_24h">24 שעות</string>
     <string name="option_on">מופעל</string>
     <string name="option_off">כבוי</string>
     <string name="danar_bt_name_title">מכשיר בלוטות\' DanaR</string>

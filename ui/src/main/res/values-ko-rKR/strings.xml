@@ -6,25 +6,40 @@
     <string name="time_offset">시간 이동</string>
     <string name="unit_minute_short">분</string>
     <!--    Widget-->
+    <string name="widget_description">AAPS 위젯</string>
     <!--     Activities-->
+    <string name="activity_monitor">활동 모니터</string>
+    <string name="do_you_want_reset_stats">활동 통계를 초기화하시겠습니까?</string>
     <string name="statistics">통계</string>
     <string name="calculation_in_progress">계산 진행 중</string>
+    <string name="invalid_age">유효하지 않은 나이입니다</string>
+    <string name="invalid_weight">유효하지 않은 몸무게입니다</string>
     <string name="id">ID:</string>
     <string name="submit">확인</string>
+    <string name="age">나이</string>
+    <string name="weight_label">가중</string>
+    <string name="most_common_profile">가장 많이 사용된 프로파일:</string>
+    <string name="glucose_type">혈당 종류</string>
+    <string name="bg_other">기타</string>
+    <string name="bg_meter">측정기</string>
+    <string name="bg_sensor">센서</string>
     <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">합계</string>
     <!-- FillDialog -->
-    <string name="button1">버튼1</string>
-    <string name="button2">버튼2</string>
-    <string name="button3">버튼3</string>
+    <string name="fill_warning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
     <string name="record_pump_site_change">펌프 위치 변경 기록</string>
     <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">실제 Bolus 주입않고, 기록만 하기</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">%1$d%%를 %2$dh 동안 재사용하기</string>
+    <string name="timeshift_label">시간 이동</string>
+    <string name="percentage_label">퍼센트</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">1시간동안 Loop 일시중지</string>
     <string name="suspendloopfor2h">2시간동안 Loop 일시중지</string>
     <string name="suspendloopfor3h">3시간동안 Loop 일시중지</string>
     <string name="suspendloopfor10h">10시간동안 Loop 일시중지</string>
@@ -43,8 +58,10 @@
     <string name="duration3h">3시간</string>
     <string name="duration10h">10시간</string>
     <!-- WizardDialog -->
+    <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">결과: %1$s %2$s</string>
     <string name="missing_carbs">부족 %1$d g</string>
+    <string name="carb_time_label">탄수화물 시간</string>
     <string name="show_calculation">계산 표시</string>
     <!-- Treatments -->
     <string name="calculation_short">Calc</string>
@@ -52,25 +69,33 @@
     <string name="treatments_insulin_label_string">인슐린:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iobtotal_label_string">IOB 총량:</string>
+    <string name="treatments_iob_activity_total_label_string">활동 IOB 총량:</string>
     <string name="tempbasals_realduration_label_string">기간:</string>
     <string name="tempbasals_netratio_label_string">비율:</string>
     <string name="tempbasals_netinsulin_label_string">인슐린:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
-    <string name="treatments_wizard_tt_label">임시목표</string>
     <string name="treatments_wizard_correction_label">교정</string>
+    <string name="meal_bolus">Meal</string>
     <string name="prime">교체</string>
     <string name="refresheventsfromnightscout">NS로부터 최신 정보로 업데이트 함.</string>
+    <string name="user_entry">사용자 항목</string>
     <string name="clone_label">복사</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile_type">프로파일 종류</string>
+    <string name="basal_pct_from_tdd_label">% basal</string>
     <string name="selected_profile">선택:</string>
+    <string name="compare_profile">프로파일 비교하기</string>
+    <string name="nav_profile_helper">프로파일 보조기</string>
+    <string name="motol_default_profile">기본 프로파일</string>
+    <string name="current_profile">현재 프로파일</string>
+    <string name="available_profile">사용 가능한 프로파일</string>
+    <string name="format_with_tdd">나이: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">나이: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">나이: %1$d 체중: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV 기본 프로파일</string>
+    <string name="invalid_pct">유효하지 않은 % 입력</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Basal양</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">환경설정 가져오기 문제의 상세정보</string>
-    <string name="check_preferences_import_btn">가져오기</string>
-    <string name="check_preferences_import_anyway_btn">무시하고 가져오기 (위험!)</string>
-    <string name="check_preferences_before_import">가져오기 전에 환경설정을 확인하세요.</string>
-    <string name="check_preferences_cannot_import">환경 설정을 가져올 수가 없습니다.</string>
-    <string name="check_preferences_dangerous_import">환경 설정을 가져오면 안됩니다.</string>
+    <string name="stop_pressed">정지 누름</string>
 </resources>

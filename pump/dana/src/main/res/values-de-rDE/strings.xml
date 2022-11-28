@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Koppeln</string>
-    <string name="danars_nodeviceavailable">Pumpe noch nicht gefunden</string>
+    <string name="danars_no_device_available">Pumpe noch nicht gefunden</string>
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Zeitüberschreitung beim Pairing</string>
     <string name="danars_waitingforpairing">Auf Verbindung warten</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Füllmenge</string>
     <string name="danar_history_syspend">Unterbrechungen</string>
     <string name="danar_history_prime">Füllen</string>
-    <string name="danar_useroptions">Benutzerdefinierte Einstellungen</string>
-    <string name="danar_timedisplay">Zeitformat</string>
-    <string name="danar_buttonscroll">Scrollfunktion</string>
+    <string name="danar_user_options">Benutzerdefinierte Einstellungen</string>
+    <string name="danar_time_display">Zeitformat</string>
+    <string name="danar_button_scroll">Scrollfunktion</string>
     <string name="danar_beep">Piepen (Tastentöne)</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Töne</string>
-    <string name="danar_pumpalarm_vibrate">Vibration</string>
-    <string name="danar_pumpalarm_both">Beides</string>
-    <string name="danar_screentimeout">LCD-Einschaltdauer [Sek.]</string>
+    <string name="danar_pump_alarm">Alarm</string>
+    <string name="danar_pump_alarm_sound">Töne</string>
+    <string name="danar_pump_alarm_vibrate">Vibration</string>
+    <string name="danar_pump_alarm_both">Beides</string>
+    <string name="danar_screen_timeout">LCD-Einschaltdauer [Sek.]</string>
     <string name="danar_backlight">Einschaltdauer Hintergrundbeleuchtung [Sek.]</string>
-    <string name="danar_glucoseunits">BZ-Einheit</string>
+    <string name="danar_glucose_units">BZ-Einheit</string>
     <string name="danar_shutdown">Abschalten (Std.)</string>
-    <string name="danar_lowreservoir">Reservoir fast leer (IE)</string>
-    <string name="danar_saveuseroptions">In Pumpe speichern</string>
+    <string name="danar_low_reservoir">Reservoir fast leer (IE)</string>
+    <string name="danar_save_user_options">In Pumpe speichern</string>
     <string name="description_pump_dana_r">Pumpen-Integration für DANA Diabecare R Pumpen</string>
     <string name="description_pump_dana_r_korean">Pumpen-Integration für koreanische DANA Diabecare R Pumpen</string>
     <string name="description_pump_dana_r_v2">Pumpen-Integration für DANA Diabecare R Pumpen mit aktualisierter Firmware</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Setzen des Basal-Profils fehlgeschlagen</string>
     <string name="danar_bluetooth_status">Bluetooth-Status</string>
     <string name="danar_iob_label">Pumpen-IOB</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana Pumpen-Einstellungen</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">Ein</string>
     <string name="option_off">Aus</string>
     <string name="danar_bt_name_title">DanaR Blueetooth--Gerät</string>

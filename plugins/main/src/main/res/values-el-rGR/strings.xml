@@ -2,24 +2,100 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_tab_otp_label">Ρύθμιση ελέγχου ταυτότητας</string>
+    <string name="sms_wrong_code">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Για έγχυση bolus %1$.2fU απαντήστε με κωδικό %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Για να ορίσετε τον Προσωρινό Στόχο %1$s απαντήστε με κωδικό %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Για να ακυρώσετε Προσωρινό Στόχο απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Για να απενεργοποιήσετε το SMS Απομακρυσμένη Υπηρεσία απαντήστε με κωδικό %1$s.\n\n μπορείτε να το ενεργοποιήσετε ξανά απευθείας μόνο από το AAPS master smartphone.</string>
+    <string name="smscommunicator_stopped_sms">Η απομάκρυσμένη υπηρεσία SMS σταμάτησε. Για να την ενεργοποιήσετε πάλι, χρησιμοποιήστε το AAPS στο κύριο τηλέφωνο.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Για αποστολή καλιμπραρίσματος %1$.2f στείλτε με κωδικό %2$s</string>
+    <string name="smscommunicator_bolus_failed">Αποτυχία Bolus</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Ελάχιστος χρόνος σε λεπτά που πρέπει να μεσολαβήσει μεταξύ μίας απομακρυσμένης έγχυσης (bolus) και της επόμενης</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Πόσα λεπτά, τουλάχιστον, πρέπει να μεσολαβήσουν μεταξύ μιας έγχυσης (bolus) και της επόμενης</string>
+    <string name="smscommunicator_remote_bolus_min_distance_caveat">Για την ασφάλειά σας, για να επεξεργαστείτε αυτή την προτίμηση πρέπει να προσθέσετε τουλάχιστον 2 αριθμούς τηλεφώνου.</string>
+    <string name="smscommunicator_bolus_delivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
+    <string name="smscommunicator_meal_bolus_delivered">Γευματική Bolus %1$.2fU μονάδες δόθηκε επιτυχώς</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Στόχος %1$s για %2$d λεπτά</string>
+    <string name="smscommunicator_remote_commands_allowed">Άδεια για απομακρυσμένες εντολές μέσω SMS</string>
+    <string name="smscommunicator_loop_has_been_disabled">Το κύκλωμα απενεργοποιήθηκε</string>
+    <string name="smscommunicator_loop_has_been_enabled">Το κύκλωμα ενεργοποιήθηκε</string>
+    <string name="smscommunicator_loop_is_enabled">Κύκλωμα ενεργοποιημένο</string>
+    <string name="smscommunicator_pump_connect_with_code">Για να συνδέσετε την αντλία απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Αποτυχία σύνδεσης με την αντλία</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Για αποσύνδεση αντλίας για %1$d λεπτά απαντήστε με κωδικό %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Η αντλία αποσυνδέθηκε</string>
+    <string name="smscommunicator_remote_command_not_allowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
+    <string name="smscommunicator_basal_reply_with_code">Για έναρξη βασικού %1$.2fU/h για %2$d λεπτά απαντήστε με κωδικό %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Για αλλαγή προφίλ σε %1$s %2$d%% στείλτε κωδικό %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Για έναρξη εκτεταμένου bolus %1$.2fU για %2$d λεπτά απαντήστε με κωδικό %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Για να εισαγάγετε %1$dg στο %2$s απαντήστε με κωδικό %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Για έναρξη βασικού %1$d%% για %2$d λεπτά στείλτε κωδικό %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Για αναστολή κυκλκώματος για %1$d λεπτών στείλτε με κωδικό %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Για να συνεχίσετε το κύκλωμα απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Για να ενεργοποιήσετε το κύκλωμα απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Για να απενεργοποιήσετε το κύκλωμα απαντήστε με κωδικό %1$s</string>
+    <string name="smscommunicator_tempbasal_set">Προσωρινός Ρυθμός %1$.2fU/h για %2$d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_extended_set">Εκτεταμένο bolus %1$.2fU για %2$d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_carbs_set">Υδατάνθρακες %1$d  g εισήχθησαν επιτυχώς</string>
+    <string name="smscommunicator_carbs_failed">Η εισαγωγή %1$dg υδατανθράκων απέτυχε</string>
+    <string name="smscommunicator_tempbasal_set_percent">Προσωρινός Ρυθμός %1$d%% για %2$d λεπτά ξεκίνησε επιτυχώς</string>
+    <string name="smscommunicator_tempbasal_failed">Εκκίνηση Προσωρινού Ρυθμού απέτυχε</string>
+    <string name="smscommunicator_extended_failed">Έναρξη εκτεταμένου bolus απέτυχε</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Για κλείσιμο Προσωρινού Ρυθμού στείλτε κωδικό %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Για κλείσιμο Εκτεταμένου bolus στείλτε κωδικό %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Ο Προσωρινός Ρυθμός ακυρώθηκε</string>
+    <string name="smscommunicator_extended_canceled">Εκτεταμένο bolus ακυρώθηκε</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Ακύρωση Προσωρινού Ρυθμού απέτυχε</string>
+    <string name="smscommunicator_extended_cancel_failed">Η ακύρωση του Εκτεταμένου bolus απέτυχε</string>
+    <string name="smscommunicator_unknown_command">Άγνωστη εντολή ή λάθος απάντηση</string>
+    <string name="smscommunicator_wrong_duration">Λάθος διάρκεια</string>
+    <string name="smscommunicator_loop_suspended">Κύκλωμα σε αναστολή</string>
+    <string name="smscommunicator_loop_resumed">Επαναφορά κυκλώματος</string>
+    <string name="smscommunicator_invalid_phone_number">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
+    <string name="smscommunicator_calibration_sent">Το καλιμπράρισμα στάλθηκε. Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip+.</string>
+    <string name="smscommunicator_calibration_failed">το xDrip+ δεν λαμβάνει βαθμονόμηση</string>
+    <string name="smscommunicator_message_body">Μη έγκυρο μήνυμα</string>
+    <string name="wrong_format">Λάθος μορφή αρχείου</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">Τελευταία BG:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
+    <string name="sms_min_ago">πριν από %1$d λεπτά</string>
+    <string name="sms_loop_suspended_for">Αναστολή (%1$d m)</string>
+    <string name="sms_read_status_failed">Η ανάγνωση κατάστασης απέτυχε</string>
+    <string name="sms_profile_switch_created">Δημιουργήθηκε αλλαγή προφίλ</string>
     <!-- Insulin -->
     <string name="insulin_shortname">INS</string>
+    <string name="ultra_rapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status_shortname">xds</string>
+    <string name="xdrip_status_detailed_iob_title">Δείξε αναλυτικά IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Χώρισε την IOB σε bolus και βασικό στο ρολόι</string>
+    <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
+    <string name="xdrip_status_show_bgi_title">Δείξε BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Πρόσθεσε BGI στην γραμμή κατάστασης</string>
     <!-- Food-->
+    <string name="food_short">Γεύμα</string>
+    <string name="short_kilo_joul">kj</string>
+    <string name="short_energy">Ενέργεια</string>
+    <string name="short_protein">Πρωτεΐνες</string>
+    <string name="short_fat">Λίπος</string>
+    <string name="calculator_label">Υπολογιστής</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
+    <string name="localprofile">Προφίλ</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="units_colon">Μονάδες:</string>
+    <string name="errors">Σφάλματα</string>
+    <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
     <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
@@ -29,14 +105,22 @@
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
+    <string name="objectives_next_button">Επόμενο</string>
+    <string name="objectives_previous_button">Προηγ</string>
     <!-- Actions -->
+    <string name="actions">Ενέργειες</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="actions_shortname">ΔΡΑΣΗ</string>
+    <string name="tempbasal_button">Προσ Ρυθμός</string>
+    <string name="extended_bolus_button">Εκτεταμμένο Bolus</string>
+    <string name="extended_bolus_cancel_button">Ακύρωση Εκτεταμμένου bolus</string>
+    <string name="nav_history_browser">Ιστορικό περιήγησης</string>
+    <string name="sensor_label">Αισθητήρας</string>
+    <string name="insulin_label">Ινσουλίνη</string>
     <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Περιορίζεται το εκτεταμένο bolus σε %1$.1f U λόγω %2$s</string>
     <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
-    <string name="limitingiob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
     <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
@@ -46,7 +130,6 @@
     <string name="hardlimit">σταθερό όριο</string>
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <!-- Overview -->
-    <string name="snooze">Αναβολή</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="statuslights_iage_warning">Όριο προειδοποίησης για την ηλικία της ινσουλίνης[h]</string>
     <string name="statuslights_iage_critical">Κατώτατο όριο ηλικίας της ινσουλίνης[h]</string>
@@ -58,57 +141,160 @@
     <string name="statuslights_bage_critical">Κατώτατο όριο της ηλικίας της μπαταρίας της αντλίας[h]</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="apsmode_title">Λειτουργία APS</string>
-    <string name="setbasalquestion">Αποδοχή νέου Προσ Ρυθμού:</string>
+    <string name="a11y_insulin_label">ινσουλίνη</string>
+    <string name="a11y_blood_glucose">γλυκόζη αίματος</string>
+    <string name="aps_mode_title">Λειτουργία APS</string>
+    <string name="set_basal_question">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Γρήγορος Οδηγός</string>
-    <!-- NSClient -->
-    <string name="restart">Επανεκκίνηση</string>
-    <string name="deliver_now">Έγχυση τώρα</string>
-    <string name="clear_queue">Διαγραφή σειράς</string>
-    <string name="show_queue">Δείξε σειρά</string>
-    <string name="queue">Σειρά:</string>
-    <string name="status">Κατάσταση:</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
-    <string name="title_tidepool_username">Όνομα Χρήστη</string>
-    <string name="summary_tidepool_password">Το συνθηματικό του Tidepool</string>
-    <string name="title_tidepool_password">Συνθηματικό εισόδου</string>
-    <string name="title_tidepool_test_login">Δοκιμή εισόδου Tidepool</string>
-    <string name="summary_tidepool_dev_servers">Αν ενεργοποιήθηκε, τα δεδομένα θα ανέβουν στο https://int-app.tidepool.org αντί για το σύνηθες https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
-    <string name="tidepool_upload_cgm">Αποστολή δεδομένων CGM</string>
-    <string name="tidepool_upload_bolus">Αποστολή θεραπειών (ινσουλίνης, υδατανθράκων)</string>
-    <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
-    <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
-    <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
+    <string name="overview">Επισκόπηση</string>
+    <string name="overview_shortname">ΑΡΧΙΚΗ</string>
+    <string name="description_overview">Εμφανίζει την τρέχουσα κατάσταση του κυκλώματός σας και τα πλήκτρα για τις πιο κοινές ενέργειες</string>
+    <string name="overview_editquickwizard_usecob">Υπολογισμός COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Υπολογισμός προσωρινού στόχου</string>
+    <string name="overview_buttons_selection">Πλήκτρα</string>
+    <string name="dexcom_app_not_installed">Η εφαρμογή Dexcom δεν είναι εγκατεστημένη.</string>
+    <string name="dexcom_app_not_detected">Ενημερώστε την εφαρμογή G5 στην υποστηριζόμενη έκδοση</string>
+    <string name="error_starting_cgm">Δεν είναι δυνατή η εκκίνηση της εφαρμογής CGM. Βεβαιωθείτε ότι έχει εγκατασταθεί.</string>
+    <string name="not_available_full">Μη διαθέσιμο</string>
+    <string name="constraints_violation">Παραβίαση Περιορισμών</string>
+    <string name="change_your_input">Αλλάξτε αυτό που εισάγατε!</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Uploader</string>
+    <string name="quickwizard_settings">Ρυθμίσεις Γρήγορου Οδηγού</string>
+    <string name="overview_edit_quickwizard_button_text">Κείμενο στο πλήκτρο:</string>
+    <string name="overview_edit_quickwizard_carbs">Υδατάνθρακες:</string>
+    <string name="overview_edit_quickwizard_valid">Ισχύς:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Προσθήκη</string>
+    <string name="overview_quickwizard_item_edit_button">Διαμόρφωση</string>
+    <string name="overview_edit_quickwizard_use_bg">Υπολογισμός BG</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Υπολογισμός του IOB bolus</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Υπολογισμός βασικού IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Υπολογισμός τάσης</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Υπολογισμός superbolus</string>
+    <string name="overview_edit_quickwizard_percentage">Ποσοστό</string>
+    <string name="device_all">Όλα</string>
+    <string name="device_watch">Ρολόι</string>
+    <string name="positive_only">Μόνο θετική</string>
+    <string name="negative_only">Μόνο αρνητική</string>
+    <string name="keep_screen_on_title">Κρατήστε την οθόνη ενεργή</string>
+    <string name="keep_screen_on_summary">Αποτρέψετε το Android να απενεργοποιήσει την οθόνη. Χωρίς σύνδεση με το φορτιστή, αποφορτίζει πολύ γρήγορα την μπαταρία.</string>
+    <string name="treatments">Θεραπείες</string>
+    <string name="carb_increment_button_message">Αριθμός υδατανθράκων να προστεθεί όταν πατήσετε το πλήκτρο</string>
+    <string name="insulin_increment_button_message">Ποσότητα ινσουλίνης να προστεθεί όταν πατήσετε το πλήκτρο</string>
+    <string name="firstinsulinincrement">Πρώτη αύξηση ινσουλίνης</string>
+    <string name="secondinsulinincrement">Δεύτερη αύξηση ινσουλίνης</string>
+    <string name="thirdinsulinincrement">Τρίτη αύξηση ινσουλίνης</string>
+    <string name="firstcarbsincrement">Πρώτη αύξηση υδατανθράκων</string>
+    <string name="secondcarbsincrement">Δεύτερη αύξηση υδατανθράκων</string>
+    <string name="thirdcarbsincrement">Τρίτη αύξηση υδατανθράκων</string>
+    <string name="cgm">CGM</string>
+    <string name="default_temptargets">Προκαθορισμένος Στόχος-Προσ Ρυθμού</string>
+    <string name="eatingsoon_duration">Διάρκεια πλησιέστερου γεύματος</string>
+    <string name="eatingsoon_target">στόχος για γεύμα</string>
+    <string name="activity_duration">διάρκεια άσκησης</string>
+    <string name="activity_target">στόχος άσκησης</string>
+    <string name="hypo_duration">διάρκεια υπογλυκαιμίας</string>
+    <string name="hypo_target">στόχος υπογλυκαιμίας</string>
+    <string name="fill_bolus_title">Πλήρωση/Γέμισμα στανταρ ποσότητες ινσουλίνης</string>
+    <string name="button1">Πλήκτρο 1</string>
+    <string name="button2">Πλήκτρο 2</string>
+    <string name="button3">Πλήκτρο 3</string>
+    <string name="prefs_range_title">Εύρος εμφάνισης</string>
+    <string name="prefs_range_summary">Υψηλό και Χαμηλό σημείο για την γραφική στην Επισκόπηση και Smartwatch</string>
+    <string name="low_mark">ΧΑΜΗΛΟ σημείο</string>
+    <string name="high_mark">ΥΨΗΛΟ σημείο</string>
+    <string name="short_tabtitles">Συντομογραφίες ενοτήτων</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Εμφάνιση πεδίου σημειώσεων στους διαλόγους θεραπείας</string>
+    <string name="deliverpartofboluswizard">Ο Υπολογισμός Bolus κάνει υπολογισμούς αλλά μόνο αυτό το μέρος της υπολογίσημης ινσουλίνης χορηγείται. Χρήσιμο με τον αλγόριθμο SMB.</string>
+    <string name="enablesuperbolus">Ενεργοποίηση superbolus στον σύντομο οδηγό</string>
+    <string name="enablesuperbolus_summary">Ενεργοποιήστε την λειτουργία superbolus στον σύντομο οδηγό. Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ!</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Προβλέψεις</string>
+    <string name="overview_show_treatments">Θεραπείες</string>
+    <string name="overview_show_activity">Δραστηριότητα</string>
+    <string name="overview_show_sensitivity">Ευαισθησία</string>
+    <string name="overview_show_deviations">Αποκλίσεις</string>
+    <string name="overview_show_cob">Ενεργοί Υδατάνθρακες</string>
+    <string name="overview_show_iob">Ενεργή Ινσουλίνη</string>
+    <string name="overview_show_basals">Βασικοί</string>
+    <string name="basal_shortname">BAS</string>
+    <string name="activity_shortname">ΔΡΑΣΗ</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="treatments_shortname">ΘΕΡΑΠ</string>
+    <string name="sensitivity_shortname">SENS</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Τύπος εικονικής αντλίας</string>
+    <string name="virtual_pump_definition">Ορισμός Αντλίας</string>
+    <string name="virtual_pump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">Εικ. αντλία</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
+    <string name="virtual_pump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
     <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Λάβετε τις τιμές BG από το xDrip+.</string>
     <string name="eversense">Eversense App (τροποποιημένη)</string>
     <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">Αποστολή δεδομένων BG στο xDrip+</string>
+    <string name="do_xdrip_upload_summary">Στο xDrip+, επιλέξτε την πηγή δεδομένων 640g / Eversense</string>
     <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
-    <!-- NSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="ns_create_announcements_from_errors_title">Δημιουργήστε ειδοποιήσεις σφαλμάτων</string>
-    <string name="ns_create_announcements_from_errors_summary">Δημιουργήστε μια ειδοποίηση Ns για σφάλματα διαλόγων και τοπικούς συναγερμούς (που φαίνονται στο Careportal κάτω από τις Θεραπείες)</string>
-    <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
+    <string name="dexcom_log_ns_sensor_change_title">Αλλαγή αρχείου αισθητήρα σε NS</string>
     <!-- Skins -->
     <!--    Loop -->
+    <string name="executing">Εκτελείτε</string>
+    <string name="run_now">Έναρξη τώρα</string>
+    <string name="smb_frequency_exceeded">Ένα bolus παραδόθηκε μέσα στα τελευταία 3 λεπτά, παράκαμψη SMB</string>
+    <string name="pump_not_initialized">Η αντλία δεν έχει ρυθμιστεί!</string>
+    <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
+    <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
+    <string name="no_aps_selected">ΔΕΝ ΕΠΙΛΕΧΘΗΚΕ APS Ή ΒΡΕΘΗΚΕ ΑΠΟΤΕΛΕΣΜΑ</string>
+    <string name="carbs_suggestion">Προτεινόμενοι Υδατάνθρακες</string>
+    <string name="open_loop_new_suggestion">Νέα πρόταση διαθέσιμη</string>
+    <string name="basal_set_correctly">Ο βασικός ρυθμός ορίστηκε σωστά</string>
+    <string name="last_run_label">Τελευταίος Υπολογισμός</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Αίτημα</string>
+    <string name="loop_constraints_processed_label">Μετά από επεξεργασία περιορισμών</string>
+    <string name="loop_tbr_set_by_pump_label">Προσωρινός Ρυθμός ορίστηκε από την αντλία</string>
+    <string name="loop_smb_set_by_pump_label">Το SMB ρυθμίστηκε από την αντλία</string>
+    <string name="loop_open_mode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">χρήσιμες συμβουλές:</string>
+    <!--    Iob-->
+    <string name="send_logfiles">Στείλτε τα αρχεία καταγραφής της ημέρας στους προγραμματιστές μαζί με αυτή τη φορά. Απροσδόκητη κατάσταση.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="no_success">αποτυχία - ελέγξτε τηλέφωνο</string>
+    <string name="wear_settings">Ρυθμίσεις Wear</string>
+    <string name="wearcontrol_title">Έλεγχος από ρολόι</string>
+    <string name="wearcontrol_summary">Ρυθμίστε Στόχους-Προσ Ρυθμού και βάλτε Θεραπείες από το ρολόι.</string>
+    <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
+    <string name="wear_display_settings">Ρυθμίσεις Εμφάνισης</string>
+    <string name="wear_general_settings">Γενικές Ρυθμίσεις</string>
+    <string name="wear_detailed_delta_title">Εμφάνιση λεπτομερών στατιστικών</string>
+    <string name="wear_detailed_delta_summary">Δείξτε τη διαφορά με ένα επιπλέον δεκαδικό ψηφίο</string>
+    <string name="wear_notifysmb_title">Ειδοποίηση στο SMB</string>
+    <string name="wear_notifysmb_summary">Εμφάνιση SMB στο ρολόι όπως ένα τυπικό bolus.</string>
+    <string name="wear_predictions_summary">Προβολή πρόβλεψης στο ρολόι.</string>
+    <string name="wear_predictions_title">Προβλέψεις</string>
+    <string name="resend_all_data">Ξαναστείλτε όλα τα Δεδομένα</string>
+    <string name="open_settings_on_wear">Ρυθμίσεις στο Wear</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Εμφανίζει μία τρέχουσα ειδοποίηση με σύντομη επισκόπηση του τι κάνει το κύκλωμα τώρα</string>
+    <string name="old_data">Παλιά Δεδομένα</string>
 </resources>

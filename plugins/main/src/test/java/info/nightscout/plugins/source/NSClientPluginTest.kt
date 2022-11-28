@@ -13,7 +13,7 @@ import org.mockito.Mock
 
 class NSClientPluginTest : TestBase() {
 
-    private lateinit var nsClientSourcePlugin: NSClientSourcePlugin
+    private lateinit var nsClientSourcePlugin: info.nightscout.plugins.source.NSClientSourcePlugin
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
@@ -21,7 +21,7 @@ class NSClientPluginTest : TestBase() {
 
     @Before
     fun setup() {
-        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, rh, aapsLogger, config)
+        nsClientSourcePlugin = info.nightscout.plugins.source.NSClientSourcePlugin({ AndroidInjector { } }, rh, aapsLogger, config)
     }
 
     @Test fun advancedFilteringSupported() {

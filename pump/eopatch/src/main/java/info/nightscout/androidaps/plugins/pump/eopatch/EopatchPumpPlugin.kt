@@ -9,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -27,6 +26,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -60,7 +60,8 @@ class EopatchPumpPlugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val patchManager: IPatchManager,
     private val alarmManager: IAlarmManager,
-    private val preferenceManager: IPreferenceManager
+    private val preferenceManager: IPreferenceManager,
+    private val uiInteraction: UiInteraction
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -203,7 +204,7 @@ class EopatchPumpPlugin @Inject constructor(
                 disposable.dispose()
                 aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess ?: false}")
                 if (isSuccess == true) {
-                    rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+                    uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
                     return PumpEnactResult(injector).success(true).enacted(true)
                 } else {
                     return PumpEnactResult(injector)
@@ -212,7 +213,7 @@ class EopatchPumpPlugin @Inject constructor(
         } else {
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             return PumpEnactResult(injector).success(true).enacted(true)
         }
     }

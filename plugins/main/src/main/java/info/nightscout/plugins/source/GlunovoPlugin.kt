@@ -13,6 +13,7 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
@@ -91,7 +92,7 @@ class GlunovoPlugin @Inject constructor(
 
         try {
             context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
-                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
                 val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
                 cr.moveToFirst()
 
@@ -119,7 +120,7 @@ class GlunovoPlugin @Inject constructor(
                     }
 
                     if (curr != 0.0)
-                        glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                        glucoseValues += TransactionGlucoseValue(
                             timestamp = timestamp,
                             value = value * Constants.MMOLL_TO_MGDL,
                             raw = 0.0,

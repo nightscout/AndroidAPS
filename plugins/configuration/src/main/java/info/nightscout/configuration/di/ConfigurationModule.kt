@@ -8,6 +8,7 @@ import info.nightscout.configuration.configBuilder.ConfigBuilderFragment
 import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
 import info.nightscout.configuration.configBuilder.RunningConfigurationImpl
 import info.nightscout.configuration.maintenance.ImportExportPrefsImpl
+import info.nightscout.configuration.maintenance.MaintenanceFragment
 import info.nightscout.configuration.maintenance.PrefFileListProviderImpl
 import info.nightscout.configuration.maintenance.activities.PrefImportListActivity
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
@@ -19,11 +20,13 @@ import info.nightscout.interfaces.maintenance.PrefFileListProvider
 
 @Module(
     includes = [
+        ConfigurationModule.Bindings::class,
         SetupWizardModule::class
     ]
 )
 abstract class ConfigurationModule {
 
+    @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity

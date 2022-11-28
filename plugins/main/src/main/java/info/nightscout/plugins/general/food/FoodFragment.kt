@@ -22,7 +22,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateFoodTransaction
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.FoodFragmentBinding
 import info.nightscout.plugins.databinding.FoodItemBinding
@@ -49,7 +49,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val disposable = CompositeDisposable()
     private var unfiltered: List<Food> = arrayListOf()
@@ -224,7 +224,7 @@ class FoodFragment : DaggerFragment() {
                     val food = v.tag as Food
                     activity?.let { activity ->
                         protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                            if (isAdded) activityNames.runWizardDialog(childFragmentManager, food.carbs, food.name)
+                            if (isAdded) uiInteraction.runWizardDialog(childFragmentManager, food.carbs, food.name)
                         })
                     }
                 }

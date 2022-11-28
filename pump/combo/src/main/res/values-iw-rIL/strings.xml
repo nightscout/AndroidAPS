@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">שימוש לא בטוח: המשאבה משתמשת בפרופיל בזאלי שונה מהראשון. הלולאה הושבתה. בחרו את הפרופיל הראשון במשאבה ורעננו.</string>
     <string name="bolus_frequency_exceeded">התבקשו בולוסים זהים בשתי הדקות האחרונות. כדי למנוע בולוסים כפולים בטעות ולשמור מפני באגים הדבר אסור.</string>
     <string name="combo_pump_connected_now">עכשיו</string>
-    <string name="combo_activity_reading_pump_history">קורא היסטוריית המשאבה</string>
     <string name="combo_activity_setting_basal_profile">הגדרת פרופיל בזאלי</string>
     <string name="combo_pump_cartridge_low_warrning">רמת מכל נמוכה</string>
     <string name="combo_pump_battery_low_warrning">סוללת המשאבה חלשה</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">אף פעם</string>
     <string name="combo_error_display_error">כשחלה שגיאה</string>
     <string name="combo_error_display_always">תמיד</string>
+    <string name="unsafeusage">שימוש לא בטוח</string>
 </resources>

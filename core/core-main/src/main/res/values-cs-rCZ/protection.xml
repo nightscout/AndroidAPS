@@ -5,7 +5,6 @@
     <string name="settings_protection">Ochrana nastavení</string>
     <string name="application_protection">Ochrana aplikace</string>
     <string name="bolus_protection">Ochrana bolusu</string>
-    <string name="master_password">Hlavní heslo</string>
     <string name="settings_password">Heslo pro nastavení</string>
     <string name="settings_pin">PIN pro nastavení</string>
     <string name="application_password">Heslo aplikace</string>
@@ -14,13 +13,10 @@
     <string name="bolus_pin">PIN pro bolus</string>
     <string name="protection_timeout_title">Uchování hesla a PINu [s]</string>
     <string name="protection_timeout_summary">Doba před zadáním hesla nebo PINu</string>
-    <string name="unlock_settings">Odemknout nastavení</string>
     <string name="biometric">Biometrie</string>
     <string name="custom_password">Vlastní heslo</string>
     <string name="custom_pin">Vlastní PIN</string>
     <string name="noprotection">Bez ochrany</string>
-    <string name="protection">Ochrana</string>
-    <string name="master_password_missing">Hlavní heslo není nastaveno!\n\nProsím nastavte své hlavní heslo v Preferencích (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Nezabezpečené záložní řešení</string>
     <string name="unsecure_fallback_descriotion_biometric">Aby bylo biometrické zabezpečení účinné, je třeba pro záložní řešení nastavit hlavní heslo.\n\nNastavte hlavní heslo!</string>
     <string name="password_set">Heslo nastaveno!</string>
@@ -29,7 +25,6 @@
     <string name="pin_not_set">PIN není nastaven</string>
     <string name="password_not_changed">Heslo nezměněno</string>
     <string name="pin_not_changed">PIN nebyl změněn</string>
-    <string name="password_cleared">Heslo vymazáno!</string>
     <string name="pin_cleared">PIN byl vymazán!</string>
     <string name="password_hint">Zadejte heslo</string>
     <string name="pin_hint">Zadejte PIN</string>

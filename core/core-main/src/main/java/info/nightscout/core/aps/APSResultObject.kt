@@ -2,8 +2,8 @@ package info.nightscout.core.aps
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.convertedToPercent
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.convertedToPercent
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.APSResult

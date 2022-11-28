@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Формат на файла</string>
+    <string name="metadata_label_created_at">Създаден на</string>
+    <string name="metadata_label_aaps_version">Версия на AAPS</string>
+    <string name="metadata_label_aaps_flavour">вариант</string>
+    <string name="metadata_label_device_name">Име на пациента</string>
+    <string name="metadata_label_device_model">Модел на телефона:</string>
+    <string name="metadata_label_encryption">Криптиране</string>
+    <string name="metadata_format_new">Нов формат</string>
+    <string name="metadata_format_debug">Нов формат (незащитен)</string>
+    <string name="metadata_format_other">Непознат формат</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
+    <!-- PumpPluginBase -->
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1fЕ</string>
+    <string name="format_insulin_units">%1$.2fЕ</string>
+</resources>

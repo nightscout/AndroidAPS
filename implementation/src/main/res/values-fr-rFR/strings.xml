@@ -3,17 +3,11 @@
     <string name="xdrip_not_installed">xDrip+ n\'est pas installé</string>
     <string name="calibration_sent">Étalonnage envoyé à xDrip+</string>
     <string name="bg_label">Gly</string>
-    <string name="missed_bg_readings">Valeurs de glycémie manquantes</string>
     <string name="time_to_eat">Il est temps de manger</string>
-    <string name="enable_bolus_advisor">Activer l\'assistant bolus</string>
-    <string name="enable_bolus_advisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="executing_right_now">Commande exécutée à l\'instant</string>
     <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
-    <string name="request">Demande</string>
     <string name="permission">Autorisation</string>
-    <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <string name="need_whitelisting">%1$s a besoin d\'être sur la liste blanche de l\'optimisation de la batterie pour des performances correctes</string>
     <string name="need_location_permission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
     <string name="need_storage_permission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>

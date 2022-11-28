@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Onveilig gebruik: de pomp gebruikt een andere basaal stand dan de eerste. Loop is uitgeschakeld. Selecteer het eerste profiel en ververs.</string>
     <string name="bolus_frequency_exceeded">Een bolus met dezelfde hoeveelheid was gevraagd binnen de afgelopen twee minuten. Om incidentele of door bugs veroorzaakte dubbele bolussen te voorkomen is deze bolus geannuleerd.</string>
     <string name="combo_pump_connected_now">Zojuist</string>
-    <string name="combo_activity_reading_pump_history">Lezen van pomp historiek</string>
     <string name="combo_activity_setting_basal_profile">Instellen van basaal profiel</string>
     <string name="combo_pump_cartridge_low_warrning">Insuline ampul is bijna leeg</string>
     <string name="combo_pump_battery_low_warrning">Batterij pomp is bijna leeg</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Nooit</string>
     <string name="combo_error_display_error">Bij een fout</string>
     <string name="combo_error_display_always">Altijd</string>
+    <string name="unsafeusage">onveilig gebruik</string>
 </resources>

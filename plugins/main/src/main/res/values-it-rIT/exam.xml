@@ -109,6 +109,7 @@
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="insulin_plugins">Plugin insulina</string>
     <string name="insulin_ultrarapid">Quale insulina dovresti usare con il plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>

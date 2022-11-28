@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Negauti KG duomenys</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
-    <string name="request">Užklausa</string>
     <string name="permission">Leidimas</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--       Stats -->
+    <string name="low" comment="3.1-3.9">Žemas</string>
+    <string name="high" comment="10.0-13.9">Aukštas</string>
 </resources>

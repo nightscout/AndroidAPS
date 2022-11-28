@@ -11,7 +11,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
@@ -31,7 +31,7 @@ class DiaconnG8UserOptionsActivity : DaggerAppCompatActivity() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var sp: SP
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
 
@@ -155,7 +155,7 @@ class DiaconnG8UserOptionsActivity : DaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

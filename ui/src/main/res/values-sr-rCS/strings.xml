@@ -2,6 +2,10 @@
 <resources>
     <!--    Widget-->
     <!--     Activities-->
+    <string name="glucose_type">Tip glukoze</string>
+    <string name="bg_other">Ostalo</string>
+    <string name="bg_meter">Glucometar</string>
+    <string name="bg_sensor">Senzor</string>
     <!-- WizardDialog -->
     <!-- FillDialog -->
     <!-- InsulinDialog -->
@@ -16,21 +20,14 @@
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Ugljeni hidrati:</string>
     <string name="treatments_iobtotal_label_string">Ukupno IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Ukupna aktivnost IOB-a:</string>
     <string name="tempbasals_realduration_label_string">Trajanje:</string>
     <string name="tempbasals_netratio_label_string">Odnos:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Korekcija</string>
+    <string name="meal_bolus">Obrok</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Detalji o problemima sa uvozom</string>
-    <string name="check_preferences_import_btn">Uvoz</string>
-    <string name="check_preferences_import_anyway_btn">Uvezi svejedno (OPASNO!)</string>
-    <string name="check_preferences_before_import">Proverite postavke pre uvoza:</string>
-    <string name="check_preferences_cannot_import">Postavke se ne mogu uvesti!</string>
-    <string name="check_preferences_dangerous_import">Postavke ne treba da se uvoze!</string>
 </resources>

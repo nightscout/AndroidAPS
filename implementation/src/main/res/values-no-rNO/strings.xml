@@ -3,17 +3,11 @@
     <string name="xdrip_not_installed">xDrip+ ikke installert</string>
     <string name="calibration_sent">Kalibrering er sendt til xDrip+</string>
     <string name="bg_label">BS</string>
-    <string name="missed_bg_readings">Mangler BS-målinger</string>
     <string name="time_to_eat">Nå må du spise</string>
-    <string name="enable_bolus_advisor">Aktiver boluskalkulator</string>
-    <string name="enable_bolus_advisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
     <string name="executing_right_now">Kommandoen utføres akkurat nå</string>
     <string name="basal_value_below_minimum">Basalverdi under minimum. Profilen settes ikke!</string>
-    <string name="request">Forespørsel</string>
     <string name="permission">Tillatelse</string>
-    <string name="error_asking_for_permissions">Feil under spørring etter tillatelser</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Det ser ikke ut som mobilen støtter registrering av apper som unntas fra batterioptimalisering - du kan oppleve ytelsesproblemer.</string>
     <string name="need_whitelisting">%1$s trenger tillatelse for å omgå automatisk batterisparefunksjonene for å fungere tilfredsstillende</string>
     <string name="need_location_permission">App trenger tilgang til Posisjon for å søke etter Bluetooth og Wifi enheter</string>
     <string name="need_storage_permission">App trenger tilgang til Lagring for lagre logg filer og eksportere innstillinger</string>

@@ -26,7 +26,6 @@
     <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille autentiseringen vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
     <string name="sms_wrong_code">Feil kode. Kommandoen avbrutt.</string>
     <string name="sms_timeout_while_waiting">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="smscommunicator_allowednumbers">Godkjente mobilnumre</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">For å levere bolus på %1$.2fE, svar med kode %2$s</string>
@@ -119,6 +118,7 @@
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">xDrip+ statuslinje (klokke)</string>
     <string name="xdrip_status_shortname">xds</string>
     <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
@@ -171,23 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">MÅL</string>
     <string name="basal_short">BAS</string>
-    <!-- BG Quality -->
-    <string name="recalculated_data_used">Rekalkulerte siste data</string>
-    <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
-    <string name="a11y_bg_quality_doubles">doble registreringer</string>
-    <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
-    <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
-    <!-- Storage constraint -->
-    <string name="disk_full">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <string name="old_version">gammel versjon</string>
-    <string name="very_old_version">veldig gammel versjon</string>
-    <string name="application_expired">Applikasjon utløpt - oppdater</string>
-    <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="completed_well_done">Fullført, godt gjort!</string>
     <string name="not_completed_yet">Enda Ikke fullført</string>
@@ -228,7 +211,6 @@
     <!-- Safety -->
     <string name="limitingextendedbolus">Begrenser forlenget bolus til %1$.1f E på grunn av %2$s</string>
     <string name="limitingcarbs">Begrenser karbohydrater til %1$d g på grunn av %2$s</string>
-    <string name="limitingiob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
     <string name="closedmodedisabledinpreferences">Lukket Loop er eaktivert i innstillinger</string>
     <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
@@ -239,8 +221,6 @@
     <string name="hardlimit">hard begrensning</string>
     <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
     <!-- Overview -->
-    <string name="snooze">Slumre</string>
-    <string name="copy_existing_values">Kopiere NS innstillinger (hvis de eksisterer)?</string>
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
     <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [h]</string>
     <string name="statuslights_cage_critical">Terskel for kritisk alder på slangesett [h]</string>
@@ -256,7 +236,6 @@
     <string name="statuslights_res_critical">Terskel for kritisk insulinreservoar [U]</string>
     <string name="statuslights_bat_warning">Terskel for advarsel, batterinivå for pumpe [%]</string>
     <string name="statuslights_bat_critical">Terskel for kritisk batterinivå for pumpe [%]</string>
-    <string name="statuslights">Statuslys</string>
     <string name="statuslights_copy_ns">Kopier innstillingene fra NS</string>
     <string name="a11y_graph">graf</string>
     <string name="a11y_insulin_label">insulin</string>
@@ -264,91 +243,14 @@
     <string name="a11y_bg_quality">blodsukkermålingens kvalitet</string>
     <string name="a11y_blood_glucose">blodsukker</string>
     <string name="a11y_bg_outdated">utdatert</string>
-    <string name="apsmode_title">APS modus</string>
-    <string name="setbasalquestion">Aksepter ny temp basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Hurtigveiviser</string>
-    <!-- NSClient -->
-    <string name="no_write_permission">NSCLIENT har ingen skriverettighet. Feil API-nøkkel?</string>
-    <string name="ns_client_v3">NSClientV3</string>
-    <string name="ns_client_v3_short_name">NSV3</string>
-    <string name="ns_client">NSClient</string>
-    <string name="ns_client_short_name">NSCI</string>
-    <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoscroll</string>
-    <string name="restart">Omstart</string>
-    <string name="ns_client_internal_title">NSClient</string>
-    <string name="ns_client_url_title">Nightscout URL</string>
-    <string name="ns_client_url_dialog_message">Oppgi din Nightscout URL</string>
-    <string name="ns_client_secret_title">Nightscout API-nøkkel</string>
-    <string name="ns_client_secret_dialog_title">Nightscout API-nøkkel</string>
-    <string name="ns_client_secret_dialog_message">Oppgi NS API-nøkkel (min 12 tegn)</string>
-    <string name="nsclient_token_title">NS tilgangstoken</string>
-    <string name="nsclient_token_dialog_title">NS tilgangstoken</string>
-    <string name="nsclient_token_dialog_message">Tilgangstoken laget på NS admin-side (min 17 tegn)</string>
-    <string name="deliver_now">Lever nå</string>
-    <string name="clear_queue">Tøm kø</string>
-    <string name="show_queue">Vis kø</string>
-    <string name="queue">Kø:</string>
-    <string name="status">Status:</string>
-    <string name="clear_log">Tøm logg</string>
-    <string name="full_sync">Full synkronisering</string>
-    <string name="full_sync_comment">Full synkronisering? Dette kan ta mange timer og du ser ikke nye data i NS før dette er ferdig.</string>
-    <string name="ns_sync_options">Synkronisering</string>
-    <string name="ns_upload_summary">Profiler, boluser, karbohydrater, midlertidige basaler lastes opp til NS</string>
-    <string name="ns_upload">Last opp data til NS</string>
-    <string name="ns_receive_profile_store">Hent lagrede profiler</string>
-    <string name="ns_receive_profile_store_summary">Synkroniser profiler fra NS profileditor</string>
-    <string name="ns_receive_temp_target">Motta midlertidige BS mål</string>
-    <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller NSClient</string>
-    <string name="ns_receive_profile_switch">Motta profilbytter</string>
-    <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller NSClient</string>
-    <string name="ns_receive_offline_event">Motta APS offline hendelser</string>
-    <string name="ns_receive_offline_event_summary">Aksepter APS offline hendelser lagt inn gjennom NS eller NSKlient</string>
-    <string name="ns_receive_tbr_eb">Motta TBR og EB</string>
-    <string name="ns_receive_tbr_eb_summary">Godta TBR og EB beregninger fra tilleggsmodul</string>
-    <string name="ns_receive_insulin">Motta insulin</string>
-    <string name="ns_receive_insulin_summary">Aksepter insulin angitt via NS eller NSClient (enhetene er ikke dosert, kun beregnet mot IOB)</string>
-    <string name="ns_receive_carbs">Motta karbohydrater</string>
-    <string name="ns_receive_carbs_summary">Aksepter karbohydrater angitt med NS eller NSClient</string>
-    <string name="ns_receive_therapy_events">Motta behandlingshendelser</string>
-    <string name="ns_receive_therapy_events_summary">Godta behandlingshendelser (kanyle, insulin, batteribytte osv.) som er lagt inn gjennom NS eller NSClient</string>
-    <string name="ns_receive_cgm">Motta/tilbakefyll CGM data</string>
-    <string name="ns_receive_cgm_summary">Aksepter CGM data fra NS</string>
     <string name="run_question">Kjør %s?</string>
-    <string name="ns_sync_slow">Reduser opplastingshastighet</string>
-    <string name="ns_alarm_options">Alarmvalg</string>
-    <string name="ns_alarms">Opprett varsler fra NS-alarmer</string>
-    <string name="ns_announcements">Opprett varsler fra NS-meldinger</string>
-    <string name="ns_alarm_stale_data_value_label">Advarsel ved manglende data [min]</string>
-    <string name="ns_alarm_urgent_stale_data_value_label">Advarsel ved kritisk mangel på data [min]</string>
-    <string name="ns_log_app_started_event">Logg app-start til NS</string>
-    <string name="ns_local_broadcasts">Aktiver kringkasting av data til andre apper (som xDrip+). Ikke aktiver dette hvis du har mer enn én AAPS eller NSClient installert!</string>
-    <string name="ns_local_broadcasts_title">Aktiver deling av data mellom apper på telefonen.</string>
-    <!-- Tidepool -->
-    <string name="summary_tidepool_username">Ditt Tidepool brukernavn, normalt din e-postadresse</string>
-    <string name="title_tidepool_username">Brukernavn for innlogging</string>
-    <string name="summary_tidepool_password">Ditt passord for Tidepool</string>
-    <string name="title_tidepool_password">Passord</string>
-    <string name="title_tidepool_test_login">Test Tidepool innlogging</string>
-    <string name="summary_tidepool_dev_servers">Hvis aktivert, vil opplastinger gå til https://int-app.tidepool.org i stedet for vanlig https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Bruk integrasjon (test) servere</string>
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
-    <string name="description_tidepool">Laster opp data til Tidepool</string>
-    <string name="tidepool_upload_cgm">Last opp CGM data</string>
-    <string name="tidepool_upload_bolus">Last opp behandlinger (insulin, karbohydrater)</string>
-    <string name="tidepool_upload_tbr">Last opp temp basaler</string>
-    <string name="tidepool_upload_profile">Last opp profilbytter, temp targets</string>
-    <string name="tidepool_upload_bg">Last opp BS tester</string>
-    <string name="remove_all">Fjern alt</string>
-    <string name="reset_start">Tilbakestill til oppstart</string>
-    <string name="upload_now">Last opp nå</string>
+    <!--    OverviewMenu-->
     <!-- VirtualPump -->
     <string name="virtual_pump_type">Virtuell pumpetype</string>
     <string name="virtual_pump_definition">Pumpedefinisjon</string>
     <string name="virtual_pump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump">Virtuell pumpe</string>
     <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
     <string name="virtual_pump_label">VIRTUELL PUMPE</string>
@@ -381,28 +283,14 @@
     <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">Motta BS verdier fra GlucoRx Aidex CGM.</string>
+    <string name="random_bg">Vilkårlig BS</string>
+    <string name="description_source_random_bg">Generer vilkårlige BS data (kun demo formål)</string>
+    <string name="random_bg_short">BS</string>
+    <string name="do_xdrip_upload_title">Send BS data til xDrip+</string>
+    <string name="do_xdrip_upload_summary">I xDrip+, velg 640G/Eversens som datakilde</string>
     <string name="bgsource_upload">Innstillinger for opplasting av BS</string>
-    <!-- NSClient -->
-    <string name="ns_cellular">Bruk mobildata</string>
-    <string name="ns_wifi">Bruk Wi-Fi-tilkobling</string>
-    <string name="ns_wifi_ssids">WiFi nettverksnavn</string>
-    <string name="ns_charging">Under lading</string>
-    <string name="ns_battery">På batteri</string>
-    <string name="connection_settings_title">Tilkoblingsinnstillinger</string>
-    <string name="ns_wifi_allowed_ssids">Tillatte nettverksnavn SSID (separert med semikolon)</string>
-    <string name="ns_allow_roaming">Tillat tilkobling i roaming</string>
-    <string name="ns_create_announcements_from_errors_title">Lag meldinger ved feil</string>
-    <string name="ns_create_announcements_from_carbs_req_title">Opprett varslinger hvis det er nødvendig med karbohydrater</string>
-    <string name="ns_create_announcements_from_errors_summary">Opprett varslinger i Nightscout ved feil eller meldinger (også synlig i Careportal under Behandlinger)</string>
-    <string name="ns_create_announcements_from_carbs_req_summary">Opprett Nighjtscout meldinger ved behov for karbohydrater</string>
-    <string name="description_ns_client">Synkroniserer dine data med Nightscout</string>
-    <string name="description_ns_client_v3">Synkroniserer dataene dine med Nightscout med v3 API</string>
-    <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
-    <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
-    <string name="unsupported_ns_version">Versjonen av Nightscout støttes ikke</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">UPLD</string>
-    <string name="ns_malfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
+    <string name="dexcom_log_ns_sensor_change_title">Logg sensor bytte til NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensor bytte\" automatisk i NS ved start av sensoren</string>
     <!-- Skins -->
     <string name="classic_description">Opprinnelig visningstema</string>
     <string name="lowres_description">Tema for lav oppløsning</string>
@@ -410,5 +298,69 @@
     <string name="largedisplay_description">Stor skjerm</string>
     <string name="skin">Tema</string>
     <!--    Loop -->
+    <string name="executing">Utfører</string>
+    <string name="run_now">Kjør nå</string>
+    <string name="smb_frequency_exceeded">En bolus er gitt i løpet av de siste 3 minuttene, dropper SMB</string>
+    <string name="pump_not_initialized">Pumpen er ikke initialisert!</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Aktiver eller deaktiver hendelsen som starter kjøring av loop.</string>
+    <string name="no_aps_selected">INGEN APS ER VALGT ELLER HAR LEVERT RESULTAT</string>
+    <string name="ignore5m">Ignorer 5m</string>
+    <string name="ignore15m">Ignorer 15m</string>
+    <string name="ignore30m">Ignorer 30m</string>
+    <string name="carbs_suggestion">Karbo forslag</string>
+    <string name="open_loop_new_suggestion">Ny anbefaling tilgjengelig</string>
+    <string name="basal_set_correctly">Basal er satt riktig</string>
+    <string name="last_run_label">Siste beregning</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Forespørsel</string>
+    <string name="loop_constraints_processed_label">Etter behandling av begrensninger</string>
+    <string name="loop_tbr_request_time_label">Temp basal endring forespurt</string>
+    <string name="loop_tbr_execution_time_label">Temp basal utført</string>
+    <string name="loop_tbr_set_by_pump_label">Temp basal satt av pumpen</string>
+    <string name="loop_smb_request_time_label">SMB forespurt</string>
+    <string name="loop_smb_execution_time_label">SMB utført</string>
+    <string name="loop_smb_set_by_pump_label">SMB satt med pumpe</string>
+    <string name="loop_open_mode_min_change">Minste endrings forespørsel [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">I åpen Loop modus vil AAPS be deg utføre en hendelse hvis forandringen er større enn denne verdien i %. Standard verdi er 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">bruk:</string>
+    <!--    Iob-->
+    <string name="send_logfiles">Send dagens loggfiler og tidspunkt til utviklere. Uventet situasjon oppstod.</string>
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Overvåke og kontrollere AAPS ved hjelp av WearOS-klokken.</string>
+    <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
+    <string name="pump_status">Pumpe status</string>
+    <string name="loop_status">Loop status</string>
+    <string name="wizard_result">Kalkulator hurtigveiviser:\nInsulin: %1$.2fE\nKarbo: %2$dg</string>
+    <string name="quick_wizard_not_available">Den valgte hurtigveiviseren er ikke tilgjengelig lenger, oppdater klokkeurskive</string>
+    <string name="quick_wizard_message">Hurtigveiviser: %1$s\ninsulin: %2$.2fE\nKarbo: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Ukjent forhåndsinnstilling temp target: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Avbryt gjeldende Temp Target?</string>
+    <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
+    <string name="wear_action_tempt_zero_message">Zero-TempTarget - skal gjeldende TempTarget avbrytes?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BS utenfor område!</string>
+    <string name="wear_action_tempt_max_bg_error">Maks-BS utenfor område!</string>
+    <string name="wear_action_tempt_manual_range_message">Temp target:\nMin: %1$s\nMaks: %2$s\nVarighet: %3$s</string>
+    <string name="wear_action_tempt_manual_message">TempTarget:\nMål: %1$s\nVarighet: %2$s</string>
+    <string name="wear_action_tempt_preset_message">TempTarget:\nÅrsak: %1$s\nMål: %2$s\nVarighet: %3$s</string>
+    <string name="no_success">feilet - sjekk telefonen</string>
+    <string name="wear_settings">Klokkeinnstillinger</string>
+    <string name="wearcontrol_title">Kontroller fra klokke</string>
+    <string name="wearcontrol_summary">Sett temp target og angi behandlinger fra klokken.</string>
+    <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra veiviseren:</string>
+    <string name="wear_display_settings">Visningsinnstillinger</string>
+    <string name="wear_general_settings">Generelle innstillinger</string>
+    <string name="wear_detailed_delta_title">Vis detaljert delta</string>
+    <string name="wear_detailed_delta_summary">Vis delta med én ekstra desimal</string>
+    <string name="wear_notifysmb_title">Varsle på SMB</string>
+    <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
+    <string name="wear_predictions_summary">Vis blodsukker prognoser på klokken.</string>
+    <string name="wear_predictions_title">Prognoser</string>
+    <string name="resend_all_data">Send alle data på nytt</string>
+    <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
+    <string name="old_data">GAMLE DATA</string>
 </resources>

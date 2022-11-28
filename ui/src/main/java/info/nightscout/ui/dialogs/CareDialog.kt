@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.core.extensions.fromConstant
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
@@ -24,7 +24,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -50,7 +50,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     private val disposable = CompositeDisposable()
 
-    private var options: ActivityNames.EventType = ActivityNames.EventType.BGCHECK
+    private var options: UiInteraction.EventType = UiInteraction.EventType.BGCHECK
 
     //private var valuesWithUnit = mutableListOf<XXXValueWithUnit?>()
     private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
@@ -84,48 +84,48 @@ class CareDialog : DialogFragmentWithDate() {
 
         (savedInstanceState ?: arguments)?.let {
             event = it.getInt("event", R.string.error)
-            options = ActivityNames.EventType.values()[it.getInt("options", 0)]
+            options = UiInteraction.EventType.values()[it.getInt("options", 0)]
         }
 
         binding.icon.setImageResource(
             when (options) {
-                ActivityNames.EventType.BGCHECK        -> R.drawable.ic_cp_bgcheck
-                ActivityNames.EventType.SENSOR_INSERT  -> R.drawable.ic_cp_cgm_insert
-                ActivityNames.EventType.BATTERY_CHANGE -> R.drawable.ic_cp_pump_battery
-                ActivityNames.EventType.NOTE           -> R.drawable.ic_cp_note
-                ActivityNames.EventType.EXERCISE       -> R.drawable.ic_cp_exercise
-                ActivityNames.EventType.QUESTION       -> R.drawable.ic_cp_question
-                ActivityNames.EventType.ANNOUNCEMENT   -> R.drawable.ic_cp_announcement
+                UiInteraction.EventType.BGCHECK        -> R.drawable.ic_cp_bgcheck
+                UiInteraction.EventType.SENSOR_INSERT  -> R.drawable.ic_cp_cgm_insert
+                UiInteraction.EventType.BATTERY_CHANGE -> R.drawable.ic_cp_pump_battery
+                UiInteraction.EventType.NOTE           -> R.drawable.ic_cp_note
+                UiInteraction.EventType.EXERCISE       -> R.drawable.ic_cp_exercise
+                UiInteraction.EventType.QUESTION       -> R.drawable.ic_cp_question
+                UiInteraction.EventType.ANNOUNCEMENT   -> R.drawable.ic_cp_announcement
             }
         )
         binding.title.text = rh.gs(
             when (options) {
-                ActivityNames.EventType.BGCHECK        -> R.string.careportal_bgcheck
-                ActivityNames.EventType.SENSOR_INSERT  -> R.string.cgm_sensor_insert
-                ActivityNames.EventType.BATTERY_CHANGE -> R.string.pump_battery_change
-                ActivityNames.EventType.NOTE           -> R.string.careportal_note
-                ActivityNames.EventType.EXERCISE       -> R.string.careportal_exercise
-                ActivityNames.EventType.QUESTION       -> R.string.careportal_question
-                ActivityNames.EventType.ANNOUNCEMENT   -> R.string.careportal_announcement
+                UiInteraction.EventType.BGCHECK        -> R.string.careportal_bgcheck
+                UiInteraction.EventType.SENSOR_INSERT  -> R.string.cgm_sensor_insert
+                UiInteraction.EventType.BATTERY_CHANGE -> R.string.pump_battery_change
+                UiInteraction.EventType.NOTE           -> R.string.careportal_note
+                UiInteraction.EventType.EXERCISE       -> R.string.careportal_exercise
+                UiInteraction.EventType.QUESTION       -> R.string.careportal_question
+                UiInteraction.EventType.ANNOUNCEMENT   -> R.string.careportal_announcement
             }
         )
 
         when (options) {
-            ActivityNames.EventType.QUESTION,
-            ActivityNames.EventType.ANNOUNCEMENT,
-            ActivityNames.EventType.BGCHECK        -> {
+            UiInteraction.EventType.QUESTION,
+            UiInteraction.EventType.ANNOUNCEMENT,
+            UiInteraction.EventType.BGCHECK        -> {
                 binding.durationLayout.visibility = View.GONE
             }
 
-            ActivityNames.EventType.SENSOR_INSERT,
-            ActivityNames.EventType.BATTERY_CHANGE -> {
+            UiInteraction.EventType.SENSOR_INSERT,
+            UiInteraction.EventType.BATTERY_CHANGE -> {
                 binding.bgLayout.visibility = View.GONE
                 binding.bgsource.visibility = View.GONE
                 binding.durationLayout.visibility = View.GONE
             }
 
-            ActivityNames.EventType.NOTE,
-            ActivityNames.EventType.EXERCISE       -> {
+            UiInteraction.EventType.NOTE,
+            UiInteraction.EventType.EXERCISE       -> {
                 binding.bgLayout.visibility = View.GONE
                 binding.bgsource.visibility = View.GONE
             }
@@ -160,7 +160,7 @@ class CareDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("duration")
                 ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok
         )
-        if (options == ActivityNames.EventType.NOTE || options == ActivityNames.EventType.QUESTION || options == ActivityNames.EventType.ANNOUNCEMENT || options == ActivityNames.EventType.EXERCISE)
+        if (options == UiInteraction.EventType.NOTE || options == UiInteraction.EventType.QUESTION || options == UiInteraction.EventType.ANNOUNCEMENT || options == UiInteraction.EventType.EXERCISE)
             binding.notesLayout.root.visibility = View.VISIBLE // independent to preferences
         binding.bgLabel.labelFor = binding.bg.editTextId
         binding.durationLabel.labelFor = binding.duration.editTextId
@@ -180,19 +180,19 @@ class CareDialog : DialogFragmentWithDate() {
         val therapyEvent = TherapyEvent(
             timestamp = eventTime,
             type = when (options) {
-                ActivityNames.EventType.BGCHECK        -> TherapyEvent.Type.FINGER_STICK_BG_VALUE
-                ActivityNames.EventType.SENSOR_INSERT  -> TherapyEvent.Type.SENSOR_CHANGE
-                ActivityNames.EventType.BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
-                ActivityNames.EventType.NOTE           -> TherapyEvent.Type.NOTE
-                ActivityNames.EventType.EXERCISE       -> TherapyEvent.Type.EXERCISE
-                ActivityNames.EventType.QUESTION       -> TherapyEvent.Type.QUESTION
-                ActivityNames.EventType.ANNOUNCEMENT   -> TherapyEvent.Type.ANNOUNCEMENT
+                UiInteraction.EventType.BGCHECK        -> TherapyEvent.Type.FINGER_STICK_BG_VALUE
+                UiInteraction.EventType.SENSOR_INSERT  -> TherapyEvent.Type.SENSOR_CHANGE
+                UiInteraction.EventType.BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
+                UiInteraction.EventType.NOTE           -> TherapyEvent.Type.NOTE
+                UiInteraction.EventType.EXERCISE       -> TherapyEvent.Type.EXERCISE
+                UiInteraction.EventType.QUESTION       -> TherapyEvent.Type.QUESTION
+                UiInteraction.EventType.ANNOUNCEMENT   -> TherapyEvent.Type.ANNOUNCEMENT
             },
             glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(profileFunction.getUnits())
         )
 
         val actions: LinkedList<String> = LinkedList()
-        if (options == ActivityNames.EventType.BGCHECK || options == ActivityNames.EventType.QUESTION || options == ActivityNames.EventType.ANNOUNCEMENT) {
+        if (options == UiInteraction.EventType.BGCHECK || options == UiInteraction.EventType.QUESTION || options == UiInteraction.EventType.ANNOUNCEMENT) {
             val meterType =
                 when {
                     binding.meter.isChecked  -> TherapyEvent.MeterType.FINGER
@@ -206,7 +206,7 @@ class CareDialog : DialogFragmentWithDate() {
             valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value, profileFunction.getUnits().asText))
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
-        if (options == ActivityNames.EventType.NOTE || options == ActivityNames.EventType.EXERCISE) {
+        if (options == UiInteraction.EventType.NOTE || options == UiInteraction.EventType.EXERCISE) {
             actions.add(rh.gs(R.string.duration_label) + ": " + rh.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
             valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) })
@@ -222,13 +222,13 @@ class CareDialog : DialogFragmentWithDate() {
         therapyEvent.enteredBy = enteredBy
 
         val source = when (options) {
-            ActivityNames.EventType.BGCHECK        -> UserEntry.Sources.BgCheck
-            ActivityNames.EventType.SENSOR_INSERT  -> UserEntry.Sources.SensorInsert
-            ActivityNames.EventType.BATTERY_CHANGE -> UserEntry.Sources.BatteryChange
-            ActivityNames.EventType.NOTE           -> UserEntry.Sources.Note
-            ActivityNames.EventType.EXERCISE       -> UserEntry.Sources.Exercise
-            ActivityNames.EventType.QUESTION       -> UserEntry.Sources.Question
-            ActivityNames.EventType.ANNOUNCEMENT   -> UserEntry.Sources.Announcement
+            UiInteraction.EventType.BGCHECK        -> UserEntry.Sources.BgCheck
+            UiInteraction.EventType.SENSOR_INSERT  -> UserEntry.Sources.SensorInsert
+            UiInteraction.EventType.BATTERY_CHANGE -> UserEntry.Sources.BatteryChange
+            UiInteraction.EventType.NOTE           -> UserEntry.Sources.Note
+            UiInteraction.EventType.EXERCISE       -> UserEntry.Sources.Exercise
+            UiInteraction.EventType.QUESTION       -> UserEntry.Sources.Question
+            UiInteraction.EventType.ANNOUNCEMENT   -> UserEntry.Sources.Announcement
         }
 
         activity?.let { activity ->

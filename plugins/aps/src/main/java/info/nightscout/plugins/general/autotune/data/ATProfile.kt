@@ -1,8 +1,8 @@
 package info.nightscout.plugins.general.autotune.data
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.blockValueBySeconds
-import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.core.extensions.blockValueBySeconds
+import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.MidnightUtils
