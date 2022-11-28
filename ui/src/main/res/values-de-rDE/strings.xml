@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Beschränkung angewendet!</string>
     <string name="bolus_constraint_applied">Bolus-Beschränkung angewendet</string>
     <string name="carbs_constraint_applied">Kohlenhydrat-Beschränkung erreicht</string>
     <string name="temp_target_short">TT</string>
@@ -23,12 +22,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <!-- FillDialog -->
-    <string name="button1">Schaltfläche 1</string>
-    <string name="button2">Schaltfläche 2</string>
-    <string name="button3">Schaltfläche 3</string>
     <string name="record_pump_site_change">Katheter-Wechsel erfassen</string>
     <string name="record_insulin_cartridge_change">Reservoir-Wechsel erfassen</string>
     <!-- InsulinDialog -->
@@ -70,8 +65,6 @@
     <string name="tempbasals_netratio_label_string">Verhältnis:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="prime">Füllen</string>
     <string name="profile_changes">Profilwechsel</string>
@@ -93,11 +86,4 @@
     <string name="selected_profile">Ausgewählt:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Details zu den Import-Problemen</string>
-    <string name="check_preferences_import_btn">Importieren</string>
-    <string name="check_preferences_import_anyway_btn">Trotzdem importieren (GEFÄHRLICH!)</string>
-    <string name="check_preferences_before_import">Überprüfe die Einstellungen vor dem Import:</string>
-    <string name="check_preferences_cannot_import">Einstellungen können nicht importiert werden!</string>
-    <string name="check_preferences_dangerous_import">Einstellungen sollten nicht importiert werden!</string>
 </resources>
