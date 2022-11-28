@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_diaconn_g8_is_bolus_speed_sync">diaconn_g8_isbolusspeedsync</string>
     <string name="resetpairing">Réinit. Appairage</string>
     <string name="diaconn_no_device_available">Aucun appareil disponible</string>
     <string name="diaconn_pairing">Appairage pompe Diaconn</string>
