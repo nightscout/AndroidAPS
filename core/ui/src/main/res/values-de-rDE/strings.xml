@@ -1,8 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Aktualisieren</string>
+    <string name="error">Fehler</string>
+    <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
+    <string name="constraint_applied">Beschränkung angewendet!</string>
+    <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
+    <string name="pump_unreachable">Pumpe nicht erreichbar</string>
+    <string name="insulin_unit_shortname">IE</string>
+    <string name="reload">Neu laden</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Speichern</string>
+    <string name="snooze">Schlummern</string>
+    <string name="constraints">Beschränkungen</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpe pausiert</string>
+    <string name="and">Und</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
+    <string name="result">Ergebnis</string>
+    <string name="settings">Einstellungen</string>
+    <string name="statuslights">Statusanzeige</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Reservoir</string>
+    <string name="base_basal_rate_label">Basis-Basalrate</string>
+    <string name="tempbasal_label">TBR</string>
+    <string name="extended_bolus_label">Verzögerter Bolus</string>
+    <string name="serial_number">Seriennummer</string>
+    <string name="disconnected">Getrennt</string>
+    <string name="connecting">Verbinden</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbindung zur Pumpe geklickt</string>
+    <string name="pump_icon">Pumpen-Symbol</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpentreiber ändern.</string>
+    <string name="device_changed" comment="26 characters max for translation">Gerät gewechselt</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Nicht angegeben</string>
+    <string name="reading_pump_history">Pumpen-Historie wird gelesen</string>
+    <string name="password_cleared">Passwort gelöscht!</string>
+    <string name="pairing">Koppeln</string>
+    <string name="initializing">Initialisierung...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
+    <string name="pumplimit">Limit der Pumpe</string>
+    <string name="limitingpercentrate">Begrenzung des max. Prozentsatzes auf %1$d%% wegen %2$s</string>
+    <string name="itmustbepositivevalue">Es muss ein positiver Wert sein.</string>
+    <string name="limitingbolus">Begrenze Bolusmenge auf %1$.1f IE wegen %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bestätigung</string>
@@ -12,6 +54,7 @@
     <string name="dismiss">VERWERFEN</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="close">Schließen</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
@@ -19,6 +62,12 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nicht unterstützt oder Gerät nicht verbunden.</string>
+    <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
+    <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
+    <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
     <!--    Preferences -->
 </resources>
