@@ -20,6 +20,7 @@
     <string name="result">结果</string>
     <string name="settings">设置</string>
     <string name="statuslights">状态指示灯</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">储药器</string>
     <string name="base_basal_rate_label">基础率</string>
@@ -68,4 +69,5 @@
     <string name="location_not_found_title">未启用位置</string>
     <string name="location_not_found_message">为了蓝牙能发现新的设备，手机定位功能必须启用， AAPS 不会追踪你的位置，你可以在配对成功后禁用定位。</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
