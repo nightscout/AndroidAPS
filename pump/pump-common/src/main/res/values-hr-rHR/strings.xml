@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">U redu</string>
     <string name="pump_serial_number">Serijski broj pumpe</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nije inicijalizirano</string>
@@ -13,6 +14,7 @@
     <!-- PumpCommon - History Group -->
     <string name="history_group_all">Svi</string>
     <string name="history_group_bolus">Bolusi</string>
+    <string name="history_group_prime">Punjenje katetera</string>
     <string name="history_group_base">Osnova</string>
     <string name="history_group_other">Ostalo</string>
     <string name="history_group_events">Svi događaji</string>
@@ -52,4 +54,9 @@
     <string name="pump_settings_error_wrong_max_basal_set">Pogrešno podešen maksimalni bazal na pumpi (mora biti %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dan</item>
+        <item quantity="few">%1$d dana</item>
+        <item quantity="other">%1$d dana</item>
+    </plurals>
 </resources>
