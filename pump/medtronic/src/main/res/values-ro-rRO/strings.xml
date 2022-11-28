@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Au fost detectate date nevalide din istoricul pompei. Deschideți o nouă problemă și furnizați jurnalele.</string>
     <string name="riley_statistics">Statistici RL</string>
     <string name="medtronic_history_type">Tip:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Reîmprospătare apăsată</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Reîmprospătare stare programată</string>
 </resources>
