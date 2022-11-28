@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">사용자</string>
     <string name="result">결과</string>
     <string name="statuslights">상태 등</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">인슐린 잔량</string>
     <string name="base_basal_rate_label">기본 Basal양</string>
@@ -61,4 +62,5 @@
     <string name="location_not_found_title">위치가 활성화되지 않았습니다.</string>
     <string name="location_not_found_message">최신 스마트폰에서 블루투스 검색이 작동하려면 위치가 활성화되어 있어야합니다. AAPS는 당신의 위치를 추적하지 않으며 페어링에 성공한 후 비활성화 할 수 있습니다.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
