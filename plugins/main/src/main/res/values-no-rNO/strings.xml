@@ -361,4 +361,6 @@
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
     <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
+    <string name="old_data">GAMLE DATA</string>
 </resources>
