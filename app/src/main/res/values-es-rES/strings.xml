@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">Preferencias de %1$s</string>
     <string name="nav_refreshtreatments">Actualizar los tratamientos desde Nightscout</string>
     <string name="nav_exit">Salir</string>
-    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Perfil</string>
     <string name="save">Guardar</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(PELIGROSO DESHABILITAR) Sólo subida a Nightscout</string>
     <string name="ns_upload_only_summary">Sólo subir a Nightscout (sincronización desactivada). No es efectivo en SGV, a menos que se seleccione una fuente local como xDrip+. No es efectivo en perfiles, si se usan perfiles Nightscout.\n!!! ¡¡ADVERTENCIA!!! Desactivar esta opción puede causar mal funcionamiento y sobredosis de insulina, si cualquiera de sus componentes (AAPS, NS, xDrip+) está mal configurado. ¡Vigile cuidadosamente si los datos mostrados por AAPS coinciden con el estado de la bomba!</string>
     <string name="wear">Reloj</string>
-    <string name="ongoingnotificaction">Notificaciones en curso</string>
-    <string name="old_data">DATOS CADUCADOS</string>
     <string name="nav_about">Acerca de</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permiso de estado del teléfono</string>
     <string name="ns_alarm_options">Opciones de alarmas</string>
