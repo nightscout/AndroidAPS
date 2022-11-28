@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">Nastavení pluginu %1$s</string>
     <string name="nav_refreshtreatments">Obnovit ošetření z NS</string>
     <string name="nav_exit">Konec</string>
-    <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="delta">Rozdíl</string>
     <string name="profile_label">Profil</string>
     <string name="save">Uložit</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(NEBEZPEČNÉ ZAKÁZAT) Pouze odesílání do NS</string>
     <string name="ns_upload_only_summary">Pouze nahrávání do NS. Neplatí pro glykémie, pokud je NS vybrán jako zdroj glykémií. Neplatí pro profily, pokud je vybraný NS Profil.\n!!! VAROVÁNÍ!!! Vypnutí této možnosti může způsobit chybné chování a předávkování inzulínem, pokud je některá z vašich komponent (AAPS, NS, xDrip+) špatně nastavena. Pečlivě sledujte, jestli data zobrazená v AAPS odpovídají stavu pumpy!</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Průběžné oznámení</string>
-    <string name="old_data">ZASTARALÉ</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
     <string name="ns_alarm_options">Nastavení alarmů</string>
