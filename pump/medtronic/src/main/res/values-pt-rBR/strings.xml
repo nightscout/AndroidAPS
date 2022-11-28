@@ -92,4 +92,6 @@
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
     <string name="invalid_history_data">Dados inválidos do histórico da bomba detectados. Abra nova solicitação e forneça logs.</string>
     <string name="medtronic_history_type">Tipo:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Atualização em andamento</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Att. de status programada</string>
 </resources>
