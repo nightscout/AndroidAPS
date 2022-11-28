@@ -20,7 +20,29 @@
     <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
     <string name="event_type">Hendelsestype</string>
     <string name="reload">Last på nytt</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Lagre</string>
+    <string name="snooze">Slumre</string>
+    <string name="virtual_pump">Virtuell pumpe</string>
+    <string name="constraints">Begrensninger</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpen pauset</string>
+    <string name="and">Og</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
+    <string name="result">Resultat</string>
+    <string name="settings">Innstillinger</string>
     <!--    Pumps -->
+    <string name="battery_label">Batteri</string>
+    <string name="reservoir_label">Reservoar</string>
+    <string name="last_connection_label">Siste tilkobling</string>
+    <string name="last_bolus_label">Siste bolus</string>
+    <string name="base_basal_rate_label">Profilens basaldose</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="extended_bolus_label">Forlenget bolus</string>
+    <string name="serial_number">Serienummer</string>
+    <string name="disconnected">Frakoblet</string>
+    <string name="connecting">Tilkobler</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
     <string name="reservoir_value">%1$.0f / %2$d E</string>
     <string name="daily_units">Daglige enheter</string>
