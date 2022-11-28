@@ -162,4 +162,5 @@
     <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
     <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
+    <!--    PersistentNotification-->
 </resources>
