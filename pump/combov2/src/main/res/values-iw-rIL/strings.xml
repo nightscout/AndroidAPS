@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">סוללה ריקה</string>
+    <string name="combov2_error_4">חסימה</string>
+    <string name="combov2_error_6">תקלה מכאנית</string>
     <string name="bluetooth_address">כתובת בלוטות\'</string>
+    <string name="combov2_not_initialized">לא מאותחל</string>
+    <string name="combov2_ready">מוכן</string>
+    <string name="combov2_suspended">מושהה</string>
+    <string name="combov2_setting_basal_profile_cmddesc">הגדרת פרופיל בזאלי</string>
+    <string name="combov2_bolus_cancelled">בולוס בוטל</string>
+    <string name="combov2_bolus_delivery_failed">מתן הבולוס נכשל. נראה כי לא ניתן בולוס. כדי להיות בטוחים, יש לבדוק את המשאבה כדי למנוע בולוס כפול ואז להזריק שוב בולוס. כדי להגן מפני באגים, בולוסים אינם ניתנים מחדש אוטומטית.</string>
+    <string name="combov2_current_tbr">%1$d%% (נותרו %2$d דקות)</string>
+    <string name="combov2_battery_low_warning">סוללת המשאבה חלשה</string>
+    <string name="combov2_short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
+    <string name="combov2_short_status_temp_basal">בזאלי זמני: %s</string>
+    <string name="combov2_short_status_reservoir">מכל: %d יח\'</string>
+    <string name="combov2_short_status_battery_state_empty">ריק</string>
+    <string name="combov2_short_status_battery_state_low">נמוכה</string>
 </resources>
