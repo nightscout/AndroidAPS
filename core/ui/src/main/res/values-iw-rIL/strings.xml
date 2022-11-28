@@ -21,6 +21,7 @@
     <string name="result">תוצאה</string>
     <string name="settings">הגדרות</string>
     <string name="statuslights">אורות חיווי</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">מכל</string>
     <string name="base_basal_rate_label">בזאלי בסיסי</string>
@@ -61,4 +62,5 @@
     <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
