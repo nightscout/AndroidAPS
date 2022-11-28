@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Ongeldige pompgeschiedenis gegevens gedetecteerd. Open een nieuw issue inclusief de logbestanden.</string>
     <string name="riley_statistics">RL Statistieken</string>
     <string name="medtronic_history_type">Type:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Vernieuwen geklikt</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Status gepland actualiseren</string>
 </resources>
