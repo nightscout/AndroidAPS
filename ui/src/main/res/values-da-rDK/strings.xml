@@ -21,12 +21,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">I alt</string>
     <!-- FillDialog -->
-    <string name="button1">Knap 1</string>
-    <string name="button2">Knap 2</string>
-    <string name="button3">Knap 3</string>
     <string name="record_pump_site_change">Registrer skift af infusionssæt</string>
     <string name="record_insulin_cartridge_change">Registrer skift af insulinampul</string>
     <!-- InsulinDialog -->
@@ -68,8 +64,6 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_tt_label">Midlertidig Mål</string>
     <string name="treatments_wizard_correction_label">Korrektion</string>
     <string name="prime">Klargør</string>
     <string name="profile_changes">Profil ændringer</string>
@@ -91,11 +85,4 @@
     <string name="selected_profile">Valgt:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Importeringsfejl detaljer</string>
-    <string name="check_preferences_import_btn">Importer</string>
-    <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
-    <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
-    <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
-    <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
 </resources>
