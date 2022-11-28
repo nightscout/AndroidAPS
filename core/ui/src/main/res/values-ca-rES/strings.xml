@@ -20,6 +20,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuari</string>
     <string name="result">Resultat</string>
     <string name="statuslights">Llums d\'estat</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservori</string>
     <string name="base_basal_rate_label">Ràtio de basal base</string>
@@ -61,4 +62,5 @@
     <string name="location_not_found_title">Ubicació no habilitada</string>
     <string name="location_not_found_message">Per a que el descobriment de nous dispositius en Bluetooth funcioni, la ubicació ha d\'estar habilitada. AAPS no fa un seguiment de la vostra localització. A més, pot ser deshabilitada un cop la sincronització s\'ha produït.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
