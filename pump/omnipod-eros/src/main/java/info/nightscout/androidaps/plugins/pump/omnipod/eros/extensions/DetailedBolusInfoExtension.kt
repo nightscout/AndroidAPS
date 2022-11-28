@@ -1,4 +1,4 @@
-package info.nightscout.core.pump
+package info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions
 
 import com.google.gson.Gson
 import info.nightscout.interfaces.pump.DetailedBolusInfo

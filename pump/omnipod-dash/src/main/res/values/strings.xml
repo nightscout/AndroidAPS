@@ -50,4 +50,8 @@
     <string name="omnipod_dash_connection_lost">Lost connection to pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Another bolus is being delivered</string>
     <string name="omnipod_dash_not_enough_insulin">Not enough insulin left in the reservoir</string>
+
+    <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
+
 </resources>

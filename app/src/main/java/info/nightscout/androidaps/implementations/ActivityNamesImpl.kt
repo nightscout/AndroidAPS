@@ -42,6 +42,7 @@ import info.nightscout.ui.dialogs.WizardDialog
 import javax.inject.Inject
 
 class ActivityNamesImpl @Inject constructor(
+    private val context: Context,
     private val rxBus: RxBus,
     private val injector: HasAndroidInjector,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper
@@ -57,13 +58,13 @@ class ActivityNamesImpl @Inject constructor(
     override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
     override val prefGeneral: Int = R.xml.pref_general
 
-    override fun runAlarm(ctx: Context, status: String, title: String, @RawRes soundId: Int) {
-        val i = Intent(ctx, errorHelperActivity)
+    override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
+        val i = Intent(context, errorHelperActivity)
         i.putExtra(AlarmSoundService.SOUND_ID, soundId)
         i.putExtra(AlarmSoundService.STATUS, status)
         i.putExtra(AlarmSoundService.TITLE, title)
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ctx.startActivity(i)
+        context.startActivity(i)
     }
 
     override fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int?, name: String?) {
@@ -168,7 +169,7 @@ class ActivityNamesImpl @Inject constructor(
         rxBus.send(EventNewNotification(Notification(id, text, level, validMinutes)))
     }
 
-    override fun addNotificationWithSound(id: Int, text: String, level: Int, soundId: Int) {
+    override fun addNotificationWithSound(id: Int, text: String, level: Int, soundId: Int?) {
         rxBus.send(EventNewNotification(Notification(id, text, level).also { it.soundId = soundId }))
     }
 

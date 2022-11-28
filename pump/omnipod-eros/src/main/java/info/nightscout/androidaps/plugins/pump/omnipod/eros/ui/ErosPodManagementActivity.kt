@@ -235,9 +235,7 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
     }
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
-        context.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+        activityNames.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayNotConfiguredDialog() {

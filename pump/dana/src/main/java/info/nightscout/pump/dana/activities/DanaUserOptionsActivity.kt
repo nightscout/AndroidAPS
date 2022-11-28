@@ -158,7 +158,7 @@ class DanaUserOptionsActivity : DaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
+                    activityNames.runAlarm(result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

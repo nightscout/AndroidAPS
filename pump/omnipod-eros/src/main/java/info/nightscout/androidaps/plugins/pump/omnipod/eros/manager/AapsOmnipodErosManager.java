@@ -55,13 +55,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ril
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions.DetailedBolusInfoExtensionKt;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.core.events.EventNewNotification;
-import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.core.pump.PumpStateExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.profile.Profile;
@@ -969,7 +968,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        activityNames.runAlarm(context, message, rh.gs(R.string.error), sound);
+        activityNames.runAlarm(message, rh.gs(R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
@@ -981,14 +980,7 @@ public class AapsOmnipodErosManager {
     }
 
     private void showNotification(int id, String message, int urgency, Integer sound) {
-        Notification notification = new Notification( //
-                id, //
-                message, //
-                urgency);
-        if (sound != null) {
-            notification.setSoundId(sound);
-        }
-        sendEvent(new EventNewNotification(notification));
+        activityNames.addNotificationWithSound(id, message, urgency, sound);
     }
 
     private void dismissNotification(int id) {

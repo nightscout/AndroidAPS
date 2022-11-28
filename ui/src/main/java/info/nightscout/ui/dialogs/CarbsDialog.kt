@@ -374,7 +374,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             override fun run() {
                                 carbTimer.removeAutomationEventEatReminder()
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    activityNames.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 } else if (sp.getBoolean(R.string.key_usebolusreminder, false) && remindBolus)
                                     bolusTimer.scheduleAutomationEventBolusReminder()
                             }

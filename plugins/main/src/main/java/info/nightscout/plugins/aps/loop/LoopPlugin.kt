@@ -14,10 +14,10 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.convertedToPercent
 import info.nightscout.core.extensions.plannedRemainingMinutes
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.iob.json
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
@@ -684,7 +684,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                        activityNames.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                     }
                 }
             })
@@ -692,7 +692,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                        activityNames.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                     }
                 }
             })
@@ -701,7 +701,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(context, result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                        activityNames.runAlarm(result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -719,7 +719,7 @@ class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(context, result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                    activityNames.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                 }
             }
         })

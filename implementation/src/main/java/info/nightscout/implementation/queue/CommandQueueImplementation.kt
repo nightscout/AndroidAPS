@@ -9,8 +9,8 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
@@ -117,7 +117,7 @@ class CommandQueueImplementation @Inject constructor(
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
-                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failed_update_basal_profile), R.raw.boluserror)
+                                           activityNames.runAlarm(result.comment, rh.gs(R.string.failed_update_basal_profile), R.raw.boluserror)
                                        } else {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
