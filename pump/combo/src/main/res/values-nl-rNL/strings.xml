@@ -56,4 +56,5 @@
     <string name="combo_error_display_never">Nooit</string>
     <string name="combo_error_display_error">Bij een fout</string>
     <string name="combo_error_display_always">Altijd</string>
+    <string name="unsafeusage">onveilig gebruik</string>
 </resources>
