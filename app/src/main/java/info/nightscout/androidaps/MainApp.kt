@@ -36,7 +36,7 @@ import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
@@ -74,7 +74,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var dateUtil: DateUtil
     @Suppress("unused") @Inject lateinit var staticInjector: info.nightscout.plugins.aps.utils.StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
     @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
@@ -247,7 +247,7 @@ class MainApp : DaggerApplication() {
     override fun onTerminate() {
         aapsLogger.debug(LTag.CORE, "onTerminate")
         unregisterActivityLifecycleCallbacks(activityMonitor)
-        activityNames.stopAlarm("onTerminate")
+        uiInteraction.stopAlarm("onTerminate")
         super.onTerminate()
     }
 }

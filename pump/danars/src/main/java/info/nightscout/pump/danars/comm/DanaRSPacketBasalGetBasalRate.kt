@@ -47,7 +47,7 @@ class DanaRSPacketBasalGetBasalRate(
             aapsLogger.debug(LTag.PUMPCOMM, "Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + danaPump.pumpProfiles!![danaPump.activeProfile][index])
         if (danaPump.basalStep != 0.01) {
             failed = true
-            activityNames.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(R.string.danar_setbasalstep001), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(R.string.danar_setbasalstep001), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
         }

@@ -79,7 +79,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 temporaryBasalStorage,
                 fabricPrivacy,
                 dateUtil,
-                activityNames,
+                uiInteraction,
                 danaHistoryDatabase
             )
     }

@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistory
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.core.utils.ByteUtil
 import org.junit.Assert
 import org.junit.Before
@@ -19,7 +19,7 @@ import org.mockito.Mock
 @Suppress("SpellCheckingInspection")
 class MedtronicPumpHistoryDecoderUTest : TestBase() {
 
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
     //@Mock lateinit var injector: HasAndroidInjector
     //@Mock lateinit var rh: ResourceHelper
 //    @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
@@ -35,7 +35,7 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
         medtronicPumpStatus =
             MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil =
-            MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, activityNames)
+            MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, ByteUtil())
     }
 

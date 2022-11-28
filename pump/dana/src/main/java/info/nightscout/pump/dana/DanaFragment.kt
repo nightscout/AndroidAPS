@@ -19,7 +19,7 @@ import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.userEntry.UserEntryMapper.Action
 import info.nightscout.interfaces.userEntry.UserEntryMapper.Sources
 import info.nightscout.pump.dana.activities.DanaHistoryActivity
@@ -58,7 +58,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -97,15 +97,15 @@ class DanaFragment : DaggerFragment() {
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
-            activityNames.runProfileViewerDialog(
+            uiInteraction.runProfileViewerDialog(
                 fragmentManager = childFragmentManager,
                 time = dateUtil.now(),
-                mode = ActivityNames.Mode.CUSTOM_PROFILE,
+                mode = UiInteraction.Mode.CUSTOM_PROFILE,
                 customProfile = profile.toString(),
                 customProfileName = profileName
             )
         }
-        binding.stats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
+        binding.stats.setOnClickListener { startActivity(Intent(context, uiInteraction.tddStatsActivity)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DanaUserOptionsActivity::class.java)) }
         binding.btConnectionLayout.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")

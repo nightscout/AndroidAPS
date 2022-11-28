@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.interfaces.profile.ProfileInstantiator
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.comm.DanaRSPacket
 import info.nightscout.shared.sharedPreferences.SP
@@ -17,7 +17,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var profileInstantiator: ProfileInstantiator
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
 
     val injector = HasAndroidInjector { AndroidInjector { } }
 

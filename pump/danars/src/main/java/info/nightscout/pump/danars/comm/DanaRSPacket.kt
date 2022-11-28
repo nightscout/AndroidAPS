@@ -2,7 +2,7 @@ package info.nightscout.pump.danars.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.DateUtil
 import org.joda.time.DateTime
@@ -14,7 +14,7 @@ open class DanaRSPacket(protected var injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     var isReceived = false
         private set

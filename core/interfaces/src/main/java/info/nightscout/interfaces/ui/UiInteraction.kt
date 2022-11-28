@@ -11,7 +11,7 @@ import info.nightscout.interfaces.nsclient.NSAlarm
  * Interface to use activities located in different modules
  * usage: startActivity(Intent(context, activityNames.xxxx))
  */
-interface ActivityNames {
+interface UiInteraction {
 
     val mainActivity: Class<*>
     val tddStatsActivity: Class<*>

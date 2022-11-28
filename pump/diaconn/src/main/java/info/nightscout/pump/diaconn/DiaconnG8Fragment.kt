@@ -14,7 +14,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.activities.DiaconnG8HistoryActivity
 import info.nightscout.pump.diaconn.activities.DiaconnG8UserOptionsActivity
 import info.nightscout.pump.diaconn.databinding.DiaconnG8FragmentBinding
@@ -49,7 +49,7 @@ class DiaconnG8Fragment : DaggerFragment() {
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -78,7 +78,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.history.setOnClickListener { startActivity(Intent(context, DiaconnG8HistoryActivity::class.java)) }
-        binding.stats.setOnClickListener { startActivity(Intent(context, activityNames.tddStatsActivity)) }
+        binding.stats.setOnClickListener { startActivity(Intent(context, uiInteraction.tddStatsActivity)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, DiaconnG8UserOptionsActivity::class.java)) }
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")

@@ -19,7 +19,7 @@ import info.nightscout.core.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.ui.activities.BolusProgressHelperActivity
@@ -41,12 +41,12 @@ import info.nightscout.ui.dialogs.TreatmentDialog
 import info.nightscout.ui.dialogs.WizardDialog
 import javax.inject.Inject
 
-class ActivityNamesImpl @Inject constructor(
+class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,
     private val injector: HasAndroidInjector,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper
-) : ActivityNames {
+) : UiInteraction {
 
     override val mainActivity: Class<*> = MainActivity::class.java
     override val tddStatsActivity: Class<*> = TDDStatsActivity::class.java
@@ -129,7 +129,7 @@ class ActivityNamesImpl @Inject constructor(
             .show(fragmentManager, "FillDialog")
     }
 
-    override fun runProfileViewerDialog(fragmentManager: FragmentManager, time: Long, mode: ActivityNames.Mode, customProfile: String?, customProfileName: String?, customProfile2: String?) {
+    override fun runProfileViewerDialog(fragmentManager: FragmentManager, time: Long, mode: UiInteraction.Mode, customProfile: String?, customProfileName: String?, customProfile2: String?) {
         ProfileViewerDialog()
             .also {
                 it.arguments = Bundle().also { bundle ->
@@ -143,7 +143,7 @@ class ActivityNamesImpl @Inject constructor(
             .show(fragmentManager, "ProfileViewer")
     }
 
-    override fun runCareDialog(fragmentManager: FragmentManager, options: ActivityNames.EventType, @StringRes event: Int) {
+    override fun runCareDialog(fragmentManager: FragmentManager, options: UiInteraction.EventType, @StringRes event: Int) {
         CareDialog()
             .also {
                 it.arguments = Bundle().also { bundle ->

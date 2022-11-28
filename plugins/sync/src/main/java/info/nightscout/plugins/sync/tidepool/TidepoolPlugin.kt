@@ -12,7 +12,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.sync.Sync
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
@@ -51,7 +51,7 @@ class TidepoolPlugin @Inject constructor(
     private val sp: SP,
     private val rateLimit: RateLimit,
     private val receiverStatusStore: ReceiverStatusStore,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -172,7 +172,7 @@ class TidepoolPlugin @Inject constructor(
             }
             textLog = HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            activityNames.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
     }
 

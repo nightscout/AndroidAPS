@@ -83,7 +83,7 @@ class DanaRSPacketBolusGetBolusOption(
         dataSize = 1
         val missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         if (!danaPump.isExtendedBolusEnabled) {
-            activityNames.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
+            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
             failed = true
         } else {
             rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))

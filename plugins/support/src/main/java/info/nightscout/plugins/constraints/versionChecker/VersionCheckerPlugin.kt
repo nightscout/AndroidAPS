@@ -8,7 +8,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.support.R
 import info.nightscout.rx.bus.RxBus
@@ -31,7 +31,7 @@ class VersionCheckerPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -96,7 +96,7 @@ class VersionCheckerPlugin @Inject constructor(
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
-            activityNames.addNotification(Notification.OLD_VERSION, message, Notification.NORMAL)
+            uiInteraction.addNotification(Notification.OLD_VERSION, message, Notification.NORMAL)
         }
 
         val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
@@ -105,7 +105,7 @@ class VersionCheckerPlugin @Inject constructor(
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            activityNames.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
+            uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.application_expired), Notification.URGENT)
         }
     }
 

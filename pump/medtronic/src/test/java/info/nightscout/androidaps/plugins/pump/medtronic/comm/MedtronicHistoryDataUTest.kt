@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.database.impl.serialisation.SealedClassHelper
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -27,7 +27,7 @@ import org.mockito.Mock
  */
 class MedtronicHistoryDataUTest : TestBase() {
 
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
     //TestLogger LOGGER = TestLoggerFactory.getTestLogger(MedtronicHistoryDataUTest.class);
     // var historyPageData = ByteUtil
     //     .createByteArrayFromString(
@@ -43,11 +43,11 @@ class MedtronicHistoryDataUTest : TestBase() {
         rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
 
         medtronicPumpStatus = MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
-        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, activityNames)
+        medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
         decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, byteUtil)
         medtronicHistoryData = MedtronicHistoryData(
             packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
-            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, activityNames
+            medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction
         )
 
 

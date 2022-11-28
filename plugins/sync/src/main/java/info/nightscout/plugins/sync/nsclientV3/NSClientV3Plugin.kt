@@ -21,7 +21,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
@@ -71,7 +71,7 @@ class NSClientV3Plugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -225,7 +225,7 @@ class NSClientV3Plugin @Inject constructor(
             }
             return HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            activityNames.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
         return HtmlHelper.fromHtml("")
     }

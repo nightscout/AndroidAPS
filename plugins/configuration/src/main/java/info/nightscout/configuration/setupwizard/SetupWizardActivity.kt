@@ -12,7 +12,7 @@ import info.nightscout.configuration.setupwizard.elements.SWItem
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper.update
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventProfileStoreChanged
 import info.nightscout.rx.events.EventProfileSwitchChanged
@@ -34,7 +34,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
@@ -164,7 +164,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Suppress("UNUSED_PARAMETER")
     fun finishSetupWizard(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        val intent = Intent(this, activityNames.mainActivity)
+        val intent = Intent(this, uiInteraction.mainActivity)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()

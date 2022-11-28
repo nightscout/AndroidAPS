@@ -39,7 +39,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -73,7 +73,7 @@ class StoreDataForDbImpl @Inject constructor(
     private val nsClientSource: NSClientSource,
     private val xDripBroadcast: XDripBroadcast,
     private val virtualPump: VirtualPump,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : StoreDataForDb {
 
     override val glucoseValues: MutableList<TransactionGlucoseValue> = mutableListOf()
@@ -529,7 +529,7 @@ class StoreDataForDbImpl @Inject constructor(
                     it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
                 ) {
                     if (sp.getBoolean(R.string.key_ns_announcements, config.NSCLIENT))
-                        activityNames.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
+                        uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
                 }
             }
         if (therapyEvents.isNotEmpty())

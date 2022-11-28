@@ -7,7 +7,7 @@ import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
@@ -21,7 +21,7 @@ class SurveyActivity : DaggerAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private lateinit var binding: ActivitySurveyBinding
 
@@ -54,10 +54,10 @@ class SurveyActivity : DaggerAppCompatActivity() {
             }
             profileFunction.getProfile()?.let { runningProfile ->
                 defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())?.let { profile ->
-                    activityNames.runProfileViewerDialog(
+                    uiInteraction.runProfileViewerDialog(
                         fragmentManager = supportFragmentManager,
                         time = dateUtil.now(),
-                        mode = ActivityNames.Mode.PROFILE_COMPARE,
+                        mode = UiInteraction.Mode.PROFILE_COMPARE,
                         customProfile = runningProfile.toPureNsJson(dateUtil).toString(),
                         customProfileName = "Age: $age TDD: $tdd Weight: $weight",
                         customProfile2 = profile.jsonObject.toString()

@@ -47,7 +47,7 @@ import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.storage.Storage
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.userEntry.UserEntryPresentationHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.bus.RxBus
@@ -83,7 +83,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean {
@@ -176,8 +176,8 @@ class ImportExportPrefsImpl @Inject constructor(
                                       rh.gs(wrongPwdTitle),
                                       rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
                                       R.string.nav_preferences, {
-                                          val intent = Intent(activity, activityNames.preferencesActivity).apply {
-                                              putExtra("id", activityNames.prefGeneral)
+                                          val intent = Intent(activity, uiInteraction.preferencesActivity).apply {
+                                              putExtra("id", uiInteraction.prefGeneral)
                                           }
                                           activity.startActivity(intent)
                                       })

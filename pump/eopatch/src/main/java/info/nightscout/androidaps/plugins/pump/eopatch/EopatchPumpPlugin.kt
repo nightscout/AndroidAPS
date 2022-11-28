@@ -26,7 +26,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -61,7 +61,7 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchManager: IPatchManager,
     private val alarmManager: IAlarmManager,
     private val preferenceManager: IPreferenceManager,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -204,7 +204,7 @@ class EopatchPumpPlugin @Inject constructor(
                 disposable.dispose()
                 aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess ?: false}")
                 if (isSuccess == true) {
-                    activityNames.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+                    uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
                     return PumpEnactResult(injector).success(true).enacted(true)
                 } else {
                     return PumpEnactResult(injector)
@@ -213,7 +213,7 @@ class EopatchPumpPlugin @Inject constructor(
         } else {
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            activityNames.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             return PumpEnactResult(injector).success(true).enacted(true)
         }
     }

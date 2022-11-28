@@ -54,7 +54,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
@@ -105,7 +105,7 @@ class LoopPlugin @Inject constructor(
     private val uel: UserEntryLogger,
     private val repository: AppRepository,
     private val runningConfiguration: RunningConfiguration,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
@@ -461,14 +461,14 @@ class LoopPlugin @Inject constructor(
 
     private fun presentSuggestion(builder: NotificationCompat.Builder) {
         // Creates an explicit intent for an Activity in your app
-        val resultIntent = Intent(context, activityNames.mainActivity)
+        val resultIntent = Intent(context, uiInteraction.mainActivity)
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
         // This ensures that navigating backward from the Activity leads out of
         // your application to the Home screen.
         val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addParentStack(activityNames.mainActivity)
+        stackBuilder.addParentStack(uiInteraction.mainActivity)
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent)
         val resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -684,7 +684,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                     }
                 }
             })
@@ -692,7 +692,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                     }
                 }
             })
@@ -701,7 +701,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        activityNames.runAlarm(result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
                     }
                 }
             })
@@ -719,7 +719,7 @@ class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    activityNames.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                 }
             }
         })

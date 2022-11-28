@@ -63,7 +63,7 @@ class DanaRSPacketNotifyAlarm(
             aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
             return
         }
-        activityNames.addNotification(Notification.USER_MESSAGE, errorString, Notification.URGENT)
+        uiInteraction.addNotification(Notification.USER_MESSAGE, errorString, Notification.URGENT)
         pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber)
     }
 

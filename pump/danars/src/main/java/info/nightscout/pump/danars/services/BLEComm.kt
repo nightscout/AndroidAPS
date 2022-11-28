@@ -25,7 +25,7 @@ import info.nightscout.core.utils.notify
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.activities.EnterPinActivity
@@ -63,7 +63,7 @@ class BLEComm @Inject internal constructor(
     private val bleEncryption: BleEncryption,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) {
 
     companion object {
@@ -514,7 +514,7 @@ class BLEComm @Inject internal constructor(
     private fun sendConnect() {
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
-            activityNames.addNotification(Notification.DEVICE_NOT_PAIRED, rh.gs(R.string.pairfirst), Notification.URGENT)
+            uiInteraction.addNotification(Notification.DEVICE_NOT_PAIRED, rh.gs(R.string.pairfirst), Notification.URGENT)
             return
         }
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
@@ -586,7 +586,7 @@ class BLEComm @Inject internal constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
             pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
-            activityNames.addNotification(Notification.PUMP_ERROR, rh.gs(R.string.pumperror), Notification.URGENT)
+            uiInteraction.addNotification(Notification.PUMP_ERROR, rh.gs(R.string.pumperror), Notification.URGENT)
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -598,7 +598,7 @@ class BLEComm @Inject internal constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.connection_error)))
             danaRSPlugin.clearPairing()
-            activityNames.addNotification(Notification.WRONG_SERIAL_NUMBER, rh.gs(R.string.password_cleared), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_SERIAL_NUMBER, rh.gs(R.string.password_cleared), Notification.URGENT)
         }
     }
 
@@ -688,7 +688,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
-                activityNames.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
+                uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
                 disconnect("WrongPassword")
                 SystemClock.sleep(T.mins(1).msecs())
             } else {

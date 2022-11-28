@@ -33,7 +33,7 @@ class MsgInitConnStatusOption(
             failed = true
         }
         if (!danaPump.isPasswordOK) {
-            activityNames.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_PUMP_PASSWORD))
         }

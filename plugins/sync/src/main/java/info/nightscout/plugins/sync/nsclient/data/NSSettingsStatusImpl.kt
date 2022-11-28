@@ -10,7 +10,7 @@ import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
@@ -124,7 +124,7 @@ class NSSettingsStatusImpl @Inject constructor(
     private val sp: SP,
     private val config: Config,
     private val uel: UserEntryLogger,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) : NSSettingsStatus {
 
     // ***** PUMP STATUS ******
@@ -151,7 +151,7 @@ class NSSettingsStatusImpl @Inject constructor(
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Got versions: Nightscout: ${getVersion()}")
         if (getVersionNum() < config.SUPPORTEDNSVERSION) {
-            activityNames.addNotification(Notification.OLD_NS, rh.gs(R.string.unsupported_ns_version), Notification.NORMAL)
+            uiInteraction.addNotification(Notification.OLD_NS, rh.gs(R.string.unsupported_ns_version), Notification.NORMAL)
         } else {
             rxBus.send(EventDismissNotification(Notification.OLD_NS))
         }

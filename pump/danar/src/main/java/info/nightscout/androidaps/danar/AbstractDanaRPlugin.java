@@ -23,7 +23,7 @@ import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.ManufacturerType;
 import info.nightscout.interfaces.pump.defs.PumpDescription;
 import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.interfaces.utils.DecimalFormatter;
 import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaFragment;
@@ -62,7 +62,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected DateUtil dateUtil;
     protected AapsSchedulers aapsSchedulers;
     protected PumpSync pumpSync;
-    protected ActivityNames activityNames;
+    protected UiInteraction uiInteraction;
     protected DanaHistoryDatabase danaHistoryDatabase;
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
@@ -77,7 +77,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             SP sp,
             DateUtil dateUtil,
             PumpSync pumpSync,
-            ActivityNames activityNames,
+            UiInteraction uiInteraction,
             DanaHistoryDatabase danaHistoryDatabase
     ) {
         super(new PluginDescription()
@@ -98,7 +98,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.dateUtil = dateUtil;
         this.aapsSchedulers = aapsSchedulers;
         this.pumpSync = pumpSync;
-        this.activityNames = activityNames;
+        this.uiInteraction = uiInteraction;
         this.danaHistoryDatabase = danaHistoryDatabase;
     }
 
@@ -150,19 +150,19 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         }
         if (!isInitialized()) {
             getAapsLogger().error("setNewBasalProfile not initialized");
-            activityNames.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
             result.comment(R.string.pump_not_initialized_profile_not_set);
             return result;
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
-            activityNames.addNotification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(R.string.failed_update_basal_profile), Notification.URGENT);
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(R.string.failed_update_basal_profile), Notification.URGENT);
             result.comment(R.string.failed_update_basal_profile);
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
-            activityNames.addNotificationValidFor(Notification.PROFILE_SET_OK, getRh().gs(R.string.profile_set_ok), Notification.INFO, 60);
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, getRh().gs(R.string.profile_set_ok), Notification.INFO, 60);
             result.success(true).enacted(true).comment("OK");
         }
         return result;

@@ -20,7 +20,7 @@ class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {
                 it.rh = rh
                 it.pumpSync = pumpSync
                 it.danaPump = danaPump
-                it.activityNames = activityNames
+                it.uiInteraction = uiInteraction
             }
         }
     }

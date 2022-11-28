@@ -56,7 +56,7 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter.to0Decimal
 import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
 import info.nightscout.interfaces.utils.Round
@@ -102,7 +102,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames,
+    private val uiInteraction: UiInteraction,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -181,7 +181,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun updatePodWarnings() {
         if (System.currentTimeMillis() > nextPodWarningCheck) {
             if (!podStateManager.isPodRunning) {
-                activityNames.addNotification(
+                uiInteraction.addNotification(
                     Notification.OMNIPOD_POD_NOT_ATTACHED,
                     "Pod not activated",
                     Notification.NORMAL
@@ -198,7 +198,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
                     if (!podStateManager.sameTimeZone) {
-                        activityNames.addNotification(
+                        uiInteraction.addNotification(
                             Notification.OMNIPOD_TIME_OUT_OF_SYNC,
                             "Timezone on pod is different from the timezone on phone. " +
                                 "Basal rate is incorrect" +
@@ -1496,11 +1496,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        activityNames.runAlarm(message, rh.gs(R.string.error), sound)
+        uiInteraction.runAlarm(message, rh.gs(R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {
-        activityNames.addNotificationWithSound(
+        uiInteraction.addNotificationWithSound(
             id,
             message,
             urgency,

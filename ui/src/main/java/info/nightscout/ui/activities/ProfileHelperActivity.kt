@@ -19,7 +19,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.stats.TddCalculator
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
@@ -220,7 +220,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
                             it.putLong("time", dateUtil.now())
-                            it.putInt("mode", ActivityNames.Mode.PROFILE_COMPARE.ordinal)
+                            it.putInt("mode", UiInteraction.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", profile0.jsonObject.toString())
                             it.putString("customProfile2", profile1.jsonObject.toString())
                             it.putString(

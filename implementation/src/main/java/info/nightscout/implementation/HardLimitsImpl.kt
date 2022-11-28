@@ -5,7 +5,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.main.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -21,7 +21,7 @@ import kotlin.math.min
 @Singleton
 class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val activityNames: ActivityNames,
+    private val uiInteraction: UiInteraction,
     private val sp: SP,
     private val rh: ResourceHelper,
     private val context: Context,
@@ -100,7 +100,7 @@ class HardLimitsImpl @Inject constructor(
             msg += rh.gs(R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
-            activityNames.showToastAndNotification(context, msg, R.raw.error)
+            uiInteraction.showToastAndNotification(context, msg, R.raw.error)
         }
         return newValue
     }

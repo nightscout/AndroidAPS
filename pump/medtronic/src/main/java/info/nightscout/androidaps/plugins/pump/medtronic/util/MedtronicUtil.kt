@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
@@ -35,7 +35,7 @@ class MedtronicUtil @Inject constructor(
     private val rxBus: RxBus,
     private val rileyLinkUtil: RileyLinkUtil,
     private val medtronicPumpStatus: MedtronicPumpStatus,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) {
 
     private val ENVELOPE_SIZE = 4 // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
@@ -94,7 +94,7 @@ class MedtronicUtil @Inject constructor(
     }
 
     fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper) {
-        activityNames.addNotification(
+        uiInteraction.addNotification(
             notificationType.notificationType,
             rh.gs(notificationType.resourceId),
             notificationType.notificationUrgency
@@ -102,7 +102,7 @@ class MedtronicUtil @Inject constructor(
     }
 
     fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper, vararg parameters: Any?) {
-        activityNames.addNotification(
+        uiInteraction.addNotification(
             notificationType.notificationType,
             rh.gs(notificationType.resourceId, *parameters),
             notificationType.notificationUrgency

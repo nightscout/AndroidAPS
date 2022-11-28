@@ -22,7 +22,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -58,7 +58,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var sp: SP
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var pm: IPreferenceManager
     @Inject lateinit var mAlarmRegistry: IAlarmRegistry
 
@@ -156,7 +156,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             val expireTimeString = SimpleDateFormat(resourceHelper.gs(R.string.date_format_yyyy_m_d_e_a_hh_mm_comma), Locale.US).format(expireTimeValue)
             alarmMsg = resourceHelper.gs(alarmCode.resId, expireTimeString)
         }
-        activityNames.addNotificationWithAction(
+        uiInteraction.addNotificationWithAction(
             id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
             text = alarmMsg,
             level = Notification.URGENT,
@@ -180,7 +180,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                                 }
                                 updateState(alarmCode, AlarmState.HANDLE)
                             } else {
-                                activityNames.addNotification(
+                                uiInteraction.addNotification(
                                     id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
                                     text = alarmMsg,
                                     level = Notification.URGENT

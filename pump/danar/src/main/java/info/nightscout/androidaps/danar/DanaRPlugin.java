@@ -23,7 +23,7 @@ import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.ActivityNames;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.database.DanaHistoryDatabase;
@@ -65,10 +65,10 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             DateUtil dateUtil,
             FabricPrivacy fabricPrivacy,
             PumpSync pumpSync,
-            ActivityNames activityNames,
+            UiInteraction uiInteraction,
             DanaHistoryDatabase danaHistoryDatabase
     ) {
-        super(injector, danaPump, rh, constraints, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, activityNames, danaHistoryDatabase);
+        super(injector, danaPump, rh, constraints, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;

@@ -30,7 +30,7 @@ import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.pump.dana.DanaFragment
@@ -78,7 +78,7 @@ class DanaRSPlugin @Inject constructor(
     private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames,
+    private val uiInteraction: UiInteraction,
     private val danaHistoryDatabase: DanaHistoryDatabase
 ) : PumpPluginBase(
     PluginDescription()
@@ -233,20 +233,20 @@ class DanaRSPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
-            activityNames.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
             result.comment = rh.gs(R.string.pump_not_initialized_profile_not_set)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (danaRSService?.updateBasalsInPump(profile) != true) {
-            activityNames.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
             result.comment = rh.gs(R.string.failed_update_basal_profile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            activityNames.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             result.success = true
             result.enacted = true
             result.comment = "OK"

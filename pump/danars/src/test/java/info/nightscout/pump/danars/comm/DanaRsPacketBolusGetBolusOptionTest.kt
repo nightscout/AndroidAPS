@@ -15,7 +15,7 @@ class DanaRsPacketBolusGetBolusOptionTest : DanaRSTestBase() {
                 it.rxBus = rxBus
                 it.rh = rh
                 it.danaPump = danaPump
-                it.activityNames = activityNames
+                it.uiInteraction = uiInteraction
             }
         }
     }

@@ -29,7 +29,6 @@
     <string name="target_long_label">Blood Glucose Target</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">Advanced Settings</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Switches off the phone\'s bluetooth for one second if no connection to the pump is possible. This may help on some phones where the bluetooth stack freezes.</string>

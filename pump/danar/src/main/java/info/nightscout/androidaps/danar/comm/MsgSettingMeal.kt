@@ -33,12 +33,12 @@ class MsgSettingMeal(
             danaPump.basalStep = 0.01
         }
         if (danaPump.basalStep != 0.01) {
-            activityNames.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(R.string.danar_setbasalstep001), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(R.string.danar_setbasalstep001), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
         }
         if (danaPump.isConfigUD) {
-            activityNames.addNotification(Notification.UD_MODE_ENABLED, rh.gs(R.string.danar_switchtouhmode), Notification.URGENT)
+            uiInteraction.addNotification(Notification.UD_MODE_ENABLED, rh.gs(R.string.danar_switchtouhmode), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.UD_MODE_ENABLED))
         }

@@ -26,7 +26,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.common.sync.PumpDbEntry
 import info.nightscout.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.pump.common.sync.PumpDbEntryCarbs
@@ -67,7 +67,7 @@ class MedtronicHistoryData @Inject constructor(
     val medtronicPumpStatus: MedtronicPumpStatus,
     private val pumpSync: PumpSync,
     private val pumpSyncStorage: PumpSyncStorage,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) {
 
     val allHistory: MutableList<PumpHistoryEntry> = mutableListOf()
@@ -654,7 +654,7 @@ class MedtronicHistoryData @Inject constructor(
                             "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            activityNames.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
+                            uiInteraction.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = pumpSync.syncTemporaryBasalWithTempId(
@@ -695,7 +695,7 @@ class MedtronicHistoryData @Inject constructor(
                             "duration=${tempBasalProcessDTO.durationAsSeconds} s, pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
                         if (tempBasalProcessDTO.durationAsSeconds <= 0) {
-                            activityNames.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
+                            uiInteraction.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
                             aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
                         } else {
                             val result = pumpSync.syncTemporaryBasalWithPumpId(
@@ -963,7 +963,7 @@ class MedtronicHistoryData @Inject constructor(
                 "pumpSerial=${medtronicPumpStatus.serialNumber}]")
 
             if (tempBasalProcess.durationAsSeconds <= 0) {
-                activityNames.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
+                uiInteraction.addNotification(Notification.MDT_INVALID_HISTORY_DATA, rh.gs(R.string.invalid_history_data), Notification.URGENT)
                 aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId - Skipped")
             } else {
                 val result = pumpSync.syncTemporaryBasalWithPumpId(

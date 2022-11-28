@@ -41,7 +41,7 @@ import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.bus.RxBus
@@ -108,7 +108,7 @@ class ComboV2Plugin @Inject constructor (
     private val sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) :
     PumpPluginBase(
         PluginDescription()
@@ -540,7 +540,7 @@ class ComboV2Plugin @Inject constructor (
                             val activeBasalProfileNumber = it.statusFlow.value?.activeBasalProfileNumber
                             aapsLogger.debug(LTag.PUMP, "Active basal profile number: $activeBasalProfileNumber")
                             if ((activeBasalProfileNumber != null) && (activeBasalProfileNumber != 1)) {
-                                activityNames.addNotification(
+                                uiInteraction.addNotification(
                                     Notification.COMBO_PUMP_ALARM,
                                     text = rh.gs(R.string.combov2_incorrect_active_basal_profile, activeBasalProfileNumber),
                                     level = Notification.URGENT
@@ -574,7 +574,7 @@ class ComboV2Plugin @Inject constructor (
                     notifyAboutComboAlert(e.alertScreenContent)
                     forciblyDisconnectDueToError = true
                 } catch (e: Exception) {
-                    activityNames.addNotification(
+                    uiInteraction.addNotification(
                         Notification.COMBO_PUMP_ALARM,
                         text = rh.gs(R.string.combov2_connection_error, e.message),
                         level = Notification.URGENT
@@ -665,7 +665,7 @@ class ComboV2Plugin @Inject constructor (
         if (!isInitialized()) {
             aapsLogger.error(LTag.PUMP, "Cannot set profile since driver is not initialized")
 
-            activityNames.addNotification(
+            uiInteraction.addNotification(
                 Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
                 rh.gs(R.string.pump_not_initialized_profile_not_set),
                 Notification.URGENT
@@ -694,7 +694,7 @@ class ComboV2Plugin @Inject constructor (
                         activeBasalProfile = requestedBasalProfile
                         updateBaseBasalRateUI()
 
-                        activityNames.addNotificationValidFor(
+                        uiInteraction.addNotificationValidFor(
                             Notification.PROFILE_SET_OK,
                             rh.gs(R.string.profile_set_ok),
                             Notification.INFO,
@@ -724,7 +724,7 @@ class ComboV2Plugin @Inject constructor (
             } catch (e: Exception) {
                 aapsLogger.error("Exception thrown during basal profile update: $e")
 
-                activityNames.addNotification(
+                uiInteraction.addNotification(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.failed_update_basal_profile),
                     Notification.URGENT
@@ -1699,7 +1699,7 @@ class ComboV2Plugin @Inject constructor (
 
         when (event) {
             is ComboCtlPump.Event.BatteryLow -> {
-                activityNames.addNotification(
+                uiInteraction.addNotification(
                     Notification.COMBO_PUMP_ALARM,
                     text = rh.gs(R.string.combov2_battery_low_warning),
                     level = Notification.NORMAL
@@ -1707,7 +1707,7 @@ class ComboV2Plugin @Inject constructor (
             }
 
             is ComboCtlPump.Event.ReservoirLow -> {
-                activityNames.addNotification(
+                uiInteraction.addNotification(
                     Notification.COMBO_PUMP_ALARM,
                     text = rh.gs(R.string.combov2_reservoir_low_warning),
                     level = Notification.NORMAL
@@ -1802,7 +1802,7 @@ class ComboV2Plugin @Inject constructor (
                     event.remainingTbrDurationInMinutes / 60,
                     event.remainingTbrDurationInMinutes % 60
                 )
-                activityNames.addNotification(
+                uiInteraction.addNotification(
                     Notification.COMBO_UNKNOWN_TBR,
                     text = rh.gs(
                         R.string.combov2_unknown_tbr_detected,
@@ -1954,7 +1954,7 @@ class ComboV2Plugin @Inject constructor (
             // that the Combo is currently suspended, otherwise this
             // only shows up in the Combo fragment.
             if (newState == DriverState.Suspended) {
-                activityNames.addNotification(
+                uiInteraction.addNotification(
                     Notification.COMBO_PUMP_SUSPENDED,
                     text = rh.gs(R.string.combov2_pump_is_suspended),
                     level = Notification.NORMAL
@@ -1995,7 +1995,7 @@ class ComboV2Plugin @Inject constructor (
 
     private fun unpairDueToPumpDataError() {
         disconnectInternal(forceDisconnect = true)
-        activityNames.addNotificationValidTo(
+        uiInteraction.addNotificationValidTo(
             id = Notification.PUMP_ERROR,
             date = dateUtil.now(),
             text = rh.gs(R.string.combov2_cannot_access_pump_data),
@@ -2081,7 +2081,7 @@ class ComboV2Plugin @Inject constructor (
         }
 
     private fun notifyAboutComboAlert(alert: AlertScreenContent) {
-        activityNames.addNotification(
+        uiInteraction.addNotification(
             Notification.COMBO_PUMP_ALARM,
             text = "${rh.gs(R.string.combov2_combo_alert)}: ${getAlertDescription(alert)}",
             level = if (alert is AlertScreenContent.Warning) Notification.NORMAL else Notification.URGENT

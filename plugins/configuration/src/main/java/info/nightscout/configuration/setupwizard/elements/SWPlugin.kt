@@ -14,7 +14,7 @@ import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.events.EventConfigBuilderChange
 import info.nightscout.rx.events.EventSWUpdate
 import javax.inject.Inject
@@ -23,7 +23,7 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var configBuilder: ConfigBuilder
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var pType: PluginType? = null
     private var radioGroup: RadioGroup? = null
@@ -93,7 +93,7 @@ class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinitio
 
     private fun addConfiguration(layout: LinearLayout, plugin: PluginBase) {
         if (plugin.preferencesId != -1) {
-            fragment = Class.forName(activityNames.myPreferenceFragment.name).newInstance() as Fragment //MyPreferenceFragment()
+            fragment = Class.forName(uiInteraction.myPreferenceFragment.name).newInstance() as Fragment //MyPreferenceFragment()
             fragment?.let {
                 it.arguments = Bundle().also { it.putInt("id", plugin.preferencesId) }
                 definition.activity.supportFragmentManager.beginTransaction().run {

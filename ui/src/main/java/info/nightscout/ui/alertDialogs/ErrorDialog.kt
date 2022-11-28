@@ -15,7 +15,7 @@ import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.databinding.DialogErrorBinding
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var uel: UserEntryLogger
 
@@ -113,9 +113,9 @@ class ErrorDialog : DaggerDialogFragment() {
 
     private fun startAlarm() {
         if (sound != 0)
-            activityNames.startAlarm(sound, "$title:$status")
+            uiInteraction.startAlarm(sound, "$title:$status")
     }
 
     private fun stopAlarm(reason: String) =
-        activityNames.stopAlarm(reason)
+        uiInteraction.stopAlarm(reason)
 }

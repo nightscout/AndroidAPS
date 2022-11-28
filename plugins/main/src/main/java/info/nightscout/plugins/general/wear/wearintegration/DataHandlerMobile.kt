@@ -46,7 +46,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
@@ -101,7 +101,7 @@ class DataHandlerMobile @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
-    private val activityNames: ActivityNames
+    private val uiInteraction: UiInteraction
 ) {
 
     private val disposable = CompositeDisposable()
@@ -293,7 +293,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "SnoozeAlert received $it from ${it.sourceNodeId}")
-                           activityNames.stopAlarm("Muted from wear")
+                           uiInteraction.stopAlarm("Muted from wear")
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.WearException::class.java)
