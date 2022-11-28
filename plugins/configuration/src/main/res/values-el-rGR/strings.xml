@@ -78,4 +78,10 @@
     <string name="send_all_logs">Αποστολή αρχείων καταγραφής μέσω Email</string>
     <string name="delete_logs">Διαγραφή αρχείων καταγραφής</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
+    <string name="engineering_mode_enabled">Μηχανική λειτουργία ενεργοποιημένη</string>
+    <string name="nav_logsettings">Ρυθμίσεις Αρχείου Καταγραφής</string>
+    <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
+    <string name="resettodefaults">Επαναφορά προεπιλογών</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
