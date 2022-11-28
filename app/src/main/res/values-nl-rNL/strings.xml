@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Instellingen</string>
     <string name="nav_refreshtreatments">Haal behandelingen op van NS</string>
     <string name="nav_exit">Afsluiten</string>
-    <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="delta">Verschil</string>
     <string name="profile_label">Profiel</string>
     <string name="save">Opslaan</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(GEVAARLIJK OM UIT TE SCHAKELEN) alleen NS upload</string>
     <string name="ns_upload_only_summary">Alleen NS-upload. Heeft geen effect op de SGV, behalve als een lokale bron als xDrip geselecteerd is. Heeft geen effect op profielen wanneer NS-Profielen gebruikt worden.\n!!! WAARSCHUWING !!! Het uitschakelen van deze optie kan fouten veroorzaken en mogelijk resulteren in een overdosis insuline als een van de onderdelen (AAPS, NS, xDrip) onjuist is geconfigureerd. Let goed op of de gegevens van AAPS overeenkomen met de pompstatus!</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Permanent bericht</string>
-    <string name="old_data">Oude gegevens</string>
     <string name="nav_about">Over</string>
     <string name="smscommunicator_missingphonestatepermission">Machtiging ontbreekt voor telefoon gebruik</string>
     <string name="ns_alarm_options">Alarm opties</string>
