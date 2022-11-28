@@ -227,14 +227,24 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         //sensitivityRatio = 2/(2+(target_bg-normalTarget)/40);
         var c = halfBasalTarget - normalTarget;
         sensitivityRatio = c/(c+target_bg-normalTarget);
-        // limit sensitivityRatio to profile.autosens_max (1.2x by default)
-        sensitivityRatio = Math.min(sensitivityRatio, profile.autosens_max);
-        sensitivityRatio = round(sensitivityRatio,2);
         console.log("Sensitivity ratio set to "+sensitivityRatio+" based on temp target of "+target_bg+"; ");
     } else if (typeof autosens_data !== 'undefined' && autosens_data) {
         sensitivityRatio = autosens_data.ratio;
+    }
+    if (sensitivityRatio > 1) {
+        sensitivityRatio = Math.min(sensitivityRatio, profile.autosens_max);
+        sensitivityRatio = round(sensitivityRatio, 2);
         console.log("Autosens ratio: "+sensitivityRatio+"; ");
     }
+    else if (sensitivityRatio < 1) {
+        sensitivityRatio = Math.max(sensitivityRatio, profile.autosens_min);
+        sensitivityRatio = round(sensitivityRatio, 2);
+        console.log("Autosens ratio: "+sensitivityRatio+"; ");
+    }
+    else {
+        console.log("Autosens ratio: "+sensitivityRatio+"; ");
+    }
+
     if (sensitivityRatio) {
         basal = profile.current_basal * sensitivityRatio;
         basal = round_basal(basal, profile);
