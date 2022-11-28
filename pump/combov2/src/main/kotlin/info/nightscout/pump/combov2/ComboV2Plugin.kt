@@ -1324,9 +1324,17 @@ class ComboV2Plugin @Inject constructor (
     override fun canHandleDST() = true
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
-        // Currently just logging this; the ComboCtl.Pump code will set the new datetime
-        // (as localtime) as part of the on-connect checks automatically.
         aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. Time change type = $timeChangeType")
+
+        val reason = when (timeChangeType) {
+            TimeChangeType.TimezoneChanged -> rh.gs(R.string.combov2_timezone_changed)
+            TimeChangeType.TimeChanged -> rh.gs(R.string.combov2_datetime_changed)
+            TimeChangeType.DSTStarted -> rh.gs(R.string.combov2_dst_started)
+            TimeChangeType.DSTEnded -> rh.gs(R.string.combov2_dst_ended)
+        }
+        // Updating pump status implicitly also updates the pump's local datetime,
+        // which is what we want after the system datetime/timezone/DST changed.
+        commandQueue.readStatus(reason, null)
     }
 
     /*** Loop constraints ***/

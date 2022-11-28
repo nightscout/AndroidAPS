@@ -129,4 +129,8 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_automatic_battery_entry">Autodetect and automatically enter battery change</string>
     <string name="combov2_note_reservoir_change">Insulin reservoir change inserted automatically by combov2 driver</string>
     <string name="combov2_note_battery_change">Battery change inserted automatically by combov2 driver</string>
+    <string name="combov2_timezone_changed">Timezone changed</string>
+    <string name="combov2_datetime_changed">Date and/or time changed</string>
+    <string name="combov2_dst_started">Daylight savings time (DST) started</string>
+    <string name="combov2_dst_ended">Daylight savings time (DST) ended</string>
 </resources>
