@@ -28,6 +28,7 @@
     <string name="today">Oggi</string>
     <string name="yesterday">Ieri</string>
     <!-- Rx -->
+    <string name="connecting_for">In connessione per %1$d s</string>
     <string name="handshaking">Connessione</string>
     <string name="connected">Connesso</string>
     <string name="disconnecting">Disconnessione</string>
