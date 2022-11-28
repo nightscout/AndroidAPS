@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.core.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size

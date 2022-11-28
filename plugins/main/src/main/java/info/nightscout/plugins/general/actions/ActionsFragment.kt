@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.toStringMedium
-import info.nightscout.androidaps.extensions.toStringShort
+import info.nightscout.core.extensions.toStringMedium
+import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.androidaps.extensions.toTemporaryBasal
+import info.nightscout.core.extensions.toTemporaryBasal
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.profile.Profile

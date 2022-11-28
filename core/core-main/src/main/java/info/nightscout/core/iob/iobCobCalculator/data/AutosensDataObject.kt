@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data
+package info.nightscout.core.iob.iobCobCalculator.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.main.R

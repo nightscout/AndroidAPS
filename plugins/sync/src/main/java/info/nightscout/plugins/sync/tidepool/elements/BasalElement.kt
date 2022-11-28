@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.shared.utils.DateUtil

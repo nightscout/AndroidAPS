@@ -14,9 +14,9 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.convertedToPercent
-import info.nightscout.androidaps.extensions.plannedRemainingMinutes
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.convertedToPercent
+import info.nightscout.core.extensions.plannedRemainingMinutes
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.iob.json
 import info.nightscout.core.utils.fabric.FabricPrivacy

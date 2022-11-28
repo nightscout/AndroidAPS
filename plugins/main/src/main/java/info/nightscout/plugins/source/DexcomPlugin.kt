@@ -8,7 +8,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.core.extensions.fromConstant
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue

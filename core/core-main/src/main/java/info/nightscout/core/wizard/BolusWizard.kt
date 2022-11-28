@@ -4,9 +4,9 @@ import android.content.Context
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.highValueToUnitsToString
-import info.nightscout.androidaps.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.highValueToUnitsToString
+import info.nightscout.core.extensions.lowValueToUnitsToString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.dialogs.OKDialog

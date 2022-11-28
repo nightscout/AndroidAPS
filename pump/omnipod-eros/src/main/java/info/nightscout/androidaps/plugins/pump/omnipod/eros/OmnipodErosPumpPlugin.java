@@ -70,7 +70,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.Ri
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.androidaps.services.AlarmSoundService;
+import info.nightscout.core.services.AlarmSoundService;
 import info.nightscout.core.events.EventNewNotification;
 import info.nightscout.core.pump.DetailedBolusInfoExtensionKt;
 import info.nightscout.core.utils.DateTimeUtil;

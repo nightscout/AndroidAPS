@@ -8,9 +8,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.toStringShort
+import info.nightscout.core.extensions.valueToUnitsString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy

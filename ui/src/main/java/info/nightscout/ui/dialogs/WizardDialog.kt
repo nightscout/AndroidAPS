@@ -18,7 +18,7 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.toast.ToastUtils

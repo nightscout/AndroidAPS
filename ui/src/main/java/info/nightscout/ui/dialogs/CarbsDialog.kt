@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.formatColor

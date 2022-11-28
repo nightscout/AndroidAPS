@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.services
+package info.nightscout.core.services
 
 import android.content.Context
 import android.content.Intent
@@ -75,7 +75,7 @@ class AlarmSoundService : DaggerService() {
 
         player?.let { if (it.isPlaying) it.stop() }
 
-        if (intent?.hasExtra(AlarmSoundService.SOUND_ID) == true) resourceId = intent.getIntExtra(AlarmSoundService.SOUND_ID, R.raw.error)
+        if (intent?.hasExtra(SOUND_ID) == true) resourceId = intent.getIntExtra(SOUND_ID, R.raw.error)
         player = MediaPlayer()
         try {
             val afd = rh.openRawResourceFd(resourceId) ?: return START_NOT_STICKY
@@ -125,7 +125,8 @@ class AlarmSoundService : DaggerService() {
 
             if (currentVolumeLevel < VOLUME_INCREASE_STEPS) {
                 // Increase volume faster as time goes by
-                val delay = VOLUME_INCREASE_MIN_DELAY_MILLIS.coerceAtLeast(VOLUME_INCREASE_BASE_DELAY_MILLIS -
+                val delay = VOLUME_INCREASE_MIN_DELAY_MILLIS.coerceAtLeast(
+                    VOLUME_INCREASE_BASE_DELAY_MILLIS -
                     ((currentVolumeLevel - 1).toDouble().pow(VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT) * 1000).toLong())
                 aapsLogger.debug(LTag.CORE, "Next notification volume increment in {}ms", delay)
                 increaseVolumeHandler.postDelayed(this, delay)

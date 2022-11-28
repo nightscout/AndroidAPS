@@ -1,7 +1,7 @@
 package info.nightscout.implementation.pump
 
 import android.widget.TextView
-import info.nightscout.androidaps.extensions.isOlderThan
+import info.nightscout.core.extensions.isOlderThan
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.pump.WarnColors

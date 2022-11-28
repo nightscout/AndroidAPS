@@ -7,11 +7,11 @@ import androidx.annotation.DrawableRes
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import info.nightscout.androidaps.extensions.convertedToPercent
-import info.nightscout.androidaps.extensions.isInProgress
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.valueToUnits
+import info.nightscout.core.extensions.convertedToPercent
+import info.nightscout.core.extensions.isInProgress
+import info.nightscout.core.extensions.toStringFull
+import info.nightscout.core.extensions.toStringShort
+import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.DataPointWithLabelInterface
 import info.nightscout.core.graph.data.DeviationDataPoint

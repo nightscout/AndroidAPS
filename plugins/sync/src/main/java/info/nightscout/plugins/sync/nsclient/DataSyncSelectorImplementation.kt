@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient
 
-import info.nightscout.androidaps.extensions.toJson
+import info.nightscout.core.extensions.toJson
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult

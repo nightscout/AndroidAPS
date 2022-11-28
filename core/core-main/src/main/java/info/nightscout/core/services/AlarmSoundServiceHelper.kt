@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.services
+package info.nightscout.core.services
 
 import android.content.ComponentName
 import android.content.Context

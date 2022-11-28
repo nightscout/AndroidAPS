@@ -16,7 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.getCustomizedName
+import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog

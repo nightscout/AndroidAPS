@@ -135,7 +135,7 @@
         </provider>
 
         <service
-            android:name=".services.AlarmSoundService"
+            android:name="info.nightscout.core.services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service android:name=".plugins.general.persistentNotification.DummyService" />

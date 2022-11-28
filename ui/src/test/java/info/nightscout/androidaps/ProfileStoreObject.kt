@@ -2,7 +2,7 @@ package info.nightscout.implementation.profile
 
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin

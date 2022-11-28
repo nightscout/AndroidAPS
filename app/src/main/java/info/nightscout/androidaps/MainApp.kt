@@ -20,7 +20,7 @@ import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
-import info.nightscout.androidaps.services.AlarmSoundServiceHelper
+import info.nightscout.core.services.AlarmSoundServiceHelper
 import info.nightscout.implementation.lifecycle.ProcessLifecycleListener
 import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.implementation.receivers.NetworkChangeReceiver

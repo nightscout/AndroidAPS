@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafe
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
-import info.nightscout.androidaps.services.AlarmSoundServiceHelper
+import info.nightscout.core.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

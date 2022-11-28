@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.core.extensions
 
 import info.nightscout.database.entities.Food
 import info.nightscout.interfaces.utils.JsonHelper

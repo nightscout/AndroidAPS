@@ -7,8 +7,8 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.blockFromJsonArray
-import info.nightscout.androidaps.extensions.pureProfileFromJson
+import info.nightscout.core.extensions.blockFromJsonArray
+import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils

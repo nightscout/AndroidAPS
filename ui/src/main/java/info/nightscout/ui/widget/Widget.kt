@@ -13,9 +13,9 @@ import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.directionToIcon
-import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.directionToIcon
+import info.nightscout.core.extensions.valueToUnitsString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.ProfileSealed

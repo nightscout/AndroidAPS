@@ -9,7 +9,7 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.getCustomizedName
+import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy

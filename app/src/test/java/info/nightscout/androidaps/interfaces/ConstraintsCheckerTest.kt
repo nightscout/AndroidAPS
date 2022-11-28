@@ -10,7 +10,7 @@ import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl

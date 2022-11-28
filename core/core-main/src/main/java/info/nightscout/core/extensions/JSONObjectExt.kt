@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.extensions
+package info.nightscout.core.extensions
 
 import androidx.annotation.StringRes
 import info.nightscout.shared.interfaces.ResourceHelper

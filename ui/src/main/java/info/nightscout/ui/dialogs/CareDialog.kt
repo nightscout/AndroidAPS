@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.core.extensions.fromConstant
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.core.iob.iobCobCalculator
 
 import dagger.Reusable
 import info.nightscout.core.iob.asRounded
