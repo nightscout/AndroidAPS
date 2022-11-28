@@ -14,5 +14,8 @@
     <!--    PumpType-->
     <string name="def_extended_note">* Iba diskrétne hodnoty a nie rozsahy sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Ovládač pumpy zmenený.</string>
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f JI</string>
+    <string name="format_insulin_units">%1$.2f JI</string>
 </resources>
