@@ -19,4 +19,8 @@
     <string name="shortminute">м</string>
     <string name="shortday">д</string>
     <!-- Rx -->
+    <string name="handshaking">Сдвояване</string>
+    <string name="connected">Свързана</string>
+    <string name="disconnecting">Разкачане</string>
+    <string name="waiting_for_disconnection">Изчакване за разкачане</string>
 </resources>
