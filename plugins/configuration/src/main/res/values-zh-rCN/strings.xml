@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">允许通过fabric.io服务将自动崩溃报告和功能使用数据发送给开发人员。</string>
     <string name="summary_email_for_crash_report">此项为选填信息，会附在反馈的崩溃报告中，以便我们在紧急情况下与您联系。</string>
     <string name="identification">身份识别 (email邮件地址, FaceBook账号 或 Discord账号等等)</string>
+    <string name="apsmode_title">APS模式</string>
+    <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">胰岛素泵</string>
     <string name="configbuilder_profile">配置文件</string>
     <string name="configbuilder_aps">APS</string>
@@ -52,8 +55,8 @@
     <string name="configbuilder_loop">闭环</string>
     <string name="configbuilder_insulin_description">你使用哪种类型的胰岛素？</string>
     <string name="configbuilder_bgsource">血糖来源</string>
-    <string name="apsmode_title">APS模式</string>
-    <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="configbuilder_sensitivity">灵敏度检测</string>
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
