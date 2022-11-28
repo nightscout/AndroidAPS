@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Temp-Target %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">PCT profilo %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">E (AND)</string>
     <string name="or">O (OR)</string>
     <string name="xor">O (esclusivo - XOR)</string>
     <string name="atspecifiedtime">A %1$s</string>
