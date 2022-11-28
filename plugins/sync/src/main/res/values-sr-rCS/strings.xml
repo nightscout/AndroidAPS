@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="description_ns_client">Sinhronizuje vaše podatke sa Nightscout-om</string>
     <!-- NSClient -->
     <!-- Tidepool -->
 </resources>
