@@ -14,7 +14,15 @@
     <string name="open_humans_notifications">Open Humans Pranešimai</string>
     <string name="you_have_been_signed_out_of_open_humans">Jūs buvote atjungtas iš Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
+    <string name="next">Kitas</string>
     <string name="terms_of_use">Naudojimosi sąlygos</string>
+    <string name="info_openhumans">Tai yra atviro kodo įrankis, kuris nukopijuoja jūsų duomenis į Open Humans. Mes neturime teisės perduoti jūsų duomenų trečiosioms šalims be aiškaus jūsų sutikimo. Duomenys, kuriuos gauna projektas ir programa, identifikuojami pagal atsitiktinį vartotojo ID ir tik tada saugiai perkeliami į Open Humans paskyrą, jei sutinkate su šiuo procesu. Galite bet kada sustabdyti įkėlimą ir ištrinti savo įkeltus duomenis apsilankę www.openhumans.org.</string>
+    <string name="boluses">Bolusai</string>
+    <string name="carbohydrates">AV</string>
+    <string name="settings">Parametrai</string>
+    <string name="device_model">Įrenginio modelis</string>
+    <string name="nightscout_url">Nightscout URL</string>
+    <string name="agree">Aš suprantu ir sutinku.</string>
     <string name="cancel">Atšaukti</string>
     <string name="close">Uždaryti</string>
     <string name="upload_now">Įkelti dabar</string>
