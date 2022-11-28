@@ -48,6 +48,9 @@
     <string name="allow_automated_crash_reporting">Automatické odosielanie chýb aplikácie a štatistiky používania vývojárom pomocou služby fabric.io.</string>
     <string name="summary_email_for_crash_report">Táto identifikácia bude priložená ku správam o zlyhaniach, aby sme Vás mohli v naliehavých prípadoch kontaktovať. Je to voliteľné.</string>
     <string name="identification">Identifikácia (E-mail, prezývka FB, alebo Discord atď.)</string>
+    <string name="apsmode_title">APS mód</string>
+    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Akú pumpu chcete používať s AndroidAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -63,8 +66,8 @@
     <string name="configbuilder_insulin_description">Aký druh inzulínu používate?</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
-    <string name="apsmode_title">APS mód</string>
-    <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="configbuilder_sensitivity">Detekcia citlivosti</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
