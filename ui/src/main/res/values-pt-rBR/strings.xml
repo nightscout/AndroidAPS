@@ -20,12 +20,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg I:C: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Botão 1</string>
-    <string name="button2">Botão 2</string>
-    <string name="button3">Botão 3</string>
     <string name="record_pump_site_change">Registar mudança de sítio</string>
     <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
     <!-- InsulinDialog -->
@@ -67,8 +63,6 @@
     <string name="tempbasals_netratio_label_string">Rácio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="prime">Purgar/Preencher</string>
     <string name="profile_changes">Alterações de perfil</string>
@@ -90,11 +84,4 @@
     <string name="selected_profile">Seleccionado:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Detalhes de problemas de importação</string>
-    <string name="check_preferences_import_btn">Importar</string>
-    <string name="check_preferences_import_anyway_btn">Importar mesmo assim (PERIGOSO!)</string>
-    <string name="check_preferences_before_import">Por favor, verifique as preferências antes da importação:</string>
-    <string name="check_preferences_cannot_import">Preferências não podem ser importadas!</string>
-    <string name="check_preferences_dangerous_import">As preferências não devem ser importadas!</string>
 </resources>
