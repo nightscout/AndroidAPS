@@ -29,7 +29,6 @@
     <string name="pin_not_set">PIN není nastaven</string>
     <string name="password_not_changed">Heslo nezměněno</string>
     <string name="pin_not_changed">PIN nebyl změněn</string>
-    <string name="password_cleared">Heslo vymazáno!</string>
     <string name="pin_cleared">PIN byl vymazán!</string>
     <string name="password_hint">Zadejte heslo</string>
     <string name="pin_hint">Zadejte PIN</string>
