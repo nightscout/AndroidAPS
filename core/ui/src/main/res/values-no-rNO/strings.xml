@@ -34,7 +34,19 @@
     <string name="settings">Innstillinger</string>
     <string name="statuslights">Statuslys</string>
     <string name="do_ns_upload_title">Last opp BS data til NS</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Hoved passord</string>
+    <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
+    <string name="confirm">Bekreft</string>
+    <string name="pump">Pumpe</string>
+    <string name="missed_bg_readings">Mangler BS-målinger</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Demp i 5 minutter</string>
+    <string name="mute">Lyd av</string>
+    <string name="success">Suksess</string>
     <!--    Protection-->
+    <string name="unlock_settings">Lås opp innstillinger</string>
     <!--    Pumps -->
     <string name="battery_label">Batteri</string>
     <string name="reservoir_label">Reservoar</string>
@@ -103,4 +115,17 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Plugin innstillinger</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minutt</item>
+        <item quantity="other">%1$d minutter</item>
+    </plurals>
 </resources>
