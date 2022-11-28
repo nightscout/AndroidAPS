@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Preferenze</string>
     <string name="nav_refreshtreatments">Aggiorna trattamenti da NS</string>
     <string name="nav_exit">Esci</string>
-    <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profilo</string>
     <string name="save">Salva</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">Solo upload su NS (PERICOLOSO DISABILITARE)</string>
     <string name="ns_upload_only_summary">Solo upload su NS (no sincronizzazione). Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip+. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip+) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="wear">Smartwatch</string>
-    <string name="ongoingnotificaction">Notifica persistente</string>
-    <string name="old_data">DATI VECCHI</string>
     <string name="nav_about">Informazioni su</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
     <string name="ns_alarm_options">Opzioni allarme</string>
