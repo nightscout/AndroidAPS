@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu Chek Combo</string>
+    <string name="combov2_error_2">Батарея разряжена</string>
+    <string name="combov2_error_4">закупорка</string>
+    <string name="combov2_error_6">Механическая ошибка</string>
     <string name="bluetooth_address">Адрес Bluetooth</string>
+    <string name="combov2_start_pairing">Начните сопряжение</string>
+    <string name="combov2_cancel_pairing">Отменить сопряжение</string>
+    <string name="combov2_not_initialized">Нет инициализации</string>
+    <string name="combov2_ready">Помпа готова</string>
+    <string name="combov2_suspended">Помпа остановлена</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Установка базального профиля</string>
+    <string name="combov2_bolus_cancelled">Болюс отменен</string>
+    <string name="combov2_bolus_delivery_failed">Подача болюса не состоялась. Чтобы удостовериться, проверьте помпу во избежание двойного болюса и повторите подачу. Для защиты от ложных срабатываний болюсы не повторяются автоматически.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d мин осталось)</string>
+    <string name="combov2_battery_low_warning">Низкий заряд батареи помпы</string>
+    <string name="combov2_short_status_last_connection">Предыдущее соединение: %1$d мин. назад</string>
+    <string name="combov2_short_status_temp_basal">Временн %s</string>
+    <string name="combov2_short_status_reservoir">Резервуар: %dед</string>
+    <string name="combov2_short_status_battery_state_empty">пусто</string>
+    <string name="combov2_short_status_battery_state_low">низкая</string>
 </resources>
