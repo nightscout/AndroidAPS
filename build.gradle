@@ -49,7 +49,7 @@ buildscript {
         play_services_location_version = '21.0.1'
 
         kotlinx_datetime_version = '0.3.2'
-        kotlinx_serialization_core_version = '1.3.2'
+        kotlinx_serialization_core_version = '1.4.1'
     }
     repositories {
         google()
