@@ -3,6 +3,7 @@
     <string name="next_button">Tovább</string>
     <string name="previous_button">Vissza</string>
     <string name="setupwizard_finish">BEFEJEZ</string>
+    <string name="display_settings">Megjelenítési beállítások</string>
     <string name="current_master_password">Jelenlegi mesterjelszó</string>
     <string name="status">Állapot:</string>
     <string name="patient_name">Beteg neve</string>
@@ -10,7 +11,11 @@
     <string name="profile">Profil</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink állapot:</string>
     <!--    ConfigBuilder-->
+    <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_loop">Loop</string>
     <!--ImportExport-->
+    <string name="import_setting">Beállítások importálása</string>
     <string name="nav_export">Beállítások exportálása</string>
     <string name="setting_imported">Beállítások importálva</string>
     <string name="old_master_password">Régi mesterjelszó</string>

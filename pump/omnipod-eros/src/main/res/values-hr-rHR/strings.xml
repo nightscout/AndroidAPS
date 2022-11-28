@@ -5,7 +5,10 @@
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
     <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_item_source">Izvor</string>
+    <string name="omnipod_eros_history_item_date">Datum</string>
     <string name="omnipod_eros_history_type">Tip:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
     <!-- Omnipod Eros - Short Status -->
     <!-- Omnipod Eros - Error -->
     <!-- Omnipod Eros - Pod Management -->

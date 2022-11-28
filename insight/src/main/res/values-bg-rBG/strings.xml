@@ -43,7 +43,6 @@
     <string name="short_status_tdd">ТДД: %1$.2f</string>
     <string name="short_status_reservoir">Рез.: %1$.2fE</string>
     <string name="short_status_battery">Бат.: %1$d%%</string>
-    <string name="mute_alert">Без звук</string>
     <string name="release_software_version">Софтуер версия</string>
     <string name="ui_processor_software_version">UI процесор софтуер версия</string>
     <string name="pc_processor_software_version">PC процесор софтуер версия</string>

@@ -43,7 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f IE</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="mute_alert">Stumm</string>
     <string name="release_software_version">Release-Softwareversion</string>
     <string name="ui_processor_software_version">UI-Prozessor-Softwareversion</string>
     <string name="pc_processor_software_version">PC-Prozessor-Softwareversion</string>

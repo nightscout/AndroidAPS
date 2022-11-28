@@ -2,9 +2,15 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_scan_stop">停止</string>
     <!-- RL Status Page -->
+    <string name="rileylink_pump_serial_number">ポンプのシリアル番号:</string>
+    <string name="rileylink_pump_frequency">ポンプ周波数:</string>
     <!-- RL State -->
+    <string name="rileylink_state_connected">接続されました</string>
     <!-- RL Errors -->
     <!-- RileyLink - Common -->
+    <string name="riley_link_common_yes">Yes</string>
+    <string name="riley_link_common_no">No</string>
     <!-- RileyLink - Preferences -->
 </resources>

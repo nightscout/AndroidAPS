@@ -43,7 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Rezervor: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="mute_alert">Liniște</string>
     <string name="release_software_version">Versiunea de software</string>
     <string name="ui_processor_software_version">Versiunea softwareului procesor UI</string>
     <string name="pc_processor_software_version">Versiunea software procesor PC</string>

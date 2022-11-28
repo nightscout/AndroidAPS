@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">Mistet tilkoblingen til pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">En annen bolusdose blir levert</string>
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Kommando er ikke bekreftet</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
 </resources>

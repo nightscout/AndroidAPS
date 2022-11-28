@@ -6,6 +6,9 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_charging">Under opladning</string>
     <string name="ns_battery">På batteri</string>
+    <string name="connection_settings_title">Indstillinger for forbindelse</string>
+    <string name="ns_wifi_allowed_ssids">Tilladte SSID\'er (semikolon separeret)</string>
+    <string name="ns_allow_roaming">Tillad forbindelse i roaming</string>
     <string name="ns_create_announcements_from_errors_title">Opret annonceringer fra fejl</string>
     <string name="ns_create_announcements_from_carbs_req_title">Opret meddelelser fra kulhydrat krævet advarsler</string>
     <string name="ns_create_announcements_from_errors_summary">Opret Nightscout meddelelse for fejldialoger og lokale advarsler (kan også ses i Careportal under Behandlinger)</string>
@@ -13,15 +16,29 @@
     <string name="description_ns_client">Synkroniserer dine data med NightScout</string>
     <string name="blocked_by_charging">Blokeret af opladningsmuligheder</string>
     <string name="blocked_by_connectivity">Blokeret af forbindelsesmuligheder</string>
+    <string name="unsupported_ns_version">Ikke understøttet version af Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
+    <string name="ns_malfunction">NSClient funktionsfejl. Overvej NS og NSClient genstart.</string>
     <!-- NSClient -->
+    <string name="no_write_permission">NSCLIENT har ingen skrivetilladelse. Forkert API-secret?</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_autoscroll">Autoscroll</string>
     <string name="restart">Genstart</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_dialog_message">Indtast dit Nightscout URL</string>
+    <string name="ns_client_secret_title">NS API secret</string>
+    <string name="ns_client_secret_dialog_title">NS API secret</string>
+    <string name="ns_client_secret_dialog_message">Indtast NS API secret (min 12 tegn)</string>
     <string name="deliver_now">Afgiver nu</string>
     <string name="clear_queue">Ryd kø</string>
     <string name="show_queue">Vis kø</string>
     <string name="queue">Kø:</string>
     <string name="status">Status:</string>
+    <string name="clear_log">Ryd log</string>
     <string name="full_sync">Fuld synkronisering</string>
     <string name="full_sync_comment">Fuld synkronisering? Det kan tage mange timer, og indtil du er færdig, vil du ikke se nye data i NS.</string>
     <string name="ns_sync_options">Synkronisering</string>
@@ -46,8 +63,15 @@
     <string name="ns_receive_cgm">Modtag/tilbagefyld CGM-data</string>
     <string name="ns_receive_cgm_summary">Accepter CGM-data fra NS</string>
     <string name="ns_sync_slow">Reducer upload hastighed</string>
+    <string name="ns_alarm_options">Indstillinger for alarm</string>
     <string name="ns_alarms">Opret notifikationer fra NS-alarmer</string>
     <string name="ns_announcements">Opret notifikationer fra NS-meddelelser</string>
+    <string name="ns_alarm_stale_data_value_label">Forældet data grænse [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Akut forældet data grænse [min]</string>
+    <string name="ns_log_app_started_event">Log app-start til NS</string>
+    <string name="ns_local_broadcasts">Aktivér dryp til andre apps (såsom xDrip+). Aktiver ikke, hvis du har mere end én instans af AAPS eller AAPSClient installeret!</string>
+    <string name="ns_local_broadcasts_title">Aktiver lokale udsendelser.</string>
+    <string name="copy_existing_values">Kopier NS-indstillinger (hvis de findes)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Dit brugernavn til Tidepool, normalt din e-mailadresse</string>
     <string name="title_tidepool_username">Login Brugernavn</string>

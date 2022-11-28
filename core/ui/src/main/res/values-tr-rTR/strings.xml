@@ -18,7 +18,19 @@
     <string name="settings">Ayarlar</string>
     <string name="statuslights">Durum ışıkları</string>
     <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
+    <string name="configbuilder_insulin">İnsülin</string>
+    <string name="value_unavailable_short">yok</string>
+    <string name="master_password">Ana parola</string>
+    <string name="ue_export_to_csv">Kullanıcı Girişlerini Excel\'e Aktar (csv)</string>
+    <string name="confirm">Onayla</string>
+    <string name="pump">Pompa</string>
+    <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
+    <string name="treatments_iob_label_string">AİNS:</string>
+    <string name="mute5min">5 dakika sessize al</string>
+    <string name="mute">Sessiz</string>
+    <string name="success">Başarılı</string>
     <!--    Protection-->
+    <string name="unlock_settings">Kilit açma ayarları</string>
     <!--    Pumps -->
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
     <string name="reservoir_value">%1$.0f / %2$d Ü</string>
@@ -58,4 +70,17 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
+    <plurals name="days">
+        <item quantity="one">%1$d gün</item>
+        <item quantity="other">%1$d gün</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d dakika</item>
+        <item quantity="other">%1$d dakika</item>
+    </plurals>
 </resources>

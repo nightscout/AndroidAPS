@@ -6,6 +6,7 @@
     <string name="automation_missing_task_name">Παρακαλώ εισάγετε όνομα εργασίας.</string>
     <string name="automation_missing_trigger">Προσδιορίστε τουλάχιστον ένα σύστημα ενεργοποίηση.</string>
     <string name="automation_missing_action">Προσδιορίστε τουλάχιστον μία ενέργεια.</string>
+    <string name="alarm_short">Συναγερμός:</string>
     <string name="message_short">Μην:</string>
     <string name="alreadyenabled">Ήδη ενεργοποιημένο</string>
     <string name="alreadydisabled">Ήδη απενεργοποιημένο</string>
@@ -45,6 +46,7 @@
     <string name="short_avgdelta">Βραχυπρόθεσμος Μέσος Όρος</string>
     <string name="long_avgdelta">Μακροπρόθεσμος Μέσος Όρος</string>
     <string name="delta">Διαφορά</string>
+    <string name="locationis">%1$s %2$s</string>
     <string name="time_range">Εύρος χρόνου</string>
     <string name="timerange_value">Ο χρόνος είναι μεταξύ %1$s και %2$s</string>
     <string name="between">Ανάμεσα </string>

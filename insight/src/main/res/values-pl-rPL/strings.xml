@@ -43,7 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Zbiornik: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="mute_alert">Wycisz</string>
     <string name="release_software_version">Wersja oprogramowania</string>
     <string name="ui_processor_software_version">Wersja oprogramowania procesora interfejsu użytkownika</string>
     <string name="pc_processor_software_version">Wersja oprogramowania procesora PC</string>

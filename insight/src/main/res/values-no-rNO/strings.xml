@@ -43,7 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Ampull: %1$.2f E</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="mute_alert">Demp lyd</string>
     <string name="release_software_version">Programvare versjon</string>
     <string name="ui_processor_software_version">UI prosessor programvare versjon</string>
     <string name="pc_processor_software_version">PC prosessor programvare versjon</string>

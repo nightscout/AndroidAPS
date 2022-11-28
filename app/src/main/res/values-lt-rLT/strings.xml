@@ -3,7 +3,7 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="nav_preferences_plugin">%1$s Nustatymai</string>
+    <string name="nav_preferences_plugin">%1$s nustatymai</string>
     <string name="nav_refreshtreatments">Atnaujinti terapiją iš NS</string>
     <string name="nav_exit">Išeiti</string>
     <string name="delta">Pokytis</string>
@@ -33,6 +33,8 @@
     <string name="enable_carbs_req_alert">Perspėti, jei būtini angliavandeniai</string>
     <string name="open_navigation">Atidaryti meniu</string>
     <string name="close_navigation">Uždaryti meniu</string>
+    <string name="remove_items">Pašalinti elementus</string>
+    <string name="sort_items">Rūšiuoti</string>
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
     <string name="error_adding_treatment_message">Įrašas (insulinas: %1$.2f, angl.: %2$d, ties: %3$s) negali būti pridėtas. Prašome patikrinti ir rankiniu būdu atitinkamai įtraukti įrašą.</string>
     <string name="generated_ecarbs_note">iAV.: %1$d g (%2$d h), atidėjimas: %3$d m</string>
@@ -49,7 +51,13 @@
     <string name="clear_filter">Valyti filtrą</string>
     <string name="cannula">Kaniulė</string>
     <string name="email_address">El. pašto adresas</string>
+    <string name="remove_bg_readings">Pašalinti KG duomenis</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
+    <string name="a11y_dialog">dialogas</string>
     <!-- WEAR OS-->
+    <string name="wear_unknown_action_string">Nežinoma komanda:</string>
+    <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
+    <string name="count_selected">%1$d pasirinkta</string>
     <string name="sort_label">Rūšiuoti</string>
+    <string name="search">Ieškoti</string>
 </resources>

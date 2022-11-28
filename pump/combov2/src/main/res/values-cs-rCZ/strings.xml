@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">Vybitá baterie</string>
+    <string name="combov2_error_4">Okluze</string>
+    <string name="combov2_error_6">Porucha mechaniky</string>
     <string name="bluetooth_address">Bluetooth MAC adresa</string>
+    <string name="combov2_not_initialized">Není inicializován</string>
+    <string name="combov2_ready">Připraven</string>
+    <string name="combov2_suspended">Pozastaveno</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Nastavení bazálního profilu</string>
+    <string name="combov2_bolus_cancelled">Bolus zrušen</string>
+    <string name="combov2_bolus_delivery_failed">Provádění bolusu selhalo. Zdá se, že žádný bolus nebyl podán. Zkontrolujte pumpu a případně pošlete bolus znovu. Jako bezpečnostní opatření podání bolusu není opakováno.</string>
+    <string name="combov2_current_tbr">%1$d%% (zbývá %2$d min)</string>
+    <string name="combov2_battery_low_warning">Slabá baterie v pumpě</string>
+    <string name="combov2_short_status_last_connection">Poslední spoj: před %1$d min</string>
+    <string name="combov2_short_status_temp_basal">Doč. bazál: %s</string>
+    <string name="combov2_short_status_reservoir">Zásobník: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">prázdný</string>
+    <string name="combov2_short_status_battery_state_low">nízká</string>
 </resources>

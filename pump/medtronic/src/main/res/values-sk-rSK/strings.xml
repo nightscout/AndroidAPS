@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Zistené chybné dáta v histórii pumpy. Otvor nový incident a poskytni logy.</string>
     <string name="riley_statistics">Štatistiky RL</string>
     <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuté na tlačítko obnoviť</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Naplánovaná aktualizácia stavu</string>
 </resources>

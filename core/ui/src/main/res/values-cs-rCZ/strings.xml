@@ -34,7 +34,20 @@
     <string name="settings">Nastavení</string>
     <string name="statuslights">Stavové indikátory</string>
     <string name="do_ns_upload_title">Nahrávat data do NS</string>
+    <string name="configbuilder_insulin">Inzulín</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Hlavní heslo</string>
+    <string name="ue_export_to_csv">Exportovat uživatelské záznamy do Excelu (csv)</string>
+    <string name="confirm">Potvrdit</string>
+    <string name="pump">Pumpa</string>
+    <string name="missed_bg_readings">Chybějící glykémie</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Ztlumit na 5 minut</string>
+    <string name="mute">Ztlumit</string>
+    <string name="success">Úspěch</string>
+    <string name="advancedsettings_title">Rozšířené nastavení</string>
     <!--    Protection-->
+    <string name="unlock_settings">Odemknout nastavení</string>
     <!--    Pumps -->
     <string name="battery_label">Baterie</string>
     <string name="reservoir_label">Zásobník</string>
@@ -103,4 +116,23 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Nastavení pluginu</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
+    <plurals name="days">
+        <item quantity="one">%1$d den</item>
+        <item quantity="few">%1$d dnů</item>
+        <item quantity="many">%1$d dnů</item>
+        <item quantity="other">%1$d dnů</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodin</item>
+        <item quantity="many">%1$d hodin</item>
+        <item quantity="other">%1$d hodin</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuta</item>
+        <item quantity="few">%1$d minut</item>
+        <item quantity="many">%1$d minut</item>
+        <item quantity="other">%1$d minut</item>
+    </plurals>
 </resources>

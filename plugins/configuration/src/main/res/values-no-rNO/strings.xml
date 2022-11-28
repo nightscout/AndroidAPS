@@ -78,6 +78,7 @@
     <string name="description_config_builder">Brukes for innstilling av aktive plugins</string>
     <string name="allow_hardware_pump_text">Varsel: Hvis du aktiverer og kobler til en pumpe, så vil AndroidAPS kopiere basal innstillinger fra din profil over til pumpen og overskrive verdiene som er lagret i pumpen. Sjekk at du har riktige basal verdier i AndroidAPS. Hvis du ikke er sikker eller ikke ønsker å overskrive basal verdiene i pumpen, trykk avbryt og koble til pumpen senere.</string>
     <string name="a11y_open_settings">åpne innstillinger</string>
+    <string name="nsclient_version_does_not_match">NSClient-versjonen samsvarer ikke med AAPS-versjonen. Vennligst oppdater.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Innstillinger</string>
     <string name="password_preferences_encrypt_prompt">Du må angi et hovedpassord som vil bli brukt til å kryptere dine eksporterte innstillinger. Husk dette!</string>
@@ -104,6 +105,8 @@
     <string name="goto_main_try_again">Gå tilbake til hovedskjermen og prøv på nytt.</string>
     <string name="restartingapp">Avslutter appen for å aktivere innstillinger.</string>
     <string name="ue_exported">Brukeroppføringer er eksportert</string>
+    <string name="protection">Beskyttelse</string>
+    <string name="master_password_missing">Hoved passord er ikke definert!\n\nAngi hoved passord i innstillinger (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">Vedlikehold</string>
     <string name="maintenance_shortname">VEDL</string>
@@ -125,5 +128,29 @@
     <string name="nav_resetdb">Nullstill databasene</string>
     <string name="resettodefaults">Tilbakestill til standardverdier</string>
     <!-- Maintenance -->
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportert for %1$s siden</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksportert den %1$s</string>
+    <string name="exported_less_than_hour_ago">eksportert for mindre enn time siden</string>
+    <string name="in_directory" comment="placeholder is for exported file path">i katalogen: %1$s</string>
+    <string name="preferences_import_list_title">Velg fil å importere</string>
+    <string name="metadata_warning_different_flavour">Innstillinger ble opprettet med en annen utgave av AAPS (%1$s) mens du har: %2$s.\n\nNoen innstillinger kan mangle eller være ugyldige. Etter å ha importert bør du kontrollere og oppdatere innstillingene dine.</string>
+    <string name="metadata_warning_different_device">Innstillingene ble opprettet på en annen enhet. Det er OK om du importerer fra en eldre/annen telefon, men kontroller at importerte innstillinger er riktig!</string>
+    <string name="metadata_warning_outdated_format">Du bruker et utgått format fra en gammel versjon av AAPS som ikke er sikkert! Bruk det bare som en siste utvei hvis du ikke har en nyere eksport som benytter JSON formatet.</string>
+    <string name="metadata_warning_old_export">Importerte innstillinger er allerede %1$s dager gamle! Kanskje du har flere oppdaterte innstillinger eller du har valgt feil fil? Husk å eksportere innstillinger regelmessig!</string>
+    <string name="metadata_warning_date_format">Ugyldig dato-tid format!</string>
+    <string name="metadata_warning_different_version">Innstillinger er fra en annen delversjon av appen. Det er OK å importere etter en oppgradering av app, men sjekk at innstillinger fortsatt er korrekte etter importen!</string>
+    <string name="metadata_urgent_different_version">Innstillinger er fra en annen hovedversjon av appen. Forskjeller mellom hovedversjoner kan være betydelige og dermed inkompatible innstillinger. Verifiser etter importen at dine innstillinger fortsatt er korrekte!</string>
+    <string name="prefdecrypt_settings_tampered">Filen med innstillinger er manipulert</string>
+    <string name="prefdecrypt_settings_secure">Fil med innstillinger er sikker</string>
+    <string name="prefdecrypt_settings_unencrypted">Bruker usikkert, ikke-kryptert format for innstillinger</string>
+    <string name="prefdecrypt_wrong_json">JSON formatfeil, mangler påkrevd felt (format, innhold, metadata eller sikkerhet)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfeil, oppgitt passord kan ikke dekryptere filen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filens sjekksum (hash) mangler, kan dermed ikke bekrefte innstillingene!</string>
+    <string name="prefdecrypt_issue_modified">Filen har blitt endret etter eksporten!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfeil, klarte ikke å tolke innstillingene!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfeil, det oppgitte passordet er ugyldig eller filen har blitt endret! Det kan hende filen ble eksportert med et annet passord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Mangler krypteringsinformasjon, formatet på innstillinger er ugyldig!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Ugyldig eller ikke spesifisert krypteringsalgoritme!</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
 </resources>

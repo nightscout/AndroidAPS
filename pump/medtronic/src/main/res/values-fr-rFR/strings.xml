@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Données invalides dans l\'historique de la pompe. Déclarez le problème (\"Issue\") sur Github avec vos fichiers logs.</string>
     <string name="riley_statistics">Stats RL</string>
     <string name="medtronic_history_type">Type :</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Actualisation demandée</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Actualisation état programmé</string>
 </resources>

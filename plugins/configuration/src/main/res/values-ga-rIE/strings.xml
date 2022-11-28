@@ -15,7 +15,9 @@
     <string name="configbuilder_loop">Lúb</string>
     <string name="configbuilder_bgsource">Foinse BG</string>
     <!--ImportExport-->
+    <string name="nav_preferences">Sainroghanna</string>
     <string name="check_preferences_import_btn">Iompórtáil</string>
+    <string name="import_setting">Socruithe Iompórtáil</string>
     <string name="nav_export">Socruithe Easpórtáil</string>
     <string name="export_to">Socruithe Easpórtáil chun</string>
     <string name="exported">Easpórtáil Socruithe</string>

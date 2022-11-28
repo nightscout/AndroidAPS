@@ -15,4 +15,6 @@
     <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
     <!-- PumpPluginBase -->
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1fЕ</string>
+    <string name="format_insulin_units">%1$.2fЕ</string>
 </resources>

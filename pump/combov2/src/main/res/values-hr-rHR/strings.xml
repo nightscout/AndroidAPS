@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="combov2_ready">Spremno</string>
+    <string name="combov2_suspended">Suspendiran</string>
+    <string name="combov2_short_status_battery_state_low">nisko</string>
+</resources>

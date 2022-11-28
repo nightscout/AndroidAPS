@@ -2,6 +2,7 @@
 <resources>
     <!--    DateUtil-->
     <!-- Rx -->
+    <string name="connecting_for">%1$d 秒間接続中</string>
     <string name="handshaking">ハンドシェイク中です</string>
     <string name="connected">接続されました</string>
     <string name="disconnecting">切断中</string>

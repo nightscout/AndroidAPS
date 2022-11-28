@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="key_diaconn_g8_is_bolus_speed_sync">diaconn_g8_isbolusspeedsync</string>
     <string name="resetpairing">Slett sammenkobling</string>
     <string name="diaconn_no_device_available">Ingen enheter er tilgjengelige</string>
     <string name="diaconn_pairing">Diaconn pumpe sammenkobling</string>

@@ -41,6 +41,7 @@
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
+    <string name="timeshift_label">Tijd verschuiving</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor2h">Onderbreek loop voor 2u</string>
     <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
@@ -102,6 +103,10 @@
     <!-- ProfileHelperActivity -->
     <string name="profile2">Profiel 2</string>
     <string name="selected_profile">Geselecteerd:</string>
+    <string name="format_with_tdd">Duur: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Leeftijd: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Leeftijd: %1$d Gewicht: %2$.0f kg</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP INGEDRUKT</string>
 </resources>

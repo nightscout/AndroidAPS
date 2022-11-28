@@ -43,7 +43,6 @@
     <string name="short_status_tdd">BPD: %1$.2f</string>
     <string name="short_status_reservoir">Rez.: %1$.2f vv</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="mute_alert">Nutildyti</string>
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
     <string name="ui_processor_software_version">UI procesoriaus programinės įrangos versija</string>
     <string name="pc_processor_software_version">PC procesoriaus programinės įrangos versija</string>

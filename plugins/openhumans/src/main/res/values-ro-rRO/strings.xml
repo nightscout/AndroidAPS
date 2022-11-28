@@ -14,7 +14,15 @@
     <string name="open_humans_notifications">Notificări Open Humans</string>
     <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
+    <string name="next">Următor</string>
     <string name="terms_of_use">Condiții de utilizare</string>
+    <string name="info_openhumans">Aceasta este un instrument open source care va copia datele tale în Open Humans. Nu avem dreptul sa împărtășim datele tale cu terțe părți fără autorizație explicită. Datele pe care le primesc proiectul și aplicația sunt identificate printr-un ID de utilizator aleatoriu și vor fi transmise în siguranță într-un cont Open Humans numai cu autorizarea acestui proces. Poți înceta încărcarea și șterge datele oricând folosind www.openhumans.org.</string>
+    <string name="boluses">Bolusuri</string>
+    <string name="carbohydrates">Carbohidrați</string>
+    <string name="settings">Setări</string>
+    <string name="device_model">Model dispozitiv</string>
+    <string name="nightscout_url">Adresa Nightscout</string>
+    <string name="agree">Înţeleg şi sunt de acord.</string>
     <string name="cancel">Renunță</string>
     <string name="close">Închide</string>
     <string name="upload_now">Încarcă acum</string>

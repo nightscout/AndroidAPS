@@ -43,7 +43,6 @@
     <string name="short_status_tdd">DTI : %1$.2f</string>
     <string name="short_status_reservoir">Réserv.: %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="mute_alert">Coupure son</string>
     <string name="release_software_version">Version du logiciel</string>
     <string name="ui_processor_software_version">Version du logiciel de processeur UI</string>
     <string name="pc_processor_software_version">Version du logiciel du processeur PC</string>

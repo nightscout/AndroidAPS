@@ -44,6 +44,17 @@
     <string name="smscommunicator_extended_stop_reply_with_code">Для прекращения подачи пролонгированного болюса ответьте кодом %1$s</string>
     <string name="smscommunicator_tempbasal_canceled">Временный базал отменен</string>
     <string name="smscommunicator_extended_canceled">Пролонгированный болюс отменен</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Отмена врем базала не состоялась</string>
+    <string name="smscommunicator_extended_cancel_failed">Сбой отмены пролонгированного болюса</string>
+    <string name="smscommunicator_unknown_command">Неизвестная команда или неверный ответ</string>
+    <string name="smscommunicator_wrong_duration">Неверное значение длительности</string>
+    <string name="smscommunicator_loop_suspended">ЗЦикл остановлен</string>
+    <string name="smscommunicator_loop_resumed">ЗЦикл возобновлен</string>
+    <string name="smscommunicator_invalid_phone_number">Неверный номер телефона для смс</string>
+    <string name="smscommunicator_calibration_failed">xDrip + не получает калибровки</string>
+    <string name="smscommunicator_message_body">Недопустимое тело сообщения</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
+    <string name="smscommunicator_pump_unreachable">Сообщить о недоступности помпы</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="ultra_rapid_oref">Сверхбыстрый Oref</string>
@@ -51,6 +62,7 @@
     <string name="ultra_fast_acting_insulin_comment">Фиасп</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">Cтрока состояния xDrip (часы)</string>
     <string name="xdrip_status_shortname">Статус xDrip</string>
     <string name="xdrip_status_detailed_iob_title">Показать IOB подробно</string>
     <string name="disabled_loop">Зцикл не работает</string>
@@ -60,12 +72,19 @@
     <!-- Food-->
     <string name="food_short">Еда</string>
     <string name="description_food">Показывает заданные в Nightscout настройки для приема пищи</string>
+    <string name="short_kilo_joul">кДж</string>
+    <string name="short_energy">Энергия</string>
+    <string name="short_protein">Белки</string>
+    <string name="short_fat">Жиры</string>
     <string name="calculator_label">Калькулятор</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">Выберите темную, светлую или системную тему</string>
     <!-- Profile -->
     <string name="localprofile">Профиль</string>
     <string name="do_you_want_switch_profile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
+    <string name="save_or_reset_changes_first">Сначала сохраните или сбросьте текущие изменения</string>
+    <string name="delete_current_profile">Удалить текущий профиль?</string>
+    <string name="profile_name_contains_dot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <!-- Objectives -->
     <string name="completed_well_done">Завершено, отлично!</string>
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
@@ -136,15 +155,121 @@
     <string name="a11y_bg_quality">качество ГК</string>
     <string name="a11y_blood_glucose">уровень глюкозы в крови ГК</string>
     <string name="a11y_bg_outdated">устаревшие данные</string>
+    <string name="aps_mode_title">Режим APS</string>
+    <string name="set_basal_question">Принять новый врем базал:</string>
     <string name="overview_cgm">Непрерывный мониторинг ГК</string>
     <string name="quickwizard">Мастер Быстрого доступа</string>
+    <string name="a11y_only_on_watch">только на часах</string>
+    <string name="a11y_only_on_phone">только на телефоне</string>
+    <string name="overview">Начало</string>
+    <string name="overview_shortname">НАЧАЛО</string>
+    <string name="description_overview">Отображает текущее состояние цикла и часто используемые кнопки</string>
+    <string name="overview_editquickwizard_usecob">Вычисление активных углеводов COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Вычисление временного целевого значения</string>
+    <string name="overview_editquickwizard_usepercentage">Расчет процентов</string>
+    <string name="overview_buttons_selection">Кнопки</string>
+    <string name="show_calibration_button_summary">Отправляет калибровки на xDrip+ или открывает диалоговое окно калибровки BYODA DEXCOM</string>
+    <string name="show_cgm_button_summary">Открывает xDrip + или BYODA DEXCOM, кнопка назад возвращает в AAPS</string>
+    <string name="dexcom_app_not_installed">Приложение Dexcom не установлено</string>
+    <string name="dexcom_app_not_detected">Пожалуйста, обновите приложение Dexcom до поддерживаемой версии</string>
+    <string name="error_starting_cgm">Не удалось запустить приложения мониторинга СК. Убедитесь, что оно установлено.</string>
+    <string name="not_available_full">Недоступно</string>
+    <string name="constraints_violation">ограничение нарушено</string>
+    <string name="change_your_input">измените введенные данные</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Загрузчик</string>
+    <string name="data_status">Состояние данных ГК</string>
+    <string name="quickwizard_settings">БыстрыйБолюс настройки</string>
+    <string name="overview_edit_quickwizard_button_text">текст на кнопке</string>
+    <string name="overview_edit_quickwizard_carbs">Углеводы:</string>
+    <string name="overview_edit_quickwizard_valid">использовать до:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">добавить</string>
+    <string name="overview_quickwizard_item_edit_button">редактировать</string>
+    <string name="overview_edit_quickwizard_show_on_device">Показать запись на устройстве:</string>
+    <string name="overview_edit_quickwizard_use_bg">Вычисление СК</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Расчет болюсного активного инсулина IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Расчет базального активного инсулина IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Расчет тренда</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Расчет супер болюса</string>
+    <string name="overview_edit_quickwizard_percentage">Процент</string>
+    <string name="device_all">Все</string>
+    <string name="device_phone">Телефон</string>
+    <string name="device_watch">Смарт-часы</string>
+    <string name="positive_only">Только положительные</string>
+    <string name="negative_only">Только отрицательные</string>
+    <string name="app_default">Из настроек приложения</string>
+    <string name="a11y_drag_and_drop_handle">перетаскиватель</string>
+    <string name="keep_screen_on_title">Не отключать экран</string>
+    <string name="keep_screen_on_summary">Не давать системе Android отключать экран. Это увеличит потребление энергии при отключенной сети питания.</string>
+    <string name="treatments">Терапия</string>
+    <string name="carb_increment_button_message">Количество вводимых углеводов при нажатии кнопки</string>
+    <string name="insulin_increment_button_message">Количество инсулина, вводимого при нажатии кнопки</string>
+    <string name="firstinsulinincrement">Первый шаг увеличения инсулина</string>
+    <string name="secondinsulinincrement">Второй шаг увеличения инсулина</string>
+    <string name="thirdinsulinincrement">Третий шаг увеличения инсулина</string>
+    <string name="firstcarbsincrement">Первый шаг увеличения углеводов</string>
+    <string name="secondcarbsincrement">Второй шаг увеличения углеводов</string>
+    <string name="thirdcarbsincrement">Третий шаг увеличения углеводов</string>
+    <string name="cgm">Мониторинг ГК</string>
+    <string name="default_temptargets">Временные цели по умолчанию</string>
+    <string name="eatingsoon_duration">продолжительность ожидания приема пищи eatingsoon</string>
+    <string name="eatingsoon_target">целевое значение ГК при ожидаемом приеме пищи eatingsoon</string>
+    <string name="activity_duration">длительность нагрузки</string>
+    <string name="activity_target">целевое значение ГК при физической нагрузке</string>
+    <string name="hypo_duration">длительность гипо</string>
+    <string name="hypo_target">целевое значение ГК при гипо</string>
+    <string name="fill_bolus_title">Заполнить стандартное количество инсулина</string>
+    <string name="button1">Кнопка 1</string>
+    <string name="button2">Кнопка 2</string>
+    <string name="button3">Кнопка 3</string>
+    <string name="prefs_range_title">Диапазон для визуализации</string>
+    <string name="prefs_range_summary">Нижняя и верхняя граница графиков на начальном экране и на смарт-часах</string>
+    <string name="low_mark">отметка НИЗКИЙ</string>
+    <string name="high_mark">Отметка ВЫСОКИЙ</string>
+    <string name="short_tabtitles">Сокращенные наименования вкладок</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Показать поле примечаний в диалогах терапии</string>
+    <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подается только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
+    <string name="enable_bolus_advisor">Вкл помощник болюса</string>
+    <string name="enable_bolus_advisor_summary">Воспользуйтесь напоминанием, чтобы начать есть позже, вместо того, чтобы задействовать помощник болюса на высоких значениях ГК (\"пре-болюс\")</string>
+    <string name="enablesuperbolus">Активировать суперболюс в помощнике болюса</string>
+    <string name="enablesuperbolus_summary">Активировать возможность суперболюса в мастере. Не активируйте если не знаете что это. МОЖЕТ ВЫЗВАТЬ ПЕРЕДОЗИРОВКУ ИНСУЛИНА ЕСЛИ ИСПОЛЬЗУЕТСЯ ВСЛЕПУЮ!</string>
+    <string name="enablebolusreminder">Включить напоминание о болюсе</string>
+    <string name="enablebolusreminder_summary">Напомнить о подаче болюса позднее в мастере (постболюс)</string>
     <string name="run_question">Запустить %s?</string>
     <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Прогнозирование</string>
+    <string name="overview_show_treatments">Терапия</string>
+    <string name="overview_show_deviation_slope">Линия отклонения</string>
+    <string name="overview_show_activity">Активность</string>
+    <string name="overview_show_bgi">Влияние ГК</string>
+    <string name="overview_show_sensitivity">Чувствительность</string>
+    <string name="overview_show_deviations">Отклонение</string>
+    <string name="overview_show_cob">Активные углеводы COB</string>
+    <string name="overview_show_basals">Базал</string>
+    <string name="overview_show_abs_insulin">Абсолютный инсулин</string>
+    <string name="prediction_shortname">ОЖИД</string>
+    <string name="basal_shortname">БАЗ</string>
+    <string name="deviation_shortname">ОТКЛН</string>
+    <string name="activity_shortname">НАГР</string>
+    <string name="bgi_shortname">-BGI</string>
+    <string name="abs_insulin_shortname">НАДО</string>
+    <string name="devslope_shortname">ЛИНОТКЛН</string>
+    <string name="treatments_shortname">НАЗНАЧ</string>
+    <string name="sensitivity_shortname">ЧУВСТВ</string>
+    <string name="graph_scale">Масштаб графика</string>
+    <string name="graph_menu_divider_header">График</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Тип виртуальной помпы</string>
+    <string name="virtual_pump_definition">Определение помпы</string>
+    <string name="virtual_pump_pump_def">Болюс: Шаг =%1$s\n Пролонгированный Болюс: [Шаг =%2$s, Продолжительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\n ВБС: %6$s (на %7$s), Продолжительность =%8$sмин -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">ВиртПомпа</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
+    <string name="virtual_pump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
     <!-- Source -->
+    <string name="ns_client_bg">СК с клиента Nightscout</string>
+    <string name="ns_client_bg_short">ГК с NS </string>
     <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
     <string name="xdrip">xDrip +</string>
     <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
@@ -153,7 +278,9 @@
     <string name="description_source_dexcom">Получать данные ГК от \'Самостоятельно собранного приложения Dexcom\'.</string>
     <string name="eversense">Приложение Eversense (пропатченное)</string>
     <string name="description_source_eversense">Получать данные гликемии от пропатченного приложения Eversense.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Получать данные гликемии от 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Получать данные гликемии от приложения Poctech</string>
@@ -164,6 +291,7 @@
     <string name="tomato">Томато (MiaoMiao)</string>
     <string name="tomato_short">Томато</string>
     <string name="description_source_tomato">Получать значения ГК от приложения Tomato (устройство MiaoMiao)</string>
+    <string name="aidex">Aidex GlucoRx</string>
     <string name="aidex_short">Aidex </string>
     <string name="description_source_aidex">Получить значения ГК от GlucoRx Aidex</string>
     <string name="random_bg">Случайные значения ГК</string>
@@ -181,8 +309,69 @@
     <string name="largedisplay_description">Большой экран</string>
     <string name="skin">Тема оформления</string>
     <!--    Loop -->
+    <string name="executing">выполнение</string>
+    <string name="run_now">выполнить сейчас</string>
+    <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
+    <string name="pump_not_initialized">помпа не инициализирована</string>
+    <string name="loop_shortname">ЗЦ</string>
+    <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
+    <string name="no_aps_selected">APS не выбрана или не выдала результат</string>
+    <string name="ignore5m">Игнорировать 5 м</string>
+    <string name="ignore15m">Игнорировать 15 м</string>
+    <string name="ignore30m">Игнорировать 30 м</string>
+    <string name="carbs_suggestion">Предложены углеводы</string>
+    <string name="open_loop_new_suggestion">есть новое предложение</string>
+    <string name="basal_set_correctly">Базал задан корректно</string>
+    <string name="last_run_label">последнее выполненное</string>
+    <string name="loop_aps_label">Система ИПЖ</string>
+    <string name="request_label">запрос</string>
+    <string name="loop_constraints_processed_label">после наложенных ограничений</string>
+    <string name="loop_tbr_request_time_label">Время запроса временной базальной скорости</string>
+    <string name="loop_tbr_execution_time_label">Время выполнения временной базальной скорости</string>
+    <string name="loop_tbr_set_by_pump_label">Временный базал определяется помпой</string>
+    <string name="loop_smb_request_time_label">Время запроса микроболюса SMB</string>
+    <string name="loop_smb_execution_time_label">Время выполнения микроболюса SMB</string>
+    <string name="loop_smb_set_by_pump_label">Супер микро болюс SMB задан помпой</string>
+    <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">применение:</string>
     <!--    Iob-->
+    <string name="send_logfiles">Отправьте файлы сегодняшнего лога разработчикам наряду с этим. Непредвиденная ситуация.</string>
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>
+    <string name="no_watch_connected">(Часы не подключены)</string>
+    <string name="pump_status">Статус помпы</string>
+    <string name="loop_status">Статус цикла</string>
+    <string name="wizard_result">Мастер:\nИнсулин: %1$.2fед\nУгл: %2$dг</string>
+    <string name="quick_wizard_not_available">Выбранный мастер быстрого доступа больше недоступен, обновите плитку</string>
+    <string name="quick_wizard_message">Мастер: %1$s\nИнсулин: %2$.2fЕд\nУгл: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Неизвестная конфигурация врем цели: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Отменить врем цели?</string>
+    <string name="wear_action_tempt_unit_error">На часах и телефоне различные единицы измерения!</string>
+    <string name="wear_action_tempt_zero_message">Нулевая врем цель - отмена?</string>
+    <string name="wear_action_tempt_min_bg_error">Мин ГК вне диапазона!</string>
+    <string name="wear_action_tempt_max_bg_error">Макс ГК вне диапазона!</string>
+    <string name="wear_action_tempt_manual_range_message">ВремЦель:\nМин: %1$s\nМакс.: %2$s\nДлительность: %3$s</string>
+    <string name="wear_action_tempt_manual_message">ВремЦель:\nЦель: %1$s\nДлительность: %2$s</string>
+    <string name="wear_action_tempt_preset_message">ВремЦель:\nПричина: %1$s\nЦель.: %2$s\nДлительность: %3$s</string>
+    <string name="no_success">неуспешно - проверьте телефон</string>
+    <string name="wear_settings">настройки смарт-часов Wear</string>
+    <string name="wearcontrol_title">Контроль с часов</string>
+    <string name="wearcontrol_summary">Ставить временные цели и вводить терапию с часов.</string>
+    <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
+    <string name="wear_display_settings">Параметры экрана</string>
+    <string name="wear_general_settings">Общие настройки</string>
+    <string name="wear_detailed_delta_title">Показать подробно дельту</string>
+    <string name="wear_detailed_delta_summary">Показать дельту еще с одним десятичным знаком</string>
+    <string name="wear_notifysmb_title">Сообщить о супер микро болюсе SMB</string>
+    <string name="wear_notifysmb_summary">Показывать супер микро болюс SMB на часах как стандартный болюс.</string>
+    <string name="wear_predictions_summary">Показывать линию тренда на смарт-часах.</string>
+    <string name="wear_predictions_title">Прогнозирование</string>
+    <string name="resend_all_data">повторить отправку всех данных</string>
+    <string name="open_settings_on_wear">Открыть настройки на Wear</string>
     <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
+    <string name="old_data">старые данные</string>
 </resources>

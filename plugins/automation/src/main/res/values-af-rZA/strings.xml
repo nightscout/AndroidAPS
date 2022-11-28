@@ -6,6 +6,7 @@
     <string name="automation_missing_task_name">Verskaf asb \'n aksie.</string>
     <string name="automation_missing_trigger">Gee asseblief ten minste een sneller.</string>
     <string name="automation_missing_action">Spesifisieer ten minste een aksie.</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Msg:</string>
     <string name="alreadyenabled">Reeds aangeskakel</string>
     <string name="alreadydisabled">Reeds afgeskakel</string>

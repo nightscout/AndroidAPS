@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Format del fitxer</string>
     <string name="metadata_label_created_at">Creat:</string>
     <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
     <string name="metadata_label_aaps_flavour">Variant de compilació</string>
@@ -14,4 +15,6 @@
     <string name="def_extended_note">* Només son acceptats valors discrets, no rangs, com a granularitat pels bolus/basals a la bomba virtual.</string>
     <!-- PumpPluginBase -->
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

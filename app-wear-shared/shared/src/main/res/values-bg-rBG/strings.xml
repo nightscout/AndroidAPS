@@ -19,6 +19,7 @@
     <string name="shortminute">м</string>
     <string name="shortday">д</string>
     <!-- Rx -->
+    <string name="connecting_for">Свързване %1$d сек</string>
     <string name="handshaking">Сдвояване</string>
     <string name="connected">Свързана</string>
     <string name="disconnecting">Разкачане</string>

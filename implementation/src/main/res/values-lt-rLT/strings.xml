@@ -3,4 +3,6 @@
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="permission">Leidimas</string>
     <!--       Stats -->
+    <string name="low" comment="3.1-3.9">Žemas</string>
+    <string name="high" comment="10.0-13.9">Aukštas</string>
 </resources>

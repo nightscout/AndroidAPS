@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">Batterie leer</string>
+    <string name="combov2_error_4">Verstopfung</string>
+    <string name="combov2_error_6">Mechanikfehler</string>
     <string name="bluetooth_address">Bluetooth-Adresse</string>
+    <string name="combov2_not_initialized">Nicht initialisiert</string>
+    <string name="combov2_ready">Bereit</string>
+    <string name="combov2_suspended">Angehalten</string>
+    <string name="combov2_setting_basal_profile_cmddesc">BR-Profil wird aktualisiert.</string>
+    <string name="combov2_bolus_cancelled">Bolus-Abbruch</string>
+    <string name="combov2_bolus_delivery_failed">Die Bolusabgabe ist fehlgeschlagen: Es wurde scheinbar kein Bolus abgegeben. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde. Um doppelte Boli durch Programmfehler zu vermeiden, werden Boli nicht automatisch wiederholt.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min verbleibend)</string>
+    <string name="combov2_battery_low_warning">Die Batterie in der Pumpe ist fast leer</string>
+    <string name="combov2_short_status_last_connection">Letzte Verb.: vor %1$d min</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Reserv: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">leer</string>
+    <string name="combov2_short_status_battery_state_low">niedrig</string>
 </resources>

@@ -14,7 +14,15 @@
     <string name="open_humans_notifications">Notificações Open Humans</string>
     <string name="you_have_been_signed_out_of_open_humans">Sessão do Open Humans foi encerrada</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Clique aqui para entrar novamente, se não foi de propósito.</string>
+    <string name="next">Seguinte</string>
     <string name="terms_of_use">Termos de Utilização</string>
+    <string name="info_openhumans">Esta é uma ferramenta de código aberto que vai copiar seus dados para Open Humans. Nós não retemos direitos de compartilhar seus dados com terceiros sem a sua autorização explícita. Os dados que o projecto e a app recebem são identificados através de um ID de usuário aleatório e só serão transmitidos de forma segura para uma conta Open Humans com a sua autorização desse processo. Pode parar de fazer o envio e excluir seus dados enviados a qualquer momento via www.openhumans.org.</string>
+    <string name="boluses">Bólus</string>
+    <string name="carbohydrates">Hidratos de Carbono</string>
+    <string name="settings">Definições</string>
+    <string name="device_model">Modelo do dispositivo</string>
+    <string name="nightscout_url">Nightscout URL</string>
+    <string name="agree">Compreendo e concordo.</string>
     <string name="cancel">Cancelar</string>
     <string name="close">Fechar</string>
     <string name="upload_now">Fazer o upload agora</string>

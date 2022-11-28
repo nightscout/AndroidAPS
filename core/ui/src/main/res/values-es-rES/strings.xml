@@ -32,8 +32,22 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="result">Resultado</string>
     <string name="settings">Ajustes</string>
+    <string name="statuslights">Luces de estado</string>
     <string name="do_ns_upload_title">Subir datos de glucosa a Nightscout</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Contraseña maestra</string>
+    <string name="ue_export_to_csv">Exportar entradas de usuario a Excel (csv)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="pump">Bomba</string>
+    <string name="missed_bg_readings">Faltan lecturas de glucosa</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Silenciar por 5 minutos</string>
+    <string name="mute">Silenciar</string>
+    <string name="success">Exito</string>
+    <string name="advancedsettings_title">Ajustes avanzados</string>
     <!--    Protection-->
+    <string name="unlock_settings">Desbloquear ajustes</string>
     <!--    Pumps -->
     <string name="battery_label">Batería</string>
     <string name="reservoir_label">Reservorio</string>
@@ -102,4 +116,17 @@
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Faltan permisos de SMS</string>
+    <plurals name="days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
 </resources>

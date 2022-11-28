@@ -15,4 +15,6 @@
     <string name="def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
     <!-- PumpPluginBase -->
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

@@ -56,4 +56,5 @@
     <string name="combo_error_display_never">Aldrig</string>
     <string name="combo_error_display_error">Ved Fejl</string>
     <string name="combo_error_display_always">Altid</string>
+    <string name="unsafeusage">usikker brug</string>
 </resources>

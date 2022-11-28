@@ -43,7 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reservoir: %1$.2f E</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="mute_alert">Geluid dempen</string>
     <string name="release_software_version">Release softwareversie</string>
     <string name="ui_processor_software_version">UI processor softwareversie</string>
     <string name="pc_processor_software_version">PC processor softwareversie</string>
