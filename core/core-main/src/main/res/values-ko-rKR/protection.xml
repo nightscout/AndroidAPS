@@ -18,6 +18,5 @@
     <string name="password_set">비밀번호가 설정되었습니다!</string>
     <string name="password_not_set">비밀번호가 설정되지 않았습니다.</string>
     <string name="password_not_changed">비밀번호가 변경되지 않았습니다.</string>
-    <string name="password_cleared">비밀번호가 지워졌습니다.</string>
     <string name="password_hint">여기에 비밀번호를 입력하세요</string>
 </resources>
