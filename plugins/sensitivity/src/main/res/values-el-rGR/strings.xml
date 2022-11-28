@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Ευαισθησία Oref1</string>
+    <string name="sensitivity_aaps">Ευαισθησία AAPS</string>
+    <string name="sensitivity_weighted_average">Ευαισθησία WeightedAverage</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
     <string name="description_sensitivity_oref1">Η ευαισθησία υπολογίζεται από 8h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές. Η προσθήκη υπολογίζει ακόμα το UAM.</string>
     <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
+    <string name="uam_disabled_oref1_not_selected">Το UAM απενεργοποιήθηκε επειδή είναι ενεργοποιημένο στην προσθήκη ευαισθησία στο Oref1</string>
+    <string name="absorption_settings_title">Ρύθμιση απορρόφησης</string>
+    <string name="absorption_max_time_title">Μέγιστος χρόνος απορρόφησης γεύματος [h]</string>
+    <string name="absorption_max_time_summary">Χρόνος σε ώρες που περιμένουμε να απορροφηθούν όλοι οι υδατάνθρακες ενός γεύματος</string>
     <string name="openapsama_autosens_period">Εσωτερικά διαστήματα για autosense [h] </string>
     <string name="openapsama_autosens_period_summary">Ποσότητα ωρών κατά το παρελθόν για ανίχνευση ευαισθησίας (εξαιρείται ο χρόνος απορρόφησης υδατανθράκων)</string>
     <string name="openapsama_autosens_max_summary">Προεπιλεγμένη τιμή: 1.2\nΑυτός είναι ένας πολλαπλασιαστής για το autosens (και σύντομα autotune) για να ορίσετε ένα 20%% ανώτατο όριο στο πόσο ψηλά μπορεί να είναι ο λόγος autosens, που με τη σειρά του καθορίζει πόσο ψηλά το autosens μπορεί να ρυθμίσει τον βασικό ρυθμό, πόσο χαμηλά μπορεί να ρυθμίσει την ISF, και πόσο χαμηλά μπορεί να ορίσει το στόχο της BG.</string>
     <string name="openapsama_autosens_min_summary">Προεπιλεγμένη τιμή: 0.7\n H άλλη πλευρά από τα όρια ασφαλείας του autosens, θέτοντας ένα ανώτατο όριο στο πόσο χαμηλά to autosens μπορεί να προσαρμόσει τον βασικό ρυθμό και πόσο ψηλά μπορεί να ρυθμίσει τη ISF και τον στόχο του BG.</string>
     <string name="openapsama_autosens_max">Μέγιστη αναλογία autosens</string>
     <string name="openapsama_autosens_min">Ελάχιστη αναλογία autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
     <string name="absorption_cutoff_title">Μέγιστος χρόνος απορρόφησης γεύματος [h]</string>
     <string name="absorption_cutoff_summary">Χρόνος κατά τον οποίο οποιοδήποτε γεύμα θεωρείται απορροφημένο. Οι υπόλοιποι υδατάνθρακες θα αποκοπούν.</string>
 </resources>
