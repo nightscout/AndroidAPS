@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Geçersiz pompa geçmişi verisi tespit edildi. Yeni hata bildirim konusu açın ve günlükleri gönderin.</string>
     <string name="riley_statistics">RL İstatistikleri</string>
     <string name="medtronic_history_type">Tip:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Yenileme tıklandı</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Zamanlanmış Durum Yenileme</string>
 </resources>
