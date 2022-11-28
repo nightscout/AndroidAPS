@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">와이파이 SSID</string>
+    <string name="ns_create_announcements_from_errors_title">에러 발생시 알림 생성</string>
+    <string name="ns_create_announcements_from_carbs_req_title">\"필요 탄수화물 경고\"에서 알림 만들기</string>
+    <string name="ns_create_announcements_from_errors_summary">에러 발생에 대한 Nightscout 알림과 자체 경고를 생성합니다. (케어포털 관리에서도 표시됩니다.)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">\"필요한 탄수화물 경고\"를 위해 Nightscout 알림 만들기</string>
+    <string name="description_ns_client">Nightscout과 데이터 동기화하기</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
     <!-- NSClient -->
+    <string name="restart">재시작</string>
+    <string name="deliver_now">즉시전송</string>
+    <string name="clear_queue">대기열 지우기</string>
+    <string name="show_queue">대기열 보여주기</string>
+    <string name="queue">대기열:</string>
+    <string name="status">상태:</string>
+    <string name="ns_sync_options">동기화</string>
+    <string name="ns_upload_summary">프로파일, bolus, 탄수화물, 임시 basal이 NS에 업로드 됨</string>
+    <string name="ns_upload">NS에 데이터 업로드하기</string>
+    <string name="ns_receive_profile_store">프로파일 목록 받기</string>
+    <string name="ns_receive_temp_target">임시 목표들 받기</string>
+    <string name="ns_receive_temp_target_summary">NS 또는 NSClient에서 입력한 임시 목표 수락하기</string>
+    <string name="ns_receive_profile_switch">프로파일 변경 받기</string>
+    <string name="ns_receive_profile_switch_summary">NS 또는 NSClient에서 입력한 프로파일 변경 수락하기</string>
+    <string name="ns_receive_offline_event">APS 오프라인 이벤트 받기</string>
+    <string name="ns_receive_offline_event_summary">NS 또는 NSClient에서 입력한 APS 오프라인 이벤트 수락하기</string>
+    <string name="ns_receive_insulin">인슐린 받기</string>
+    <string name="ns_receive_insulin_summary">NS 또는 NSClient에서 입력한 인슐린 수락하기 (주입되지는 않음, IOB에 계산만 됨)</string>
+    <string name="ns_receive_carbs">탄수화물 받기</string>
+    <string name="ns_receive_carbs_summary">NS 또는 NSClient에서 입력한 탄수화물 수락하기</string>
+    <string name="ns_receive_therapy_events">처치 이벤트 받기</string>
+    <string name="ns_receive_therapy_events_summary">NS 또는 NSClient에서 입력한 처치 이벤트 (캐뉼라, 인슐린, 배터리 교체 등) 수락하기</string>
+    <string name="ns_receive_cgm">CGM 데이터 받기/다시 채우기</string>
+    <string name="ns_receive_cgm_summary">NS로부터 CGM 데이터 수락하기</string>
+    <string name="ns_alarms">NS 알람에서 알림 만들기</string>
+    <string name="ns_announcements">NS 안내에서 알림 만들기</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>
+    <string name="title_tidepool_username">로그인 사용자명</string>
+    <string name="summary_tidepool_password">Tidepool 로그인 비밀번호</string>
+    <string name="title_tidepool_password">로그인 비밀번호</string>
+    <string name="title_tidepool_test_login">Tidepool 로그인 테스트하기</string>
+    <string name="summary_tidepool_dev_servers">활성화하면 업로드 정보가 https://app.tidepool.org/이 아닌 https://int-app.tidepool.org/로 전송됩니다.</string>
+    <string name="title_tidepool_dev_servers">테스트 서버 사용</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">데이터를 Tidepool로 업로드</string>
+    <string name="tidepool_upload_cgm">CGM 데이터 업로드</string>
+    <string name="tidepool_upload_bolus">관리정보(인슐린, 탄수화물) 업로드</string>
+    <string name="tidepool_upload_tbr">임시 Basal 업로드</string>
+    <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
+    <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
+    <string name="upload_now">지금 업로드하기</string>
 </resources>
