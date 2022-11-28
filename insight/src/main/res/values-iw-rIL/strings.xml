@@ -43,7 +43,6 @@
     <string name="short_status_tdd">מינון כולל: %1$.2f</string>
     <string name="short_status_reservoir">מכל: %1$.2f יח\'</string>
     <string name="short_status_battery">סול\': %1$d%%</string>
-    <string name="mute_alert">השתק</string>
     <string name="release_software_version">גרסת תוכנה</string>
     <string name="ui_processor_software_version">גרסת תוכנת מעבד הממשק</string>
     <string name="pc_processor_software_version">גרסת תוכנת מעבד המחשב</string>
