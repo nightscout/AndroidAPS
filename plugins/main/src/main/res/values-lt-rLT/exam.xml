@@ -91,6 +91,8 @@
     <string name="troubleshooting_yourendo">Turėtumėte kreiptis į savo diabeto kliniką/endokrinologą.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="insulin_plugins">Insulino įskiepiai</string>
     <string name="insulin_ultrarapid">Kurį insuliną reikėtų naudoti su Ultra-Rapid Oref įskiepiu?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -103,6 +105,7 @@
     <string name="sensitivity_cannula">Pažymėjus kaniulės pakeitimą, Autosens santykis vėl bus grąžintas į 100%.</string>
     <string name="sensitivity_time">Kai kurios įskiepo parinktys turi konfigūruojamus laiko intervalus, kuriuos gali nustatyti vartotojas.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Angliavandenių įvedimo klaidos</string>
     <string name="wrongcarbs_whattodo">Ką reikia daryti, jei įrašyti neteisingi angliavandeniai?</string>
     <string name="wrongcarbs_treatmentstab">Ištrinti neteisingą įrašą Terapijos skiltyje ir įvesti teisingą angliavandenių kiekį.</string>
