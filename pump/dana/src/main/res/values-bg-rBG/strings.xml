@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Сдвояване</string>
-    <string name="danars_nodeviceavailable">Все още устройството не е намерено</string>
     <string name="danars_pairingok">Сдвояване - ОК</string>
     <string name="danars_pairingtimedout">Времето за сдвояване изтече</string>
     <string name="danars_waitingforpairing">Очаква сдвояване с помпа</string>
@@ -65,20 +64,9 @@
     <string name="danar_history_refill">Презареждане</string>
     <string name="danar_history_syspend">Спиране</string>
     <string name="danar_history_prime">Пълнене</string>
-    <string name="danar_useroptions">Потребителски опции</string>
-    <string name="danar_timedisplay">Формат на времето</string>
-    <string name="danar_buttonscroll">Превъртане при задъжане</string>
     <string name="danar_beep">Звуков сигнал при натискане на бутон</string>
-    <string name="danar_pumpalarm">Тип аларма</string>
-    <string name="danar_pumpalarm_sound">Звукова</string>
-    <string name="danar_pumpalarm_vibrate">Вибрация</string>
-    <string name="danar_pumpalarm_both">И двете</string>
-    <string name="danar_screentimeout">Включен екран за [seconds]</string>
     <string name="danar_backlight">Подсветка [seconds]</string>
-    <string name="danar_glucoseunits">Единици на КЗ</string>
     <string name="danar_shutdown">Изключване след [hours]</string>
-    <string name="danar_lowreservoir">Минимален инсулин в резервоара [Units]</string>
-    <string name="danar_saveuseroptions">Запиши опциите в помпата</string>
     <string name="description_pump_dana_r">Поддръжка за Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_korean">Поддръжка за корейски Dana Diabecare R помпи</string>
     <string name="description_pump_dana_r_v2">Поддръжка за Dana Diabecare R помпи с обновен софтуер</string>
@@ -94,10 +82,7 @@
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
     <string name="danar_bluetooth_status">Bluetooh статус</string>
     <string name="danar_iob_label">IOB на помпата</string>
-    <string name="virtualpump_firmware_label">Фърмуер</string>
     <string name="danar_pump_settings">DanaR настройки</string>
-    <string name="timeformat12h">12ч</string>
-    <string name="timeformat24h">24ч</string>
     <string name="option_on">Вкл</string>
     <string name="option_off">Изкл</string>
     <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>
