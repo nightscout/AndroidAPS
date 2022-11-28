@@ -50,4 +50,5 @@
     <string name="bolusstopped">Bolus 중지됨</string>
     <string name="bolusstopping">Bolus 중지중</string>
     <string name="combo_error_display_never">절대</string>
+    <string name="unsafeusage">위험한 사용</string>
 </resources>
