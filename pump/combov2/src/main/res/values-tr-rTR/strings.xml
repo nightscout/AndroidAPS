@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_pump_terminated_connection">Bağlantıyı sonlandır</string>
+    <string name="combov2_warning_10">Bluetooth hatası; yeniden eşleştirin</string>
+    <string name="combov2_error_5">Yedek pompa çalışma sonu</string>
+    <string name="combov2_error_9">Ödünç pompa çalışma sonu</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
     <string name="bluetooth_address">Bluetooth adresi</string>
+    <string name="combov2_pairing_in_progress">Pompa eşleştirme devam ediyor</string>
+    <string name="combov2_pairing_start_steps">Combo pompanızla eşleştirme adımları:\n\n
+1. Pompanızda Bluetooth Ayarlarına gidin\n
+2. Halihazırda eşlenmiş bir cihaz olup olmadığını kontrol edin; eğer varsa, pompa ekranında cihazı silmek/eşleşmeyi kaldırmak için \"Cihazı sil\" seçeneğini seçin\n
+3. Pompa ekranında \"Cihaz ekle\"ye gidin ve pompada eşleştirmeyi başlatın\n
+4. AndroidAPS\'de eşleştirmeyi başlatmak için aşağıdaki \"Eşleşmeyi başlat\" düğmesine tıklayın\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Bir süre sonra pompanın ekranında telefonun adı beliriyor; onaylamak için CHECK düğmesine basın.\n\n
+Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmeyi onaylayın ve CHECK düğmesine iki kez basarak ana pompa ekranına dönün.\n\n
+~5 dakikadan uzun bir süre bağlantı kurulmazsa:\n\n
+1. Geri\'ye veya \"Eşleştirmeyi İptal Et\" düğmesine basın\n
+2. Combo\'da eşleştirmeyi iptal edin (UP ve MENU düğmelerine aynı anda basarak eşleştirmeyi iptal edin)\n
+3. Tekrar eşleştirmeyi deneyin</string>
+    <string name="combov2_pairing_cancelled">Combo ile eşleştirme kullanıcı tarafından iptal edildi</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo taraması zaman aşımına uğradı</string>
+    <string name="combov2_pairing_failed_due_to_error">Eşleştirme hata nedeniyle başarısız oldu: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Eşleştirme bilinmeyen nedenlerle iptal edildi</string>
+    <string name="combov2_establishing_bt_connection">Bluetooth bağlantısı kuruluyor (deneme no. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Pompa ile el sıkışma</string>
+    <string name="combov2_pairing_pump_requests_pin">Pompa 10 haneli PIN istiyor</string>
+    <string name="combov2_pairing_finishing">Eşleştirmeyi Bitir</string>
+    <string name="combov2_no_connection_for_n_mins">%1$d dk için bağlantı yok</string>
+    <string name="combov2_setting_current_pump_time">Mevcut pompa süresinin ayarlanması</string>
+    <string name="combov2_setting_current_pump_date">Mevcut pompa tarihinin ayarlanması</string>
+    <string name="combov2_checking_pump">Pompa kontrol ediliyor</string>
+    <string name="combov2_setting_tbr_cmddesc">%2$d dakika için %1$d%% GBO ayarlanıyor</string>
+    <string name="combov2_pairing_pin_failure">PIN çalışmadı. Bir yazım hatası olup olmadığını kontrol edin. Eğer bu
+         devam ederse, eşleştirmeyi iptal edin ve yeniden deneyin.</string>
+    <string name="combov2_discovery_duration">Süreyi girin (saniye olarak)</string>
+    <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %1$d%%\'de bir sınıra ulaştı</string>
+    <string name="combov2_pair_with_pump_summary">AndroidAPS ile şu anda eşleştirilmemiş bir Accu-Chek Combo pompasını eşleştirin</string>
 </resources>
