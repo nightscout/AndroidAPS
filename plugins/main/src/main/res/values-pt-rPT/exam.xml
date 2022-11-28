@@ -91,6 +91,8 @@
     <string name="troubleshooting_yourendo">Deveria pedir à sua clínica de diabetes/endocrinologista.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="insulin_plugins">Plugins de Insulina</string>
     <string name="insulin_ultrarapid">Que insulina deve utilizar com o plugin Oref Ultra-Rápida ?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -103,6 +105,7 @@
     <string name="sensitivity_cannula">Registar uma mudança de cânula irá redefinir a taxa de Autosens de volta para 100%.</string>
     <string name="sensitivity_time">Algumas opções de plugin têm intervalos de tempo configuráveis que podem ser configurados pelo utilizador.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Erros de Entrada de Hidratos</string>
     <string name="wrongcarbs_whattodo">O que deve fazer se tiver feito uma entrada incorrecta de hidratos?</string>
     <string name="wrongcarbs_treatmentstab">Elimine a entrada incorreta em Tratamentos e insira o novo valor correto dos hidratos.</string>
