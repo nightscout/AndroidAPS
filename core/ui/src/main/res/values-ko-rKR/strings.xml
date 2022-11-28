@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">새로고침</string>
+    <string name="error">에러</string>
+    <string name="profile_set_ok">Basal 프로파일이 펌프에 업데이트 되었습니다</string>
+    <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
+    <string name="pump_unreachable">펌프에 연결할 수 없습니다.</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">새로고침</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">저장</string>
+    <string name="snooze">스누즈</string>
+    <string name="constraints">제한</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">펌프 일시중지</string>
+    <string name="and">그리고</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">사용자</string>
+    <string name="result">결과</string>
+    <string name="statuslights">상태 등</string>
     <!--    Pumps -->
+    <string name="reservoir_label">인슐린 잔량</string>
+    <string name="base_basal_rate_label">기본 Basal양</string>
+    <string name="tempbasal_label">임시Basal</string>
+    <string name="extended_bolus_label">확장Bolus</string>
+    <string name="serial_number">시리얼번호</string>
+    <string name="disconnected">연결 끊김</string>
+    <string name="connecting">연결중</string>
+    <string name="not_set_short">설정되지 않음</string>
+    <string name="reading_pump_history">펌프 이력 읽기</string>
+    <string name="password_cleared">비밀번호가 지워졌습니다.</string>
+    <string name="pairing">동기화</string>
+    <string name="initializing">초기화중 ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
+    <string name="pumplimit">펌프 제한</string>
+    <string name="limitingpercentrate">%2$s로 인해 최대 비율이 %1$d%%로 제한됩니다.</string>
+    <string name="itmustbepositivevalue">양의 값이어야 합니다.</string>
+    <string name="limitingbolus">%2$s로 인해 Bolus가 %1$.1f U로 제한됩니다.</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">확인</string>
@@ -12,6 +47,7 @@
     <string name="dismiss">무시</string>
     <string name="yes">네</string>
     <string name="no">아니오</string>
+    <string name="close">닫기</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$d시 %2$d분</string>
@@ -19,5 +55,10 @@
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">BLE(블루투스 저전력) 지원되지 않음</string>
+    <string name="ble_not_supported_or_not_paired">저전력 블루투스(BLE)가 작동하지 않거나, 기기가 연동되지 않았습니다.</string>
+    <string name="ble_not_enabled">블루투스가 활성화되지 않았습니다.</string>
+    <string name="location_not_found_title">위치가 활성화되지 않았습니다.</string>
+    <string name="location_not_found_message">최신 스마트폰에서 블루투스 검색이 작동하려면 위치가 활성화되어 있어야합니다. AAPS는 당신의 위치를 추적하지 않으며 페어링에 성공한 후 비활성화 할 수 있습니다.</string>
     <!--    Preferences -->
 </resources>
