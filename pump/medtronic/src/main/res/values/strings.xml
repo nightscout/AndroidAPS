@@ -125,4 +125,7 @@
     <string name="riley_statistics">RL Stats</string>
     <string name="medtronic_history_type">Type:</string>
 
+    <string name="clicked_refresh" comment="26 characters max for translation">Clicked refresh</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
+
 </resources>
