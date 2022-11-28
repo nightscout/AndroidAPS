@@ -356,8 +356,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Status outdated.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal outdated.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Clicked refresh</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Scheduled Status Refresh</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
