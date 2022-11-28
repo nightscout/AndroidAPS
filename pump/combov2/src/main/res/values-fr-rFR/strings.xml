@@ -61,4 +61,14 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Récupération de l\'historique DTI</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Mise à jour date et heure de la pompe</string>
     <string name="combov2_updating_pump_status_cmddesc">Mise à jour de l\'état pompe</string>
+    <string name="combov2_bolus_cancelled">Bolus annulé</string>
+    <string name="combov2_bolus_delivery_failed">Administration bolus échouée. Il semble qu’aucun bolus n’a été administré. Pour être sûr, veuillez vérifier la pompe pour éviter un double bolus ensuite refaire le bolus une nouvelle fois.</string>
+    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min restantes)</string>
+    <string name="combov2_battery_low_warning">Pile pompe faible</string>
+    <string name="combov2_short_status_last_connection">Dernière connexion : il y a %1$d min</string>
+    <string name="combov2_short_status_temp_basal">Temps : %s</string>
+    <string name="combov2_short_status_reservoir">Réserve : %dU</string>
+    <string name="combov2_short_status_battery_state_empty">vide</string>
+    <string name="combov2_short_status_battery_state_low">basse</string>
 </resources>
