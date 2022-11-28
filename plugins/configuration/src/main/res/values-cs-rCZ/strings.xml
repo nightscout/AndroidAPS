@@ -55,6 +55,7 @@
     <string name="error_asking_for_permissions">Chyba žádosti o oprávnění</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <!--    ConfigBuilder-->
+    <string name="config_builder">Konfigurace</string>
     <string name="configbuilder_pump">Pumpa</string>
     <string name="configbuilder_pump_description">Jakou pumpu chcete s AAPS používat?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -73,10 +74,12 @@
     <string name="configbuilder_bgsource_description">Odkud má AAPS získávat glykémie?</string>
     <string name="configbuilder_sensitivity">Detekce citlivosti</string>
     <string name="configbuilder_sensitivity_description">Jaký druh algoritmu pro detekci citlivosti chcete použít?</string>
+    <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="a11y_open_settings">otevřít nastavení</string>
     <!--ImportExport-->
+    <string name="nav_preferences">Nastavení</string>
     <string name="password_preferences_encrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k šifrování exportovaných předvoleb.</string>
     <string name="preferences_export_canceled">Export zrušen! Předvolby NEBYLY exportovány!</string>
     <string name="preferences_import_canceled">Import zrušen! Předvolby NEBYLY importovány!</string>
@@ -102,6 +105,25 @@
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>
     <string name="ue_exported">Uživatelské záznamy exportovány</string>
     <!--    Maintenance-->
+    <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">ÚDRŽBA</string>
     <string name="description_maintenance">Poskytuje funkce pro údržbu (např. odesílání logů, čištění).</string>
+    <string name="database_cleanup">Vyčištění databáze</string>
+    <string name="cleanup_db_confirm">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.</string>
+    <string name="cleared_entries">Vymazané záznamy</string>
+    <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
+    <string name="maintenance_settings">Nastavení údržby</string>
+    <string name="maintenance_email">Příjemce e-mailu</string>
+    <string name="maintenance_amount">Počet logů k odeslání</string>
+    <string name="send_all_logs">Poslat logy e-mailem</string>
+    <string name="delete_logs">Smazat logy</string>
+    <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
+    <string name="engineering_mode_enabled">Expertní mód povolen</string>
+    <string name="log_files">Soubory protokolu</string>
+    <string name="nav_logsettings">Nastavení logování</string>
+    <string name="miscellaneous">Různé</string>
+    <string name="nav_resetdb">Inicializovat databáze</string>
+    <string name="resettodefaults">Obnovit výchozí</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
