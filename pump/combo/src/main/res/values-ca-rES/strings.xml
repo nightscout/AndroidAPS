@@ -51,4 +51,5 @@
     <string name="bolusstopped">Bolus aturat</string>
     <string name="bolusstopping">Aturant bolus</string>
     <string name="combo_error_display_never">Mai</string>
+    <string name="unsafeusage">ús no segur</string>
 </resources>
