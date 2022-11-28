@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">רענן</string>
+    <string name="error">שגיאה</string>
+    <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
+    <string name="constraint_applied">מגבלה הוחלה!</string>
+    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
+    <string name="pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="insulin_unit_shortname">יחידות</string>
+    <string name="reload">טען מחדש</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">שמירה</string>
+    <string name="snooze">נודניק</string>
+    <string name="constraints">מגבלות</string>
+    <string name="superbolus">סופר בולוס</string>
+    <string name="pump_paused">המשאבה הושהתה</string>
+    <string name="and">וגם</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
+    <string name="result">תוצאה</string>
+    <string name="settings">הגדרות</string>
+    <string name="statuslights">אורות חיווי</string>
     <!--    Pumps -->
+    <string name="reservoir_label">מכל</string>
+    <string name="base_basal_rate_label">בזאלי בסיסי</string>
+    <string name="tempbasal_label">בזאלי זמני</string>
+    <string name="extended_bolus_label">בולוס ממושך</string>
+    <string name="serial_number">מספר סידורי</string>
+    <string name="disconnected">מנותק</string>
+    <string name="connecting">מתחבר</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">התחבר למשאבה נלחץ</string>
+    <string name="pump_icon">צלמית משאבה</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">שינוי במנהל התקן המשאבה.</string>
+    <string name="device_changed" comment="26 characters max for translation">התקן שונה</string>
+    <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
+    <string name="initializing">מאתחל...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
+    <string name="pumplimit">מגבלת משאבה</string>
+    <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
+    <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
+    <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">אישור</string>
@@ -12,6 +50,7 @@
     <string name="dismiss">בטל</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
+    <string name="close">סגור</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>
@@ -19,6 +58,7 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
     <!--    BlePreCheck-->
     <!--    Preferences -->
 </resources>
