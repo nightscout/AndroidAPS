@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Ungültige Pumpenhistorie erkannt. Eröffne ein neues Ticket (issue) und füge Logs bei.</string>
     <string name="riley_statistics">RL Statistik</string>
     <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Aktualisieren geklickt</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Geplante Statusaktualisierung</string>
 </resources>
