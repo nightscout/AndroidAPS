@@ -28,6 +28,7 @@
     <string name="today">I dag</string>
     <string name="yesterday">I går</string>
     <!-- Rx -->
+    <string name="connecting_for">Opretter forbindelse i %1$d s</string>
     <string name="handshaking">Forbindelse verificeres</string>
     <string name="connected">Tilsuttet</string>
     <string name="disconnecting">Afbryder</string>
