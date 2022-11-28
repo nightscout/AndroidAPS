@@ -359,4 +359,5 @@
     <string name="wear_predictions_title">Predikce</string>
     <string name="resend_all_data">Znovu poslat všechna data</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
+    <!--    PersistentNotification-->
 </resources>
