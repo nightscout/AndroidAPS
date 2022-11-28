@@ -56,4 +56,5 @@
     <string name="combo_error_display_never">Niekada</string>
     <string name="combo_error_display_error">Kai klaida</string>
     <string name="combo_error_display_always">Visada</string>
+    <string name="unsafeusage">Nesaugus naudojimas</string>
 </resources>
