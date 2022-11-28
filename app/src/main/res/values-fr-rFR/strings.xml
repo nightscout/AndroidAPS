@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">Préférences de %1$s</string>
     <string name="nav_refreshtreatments">Actualiser les données depuis NS</string>
     <string name="nav_exit">Quitter</string>
-    <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">Enregistrer</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(DÉSACTIVATION DANGEREUSE) Envoi NS uniquement</string>
     <string name="ns_upload_only_summary">Envoi NS uniquement (sync désactivée). Inactif sur les Glycémie des capteurs sauf si une source locale comme xDrip+ est sélectionnée. Inactif sur les profils si Profil NS est sélectionné.\n!!! ATTENTION !!! La désactivation de cette option peut causer des dysfonctionnements et une surdose d\'insuline si l\'un de vos composants (AAPS, NS, xDrip+) est mal configuré. Vérifiez bien si les données affichées par AAPS correspondent à l’état de la pompe !</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Notification en cours</string>
-    <string name="old_data">DONNÉES ANCIENNES</string>
     <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
     <string name="ns_alarm_options">Options d\'alarme</string>
