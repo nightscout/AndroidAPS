@@ -36,7 +36,6 @@
     <string name="short_status_multiwave">Multigolf: %1$.2f / %2$.2f U vir %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="mute_alert">Demp</string>
     <string name="release_software_version">Vrygestelde sagteware weergawe</string>
     <string name="ui_processor_software_version">UI verwerker sagteware weergawe</string>
     <string name="pc_processor_software_version">PC verwerker sagteware weergawe</string>
