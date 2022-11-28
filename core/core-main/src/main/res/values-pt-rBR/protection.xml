@@ -18,6 +18,5 @@
     <string name="password_set">Senha foi definida!</string>
     <string name="password_not_set">Senha não foi definida</string>
     <string name="password_not_changed">Senha não foi alterada</string>
-    <string name="password_cleared">Senha apagada!</string>
     <string name="password_hint">Insira a senha aqui</string>
 </resources>

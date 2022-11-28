@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="constraint_applied">Sınırlaması uygulanır!</string>
+    <string name="event_type">Etkinlik tipi</string>
+    <string name="reload">Yeniden yükle</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <!--    Pumps -->
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
+    <string name="reservoir_value">%1$.0f / %2$d Ü</string>
+    <string name="daily_units">Günlük ünite</string>
+    <string name="pump_icon">Pompa simgesi</string>
+    <string name="view_profile">Profili görüntüle</string>
+    <string name="pump_history">Pompa geçmişi</string>
+    <string name="stats">İstatistikler</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pompa sürücüsü değişimi.</string>
+    <string name="device_changed" comment="26 characters max for translation">Cihaz değişti</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus Tmm</string>
+    <string name="temp_basal_delivery_error">Geçici Bazal teslimat hatası</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
+    <string name="pumplimit">pompa sınırı</string>
+    <string name="limitingpercentrate">%2$s\'den dolayı max yüzde oranı %1$d%% ile sınırlandırılıyor</string>
+    <string name="itmustbepositivevalue">pozitif bir değer olmalıdır</string>
+    <string name="limitingbolus">%2$s\'den dolayı bolus %1$.1f Ü ile sınırlandırılıyor</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
     <string name="message">İleti</string>
@@ -14,4 +39,7 @@
     <string name="format_hour_minute">%1$dsa %2$ddk</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
 </resources>

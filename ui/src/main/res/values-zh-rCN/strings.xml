@@ -19,12 +19,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">超级大剂量Superbolus</string>
     <string name="treatments_wizard_total_label">总计</string>
     <!-- FillDialog -->
-    <string name="button1">按钮1</string>
-    <string name="button2">按钮2</string>
-    <string name="button3">按钮3</string>
     <string name="record_pump_site_change">记录泵管路更换</string>
     <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
     <!-- InsulinDialog -->
@@ -66,8 +62,6 @@
     <string name="tempbasals_netratio_label_string">比率：</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB活性胰岛素:</string>
-    <string name="tempbasals_iobtotal_label_string">总 IOB:</string>
-    <string name="treatments_wizard_tt_label">临时目标</string>
     <string name="treatments_wizard_correction_label">矫正值</string>
     <string name="prime">充盈</string>
     <string name="profile_changes">配置文件更改</string>
@@ -89,11 +83,4 @@
     <string name="selected_profile">已选择:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">导入问题详细信息</string>
-    <string name="check_preferences_import_btn">导入</string>
-    <string name="check_preferences_import_anyway_btn">继续导入（危险！）</string>
-    <string name="check_preferences_before_import">请在导入之前检查首选项：</string>
-    <string name="check_preferences_cannot_import">无法导入首选项！</string>
-    <string name="check_preferences_dangerous_import">不应导入首选项 !</string>
 </resources>

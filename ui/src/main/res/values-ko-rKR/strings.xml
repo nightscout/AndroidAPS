@@ -14,12 +14,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">합계</string>
     <!-- FillDialog -->
-    <string name="button1">버튼1</string>
-    <string name="button2">버튼2</string>
-    <string name="button3">버튼3</string>
     <string name="record_pump_site_change">펌프 위치 변경 기록</string>
     <string name="record_insulin_cartridge_change">인슐린 카트리지 변경 기록</string>
     <!-- InsulinDialog -->
@@ -56,8 +52,6 @@
     <string name="tempbasals_netratio_label_string">비율:</string>
     <string name="tempbasals_netinsulin_label_string">인슐린:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
-    <string name="treatments_wizard_tt_label">임시목표</string>
     <string name="treatments_wizard_correction_label">교정</string>
     <string name="prime">교체</string>
     <string name="refresheventsfromnightscout">NS로부터 최신 정보로 업데이트 함.</string>
@@ -66,11 +60,4 @@
     <string name="selected_profile">선택:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">환경설정 가져오기 문제의 상세정보</string>
-    <string name="check_preferences_import_btn">가져오기</string>
-    <string name="check_preferences_import_anyway_btn">무시하고 가져오기 (위험!)</string>
-    <string name="check_preferences_before_import">가져오기 전에 환경설정을 확인하세요.</string>
-    <string name="check_preferences_cannot_import">환경 설정을 가져올 수가 없습니다.</string>
-    <string name="check_preferences_dangerous_import">환경 설정을 가져오면 안됩니다.</string>
 </resources>

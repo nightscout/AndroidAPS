@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Alvo Temporário %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Percentagem Perfil  %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">E</string>
     <string name="or">Ou</string>
     <string name="xor">Exclusivo ou</string>
     <string name="atspecifiedtime">Às %1$s</string>

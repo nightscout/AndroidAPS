@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">אישור</string>
     <string name="message">הודעה</string>
@@ -14,4 +18,7 @@
     <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
 </resources>

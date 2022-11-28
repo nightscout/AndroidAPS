@@ -34,7 +34,6 @@
     <string name="openapsma_iob_data_label">Datos IOB</string>
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_meal_data_label">Datos de comidas</string>
-    <string name="result">Resultado</string>
     <string name="openapsma_request_label">Solicitud</string>
     <string name="constraints">Restricciones</string>
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
@@ -85,7 +84,7 @@
     <string name="uam_disabled_in_preferences">UAM deshabilitado en las preferencias</string>
     <string name="autosens_disabled_in_preferences">Autosens deshabilitado en preferencias</string>
     <!--    Verify if needed in safety-->
-    <string name="limitingiob">Limitando IOB a %1$.1f U debido a %2$s</string>
+    <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
     <string name="hardlimit">límite estricto</string>
     <!--    Autotune   -->

@@ -14,12 +14,6 @@
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="dia_short">DIA</string>
-    <!-- BG Quality -->
-    <!-- DST Helper -->
-    <!-- Storage constraint -->
-    <!-- Signature verifier -->
-    <!-- Version Checker -->
-    <!-- PhoneChecker -->
     <!-- Objectives -->
     <string name="loopenabled">Lúb cumasaithe</string>
     <string name="apsselected">APS  roghnaithe</string>
@@ -27,15 +21,8 @@
     <string name="actions_shortname">GNÍ</string>
     <!-- Safety -->
     <!-- Overview -->
-    <string name="apsmode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>
-    <!-- NSClient -->
-    <string name="restart">Atosaigh</string>
-    <string name="deliver_now">Seachadadh anois</string>
-    <string name="status">Stádas:</string>
-    <!-- Tidepool -->
-    <string name="tidepool">Tidepool</string>
-    <string name="tidepool_shortname">TDP</string>
+    <!--    OverviewMenu-->
     <!-- VirtualPump -->
     <!-- Source -->
     <string name="description_source_ns_client">Sonraí a íoslódáil ó Nightscout</string>
@@ -45,10 +32,9 @@
     <string name="poctech">Poctech</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
-    <!-- NSClient -->
-    <string name="ns_wifi_ssids">WiFi SSID</string>
-    <string name="openaps_short">OAPS</string>
     <!-- Skins -->
     <!--    Loop -->
     <!--    DataBroadcast-->
+    <!--    Iob-->
+    <!--    Wear-->
 </resources>

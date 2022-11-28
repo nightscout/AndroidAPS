@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation">Automatizálás</string>
-    <string name="and">És</string>
     <string name="or">vagy</string>
     <string name="weekday_sunday_short">Vas</string>
     <string name="weekday_saturday_short">Szo</string>

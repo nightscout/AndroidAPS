@@ -36,7 +36,6 @@
     <string name="timeout_during_handshake">Zeitüberschreitung während des Handshakes - Bluetooth zurücksetzen</string>
     <string name="pump_stopped">Pumpe gestoppt</string>
     <string name="pump_started">Pumpe gestartet</string>
-    <string name="pump_paused">Pumpe pausiert</string>
     <string name="short_status_last_connected">Letzte Verb.: vor %1$d min</string>
     <string name="short_status_tbr">TBR: %1$d%% für %2$d / %3$d min</string>
     <string name="short_status_extended">Verzögert: %1$.2f / %2$.2f IE für %3$d min.</string>

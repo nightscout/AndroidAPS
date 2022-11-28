@@ -20,6 +20,5 @@
     <string name="password_set">Parola a fost setată!</string>
     <string name="password_not_set">Parola nu a fost setată</string>
     <string name="password_not_changed">Parola nu a fost modificată</string>
-    <string name="password_cleared">Parolă ștearsă!</string>
     <string name="password_hint">Introduceți parola aici</string>
 </resources>

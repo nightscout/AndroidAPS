@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="cancel">Откажи</string>
     <string name="confirm">Потвърди</string>
     <string name="next">Следващ</string>

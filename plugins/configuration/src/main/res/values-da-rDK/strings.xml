@@ -43,6 +43,9 @@
     <string name="allow_automated_crash_reporting">Tillad automatisk nedbruds rapportering og funktionsbrug data som sendes til udviklerne via fabric.io tjenesten.</string>
     <string name="summary_email_for_crash_report">Denne identifikation vil blive vedhæftet til nedbrudsrapporter, så vi kan kontakte dig i hastende tilfælde. Det er valgfrit.</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
+    <string name="apsmode_title">APS Tilstand</string>
+    <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
@@ -57,8 +60,8 @@
     <string name="configbuilder_insulin_description">Hvilken type insulin bruger du?</string>
     <string name="configbuilder_bgsource">BG kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
-    <string name="apsmode_title">APS Tilstand</string>
-    <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
     <string name="configbuilder_sensitivity">Detektering af følsomhed</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>

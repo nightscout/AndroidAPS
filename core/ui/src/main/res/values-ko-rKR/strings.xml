@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">확인</string>
     <string name="message">메시지</string>
@@ -13,4 +17,7 @@
     <string name="format_hour_minute">%1$d시 %2$d분</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
 </resources>

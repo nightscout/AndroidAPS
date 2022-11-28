@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
     <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="identification">Identifiering (e-post, FB, Discord-namn etc)</string>
+    <string name="apsmode_title">APS-läge</string>
+    <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_profile">Profil</string>
     <string name="configbuilder_aps">APS</string>
@@ -52,8 +55,8 @@
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_insulin_description">Vilken typ av insulin använder du?</string>
     <string name="configbuilder_bgsource">BG-källa</string>
-    <string name="apsmode_title">APS-läge</string>
-    <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>

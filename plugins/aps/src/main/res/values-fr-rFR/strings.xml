@@ -34,7 +34,6 @@
     <string name="openapsma_iob_data_label">Données IA</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_meal_data_label">Données repas</string>
-    <string name="result">Résultats</string>
     <string name="openapsma_request_label">Requête</string>
     <string name="constraints">Restrictions</string>
     <string name="openapsma_autosensdata_label">Données Autosens</string>
@@ -85,7 +84,7 @@
     <string name="uam_disabled_in_preferences">Repas Non Signalé (RNS) désactivé dans les préférences</string>
     <string name="autosens_disabled_in_preferences">Autosens désactivé dans les préférences</string>
     <!--    Verify if needed in safety-->
-    <string name="limitingiob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
+    <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
     <string name="hardlimit">limite fixée</string>
     <!--    Autotune   -->

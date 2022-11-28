@@ -43,6 +43,9 @@
     <string name="allow_automated_crash_reporting">אפשר דיווח אוטומטי על קריסה ושליחת נתוני השימוש למפתחים דרך שירות fabric.io.</string>
     <string name="summary_email_for_crash_report">אמצעי הזיהוי יצורף לדיווחי קריסה על מנת שנוכל ליצור קשר במקרים דחופים. אין זו חובה.</string>
     <string name="identification">אמצעי זיהוי (מייל, פייסבוק או דיסקורד וכו\')</string>
+    <string name="apsmode_title">מצב APS</string>
+    <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">משאבה</string>
     <string name="configbuilder_pump_description">עם איזו משאבה אתם מעוניינים להשתמש ב-AndroidAPS?</string>
     <string name="configbuilder_profile">פרופיל</string>
@@ -57,8 +60,8 @@
     <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
-    <string name="apsmode_title">מצב APS</string>
-    <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="configbuilder_sensitivity">זיהוי רגישות</string>
     <string name="configbuilder_sensitivity_description">באיזה אלגוריתם זיהוי רגישות להשתמש?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>

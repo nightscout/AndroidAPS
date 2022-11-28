@@ -8,9 +8,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Lomlán</string>
     <!-- FillDialog -->
-    <string name="button1">Cnaipe 1</string>
-    <string name="button2">Cnaipe 2</string>
-    <string name="button3">Cnaipe 3</string>
     <!-- InsulinDialog -->
     <!-- ProfileSwitchDialog -->
     <!-- LoopDialog -->
@@ -41,12 +38,8 @@
     <string name="tempbasals_netratio_label_string">Cóimheas:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Lomlán IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Cear</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_import_btn">Iompórtáil</string>
 </resources>
