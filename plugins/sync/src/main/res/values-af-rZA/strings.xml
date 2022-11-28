@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_create_announcements_from_errors_title">Skep aankondigings vanaf foute</string>
+    <string name="ns_create_announcements_from_errors_summary">Skep Nightscout aankondiging vir foutdialoë en plaaslike waarskuwings (ook vertoonbaar in Careportal onder behandelings)</string>
+    <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
     <!-- NSClient -->
+    <string name="restart">Herbegin</string>
+    <string name="deliver_now">Lewer nou</string>
+    <string name="clear_queue">Vee tou uit</string>
+    <string name="show_queue">Wys tou</string>
+    <string name="queue">Tou:</string>
+    <string name="status">Status:</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
+    <string name="title_tidepool_username">Login Gebruiker Naam</string>
+    <string name="summary_tidepool_password">Jou Tidepool login kode</string>
+    <string name="title_tidepool_password">Login wagwoord</string>
+    <string name="title_tidepool_test_login">Toets Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">As ge-aktiveer sal data oplaai na https://int-app.tidepool.org instede van die gewone https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Gebruik Integrasie (toets) bedieners</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laai data op na Tidepool</string>
+    <string name="tidepool_upload_cgm">Laai CGM data op</string>
+    <string name="tidepool_upload_bolus">Laai behandelings op (insulien, karbs)</string>
+    <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
+    <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
+    <string name="tidepool_upload_bg">Laai BG toetse op</string>
 </resources>
