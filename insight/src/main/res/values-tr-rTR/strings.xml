@@ -43,7 +43,6 @@
     <string name="short_status_tdd">GTD: %1$.2f</string>
     <string name="short_status_reservoir">Rezerv.: %1$.2f Ü</string>
     <string name="short_status_battery">Pil: %%1$d%</string>
-    <string name="mute_alert">Sessiz</string>
     <string name="release_software_version">Yayın yazılım sürümü</string>
     <string name="ui_processor_software_version">UI işlemci yazılım sürümü</string>
     <string name="pc_processor_software_version">PC yazılım işlemci sürümü</string>
