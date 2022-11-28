@@ -25,6 +25,7 @@
     <string name="data_choices">Data keuses</string>
     <string name="fabric_upload">Fabric Upload</string>
     <string name="allow_automated_crash_reporting">Laat outomatiese Foutverslagdoening en kenmerk data stuur na die ontwikkelaars via die fabric.io diens.</string>
+    <string name="request">Versoek</string>
     <string name="apsmode_title">APS modus</string>
     <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
     <!--    ConfigBuilder-->
@@ -40,6 +41,17 @@
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_sensitivity">Sensitiwiteit opsporing</string>
     <string name="configbuilder_sensitivity_description">Watter sensitiwiteit algoritme moet gebruik word?</string>
+    <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <!--ImportExport-->
+    <string name="nav_export">Voer instellings uit na</string>
+    <string name="export_to">Uitvoer instellings na</string>
+    <string name="import_from">Voer instellings in vanaf</string>
+    <string name="setting_imported">Instellings ingevoer</string>
+    <string name="exported">Voorkeure uitgevoer</string>
+    <string name="filenotfound">Lêer nie gevind nie</string>
+    <string name="restartingapp">Begin toepassing weer om instellings toe te pas.</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MAINT</string>
+    <string name="description_maintenance">Bied verskeie funksies vir onderhoud (bv. log stuur, log skrapping).</string>
+    <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
 </resources>

@@ -6,6 +6,18 @@
     <string name="reload">Yeniden yükle</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="save">Kaydet</string>
+    <string name="snooze">Ertele</string>
+    <string name="virtual_pump">Sanal pompa</string>
+    <string name="constraints">Kısıtlamalar</string>
+    <string name="superbolus">Süperbolus</string>
+    <string name="pump_paused">Pompa duraklatıldı</string>
+    <string name="and">Ve</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Kullanıcı</string>
+    <string name="result">Sonuç</string>
+    <string name="settings">Ayarlar</string>
+    <string name="statuslights">Durum ışıkları</string>
+    <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
     <!--    Pumps -->
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
     <string name="reservoir_value">%1$.0f / %2$d Ü</string>
@@ -18,6 +30,7 @@
     <string name="device_changed" comment="26 characters max for translation">Cihaz değişti</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus Tmm</string>
     <string name="temp_basal_delivery_error">Geçici Bazal teslimat hatası</string>
+    <string name="initializing">Başlatılıyor ...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
     <string name="pumplimit">pompa sınırı</string>
@@ -42,4 +55,5 @@
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">Eklenti tercihleri</string>
 </resources>

@@ -43,8 +43,10 @@
     <string name="data_choices">Избор на данни</string>
     <string name="fabric_upload">Качване на статистики във Fabric</string>
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
+    <string name="request">Искане</string>
     <string name="apsmode_title">APS режим</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_profile">Профил</string>
@@ -58,6 +60,32 @@
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
+    <string name="description_config_builder">За конфигурация на активните плъгини</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Главна парола, която ще бъде използвана за криптиране на експортирани настройки.</string>
+    <string name="preferences_export_canceled">Експорт неуспешен! Настройките не са експортирани!</string>
+    <string name="preferences_import_canceled">Импорт неуспешен! Настройките не са импортирани!</string>
+    <string name="preferences_import_impossible">Импортирането неуспешно!</string>
+    <string name="check_preferences_details_btn">Разясняване на проблеми с импорт…</string>
+    <string name="check_preferences_details_title">Подробности за проблеми с импорта</string>
+    <string name="check_preferences_import_btn">Импорт</string>
+    <string name="check_preferences_import_anyway_btn">Импортирай все пак (ОПАСНО!)</string>
+    <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
+    <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
+    <string name="check_preferences_dangerous_import">Настройите не трябва да бъдат импортирани! (опасни)</string>
+    <string name="nav_export">Експорт настройки</string>
+    <string name="export_to">Експортирай настройките в </string>
+    <string name="import_from">Импорт на настройки от</string>
+    <string name="setting_imported">Настройките са импортирани</string>
+    <string name="old_master_password">Стара главна парола</string>
+    <string name="different_password_used">Този файл е експортиран и шифрован с различна главна парола. Използвайте старата главна парола за декриптиране на файла.</string>
+    <string name="master_password_will_be_replaced">Вашата главна парола ЩЕ БЪДЕ ПОДМЕНЕНА с друга от импортирания файл!</string>
+    <string name="exported">Настройките са експортирани</string>
+    <string name="filenotfound">Файлът не е намерен</string>
+    <string name="goto_main_try_again">Моля, върнете се на началния екран и опитайте отново.</string>
+    <string name="restartingapp">Рестартиране за да се приложат новите настройки.</string>
+    <string name="ue_exported">Потребителските настройки икспортирани</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">ПОДДР</string>
+    <string name="description_maintenance">Предоставя няколко функции за поддръжка (напр. изпращане и изтриване на логовете).</string>
 </resources>

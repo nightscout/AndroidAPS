@@ -84,6 +84,7 @@
     <string name="uam_disabled_in_preferences">UAM zakázáno v nastavení</string>
     <string name="autosens_disabled_in_preferences">Autosens zakázán v nastavení</string>
     <!--    Verify if needed in safety-->
+    <string name="limiting_iob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Obnovit</string>
     <string name="error">Chyba</string>
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="invalid_input">Chybná vstupní data</string>
@@ -8,8 +9,47 @@
     <string name="constraint_applied">Aplikováno omezení!</string>
     <string name="tempbasals_iobtotal_label_string">Celkem IOB:</string>
     <string name="tt_label">DC</string>
+    <string name="pump_unreachable">Pumpa nedostupná</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Znovu načíst</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Uložit</string>
+    <string name="snooze">Odložit</string>
+    <string name="virtual_pump">Virtuální pumpa</string>
+    <string name="constraints">Omezení</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpa pozastavena</string>
+    <string name="and">A</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Uživatel</string>
+    <string name="result">Výsledek</string>
+    <string name="settings">Nastavení</string>
+    <string name="statuslights">Stavové indikátory</string>
+    <string name="do_ns_upload_title">Nahrávat data do NS</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Zásobník</string>
+    <string name="base_basal_rate_label">Základní hodnota bazálu</string>
+    <string name="tempbasal_label">Dočasný bazál</string>
+    <string name="extended_bolus_label">Prodloužený bolus</string>
+    <string name="serial_number">Sériové číslo</string>
+    <string name="disconnected">Odpojeno</string>
+    <string name="connecting">Připojuji</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuto na připojit k pumpě</string>
+    <string name="pump_icon">Ikona pumpy</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Změna ovladače pumpy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Zařízení změněno</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Nenastaveno</string>
+    <string name="reading_pump_history">Načítání historie pumpy</string>
+    <string name="password_cleared">Heslo vymazáno!</string>
+    <string name="pairing">Párování</string>
+    <string name="initializing">Inicializuji ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
+    <string name="pumplimit">limit pumpy</string>
+    <string name="limitingpercentrate">Bazál omezen na %1$d%%: %2$s</string>
+    <string name="itmustbepositivevalue">požadována kladná hodnota</string>
+    <string name="limitingbolus">Bolus omezen na %1$.1f U: %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrzení</string>
@@ -31,6 +71,12 @@
     <string name="event_time_label">Čas</string>
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárována</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nepodporováno.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy není podporováno, nebo zařízení není spárováno.</string>
+    <string name="ble_not_enabled">Bluetooth není povoleno.</string>
+    <string name="location_not_found_title">Zjišťování polohy není povoleno</string>
+    <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS vás nesleduje a po provedení párování můžete tuto volbu opět zakázat.</string>
     <!--    Preferences -->
 </resources>

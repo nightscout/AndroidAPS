@@ -32,6 +32,8 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
     <string name="result">Resultat</string>
     <string name="settings">Innstillinger</string>
+    <string name="statuslights">Statuslys</string>
+    <string name="do_ns_upload_title">Last opp BS data til NS</string>
     <!--    Pumps -->
     <string name="battery_label">Batteri</string>
     <string name="reservoir_label">Reservoar</string>

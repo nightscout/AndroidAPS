@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Uppdatera</string>
+    <string name="error">Fel</string>
+    <string name="profile_set_ok">Basalprofilen uppdaterad i pumpen</string>
+    <string name="tempbasals_iobtotal_label_string">IOB fr basal:</string>
+    <string name="pump_unreachable">Pumpen kan inte nås</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Hämta</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Spara</string>
+    <string name="snooze">Snooze</string>
+    <string name="constraints">Begränsningar</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pump pausad</string>
+    <string name="and">och</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Ditt namn</string>
+    <string name="result">Resultat</string>
+    <string name="statuslights">Statuslampor</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Reservoar</string>
+    <string name="base_basal_rate_label">Profilens basaldos</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="extended_bolus_label">Förlängd bolus</string>
+    <string name="serial_number">Serienummer</string>
+    <string name="disconnected">Frånkopplad</string>
+    <string name="connecting">Ansluter</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Klickade Anslut till pump</string>
+    <string name="pump_icon">Pumpikon</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpdrivr. byte.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enheten ändrad</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Ej vald</string>
+    <string name="reading_pump_history">Läser historik från pumpen</string>
+    <string name="password_cleared">Lösenordet togs bort!</string>
+    <string name="pairing">Parkoppling</string>
+    <string name="initializing">Startar...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Max basal: %1$.2f E/h pga %2$s</string>
+    <string name="pumplimit">pumpbegränsning</string>
+    <string name="limitingpercentrate">Begränsar max procent hastighet till %1$d%% pga %2$s</string>
+    <string name="itmustbepositivevalue">det måste vara ett positivt värde</string>
+    <string name="limitingbolus">Max bolus: %1$.1f U pga %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekräftelse</string>
@@ -12,6 +52,7 @@
     <string name="dismiss">TA BORT</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
+    <string name="close">Stäng</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">öka %1$s med %2$s</string>
@@ -19,6 +60,12 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pump parkopplad</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Enheten stöder inte BLE.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy stöds inte, eller så är enheten inte parkopplad.</string>
+    <string name="ble_not_enabled">Bluetooth är avstängt.</string>
+    <string name="location_not_found_title">Platsdata är inte aktiverat</string>
+    <string name="location_not_found_message">För att Bluetooth ska fungera med nyare enheter, måste platsdata vara aktiverat. AAPS sparar inte din plats och det kan stängas av efter att enheten har parkopplats.</string>
     <!--    Preferences -->
 </resources>

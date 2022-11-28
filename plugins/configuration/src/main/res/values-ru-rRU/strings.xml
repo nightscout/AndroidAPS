@@ -48,8 +48,11 @@
     <string name="allow_automated_crash_reporting">Разрешить отправлять сообщения о неполадках и данные об использовании опций разработчикам при помощи сервиса fabric.io.</string>
     <string name="summary_email_for_crash_report">Эта идентификация будет прикреплена к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
     <string name="identification">Идентификация (электронная почта, ник в Facebook или Discord и т. п)</string>
+    <string name="request">Запрос</string>
     <string name="apsmode_title">Режим APS</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
+    <string name="error_asking_for_permissions">Ошибка при запросе разрешения</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
@@ -68,7 +71,51 @@
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
+    <string name="description_config_builder">Применяется для настройки активных плагинов</string>
+    <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
+    <string name="a11y_open_settings">открыть настройки</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Будет предложено ввести главный пароль, который будет использоваться для шифрования экспортированных параметров.</string>
+    <string name="preferences_export_canceled">Экспорт отменен! Настройки НЕ экспортированы!</string>
+    <string name="preferences_import_canceled">Импорт отменен! Настройки не импортированы!</string>
+    <string name="preferences_import_impossible">Не удается импортировать настройки!</string>
+    <string name="check_preferences_details_btn">Объяснить проблемы импорта…</string>
+    <string name="check_preferences_details_title">Сведения о проблемах импорта</string>
+    <string name="check_preferences_import_btn">Импортировать</string>
+    <string name="check_preferences_import_anyway_btn">Импортировать в любом случае (ОПАСНО!)</string>
     <string name="import_setting">Импортировать настройки</string>
+    <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
+    <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
+    <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
+    <string name="nav_export">экспорт настроек</string>
+    <string name="export_to">экспортировать настройки в</string>
+    <string name="import_from">импортировать настройки из</string>
+    <string name="setting_imported">настройки импортированы</string>
+    <string name="old_master_password">Старый главный пароль</string>
+    <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
+    <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
+    <string name="exported">настройки экспортированы</string>
+    <string name="filenotfound">файл не найден</string>
+    <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
+    <string name="restartingapp">выход из приложения для применения настроек</string>
+    <string name="ue_exported">Записи пользователя экспортированы</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">ОБСЛУЖ</string>
+    <string name="description_maintenance">Предоставляет возможности для обслуживания (например. отправку логов, удаление логов).</string>
+    <string name="database_cleanup">Очистка базы данных</string>
+    <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
+    <string name="cleared_entries">Удалённые записи</string>
+    <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
+    <string name="maintenance_settings">Параметры обслуживания</string>
+    <string name="maintenance_email">Адрес электронной почты</string>
+    <string name="maintenance_amount">Количество логов для отправки</string>
+    <string name="send_all_logs">Отправить журналы (логи) по email</string>
+    <string name="delete_logs">Удалить записи журнала</string>
+    <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
+    <string name="engineering_mode_enabled">Режим отладки включен</string>
+    <string name="log_files">Файлы журналов</string>
+    <string name="nav_logsettings">Настройки журнала</string>
+    <string name="miscellaneous">Разное</string>
+    <string name="nav_resetdb">обнулить базы</string>
+    <string name="resettodefaults">Восстановить значения по умолчанию</string>
 </resources>

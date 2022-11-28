@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Atualizar</string>
+    <string name="error">Erro</string>
+    <string name="profile_set_ok">Perfil Basal atualizado na bomba</string>
+    <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
+    <string name="pump_unreachable">Bomba inacessível</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Recarregar</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Salvar</string>
+    <string name="snooze">Silenciar</string>
+    <string name="constraints">Restrições</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Bomba suspensa</string>
+    <string name="and">E</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuário</string>
+    <string name="result">Resultado</string>
+    <string name="statuslights">Luzes de estado</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Reservatório</string>
+    <string name="base_basal_rate_label">Taxa Basal de base</string>
+    <string name="tempbasal_label">Basal temporaria</string>
+    <string name="extended_bolus_label">Bólus estendido</string>
+    <string name="serial_number">Número de série</string>
+    <string name="disconnected">Desconectado</string>
+    <string name="connecting">Conectando</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicado no conectar à bomba</string>
+    <string name="pump_icon">Ícone da bomba</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Alteração driver da bomba.</string>
+    <string name="device_changed" comment="26 characters max for translation">Troca de dispositivo</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Não definido</string>
+    <string name="reading_pump_history">Lendo histórico da bomba</string>
+    <string name="password_cleared">Senha apagada!</string>
+    <string name="pairing">Emparelhando</string>
+    <string name="initializing">Inicializando...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">A basal max está limitada a %1$.2f U/h por %2$s</string>
+    <string name="pumplimit">limite da bomba</string>
+    <string name="limitingpercentrate">A limitar rácio percentagem máx para %1$d%% porque %2$s</string>
+    <string name="itmustbepositivevalue">deve ser valor positivo</string>
+    <string name="limitingbolus">Limitando bólus para %1$.1f U porque %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmação</string>
@@ -12,6 +52,7 @@
     <string name="dismiss">Dispensar</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
+    <string name="close">Fechar</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">aumento de %1$s para %2$s</string>
@@ -19,6 +60,12 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Bomba acoplada</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth de energia baixa (LE) não suportado.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetoothn Low Energy (BLE) não suportado ou o dispositivo não está acoplado.</string>
+    <string name="ble_not_enabled">Bluetooth não está ativado.</string>
+    <string name="location_not_found_title">Localização Não Está Ativada</string>
+    <string name="location_not_found_message">Para que a procura de Bluetooth funcione em aparelhos mais recentes, a localização tem que ser activada. A app não rastreia a sua localização e pode ser desativada depois de um emparelhamento bem sucedido.</string>
     <!--    Preferences -->
 </resources>

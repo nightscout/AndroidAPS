@@ -1,8 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Opdatér</string>
+    <string name="error">Fejl</string>
+    <string name="profile_set_ok">Basal profil i pumpen er opdateret</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="pump_unreachable">Pumpe utilgængelig</string>
+    <string name="insulin_unit_shortname">IE</string>
+    <string name="reload">Genindlæs</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Gem</string>
+    <string name="snooze">Udsæt</string>
+    <string name="constraints">Begrænsninger</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpe på pause</string>
+    <string name="and">Og</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruger</string>
+    <string name="result">Resultat</string>
+    <string name="settings">Indstillinger</string>
+    <string name="statuslights">Status lys</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Reservoir</string>
+    <string name="base_basal_rate_label">Standard basal rate</string>
+    <string name="tempbasal_label">Midlertidig basal</string>
+    <string name="extended_bolus_label">Forlænget bolus</string>
+    <string name="disconnected">Forbindelse afbrudt</string>
+    <string name="connecting">Forbinder</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Klikket: tilslut til pumpe</string>
+    <string name="pump_icon">Pumpe ikon</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpe driver ændret.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enhed ændret</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Ikke angivet</string>
+    <string name="reading_pump_history">Læser pumpehistorik</string>
+    <string name="pairing">Parring</string>
+    <string name="initializing">Initialiserer ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Begrænser max IOB til %1$.2f E/t på grund af %2$s</string>
+    <string name="pumplimit">pumpe grænse</string>
+    <string name="limitingpercentrate">Begrænser maks. procent til %1$d%% på grund af %2$s</string>
+    <string name="itmustbepositivevalue">det skal være en positiv værdi</string>
+    <string name="limitingbolus">Begrænser bolus til %1$.1f IE på grund af %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekræftelse</string>
@@ -12,6 +51,7 @@
     <string name="dismiss">AFVIS</string>
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
+    <string name="close">Luk</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">stigning %1$s af %2$s</string>
@@ -19,6 +59,12 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe parret</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy understøttes ikke.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy understøttes ikke eller enheden er ikke parret.</string>
+    <string name="ble_not_enabled">Bluetooth er deaktiveret.</string>
+    <string name="location_not_found_title">Lokation er deaktiveret</string>
+    <string name="location_not_found_message">Placeringen skal være aktiveret, hvis Bluetooth-opdagelsen skal fungere på nyere enheder. AAPS sporer ikke din placering, og det kan deaktiveres efter parring er lykkedes.</string>
     <!--    Preferences -->
 </resources>

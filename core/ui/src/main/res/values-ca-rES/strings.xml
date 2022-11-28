@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Actualitzar</string>
+    <string name="error">Error</string>
+    <string name="profile_set_ok">Perfil de basal actualitzat a la bomba</string>
+    <string name="constraint_applied">Restricció aplicada!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
+    <string name="pump_unreachable">Bomba no accessible</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Actualitzar</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Desar</string>
+    <string name="snooze">Postposar</string>
+    <string name="constraints">Restriccions</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Bomba en pausa</string>
+    <string name="and">I</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuari</string>
+    <string name="result">Resultat</string>
+    <string name="statuslights">Llums d\'estat</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Reservori</string>
+    <string name="base_basal_rate_label">Ràtio de basal base</string>
+    <string name="tempbasal_label">Basal temporal</string>
+    <string name="extended_bolus_label">Bolus estès</string>
+    <string name="serial_number">Nr. de sèrie</string>
+    <string name="disconnected">Desconnectat</string>
+    <string name="connecting">Connectant</string>
+    <string name="pump_icon">Icona de la bomba</string>
+    <string name="not_set_short">No configurat</string>
+    <string name="reading_pump_history">Llegint històric bomba</string>
+    <string name="pairing">Sincronitzant</string>
+    <string name="initializing">Inicialitzant...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Limitant màx ràtio basal a %1$.2f U a causa de %2$s</string>
+    <string name="pumplimit">límit de la bomba</string>
+    <string name="limitingpercentrate">Limitant percentatge màx a %1$d%% a causa de %2$s</string>
+    <string name="itmustbepositivevalue">ha de ser un valor positiu</string>
+    <string name="limitingbolus">Limitant bolus a %1$.1f U a causa de %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmació</string>
@@ -11,6 +47,7 @@
     <string name="dismiss">DESCARTAR</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="close">Tancar</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
@@ -18,5 +55,10 @@
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
+    <string name="ble_not_enabled">Bluetooth no activat.</string>
+    <string name="location_not_found_title">Ubicació no habilitada</string>
+    <string name="location_not_found_message">Per a que el descobriment de nous dispositius en Bluetooth funcioni, la ubicació ha d\'estar habilitada. AAPS no fa un seguiment de la vostra localització. A més, pot ser deshabilitada un cop la sincronització s\'ha produït.</string>
     <!--    Preferences -->
 </resources>

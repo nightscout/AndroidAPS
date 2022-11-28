@@ -50,8 +50,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_automated_crash_reporting">Autoriser l\'envoi automatique des rapports d\'erreur et des données d\'utilisation aux développeurs via le service fabric.io</string>
     <string name="summary_email_for_crash_report">Cette identification sera jointe aux rapports de plantage afin que nous puissions vous contacter en cas d\'urgence. Elle est facultative.</string>
     <string name="identification">Identification (email, FB ou pseudo dans Discord, etc)</string>
+    <string name="request">Demande</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
+    <string name="error_asking_for_permissions">Erreur lors de la demande des autorisations</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
@@ -71,7 +74,37 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
     <string name="configbuilder_sensitivity">Estimation de Sensibilité</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
+    <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
+    <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AAPS copiera les paramètres basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres basal dans AAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres basal sur votre pompe, appuyez sur Annuler et reporter la selection de la pompe à une date ultérieure.</string>
+    <string name="a11y_open_settings">ouvrir les paramètres</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Le mot de passe principal vous sera demandé pour crypter les préférences exportées.</string>
+    <string name="preferences_export_canceled">Export annulé ! Les préférences n\'ont PAS été exportées !</string>
+    <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>
+    <string name="preferences_import_impossible">Impossible d\'importer les préférences !</string>
+    <string name="check_preferences_details_btn">Explication des problèmes d\'importation…</string>
+    <string name="check_preferences_details_title">Détails des problèmes d\'importation</string>
+    <string name="check_preferences_import_btn">Import</string>
+    <string name="check_preferences_import_anyway_btn">Importer quand même (DANGEREUX !)</string>
     <string name="import_setting">Importer les paramètres</string>
+    <string name="check_preferences_before_import">Veuillez vérifier les préférences avant d\'importer:</string>
+    <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
+    <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
+    <string name="nav_export">Exporter les paramètres</string>
+    <string name="export_to">Exporter les paramètres au</string>
+    <string name="import_from">Importer les paramètres depuis</string>
+    <string name="setting_imported">Paramètres importés</string>
+    <string name="old_master_password">Ancien mot de passe principal</string>
+    <string name="different_password_used">Ce fichier a été exporté et chiffré avec un mot de passe principal différent. Veuillez renseigner votre ancien mot de passe principal pour déchiffrer le fichier.</string>
+    <string name="master_password_will_be_replaced">Suite à l\'importation réussie, le mot de place principal actuel SERA REMPLACÉ par cet ancien mot de passe!</string>
+    <string name="exported">Préférences exportées</string>
+    <string name="filenotfound">Fichier introuvable</string>
+    <string name="goto_main_try_again">Veuillez retourner à l\'écran principal et réessayer.</string>
+    <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
+    <string name="ue_exported">Entrées utilisateur exportées</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MAINT</string>
+    <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
+    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
+    <string name="cleared_entries">Entrées effacées</string>
 </resources>

@@ -42,8 +42,10 @@
     <string name="allow_automated_crash_reporting">Tillåt automatisk rapportering av appkrascher och användningsinformation till utvecklarna via fabric.io-tjänsten.</string>
     <string name="summary_email_for_crash_report">Den här mejladressen kommer att bifogas till kraschrapporter så att vi kan kontakta dig i brådskande fall. Det är frivilligt.</string>
     <string name="identification">Identifiering (e-post, FB, Discord-namn etc)</string>
+    <string name="request">Begäran</string>
     <string name="apsmode_title">APS-läge</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_profile">Profil</string>
@@ -57,6 +59,41 @@
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
+    <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att kryptera exporterade inställningar.</string>
+    <string name="preferences_export_canceled">Exporten avbröts. Inställningarna har INTE exporterats!</string>
+    <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>
+    <string name="preferences_import_impossible">Kan inte importera inställningar!</string>
+    <string name="check_preferences_details_btn">Förklara importproblem…</string>
+    <string name="check_preferences_details_title">Detaljer kring importproblem</string>
+    <string name="check_preferences_import_btn">Importera</string>
+    <string name="check_preferences_import_anyway_btn">Importera ändå (FARLIGT!)</string>
+    <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
+    <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
+    <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
+    <string name="nav_export">Exportera inställningar</string>
+    <string name="export_to">Exportera inställningar till</string>
+    <string name="import_from">Importera inställningar från</string>
+    <string name="setting_imported">Inställningar importerade</string>
+    <string name="old_master_password">Gamla huvudlösenordet</string>
+    <string name="different_password_used">Den här filen har exporterats och krypterats med ett annat lösenord. Ange det gamla lösenordet för att dekryptera filen.</string>
+    <string name="master_password_will_be_replaced">OBS! Som ett resultat av en lyckad import, kommer det nuvarande huvudlösenordet att ersättas av det gamla huvudlösenordet!</string>
+    <string name="exported">Inställningar exporterade</string>
+    <string name="filenotfound">Hittade inte filen</string>
+    <string name="goto_main_try_again">Vänligen gå tillbaka till huvudskärmen och försök igen.</string>
+    <string name="restartingapp">Avslutar appen för att inställningarna ska läsas in.</string>
+    <string name="ue_exported">Användarposter exporterade</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">UH</string>
+    <string name="description_maintenance">Tillhandahåller funktioner för underhåll (t ex skicka eller ta bort loggar).</string>
+    <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
+    <string name="maintenance_settings">Underhållsinställningar</string>
+    <string name="maintenance_email">e-postmottagare</string>
+    <string name="maintenance_amount">Antal loggar att skicka</string>
+    <string name="send_all_logs">Skicka loggar per e-post</string>
+    <string name="delete_logs">Radera loggar</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
+    <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
+    <string name="nav_logsettings">Loggningsinställningar</string>
 </resources>

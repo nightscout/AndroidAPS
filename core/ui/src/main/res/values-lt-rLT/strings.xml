@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Atnaujinti</string>
+    <string name="error">Klaida</string>
+    <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
+    <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
+    <string name="pump_unreachable">Pompa nepasiekiama</string>
+    <string name="insulin_unit_shortname">vv</string>
+    <string name="reload">Atnaujinti</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Išsaugoti</string>
+    <string name="snooze">Snausti</string>
+    <string name="constraints">Apribojimai</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompa pristabdyta</string>
+    <string name="and">Ir</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
+    <string name="result">Rezultatas</string>
+    <string name="statuslights">Būklės indikatoriai</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Rezervuaras</string>
+    <string name="base_basal_rate_label">Pagrindinis bazės dydis</string>
+    <string name="tempbasal_label">Laikina bazė</string>
+    <string name="extended_bolus_label">Ištęstas bolusas</string>
+    <string name="serial_number">Serijos numeris</string>
+    <string name="disconnected">Atsijungta</string>
+    <string name="connecting">Jungiamasi</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Spausta \"jungtis su pompa\"</string>
+    <string name="pump_icon">Pompos ikonėlė</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pompos valdiklio keitimas.</string>
+    <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
+    <string name="not_set_short">Nenustatyta</string>
+    <string name="reading_pump_history">Skaitoma pompos istorija</string>
+    <string name="password_cleared">Slaptažodis išvalytas!</string>
+    <string name="pairing">Sujungiama</string>
+    <string name="initializing">Inicijuojama ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
+    <string name="pumplimit">pompos limitas</string>
+    <string name="limitingpercentrate">Ribojamas maks procentų skaičius %1$d%%, nes %2$s</string>
+    <string name="itmustbepositivevalue">reikšmė turi būti teigiama</string>
+    <string name="limitingbolus">Bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
@@ -12,12 +52,19 @@
     <string name="dismiss">ATMESTI</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
+    <string name="close">Uždaryti</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
+    <string name="ble_not_supported_or_not_paired">Nepalaikomas Bluetooth Low Energy arba įrenginys nesuporuotas.</string>
+    <string name="ble_not_enabled">Bluetooth neįjungta.</string>
+    <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
+    <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
     <!--    Preferences -->
 </resources>

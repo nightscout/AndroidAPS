@@ -43,8 +43,11 @@
     <string name="allow_automated_crash_reporting">Tillad automatisk nedbruds rapportering og funktionsbrug data som sendes til udviklerne via fabric.io tjenesten.</string>
     <string name="summary_email_for_crash_report">Denne identifikation vil blive vedhæftet til nedbrudsrapporter, så vi kan kontakte dig i hastende tilfælde. Det er valgfrit.</string>
     <string name="identification">Identifikation (e-mail, FB eller Discord alias osv.)</string>
+    <string name="request">Anmod</string>
     <string name="apsmode_title">APS Tilstand</string>
     <string name="setupwizard_preferred_aps_mode">Foretrukket APS-tilstand</string>
+    <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_pump_description">Hvilken pumpe vil du gerne bruge med AAPS?</string>
@@ -62,6 +65,33 @@
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
     <string name="configbuilder_sensitivity">Detektering af følsomhed</string>
     <string name="configbuilder_sensitivity_description">Hvilken følsomhedsalgoritme skal anvendes?</string>
+    <string name="description_config_builder">Bruges til at konfigurere de aktive plugins</string>
+    <string name="allow_hardware_pump_text">Bemærk: Hvis du aktiverer og opretter forbindelse til en hardwarepumpe, vil AndroidAPS kopiere de basale indstillinger fra profilen til pumpen og overskrive den eksisterende basal rate lagret på pumpen. Sørg for, at du har den korrekte basal indstilling i AndroidAPS. Hvis du ikke er sikker på eller ikke ønsker at overskrive de basale indstillinger på din pumpe, tryk på annuller og gentag skift til pumpen på et senere tidspunkt.</string>
+    <string name="a11y_open_settings">Åbn indstillinger</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Du bliver bedt om hovedadgangskode, som vil blive brugt til at kryptere eksporterede præferencer.</string>
+    <string name="preferences_export_canceled">Eksport annulleret! Indstillinger er IKKE eksporteret!</string>
+    <string name="preferences_import_canceled">Import er annulleret! Præferencer er IKKE importeret!</string>
+    <string name="preferences_import_impossible">Kan ikke importere præferencer!</string>
+    <string name="check_preferences_details_btn">Forklar importproblemer…</string>
+    <string name="check_preferences_details_title">Importeringsfejl detaljer</string>
+    <string name="check_preferences_import_btn">Importer</string>
+    <string name="check_preferences_import_anyway_btn">Importér alligevel (FARLIGT!)</string>
+    <string name="check_preferences_before_import">Tjek venligst præferencer før importering:</string>
+    <string name="check_preferences_cannot_import">Præferencer kan ikke importeres!</string>
+    <string name="check_preferences_dangerous_import">Præferencer bør ikke importeres!</string>
+    <string name="nav_export">Eksporter indstillinger</string>
+    <string name="export_to">Eksporter indstillinger til</string>
+    <string name="import_from">Importer indstillinger fra</string>
+    <string name="setting_imported">Indstillinger importeret</string>
+    <string name="old_master_password">Gammel Hovedadgangskode</string>
+    <string name="different_password_used">Denne fil er eksporteret og krypteret med et andet masterkodeord. Angiv det gamle masterkodeord for at dekryptere filen.</string>
+    <string name="master_password_will_be_replaced">Som et resultat af en vellykket import vil nuværende hovedadgangskode blive erstattet med den gamle hovedadgangskode!</string>
+    <string name="exported">Præferencer eksporteret</string>
+    <string name="filenotfound">Filen blev ikke fundet</string>
+    <string name="goto_main_try_again">Gå venligst tilbage til hovedskærmen og prøv igen.</string>
+    <string name="restartingapp">Afslutter applikationen for at anvende indstillinger.</string>
+    <string name="ue_exported">Brugerindtastninger exporteret</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MAINT</string>
 </resources>

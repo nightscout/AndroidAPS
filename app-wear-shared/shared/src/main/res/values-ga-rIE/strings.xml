@@ -19,4 +19,6 @@
     <string name="shortminute">n</string>
     <string name="shortday">lá</string>
     <!-- Rx -->
+    <string name="connected">Nasctha</string>
+    <string name="disconnecting">Dícheangal</string>
 </resources>

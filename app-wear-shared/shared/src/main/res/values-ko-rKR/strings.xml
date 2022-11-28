@@ -19,4 +19,7 @@
     <string name="shortminute">분</string>
     <string name="shortday">일</string>
     <!-- Rx -->
+    <string name="handshaking">통신 확인</string>
+    <string name="connected">연결됨</string>
+    <string name="disconnecting">연결끊기중</string>
 </resources>

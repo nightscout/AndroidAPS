@@ -15,5 +15,10 @@
     <string name="configbuilder_loop">Lúb</string>
     <string name="configbuilder_bgsource">Foinse BG</string>
     <!--ImportExport-->
+    <string name="check_preferences_import_btn">Iompórtáil</string>
+    <string name="nav_export">Socruithe Easpórtáil</string>
+    <string name="export_to">Socruithe Easpórtáil chun</string>
+    <string name="exported">Easpórtáil Socruithe</string>
     <!--    Maintenance-->
+    <string name="reset_db_confirm">An bhfuil tú cinnte gur mian leat an bhunachair sonraí a athshocrú?</string>
 </resources>

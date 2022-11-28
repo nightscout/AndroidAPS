@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Aggiorna</string>
+    <string name="error">Errore</string>
+    <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
+    <string name="constraint_applied">Vincolo applicato!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
+    <string name="pump_unreachable">Micro irraggiungibile</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Ricarica</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Salva</string>
+    <string name="snooze">Posticipa</string>
+    <string name="virtual_pump">Micro virtuale</string>
+    <string name="constraints">Vincoli</string>
+    <string name="superbolus">Superbolo</string>
+    <string name="pump_paused">Micro in pausa</string>
+    <string name="and">E (AND)</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
+    <string name="result">Risultato</string>
+    <string name="settings">Impostazioni</string>
+    <string name="statuslights">Indicatori di stato</string>
+    <string name="do_ns_upload_title">Carica dati BG su NS</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Serbatoio</string>
+    <string name="base_basal_rate_label">Velocità basale originale</string>
+    <string name="tempbasal_label">Basale temporanea</string>
+    <string name="extended_bolus_label">Bolo Esteso</string>
+    <string name="serial_number">Numero seriale</string>
+    <string name="disconnected">Disconnesso</string>
+    <string name="connecting">Connessione</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
+    <string name="pump_icon">Icona micro</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Cambio driver micro.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiato</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
+    <string name="not_set_short">Non impostato</string>
+    <string name="reading_pump_history">Lettura storico micro</string>
+    <string name="password_cleared">Password cancellata!</string>
+    <string name="pairing">Associazione</string>
+    <string name="initializing">Inizializzazione...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
+    <string name="pumplimit">limite micro</string>
+    <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
+    <string name="itmustbepositivevalue">deve essere un valore positivo</string>
+    <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Conferma</string>
@@ -12,6 +56,7 @@
     <string name="dismiss">RIMUOVI</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="close">Chiudi</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="a11y_plus_button_description">incremento %1$s di %2$s</string>
@@ -19,6 +64,12 @@
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
+    <string name="ble_not_enabled">Bluetooth non abilitato.</string>
+    <string name="location_not_found_title">La localizzazione non è abilitata</string>
+    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Preferences -->
 </resources>

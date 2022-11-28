@@ -16,4 +16,7 @@
     <string name="unit_weeks">εβδομάδες</string>
     <string name="shortminute">m</string>
     <!-- Rx -->
+    <string name="handshaking">Δημιουργία σύνδεσης</string>
+    <string name="connected">Συνδέθηκε</string>
+    <string name="disconnecting">Αποσυνδέεται</string>
 </resources>

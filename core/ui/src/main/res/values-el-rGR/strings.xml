@@ -1,8 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Ανανέωση</string>
+    <string name="profile_set_ok">Το Βασικό προφίλ στην αντλία ενημερώθηκε</string>
+    <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
+    <string name="pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Γέμισμα</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Αποθήκευση</string>
+    <string name="snooze">Αναβολή</string>
+    <string name="constraints">Περιορισμοί</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Παύση της αντλίας</string>
+    <string name="and">Και</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Χρήστης</string>
+    <string name="result">Αποτέλεσμα</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Αμπούλα</string>
+    <string name="base_basal_rate_label">Βάση Βασικού Ρυθμού</string>
+    <string name="tempbasal_label">Προσωρινός Ρυθμός</string>
+    <string name="extended_bolus_label">Εκτεταμμένο bolus</string>
+    <string name="serial_number">Serial number</string>
+    <string name="disconnected">Αποσυνδέθηκε</string>
+    <string name="connecting">Συνδέεται</string>
+    <string name="not_set_short">Μη ορισμένο</string>
+    <string name="reading_pump_history">Ανάγνωση ιστορικού αντλίας</string>
+    <string name="initializing">Παραμετροποίηση...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Ο μέγιστος βασικός ρυθμός περιορίζεται σε %1$.2f U/h λόγω ότι %2$s</string>
+    <string name="pumplimit">όριο αντλίας</string>
+    <string name="limitingpercentrate">Περιορίζεται το μέγιστο επί τοις εκατό ποσοστό σε %1$d%% λόγω %2$s</string>
+    <string name="itmustbepositivevalue">πρέπει να είναι θετική τιμή</string>
+    <string name="limitingbolus">Περιορίζεται το bolus σε %1$.1f U λόγω %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="ok">ΟΚ</string>
@@ -10,11 +41,16 @@
     <string name="dismiss">ΑΠΟΡΡΙΨΗ</string>
     <string name="yes">Ναι</string>
     <string name="no">Όχι</string>
+    <string name="close">Κλείσιμο</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Χαμηλή ενέργεια Bluetooth δεν υποστηρίζεται.</string>
+    <string name="ble_not_enabled">Bluetooth μη ενεργοποιημένο.</string>
+    <string name="location_not_found_title">Τοποθεσία μη ενεργοποιημένη</string>
+    <string name="location_not_found_message">Για την εύρεση Bluetooth σε νεότερες συσκευές, η τοποθεσία πρέπει να είναι ενεργοποιημένη. Το AAPS δεν παρακολουθεί την τοποθεσία σας και μπορεί να απενεργοποιηθεί μετά την επιτυχή σύζευξη.</string>
     <!--    Preferences -->
 </resources>

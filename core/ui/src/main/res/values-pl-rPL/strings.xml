@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Odśwież</string>
+    <string name="error">Błąd</string>
+    <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
+    <string name="tempbasals_iobtotal_label_string">Całkowita IOB:</string>
+    <string name="pump_unreachable">Pompa nieosiągalna</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Załaduj ponownie</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">ZACHOWAJ</string>
+    <string name="snooze">Wycisz</string>
+    <string name="constraints">Ograniczenia</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompa wstrzymana</string>
+    <string name="and">i</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Użytkownik</string>
+    <string name="result">Rezultat</string>
+    <string name="statuslights">Wskaźniki stanu</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Zbiornik</string>
+    <string name="base_basal_rate_label">Podstawowa dawka bazowa</string>
+    <string name="tempbasal_label">Baza tymczasowa</string>
+    <string name="extended_bolus_label">Bolus Przedłużony</string>
+    <string name="serial_number">Numer seryjny</string>
+    <string name="disconnected">Rozłączono</string>
+    <string name="connecting">Łączę</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknięto połącz z pompą</string>
+    <string name="pump_icon">Ikona pompy</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Zmiana ster. pompy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Urządzenie zmieniono</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Nie ustawiono</string>
+    <string name="reading_pump_history">Wczytywanie historii pompy</string>
+    <string name="password_cleared">Hasło usunięte!</string>
+    <string name="pairing">Parowanie</string>
+    <string name="initializing">Inicjuje ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
+    <string name="pumplimit">ograniczenie pompy</string>
+    <string name="limitingpercentrate">Ograniczam maksymalną wartość w procentach do %1$d%% z uwagi na %2$s</string>
+    <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
+    <string name="limitingbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potwierdzenie</string>
@@ -12,12 +52,19 @@
     <string name="dismiss">ODRZUĆ</string>
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
+    <string name="close">Zamknij</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nie jest obsługiwany.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie jest obsługiwany lub urządzenie nie jest sparowane.</string>
+    <string name="ble_not_enabled">Bluetooth nie jest włączony.</string>
+    <string name="location_not_found_title">Lokalizacja nie jest włączona</string>
+    <string name="location_not_found_message">Aby uruchomić odnajdywanie Bluetooth na nowszych urządzeniach, lokalizacja musi być uruchomiona. AAPS nie śledzi twojej lokalizacji więc po udanym parowaniu urządzenia Bluetooth można wyłączyć lokalizację.</string>
     <!--    Preferences -->
 </resources>
