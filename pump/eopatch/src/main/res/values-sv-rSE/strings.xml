@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolus %1$.2f enheter levererat</string>
     <string name="cancel">Avbryt</string>
     <string name="confirm">Bekräfta</string>
 </resources>
