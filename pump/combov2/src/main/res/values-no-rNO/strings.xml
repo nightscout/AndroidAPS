@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_error_2">Batteri tomt</string>
+    <string name="combov2_error_4">Tilstopping</string>
+    <string name="combov2_error_6">Mekanisk feil</string>
     <string name="bluetooth_address">Bluetooth adresse</string>
+    <string name="combov2_start_pairing">Start paringen</string>
+    <string name="combov2_cancel_pairing">Avbryt paringen</string>
+    <string name="combov2_not_initialized">Pumpen er ikke startet</string>
+    <string name="combov2_ready">Klar</string>
+    <string name="combov2_suspended">Pauset</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Setter basal profil</string>
+    <string name="combov2_bolus_cancelled">Bolus avbrutt</string>
+    <string name="combov2_bolus_delivery_failed">Bolus avbrutt. Det virker som ingen bolus er levert. For å være sikker, sjekk pumpen for å unngå levering av dobbel bolus og gjør evt et nytt forsøk. For å unngå feil vil systemet aldri prøve å levere ny bolus.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min igjen)</string>
+    <string name="combov2_battery_low_warning">Pumpebatteriet er lavt</string>
+    <string name="combov2_short_status_last_connection">Siste tilkobling: %1$d min siden</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Reservoar: %d E</string>
+    <string name="combov2_short_status_battery_state_empty">tom</string>
+    <string name="combov2_short_status_battery_state_low">lavt</string>
 </resources>
