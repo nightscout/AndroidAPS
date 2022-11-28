@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="setup">Ρύθμιση</string>
+    <string name="next">Επόμενο</string>
+    <string name="boluses">Bolus</string>
+    <string name="carbohydrates">Υδατάνθρακες</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="device_model">Μοντέλο συσκευής</string>
+    <string name="nightscout_url">Διεύθυνση Nightscout</string>
     <string name="cancel">Ακύρωση</string>
     <string name="close">Κλείσιμο</string>
 </resources>
