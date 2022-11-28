@@ -23,7 +23,6 @@
     <string name="description_smb_dynamic_isf">面向高级用户的最新算法，可以动态/自动调整ISF胰岛素敏感系数</string>
     <string name="openapsma_run">现在运行</string>
     <string name="openapsma_profile_label">配置文件</string>
-    <string name="result">结果</string>
     <string name="openapsma_request_label">请求</string>
     <string name="constraints">约束条件</string>
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
