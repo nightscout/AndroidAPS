@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Innstillinger</string>
     <string name="nav_refreshtreatments">Oppdater behandlinger fra NS</string>
     <string name="nav_exit">Avslutt</string>
-    <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">Lagre</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(FARLIG Å DEAKTIVERE) Kun NS opplasting</string>
     <string name="ns_upload_only_summary">Kun NS opplasting (deaktivert sync). Ikke effektiv på SGV med mindre en lokal kilde som xDrip+ er valgt. Ikke effektiv på Profiler mens NS-Profiler brukes.\n!!! ADVARSEL !!! Deaktivering av dette alternativet kan føre til funksjonsfeil og overdosering av insulin hvis noen av dine komponenter (AAPS, NS, xDrip+) er feil konfigurert. Observer at data som vises i AAPS samsvarer med pumpestatus!</string>
     <string name="wear">Klokke</string>
-    <string name="ongoingnotificaction">Pågående varslinger</string>
-    <string name="old_data">GAMLE DATA</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Appen mangler tilgang til telefonstatus</string>
     <string name="ns_alarm_options">Alarmvalg</string>
