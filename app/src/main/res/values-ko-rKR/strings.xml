@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s 설정</string>
     <string name="nav_refreshtreatments">NS에서 관리 새로고침</string>
     <string name="nav_exit">종료</string>
-    <string name="description_persistent_notification">Loop가 어떤 작동하는지에 대한 간략한 개요를 연속 알림으로 보여줍니다.</string>
     <string name="delta">증분</string>
     <string name="save">저장</string>
     <string name="reloadprofile">프로파일 새로고침</string>
@@ -14,8 +13,6 @@
     <string name="ns_upload_only">(비활성화 시 위험함) NS에 업로드만 하기</string>
     <string name="ns_upload_only_summary">NS에 업로드만 하기 (sync를 비활성화 함). xDrip+와 같은 로컬 출처를 선택한 경우 외에는 SGV에 영향을 주지 않음. NS 프로파일을 사용하는 동안 프로파일에 영향을 주지 않음.\n!!! 경고!!! 이 기능을 비활성화하면 일부 구성요소 (AAPS, NS, xDrip+) 가 잘못 설정되어 있을 때 잘못 작동하거나 인슐린의 과다주입을 야기할 수 있음. AAPS에서 보여지는 정보와 펌프 상태가 일치하는지 유의해서 관찰해야 함!</string>
     <string name="wear">워치</string>
-    <string name="ongoingnotificaction">연속 알림</string>
-    <string name="old_data">오래된 데이터</string>
     <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
     <string name="ns_alarm_options">알람 옵션</string>
