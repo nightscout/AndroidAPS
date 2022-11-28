@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Obnoviť</string>
+    <string name="error">Chyba</string>
+    <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
+    <string name="constraint_applied">Aplikované obmedzenie!</string>
+    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
+    <string name="pump_unreachable">Pumpa nedostupná</string>
+    <string name="insulin_unit_shortname">JI</string>
+    <string name="reload">Znova načítať</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">Uložiť</string>
+    <string name="snooze">Odložiť</string>
+    <string name="virtual_pump">Virtuálna pumpa</string>
+    <string name="constraints">Obmedzenia</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpa pozastavená</string>
+    <string name="and">A</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Používateľ</string>
+    <string name="result">Výsledok</string>
+    <string name="settings">Nastavenia</string>
+    <string name="statuslights">Indikátory stavu</string>
+    <string name="do_ns_upload_title">Nahrávať glykémie do NS</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Zásobník</string>
+    <string name="base_basal_rate_label">Základná hodnota bazálu</string>
+    <string name="tempbasal_label">Dočasný bazál</string>
+    <string name="extended_bolus_label">Predĺžený bolus</string>
+    <string name="serial_number">Sériové číslo</string>
+    <string name="disconnected">Odpojené</string>
+    <string name="connecting">Pripájanie</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuté pripojiť k pumpe</string>
+    <string name="pump_icon">Ikona pumpy</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Zmena ovládača pumpy.</string>
+    <string name="device_changed" comment="26 characters max for translation">Zariadenie zmenené</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Nenastavené</string>
+    <string name="reading_pump_history">Načítavam históriu z pumpy</string>
+    <string name="password_cleared">Heslo vymazané!</string>
+    <string name="pairing">Párovanie</string>
+    <string name="initializing">Inicializácia ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
+    <string name="pumplimit">limit pumpy</string>
+    <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
+    <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
+    <string name="limitingbolus">Bolus obmedzený na %1$.1f JI: %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrdenie</string>
@@ -12,6 +56,7 @@
     <string name="dismiss">ODMIETNUŤ</string>
     <string name="yes">Áno</string>
     <string name="no">Nie</string>
+    <string name="close">Zavrieť</string>
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Budete vyzvaný na zadanie hlavného hesla, ktoré bude použité na dešifrovanie importovaných nastavení.</string>
     <!-- NumberPicker -->
@@ -23,6 +68,12 @@
     <string name="event_time_label">Čas udalosti</string>
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nie je podporované.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie je podporované, alebo zariadenie nie je spárované.</string>
+    <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
+    <string name="location_not_found_title">Poloha nie je aktivovaná</string>
+    <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
     <!--    Preferences -->
 </resources>
