@@ -67,5 +67,9 @@ interface ActivityNames {
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int)
     fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)
     fun addNotificationWithAction(injector: HasAndroidInjector, nsAlarm: NSAlarm)
+    fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, @RawRes soundId: Int? = null, date: Long = System.currentTimeMillis())
     fun showToastAndNotification(ctx: Context?, string: String?, @RawRes soundID: Int)
+
+    fun startAlarm(@RawRes sound: Int, reason: String)
+    fun stopAlarm(reason: String)
 }

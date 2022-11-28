@@ -61,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="muteClicked"
-            android:text="@string/mute_alert" />
+            android:text="@string/mute" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/confirm"

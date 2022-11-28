@@ -1,6 +1,5 @@
 package info.nightscout.ui.alertDialogs
 
-import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -11,12 +10,12 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.core.services.AlarmSoundServiceHelper
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.core.main.R
+import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.databinding.DialogErrorBinding
@@ -24,10 +23,9 @@ import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {
 
-    @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
+    @Inject lateinit var activityNames: ActivityNames
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var ctx: Context
 
     var helperActivity: DialogAppCompatActivity? = null
     var status: String = ""
@@ -115,9 +113,9 @@ class ErrorDialog : DaggerDialogFragment() {
 
     private fun startAlarm() {
         if (sound != 0)
-            alarmSoundServiceHelper.startAlarm(ctx, sound, "$title:$status")
+            activityNames.startAlarm(sound, "$title:$status")
     }
 
     private fun stopAlarm(reason: String) =
-        alarmSoundServiceHelper.stopService(ctx, reason)
+        activityNames.stopAlarm(reason)
 }

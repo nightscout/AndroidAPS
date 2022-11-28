@@ -25,10 +25,11 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':core:core-main')
     implementation project(':core:interfaces')
     implementation project(':core:utils')
     implementation project(':core:ui')
+
+    api 'com.google.guava:guava:31.1-jre'
 
     //RxAndroidBle
     implementation "com.polidea.rxandroidble3:rxandroidble:1.17.2"

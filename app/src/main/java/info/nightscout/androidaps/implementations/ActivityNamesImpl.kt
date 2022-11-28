@@ -12,9 +12,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.core.services.AlarmSoundService
 import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.services.AlarmSoundService
+import info.nightscout.core.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
@@ -41,7 +42,9 @@ import info.nightscout.ui.dialogs.WizardDialog
 import javax.inject.Inject
 
 class ActivityNamesImpl @Inject constructor(
-    private val rxBus: RxBus
+    private val rxBus: RxBus,
+    private val injector: HasAndroidInjector,
+    private val alarmSoundServiceHelper: AlarmSoundServiceHelper
 ) : ActivityNames {
 
     override val mainActivity: Class<*> = MainActivity::class.java
@@ -177,9 +180,30 @@ class ActivityNamesImpl @Inject constructor(
         rxBus.send(EventNewNotification(NotificationWithAction(injector, nsAlarm)))
     }
 
+    override fun addNotificationWithAction(id: Int, text: String, level: Int, buttonText: Int, action: Runnable, @RawRes soundId: Int?, date: Long) {
+        rxBus.send(
+            EventNewNotification(
+                NotificationWithAction(injector, id, text, level)
+                    .action(buttonText, action)
+                    .also {
+                        it.date = date
+                        it.soundId = soundId
+                    }
+            )
+        )
+    }
+
     override fun showToastAndNotification(ctx: Context?, string: String?, soundID: Int) {
         ToastUtils.showToastInUiThread(ctx, string)
         ToastUtils.playSound(ctx, soundID)
         addNotification(Notification.TOAST_ALARM, string!!, Notification.URGENT)
+    }
+
+    override fun startAlarm(@RawRes sound: Int, reason: String) {
+        alarmSoundServiceHelper.startAlarm(sound, reason)
+    }
+
+    override fun stopAlarm(reason: String) {
+        alarmSoundServiceHelper.stopAlarm(reason)
     }
 }

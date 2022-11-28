@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import androidx.annotation.RawRes
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 
 import javax.inject.Inject
 import javax.inject.Singleton
+import dagger.Lazy
 
 /*
     This code replaces  following
@@ -25,10 +27,11 @@ import javax.inject.Singleton
 @Singleton
 class AlarmSoundServiceHelper @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val notificationHolder: NotificationHolder
+    private val notificationHolder: Lazy<NotificationHolder>,
+    private val context: Context
 ) {
 
-    fun startAlarm(context: Context, sound: Int, reason: String) {
+    fun startAlarm(@RawRes sound: Int, reason: String) {
         aapsLogger.debug(LTag.CORE, "Starting alarm from $reason")
         val connection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -41,7 +44,7 @@ class AlarmSoundServiceHelper @Inject constructor(
 
                 // This is the key: Without waiting Android Framework to call this method
                 // inside Service.onCreate(), immediately call here to post the notification.
-                alarmSoundService.startForeground(notificationHolder.notificationID, notificationHolder.notification)
+                alarmSoundService.startForeground(notificationHolder.get().notificationID, notificationHolder.get().notification)
 
                 // Release the connection to prevent leaks.
                 context.unbindService(this)
@@ -62,13 +65,13 @@ class AlarmSoundServiceHelper @Inject constructor(
         }
     }
 
-    fun stopService(context: Context, reason: String) {
+    fun stopAlarm(reason: String) {
         aapsLogger.debug(LTag.CORE, "Stopping alarm from $reason")
         val alarm = Intent(context, AlarmSoundService::class.java)
         context.stopService(alarm)
     }
 
-    private fun getServiceIntent(context: Context, sound: Int): Intent {
+    private fun getServiceIntent(context: Context, @RawRes sound: Int): Intent {
         val alarm = Intent(context, AlarmSoundService::class.java)
         alarm.putExtra(AlarmSoundService.SOUND_ID, sound)
         return alarm

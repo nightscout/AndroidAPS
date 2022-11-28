@@ -10,7 +10,6 @@
     <string name="format_mins">%1$d mins</string>
     <string name="objectives">Objectives</string>
     <string name="please_wait">Please wait…</string>
-    <string name="mute">Mute</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
     <string name="invalid_profile">Invalid profile!</string>
@@ -202,7 +201,6 @@
     <!--    PumpEnactResult-->
     <string name="enacted">Enacted</string>
     <string name="comment">Comment</string>
-    <string name="success">Success</string>
     <string name="percent">Percent</string>
     <string name="absolute">Absolute</string>
     <string name="waitingforpumpresult">Waiting for result</string>
@@ -227,8 +225,6 @@
 
     <!--    Ntp-->
     <string name="timedetection">Time detection</string>
-
-    <string name="mute5min">Mute for 5 minutes</string>
 
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
