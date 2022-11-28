@@ -42,8 +42,11 @@
     <string name="allow_automated_crash_reporting">Erlauben, dass automatische Fehler-Berichte und Nutzungsstatistiken an die Entwickler über den Service von Fabric.io gesendet werden</string>
     <string name="summary_email_for_crash_report">Diese Identifikation wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
     <string name="identification">Identifikation (E-Mail, Facebook oder Discord Nickname)</string>
+    <string name="request">Anfordern</string>
     <string name="apsmode_title">APS-Modus</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
+    <string name="error_asking_for_permissions">Fehler beim Anfordern der Erlaubnis</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Dieses Gerät scheint keine Deaktivierung der Energieoptimierung zu unterstützen - das könnte zu Leistungsproblemen führen.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pumpe</string>
     <string name="configbuilder_profile">Profil</string>
@@ -57,6 +60,41 @@
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="configbuilder_sensitivity">Sensitivitätserkennung</string>
     <string name="configbuilder_sensitivity_description">Welcher Sensitivitäts-Algorithmus soll verwendet werden?</string>
+    <string name="description_config_builder">Dient zum Konfigurieren der aktiven Plugins</string>
+    <string name="a11y_open_settings">Einstellungen öffnen</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die exportierten Einstellungen verschlüsselt.</string>
+    <string name="preferences_export_canceled">Export abgebrochen! Einstellungen wurden NICHT exportiert!</string>
+    <string name="preferences_import_canceled">Import abgebrochen! Einstellungen wurden NICHT importiert!</string>
+    <string name="preferences_import_impossible">Einstellungen können nicht importiert werden!</string>
+    <string name="check_preferences_details_btn">Beschreibe die Import-Probleme...</string>
+    <string name="check_preferences_details_title">Details zu den Import-Problemen</string>
+    <string name="check_preferences_import_btn">Importieren</string>
+    <string name="check_preferences_import_anyway_btn">Trotzdem importieren (GEFÄHRLICH!)</string>
+    <string name="check_preferences_before_import">Überprüfe die Einstellungen vor dem Import:</string>
+    <string name="check_preferences_cannot_import">Einstellungen können nicht importiert werden!</string>
+    <string name="check_preferences_dangerous_import">Einstellungen sollten nicht importiert werden!</string>
+    <string name="nav_export">Einstellungen exportieren</string>
+    <string name="export_to">Einstellungen exportieren nach</string>
+    <string name="import_from">Importiere Einstellungen von</string>
+    <string name="setting_imported">Einstellungen importiert</string>
+    <string name="old_master_password">Altes Master-Passwort</string>
+    <string name="different_password_used">Diese Datei wurde mit einem anderen Master-Passwort exportiert und verschlüsselt. Gib zum Entschlüsseln Dein altes Master-Passwort ein.</string>
+    <string name="master_password_will_be_replaced">Der erfolgreiche Import führt dazu, dass Dein aktuelles Master-Passwort durch das alte Master-Passwort ERSETZT wird!</string>
+    <string name="exported">Einstellungen exportiert</string>
+    <string name="filenotfound">Datei nicht gefunden</string>
+    <string name="goto_main_try_again">Bitte gehe zurück zur Startseite und versuche es erneut.</string>
+    <string name="restartingapp">App wird beendet, um neue Einstellungen zu laden.</string>
+    <string name="ue_exported">Benutzereinträge exportiert</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">WRTNG</string>
+    <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
+    <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
+    <string name="maintenance_settings">Wartungseinstellungen</string>
+    <string name="maintenance_email">E-Mail</string>
+    <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
+    <string name="send_all_logs">Logs als E-Mail versenden</string>
+    <string name="delete_logs">Logs löschen</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout-Version:</string>
+    <string name="engineering_mode_enabled">Entwickler-Modus aktiviert</string>
 </resources>
