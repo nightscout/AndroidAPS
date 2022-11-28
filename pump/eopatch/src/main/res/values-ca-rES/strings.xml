@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolus %1$.2f U lliurat correctament</string>
     <string name="cancel">Cancel·lar</string>
     <string name="confirm">Confirmar</string>
 </resources>
