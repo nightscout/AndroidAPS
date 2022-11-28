@@ -35,7 +35,6 @@
     <string name="timeout_during_handshake">연결 시간 초과 - 블루투스 재설정</string>
     <string name="pump_stopped">펌프 중지</string>
     <string name="pump_started">펌프 시작</string>
-    <string name="pump_paused">펌프 일시중지</string>
     <string name="short_status_last_connected">최신연결: %1$d 분전</string>
     <string name="short_status_tbr">임시: %2$d / %3$d 분 동안 %1$d%%</string>
     <string name="short_status_extended">확장: %3$d분 동안 %1$.2f / %2$.2f U</string>
