@@ -110,4 +110,18 @@
     <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos con más de 3 meses de antiguedad.</string>
     <string name="cleared_entries">Entradas eliminadas</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
+    <string name="maintenance_settings">Ajustes de mantenimiento</string>
+    <string name="maintenance_email">Correo electrónico</string>
+    <string name="maintenance_amount">Número de registros para enviar</string>
+    <string name="send_all_logs">Enviar registros por email</string>
+    <string name="delete_logs">Borrar registros</string>
+    <string name="configbuilder_nightscoutversion_label">Versión de Nightscout:</string>
+    <string name="engineering_mode_enabled">Modo de ingeniería activado</string>
+    <string name="log_files">Archivos de registro</string>
+    <string name="nav_logsettings">Ajustes de registros</string>
+    <string name="miscellaneous">Misceláneo</string>
+    <string name="nav_resetdb">Restablecer las bases de datos</string>
+    <string name="resettodefaults">Restablecer valores predeterminados</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
