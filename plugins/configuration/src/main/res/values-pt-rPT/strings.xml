@@ -42,8 +42,10 @@
     <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
     <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para que possamos contatá-lo em casos urgentes. É opcional.</string>
     <string name="identification">Identificação (e-mail, nick FB ou Discord, etc)</string>
+    <string name="request">Pedido</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo parece não suportar a otimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -57,6 +59,42 @@
     <string name="configbuilder_bgsource">Fonte da Glicose</string>
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
+    <string name="description_config_builder">Usado para configurar os plugins ativos</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Ser-lhe-á pedida a senha mestra, que será usada para encriptar preferências exportadas.</string>
+    <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
+    <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
+    <string name="preferences_import_impossible">Não é possível importar as preferências!</string>
+    <string name="check_preferences_details_btn">Explicar problemas de importação…</string>
+    <string name="check_preferences_details_title">Detalhes de problemas de importação</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar mesmo assim (PERIGOSO!)</string>
+    <string name="check_preferences_before_import">Por favor, verifique as preferências antes da importação:</string>
+    <string name="check_preferences_cannot_import">Preferências não podem ser importadas!</string>
+    <string name="check_preferences_dangerous_import">As preferências não devem ser importadas!</string>
+    <string name="nav_export">Exportar definições</string>
+    <string name="export_to">Exportar definições para</string>
+    <string name="import_from">Importar definições de</string>
+    <string name="setting_imported">Definições importadas</string>
+    <string name="old_master_password">Senha mestra antiga</string>
+    <string name="different_password_used">Este ficheiro foi exportado e criptografado com senha mestra diferente. Forneça a senha mestra antiga para descriptografar o ficheiro.</string>
+    <string name="master_password_will_be_replaced">Como resultado da importação bem sucedida senha mestra actual VAI SER SUBSTITUÍDA com a antiga senha mestra!</string>
+    <string name="exported">Preferências exportadas</string>
+    <string name="filenotfound">Ficheiro não encontrado</string>
+    <string name="goto_main_try_again">Por favor, volte ao ecrã principal e tente novamente.</string>
+    <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
+    <string name="ue_exported">Registos do utilizador exportadas</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MANU</string>
+    <string name="description_maintenance">Fornece várias funções para manutenção (ex. envio de relatórios, eliminação de relatórios).</string>
+    <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
+    <string name="maintenance_settings">Definições de manutenção</string>
+    <string name="maintenance_email">Email destinatário</string>
+    <string name="maintenance_amount">Nr. de registos a enviar</string>
+    <string name="send_all_logs">Enviar Logs por e-mail</string>
+    <string name="delete_logs">Eliminar registos</string>
+    <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
+    <string name="engineering_mode_enabled">Modo engenheiro activado</string>
+    <string name="nav_logsettings">Definições de registo</string>
+    <string name="nav_resetdb">Reinicializar base de dados</string>
 </resources>
