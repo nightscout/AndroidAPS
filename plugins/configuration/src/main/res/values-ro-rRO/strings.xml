@@ -42,8 +42,10 @@
     <string name="allow_automated_crash_reporting">Permite trimiterea de rapoarte automate de eroare și de date despre folosire către dezvoltatori prin serviciul fabric.io.</string>
     <string name="summary_email_for_crash_report">Această identificare va fi atașată rapoartelor de eroare pentru a vă putea contacta în cazuri urgente. Este opționala.</string>
     <string name="identification">Identificare (email, FB sau Discord etc)</string>
+    <string name="request">Cerință</string>
     <string name="apsmode_title">Mod APS</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompă</string>
     <string name="configbuilder_profile">Profil</string>
@@ -57,6 +59,28 @@
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
+    <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
+    <string name="preferences_export_canceled">Exportarea a eșuat! Preferințele NU au fost exportate!</string>
+    <string name="preferences_import_canceled">Importarea a eșuat! Preferințele NU au fost importate!</string>
+    <string name="preferences_import_impossible">Nu se pot prelua setările!</string>
+    <string name="check_preferences_details_btn">Explicații problemele de import…</string>
+    <string name="check_preferences_details_title">Detalii probleme de import</string>
+    <string name="check_preferences_import_btn">Importă</string>
+    <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
+    <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
+    <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
+    <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
+    <string name="nav_export">Exportă setările</string>
+    <string name="export_to">Exportă setările către</string>
+    <string name="import_from">Importă setările din</string>
+    <string name="setting_imported">Setări importate</string>
+    <string name="old_master_password">Parola Master veche</string>
+    <string name="different_password_used">Acest fişier a fost exportat şi criptat cu o parolă master diferită. Furnizaţi parola master veche pentru a decripta fişierul.</string>
+    <string name="master_password_will_be_replaced">Ca rezultat al unui import reusit, parola master curenta VA FI INLOCUITA cu parola master veche!</string>
+    <string name="exported">Am exportat preferințele</string>
+    <string name="filenotfound">Nu am găsit fișierul</string>
+    <string name="goto_main_try_again">Mergeți la ecranul principal și încercați din nou.</string>
     <!--    Maintenance-->
 </resources>
