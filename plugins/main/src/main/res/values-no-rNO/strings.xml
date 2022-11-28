@@ -360,4 +360,5 @@
     <string name="wear_predictions_title">Prognoser</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
+    <!--    PersistentNotification-->
 </resources>
