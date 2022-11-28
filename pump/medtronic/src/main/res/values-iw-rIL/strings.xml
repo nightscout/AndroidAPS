@@ -93,4 +93,6 @@
     <string name="invalid_history_data">זוהתה היסטוריית משאבה פסולה. נא לפתוח תלונה ולספק רישומים (לוג).</string>
     <string name="riley_statistics">סטטיסטיקות ריילילינק</string>
     <string name="medtronic_history_type">סוג:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">נלחץ ריענון</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">רענון סטטוס מתוכנן</string>
 </resources>
