@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilitat Oref1</string>
+    <string name="sensitivity_aaps">Sensibilitat AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilitat: mitja ponderada</string>
     <string name="description_sensitivity_aaps">Sensibilitat calculada com amb Oref0, però podent especificar un rang de temps en el passat. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració.</string>
     <string name="description_sensitivity_oref1">Sensibilitat calculada amb dades de 8 o 24 hores en el passat (s\'agafa el cas més \"sensible\"). Els carbohidrats (els no absorbits), es desestimen un cop passat el temps indicat a la configuració. El plugin també calcula les UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensibilitat calculada com una mitja ponderada a partir de les desviacions. Les noves desviacions tenen un pes més gran. L\'absorció mínima dels carbohidrats es calcula a partir del temps màxim d\'absorció de carbohidrats indicat a la configuració. Aquest algoritme és el més ràpid en seguir els canvis de sensibilitat.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM desactivat perquè es basa en el plugin de sensibilitat Oref1</string>
+    <string name="absorption_settings_title">Configuració absorció</string>
+    <string name="absorption_max_time_title">Màx temps d\'absorció d\'un àpat [h]</string>
+    <string name="absorption_max_time_summary">Temps en hores en que s\'espera que tots els carbohidrats d\'un àpat hagin estat absorvits</string>
     <string name="openapsama_autosens_period">Interval per autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Nr. d\'hores en el passat per detecció de sensibilitat (s\'exclou el temps d\'absorció de carbohidrats)</string>
     <string name="openapsama_autosens_max_summary">Valor per defecte: 1.2\nMultiplicador de seguretat per autosens (aviat autotune), per fixar un límit màxim del 20%% per la màxima ràtio d\'autosens, que a la seva vegada determina com d\'alta pot ajustar la basal, com de baix l\'ISF i com de baix l\'objectiu de glucèmia.</string>
     <string name="openapsama_autosens_min_summary">Valor per defecte: 0.7\nL\'altra cara dels límits de seguretat d\'autosens: com de baixa pot ajustar la basal i com d\'alts pot ajustar l\'ISF i l\'objectiu de glucèmia.</string>
     <string name="openapsama_autosens_max">Màx ràtio autosens</string>
     <string name="openapsama_autosens_min">Min ràtio autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valor per defecte: 3 (AMA) o 8.0 (SMB). Aquest paràmetre indica el valor per defecte d\'absorció de carbohidrats en 5 minuts, quan diem 3 volem dir 3mg/dl/5min. Afecta a com de ràpid decauen els COB i quina absorció de carbohidrats es considera al calcular la predicció de glucèmia futura, quan la glucèmia cau més ràpid de l\'esperat o no puja tant com era de preveure.</string>
     <string name="absorption_cutoff_title">Màx temps d\'absorció d\'un àpat [h]</string>
     <string name="absorption_cutoff_summary">Temps en que qualsevol àpat es considera absorvit. Els carbohidrats que quedin seran descartats.</string>
 </resources>
