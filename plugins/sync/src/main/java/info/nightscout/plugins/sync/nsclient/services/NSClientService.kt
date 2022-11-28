@@ -509,10 +509,44 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                         val gson = GsonBuilder().also {
                             it.registerTypeAdapter(JSONObject::class.java, deserializer)
                         }.create()
-                        val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<RemoteDeviceStatus>::class.java)
-                        if (devicestatuses.isNotEmpty()) {
-                            rxBus.send(EventNSClientNewLog("DATA", "received " + devicestatuses.size + " device statuses"))
-                            nsDeviceStatusHandler.handleNewData(devicestatuses)
+
+                        try {
+                            // "Live-patch" the JSON data if the battery value is not an integer.
+                            // This has caused crashes in the past due to parsing errors. See:
+                            // https://github.com/nightscout/AndroidAPS/issues/2223
+                            // The reason is that the "battery" data type has been changed:
+                            // https://github.com/NightscoutFoundation/xDrip/pull/1709
+                            //
+                            // Since we cannot reliably derive an integer percentage out
+                            // of an arbitrary string, we are forced to replace that string
+                            // with a hardcoded percentage. That way, at least, the
+                            // subsequent GSON parsing won't crash.
+                            val devicestatusJsonArray = data.getJSONArray("devicestatus")
+                            for (arrayIndex in 0 until devicestatusJsonArray.length()) {
+                                val devicestatusObject = devicestatusJsonArray.getJSONObject(arrayIndex)
+                                if (devicestatusObject.has("uploader")) {
+                                    val uploaderObject = devicestatusObject.getJSONObject("uploader")
+                                    if (uploaderObject.has("battery")) {
+                                        val batteryValue = uploaderObject["battery"]
+                                        if (batteryValue !is Int) {
+                                            aapsLogger.warn(
+                                                LTag.NSCLIENT,
+                                                "JSON devicestatus object #$arrayIndex (out of ${devicestatusJsonArray.length()}) " +
+                                                "has invalid value \"$batteryValue\" (expected integer); replacing with hardcoded integer 100"
+                                            )
+                                            uploaderObject.put("battery", 100)
+                                        }
+                                    }
+                                }
+                            }
+
+                            val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<RemoteDeviceStatus>::class.java)
+                            if (devicestatuses.isNotEmpty()) {
+                                rxBus.send(EventNSClientNewLog("DATA", "received " + devicestatuses.size + " device statuses"))
+                                nsDeviceStatusHandler.handleNewData(devicestatuses)
+                            }
+                        } catch (e: JSONException) {
+                            aapsLogger.error(LTag.NSCLIENT, "Skipping invalid Nightscout devicestatus data; exception: $e")
                         }
                     }
                     if (data.has("food")) {
