@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">Baterie epuizată</string>
+    <string name="combov2_error_4">Ocluzie</string>
+    <string name="combov2_error_6">Eroare mecanică</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
+    <string name="combov2_not_initialized">Neiniţializat</string>
+    <string name="combov2_suspended">Suspendat</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Se setează profilul bazalei</string>
+    <string name="combov2_bolus_cancelled">Bolus anulat</string>
+    <string name="combov2_bolus_delivery_failed">Livrare eșuată. Se pare că nu a fost livrat bolusul. Pentru siguranță, verificați în pompă pentru a evita bolusarea dublă. Pentru evitarea greșelilor, bolusurile nu sunt retrimise automat.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min rămase)</string>
+    <string name="combov2_battery_low_warning">Nivelul bateriei pompei este scăzut</string>
+    <string name="combov2_short_status_last_connection">UltimaConexiune: acum %1$d min</string>
+    <string name="combov2_short_status_temp_basal">BazalaTemporara: %s</string>
+    <string name="combov2_short_status_reservoir">Rezervor: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">gol</string>
+    <string name="combov2_short_status_battery_state_low">hipo</string>
 </resources>
