@@ -2,6 +2,8 @@
 <resources>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openapsama">OpenAPS AMA</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_autosensdata_label">Autosens adat</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
