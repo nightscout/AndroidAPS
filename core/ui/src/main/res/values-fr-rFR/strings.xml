@@ -22,6 +22,14 @@
     <string name="reload">Actualiser</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="save">Enregistrer</string>
+    <string name="snooze">Masquer</string>
+    <string name="virtual_pump">Pompe virtuelle</string>
+    <string name="constraints">Restrictions</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompe suspendue</string>
+    <string name="and">Et</string>
+    <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
     <!--    Pumps -->
     <string name="battery_label">Pile</string>
     <string name="reservoir_label">Réservoir</string>
@@ -50,6 +58,7 @@
     <string name="reading_pump_history">Lecture historique pompe</string>
     <string name="password_cleared">Mot de passe effacé !</string>
     <string name="pairing">Appairage</string>
+    <string name="initializing">En cours d\'initialisation...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">limite de la pompe</string>
