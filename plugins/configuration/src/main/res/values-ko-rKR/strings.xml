@@ -92,4 +92,9 @@
     <string name="delete_logs">로그 삭제하기</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
+    <string name="nav_logsettings">로그 설정</string>
+    <string name="nav_resetdb">데이터베이스 초기화</string>
+    <string name="resettodefaults">기본값으로 초기화</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
