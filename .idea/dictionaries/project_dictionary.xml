@@ -31,6 +31,7 @@
       <w>cellnovo</w>
       <w>chek</w>
       <w>clearalarm</w>
+      <w>combov</w>
       <w>crashlytics</w>
       <w>danar</w>
       <w>danars</w>
@@ -55,18 +56,22 @@
       <w>eveningoutpost</w>
       <w>eversense</w>
       <w>extendedbolus</w>
+      <w>fiasp</w>
       <w>fileprovider</w>
       <w>firebase</w>
       <w>glimp</w>
       <w>glunovo</w>
+      <w>glycemia</w>
       <w>gson</w>
       <w>hmac</w>
+      <w>humalog</w>
       <w>iage</w>
       <w>infinivocgm</w>
       <w>insulet</w>
       <w>intelligo</w>
       <w>iobtotal</w>
       <w>joda</w>
+      <w>joul</w>
       <w>libre</w>
       <w>listdelimiter</w>
       <w>localprofile</w>
@@ -74,6 +79,7 @@
       <w>mdtp</w>
       <w>medtronic</w>
       <w>mgdl</w>
+      <w>miao</w>
       <w>misformatted</w>
       <w>mmol</w>
       <w>motol</w>
@@ -82,6 +88,8 @@
       <w>netratio</w>
       <w>nightscout</w>
       <w>notif</w>
+      <w>novolog</w>
+      <w>novorapid</w>
       <w>nsclient</w>
       <w>oaps</w>
       <w>okcancel</w>
@@ -107,9 +115,12 @@
       <w>rileylink</w>
       <w>roboelectric</w>
       <w>rozman</w>
+      <w>sbat</w>
+      <w>setupwizard</w>
       <w>sgvs</w>
       <w>shortgramm</w>
       <w>sitechange</w>
+      <w>skippable</w>
       <w>smscommunicator</w>
       <w>sntp</w>
       <w>sooil</w>
