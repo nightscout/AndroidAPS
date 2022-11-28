@@ -49,8 +49,11 @@
     <string name="allow_automated_crash_reporting">Permite que los informes de errores automáticos y los datos de uso de las funciones, se envíen a los desarrolladores mediante el servicio fabric.io</string>
     <string name="summary_email_for_crash_report">Esta identificación se adjuntará a los informes de errores, para que podamos contactarte en casos urgentes. Es opcional.</string>
     <string name="identification">Identificación (correo electrónico, FB, nick de Discord, etc.)</string>
+    <string name="request">Solicitar</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
+    <string name="error_asking_for_permissions">Error al solicitar los permisos</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por medio de los ajustes - pueden ocurrir problemas de rendimiento.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Tabla de configuraciones</string>
     <string name="configbuilder_pump">Bomba</string>
@@ -76,6 +79,35 @@
     <string name="allow_hardware_pump_text">Atención: Si activas y conectas una bomba con AAPS, AAPS copiará la configuración basal del perfil a la bomba, sobreescribiendo el perfil basal previo que tuviera almacenado la bomba. Asegúrate de que la configuración del perfil basal en AAPS es correcto. Si no estás seguro o no quieres sobreescribir la configuración del perfil basal de tu bomba, presiona cancelar y vincula la bomba más adelante.</string>
     <string name="a11y_open_settings">abrir ajustes</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar los ajustes exportados</string>
+    <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
+    <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>
+    <string name="preferences_import_impossible">¡No se pueden importar preferencias!</string>
+    <string name="check_preferences_details_btn">Explicar problemas de importación…</string>
+    <string name="check_preferences_details_title">Importar detalles del problema</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
     <string name="import_setting">Importar ajustes</string>
+    <string name="check_preferences_before_import">Por favor, comprueba los ajustes antes de importar:</string>
+    <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
+    <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
+    <string name="nav_export">Exportar ajustes</string>
+    <string name="export_to">Exportar ajustes a</string>
+    <string name="import_from">Importar ajustes desde</string>
+    <string name="setting_imported">Ajustes importados</string>
+    <string name="old_master_password">Contraseña Maestra antigua</string>
+    <string name="different_password_used">Este archivo se ha exportado y cifrado con una contraseña maestra diferente. Insertar contraseña maestra antigua para descifrar el archivo.</string>
+    <string name="master_password_will_be_replaced">Como resultado de la importación correcta, la contraseña maestra actual SE SUSTITUIRÁ por la contraseña maestra antigua!</string>
+    <string name="exported">Ajustes exportados</string>
+    <string name="filenotfound">Archivo no encontrado</string>
+    <string name="goto_main_try_again">Por favor, vuelve a la pantalla principal e inténtalo de nuevo.</string>
+    <string name="restartingapp">Saliendo de la aplicación para aplicar los ajustes.</string>
+    <string name="ue_exported">Entradas de usuario exportadas</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MANT</string>
+    <string name="description_maintenance">Accede a varias opciones de mantenimiento (p. ej. envío y borrado de registros)</string>
+    <string name="database_cleanup">Limpiar base de dados</string>
+    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos con más de 3 meses de antiguedad.</string>
+    <string name="cleared_entries">Entradas eliminadas</string>
+    <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
 </resources>
