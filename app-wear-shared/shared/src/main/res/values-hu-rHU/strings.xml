@@ -4,4 +4,5 @@
     <string name="shortminute">p</string>
     <string name="shortday">n</string>
     <!-- Rx -->
+    <string name="connected">Kapcsolódva</string>
 </resources>
