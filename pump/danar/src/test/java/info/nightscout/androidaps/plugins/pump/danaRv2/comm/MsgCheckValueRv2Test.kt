@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
+import info.nightscout.pump.dana.DanaPump
 import org.junit.Assert
 import org.junit.Test
 

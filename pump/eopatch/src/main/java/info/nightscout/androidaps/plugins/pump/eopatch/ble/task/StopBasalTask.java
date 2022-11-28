@@ -7,15 +7,15 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.logging.UserEntryLogger;
+import info.nightscout.interfaces.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalStopResponse;
-import info.nightscout.androidaps.utils.userEntry.UserEntryMapper;
 import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.Command;
 import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.userEntry.UserEntryMapper;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Observable;

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">새로고침</string>
     <string name="error">에러</string>
@@ -12,15 +11,9 @@
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
-    <string name="connectingfor">%1$d 초 동안 연결중</string>
     <string name="bolusdelivering">%1$.2f U 주입 중</string>
-    <string name="handshaking">통신 확인</string>
     <string name="connecting">연결중</string>
-    <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="disconnecting">연결끊기중</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -30,14 +23,11 @@
     <string name="pumpbusy">펌프가 바쁩니다</string>
     <string name="connectionerror">펌프 연결 에러</string>
     <string name="objectives">목표</string>
-    <string name="close">닫기</string>
     <string name="please_wait">잠시 기다려 주세요...</string>
     <string name="mute">음소거</string>
     <string name="reload">새로고침</string>
-    <string name="stoppressed">정지 누름</string>
     <string name="stop">정지</string>
     <string name="carbs">탄수화물</string>
-    <string name="noprofileset">프로파일이 설정되지 않았습니다.</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">날짜</string>
     <string name="units_label">단위</string>
@@ -46,15 +36,16 @@
     <string name="isf_label">인슐린 민감도(ISF):</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">목표:</string>
+    <string name="basal_long_label">Basal양</string>
     <string name="initializing">초기화중 ...</string>
-    <string name="serialnumber">시리얼번호</string>
+    <string name="serial_number">시리얼번호</string>
     <string name="battery_label">배터리</string>
-    <string name="lastconnection_label">마지막 접속</string>
-    <string name="lastbolus_label">최근 Bolus:</string>
+    <string name="last_connection_label">마지막 접속</string>
+    <string name="last_bolus_label">최근 Bolus:</string>
     <string name="dailyunits">일 인슐린 총량</string>
-    <string name="basebasalrate_label">기본 Basal양</string>
+    <string name="base_basal_rate_label">기본 Basal양</string>
     <string name="tempbasal_label">임시Basal</string>
-    <string name="virtualpump_extendedbolus_label">확장Bolus</string>
+    <string name="extended_bolus_label">확장Bolus</string>
     <string name="reservoir_label">인슐린 잔량</string>
     <string name="pumphistory">펌프 이력</string>
     <string name="viewprofile">프로파일 보기</string>
@@ -68,8 +59,6 @@
     <string name="btwatchdog_title">블루투스 감시기능</string>
     <string name="btwatchdog_summary">펌프에 연결이 되지 않을때 폰의 블루투스를 1초간 껐다 켭니다. 블루투스 스택이 정지되는 일부폰에 이 기능이 도움이 됩니다.</string>
     <string name="pairing">동기화</string>
-    <string name="yes">네</string>
-    <string name="no">아니오</string>
     <string name="loopdisabled">제한으로 인해 LOOP가 사용불가합니다.</string>
     <string name="bolusdelivered">Bolus %1$.2f U이 성공적으로 주입되었습니다.</string>
     <string name="virtualpump_resultok">네</string>
@@ -99,12 +88,14 @@
     <string name="time">시간</string>
     <string name="ns_wifi_ssids">와이파이 SSID</string>
     <string name="loading">로딩 중 …</string>
-    <string name="event_time_label">이벤트 시간</string>
     <string name="notes_label">노트</string>
     <string name="remove_button">삭제</string>
     <string name="addnew">새로 추가</string>
     <string name="wrong_pump_data">다른 펌프에서 전송된 데이터. 펌프 상태 재설정을 위해 펌프 드라이버를 바꾸세요.</string>
+    <string name="bg_label">혈당</string>
+    <string name="calibration">보정</string>
     <string name="alarminxmin">%1$d분 뒤 알람 울림</string>
+    <string name="duration_label">기간</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">펌프 일시중지됨</string>
     <string name="notconfigured">설정되지 않음</string>
@@ -112,6 +103,10 @@
     <string name="trend_arrow">경향 화살표</string>
     <string name="value_unavailable_short">사용불가</string>
     <string name="required">필요량</string>
+    <string name="a11y_arrow_none">없음</string>
+    <string name="a11y_arrow_unknown">알수없음</string>
+    <string name="a11y_high">대</string>
+    <string name="a11y_low">소</string>
     <string name="average">평균</string>
     <string name="tir">TIR</string>
     <string name="tdd_total">TDD Total</string>
@@ -121,6 +116,24 @@
     <string name="reset">재설정</string>
     <string name="profileswitch_ismissing">프로파일변경 누락. 로컬 프로파일에서 프로파일 변경을 하거나 \"프로파일 활성화하기\"를 누르세요.</string>
     <string name="profile">프로파일</string>
+    <string name="overview_treatment_label">관리</string>
+    <string name="wear_wizard_settings">마법사 설정</string>
+    <string name="bg_trend_label">15분 추이</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="paused">일시중지</string>
+    <string name="invalid">유효하지 않음</string>
+    <string name="login">로그인</string>
+    <string name="overview_insulin_label">인슐린</string>
+    <string name="stoptemptarget">임시 목표 중지</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">저혈당 주입정지</string>
+    <string name="confirm">확인</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">%2$s로 인해 최대 Basal양이 %1$.2f U/h으로 제한됩니다.</string>
     <string name="pumplimit">펌프 제한</string>
@@ -128,12 +141,6 @@
     <string name="itmustbepositivevalue">양의 값이어야 합니다.</string>
     <string name="limitingbolus">%2$s로 인해 Bolus가 %1$.1f U로 제한됩니다.</string>
     <string name="pumpNotInitializedProfileNotSet">펌프가 초기화와 프로파일 설정이 되지 않았습니다!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">확인</string>
-    <string name="message">메시지</string>
-    <string name="ok">네</string>
-    <string name="cancel">취소</string>
-    <string name="dismiss">무시</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">BLE(블루투스 저전력) 지원되지 않음</string>
     <string name="ble_not_supported_or_not_paired">저전력 블루투스(BLE)가 작동하지 않거나, 기기가 연동되지 않았습니다.</string>
@@ -151,10 +158,7 @@
     <string name="profile_carbs_per_unit">g/U</string>
     <!--    ProfileFunction-->
     <string name="startprofile">프로파일 %1$d%%을 %2$d 분 동안 시작</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
     <!--    APSResult-->
-    <string name="canceltemp">임시Basal 취소하기</string>
     <string name="let_temp_basal_run">임시Basal 허용</string>
     <string name="rate">주입량</string>
     <string name="duration">기간</string>
@@ -165,18 +169,16 @@
     <!--    Temptarget-->
     <string name="mins">%1$d 분</string>
     <!--    Translator-->
+    <string name="careportal">케어포털</string>
     <string name="careportal_bgcheck">혈당 체크</string>
     <string name="careportal_mbg">수동 BG 값 입력 또는 보정</string>
     <string name="careportal_announcement">알림</string>
     <string name="careportal_note">노트</string>
     <string name="careportal_question">의문</string>
     <string name="careportal_exercise">운동</string>
-    <string name="careportal_pumpsitechange">펌프 위치 변경</string>
-    <string name="careportal_cgmsensorinsert">CGM 센서 삽입</string>
     <string name="careportal_cgmsensorstart">CGM 센서 시작</string>
     <string name="careportal_cgm_sensor_stop">CGM 센서 정지</string>
     <string name="careportal_dad_alert">D.A.D 경고</string>
-    <string name="careportal_insulincartridgechange">인슐린 카트리지 교체</string>
     <string name="careportal_profileswitch">프로파일 변경</string>
     <string name="careportal_snackbolus">간식Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
@@ -186,8 +188,7 @@
     <string name="careportal_tempbasalend">임시Basal 종료</string>
     <string name="careportal_carbscorrection">탄수화물 교정</string>
     <string name="careportal_openapsoffline">OpenAPS 오프라인</string>
-    <string name="careportal_pumpbatterychange">펌프 배터리 교체</string>
-    <string name="careportal_temporarytarget">임시 목표</string>
+    <string name="careportal_temporarytargetvalue">임시 목표 수치</string>
     <string name="careportal_temporarytargetcancel">임시 목표 취소</string>
     <string name="boluswizard">Bolus 마법사</string>
     <string name="glucosetype_finger">채혈</string>
@@ -204,6 +205,7 @@
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">기록</string>
+    <string name="reading_pump_history">펌프 이력 읽기</string>
     <!--    Command-->
     <string name="connectiontimedout">연결시간초과</string>
     <!--    PumpEnactResult-->
@@ -232,7 +234,6 @@
     <string name="tbb2">총기초량 * 2</string>
     <!--    Ntp-->
     <string name="timedetection">시간 감지</string>
-    <string name="format_hour_minute">%1$d시 %2$d분</string>
     <string name="mute5min">5분 동안 음소거</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s 전에 내보내기 함</string>
@@ -262,14 +263,6 @@
     <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
-    <string name="monday_short">월</string>
-    <string name="tuesday_short">화</string>
-    <string name="wednesday_short">수</string>
-    <string name="thursday_short">목</string>
-    <string name="friday_short">금</string>
-    <string name="saturday_short">토</string>
-    <string name="sunday_short">일</string>
     <!-- User Entry -->
     <string name="uel_bolus">Bolus</string>
     <string name="uel_bolus_advisor">Bolus 어드바이저</string>
@@ -377,9 +370,28 @@
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f이 \'고정된 한계값\'을 벗어났습니다.</string>
     <string name="basal_value">Basal 값</string>
     <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <string name="a11y_user">사용자</string>
     <!-- Autotune -->
+    <string name="autotune_result">결과: %1$s</string>
+    <string name="autotune_missing">누락</string>
+    <string name="autotune_compare_profile">프로파일 비교하기</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">경고와 알림시 시스템 알림 사용하기</string>
+    <string name="urgent_alarm">긴급 알람</string>
+    <string name="info">정보</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
+    <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 느린 탄수화물 흡수 감지: %2$d%% of time. 계산을 다시 확인하십시오. COB를 과대하게 측정하여 더 많은 인슐린이 주입될 수 있습니다 !!!!!</font>]]></string>
+    <string name="partialboluswizard">Bolus 마법사 결과의 이 부분 주입[%]</string>
+    <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
+    <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>

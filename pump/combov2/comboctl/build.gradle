@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+
+android {
+    namespace 'info.nightscout.comboctl'
+    sourceSets {
+        main {
+            kotlin.srcDirs += ['src/commonMain/kotlin', 'src/androidMain/kotlin']
+            manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+        }
+    }
+}
+
+dependencies {
+    implementation platform("org.jetbrains.kotlin:kotlin-bom")
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime_version"
+    implementation "androidx.core:core-ktx:$core_version"
+}

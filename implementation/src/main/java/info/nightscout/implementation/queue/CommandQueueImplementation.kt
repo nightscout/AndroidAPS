@@ -2,24 +2,22 @@ package info.nightscout.implementation.queue
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.extensions.getCustomizedName
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.core.pumpExtensions.insertCarbsTransaction
+import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
@@ -39,10 +37,10 @@ import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
@@ -59,6 +57,8 @@ import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.AAPSLogger
@@ -68,7 +68,6 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.LinkedList
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -87,16 +86,17 @@ class CommandQueueImplementation @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val context: Context,
     private val sp: SP,
-    private val buildHelper: BuildHelper,
+    private val config: Config,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
-    private val config: Config,
     private val androidPermission: AndroidPermission,
-    private val activityNames: ActivityNames
+    private val activityNames: ActivityNames,
+    private val persistenceLayer: PersistenceLayer
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
+    internal var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private val queue = LinkedList<Command>()
     @Volatile private var thread: QueueThread? = null
@@ -117,7 +117,7 @@ class CommandQueueImplementation @Inject constructor(
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
-                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failedupdatebasalprofile), R.raw.boluserror)
+                                           activityNames.runAlarm(context, result.comment, rh.gs(R.string.failed_update_basal_profile), R.raw.boluserror)
                                        } else {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
@@ -205,7 +205,7 @@ class CommandQueueImplementation @Inject constructor(
 
     // After new command added to the queue
     // start thread again if not already running
-    @Synchronized fun notifyAboutNewCommand() {
+    @Synchronized fun notifyAboutNewCommand() = handler.post {
         waitForFinishedThread()
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
             thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
@@ -230,7 +230,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, activityNames, persistenceLayer
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -266,18 +266,7 @@ class CommandQueueImplementation @Inject constructor(
             carbsRunnable = Runnable {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
                 detailedBolusInfo.carbs = originalCarbs
-                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                    .subscribeBy(
-                        onSuccess = { result ->
-                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
-
-                        },
-                        onError = {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                            callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
-                        }
-                    )
+                persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs(), callback, injector)
             }
             // Do not process carbs anymore
             detailedBolusInfo.carbs = 0.0
@@ -351,7 +340,7 @@ class CommandQueueImplementation @Inject constructor(
     @Synchronized
     override fun cancelAllBoluses(id: Long?) {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false), id))
+            rxBus.send(EventDismissBolusProgressIfRunning(true, id))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -624,10 +613,11 @@ class CommandQueueImplementation @Inject constructor(
 
     private fun showBolusProgressDialog(detailedBolusInfo: DetailedBolusInfo) {
         if (detailedBolusInfo.context != null) {
-            val bolusProgressDialog = BolusProgressDialog()
-            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin)
-            bolusProgressDialog.setId(detailedBolusInfo.id)
-            bolusProgressDialog.show((detailedBolusInfo.context as AppCompatActivity).supportFragmentManager, "BolusProgress")
+            activityNames.runBolusProgressDialog(
+                (detailedBolusInfo.context as AppCompatActivity).supportFragmentManager,
+                detailedBolusInfo.insulin,
+                detailedBolusInfo.id
+            )
         } else {
             val i = Intent()
             i.putExtra("insulin", detailedBolusInfo.insulin)

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_autotune_plugin"
+        android:title="@string/autotune_settings"
+        app:initialExpandedChildrenCount="0">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_auto"
+            android:summary="@string/autotune_auto_summary"
+            android:title="@string/autotune_auto_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_categorize_uam_as_basal"
+            android:summary="@string/autotune_categorize_uam_as_basal_summary"
+            android:title="@string/autotune_categorize_uam_as_basal_title" />
+        <!--  Hide tune_insulin_curve option, OpenAPS not fully validated currently
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_tune_insulin_curve"
+            android:summary="@string/autotune_tune_insulin_curve_summary"
+            android:title="@string/autotune_tune_insulin_curve_title" />
+        -->
+
+        <info.nightscout.core.validators.ValidatingEditTextPreference
+            android:defaultValue="5"
+            android:key="@string/key_autotune_default_tune_days"
+            android:title="@string/autotune_default_tune_days_title"
+            android:dialogMessage="@string/autotune_default_tune_days_summary"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            validate:maxNumber="30"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_circadian_ic_isf"
+            android:summary="@string/autotune_circadian_ic_isf_summary"
+            android:title="@string/autotune_circadian_ic_isf_title" />
+        <!--  Hide autotune_additional_log option
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_autotune_additional_log"
+            android:summary="@string/autotune_additional_log_summary"
+            android:title="@string/autotune_additional_log_title" />
+        -->
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

@@ -1,11 +1,7 @@
 package info.nightscout.implementation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.CarbTimer
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.utils.TimerUtil
-import info.nightscout.automation.AutomationEvent
+import info.nightscout.automation.AutomationEventObject
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.actions.ActionAlarm
 import info.nightscout.automation.elements.Comparator
@@ -13,6 +9,10 @@ import info.nightscout.automation.elements.InputDelta
 import info.nightscout.automation.triggers.TriggerBg
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDelta
+import info.nightscout.interfaces.CarbTimer
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.utils.TimerUtil
+import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,7 +37,7 @@ class CarbTimerImpl @Inject constructor(
      * Create new Automation event to alarm when is time to eat
      */
     override fun scheduleAutomationEventEatReminder() {
-        val event = AutomationEvent(injector).apply {
+        val event = AutomationEventObject(injector).apply {
             title = rh.gs(R.string.bolus_advisor)
             readOnly = true
             systemAction = true
@@ -94,7 +94,7 @@ class CarbTimerImpl @Inject constructor(
      * Remove Automation event
      */
     override fun removeAutomationEventEatReminder() {
-        val event = AutomationEvent(injector).apply {
+        val event = AutomationEventObject(injector).apply {
             title = rh.gs(R.string.bolus_advisor)
         }
         automationPlugin.removeIfExists(event)

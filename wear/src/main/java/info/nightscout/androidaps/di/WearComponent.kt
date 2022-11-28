@@ -4,7 +4,7 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.Aaps
+import info.nightscout.androidaps.WearApp
 import javax.inject.Singleton
 
 @Singleton
@@ -15,13 +15,13 @@ import javax.inject.Singleton
         WearServicesModule::class
     ]
 )
-interface WearComponent : AndroidInjector<Aaps> {
+interface WearComponent : AndroidInjector<WearApp> {
 
     @Component.Builder
     interface Builder {
 
         @BindsInstance
-        fun application(aaps: Aaps): Builder
+        fun application(aaps: WearApp): Builder
 
         fun build(): WearComponent
     }

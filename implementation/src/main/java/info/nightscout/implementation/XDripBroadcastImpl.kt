@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.receivers.Intents
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.interfaces.receivers.Intents
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast

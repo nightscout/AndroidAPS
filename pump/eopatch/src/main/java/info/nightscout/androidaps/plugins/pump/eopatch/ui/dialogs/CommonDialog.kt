@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.R
-import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
@@ -23,7 +22,7 @@ class CommonDialog : DaggerDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let{
-            val builder = AlertDialogHelper.Builder(it).apply {
+            val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it).apply {
                 if(title != 0) setTitle(title)
                 if(message != 0) setMessage(message)
                 setPositiveButton(positiveBtn,

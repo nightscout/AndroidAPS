@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="combopump" translatable="false">Accu-Chek Combo</string>
+    <string name="combopump" translatable="false">Accu-Chek Combo (Ruffy)</string>
     <string name="combopump_shortname" translatable="false">COMBO</string>
     <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
@@ -22,7 +22,6 @@
     <string name="combo_force_disabled_notification">Unsafe usage: the pump uses a different basal rate profile than the first. The loop has been disabled. Select the first profile on the pump and refresh.</string>
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last two minutes. To prevent accidental double boluses and to guard against bugs this is disallowed.</string>
     <string name="combo_pump_connected_now">Now</string>
-    <string name="combo_activity_reading_pump_history">Reading pump history</string>
     <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
@@ -71,5 +70,7 @@
     <string name="key_combo_error_display_never" translatable="false">NEVER</string>
     <string name="key_combo_error_display_error" translatable="false">ON_ERROR</string>
     <string name="key_combo_error_display_always" translatable="false">ALWAYS</string>
+
+    <string name="unsafeusage">unsafe usage</string>
 
 </resources>

@@ -1,18 +1,14 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.toTargetRangeString
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.TimeUnit
-
-fun TemporaryTarget.isInProgress(dateUtil: DateUtil): Boolean =
-    dateUtil.now() in timestamp..timestamp + duration
 
 fun TemporaryTarget.lowValueToUnitsToString(units: GlucoseUnit): String =
     if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(this.lowTarget)

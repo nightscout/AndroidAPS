@@ -11,7 +11,6 @@
     <string name="stop_pump">Zastaviť pumpu</string>
     <string name="started">Spustené</string>
     <string name="stopped">Zastavené</string>
-    <string name="paused">Pozastavené</string>
     <string name="operating_mode">Prevádzkový režim</string>
     <string name="description_pump_insight_local">Integrácia pre pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Nieje vložené</string>
@@ -45,7 +44,6 @@
     <string name="short_status_tdd">CDD: %1$.2f</string>
     <string name="short_status_reservoir">Zásobník: %1$.2f JI</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Potvrdiť</string>
     <string name="mute_alert">Stlmiť</string>
     <string name="release_software_version">Verzia softwaru</string>
     <string name="ui_processor_software_version">Verzia softwaru UI procesora</string>

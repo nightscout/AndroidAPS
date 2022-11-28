@@ -15,29 +15,27 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.di.DaggerAppComponent
-import info.nightscout.androidaps.di.StaticInjector
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveWorker
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
-import info.nightscout.androidaps.utils.ProcessLifecycleListener
+import info.nightscout.implementation.lifecycle.ProcessLifecycleListener
+import info.nightscout.core.ui.locale.LocaleHelper
+import info.nightscout.core.utils.receivers.NetworkChangeReceiver
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.implementation.db.CompatDBHelper
+import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
@@ -69,13 +67,12 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
+    @Suppress("unused") @Inject lateinit var staticInjector: info.nightscout.plugins.aps.utils.StaticInjector// TODO avoid , here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var notificationStore: NotificationStore
@@ -119,7 +116,7 @@ class MainApp : DaggerApplication() {
         handler.postDelayed(
             {
                 // check if identification is set
-                if (buildHelper.isDev() && sp.getStringOrNull(R.string.key_email_for_crash_report, null).isNullOrBlank())
+                if (config.isDev() && sp.getStringOrNull(R.string.key_email_for_crash_report, null).isNullOrBlank())
                     notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                 // log version
                 disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()

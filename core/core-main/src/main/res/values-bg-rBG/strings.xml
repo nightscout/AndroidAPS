@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Обнови</string>
     <string name="error">Грешка</string>
@@ -12,16 +11,9 @@
     <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
     <string name="goingtodeliver">Ще стартира %1$.2fЕ болус</string>
     <string name="waitingforpump">Чакаме помпата</string>
-    <string name="connectingfor">Свързване %1$d сек</string>
     <string name="bolusdelivering">Пускам %1$.2fЕ</string>
-    <string name="handshaking">Сдвояване</string>
     <string name="connecting">Свързване</string>
-    <string name="connected">Свързана</string>
     <string name="disconnected">Не е сврзана</string>
-    <string name="disconnecting">Разкачане</string>
-    <string name="waiting_for_disconnection">Изчакване за разкачане</string>
-    <string name="formatinsulinunits1">%1$.1fЕ</string>
-    <string name="formatinsulinunits">%1$.2fЕ</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
@@ -31,14 +23,11 @@
     <string name="pumpbusy">Помпата е заета</string>
     <string name="connectionerror">Грешка при връзка с помпата</string>
     <string name="objectives">Цели</string>
-    <string name="close">Затвори</string>
     <string name="please_wait">Моля изчакайте...</string>
     <string name="mute">Заглушаване</string>
     <string name="reload">Презареди</string>
-    <string name="stoppressed">Натиснат е СТОП!</string>
     <string name="stop">Стоп</string>
     <string name="carbs">въглехидрати</string>
-    <string name="noprofileset">НЕ Е АКТИВИРАН ПРОФИЛ</string>
     <string name="active"><![CDATA[<Активно>]]></string>
     <string name="date">Дата</string>
     <string name="units_label">Единици</string>
@@ -49,14 +38,14 @@
     <string name="target_label">Целeва КЗ:</string>
     <string name="basal_long_label">Базал</string>
     <string name="initializing">Инициализация ...</string>
-    <string name="serialnumber">Сериен номер</string>
+    <string name="serial_number">Сериен номер</string>
     <string name="battery_label">Батерия</string>
-    <string name="lastconnection_label">Последна връзка</string>
-    <string name="lastbolus_label">Последен болус:</string>
+    <string name="last_connection_label">Последна връзка</string>
+    <string name="last_bolus_label">Последен болус:</string>
     <string name="dailyunits">Инсулин за деня</string>
-    <string name="basebasalrate_label">Базална стойност</string>
+    <string name="base_basal_rate_label">Базова базална стойност</string>
     <string name="tempbasal_label">Временен базал</string>
-    <string name="virtualpump_extendedbolus_label">Удължен болус</string>
+    <string name="extended_bolus_label">Удължен болус</string>
     <string name="reservoir_label">Резервоар</string>
     <string name="pumphistory">История</string>
     <string name="viewprofile">Виж профил</string>
@@ -70,8 +59,6 @@
     <string name="btwatchdog_title">BT ограничения</string>
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="pairing">Сдвояване</string>
-    <string name="yes">Да</string>
-    <string name="no">Не</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="virtualpump_resultok">ОК</string>
@@ -101,7 +88,6 @@
     <string name="time">Време</string>
     <string name="ns_wifi_ssids">WiFi име</string>
     <string name="loading">Зареждане…</string>
-    <string name="event_time_label">Време</string>
     <string name="notes_label">Бележки</string>
     <string name="remove_button">Изтрий</string>
     <string name="addnew">Добави нов</string>
@@ -119,6 +105,10 @@
     <string name="trend_arrow">Стрелка тенденция</string>
     <string name="value_unavailable_short">---</string>
     <string name="required">нужн</string>
+    <string name="a11y_arrow_none">без</string>
+    <string name="a11y_arrow_unknown">неизвестно</string>
+    <string name="a11y_high">висока</string>
+    <string name="a11y_low">ниска</string>
     <string name="average">Средно</string>
     <string name="tir">Време в границите</string>
     <string name="tdd_total">ТДД общо</string>
@@ -128,6 +118,25 @@
     <string name="reset">нулиране</string>
     <string name="profileswitch_ismissing">Смяната на профила не е отразена. Моля, направете превключване на потребителския профил или натиснете \"Активирай профил\" в Локален профил.</string>
     <string name="profile">Профил</string>
+    <string name="overview_treatment_label">Болус</string>
+    <string name="copytolocalprofile">Създай нов профил копирайки този?</string>
+    <string name="wear_wizard_settings">Настройки на съветник</string>
+    <string name="bg_trend_label">Δ за 15мин</string>
+    <string name="treatments_wizard_cob_label">СОВ</string>
+    <string name="bolus_iob_label">IOB от болуси</string>
+    <string name="treatments_wizard_basaliob_label">Базален IOB</string>
+    <string name="paused">Пауза</string>
+    <string name="invalid">НЕВАЛИДНО</string>
+    <string name="login">Вход</string>
+    <string name="overview_insulin_label">Инсулин</string>
+    <string name="stoptemptarget">Спри временна цел</string>
+    <string name="closedloop">Затворен кръг</string>
+    <string name="openloop">Отворен кръг</string>
+    <string name="lowglucosesuspend">Спиране на базал при ниска КЗ</string>
+    <string name="confirm">Потвърди</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">И / Въгл</string>
+    <string name="isf_short">Чувств</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -135,12 +144,6 @@
     <string name="itmustbepositivevalue">трябва да бъде положително число</string>
     <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Помпата не е инициализирана, профила не е зададен!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Потвърждение</string>
-    <string name="message">Съобщение</string>
-    <string name="ok">ОК</string>
-    <string name="cancel">Откажи</string>
-    <string name="dismiss">Разбрах</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
     <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
@@ -158,10 +161,7 @@
     <string name="profile_carbs_per_unit">гр/Е</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Само конкретни стойности! Диапазони не се поддържат за базал/болус при виртуална помпа.</string>
     <!--    APSResult-->
-    <string name="canceltemp">Откажи временен базал</string>
     <string name="let_temp_basal_run">Нека текущия временен базал продължи</string>
     <string name="rate">Стойност</string>
     <string name="duration">Срок</string>
@@ -183,11 +183,8 @@
     <string name="careportal_note_message">Бележка: %1$s</string>
     <string name="careportal_question_message">Въпрос: %1$s</string>
     <string name="careportal_exercise_message">Упражнение: %1$s</string>
-    <string name="careportal_pumpsitechange">Смяна на сет</string>
-    <string name="careportal_cgmsensorinsert">Смяна на сензор</string>
     <string name="careportal_cgmsensorstart">Старт на сензор</string>
     <string name="careportal_cgm_sensor_stop">CGM Спри сензора</string>
-    <string name="careportal_insulincartridgechange">Смяна на резервоар</string>
     <string name="careportal_profileswitch">Смяна на профил</string>
     <string name="careportal_snackbolus">Болус за закуска</string>
     <string name="careportal_mealbolus">Болус за основно хранене</string>
@@ -197,8 +194,6 @@
     <string name="careportal_tempbasalend">Край на временен базал</string>
     <string name="careportal_carbscorrection">Корекция с въглехидрати</string>
     <string name="careportal_openapsoffline">OpenAPS спрян</string>
-    <string name="careportal_pumpbatterychange">Смяна на батерия</string>
-    <string name="careportal_temporarytarget">Временна цел</string>
     <string name="careportal_temporarytargetvalue">Стойност временна цел</string>
     <string name="careportal_temporarytargetcancel">Откажи временна цел</string>
     <string name="boluswizard">Болус калкулатор</string>
@@ -244,7 +239,6 @@
     <string name="tbb2">ОБИ * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Засичане на времето</string>
-    <string name="format_hour_minute">%1$dч:%2$dм</string>
     <string name="mute5min">Изключи за 5 минути</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
@@ -274,14 +268,6 @@
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
-    <string name="monday_short">П</string>
-    <string name="tuesday_short">Вт</string>
-    <string name="wednesday_short">Ср</string>
-    <string name="thursday_short">Ч</string>
-    <string name="friday_short">П</string>
-    <string name="saturday_short">С</string>
-    <string name="sunday_short">Н</string>
     <!-- User Entry -->
     <string name="uel_disconnect">Разкачане</string>
     <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
@@ -300,9 +286,21 @@
     <string name="autotune_result">Резултат: %1$s</string>
     <string name="autotune_missing">Липсва</string>
     <string name="autotune_compare_profile">Сравняване на профили</string>
-    <string name="needconnectpermission">Апликацията изисква разрешение за bluetooth</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Използвай системни известия за аларми и съобщения</string>
+    <string name="urgent_alarm">Спешна аларма</string>
+    <string name="info">ИНФО</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
+    <!-- BolusWizard -->
+    <string name="bolus_advisor">Съветник на болус</string>
+    <string name="bolus_advisor_message">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
+    <string name="cobvsiob">COB срещу IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
+    <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
+    <string name="advisoralarm">Алармата, когато е време за хранене.</string>
+    <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

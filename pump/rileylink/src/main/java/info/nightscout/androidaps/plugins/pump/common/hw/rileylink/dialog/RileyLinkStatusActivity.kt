@@ -5,11 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusBinding
+import info.nightscout.shared.interfaces.ResourceHelper
+import javax.inject.Inject
 
-class RileyLinkStatusActivity : NoSplashAppCompatActivity() {
+class RileyLinkStatusActivity : DaggerAppCompatActivity() {
+
+    @Inject lateinit var rh: ResourceHelper
 
     private lateinit var binding: RileylinkStatusBinding
 

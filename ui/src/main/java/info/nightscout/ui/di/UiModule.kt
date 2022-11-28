@@ -16,6 +16,8 @@ import info.nightscout.ui.activities.fragments.TreatmentsProfileSwitchFragment
 import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment
 import info.nightscout.ui.activities.fragments.TreatmentsTemporaryBasalsFragment
 import info.nightscout.ui.activities.fragments.TreatmentsUserEntryFragment
+import info.nightscout.ui.alertDialogs.ErrorDialog
+import info.nightscout.ui.dialogs.BolusProgressDialog
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.ui.dialogs.CareDialog
@@ -28,12 +30,19 @@ import info.nightscout.ui.dialogs.ProfileViewerDialog
 import info.nightscout.ui.dialogs.TempBasalDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
+import info.nightscout.ui.dialogs.WizardDialog
 import info.nightscout.ui.dialogs.WizardInfoDialog
+import info.nightscout.ui.widget.Widget
+import info.nightscout.ui.widget.WidgetConfigureActivity
 
 @Module
 @Suppress("unused")
 abstract class UiModule {
 
+    @ContributesAndroidInjector abstract fun contributesWidget(): Widget
+    @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity
+
+    @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
     @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
@@ -47,6 +56,8 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
     @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
+    @ContributesAndroidInjector abstract fun contributesBolusProgressDialog(): BolusProgressDialog
+    @ContributesAndroidInjector abstract fun contributesErrorDialog(): ErrorDialog
 
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity

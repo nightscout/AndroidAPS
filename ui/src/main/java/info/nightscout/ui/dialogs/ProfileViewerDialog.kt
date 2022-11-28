@@ -9,14 +9,12 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.getCustomizedName
 import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -165,7 +163,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.date.text = date
                 binding.ic.text = it.getIcList(rh, dateUtil)
                 binding.isf.text = it.getIsfList(rh, dateUtil)
-                binding.basal.text = "∑ " + rh.gs(R.string.formatinsulinunits, it.baseBasalSum()) + "\n" + it.getBasalList(rh, dateUtil)
+                binding.basal.text = "∑ " + rh.gs(R.string.format_insulin_units, it.baseBasalSum()) + "\n" + it.getBasalList(rh, dateUtil)
                 binding.target.text = it.getTargetList(rh, dateUtil)
                 binding.basalGraph.show(it)
                 binding.isfGraph.show(it)

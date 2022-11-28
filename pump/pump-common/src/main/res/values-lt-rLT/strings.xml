@@ -7,14 +7,6 @@
     <string name="pump_serial_number">Pompos serijos Nr.</string>
     <string name="bolus_delivered">%1$.2f vv iš %2$.2f vv suleista</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_never_contacted">Niekada nebuvo sujungta</string>
-    <string name="pump_status_waking_up">Pažadinimas</string>
-    <string name="pump_status_error_comm">Ryšio klaida</string>
-    <string name="pump_status_timeout_comm">Ryšiui skirtas laikas baigėsi</string>
-    <string name="pump_status_pump_unreachable">Pompa nepasiekiama</string>
-    <string name="pump_status_invalid_config">Neteisinga konfigūracija</string>
-    <string name="pump_status_active">Aktyvi</string>
-    <string name="pump_status_sleeping">Užmigusi</string>
     <string name="pump_status_not_initialized">Nepavyko paleisti</string>
     <string name="pump_status_suspended">Sustabdyta</string>
     <!-- PumpCommon - History Group -->

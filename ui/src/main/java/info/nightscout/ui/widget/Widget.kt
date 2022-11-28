@@ -13,15 +13,12 @@ import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.valueToUnitsString
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
-import info.nightscout.core.profile.toSignedUnitsString
-import info.nightscout.core.profile.toTargetRangeString
-import info.nightscout.core.profile.toUnits
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
@@ -107,7 +104,7 @@ class Widget : AppWidgetProvider() {
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 
         // Create an Intent to launch MainActivity when clicked
-        val intent = Intent(context, activityNames.mainActivityClass).also { it.action = intentAction }
+        val intent = Intent(context, activityNames.mainActivity).also { it.action = intentAction }
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         // Widgets allow click handlers to only launch pending intents
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent)

@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import dagger.android.DaggerService
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus

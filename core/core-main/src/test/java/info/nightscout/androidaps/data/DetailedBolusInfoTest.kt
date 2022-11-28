@@ -2,8 +2,8 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
-import info.nightscout.core.pumpExtensions.fromJsonString
-import info.nightscout.core.pumpExtensions.toJsonString
+import info.nightscout.core.pump.fromJsonString
+import info.nightscout.core.pump.toJsonString
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.TherapyEvent

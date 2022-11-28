@@ -2,8 +2,9 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.utils.ToastUtils
+import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.ActivityNames
@@ -14,7 +15,7 @@ import info.nightscout.ui.databinding.ActivitySurveyBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
 import javax.inject.Inject
 
-class SurveyActivity : NoSplashAppCompatActivity() {
+class SurveyActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction
@@ -29,14 +30,14 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         binding = ActivitySurveyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.id.text = info.nightscout.core.fabric.InstanceId.instanceId
+        binding.id.text = InstanceId.instanceId
 
         val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
         binding.profile.setOnClickListener {
-            val age = SafeParse.stringToDouble(binding.age.text.toString())
+            val age = SafeParse.stringToInt(binding.age.text.toString())
             val weight = SafeParse.stringToDouble(binding.weight.text.toString())
             val tdd = SafeParse.stringToDouble(binding.tdd.text.toString())
             if (age < 1 || age > 120) {
@@ -67,7 +68,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         binding.submit.setOnClickListener {
             val r = FirebaseRecord()
-            r.id = info.nightscout.core.fabric.InstanceId.instanceId
+            r.id = InstanceId.instanceId
             r.age = SafeParse.stringToInt(binding.age.text.toString())
             r.weight = SafeParse.stringToInt(binding.weight.text.toString())
             if (r.age < 1 || r.age > 120) {

@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -34,18 +33,18 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.ui.UIRunnable
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -124,7 +123,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     context?.let { context ->
                         protectionCheck.queryProtection(
                             activity, ProtectionCheck.Protection.PREFERENCES,
-                            UIRunnable { startActivity(Intent(context, ErosPodManagementActivity::class.java)) }
+                            info.nightscout.core.ui.UIRunnable { startActivity(Intent(context, ErosPodManagementActivity::class.java)) }
                         )
                     }
                 }
@@ -321,7 +320,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
-                rh.gs(R.string.pump_basebasalrate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                rh.gs(R.string.pump_base_basal_rate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
             } else {
                 PLACEHOLDER
             }
@@ -581,7 +580,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            UIRunnable {
+            info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(
                     it, rh.gs(R.string.omnipod_common_warning),
                     rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null
@@ -598,7 +597,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
-            UIRunnable {
+            info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(it, title, message, null)
             }.run()
         }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Dialogs-->
+    <string name="confirmation">Потвърждение</string>
+    <string name="message">Съобщение</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Откажи</string>
+    <string name="dismiss">Разбрах</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="format_hour_minute">%1$dч:%2$dм</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+</resources>

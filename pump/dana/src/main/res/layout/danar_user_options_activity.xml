@@ -6,7 +6,7 @@
     android:fillViewport="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity">
+    tools:context="info.nightscout.pump.dana.activities.DanaUserOptionsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_danar_useropt" />
+                app:srcCompat="@drawable/ic_user_options" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -49,14 +49,14 @@
             android:padding="5dp" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/timeformat"
+            android:id="@+id/time_format"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/danar_timedisplay"
-            android:textOff="@string/timeformat12h"
-            android:textOn="@string/timeformat24h"
+            android:text="@string/danar_time_display"
+            android:textOff="@string/time_format_12h"
+            android:textOn="@string/time_format_24h"
             app:showText="true" />
 
         <View
@@ -69,12 +69,12 @@
             android:background="?android:attr/dividerHorizontal" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/buttonscroll"
+            android:id="@+id/button_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/danar_buttonscroll"
+            android:text="@string/danar_button_scroll"
             android:textOff="@string/option_off"
             android:textOn="@string/option_on"
             app:showText="true" />
@@ -120,33 +120,33 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:text="@string/danar_pumpalarm"
+                android:text="@string/danar_pump_alarm"
                 android:textSize="14sp" />
 
             <RadioGroup
-                android:id="@+id/pumpalarm"
+                android:id="@+id/pump_alarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/pumpalarm_sound"
+                android:checkedButton="@+id/pump_alarm_sound"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/pumpalarm_sound"
+                    android:id="@+id/pump_alarm_sound"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/danar_pumpalarm_sound" />
+                    android:text="@string/danar_pump_alarm_sound" />
 
                 <RadioButton
-                    android:id="@+id/pumpalarm_vibrate"
+                    android:id="@+id/pump_alarm_vibrate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/danar_pumpalarm_vibrate" />
+                    android:text="@string/danar_pump_alarm_vibrate" />
 
                 <RadioButton
-                    android:id="@+id/pumpalarm_both"
+                    android:id="@+id/pump_alarm_both"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/danar_pumpalarm_both" />
+                    android:text="@string/danar_pump_alarm_both" />
 
             </RadioGroup>
 
@@ -174,11 +174,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="top"
-                android:text="@string/danar_screentimeout"
+                android:text="@string/danar_screen_timeout"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/screentimeout"
+            <info.nightscout.core.ui.elements.NumberPicker
+                android:id="@+id/screen_timeout"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
@@ -214,7 +214,7 @@
                 android:text="@string/danar_backlight"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/backlight"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -240,7 +240,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:splitTrack="false"
-            android:text="@string/danar_glucoseunits"
+            android:text="@string/danar_glucose_units"
             android:textOff="@string/mgdl"
             android:textOn="@string/mmol"
             app:showText="true" />
@@ -270,7 +270,7 @@
                 android:text="@string/danar_shutdown"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/shutdown"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
@@ -304,11 +304,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:text="@string/danar_lowreservoir"
+                android:text="@string/danar_low_reservoir"
                 android:textSize="14sp" />
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/lowreservoir"
+            <info.nightscout.core.ui.elements.NumberPicker
+                android:id="@+id/low_reservoir"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
@@ -323,7 +323,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_local_save"
-            android:text="@string/danar_saveuseroptions" />
+            android:text="@string/danar_save_user_options" />
 
     </LinearLayout>
 

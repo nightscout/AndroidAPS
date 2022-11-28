@@ -10,14 +10,10 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.extensions.fromConstant
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toCurrentUnitsString
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -25,6 +21,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.ActivityNames
@@ -85,9 +82,9 @@ class CareDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        savedInstanceState?.let {
-            event = savedInstanceState.getInt("event", R.string.error)
-            options = ActivityNames.EventType.values()[savedInstanceState.getInt("options", 0)]
+        (savedInstanceState ?: arguments)?.let {
+            event = it.getInt("event", R.string.error)
+            options = ActivityNames.EventType.values()[it.getInt("options", 0)]
         }
 
         binding.icon.setImageResource(

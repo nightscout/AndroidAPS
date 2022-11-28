@@ -1,0 +1,39 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
+
+android {
+
+    namespace 'info.nightscout.core.utils'
+}
+
+dependencies {
+
+    implementation project(':app-wear-shared:shared')
+
+    //Firebase
+    api platform('com.google.firebase:firebase-bom:31.1.0')
+    api "com.google.firebase:firebase-analytics-ktx"
+    api "com.google.firebase:firebase-crashlytics-ktx"
+    // StatsActivity not in use now
+    //    api "com.google.firebase:firebase-messaging-ktx"
+    //    api 'com.google.firebase:firebase-auth-ktx'
+    //    api 'com.google.firebase:firebase-database-ktx'
+
+    //CryptoUtil
+    api 'com.madgag.spongycastle:core:1.58.0.0'
+    api "com.google.crypto.tink:tink-android:$tink_version"
+
+    //WorkManager
+    api "androidx.work:work-runtime-ktx:$work_version" // DataWorkerStorage
+}

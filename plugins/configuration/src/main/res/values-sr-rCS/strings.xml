@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="end_user_license_agreement">Ugovor o licenci sa krajnjim korisnikom</string>
+    <string name="end_user_license_agreement_text">NE SME SE KORISTITI ZA DONOŠENJE MEDICINSKIH ODLUKA. NE POSTOJI GARANCIJA ZA PROGRAM, U MERI DOPUŠTENOJ PRIMJENJIVIM ZAKONOM. OSIM KADA JE DRUGAČE NAVEDENO U PISANJU NOSILACA AUTORSKOG PRAVA I/ILI DRUGE STRANE OBEZBEĐUJU PROGRAM „KAKAV JESTE“ BEZ BILO KOJE GARANCIJE, BILO IZRIČENE ILI PODRAZUMEVANE, UKLJUČUJUĆI, ALI NE OGRANIČAVAJUĆI SE NA, PODRAZUMEVANE GARANCIJE O PRODAJNOSTI I PRIKLADNOSTI ZA ODREĐENU NAMENU. CEO RIZIK PO KVALITETU I PERFORMANSE PROGRAMA JE NA VAMA. AKO SE POKAŽE NEISPRAVAN PROGRAM, VI PREUZIMATE TROŠKOVE SVIH NEOPHODNIH SERVISIRANJA, POPRAVKE ILI KOREKCIJE.</string>
+    <string name="end_user_license_agreement_i_understand">RAZUMEM I SLAŽEM SE</string>
+    <string name="profile">Profil</string>
+    <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_pump_description">Koju pumpu želite da koristite sa AAPS-om?</string>
+    <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_profile_description">Koji profil treba da koristi AAPS?</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps_description">Koji APS algoritam treba da izvrši prilagođavanja terapije?</string>
+    <string name="configbuilder_general">Uopšteno</string>
+    <string name="configbuilder_general_description">Ovo su neki opšti dodaci koji bi vam mogli biti korisni.</string>
+    <string name="configbuilder_constraints_description">Koja ograničenja se primenjuju?</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Koristite ovo da aktivirate integraciju AAPS-ovog loop-a.</string>
+    <string name="configbuilder_bgsource">GUK Izvor</string>
+    <string name="configbuilder_bgsource_description">Odakle AAPS treba da dobija svoje podatke?</string>
+    <string name="apsmode_title">APS režim</string>
+</resources>

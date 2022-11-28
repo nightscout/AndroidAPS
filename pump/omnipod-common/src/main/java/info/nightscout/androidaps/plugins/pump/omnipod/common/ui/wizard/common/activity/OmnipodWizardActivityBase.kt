@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 
-abstract class OmnipodWizardActivityBase : NoSplashAppCompatActivity() {
+abstract class OmnipodWizardActivityBase : DaggerAppCompatActivity() {
 
     override fun onBackPressed() = exitActivityAfterConfirmation()
 

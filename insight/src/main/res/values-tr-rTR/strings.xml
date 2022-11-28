@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">GBO (Geçici Bazal oran) bitti bildirimini etkinleştir\n(pompa ayarlarında)</string>
-    <string name="disable_tbr_over_notification">GBO (Geçici bazal oran) bitti bildirimini iptal et\n(pompa ayarlarında)</string>
+    <string name="enable_tbr_over_notification">GBO bitti bildirimini etkinleştir\n(pompa ayarlarında)</string>
+    <string name="disable_tbr_over_notification">GBO bitti bildirimini iptal et\n(pompa ayarlarında)</string>
     <string name="not_paired">Eşleştirilemedi</string>
     <string name="recovering">Kurtarılıyor</string>
     <string name="insight_status">Durum</string>
@@ -11,7 +11,6 @@
     <string name="stop_pump">Pompayı durdur</string>
     <string name="started">Başlatıldı</string>
     <string name="stopped">Durduruldu</string>
-    <string name="paused">Duraklatıldı</string>
     <string name="operating_mode">Çalışma Modu</string>
     <string name="description_pump_insight_local">Accu-Chek Insight pompaları için pompa entegrasyonu</string>
     <string name="not_inserted">Takılmamış</string>
@@ -34,7 +33,7 @@
     <string name="disable_vibration_summary">Bolus ve yayma bolus için (yalnızca Insight üretici yazılımı 3.x ile kullanılabilir)</string>
     <string name="disable_vibration_auto">Otomatik bolus iletiminde titreşimleri devre dışı bırakın</string>
     <string name="disable_vibration_auto_summary">TBR emülasyonlu SMB ve Geçici Bazal için (yalnızca Insight üretici yazılımı 3.x ile kullanılabilir)</string>
-    <string name="timeout_during_handshake">El sıkışma sırasında zaman aşımı olduğunda - bluetoothu sıfırla</string>
+    <string name="timeout_during_handshake">Bağlantı sırasında zaman aşımı olduğunda - bluetoothu sıfırla</string>
     <string name="pump_stopped">Pompa durduruldu</string>
     <string name="pump_started">Pompa başlatıldı</string>
     <string name="pump_paused">Pompa duraklatıldı</string>
@@ -45,7 +44,6 @@
     <string name="short_status_tdd">GTD: %1$.2f</string>
     <string name="short_status_reservoir">Rezerv.: %1$.2f Ü</string>
     <string name="short_status_battery">Pil: %%1$d%</string>
-    <string name="confirm">Onaylayın</string>
     <string name="mute_alert">Sessiz</string>
     <string name="release_software_version">Yayın yazılım sürümü</string>
     <string name="ui_processor_software_version">UI işlemci yazılım sürümü</string>

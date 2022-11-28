@@ -6,7 +6,7 @@
     android:fillViewport="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="info.nightscout.androidaps.diaconn.activities.DiaconnG8UserOptionsActivity">
+    tools:context=".activities.DiaconnG8UserOptionsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_danar_useropt" />
+                app:srcCompat="@drawable/ic_user_options" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -296,7 +296,7 @@
             android:layout_marginEnd="20dp"
             android:orientation="horizontal">
 
-            <info.nightscout.androidaps.utils.ui.NumberPicker
+            <info.nightscout.core.ui.elements.NumberPicker
                 android:id="@+id/bolus_speed"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"

@@ -1,28 +1,16 @@
 package info.nightscout.androidaps.extensions
 
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import java.util.TimeZone
-
-fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {
-    for (event in this) {
-        if (event.timestamp <= time && event.timestamp > time - T.mins(5).msecs()) {
-            if (event.duration == 0L) {
-                //aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + dateUtil.dateAndTimeString(time) + " " + event.toString())
-                return true
-            }
-        }
-    }
-    return false
-}
 
 fun ProfileSwitch.getCustomizedName(): String {
     var name: String = profileName

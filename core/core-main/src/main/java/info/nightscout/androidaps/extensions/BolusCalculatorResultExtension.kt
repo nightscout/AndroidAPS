@@ -2,7 +2,6 @@ package info.nightscout.androidaps.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction

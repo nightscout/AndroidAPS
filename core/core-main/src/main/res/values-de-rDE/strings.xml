@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Aktualisieren</string>
     <string name="error">Fehler</string>
@@ -12,16 +11,9 @@
     <string name="tempbasaldeliveryerror">TBR Abgabe-Fehler</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
-    <string name="connectingfor">Verbindungsaufbau seit %1$d s</string>
     <string name="bolusdelivering">Gebe %1$.2fIE ab</string>
-    <string name="handshaking">Handshaking</string>
     <string name="connecting">Verbinden</string>
-    <string name="connected">Verbunden</string>
     <string name="disconnected">Getrennt</string>
-    <string name="disconnecting">Verbindung wird getrennt</string>
-    <string name="waiting_for_disconnection">Warte auf Trennung der Verbindung</string>
-    <string name="formatinsulinunits1">%1$.1f IE</string>
-    <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
@@ -31,14 +23,11 @@
     <string name="pumpbusy">Pumpe ist beschäftigt</string>
     <string name="connectionerror">Pumpen-Verbindungsfehler</string>
     <string name="objectives">Objectives (Ziele)</string>
-    <string name="close">Schließen</string>
     <string name="please_wait">Bitte warten…</string>
     <string name="mute">Alarm stoppen</string>
     <string name="reload">Neu laden</string>
-    <string name="stoppressed">STOPP GEDRÜCKT</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Kohlenhydrate</string>
-    <string name="noprofileset">KEIN PROFIL GESETZT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Einheiten</string>
@@ -50,16 +39,17 @@
     <string name="dia_long_label">Insulinwirkdauer (duration of insulin action)</string>
     <string name="ic_long_label">Insulin-zu-KH-Faktor</string>
     <string name="isf_long_label">ISF: Insulin Sensitivitäts-Faktor (\"Korrektur-Faktor\")</string>
+    <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">BZ Ziel</string>
     <string name="initializing">Initialisierung...</string>
-    <string name="serialnumber">Seriennummer</string>
+    <string name="serial_number">Seriennummer</string>
     <string name="battery_label">Batterie</string>
-    <string name="lastconnection_label">Letzte Verbindung</string>
-    <string name="lastbolus_label">Letzter Bolus</string>
+    <string name="last_connection_label">Letzte Verbindung</string>
+    <string name="last_bolus_label">Letzter Bolus</string>
     <string name="dailyunits">Tägliche Einheiten</string>
-    <string name="basebasalrate_label">Basis-Basalrate</string>
+    <string name="base_basal_rate_label">Basis-Basalrate</string>
     <string name="tempbasal_label">TBR</string>
-    <string name="virtualpump_extendedbolus_label">Verzögerter Bolus</string>
+    <string name="extended_bolus_label">Verzögerter Bolus</string>
     <string name="reservoir_label">Reservoir</string>
     <string name="pumphistory">Pumpen-Historie</string>
     <string name="viewprofile">Profil anzeigen</string>
@@ -73,8 +63,6 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Deaktiviert Bluetooth kurzzeitig, falls keine Verbindung zur Pumpe besteht. Dies kann für Smartphones mit Verbindungsproblemen nützlich sein.</string>
     <string name="pairing">Koppeln</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nein</string>
     <string name="loopdisabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="bolusdelivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="virtualpump_resultok">OK</string>
@@ -104,19 +92,23 @@
     <string name="time">Zeit</string>
     <string name="ns_wifi_ssids">WLAN SSID</string>
     <string name="loading">Lade…</string>
-    <string name="event_time_label">Ereignis-Zeit</string>
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
     <string name="addnew">Weiteren hinzufügen</string>
     <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
+    <string name="bg_label">BZ</string>
+    <string name="calibration">Kalibrierung</string>
     <string name="alarminxmin">Alarm in %1$d Min.</string>
     <string name="treatmentdeliveryerror">Fehlermeldung Bolusabgabe. Prüfe manuell die tatsächlich abgegebene Menge.</string>
+    <string name="bolus_reminder">Bolus-Erinnerung</string>
+    <string name="duration_label">Dauer</string>
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="notconfigured">Nicht konfiguriert</string>
     <string name="loopsuspended">Loop pausiert</string>
     <string name="trend_arrow">Trendpfeil</string>
+    <string name="a11y_autosens_label">Auto sens</string>
     <string name="value_unavailable_short">N/A</string>
     <string name="required">angef.</string>
     <string name="a11y_arrow_double_down">schnell fallend</string>
@@ -140,6 +132,27 @@
     <string name="reset">Zurücksetzen</string>
     <string name="profileswitch_ismissing">Profil-Wechsel fehlt, bitte nimm einen Profil-Wechsel vor oder drücke \"AKTIVIERE PROFIL\" im lokalen Profil.</string>
     <string name="profile">Profil</string>
+    <string name="select_for_removal">Zum Entfernen auswählen</string>
+    <string name="confirm_remove_multiple_items">Sind Sie sicher, dass Sie diese(s) %1$d Element(e) löschen möchten?</string>
+    <string name="overview_treatment_label">Bolus</string>
+    <string name="copytolocalprofile">Neues Profil auf Basis dieses Profils erstellen?</string>
+    <string name="wear_wizard_settings">Wizard-Einstellungen</string>
+    <string name="bg_trend_label">15 min Trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bolus-IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
+    <string name="paused">Pausiert</string>
+    <string name="invalid">Ungültig</string>
+    <string name="login">Login</string>
+    <string name="overview_insulin_label">Insulin</string>
+    <string name="stoptemptarget">Temporäres Ziel (TT) stoppen</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Unterbrechung bei niedrigem BZ (LGS)</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
     <string name="pumplimit">Limit der Pumpe</string>
@@ -147,12 +160,6 @@
     <string name="itmustbepositivevalue">Es muss ein positiver Wert sein.</string>
     <string name="limitingbolus">Begrenze Bolusmenge auf %1$.1f IE wegen %2$s</string>
     <string name="pumpNotInitializedProfileNotSet">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
-    <!--    Dialogs-->
-    <string name="confirmation">Bestätigung</string>
-    <string name="message">Nachricht</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="dismiss">VERWERFEN</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nicht unterstützt oder Gerät nicht verbunden.</string>
@@ -166,16 +173,14 @@
     <string name="pin_dont_match">PINs stimmen nicht überein</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Basalraten beginnen nicht zur vollen Stunde: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal-Wert wurde durch den kleinst möglichen Wert ersetzt: %1$s</string>
     <string name="maximumbasalvaluereplaced">Basal-Wert wurde durch größt möglichen Wert ersetzt: %1$s</string>
     <string name="profile_per_unit">/IE</string>
     <string name="profile_ins_units_per_hour">IE/h</string>
     <string name="profile_carbs_per_unit">g/IE</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
     <!--    APSResult-->
-    <string name="canceltemp">TBR abbrechen</string>
     <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
     <string name="rate">Rate</string>
     <string name="duration">Dauer</string>
@@ -197,12 +202,9 @@
     <string name="careportal_note_message">Hinweis : %1$s</string>
     <string name="careportal_question_message">Frage : %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
-    <string name="careportal_pumpsitechange">Pumpenkatheter-Wechsel</string>
-    <string name="careportal_cgmsensorinsert">CGM-Sensor gesetzt</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
     <string name="careportal_cgm_sensor_stop">CGM-Sensor-Stopp</string>
     <string name="careportal_dad_alert">D.A.D. Warnung</string>
-    <string name="careportal_insulincartridgechange">Insulinreservoir-Wechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
     <string name="careportal_snackbolus">Snack-Bolus</string>
     <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
@@ -212,8 +214,6 @@
     <string name="careportal_tempbasalend">TBR Ende</string>
     <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>
-    <string name="careportal_pumpbatterychange">Pumpenbatterie-Wechsel</string>
-    <string name="careportal_temporarytarget">Temporäres Ziel</string>
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
     <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="boluswizard">Bolus-Rechner</string>
@@ -246,6 +246,7 @@
     <string name="waitingforpumpresult">Auf Pumpenergebnis warten</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g zusätzliche Kohlenhydrate innerhalb von %2$d Minuten erforderlich</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Statistik</string>
     <string name="cumulative_tdd">Kumulative TDD</string>
@@ -257,11 +258,11 @@
     <string name="amount_days"># Tage</string>
     <string name="weight">Gewichtung</string>
     <string name="warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
+    <string name="olddata_Message">Veraltete Daten, bitte klicke auf \"NEU LADEN\"</string>
     <string name="tbb">Tägl. Basalmenge</string>
     <string name="tbb2">Tägl. Basalmenge * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Zeiterkennung</string>
-    <string name="format_hour_minute">%1$dh %2$dm</string>
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">Vor %1$s Tagen exportiert</string>
@@ -292,14 +293,6 @@
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
     <string name="version_expire">Version %1$s läuft am %2$s ab</string>
     <!-- Permissions -->
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Mo</string>
-    <string name="tuesday_short">Di</string>
-    <string name="wednesday_short">Mi</string>
-    <string name="thursday_short">Do</string>
-    <string name="friday_short">Fr</string>
-    <string name="saturday_short">Sa</string>
-    <string name="sunday_short">So</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_calculator">BOLUS-KALKULATOR</string>
@@ -428,7 +421,6 @@
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basal veraltet.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbindung zur Pumpe geklickt</string>
-    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpentreiber geändert.</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Pumpentreiber ändern.</string>
     <string name="device_changed" comment="26 characters max for translation">Gerät gewechselt</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Aktualisieren geklickt</string>
@@ -439,16 +431,9 @@
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
-    <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
-    <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d ausgewählt</string>
-    <string name="sort_label">Sortieren</string>
-    <string name="remove_items">Entferne Elemente</string>
-    <string name="sort_items">Sortiere Elemente</string>
-    <string name="remove_selected_items">lösche ausgewählte Elemente</string>
     <string name="a11y_file">Datei</string>
     <string name="a11y_user">Nutzer</string>
     <!-- Autotune -->
@@ -497,8 +482,35 @@
     <string name="autotune_profile_invalid">Profil ungültig</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
-    <string name="needconnectpermission">App benötigt Bluetooth-Berechtigung</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Benutze Systemmeldungen für Alarme und Meldungen</string>
+    <string name="urgent_alarm">Wichtiger Alarm</string>
+    <string name="info">INFO</string>
     <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
+    <!-- BolusWizard -->
+    <string name="cobvsiob">COB vs IOB</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
+    <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
+    <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
+    <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
+    <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
+    <string name="wizard_no_active_profile">Kein aktives Profil gesetzt!</string>
+    <string name="wizard_no_cob">Unbekannter COB! BG-Wert fehlt oder wurde App vor kurzem neu gestartet?</string>
+    <string name="wizard_carbs_constraint">Die Kohlenhydrateinschränkung wurde überschritten!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Kohlenhydrate: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BZ: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">15\' Trend: %1$.2fU</string>
+    <string name="wizard_explain_percent">Prozent: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Verletzung der Bolusbeschränkung!\nKann %1$.2fU nicht abgeben</string>
+    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
+    <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

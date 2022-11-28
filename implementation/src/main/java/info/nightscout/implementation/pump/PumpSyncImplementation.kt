@@ -1,11 +1,11 @@
 package info.nightscout.implementation.pump
 
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.main.R
-import info.nightscout.core.pumpExtensions.fromDbPumpType
-import info.nightscout.core.pumpExtensions.toDbPumpType
-import info.nightscout.core.pumpExtensions.toDbSource
+import info.nightscout.core.pump.fromDbPumpType
+import info.nightscout.core.pump.toDbPumpType
+import info.nightscout.core.pump.toDbSource
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.ExtendedBolus
@@ -16,7 +16,6 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.database.impl.transactions.InsertBolusWithTempIdTransaction
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampCarbsTransaction
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
@@ -33,6 +32,7 @@ import info.nightscout.database.impl.transactions.SyncPumpExtendedBolusTransacti
 import info.nightscout.database.impl.transactions.SyncPumpTemporaryBasalTransaction
 import info.nightscout.database.impl.transactions.SyncPumpTotalDailyDoseTransaction
 import info.nightscout.database.impl.transactions.SyncTemporaryBasalWithTempIdTransaction
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction

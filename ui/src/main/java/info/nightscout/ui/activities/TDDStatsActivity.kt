@@ -14,10 +14,9 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.extensions.total
-import info.nightscout.core.fabric.FabricPrivacy
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.main.R
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -26,9 +25,12 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.databinding.ActivityTddStatsBinding
@@ -42,7 +44,7 @@ import javax.inject.Inject
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-class TDDStatsActivity : NoSplashAppCompatActivity() {
+class TDDStatsActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
@@ -51,6 +53,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private lateinit var binding: ActivityTddStatsBinding
     private val disposable = CompositeDisposable()
@@ -228,6 +233,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         return super.dispatchTouchEvent(event)
     }
 
+    private val TotalDailyDose.total
+        get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
+
     @SuppressLint("SetTextI18n")
     private fun loadDataFromDB() {
         historyList.clear()
@@ -302,17 +310,17 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBASAL ->
                             labelBASAL.id = 300 + i
-                            labelBASAL.text = rh.gs(R.string.formatinsulinunits, record.basalAmount)
+                            labelBASAL.text = rh.gs(R.string.format_insulin_units, record.basalAmount)
                             labelBASAL.setTextColor(rh.gac(this, R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBOLUS ->
                             labelBOLUS.id = 400 + i
-                            labelBOLUS.text = rh.gs(R.string.formatinsulinunits, record.bolusAmount)
+                            labelBOLUS.text = rh.gs(R.string.format_insulin_units, record.bolusAmount)
                             labelBOLUS.setTextColor(rh.gac(this, R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelTDD ->
                             labelTDD.id = 500 + i
-                            labelTDD.text = rh.gs(R.string.formatinsulinunits, tdd)
+                            labelTDD.text = rh.gs(R.string.format_insulin_units, tdd)
                             labelTDD.setTextColor(rh.gac(this, R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelRATIO ->
@@ -350,7 +358,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMTDD ->
                             labelCUMTDD.id = 900 + i
-                            labelCUMTDD.text = rh.gs(R.string.formatinsulinunits, sum / i)
+                            labelCUMTDD.text = rh.gs(R.string.format_insulin_units, sum / i)
                             labelCUMTDD.setTextColor(rh.gac(this, R.attr.defaultTextColor))
                         })
 
@@ -402,9 +410,9 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                     etr.addView(TextView(this@TDDStatsActivity).also { labelEXPTDD ->
                         labelEXPTDD.id = 1300 + i
                         labelEXPTDD.text = """
-                ${rh.gs(R.string.formatinsulinunits, weighted03)}
-                ${rh.gs(R.string.formatinsulinunits, weighted05)}
-                ${rh.gs(R.string.formatinsulinunits, weighted07)}
+                ${rh.gs(R.string.format_insulin_units, weighted03)}
+                ${rh.gs(R.string.format_insulin_units, weighted05)}
+                ${rh.gs(R.string.format_insulin_units, weighted07)}
                 """.trimIndent()
                         labelEXPTDD.setTextColor(rh.gac(this, R.attr.defaultTextColor))
                     })

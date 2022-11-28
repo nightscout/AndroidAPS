@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">민감도</string>
+    <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
+    <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
+    <string name="description_sensitivity_weighted_average">민감도가 편차의 가중평균으로 계산됩니다. 최근의 편차가 더 가중됩니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다. 이 알고리즘의 민감도가 가장 빠릅니다.</string>
+    <string name="openapsama_autosens_period">autosens 시간 [h]</string>
+    <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
+    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
+    <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
+    <string name="openapsama_autosens_max">최대 autosens 비율</string>
+    <string name="openapsama_autosens_min">최저 autosens 비율</string>
+    <string name="absorption_cutoff_title">식사 최대 흡수 시간 [h]</string>
+    <string name="absorption_cutoff_summary">식사가 모두 흡수되었다고 간주되는 시간. 나머지 탄수화물은 모두 없어집니다.</string>
+</resources>

@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.androidaps.extensions.safeGetSerializableExtra
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
@@ -19,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.extension.replaceFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
-import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
+import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 
 class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
@@ -157,7 +156,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                         if (patchStep.value?.isSafeDeactivation == true || connectionTryCnt >= 2) {
                             val cancelLabel = commCheckCancelLabel.value ?: getString(R.string.cancel)
                             val message = "${getString(R.string.patch_comm_error_during_discard_desc_2)}\n${getString(R.string.patch_communication_check_helper_2)}"
-                            mPatchCommCheckDialog = AlertDialogHelper.Builder(this@EopatchActivity)
+                            mPatchCommCheckDialog = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(this@EopatchActivity)
                                 .setTitle(R.string.patch_communication_failed)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -171,7 +170,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                         } else {
                             val cancelLabel = commCheckCancelLabel.value ?: getString(R.string.cancel)
                             val message = "${getString(R.string.patch_communication_check_helper_1)}\n${getString(R.string.patch_communication_check_helper_2)}"
-                            mPatchCommCheckDialog = AlertDialogHelper.Builder(this@EopatchActivity)
+                            mPatchCommCheckDialog = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(this@EopatchActivity)
                                 .setTitle(R.string.patch_communication_failed)
                                 .setMessage(message)
                                 .setCancelable(false)
@@ -187,7 +186,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
                     EventType.SHOW_BONDED_DIALOG           -> {
                         dismissProgressDialog()
-                        AlertDialogHelper.Builder(this@EopatchActivity)
+                        info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(this@EopatchActivity)
                             .setTitle(R.string.patch_communication_succeed)
                             .setMessage(R.string.patch_communication_succeed_message)
                             .setPositiveButton(R.string.confirm) { _, _ ->
@@ -196,7 +195,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                     }
 
                     EventType.SHOW_CHANGE_PATCH_DIALOG     -> {
-                        AlertDialogHelper.Builder(this@EopatchActivity).apply {
+                        info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(this@EopatchActivity).apply {
                             setTitle(R.string.string_discard_patch)
                             setMessage(
                                 when {
@@ -219,7 +218,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                     }
                     // EventType.SHOW_BONDED_DIALOG           -> this@EopatchActivity.finish()
                     EventType.SHOW_DISCARD_DIALOG          -> {
-                        AlertDialogHelper.Builder(this@EopatchActivity).apply {
+                        info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(this@EopatchActivity).apply {
                             setTitle(R.string.string_discard_patch)
                             if (isBolusActive) {
                                 setMessage(R.string.patch_change_confirm_bolus_is_active_desc)
