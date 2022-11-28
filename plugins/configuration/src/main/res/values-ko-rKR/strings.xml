@@ -39,8 +39,10 @@
     <string name="data_choices">데이터선택</string>
     <string name="fabric_upload">Fabric 업로드</string>
     <string name="allow_automated_crash_reporting">fabric.io 서비스를 통해 개발자에게 앱 오류 및 특정 데이터를 자동 전송합니다.</string>
+    <string name="request">요청</string>
     <string name="apsmode_title">APS 모드</string>
     <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_profile">프로파일</string>
@@ -54,6 +56,40 @@
     <string name="configbuilder_bgsource">혈당 출처</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
+    <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
+    <string name="preferences_export_canceled">내보내기 취소됩니다! 환경 설정을 내보내지 않았습니다!</string>
+    <string name="preferences_import_canceled">가져오고 취소됩니다! 환경설정을 가져오지 않았습니다.</string>
+    <string name="preferences_import_impossible">기본 설정을 가져올 수 없습니다.</string>
+    <string name="check_preferences_details_btn">환경설정 가져오기 문제 설명</string>
+    <string name="check_preferences_details_title">환경설정 가져오기 문제의 상세정보</string>
+    <string name="check_preferences_import_btn">가져오기</string>
+    <string name="check_preferences_import_anyway_btn">무시하고 가져오기 (위험!)</string>
+    <string name="check_preferences_before_import">가져오기 전에 환경설정을 확인하세요.</string>
+    <string name="check_preferences_cannot_import">환경 설정을 가져올 수가 없습니다.</string>
+    <string name="check_preferences_dangerous_import">환경 설정을 가져오면 안됩니다.</string>
+    <string name="nav_export">설정 저장하기</string>
+    <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
+    <string name="import_from">다음 위치에서 설정을 불러오시겠습니까</string>
+    <string name="setting_imported">설정을 불러왔습니다</string>
+    <string name="old_master_password">이전 마스터 비밀번호</string>
+    <string name="different_password_used">이 파일을 내보내고 다른 마스터 암호로 암호화했습니다. 파일의 암호를 해독하려면 이전 마스터 암호를 제공하십시오.</string>
+    <string name="master_password_will_be_replaced">가져오기에 성공하면 현재 마스터 암호가 이전 마스터 암호로 대체됩니다.</string>
+    <string name="exported">설정이 저장되었습니다</string>
+    <string name="filenotfound">파일을 찾을 수 없습니다</string>
+    <string name="goto_main_try_again">기본 화면으로 돌아가서 다시 시도하십시오.</string>
+    <string name="restartingapp">설정을 적용하기위해 앱을 종료합니다.</string>
+    <string name="ue_exported">사용자 입력 사항들이 저장됨</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MAINT</string>
+    <string name="description_maintenance">정비를 위한 여러가지 기능을 제공합니다.(예, 로그 전송,로그 삭제 등)</string>
+    <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
+    <string name="maintenance_settings">정비 설정</string>
+    <string name="maintenance_email">Email</string>
+    <string name="maintenance_amount">전송할 로그 수</string>
+    <string name="send_all_logs">Email로 로그 전송하기</string>
+    <string name="delete_logs">로그 삭제하기</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
+    <string name="engineering_mode_enabled">전문가 모드 사용</string>
 </resources>
