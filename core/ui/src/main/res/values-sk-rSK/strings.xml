@@ -23,6 +23,7 @@
     <string name="settings">Nastavenia</string>
     <string name="statuslights">Indikátory stavu</string>
     <string name="do_ns_upload_title">Nahrávať glykémie do NS</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Zásobník</string>
     <string name="base_basal_rate_label">Základná hodnota bazálu</string>
@@ -76,4 +77,5 @@
     <string name="location_not_found_title">Poloha nie je aktivovaná</string>
     <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
