@@ -56,4 +56,5 @@
     <string name="combo_error_display_never">Mai</string>
     <string name="combo_error_display_error">In caso di errore</string>
     <string name="combo_error_display_always">Sempre</string>
+    <string name="unsafeusage">uso non sicuro</string>
 </resources>
