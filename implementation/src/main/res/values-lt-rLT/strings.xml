@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Negauti KG duomenys</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="permission">Leidimas</string>
     <!--       Stats -->
