@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="eopatch_status">Status</string>
+    <string name="symbol_day">dag</string>
+    <string name="symbol_days">dae</string>
+    <string name="string_resume">Hervat</string>
+    <string name="string_suspend">Opgeskort</string>
+    <string name="string_running">Loop tans</string>
     <string name="cancel">Kanselleer</string>
     <string name="confirm">Bevestig</string>
+    <string name="string_alarm">Alarm</string>
+    <string name="string_connecting">Koppel</string>
+    <string name="next">Volgende</string>
 </resources>
