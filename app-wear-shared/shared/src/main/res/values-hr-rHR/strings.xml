@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    DateUtil-->
+    <string name="days_ago">Prije %1$.1f dana</string>
+    <string name="days_ago_round">Prije %1$.0f dana</string>
+    <string name="today">Danas</string>
     <!-- Rx -->
+    <string name="connecting_for">Povezivanje %1$d s</string>
     <string name="handshaking">Povezivanje</string>
     <string name="connected">Povezano</string>
     <string name="disconnecting">Odspajanje</string>
