@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Gevoeligheid Oref1</string>
+    <string name="sensitivity_aaps">Gevoeligheid AAPS</string>
+    <string name="sensitivity_weighted_average">Gemiddelde gevoeligheid</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar je kunt zelf instellen hoeveel uren AAPS terugkijkt. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd zoals in jouw instellingen.</string>
     <string name="description_sensitivity_oref1">Gevoeligheid wordt berekend met gegevens van de afgelopen 8 of 24 uur (de meest gevoelige van die twee) en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de instellingen. Berekent ook UAM.</string>
     <string name="description_sensitivity_weighted_average">Gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. Minimale koolhydraat absorptie is berekend op basis van de max koolhydraat absorptie tijd uit jouw instellingen. Dit algoritme is de snelste in het volgen van wijzigingen van de gevoeligheid.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM gedeactiveerd omdat het Oref1 gevoeligheid plugin nodig heeft</string>
+    <string name="absorption_settings_title">Opname instellingen</string>
+    <string name="absorption_max_time_title">Max absorptietijd maaltijd [uur]</string>
+    <string name="absorption_max_time_summary">Verwachte tijd in uren totdat alle koolhydraten opgenomen zijn</string>
     <string name="openapsama_autosens_period">Interval voor autosens [uur]</string>
     <string name="openapsama_autosens_period_summary">Aantal uren in het verleden voor gevoeligheids detectie (koolhy. absorbtie tijd niet meegerekend)</string>
     <string name="openapsama_autosens_max_summary">Standaard waarde: 1.2\nDit is een vermenigvuldigingsfactor voor autosense (en binnenkort autotune) die zorgt dat de autosens ratio maximaal 20%% kan zijn. Dit maximum bepaalt in hoeverre je basaal kan worden verhoogd, en hoeveel je ISF en BG doel verlaagd kunnen worden.</string>
     <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7\nDit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het streef BG.</string>
     <string name="openapsama_autosens_max">Max autosens ratio</string>
     <string name="openapsama_autosens_min">Min autosens ratio</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaard koolhydraten absorptie-impact per 5 minuten. De standaard is een verwachte 3mg / dl / 5min. Dit is van invloed op hoe snel COB zijn opgenomen en hoeveel koolhydraten absorptie wordt verwacht, bij het voorspellen van toekomstige BG, wanneer BG meer dan verwacht daalt of niet zoveel stijgt als verwacht.</string>
     <string name="absorption_cutoff_title">Maximum maaltijd absorptie tijd [uur]</string>
     <string name="absorption_cutoff_summary">Tijdspanne waarbinnen elke maaltijd volledig is opgenomen. Resterende KH worden niet mee gerekend.</string>
 </resources>
