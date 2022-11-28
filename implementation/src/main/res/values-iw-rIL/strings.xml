@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">לא התקבלו קריאות סוכר</string>
     <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="permission">הרשאה</string>
     <!--       Stats -->
