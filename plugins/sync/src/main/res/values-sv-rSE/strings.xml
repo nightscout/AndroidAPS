@@ -2,20 +2,37 @@
 <resources>
     <!-- NSClient -->
     <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
+    <string name="connection_settings_title">Anslutningsinställningar</string>
+    <string name="ns_wifi_allowed_ssids">Tillåtna nätverksnamn (separerade med semikolon)</string>
+    <string name="ns_allow_roaming">Tillåt NS-data vid roaming</string>
     <string name="ns_create_announcements_from_errors_title">Skapa notiser vid fel</string>
     <string name="ns_create_announcements_from_carbs_req_title">Skapa aviseringar för KH-förslag</string>
     <string name="ns_create_announcements_from_errors_summary">Skapa notiser i Nightscout vid fel eller lokala meddelanden (även synliga i Careportal/Behandlingar)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Skapa Nightscout-aviseringar för KH-förslag</string>
     <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
+    <string name="unsupported_ns_version">Versionen av Nightscout stöds inte</string>
     <string name="openaps_short">APS</string>
     <string name="uploader_short">Upld batt</string>
+    <string name="ns_malfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
     <!-- NSClient -->
+    <string name="no_write_permission">NS Client kan inte uppdatera Nightscout. Fel API secret?</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCl</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_autoscroll">Automatisk rullning</string>
     <string name="restart">Starta om</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">Nightscout-URL</string>
+    <string name="ns_client_url_dialog_message">Ange Nightscout-URL</string>
+    <string name="ns_client_secret_title">Nightscout API secret</string>
+    <string name="ns_client_secret_dialog_title">Nightscout API secret</string>
+    <string name="ns_client_secret_dialog_message">Ange Nightscout API secret (min 12 tecken)</string>
     <string name="deliver_now">Synkronisera nu</string>
     <string name="clear_queue">Töm kö</string>
     <string name="show_queue">Visa kö</string>
     <string name="queue">Kö:</string>
     <string name="status">Status:</string>
+    <string name="clear_log">Töm logg</string>
     <string name="full_sync">Full synkronisering</string>
     <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
     <string name="ns_sync_options">Synkronisering</string>
@@ -38,8 +55,14 @@
     <string name="ns_receive_cgm">Ladda ner CGM-data</string>
     <string name="ns_receive_cgm_summary">Acceptera CGM-data från NS</string>
     <string name="ns_sync_slow">Långsamma uppladdningar</string>
+    <string name="ns_alarm_options">Larminställningar</string>
     <string name="ns_alarms">Skapa aviseringar från NS-larm</string>
     <string name="ns_announcements">Skapa aviseringar från NS-meddelanden</string>
+    <string name="ns_alarm_stale_data_value_label">Första varning efter [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Akut varning efter [min]</string>
+    <string name="ns_log_app_started_event">Rapportera appstart till Nightscout</string>
+    <string name="ns_local_broadcasts_title">Aktivera lokala broadcasts</string>
+    <string name="copy_existing_values">Kopiera NS-inställningar (om det finns)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>
     <string name="title_tidepool_username">Användarnamn</string>
