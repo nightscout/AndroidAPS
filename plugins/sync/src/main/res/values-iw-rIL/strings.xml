@@ -6,6 +6,9 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="ns_charging">בזמן טעינה</string>
     <string name="ns_battery">משתמש בסוללה</string>
+    <string name="connection_settings_title">הגדרות חיבור</string>
+    <string name="ns_wifi_allowed_ssids">SSID מורשים (מופרדים בנקודה-פסיק)</string>
+    <string name="ns_allow_roaming">אפשר חיבור בנדידה</string>
     <string name="ns_create_announcements_from_errors_title">צור הודעות משגיאות</string>
     <string name="ns_create_announcements_from_carbs_req_title">צור התראות על פחמימות דרושות</string>
     <string name="ns_create_announcements_from_errors_summary">יצירת הכרזת Nightscout עבור הודעות על שגיאות והתראות מקומיות (ניתנות להצגה בפורטל הטיפולים תחת \"טיפולים\")</string>
@@ -13,15 +16,29 @@
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
+    <string name="unsupported_ns_version">גרסה לא נתמכת של Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">מעלה</string>
+    <string name="ns_malfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
     <!-- NSClient -->
+    <string name="no_write_permission">ל-NSClient אין הרשאת כתיבה. סיסמת API שגויה?</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">כתובת URL:</string>
+    <string name="ns_client_autoscroll">גלילה אוטומטית</string>
     <string name="restart">הפעל מחדש</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">כתובת נייטסקאוט</string>
+    <string name="ns_client_url_dialog_message">הזינו את כתובת ה-Nightscout שלכם</string>
+    <string name="ns_client_secret_title">קוד API של Nightscout</string>
+    <string name="ns_client_secret_dialog_title">קוד API של Nightscout</string>
+    <string name="ns_client_secret_dialog_message">הזינו את קוד ה-API של Nightscout (מינימום 12 תווים)</string>
     <string name="deliver_now">ספק עכשיו</string>
     <string name="clear_queue">נקה תור</string>
     <string name="show_queue">הצג תור</string>
     <string name="queue">תור:</string>
     <string name="status">סטטוס: </string>
+    <string name="clear_log">נקה יומן</string>
     <string name="full_sync">סינכרון מלא</string>
     <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
     <string name="ns_sync_options">סינכרון</string>
@@ -46,8 +63,15 @@
     <string name="ns_receive_cgm">קבלת\\טעינת נתוני סנסור</string>
     <string name="ns_receive_cgm_summary">קבלת נתוני סנסור מנייטסקאוט</string>
     <string name="ns_sync_slow">האט העלאות</string>
+    <string name="ns_alarm_options">אפשרויות התראה</string>
     <string name="ns_alarms">ייצר התראות מאזעקות של Nightscout</string>
     <string name="ns_announcements">ייצר התראות מהכרזות של Nightscout</string>
+    <string name="ns_alarm_stale_data_value_label">סף התיישנות נתונים [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
+    <string name="ns_log_app_started_event">רשום הפעלת AAPS ב-Nightscout</string>
+    <string name="ns_local_broadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
+    <string name="ns_local_broadcasts_title">אפשר שידורים מקומיים.</string>
+    <string name="copy_existing_values">להעתיק הגדרות מ-Nightscout (אם קיימות)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>
     <string name="title_tidepool_username">שם משתמש להתחברות</string>
