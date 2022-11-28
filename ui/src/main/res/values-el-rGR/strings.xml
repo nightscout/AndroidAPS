@@ -11,12 +11,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Σύνολο</string>
     <!-- FillDialog -->
-    <string name="button1">Πλήκτρο 1</string>
-    <string name="button2">Πλήκτρο 2</string>
-    <string name="button3">Πλήκτρο 3</string>
     <string name="record_pump_site_change">Καταγράψτε την αλλαγή της τοποθεσίας αντλίας</string>
     <string name="record_insulin_cartridge_change">Καταγράψτε την αλλαγή της τοποθεσίας καθετήρα</string>
     <!-- InsulinDialog -->
@@ -51,18 +47,9 @@
     <string name="tempbasals_netratio_label_string">Αναλογία:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Συνολική IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
     <string name="refresheventsfromnightscout">Ανανέωση από NS</string>
     <!-- ProfileHelperActivity -->
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Λεπτομέρειες προβλημάτων εισαγωγής</string>
-    <string name="check_preferences_import_btn">Εισαγωγή</string>
-    <string name="check_preferences_import_anyway_btn">Εισαγωγή οπωσδήποτε(ΕΠΙΚΙΝΔΥΝΟ)</string>
-    <string name="check_preferences_before_import">Ελέγξτε τις προτιμήσεις πριν την εισαγωγή:</string>
-    <string name="check_preferences_cannot_import">Δεν είναι δυνατή η εισαγωγή προτιμήσεων!</string>
-    <string name="check_preferences_dangerous_import">Δεν πρέπει να εισαχθούν προτιμήσεις!</string>
 </resources>
