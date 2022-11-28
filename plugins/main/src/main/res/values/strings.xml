@@ -532,4 +532,9 @@
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
 
+    <!--    PersistentNotification-->
+    <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
+    <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
+    <string name="old_data">OLD DATA</string>
+
 </resources>

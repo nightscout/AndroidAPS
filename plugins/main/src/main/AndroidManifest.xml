@@ -34,10 +34,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".sync.nsclient.services.NSClientService"
-            android:enabled="true"
-            android:exported="true" />
+        <service android:name="info.nightscout.plugins.general.persistentNotification.DummyService" />
 
         <service
             android:name="info.nightscout.plugins.general.overview.notifications.DismissNotificationService"

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.persistentNotification
+package info.nightscout.plugins.general.persistentNotification
 
 import android.app.Notification
 import android.app.Service

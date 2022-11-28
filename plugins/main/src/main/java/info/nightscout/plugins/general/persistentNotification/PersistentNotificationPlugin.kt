@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.persistentNotification
+package info.nightscout.plugins.general.persistentNotification
 
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,7 +7,6 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
@@ -25,6 +24,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.DecimalFormatter
+import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished

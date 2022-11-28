@@ -40,6 +40,8 @@
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
     <string name="confirm">Confirm</string>
     <string name="pump">Pump</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="treatments_iob_label_string">IOB:</string>
 
 
     <!--    Protection-->
