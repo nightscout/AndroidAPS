@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Potvrdenie</string>
     <string name="message">Správa</string>
@@ -18,5 +22,7 @@
     <!-- datetime layout -->
     <string name="event_time_label">Čas udalosti</string>
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">Aplikácia vyžaduje povolenie Bluetooth</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
 </resources>
