@@ -15,6 +15,7 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.ui.ActivityNames
@@ -169,10 +170,16 @@ class ActivityNamesImpl @Inject constructor(
     }
 
     override fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long) {
-        rxBus.send(EventNewNotification(Notification(id, System.currentTimeMillis(), text, level,validTo)))
+        rxBus.send(EventNewNotification(Notification(id, System.currentTimeMillis(), text, level, validTo)))
     }
 
     override fun addNotificationWithAction(injector: HasAndroidInjector, nsAlarm: NSAlarm) {
         rxBus.send(EventNewNotification(NotificationWithAction(injector, nsAlarm)))
+    }
+
+    override fun showToastAndNotification(ctx: Context?, string: String?, soundID: Int) {
+        ToastUtils.showToastInUiThread(ctx, string)
+        ToastUtils.playSound(ctx, soundID)
+        addNotification(Notification.TOAST_ALARM, string!!, Notification.URGENT)
     }
 }

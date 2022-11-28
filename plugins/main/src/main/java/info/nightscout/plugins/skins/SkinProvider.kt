@@ -3,7 +3,7 @@ package info.nightscout.plugins.skins
 import info.nightscout.plugins.R
 import info.nightscout.plugins.di.SkinsModule
 import info.nightscout.shared.sharedPreferences.SP
-import okhttp3.internal.toImmutableMap
+import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,4 +19,9 @@ class SkinProvider @Inject constructor(
 
     val list: List<SkinInterface>
         get() = allSkins.toImmutableMap().toList().sortedBy { it.first }.map { it.second }
+
+    /** Returns an immutable copy of this. */
+    private fun Map<Int, SkinInterface>.toImmutableMap(): Map<Int, SkinInterface> =
+        if (isEmpty()) emptyMap()
+        else Collections.unmodifiableMap(LinkedHashMap(this))
 }

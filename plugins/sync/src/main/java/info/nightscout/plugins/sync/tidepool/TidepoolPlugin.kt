@@ -5,15 +5,14 @@ import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.toast.showToastAdNotification
-import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.sync.Sync
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
@@ -51,7 +50,8 @@ class TidepoolPlugin @Inject constructor(
     private val uploadChunk: UploadChunk,
     private val sp: SP,
     private val rateLimit: RateLimit,
-    private val receiverStatusStore: ReceiverStatusStore
+    private val receiverStatusStore: ReceiverStatusStore,
+    private val activityNames: ActivityNames
 ) : Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -172,7 +172,7 @@ class TidepoolPlugin @Inject constructor(
             }
             textLog = HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            ToastUtils.showToastAdNotification(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            activityNames.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
     }
 

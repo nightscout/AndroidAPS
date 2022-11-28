@@ -2,7 +2,6 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import android.content.Context
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
@@ -11,6 +10,7 @@ import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.profile.DefaultValueHelper
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
@@ -123,7 +123,8 @@ class NSSettingsStatusImpl @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val sp: SP,
     private val config: Config,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val activityNames: ActivityNames
 ) : NSSettingsStatus {
 
     // ***** PUMP STATUS ******
@@ -150,8 +151,7 @@ class NSSettingsStatusImpl @Inject constructor(
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Got versions: Nightscout: ${getVersion()}")
         if (getVersionNum() < config.SUPPORTEDNSVERSION) {
-            val notification = Notification(Notification.OLD_NS, rh.gs(R.string.unsupported_ns_version), Notification.NORMAL)
-            rxBus.send(EventNewNotification(notification))
+            activityNames.addNotification(Notification.OLD_NS, rh.gs(R.string.unsupported_ns_version), Notification.NORMAL)
         } else {
             rxBus.send(EventDismissNotification(Notification.OLD_NS))
         }

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.userEntry
+package info.nightscout.implementation.userEntry
 
 import android.text.Spanned
 import dagger.Reusable
@@ -13,6 +13,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.userEntry.UserEntryPresentationHelper
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -20,14 +21,14 @@ import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 
 @Reusable
-class UserEntryPresentationHelper @Inject constructor(
+class UserEntryPresentationHelperImpl @Inject constructor(
     private val translator: Translator,
     private val profileFunction: ProfileFunction,
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil
-) {
+) : UserEntryPresentationHelper {
 
-    fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
+    override fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
         ColorGroup.InsulinTreatment -> R.color.iob
         ColorGroup.BasalTreatment   -> R.color.basal
         ColorGroup.CarbTreatment    -> R.color.carbs
@@ -40,7 +41,7 @@ class UserEntryPresentationHelper @Inject constructor(
         else                        -> R.color.defaultText
     }
 
-    fun iconId(source: Sources): Int = when (source) {
+    override fun iconId(source: Sources): Int = when (source) {
         Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
         Sources.InsulinDialog       -> R.drawable.ic_bolus
         Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
@@ -109,14 +110,14 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
 
-    fun actionToColoredString(action: Action): Spanned = when (action) {
+    override fun actionToColoredString(action: Action): Spanned = when (action) {
         Action.TREATMENT -> HtmlHelper.fromHtml(coloredAction(Action.BOLUS) + " + " + coloredAction(Action.CARBS))
         else             -> HtmlHelper.fromHtml(coloredAction(action))
     }
 
     private fun coloredAction(action: Action): String = "<font color='${rh.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
-    fun listToPresentationString(list: List<ValueWithUnit?>) =
+    override fun listToPresentationString(list: List<ValueWithUnit?>) =
         list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: ValueWithUnit?): String = when (valueWithUnit) {
@@ -148,28 +149,29 @@ class UserEntryPresentationHelper @Inject constructor(
         null                                   -> ""
     }
 
-    fun userEntriesToCsv(userEntries: List<UserEntry>): String {
+    override fun userEntriesToCsv(userEntries: List<UserEntry>): String {
         return getCsvHeader() + userEntries.joinToString("\n") { entry -> getCsvEntry(entry) }
     }
 
-    private fun getCsvHeader() = rh.gs(R.string.ue_csv_header,
-                                       csvString(R.string.ue_timestamp),
-                                       csvString(R.string.date),
-                                       csvString(R.string.ue_utc_offset),
-                                       csvString(R.string.ue_action),
-                                       csvString(R.string.event_type),
-                                       csvString(R.string.ue_source),
-                                       csvString(R.string.careportal_note),
-                                       csvString(R.string.ue_string),
-                                       csvString(R.string.event_time_label),
-                                       csvString(if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
-                                       csvString(R.string.shortgram),
-                                       csvString(R.string.insulin_unit_shortname),
-                                       csvString(R.string.profile_ins_units_per_hour),
-                                       csvString(R.string.shortpercent),
-                                       csvString(R.string.shorthour),
-                                       csvString(R.string.shortminute),
-                                       csvString(R.string.ue_none)
+    private fun getCsvHeader() = rh.gs(
+        R.string.ue_csv_header,
+        csvString(R.string.ue_timestamp),
+        csvString(R.string.date),
+        csvString(R.string.ue_utc_offset),
+        csvString(R.string.ue_action),
+        csvString(R.string.event_type),
+        csvString(R.string.ue_source),
+        csvString(R.string.careportal_note),
+        csvString(R.string.ue_string),
+        csvString(R.string.event_time_label),
+        csvString(if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
+        csvString(R.string.shortgram),
+        csvString(R.string.insulin_unit_shortname),
+        csvString(R.string.profile_ins_units_per_hour),
+        csvString(R.string.shortpercent),
+        csvString(R.string.shorthour),
+        csvString(R.string.shortminute),
+        csvString(R.string.ue_none)
     ) + "\n"
 
     private fun getCsvEntry(entry: UserEntry): String {

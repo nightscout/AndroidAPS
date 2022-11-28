@@ -132,5 +132,16 @@
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
     <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
     <string name="key_do_ns_upload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_master_password" translatable="false">master_password</string>
+    <string name="key_settings_password" translatable="false">settings_password</string>
+    <string name="key_settings_pin" translatable="false">settings_pin</string>
+    <string name="key_application_password" translatable="false">application_password</string>
+    <string name="key_application_pin" translatable="false">application_pin</string>
+    <string name="key_bolus_password" translatable="false">bolus_password</string>
+    <string name="key_bolus_pin" translatable="false">bolus_pin</string>
+    <string name="key_settings_protection" translatable="false">settings_protection</string>
+    <string name="key_application_protection" translatable="false">application_protection</string>
+    <string name="key_bolus_protection" translatable="false">bolus_protection</string>
+    <string name="key_protection_timeout" translatable="false">protection_timeout</string>
 
 </resources>

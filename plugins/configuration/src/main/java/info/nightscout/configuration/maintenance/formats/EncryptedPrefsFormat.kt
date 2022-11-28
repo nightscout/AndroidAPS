@@ -1,6 +1,6 @@
 package info.nightscout.configuration.maintenance.formats
 
-import info.nightscout.core.main.R
+import info.nightscout.configuration.R
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.utils.toHex

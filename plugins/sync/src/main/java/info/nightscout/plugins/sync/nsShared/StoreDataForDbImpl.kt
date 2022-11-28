@@ -5,7 +5,6 @@ import android.os.SystemClock
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -40,6 +39,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.NSClientSource
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -72,7 +72,8 @@ class StoreDataForDbImpl @Inject constructor(
     private val config: Config,
     private val nsClientSource: NSClientSource,
     private val xDripBroadcast: XDripBroadcast,
-    private val virtualPump: VirtualPump
+    private val virtualPump: VirtualPump,
+    private val activityNames: ActivityNames
 ) : StoreDataForDb {
 
     override val glucoseValues: MutableList<TransactionGlucoseValue> = mutableListOf()
@@ -528,7 +529,7 @@ class StoreDataForDbImpl @Inject constructor(
                     it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
                 ) {
                     if (sp.getBoolean(R.string.key_ns_announcements, config.NSCLIENT))
-                        rxBus.send(EventNewNotification(Notification(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)))
+                        activityNames.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
                 }
             }
         if (therapyEvents.isNotEmpty())

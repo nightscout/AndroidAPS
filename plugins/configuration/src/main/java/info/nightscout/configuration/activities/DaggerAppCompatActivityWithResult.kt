@@ -7,8 +7,8 @@ import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.configuration.R
 import info.nightscout.configuration.maintenance.PrefsFileContract
-import info.nightscout.core.main.R
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.maintenance.ImportExportPrefs

@@ -20,16 +20,12 @@ dependencies {
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':core:core-main')
-    implementation project(':core:graph')
-    implementation project(':core:graphview')
     implementation project(':core:interfaces')
     implementation project(':core:ns-sdk')
     implementation project(':core:ui')
     implementation project(':core:utils')
     implementation project(':core:validators')
 
-    api "androidx.appcompat:appcompat:$appcompat_version"
-    api "com.google.android.material:material:$material_version"
 
     // NSClient, Tidepool
     api("io.socket:socket.io-client:1.0.0") {
@@ -42,17 +38,5 @@ dependencies {
     api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
-
-    //SmsCommunicator
-    api 'com.eatthepath:java-otp:0.4.0'
-    api 'com.github.kenglxn.QRGen:android:2.6.0'
-
-    // Overview
-    api 'com.google.android.flexbox:flexbox:3.0.0'
-
-    // Food
-    api "androidx.work:work-runtime-ktx:$work_version"
-
-    // DataLayerListenerService
-    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
+    api "com.google.code.gson:gson:$gson_version"
 }

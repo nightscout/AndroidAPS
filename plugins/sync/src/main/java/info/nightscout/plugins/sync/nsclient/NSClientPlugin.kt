@@ -12,17 +12,17 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.toast.showToastAdNotification
-import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
+import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
@@ -30,7 +30,6 @@ import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.plugins.sync.nsclient.data.AlarmAck
-import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -61,7 +60,8 @@ class NSClientPlugin @Inject constructor(
     private val sp: SP,
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
-    private val dataSyncSelector: DataSyncSelector
+    private val dataSyncSelector: DataSyncSelector,
+    private val activityNames: ActivityNames
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -185,7 +185,7 @@ class NSClientPlugin @Inject constructor(
             }
             return fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            ToastUtils.showToastAdNotification(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            activityNames.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
         return fromHtml("")
     }

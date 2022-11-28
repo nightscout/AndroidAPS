@@ -20,7 +20,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.configuration.R
 import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.configuration.maintenance.dialogs.PrefImportSummaryDialog
@@ -49,6 +48,7 @@ import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.userEntry.UserEntryPresentationHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
