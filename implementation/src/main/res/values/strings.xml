@@ -4,7 +4,6 @@
     <string name="calibration_sent">Calibration sent to xDrip+</string>
 
     <string name="bg_label">BG</string>
-    <string name="missed_bg_readings">Missed BG readings</string>
 
     <string name="time_to_eat">Time to eat</string>
     <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
