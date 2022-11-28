@@ -28,6 +28,7 @@
     <string name="today">Cегодня</string>
     <string name="yesterday">Вчера</string>
     <!-- Rx -->
+    <string name="connecting_for">Связь установлена за %1$d сек</string>
     <string name="handshaking">Подтверждение связи</string>
     <string name="connected">соединение установлено</string>
     <string name="disconnecting">разъединение</string>
