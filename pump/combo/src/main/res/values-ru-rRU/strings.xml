@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Небезопасное использование: в помпе установлен другой профиль базала чем первый. Цикл остановлен. Выберите первый профиль на помпе и обновите.</string>
     <string name="bolus_frequency_exceeded">Болюс с таким же количеством единиц был запрошен за последние две минуты. Для предотвращения случайных двойных болюсов и сбоев операция отменена.</string>
     <string name="combo_pump_connected_now">Сейчас</string>
-    <string name="combo_activity_reading_pump_history">Чтение истории помпы</string>
     <string name="combo_activity_setting_basal_profile">Установка базального профиля</string>
     <string name="combo_pump_cartridge_low_warrning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combo_pump_battery_low_warrning">Низкий заряд батареи помпы</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Никогда</string>
     <string name="combo_error_display_error">При ошибке</string>
     <string name="combo_error_display_always">Всегда</string>
+    <string name="unsafeusage">небезопасно</string>
 </resources>
