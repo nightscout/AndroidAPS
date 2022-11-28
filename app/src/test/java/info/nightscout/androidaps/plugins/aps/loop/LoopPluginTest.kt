@@ -7,7 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config

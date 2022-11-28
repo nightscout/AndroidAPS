@@ -2,7 +2,7 @@ package info.nightscout.plugins.constraints.signatureVerifier
 
 import dagger.Lazy
 import info.nightscout.androidaps.TestBase
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ui.ActivityNames
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils

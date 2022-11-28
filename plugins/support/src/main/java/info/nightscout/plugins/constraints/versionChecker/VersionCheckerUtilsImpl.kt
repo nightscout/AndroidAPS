@@ -2,7 +2,7 @@ package info.nightscout.plugins.constraints.versionChecker
 
 import android.os.Build
 import dagger.Lazy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
 import info.nightscout.interfaces.notifications.Notification

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
+import dagger.android.HasAndroidInjector
+import info.nightscout.interfaces.nsclient.NSAlarm
 
 /**
  * Interface to use activities located in different modules
@@ -64,4 +66,5 @@ interface ActivityNames {
     fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int)
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int)
     fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)
+    fun addNotificationWithAction(injector: HasAndroidInjector, nsAlarm: NSAlarm)
 }

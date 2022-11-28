@@ -14,7 +14,7 @@ import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry

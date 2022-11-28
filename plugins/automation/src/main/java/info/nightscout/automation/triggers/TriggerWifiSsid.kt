@@ -3,7 +3,7 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator

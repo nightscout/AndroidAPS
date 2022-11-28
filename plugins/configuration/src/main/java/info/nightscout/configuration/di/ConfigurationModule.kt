@@ -19,6 +19,7 @@ import info.nightscout.interfaces.maintenance.PrefFileListProvider
 
 @Module(
     includes = [
+        ConfigurationModule.Bindings::class,
         SetupWizardModule::class
     ]
 )

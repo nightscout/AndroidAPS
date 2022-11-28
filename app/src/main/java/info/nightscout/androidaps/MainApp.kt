@@ -23,7 +23,7 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.implementation.lifecycle.ProcessLifecycleListener
 import info.nightscout.core.ui.locale.LocaleHelper
-import info.nightscout.core.utils.receivers.NetworkChangeReceiver
+import info.nightscout.implementation.receivers.NetworkChangeReceiver
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry

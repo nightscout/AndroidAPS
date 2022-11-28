@@ -31,6 +31,8 @@ import info.nightscout.implementation.pump.PumpSyncImplementation
 import info.nightscout.implementation.pump.TemporaryBasalStorageImpl
 import info.nightscout.implementation.pump.WarnColorsImpl
 import info.nightscout.implementation.queue.CommandQueueImplementation
+import info.nightscout.implementation.receivers.NetworkChangeReceiver
+import info.nightscout.implementation.receivers.ReceiverStatusStoreImpl
 import info.nightscout.implementation.resources.IconsProviderImplementation
 import info.nightscout.implementation.resources.ResourceHelperImpl
 import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
@@ -60,6 +62,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.stats.DexcomTirCalculator
 import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.stats.TirCalculator
@@ -71,6 +74,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 
 @Module(
     includes = [
+        ImplementationModule.Bindings::class,
         CommandQueueModule::class
     ]
 )
@@ -79,6 +83,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 abstract class ImplementationModule {
 
     @ContributesAndroidInjector abstract fun profileStoreInjector(): ProfileStoreObject
+    @ContributesAndroidInjector abstract fun contributesNetworkChangeReceiver(): NetworkChangeReceiver
 
     @Module
     interface Bindings {
@@ -115,5 +120,6 @@ abstract class ImplementationModule {
         @Binds fun bindsConstraints(constraintsImpl: ConstraintsImpl): Constraints
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
         @Binds fun bindsStorage(fileStorage: FileStorage): Storage
+        @Binds fun bindsReceiverStatusStore(receiverStatusStoreImpl: ReceiverStatusStoreImpl): ReceiverStatusStore
     }
 }

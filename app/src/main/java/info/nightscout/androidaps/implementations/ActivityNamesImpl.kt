@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
@@ -15,7 +16,9 @@ import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
@@ -167,5 +170,9 @@ class ActivityNamesImpl @Inject constructor(
 
     override fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long) {
         rxBus.send(EventNewNotification(Notification(id, System.currentTimeMillis(), text, level,validTo)))
+    }
+
+    override fun addNotificationWithAction(injector: HasAndroidInjector, nsAlarm: NSAlarm) {
+        rxBus.send(EventNewNotification(NotificationWithAction(injector, nsAlarm)))
     }
 }

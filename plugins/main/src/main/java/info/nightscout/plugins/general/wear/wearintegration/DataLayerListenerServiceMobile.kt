@@ -17,7 +17,7 @@ import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop

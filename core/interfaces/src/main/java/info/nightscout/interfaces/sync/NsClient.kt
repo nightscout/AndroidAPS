@@ -1,6 +1,7 @@
 package info.nightscout.interfaces.sync
 
 import android.text.Spanned
+import info.nightscout.interfaces.nsclient.NSAlarm
 import org.json.JSONObject
 
 interface NsClient : Sync {
@@ -19,6 +20,7 @@ interface NsClient : Sync {
 
     fun updateLatestBgReceivedIfNewer(latestReceived: Long)
     fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long)
+    fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long)
 
     fun resetToFullSync()
 

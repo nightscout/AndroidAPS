@@ -8,7 +8,6 @@ import dagger.Provides
 
 @Module(
     includes = [
-        CoreReceiversModule::class,
         CoreDataClassesModule::class,
         PreferencesModule::class
     ]

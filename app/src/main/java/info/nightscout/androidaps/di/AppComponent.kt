@@ -23,6 +23,7 @@ import info.nightscout.implementation.di.ImplementationModule
 import info.nightscout.plugins.aps.di.ApsModule
 import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.plugins.support.di.PluginsSupportModule
+import info.nightscout.plugins.sync.di.SyncModule
 import info.nightscout.pump.combo.di.ComboModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
@@ -50,24 +51,20 @@ import javax.inject.Singleton
 
         // Gradle modules
         AutomationModule::class,
-        AutomationModule.Bindings::class,
         ApsModule::class,
         ConfigurationModule::class,
-        ConfigurationModule.Bindings::class,
         CoreModule::class,
         DatabaseModule::class,
         ImplementationModule::class,
-        ImplementationModule.Bindings::class,
         OpenHumansModule::class,
         PluginsModule::class,
-        PluginsModule.Bindings::class,
         RxModule::class,
         SharedModule::class,
         SharedImplModule::class,
         UiModule::class,
         ValidatorsModule::class,
         PluginsSupportModule::class,
-        PluginsSupportModule.Bindings::class,
+        SyncModule::class,
 
         // pumps
         ComboModule::class,

@@ -10,10 +10,12 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.implementations.ActivityNamesImpl
 import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.workflow.CalculationWorkflowImpl
+import info.nightscout.androidaps.workflow.WorkerClassesImpl
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.workflow.WorkerClasses
 
 @Suppress("unused")
 @Module(
@@ -48,8 +50,9 @@ open class AppModule {
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
-        @Binds fun bindActivityNamesInterface(activityNames: ActivityNamesImpl): ActivityNames
-        @Binds fun bindCalculationWorkflowInterface(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
+        @Binds fun bindActivityNames(activityNames: ActivityNamesImpl): ActivityNames
+        @Binds fun bindWorkerClasses(workerClassesImpl: WorkerClassesImpl): WorkerClasses
+        @Binds fun bindCalculationWorkflow(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
     }
 }
 

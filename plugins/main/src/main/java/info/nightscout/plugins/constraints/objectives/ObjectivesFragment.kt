@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action

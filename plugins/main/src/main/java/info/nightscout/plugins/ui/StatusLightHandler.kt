@@ -15,11 +15,11 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
-import info.nightscout.plugins.sync.nsclient.extensions.age
 import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -142,5 +142,15 @@ class StatusLightHandler @Inject constructor(
                 view?.text = DecimalFormatter.to0Decimal(usage, units)
             }
         }
+    }
+    private fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
+        val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
+        var days = " " + rh.gs(info.nightscout.core.main.R.string.days) + " "
+        var hours = " " + rh.gs(info.nightscout.core.main.R.string.hours) + " "
+        if (useShortText) {
+            days = rh.gs(info.nightscout.core.main.R.string.shortday)
+            hours = rh.gs(info.nightscout.core.main.R.string.shorthour)
+        }
+        return diff[TimeUnit.DAYS].toString() + days + diff[TimeUnit.HOURS] + hours
     }
 }

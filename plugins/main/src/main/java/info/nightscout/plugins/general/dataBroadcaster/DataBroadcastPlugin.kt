@@ -10,7 +10,7 @@ import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.utils.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
