@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Actualizează</string>
+    <string name="error">Eroare</string>
+    <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
+    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
+    <string name="pump_unreachable">Pompă indisponibilă</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="reload">Reîncărcare</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Salvează</string>
+    <string name="snooze">Amână</string>
+    <string name="constraints">Constrângeri</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompă în pauză</string>
+    <string name="and">Și</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
+    <string name="result">Rezultat</string>
+    <string name="statuslights">Lumini de stare</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Rezervor</string>
+    <string name="base_basal_rate_label">Rată bazală normală</string>
+    <string name="tempbasal_label">Bazală temporară</string>
+    <string name="extended_bolus_label">Bolus extins</string>
+    <string name="serial_number">Număr serial</string>
+    <string name="disconnected">Deconectat</string>
+    <string name="connecting">Se conectează</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Conectare la pompă apăsat</string>
+    <string name="pump_icon">Pictogramă pompă</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompa.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispozitiv modificat</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="not_set_short">Nesetată</string>
+    <string name="reading_pump_history">Se citește istoricul din pompă</string>
+    <string name="password_cleared">Parolă ștearsă!</string>
+    <string name="pairing">Împerechere</string>
+    <string name="initializing">Inițializare...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
+    <string name="pumplimit">limită pompă</string>
+    <string name="limitingpercentrate">Se limitează procentul ratei maxime la %1$d%% datorită %2$s</string>
+    <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
+    <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmare</string>
@@ -12,12 +52,19 @@
     <string name="dismiss">RENUNȚĂ</string>
     <string name="yes">Da</string>
     <string name="no">Nu</string>
+    <string name="close">Închide</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
+    <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">BLE nu este suportat.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
+    <string name="ble_not_enabled">Bluetooth-ul este dezactivat.</string>
+    <string name="location_not_found_title">Localizarea este dezactivată</string>
+    <string name="location_not_found_message">Pentru a putea căuta dispozitive Bluetooth noi, trebuie să activați localizarea. AAPS nu folosește datele dumneavoastră de localizare și acestea pot fi dezactivate după stabilirea conexiunii cu pompa.</string>
     <!--    Preferences -->
 </resources>
