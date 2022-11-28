@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_error_2">Bateria rozładowana</string>
+    <string name="combov2_error_4">Zatkanie</string>
+    <string name="combov2_error_6">Usterka mechaniczna</string>
     <string name="bluetooth_address">Adres Bluetooth</string>
+    <string name="combov2_not_initialized">Nie zainicjowany</string>
+    <string name="combov2_suspended">Wstrzymany</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Wczytuje profil bazowy</string>
+    <string name="combov2_bolus_cancelled">Bolus anulowany</string>
+    <string name="combov2_bolus_delivery_failed">Podanie bolusa nie powiodło się. Wygląda na to, że bolus nie został dostarczony. Aby upewnić się, sprawdź pompę, aby uniknąć podwójnego bolusa, a następnie ponownie podaj bolus. Aby uniknąć błędów, bolusy nie są automatycznie ponawiane.</string>
+    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min pozostało)</string>
+    <string name="combov2_battery_low_warning">Poziom baterii pompy jest niski</string>
+    <string name="combov2_short_status_last_connection">Ost.Poł.: %1$d m. temu</string>
+    <string name="combov2_short_status_temp_basal">Tymcz.: %s</string>
+    <string name="combov2_short_status_reservoir">Zbior.: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">pusty</string>
+    <string name="combov2_short_status_battery_state_low">niskie</string>
 </resources>
