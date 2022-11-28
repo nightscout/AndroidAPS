@@ -48,8 +48,11 @@
     <string name="allow_automated_crash_reporting">Geliştiricilere, fabric.io hizmeti aracılığıyla otomatik kilitlenme raporlaması ve özellik kullanım verilerinin gönderilmesine izin verir.</string>
     <string name="summary_email_for_crash_report">Bu kimlik acil durumlarda sizinle iletişim kurabilmemiz için kilitlenme raporlarına eklenecektir. İsteğe bağlıdır.</string>
     <string name="identification">Tanımlama (E-posta, FB veya Discord rumuz vs.)</string>
+    <string name="request">İstek</string>
     <string name="apsmode_title">APS modu</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
+    <string name="error_asking_for_permissions">İzin istenirken hata</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Bu cihaz, program için pil optimizasyonunu desteklemiyor gibi görünüyor - performans sorunları yaşayabilirsiniz.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Pompa</string>
     <string name="configbuilder_pump_description">Hangi pompa ile AAPS kullanmak istersiniz?</string>
@@ -69,6 +72,50 @@
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
+    <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılır</string>
+    <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
+    <string name="a11y_open_settings">ayarları aç</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Dışa aktarılan tercihleri şifrelemek için kullanılacak ana parola sorulacaktır.</string>
+    <string name="preferences_export_canceled">Aktarım iptal edildi! Tercihler dışa aktarılmadı!</string>
+    <string name="preferences_import_canceled">Aktarım iptal edildi! Tercihler içe aktarılmadı!</string>
+    <string name="preferences_import_impossible">Tercihler içe aktarılamıyor!</string>
+    <string name="check_preferences_details_btn">İçe aktarım sorunlarını açıkla…</string>
+    <string name="check_preferences_details_title">İçe aktarım sorun detayları</string>
+    <string name="check_preferences_import_btn">İçe aktarma</string>
+    <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
+    <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
+    <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
+    <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>
+    <string name="nav_export">Dışarı aktarma ayarları</string>
+    <string name="export_to">Ayarları aktar</string>
+    <string name="import_from">Ayarları içe aktar</string>
+    <string name="setting_imported">Ayarlar içe aktarıldı</string>
+    <string name="old_master_password">Eski Ana Parola</string>
+    <string name="different_password_used">Bu dosya dışa aktarılmış ve farklı bir parola ile şifrelenmiş. Dosyanın şifresini çözmek için eski parolayı bulun.</string>
+    <string name="master_password_will_be_replaced">Başarılı içe aktarma işleminin sonucu olarak mevcut ana parola, eski ana parola ile DEĞİŞTİRİLECEKTİR!</string>
+    <string name="exported">Tercihler dışa aktarıldı</string>
+    <string name="filenotfound">Dosya bulunamadı</string>
+    <string name="goto_main_try_again">Lütfen ana ekrana dönün ve tekrar deneyin.</string>
+    <string name="restartingapp">Ayarları uygulamak için uygulamadan çıkılıyor.</string>
+    <string name="ue_exported">Kullanıcı Girişleri dışa aktarıldı</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">BAKIM</string>
+    <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
+    <string name="database_cleanup">Veritabanı temizleme</string>
+    <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
+    <string name="cleared_entries">Temizlenen girişler</string>
+    <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
+    <string name="maintenance_settings">Bakım ayarları</string>
+    <string name="maintenance_email">E-Posta alıcısı</string>
+    <string name="maintenance_amount">Gönderilecek kayıt yok</string>
+    <string name="send_all_logs">Kayıtları E-posta ile Gönder</string>
+    <string name="delete_logs">Kayıtları Sil</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout sürümü:</string>
+    <string name="engineering_mode_enabled">Geliştirici modu etkinleştirildi</string>
+    <string name="log_files">Günlük dosyaları</string>
+    <string name="nav_logsettings">Günlük ayarları</string>
+    <string name="miscellaneous">Diğer Ayarlar</string>
+    <string name="nav_resetdb">Veritabanlarını sıfırla</string>
+    <string name="resettodefaults">Varsayılanlara sıfırla</string>
 </resources>
