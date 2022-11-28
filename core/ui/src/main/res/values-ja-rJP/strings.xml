@@ -8,6 +8,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">保存</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">リザーバ</string>
     <string name="base_basal_rate_label">基準ベーサルレート</string>
@@ -28,4 +29,5 @@
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
