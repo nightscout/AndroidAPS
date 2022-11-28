@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_error_2">Batteria scarica</string>
+    <string name="combov2_error_4">Occlusione</string>
+    <string name="combov2_error_6">Errore meccanico</string>
     <string name="bluetooth_address">Indirizzo bluetooth</string>
+    <string name="combov2_not_initialized">Non inizializzato</string>
+    <string name="combov2_ready">Pronto</string>
+    <string name="combov2_suspended">Sospeso</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Impostazione profilo basale</string>
+    <string name="combov2_bolus_cancelled">Bolo cancellato</string>
+    <string name="combov2_bolus_delivery_failed">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min rimanenti)</string>
+    <string name="combov2_battery_low_warning">Livello batteria basso</string>
+    <string name="combov2_short_status_last_connection">Ultima conn.: %1$d min fa</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Serb: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">vuoto</string>
+    <string name="combov2_short_status_battery_state_low">basso</string>
 </resources>
