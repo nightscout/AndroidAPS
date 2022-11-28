@@ -118,4 +118,6 @@
     <string name="miscellaneous">Overige</string>
     <string name="nav_resetdb">Reset database</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
