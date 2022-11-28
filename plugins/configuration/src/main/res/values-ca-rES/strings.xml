@@ -43,6 +43,7 @@
     <string name="identification">Identificació (correu electrònic, FB, nick de Discord, etc.)</string>
     <string name="apsmode_title">Mode APS</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS preferit</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -56,6 +57,32 @@
     <string name="configbuilder_bgsource">Origen glucèmia</string>
     <string name="configbuilder_sensitivity">Detecció de sensibilitat</string>
     <string name="configbuilder_sensitivity_description">Quin algoritme de sensibilitat voleu utilitzar?</string>
+    <string name="description_config_builder">Utilitzat per configurar plugins actius</string>
     <!--ImportExport-->
+    <string name="password_preferences_encrypt_prompt">Se us demanarà una clau mestra, es farà servir per encriptar la configuració exportada.</string>
+    <string name="preferences_export_canceled">Exportació cancel·lada! Configuració NO exportada!</string>
+    <string name="preferences_import_canceled">Importació cancel·lada! Configuració NO importada!</string>
+    <string name="preferences_import_impossible">No s\'ha pogut importar la configuració!</string>
+    <string name="check_preferences_details_btn">Expliqueu problemes d\'importació…</string>
+    <string name="check_preferences_details_title">Detall problemes d\'importació</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar en qualsevol cas (PERILLÓS!)</string>
+    <string name="check_preferences_before_import">Si us plau comproveu la configuració abans d\'importar:</string>
+    <string name="check_preferences_cannot_import">La configuració no pot ser importada!</string>
+    <string name="check_preferences_dangerous_import">La configuració no s\'hauria d\'importar!</string>
+    <string name="nav_export">Exportar configuració</string>
+    <string name="export_to">Exportar configuració a</string>
+    <string name="import_from">Importar configuració de</string>
+    <string name="setting_imported">Configuració importada</string>
+    <string name="old_master_password">Clau mestra antiga</string>
+    <string name="different_password_used">Aquest arxiu ha estat exportat i encriptat amb claus mestres diferents. Introdueix la clau mestra antiga per a desencriptar-lo.</string>
+    <string name="master_password_will_be_replaced">Com a resultat de la correcta importació, la clau mestra SERÀ SUBSTITUÏDA per l\'antiga!</string>
+    <string name="exported">Configuració exportada</string>
+    <string name="filenotfound">Arxiu no trobat</string>
+    <string name="goto_main_try_again">Si us plau, torneu a la pantalla principal i torneu-ho a intentar.</string>
+    <string name="restartingapp">Sortint de l\'app per aplicar configuració.</string>
+    <string name="ue_exported">Entrades d\'usuari exportades</string>
     <!--    Maintenance-->
+    <string name="maintenance_shortname">MANT</string>
+    <string name="description_maintenance">Proporciona diverses funcions de manteniment (p. ex. enviar logs, eliminar logs).</string>
 </resources>
