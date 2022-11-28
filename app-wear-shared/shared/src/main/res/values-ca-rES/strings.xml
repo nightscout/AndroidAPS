@@ -19,6 +19,7 @@
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
     <!-- Rx -->
+    <string name="connecting_for">Connectant %1$d s</string>
     <string name="handshaking">Establint comunicació</string>
     <string name="connected">Connectat</string>
     <string name="disconnecting">Desconnectant</string>
