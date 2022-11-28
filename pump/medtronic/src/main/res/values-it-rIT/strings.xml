@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Rilevati dati non validi dallo storico del micro. Apri una segnalazione e fornisci i log.</string>
     <string name="riley_statistics">Statistiche RL</string>
     <string name="medtronic_history_type">Tipo:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Aggiorna: cliccato</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Aggiornamento stato pianificato</string>
 </resources>
