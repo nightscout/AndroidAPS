@@ -5,14 +5,11 @@
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="nav_refreshtreatments">Verfris behandelings vanaf NS</string>
     <string name="nav_exit">Gaan uit</string>
-    <string name="description_persistent_notification">Toon \'n voortgesette kennisgewing met \'n kort oorsig van wat jou lus besig is om te doen</string>
     <string name="delta">Delta</string>
     <string name="save">Stoor</string>
     <string name="reloadprofile">Herlaai profiel</string>
     <string name="correctionbous">Corr</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Voortgesette kennisgewing</string>
-    <string name="old_data">OU DATA</string>
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
     <string name="ns_alarm_options">Alarm Opsies</string>
