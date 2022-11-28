@@ -14,7 +14,6 @@
     <string name="combo_pump_action_bolusing">Ag bólas (%1$.1f A)</string>
     <string name="combo_pump_action_refreshing">Athnuaigh</string>
     <string name="combo_pump_connected_now">Anois</string>
-    <string name="combo_activity_reading_pump_history">Léigh stair caidéil</string>
     <string name="combo_activity_setting_basal_profile">Socrú próifíl bunaidh</string>
     <string name="combo_pump_cartridge_low_warrning">Is leibhéal cartús íseal</string>
     <string name="combo_pump_battery_low_warrning">Is ceallraí Caidéil íseal</string>
