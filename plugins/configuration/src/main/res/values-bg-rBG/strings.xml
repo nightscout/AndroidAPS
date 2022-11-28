@@ -43,6 +43,9 @@
     <string name="data_choices">Избор на данни</string>
     <string name="fabric_upload">Качване на статистики във Fabric</string>
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
+    <string name="apsmode_title">APS режим</string>
+    <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Помпа</string>
     <string name="configbuilder_profile">Профил</string>
     <string name="configbuilder_aps">Алгоритъм за APS</string>
@@ -53,8 +56,8 @@
     <string name="configbuilder_loop">Режим на APS - Loop</string>
     <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
-    <string name="apsmode_title">APS режим</string>
-    <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
