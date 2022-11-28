@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivity_oref1">Sensitivita Oref1</string>
+    <string name="sensitivity_aaps">Sensitivita AAPS</string>
+    <string name="sensitivity_weighted_average">Sensitivita vážený průměr</string>
     <string name="description_sensitivity_aaps">Citlivost je počítána stejným způsobem jako v Oref0, ale je možné specifikovat dobu do minulosti. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení.</string>
     <string name="description_sensitivity_oref1">Citlivost je počítána za 8h nebo 24h (použita je vyšší citlivost). Sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
     <string name="description_sensitivity_weighted_average">Citlivost je počítána jako vážený průměr z odchylek. Novější mají vyšší prioritu. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení. Tento algoritmus sleduje nejrychleji změny citlivosti.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM zakázáno, protože není povolen Oref1 plugin</string>
+    <string name="absorption_settings_title">Nastavení absorpce sacharidů</string>
+    <string name="absorption_max_time_title">Max. doba absorpce sacharidů [h]</string>
+    <string name="absorption_max_time_summary">Čas v hodinách, ve kterém předpokládáme, že všechny sacharidy budou strávené</string>
     <string name="openapsama_autosens_period">Interval pro detekci senzitivity [h]</string>
     <string name="openapsama_autosens_period_summary">Počet hodin do minulosti pro detekci senzitivity</string>
     <string name="openapsama_autosens_max_summary">Výchozí hodnota: 1.2\nToto je bezpečnostní nastavení pro detekci sensitivity (a brzy autotune). Říká, že autosense může zvýšit bazály, snížit ISF a snížit cílovou hodnotu glykémie o 20 %.</string>
