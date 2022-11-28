@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi nätverksnamn</string>
+    <string name="ns_create_announcements_from_errors_title">Skapa notiser vid fel</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Skapa aviseringar för KH-förslag</string>
+    <string name="ns_create_announcements_from_errors_summary">Skapa notiser i Nightscout vid fel eller lokala meddelanden (även synliga i Careportal/Behandlingar)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Skapa Nightscout-aviseringar för KH-förslag</string>
+    <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
+    <string name="openaps_short">APS</string>
+    <string name="uploader_short">Upld batt</string>
     <!-- NSClient -->
+    <string name="restart">Starta om</string>
+    <string name="deliver_now">Synkronisera nu</string>
+    <string name="clear_queue">Töm kö</string>
+    <string name="show_queue">Visa kö</string>
+    <string name="queue">Kö:</string>
+    <string name="status">Status:</string>
+    <string name="full_sync">Full synkronisering</string>
+    <string name="full_sync_comment">Full synkronisering? Det kan ta flera timmar du kommer inte att se nya data i NS förrän den är klar.</string>
+    <string name="ns_sync_options">Synkronisering</string>
+    <string name="ns_upload_summary">Profiler, bolus, kolhydrater och temp basaler laddas upp till NS</string>
+    <string name="ns_upload">Ladda upp data till NS</string>
+    <string name="ns_receive_profile_store">Ladda ner profiler</string>
+    <string name="ns_receive_profile_store_summary">Synkronisera profiler från NS</string>
+    <string name="ns_receive_temp_target">Ladda ner temporära mål</string>
+    <string name="ns_receive_temp_target_summary">Godkänn temp mål som anges genom NS eller NSClient</string>
+    <string name="ns_receive_profile_switch">Ladda ner profilbyten</string>
+    <string name="ns_receive_profile_switch_summary">Acceptera profilbyten som matats in via NS eller NSClient</string>
+    <string name="ns_receive_offline_event">Ladda ner APS offline händelser</string>
+    <string name="ns_receive_offline_event_summary">Acceptera APS Offline-händelser som matas in via NS eller NSClient</string>
+    <string name="ns_receive_insulin">Ladda ner loggade insulindoser</string>
+    <string name="ns_receive_insulin_summary">Acceptera loggat insulin som matats in via NS eller NSClient (den levereras inte, endast beräknad mot IOB)</string>
+    <string name="ns_receive_carbs">Ladda ner loggade kolhydrater</string>
+    <string name="ns_receive_carbs_summary">Acceptera kolhydrater som matats in via NS eller NSClient</string>
+    <string name="ns_receive_therapy_events">Ladda ner loggade behandlingar</string>
+    <string name="ns_receive_therapy_events_summary">Acceptera händelser (kanyl-, insulin-, batteribyte etc) som angetts via NS eller NSClient</string>
+    <string name="ns_receive_cgm">Ladda ner CGM-data</string>
+    <string name="ns_receive_cgm_summary">Acceptera CGM-data från NS</string>
+    <string name="ns_sync_slow">Långsamma uppladdningar</string>
+    <string name="ns_alarms">Skapa aviseringar från NS-larm</string>
+    <string name="ns_announcements">Skapa aviseringar från NS-meddelanden</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>
+    <string name="title_tidepool_username">Användarnamn</string>
+    <string name="summary_tidepool_password">Ditt Tidepool-lösenord</string>
+    <string name="title_tidepool_password">Lösenord</string>
+    <string name="title_tidepool_test_login">Testlogin på Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Om man slår på denna, kommer datat skickas till https://int-app.tidepool.org istället för https://app.tidepool.org</string>
+    <string name="title_tidepool_dev_servers">Använd Integration (test) servrar</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laddar upp data till Tidepool</string>
+    <string name="tidepool_upload_cgm">Ladda upp CGM-data</string>
+    <string name="tidepool_upload_bolus">Ladda upp behandlingar (insulin, kolhydrater)</string>
+    <string name="tidepool_upload_tbr">Ladda upp temp basaler</string>
+    <string name="tidepool_upload_profile">Ladda upp profilbyten och temp mål</string>
+    <string name="tidepool_upload_bg">Ladda upp BG-test</string>
+    <string name="upload_now">Ladda upp nu</string>
 </resources>
