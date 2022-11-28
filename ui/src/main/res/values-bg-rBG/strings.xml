@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Приложено ограничение!</string>
     <string name="bolus_constraint_applied">Приложено ограничение на болус</string>
     <string name="carbs_constraint_applied">Приложено ограничение на въглехидрати</string>
     <string name="temp_target_short">Вр.цел</string>
@@ -21,12 +20,8 @@
     <!-- WizardDialog -->
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
-    <string name="superbolus">Суперболус</string>
     <string name="treatments_wizard_total_label">Общо</string>
     <!-- FillDialog -->
-    <string name="button1">Бутон 1</string>
-    <string name="button2">Бутон 2</string>
-    <string name="button3">Бутон 3</string>
     <string name="record_pump_site_change">Запис смяна на сет</string>
     <string name="record_insulin_cartridge_change">Запис смяна на резервоар</string>
     <!-- InsulinDialog -->
@@ -64,8 +59,6 @@
     <string name="tempbasals_netratio_label_string">Съотношение:</string>
     <string name="tempbasals_netinsulin_label_string">Инс:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
-    <string name="treatments_wizard_tt_label">Вр.цел</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
     <string name="prime">Пълнене</string>
     <string name="refresheventsfromnightscout">Презареди от NS</string>
@@ -76,11 +69,4 @@
     <string name="selected_profile">Избрано:</string>
     <!-- Other dialogs -->
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
-    <string name="check_preferences_details_title">Подробности за проблеми с импорта</string>
-    <string name="check_preferences_import_btn">Импорт</string>
-    <string name="check_preferences_import_anyway_btn">Импортирай все пак (ОПАСНО!)</string>
-    <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
-    <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
-    <string name="check_preferences_dangerous_import">Настройите не трябва да бъдат импортирани! (опасни)</string>
 </resources>
