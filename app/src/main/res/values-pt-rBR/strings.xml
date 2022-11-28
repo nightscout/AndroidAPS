@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s Preferências</string>
     <string name="nav_refreshtreatments">Atualizar tratamentos de NS</string>
     <string name="nav_exit">Sair</string>
-    <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Perfil</string>
     <string name="save">Salvar</string>
@@ -14,8 +13,6 @@
     <string name="correctionbous">Correção</string>
     <string name="ns_upload_only">(PERIGOSO PARA DESATIVAR) somente upload para NS</string>
     <string name="wear">Wear</string>
-    <string name="ongoingnotificaction">Notificação em curso</string>
-    <string name="old_data">DADOS ANTIGOS</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
     <string name="ns_alarm_options">Opções Alarme</string>
