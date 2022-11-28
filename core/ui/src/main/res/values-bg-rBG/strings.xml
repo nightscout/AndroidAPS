@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="refresh">Обнови</string>
+    <string name="error">Грешка</string>
+    <string name="profile_set_ok">Профила на помпата е обновен</string>
+    <string name="constraint_applied">Приложено ограничение!</string>
+    <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
+    <string name="pump_unreachable">Помпата е недостъпна</string>
+    <string name="insulin_unit_shortname">Ед.</string>
+    <string name="reload">Презареди</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммол/л</string>
+    <string name="save">Съхрани</string>
+    <string name="snooze">Отложи</string>
+    <string name="constraints">Ограничения</string>
+    <string name="superbolus">Суперболус</string>
+    <string name="pump_paused">Помпата е на пауза</string>
+    <string name="and">И</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Потребител</string>
+    <string name="result">Резултат</string>
+    <string name="settings">Настройки</string>
+    <string name="statuslights">Индикатори</string>
     <!--    Pumps -->
+    <string name="reservoir_label">Резервоар</string>
+    <string name="base_basal_rate_label">Базова базална стойност</string>
+    <string name="tempbasal_label">Временен базал</string>
+    <string name="extended_bolus_label">Удължен болус</string>
+    <string name="serial_number">Сериен номер</string>
+    <string name="disconnected">Не е сврзана</string>
+    <string name="connecting">Свързване</string>
+    <string name="not_set_short">Не е зададен</string>
+    <string name="reading_pump_history">Чете историята на помпата</string>
+    <string name="password_cleared">Паролата е изчистена!</string>
+    <string name="pairing">Сдвояване</string>
+    <string name="initializing">Инициализация ...</string>
     <!--    Constraints-->
+    <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
+    <string name="pumplimit">лимит на помпата</string>
+    <string name="limitingpercentrate">Ограничаване на максималната процентна стойност до %1$d%% поради %2$s</string>
+    <string name="itmustbepositivevalue">трябва да бъде положително число</string>
+    <string name="limitingbolus">Ограничаване на болус до %1$.1f Е поради %2$s</string>
     <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Потвърждение</string>
@@ -12,6 +49,7 @@
     <string name="dismiss">Разбрах</string>
     <string name="yes">Да</string>
     <string name="no">Не</string>
+    <string name="close">Затвори</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dч:%2$dм</string>
@@ -19,5 +57,10 @@
     <!-- BluetoothDevicePreference -->
     <!--    Combo-->
     <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
+    <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
+    <string name="ble_not_enabled">Bluetooth не е включен.</string>
+    <string name="location_not_found_title">Локацията не е включена</string>
+    <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
     <!--    Preferences -->
 </resources>
