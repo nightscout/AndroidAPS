@@ -42,7 +42,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">잔여 인슐린 양 : %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="mute_alert">음소거</string>
     <string name="release_software_version">출시 소프트웨어 버전</string>
     <string name="ui_processor_software_version">UI 프로세서 소프트웨어 버전</string>
     <string name="pc_processor_software_version">PC 프로세서 소프트웨어 버전</string>
