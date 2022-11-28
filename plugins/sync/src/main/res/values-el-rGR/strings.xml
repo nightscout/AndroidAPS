@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_create_announcements_from_errors_title">Δημιουργήστε ειδοποιήσεις σφαλμάτων</string>
+    <string name="ns_create_announcements_from_errors_summary">Δημιουργήστε μια ειδοποίηση Ns για σφάλματα διαλόγων και τοπικούς συναγερμούς (που φαίνονται στο Careportal κάτω από τις Θεραπείες)</string>
+    <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
     <!-- NSClient -->
+    <string name="restart">Επανεκκίνηση</string>
+    <string name="deliver_now">Έγχυση τώρα</string>
+    <string name="clear_queue">Διαγραφή σειράς</string>
+    <string name="show_queue">Δείξε σειρά</string>
+    <string name="queue">Σειρά:</string>
+    <string name="status">Κατάσταση:</string>
     <!-- Tidepool -->
+    <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
+    <string name="title_tidepool_username">Όνομα Χρήστη</string>
+    <string name="summary_tidepool_password">Το συνθηματικό του Tidepool</string>
+    <string name="title_tidepool_password">Συνθηματικό εισόδου</string>
+    <string name="title_tidepool_test_login">Δοκιμή εισόδου Tidepool</string>
+    <string name="summary_tidepool_dev_servers">Αν ενεργοποιήθηκε, τα δεδομένα θα ανέβουν στο https://int-app.tidepool.org αντί για το σύνηθες https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Χρησιμοποιήστε διακομιστές ολοκλήρωσης (δοκιμής)</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Αποστολή δεδομένων στο Tidepool</string>
+    <string name="tidepool_upload_cgm">Αποστολή δεδομένων CGM</string>
+    <string name="tidepool_upload_bolus">Αποστολή θεραπειών (ινσουλίνης, υδατανθράκων)</string>
+    <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
+    <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
+    <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
 </resources>
