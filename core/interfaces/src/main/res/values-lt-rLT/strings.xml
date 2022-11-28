@@ -14,5 +14,8 @@
     <!--    PumpType-->
     <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
     <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f vv</string>
+    <string name="format_insulin_units">%1$.2f V</string>
 </resources>
