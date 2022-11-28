@@ -42,6 +42,9 @@
     <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
     <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para podermos contatá-lo em casos de urgência. É opcional.</string>
     <string name="identification">Identificação (e-mail, apelido FB ou Discord, etc)</string>
+    <string name="apsmode_title">Modo APS</string>
+    <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
+    <!--    ConfigBuilder-->
     <string name="configbuilder_pump">Bomba</string>
     <string name="configbuilder_pump_description">Qual a bomba que gostaria de usar com AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -56,8 +59,8 @@
     <string name="configbuilder_insulin_description">Que tipo de insulina está usando?</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
     <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
-    <string name="apsmode_title">Modo APS</string>
-    <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
+    <!--ImportExport-->
+    <!--    Maintenance-->
 </resources>
