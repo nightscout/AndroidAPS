@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensitivität Oref1</string>
+    <string name="sensitivity_aaps">Sensitivität AAPS</string>
+    <string name="sensitivity_weighted_average">Durchschnittliche Sensitivität</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
     <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
     <string name="description_sensitivity_weighted_average">Die Sensitivität wird aus den Abweichungen errechnet. Dabei werden neuere Abweichungen stärker gewichtet als ältere. Die minimale Kohlenhydrat-Aufnahme wird aus der in den Präferenzen angegebenen maximalen Kohlenhydrat-Resorptionszeit abgeleitet. Dieser Algorithmus reagiert am schnellsten auf Änderungen der Empfindlichkeit.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM deaktiviert, da diese auf die Oref1 Empfindlichkeitserkennung angewiesen sind.</string>
+    <string name="absorption_settings_title">Resorptions-Einstellungen</string>
+    <string name="absorption_max_time_title">Maximale Essens-Resorptionszeit [h]</string>
+    <string name="absorption_max_time_summary">Zeit in Stunden, in der zu erwarten ist, dass alle Kohlenhydrate resorbiert sein werden.</string>
     <string name="openapsama_autosens_period">Intervall für Autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Anzahl der vergangenen Stunden, die verwendet werden, um die Sensitivität zu erkennen (Zeit, in der KH resorbiert werden, wird nicht berücksichtigt)</string>
     <string name="openapsama_autosens_max_summary">Standardwert: 1.2\nDies ist eine Sicherheitsgrenze für Autosens (und bald auch Autotune), die besagt, wie stark Autosens Basalraten erhöhen darf und wie niedrig der ISF (Insulin-Sensitivitäts-Faktor) und der BZ-Zielwert eingestellt werden können. 1.2 ist dabei der Multiplikationsfaktor und erlaubt eine Anpassung um 20%%.</string>
     <string name="openapsama_autosens_min_summary">Standardwert: 0.7\nDies ist die andere Sicherheitsgrenze für autosens. Sie beschränkt, wie weit Basalraten abgesenkt und wie sehr ISF und BZ-Zielwerte erhöht werden können.</string>
     <string name="openapsama_autosens_max">Max. Autosens-Faktor</string>
     <string name="openapsama_autosens_min">Min. Autosens-Faktor</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standardwert: 3.0 (AMA) or 8.0 (SMB)\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3 mg/dl/5min (AMA) bzw. 8 mg/dl/5min (SMB). Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
     <string name="absorption_cutoff_title">Maximale Dauer der Essens-Resorption [h]</string>
     <string name="absorption_cutoff_summary">Zeit, nach der jede Mahlzeit mit Sicherheit absorbiert ist. Verbleibende Kohlenhydrate werden danach nicht mehr berücksichtigt.</string>
 </resources>
