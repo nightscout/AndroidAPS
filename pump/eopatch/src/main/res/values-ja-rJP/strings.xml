@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="symbol_day">日</string>
+    <string name="symbol_days">日</string>
+    <string name="cancel">キャンセル</string>
+    <string name="string_connecting">接続中</string>
+</resources>
