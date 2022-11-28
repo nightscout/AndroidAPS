@@ -85,4 +85,17 @@
     <!--    Maintenance-->
     <string name="maintenance_shortname">MANT</string>
     <string name="description_maintenance">Proporciona diverses funcions de manteniment (p. ex. enviar logs, eliminar logs).</string>
+    <string name="reset_db_confirm">Esteu segurs que voleu restablir les bases de dades?</string>
+    <string name="maintenance_settings">Configuració de manteniments</string>
+    <string name="maintenance_email">Email destinatari</string>
+    <string name="maintenance_amount">Nr. de logs a enviar</string>
+    <string name="send_all_logs">Enviar logs per email</string>
+    <string name="delete_logs">Eliminar logs</string>
+    <string name="configbuilder_nightscoutversion_label">Versió de Nightscout:</string>
+    <string name="engineering_mode_enabled">Mode enginyeria actiu</string>
+    <string name="nav_logsettings">Configuració logs</string>
+    <string name="nav_resetdb">Restablir bases de dades</string>
+    <string name="resettodefaults">Restablir valors per defecte</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
