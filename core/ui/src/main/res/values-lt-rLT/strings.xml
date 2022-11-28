@@ -19,6 +19,7 @@
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
     <string name="result">Rezultatas</string>
     <string name="statuslights">Būklės indikatoriai</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Rezervuaras</string>
     <string name="base_basal_rate_label">Pagrindinis bazės dydis</string>
@@ -67,4 +68,5 @@
     <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
     <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
