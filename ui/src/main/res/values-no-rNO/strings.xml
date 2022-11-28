@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Begrensning benyttet!</string>
     <string name="bolus_constraint_applied">Bolus-begrensning utført</string>
     <string name="carbs_constraint_applied">Karbohydrat-begrensning utført</string>
     <string name="temp_target_short">TT</string>
@@ -36,17 +35,19 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
     <!-- FillDialog -->
-    <string name="button1">Knapp 1</string>
-    <string name="button2">Knapp 2</string>
-    <string name="button3">Knapp 3</string>
+    <string name="fill_warning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
     <string name="record_pump_site_change">Logg bytte av slangesett</string>
     <string name="record_insulin_cartridge_change">Logg bytte av insulinampull</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør hendelse</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
+    <string name="timeshift_label">Tidsforskyving</string>
+    <string name="percentage_label">Prosent</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pause loop i 1t</string>
     <string name="suspendloopfor2h">Pause loop i 2t</string>
     <string name="suspendloopfor3h">Pause loop i 3t</string>
     <string name="suspendloopfor10h">Pause loop i 10t</string>
@@ -67,6 +68,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">korriger resultatet med %</string>
     <string name="a11_correction_units">korriger resultatet med enheter</string>
+    <string name="two_hours">2t</string>
     <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="a11y_current_bg">nåværende blodsukker</string>
@@ -85,8 +87,6 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Totalt IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Korr</string>
     <string name="meal_bolus">Måltid</string>
     <string name="prime">Prime</string>
@@ -107,9 +107,23 @@
     <string name="show_loop_records">Vis loop-registreringer</string>
     <string name="show_hide_records">Skjul loop-registreringer</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
     <string name="profile2">Profil 2</string>
+    <string name="profile_type">Profiltype</string>
+    <string name="basal_pct_from_tdd_label">% av basal</string>
     <string name="selected_profile">Valgt:</string>
+    <string name="compare_profile">Sammenlign profiler</string>
+    <string name="nav_profile_helper">Profilhjelper</string>
+    <string name="motol_default_profile">Standard profil</string>
+    <string name="current_profile">Gjeldende profil</string>
+    <string name="available_profile">Tilgjengelige profiler</string>
+    <string name="format_with_tdd">Alder: %1$d TDD: %2$.0f E</string>
+    <string name="format_with_tdd_and_pct">Alder: %1$d TDD: %2$.0f E %3$d%%</string>
+    <string name="format_with_weight">Alder: %1$d Vekt: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV standardprofil</string>
+    <string name="invalid_pct">Ugyldig % verdi</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Basalrate</string>
     <!--    BolusProgressDialog-->
-    <!--    PrefImport-->
+    <string name="stop_pressed">STOPP er trykket</string>
 </resources>
