@@ -93,4 +93,6 @@
     <string name="invalid_history_data">检测到无效的泵历史数据。打开新问题并提供日志。</string>
     <string name="riley_statistics">RileyLink状态</string>
     <string name="medtronic_history_type">类型：</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">点击刷新</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">计划状态刷新</string>
 </resources>
