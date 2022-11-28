@@ -10,6 +10,7 @@
     <string name="openapsama_autosens_min_summary">по умолчанию:0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК</string>
     <string name="openapsama_autosens_max">Макс коэффициент авто чувствительности autosens</string>
     <string name="openapsama_autosens_min">Мин. коэффициент авто чувствительности autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Эта настройка на усвоение углеводов за 5 мин. По умолчанию ожидается 3мг/дл/5мин. Влияет на скорость учета поглощения углеводов COB и усвоения в расчетах прогнозируемой гликемии, когда ГК падает быстрее или не растет так как ожидается.</string>
     <string name="absorption_cutoff_title">Максимальное время усваимости пищи [h]</string>
     <string name="absorption_cutoff_summary">Время, за которое любая еда считается усвоившейся. Оставшиеся углеводы не будут учтены.</string>
 </resources>
