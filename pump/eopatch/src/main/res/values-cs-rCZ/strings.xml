@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="patch_expiration_reminders">Připomenutí expirace pumpy</string>
+    <string name="bolus_delivered">Bolus %1$.2f U byl úspěšně aplikován</string>
+    <string name="symbol_day">dní</string>
     <string name="time_30min">30 min</string>
     <string name="time_1hr">1 h</string>
     <string name="time_1hr_30min">1 h 30 min</string>
     <string name="time_2hr">2 h</string>
+    <string name="patch_finish">Konec</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">dnů</string>
+    <string name="string_resume">Uvolnit</string>
+    <string name="string_suspend">Vypnutí</string>
+    <string name="string_suspended">Pozastaveno</string>
+    <string name="string_running">Běží</string>
     <string name="cancel">Zrušit</string>
     <string name="confirm">Potvrdit</string>
+    <string name="string_alarm">Alarm</string>
+    <string name="string_connecting">Připojuji</string>
+    <string name="retry">Opakovat</string>
+    <string name="string_suspended_insulin_delivery_message">Výdej inzulínu je pozastaven.</string>
+    <string name="finish">Konec</string>
     <string name="next">Další</string>
 </resources>
