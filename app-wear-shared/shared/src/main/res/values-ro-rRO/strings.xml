@@ -19,4 +19,8 @@
     <string name="shortminute">m</string>
     <string name="shortday">z</string>
     <!-- Rx -->
+    <string name="handshaking">Împerechere</string>
+    <string name="connected">Conectat</string>
+    <string name="disconnecting">Se deconectează</string>
+    <string name="waiting_for_disconnection">Se așteaptă deconectarea</string>
 </resources>
