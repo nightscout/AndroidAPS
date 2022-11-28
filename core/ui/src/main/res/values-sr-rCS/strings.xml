@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
+    <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
+    <string name="save">Sačuvaj</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="result">Rezultat</string>
     <!--    Pumps -->
     <!--    Constraints-->
     <!-- Locale -->
