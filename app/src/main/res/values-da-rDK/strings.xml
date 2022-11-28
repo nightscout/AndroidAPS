@@ -6,7 +6,6 @@
     <string name="nav_preferences_plugin">%1$s indstillinger</string>
     <string name="nav_refreshtreatments">Opdater behandlinger fra NS</string>
     <string name="nav_exit">Afslut</string>
-    <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">Gem</string>
@@ -15,8 +14,6 @@
     <string name="ns_upload_only">(FARLIG AT DEAKTIVERE) Kun NS upload</string>
     <string name="ns_upload_only_summary">Kun NS upload (Synkronisering deaktiveret). Ikke effektiv på SVG medmindre en lokal kilde såsom xDrip+ er valgt. Ikke effektiv på profiler når NS-Profil bliver brugt.\n!!! ADVSRSEL !!! Deaktivering af denne indstilling kan forårsage funktionsfejl og overdosis af insulin hvis nogle af dine komponenter (AAPS, NS xDrip+) er konfigureret forkert. Kig nøje efter om data fra AAPS matcher pumpens tilstand!</string>
     <string name="wear">Ur</string>
-    <string name="ongoingnotificaction">Igangværende Notifikation</string>
-    <string name="old_data">GAMLE DATA</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingphonestatepermission">Manglende telefonstatus tilladelse</string>
     <string name="ns_alarm_options">Indstillinger for alarm</string>
