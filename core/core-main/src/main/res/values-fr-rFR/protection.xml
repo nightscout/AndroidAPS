@@ -29,7 +29,6 @@
     <string name="pin_not_set">Code PIN non défini</string>
     <string name="password_not_changed">Mot de passe non modifié</string>
     <string name="pin_not_changed">Code PIN inchangé</string>
-    <string name="password_cleared">Mot de passe supprimé !</string>
     <string name="pin_cleared">Code PIN effacé!</string>
     <string name="password_hint">Entrez le mot de passe ici</string>
     <string name="pin_hint">Saisir le code PIN ici</string>
