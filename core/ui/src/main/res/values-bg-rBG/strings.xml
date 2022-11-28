@@ -21,6 +21,7 @@
     <string name="result">Резултат</string>
     <string name="settings">Настройки</string>
     <string name="statuslights">Индикатори</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Резервоар</string>
     <string name="base_basal_rate_label">Базова базална стойност</string>
@@ -63,4 +64,5 @@
     <string name="location_not_found_title">Локацията не е включена</string>
     <string name="location_not_found_message">За да работи откриването на нови устройсва чрез Bluetooth, трябва да включите локацията. AAPS не проследява вашето местоположение и ще можете да я изключите след успешното свързване.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
