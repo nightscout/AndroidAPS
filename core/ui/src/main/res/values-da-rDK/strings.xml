@@ -20,6 +20,7 @@
     <string name="result">Resultat</string>
     <string name="settings">Indstillinger</string>
     <string name="statuslights">Status lys</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="reservoir_label">Reservoir</string>
     <string name="base_basal_rate_label">Standard basal rate</string>
@@ -67,4 +68,5 @@
     <string name="location_not_found_title">Lokation er deaktiveret</string>
     <string name="location_not_found_message">Placeringen skal være aktiveret, hvis Bluetooth-opdagelsen skal fungere på nyere enheder. AAPS sporer ikke din placering, og det kan deaktiveres efter parring er lykkedes.</string>
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
