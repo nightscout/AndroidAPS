@@ -107,4 +107,14 @@
     <string name="maintenance_email">Destinatario email</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
     <string name="send_all_logs">Invia log via email</string>
+    <string name="delete_logs">Elimina log</string>
+    <string name="configbuilder_nightscoutversion_label">Versione Nightscout:</string>
+    <string name="engineering_mode_enabled">Engineering mode abilitata</string>
+    <string name="log_files">File di log</string>
+    <string name="nav_logsettings">Impostazioni Log</string>
+    <string name="miscellaneous">Miscellanea</string>
+    <string name="nav_resetdb">Resetta database</string>
+    <string name="resettodefaults">Ripristina valori predefiniti</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
 </resources>
