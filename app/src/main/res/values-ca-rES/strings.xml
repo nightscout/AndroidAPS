@@ -6,14 +6,11 @@
     <string name="nav_preferences_plugin">%1$s configuració</string>
     <string name="nav_refreshtreatments">Actualitzar tractaments des de NS</string>
     <string name="nav_exit">Sortir</string>
-    <string name="description_persistent_notification">Va mostrant avisos amb un petit resum del que el llaç està fent</string>
     <string name="delta">Delta</string>
     <string name="save">Desar</string>
     <string name="reloadprofile">Recarregar perfil</string>
     <string name="correctionbous">Corr</string>
     <string name="ns_upload_only">(PERILLÓS DESACTIVAR) Només enviar a NS</string>
-    <string name="ongoingnotificaction">Avís en curs</string>
-    <string name="old_data">DADES ANTIGUES</string>
     <string name="nav_about">Quant a</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permís d\'estat del telèfon</string>
     <string name="ns_alarm_options">Configuració alarmes</string>
