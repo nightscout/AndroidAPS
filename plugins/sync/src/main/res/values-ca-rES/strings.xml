@@ -2,20 +2,37 @@
 <resources>
     <!-- NSClient -->
     <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="connection_settings_title">Configuració de connexió</string>
+    <string name="ns_wifi_allowed_ssids">SSID permesos (separats per punt i coma)</string>
+    <string name="ns_allow_roaming">Permetre connexió en roaming</string>
     <string name="ns_create_announcements_from_errors_title">Crear avisos d\'errors</string>
     <string name="ns_create_announcements_from_carbs_req_title">Crear avisos d\'alertes de calen carbohidrats</string>
     <string name="ns_create_announcements_from_errors_summary">Crear avís de Nightscout per alertes locals i finestres d\'error (també visibles al Portal de cures, sota Tractaments)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crear avís de Nightscout per alertes de calen carbohidrats</string>
     <string name="description_ns_client">Sincronitza les vostres dades amb Nightscout</string>
+    <string name="unsupported_ns_version">Versió no compatible de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
+    <string name="ns_malfunction">Error de funcionament d\'NSClient. Considereu reiniciar NS i NSClient.</string>
     <!-- NSClient -->
+    <string name="no_write_permission">L\'NSCLIENT no te permisos d\'escriptura. Secret d\'API incorrecte?</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_autoscroll">Autodesplaçament</string>
     <string name="restart">Reiniciar</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">URL de Nightscout</string>
+    <string name="ns_client_url_dialog_message">Introduïu la vostra URL de Nightscout</string>
+    <string name="ns_client_secret_title">Secret API NS</string>
+    <string name="ns_client_secret_dialog_title">Secret API NS</string>
+    <string name="ns_client_secret_dialog_message">Introduïu el secret de l\'API NS (min 12 caràcters)</string>
     <string name="deliver_now">Lliurar ara</string>
     <string name="clear_queue">Buidar la cua</string>
     <string name="show_queue">Mostrar la cua</string>
     <string name="queue">Cua:</string>
     <string name="status">Estat:</string>
+    <string name="clear_log">Buidar log</string>
     <string name="full_sync">Sincronització completa</string>
     <string name="full_sync_comment">Sincronització completa? Pot tardar hores i fins que no es completi, no veuràs dades noves a NS.</string>
     <string name="ns_sync_options">Sincronització</string>
@@ -38,8 +55,14 @@
     <string name="ns_receive_cgm">Rebre/emplenar dades CGM</string>
     <string name="ns_receive_cgm_summary">Acceptar dades CGM de NS</string>
     <string name="ns_sync_slow">Retardar les càrregues</string>
+    <string name="ns_alarm_options">Configuració alarmes</string>
     <string name="ns_alarms">Crear avisos a partir d\'alarmes NS</string>
     <string name="ns_announcements">Crear avisos a partir d\'avisos d\'NS</string>
+    <string name="ns_alarm_stale_data_value_label">Umbral dades antigues [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Umbral urgent dades antigues [min]</string>
+    <string name="ns_log_app_started_event">Enregistrar l\'inici de l\'app a NS</string>
+    <string name="ns_local_broadcasts_title">Permetre transmisions locals.</string>
+    <string name="copy_existing_values">Copiar configuració NS (si existeix)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">El vostre nom d\'usuari de Tidepool, normalment és un email</string>
     <string name="title_tidepool_username">Nom d\'usuari</string>
