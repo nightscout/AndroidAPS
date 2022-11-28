@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Ποια είναι η αλήθεια για το DIA;</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
+    <string name="hypott_label">Υπογλυκαιμικός Ρυθμός-Στόχος</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Ποιο προφίλ μπορεί να χρησιμοποιηθεί και να διαμορφωθεί χωρίς σύνδεση;</string>
     <string name="offlineprofile_label">Θέμα: Προφίλ Εκτός Σύνδεσης</string>
@@ -13,6 +14,7 @@
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_whattodo">Τι πρέπει να κάνετε αν τα δεδομένα του CGM έχουν θόρυβο;</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="suspendloop_doigetinsulin">Λαμβάνω ινσουλίνη όταν το κύκλωμα είναι απενεργοποιημένο/αναστολή;</string>
     <string name="suspendloop_yes">Ναι, ο βασικός ρυθμός συνεχίζει να χορηγείται.</string>
@@ -27,15 +29,22 @@
     <string name="prerequisites_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="prerequisites_smartwatch">Ένα Smartwatch.</string>
     <string name="prerequisites_supportedcgm">Ένα Υποστηριζόμενο CGM.</string>
+    <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
+    <string name="whatistrue">Ελέγξτε όλες τις σωστές απαντήσεις.</string>
     <string name="update_neverupdate">Ποτέ μην αναβαθμίζετε εάν το σύστημα λειτουργεί καλά.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
+    <string name="troubleshooting_label">Αντιμετώπιση προβλημάτων</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
+    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
+    <string name="sensitivity_which">Ελέγξτε όλες τις σωστές απαντήσεις.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_whattodo">Τι πρέπει να κάνετε αν γίνει μια λανθασμένη εισαγωγή υδατανθράκων;</string>
+    <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
@@ -45,6 +54,8 @@
     <string name="ic_noeffect">Αν έχετε 0 COB Ενεργούς Υδατ., αλλάζοντας την αναλογία IC θα οδηγήσει σε μια διαφορετική ποσότητα ινσουλίνης για να διορθωθεί μια συγκεκριμένη τιμή BG.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitchtime_2">Ξεκινήστε μία αλλαγή προφίλ με χρονική μετατόπιση 2</string>
+    <string name="profileswitchtime__2">Ξεκινήστε μία αλλαγή προφίλ με χρονική μετατόπιση -2</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_where">Πού θα πάτε για βοήθεια με Βασικό ρυθμό κτλ.</string>
