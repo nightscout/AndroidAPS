@@ -9,6 +9,7 @@
     <string name="snooze">Szundi</string>
     <string name="superbolus">Szuperbólus</string>
     <string name="and">És</string>
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="pump_icon">Pumpa ikon</string>
     <string name="not_set_short">Nincs beállítva</string>
@@ -27,4 +28,5 @@
     <!--    Combo-->
     <!--    BlePreCheck-->
     <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>
