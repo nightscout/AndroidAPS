@@ -117,8 +117,8 @@
     <string name="motol_default_profile">Profil par défaut</string>
     <string name="current_profile">Profil actuel</string>
     <string name="available_profile">Profils disponibles</string>
-    <string name="format_with_tdd">Âge: %1$d DTI: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Âge: %1$d DTI: %2$.0f U %3$d%%</string>
+    <string name="format_with_tdd">Âge: %1$d DTQ: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Âge: %1$d DTQ: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Âge: %1$d Poids: %2$.0f kg</string>
     <string name="dpv_default_profile">Profil par défaut DPV</string>
     <string name="invalid_pct">% saisi invalide</string>
